@@ -1,0 +1,53 @@
+/*!***************************************************************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[1].use[1]!./node_modules/postcss-loader/dist/cjs.js??ruleSet[1].rules[1].use[2]!./node_modules/sass-loader/dist/cjs.js??ruleSet[1].rules[1].use[3]!./src/index.scss ***!
+  \***************************************************************************************************************************************************************************************************************************************/
+.salient-customizer__info--title {
+  font-size: 13px;
+  line-height: 1.5;
+}
+.salient-customizer__info--text {
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+#customize-theme-controls .accordion-section-title {
+  background-color: transparent;
+  border: none;
+  padding-left: 25px;
+  font-weight: 400;
+}
+#customize-theme-controls .accordion-section-title:after {
+  top: calc(50% - 7px);
+  font-size: 14px;
+}
+
+.salient-customizer-title {
+  height: auto;
+  display: block !important;
+  visibility: visible !important;
+  padding: 30px 25px 10px 25px;
+  border-bottom: none;
+}
+.salient-customizer-title h3 {
+  font-size: 16px !important;
+  font-weight: 600;
+  text-transform: capitalize;
+  color: #000;
+  margin: 0;
+}
+
+.salient-customizer-divider {
+  height: auto;
+  display: block !important;
+  visibility: visible !important;
+  border-bottom: none;
+  padding: 10px 26px;
+}
+.salient-customizer-divider__line {
+  margin-left: -25px;
+  width: calc(100% + 50px);
+  height: 1px;
+  background-color: #C4C4C4;
+}
+
+/*# sourceMappingURL=customizer.bundle.css.map*/

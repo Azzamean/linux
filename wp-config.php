@@ -75,18 +75,6 @@ if ( ! defined( 'WP_DEBUG' ) ) {
 
 /* That's all, stop editing! Happy Pressing. */
 
-
-
-
-/** Absolute path to the WordPress directory. */
-if ( !defined('ABSPATH') )
-	define('ABSPATH', dirname(__FILE__) . '/');
-
-/** Sets up WordPress vars and included files. */
-require_once(ABSPATH . 'wp-settings.php');
-
-
-
 /**** MULTISITE INFORMATION ****/
 define( 'WP_ALLOW_MULTISITE', true );
 define( 'MULTISITE', true );
@@ -120,3 +108,14 @@ if ( ! empty( $_ENV['PANTHEON_ENVIRONMENT'] ) ) {
       break;
     }
 }
+
+
+/** Absolute path to the WordPress directory. */
+if ( !defined('ABSPATH') )
+	define('ABSPATH', dirname(__FILE__) . '/');
+
+/** Sets up WordPress vars and included files. */
+require_once(ABSPATH . 'wp-settings.php');
+
+
+
