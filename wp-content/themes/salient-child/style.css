@@ -11,4 +11,21 @@ Version: 1.0
 
 
 
+/* HEADER */
+@media(min-width: 768px) {
+     #header-outer:not(.small-nav) {
+         margin-top: 32px;
+    }
+     .lfprojects {
+         background: #252525;
+         position: absolute;
+         width: 100%;
+         z-index: 9999;
+         height: 26px;
+    }
+     .lfprojects img {
+         max-width: 270px;
+    }
+}
+
 

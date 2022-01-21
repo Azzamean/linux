@@ -100,7 +100,8 @@ if ( ! empty( $_ENV['PANTHEON_ENVIRONMENT'] ) ) {
       define( 'DOMAIN_CURRENT_SITE', 'test-lfprojects3.pantheonsite.io' );
       break;
     case 'dev':
-      define( 'DOMAIN_CURRENT_SITE', 'dev-lfprojects3.pantheonsite.io' );
+      //define( 'DOMAIN_CURRENT_SITE', 'dev-lfprojects3.pantheonsite.io' );
+	  define( 'DOMAIN_CURRENT_SITE', 'dev-lfprojects3.linuxfoundation.org' );
       break;
     default:
       # Catch-all to accommodate default naming for multi-dev environments.

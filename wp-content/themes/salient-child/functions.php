@@ -12,5 +12,19 @@ function salient_child_enqueue_styles() {
 		}
 }
 
+// TOP LINUX FOUNDATION PROJECTS HEADER BANNER STRIP
+add_action('nectar_hook_after_body_open', 'lf_meta_header', 10, 0);
+function lf_meta_header()
+{
+    echo '
+  	<div class="lfprojects">
+		<div class="container">
+			<a href="https://www.linuxfoundation.org/projects" target="_blank" rel="noopener noreferrer"><img src="http://dev-lfprojects3.pantheonsite.io/wp-content/uploads/2022/01/lfprojects_banner.png"></a>
+		</div>
+	</div>
+';
+}
+
+
 
 ?>
