@@ -1,5 +1,8 @@
 <?php 
 
+require_once 'vc_addons/recent_posts_basic.php';
+   
+   
 add_action( 'wp_enqueue_scripts', 'salient_child_enqueue_styles', 100);
 
 function salient_child_enqueue_styles() {
