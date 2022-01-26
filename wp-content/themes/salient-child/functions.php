@@ -16,7 +16,6 @@ function salient_child_enqueue_styles() {
 }
 
 // TOP LINUX FOUNDATION PROJECTS HEADER BANNER STRIP
-add_action('nectar_hook_after_body_open', 'lf_meta_header', 10, 0);
 function lf_meta_header()
 {
     echo '
@@ -27,7 +26,42 @@ function lf_meta_header()
 	</div>
 ';
 }
+add_action('nectar_hook_after_body_open', 'lf_meta_header', 10, 0);
 
 
+// ALLOW MIME TYPE UPLOADS; EXAMPLE: SVG's 
+function cc_mime_types($mimes) {
+  $mimes['svg'] = 'image/svg+xml';
+  $mimes['svgz'] = 'image/svg+xml';
+  return $mimes;
+}
+add_filter( 'upload_mimes', 'cc_mime_types' );
+
+
+function print_post_title() {
+global $post;
+$thePostID = $post->ID;
+$post_id = get_post($thePostID);
+$title = $post_id->post_title;
+$perm = get_permalink($post_id);
+$post_keys = array(); $post_val = array();
+$post_keys = get_post_custom_keys($thePostID);
+ 
+if (!empty($post_keys)) {
+foreach ($post_keys as $pkey) {
+if ($pkey=='external_url') {
+$post_val = get_post_custom_values($pkey);
+}
+}
+if (empty($post_val)) {
+$link = $perm;
+} else {
+$link = $post_val[0];
+}
+} else {
+$link = $perm;
+}
+echo '<h2><a href="'.$link.'" rel="bookmark" title="'.$title.'">'.$title.'</a></h2>';
+}
 
 ?>

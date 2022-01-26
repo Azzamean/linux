@@ -143,10 +143,10 @@ function recent_posts_grid($atts, $content)
             $output .= '<span class="recent_posts_basic_divider"> | </span>';
             $output .= '<span class="recent_posts_basic_date">' . get_the_date('M j, Y') . '</span></div>';
             $nectar_options = get_nectar_theme_options();
-            $excerpt_length = (!empty($nectar_options['blog_excerpt_length'])) ? intval($nectar_options['blog_excerpt_length']) : 15;
+            $excerpt_length = (!empty($nectar_options['blog_excerpt_length'])) ? intval($nectar_options['blog_excerpt_length']) : 30;
             $excerpt_markup = '<div class="recent_posts_basic_excerpt"><span>' . nectar_excerpt($excerpt_length) . '</span></div>';
             $output .= $excerpt_markup;
-            $output .= '<div class="recent_posts_basic_read_more"><a href="' . get_permalink() . '">Read</a></div>';
+            $output .= '<div class="recent_posts_basic_read_more"><a href="' . get_permalink() . '" target="_blank">Read</a></div>';
             $output .= '</div>';
             $count++;
             if ($count == $columns || ($recent_posts_query->current_post + 1) == $recent_posts_query->post_count)
