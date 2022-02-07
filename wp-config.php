@@ -85,6 +85,16 @@ define( 'PATH_CURRENT_SITE', '/' );
 define( 'SITE_ID_CURRENT_SITE', 1 );
 define( 'BLOG_ID_CURRENT_SITE', 1 );
 
+
+define('COOKIE_DOMAIN', $_SERVER['HTTP_HOST']);
+define('COOKIE_DOMAIN', '');
+
+
+define('ADMIN_COOKIE_PATH', '/');
+define('COOKIE_DOMAIN', '');
+define('COOKIEPATH', '');
+define('SITECOOKIEPATH', ''); 
+
 /**
  * Define DOMAIN_CURRENT_SITE conditionally.
  */
@@ -123,7 +133,3 @@ require_once(ABSPATH . 'wp-settings.php');
 define('ALLOW_UNFILTERED_UPLOADS', true);
 
 
-define('ADMIN_COOKIE_PATH', '/');
-define('COOKIE_DOMAIN', '');
-define('COOKIEPATH', '');
-define('SITECOOKIEPATH', ''); 
