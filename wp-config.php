@@ -123,4 +123,7 @@ require_once(ABSPATH . 'wp-settings.php');
 define('ALLOW_UNFILTERED_UPLOADS', true);
 
 
-define('COOKIE_DOMAIN', false);
+define('ADMIN_COOKIE_PATH', '/');
+define('COOKIE_DOMAIN', '');
+define('COOKIEPATH', '');
+define('SITECOOKIEPATH', ''); 
