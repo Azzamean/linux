@@ -121,3 +121,6 @@ require_once(ABSPATH . 'wp-settings.php');
 
 /* ALLOW ALL FILE TYPES; EXAMPLE: SVG's */
 define('ALLOW_UNFILTERED_UPLOADS', true);
+
+
+define('COOKIE_DOMAIN', false);
