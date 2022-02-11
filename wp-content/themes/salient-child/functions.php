@@ -1,19 +1,21 @@
 <?php
-require_once 'vc_addons/recent_posts_basic.php';
 
-add_action('wp_enqueue_scripts', 'salient_child_enqueue_styles', 100);
+require_once 'vc_addons/recent_posts_linux.php';
 
+
+// GET CHILD THEME LIBRARIES
 function salient_child_enqueue_styles()
 {
-
     $nectar_theme_version = nectar_get_theme_version();
     wp_enqueue_style('salient-child-style', get_stylesheet_directory_uri() . '/style.css', '', $nectar_theme_version);
-
+    wp_enqueue_style('recent-posts-linux-style', get_stylesheet_directory_uri() . '/vc_addons/recent_posts_linux.css', '', $nectar_theme_version);
+	
     if (is_rtl())
     {
         wp_enqueue_style('salient-rtl', get_template_directory_uri() . '/rtl.css', array() , '1', 'screen');
     }
 }
+add_action('wp_enqueue_scripts', 'salient_child_enqueue_styles', 100);
 
 // TOP LINUX FOUNDATION PROJECTS HEADER BANNER STRIP
 function lf_meta_header()
@@ -36,5 +38,14 @@ function cc_mime_types($mimes)
     return $mimes;
 }
 add_filter('upload_mimes', 'cc_mime_types');
+
+// REDIRECT PANTHEON LOGIN TO WORK CORRECTLY
+function redirect_pantheon_login() {
+    if ( strpos($_SERVER['REQUEST_URI'], '/wp-signup.php?') !== false ) {
+        wp_redirect('/wp-admin/');
+        exit;
+    }
+}
+add_action('init','redirect_pantheon_login');
 
 ?>
