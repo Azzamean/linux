@@ -26,6 +26,7 @@
 .basic-design-left img {
 	width: 100% !important;
 	max-width: 250px !important;
+	max-height: 150px;
 	margin: 0 !important;
 }
 
