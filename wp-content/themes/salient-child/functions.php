@@ -10,6 +10,8 @@ function salient_child_enqueue_styles()
     wp_enqueue_style('salient-child-style', get_stylesheet_directory_uri() . '/style.css', '', $nectar_theme_version);
     wp_enqueue_style('recent-posts-linux-style', get_stylesheet_directory_uri() . '/vc_addons/recent_posts_linux.css', '', $nectar_theme_version);
 	
+	wp_enqueue_script( 'bringaze-font-awesome', 'https://kit.fontawesome.com/8511f9d0cf.js', false );
+   
     if (is_rtl())
     {
         wp_enqueue_style('salient-rtl', get_template_directory_uri() . '/rtl.css', array() , '1', 'screen');
