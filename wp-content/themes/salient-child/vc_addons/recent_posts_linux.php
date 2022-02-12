@@ -51,7 +51,7 @@ function recent_posts_linux($atts, $content)
 
     $query_args = ["post_type" => "post", 
 	"post_status" => ["publish"], 
-	"posts_per_page" => 3, 
+	"posts_per_page" => 10, 
 	//"order" => $order, 
 	//"orderby" => $orderby, 
 	"ignore_sticky_posts" => true, 
