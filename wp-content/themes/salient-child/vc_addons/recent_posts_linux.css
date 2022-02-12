@@ -41,6 +41,8 @@
 }
 
 .basic-design-title a {
+	font-size: 1rem;
+	line-height: 1rem;
 	font-weight: 700;
 }
 
@@ -52,6 +54,8 @@
 }
 
 .basic-design-date {
+	font-size: 1rem;
+	line-height: 1rem;
 	padding: 0;
 	margin: 0 0 0.5rem 0 !important;
 }
