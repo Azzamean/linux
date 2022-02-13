@@ -1,7 +1,11 @@
 <?php
 
+// GET WP BAKERY CUSTOM MODULES
 require_once 'vc_addons/recent_posts_linux.php';
+require_once 'vc_addons/projects_linux.php';
 
+//GET CUSTOM POST TYPES
+//require_once 'custom_post_types/projects.php';
 
 // GET CHILD THEME LIBRARIES
 function salient_child_enqueue_styles()
