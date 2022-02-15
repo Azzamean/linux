@@ -1,5 +1,4 @@
 <?php
-
 class Projects
 {
     function __construct()
@@ -68,6 +67,22 @@ class Projects
                 [
                     "type" => "dropdown",
                     "class" => "",
+                    "heading" => esc_html__("columns", "projects"),
+                    "param_name" => "columns",
+                    "value" => [
+                        esc_html__("2 columns", "projects") => "2",
+                        esc_html__("3 columns", "projects") => "3",
+                        esc_html__("4 columns", "projects") => "4",
+                    ],
+                    "description" => esc_html__(
+                        "Please select the number of columns you want displayed",
+                        "projects"
+                    ),
+                    "save_always" => true,
+                ],
+                [
+                    "type" => "dropdown",
+                    "class" => "",
                     "heading" => __("Category", "projects"),
                     "param_name" => "category_id",
                     "value" => $pt,
@@ -82,6 +97,25 @@ $projects = new Projects();
 
 function projects_grid($atts, $content)
 {
+    // GET SALIENT COLORS
+    $nectar_options = get_nectar_theme_options();
+    $accent_color = $nectar_options["accent-color"];
+    $extra_color1 = $nectar_options["extra-color-1"];
+    $extra_color2 = $nectar_options["extra-color-2"];
+    $extra_color3 = $nectar_options["extra-color-3"];
+    //$accent_color = substr($nectar_options["accent-color"], 1);
+    $ac_r = hexdec(substr($accent_color, 0, 2));
+    $ac_g = hexdec(substr($accent_color, 2, 2));
+    $ac_b = hexdec(substr($accent_color, 4, 2));
+    $ac_rgba =
+        "rgba(" .
+        esc_attr($ac_r) .
+        "," .
+        esc_attr($ac_g) .
+        "," .
+        esc_attr($ac_b) .
+        ", 0.3)";
+
     extract(
         shortcode_atts(
             [
@@ -89,29 +123,11 @@ function projects_grid($atts, $content)
                 "order" => "ASC",
                 "orderby" => "title",
                 "category_id" => "",
-                "columns" => "vc_col-sm-3",
+                "columns" => "",
             ],
             $atts
         )
     );
-
-    $limit = !empty($limit) ? $limit : "15";
-    $order = strtolower($order) == "asc" ? "ASC" : "DESC";
-    $orderby = !empty($orderby) ? $orderby : "title";
-    switch ($columns) {
-        case "3":
-            $column_class = "vc_col-sm-4";
-            break;
-        case "4":
-            $column_class = "vc_col-sm-3";
-            break;
-        case "5":
-            $column_class = "col-sm-5cols";
-            break;
-        default:
-            $column_class = "vc_col-sm-3";
-            break;
-    }
 
     $query_args = [
         "post_type" => "projects",
@@ -122,6 +138,26 @@ function projects_grid($atts, $content)
         "ignore_sticky_posts" => true,
     ];
 
+    $limit = !empty($limit) ? $limit : "15";
+    $order = strtolower($order) == "asc" ? "ASC" : "DESC";
+    $orderby = !empty($orderby) ? $orderby : "title";
+    $columns = !empty($columns) ? $columns : "2";
+
+    switch ($columns) {
+        case "2":
+            $column_class = "col span_6";
+            break;
+        case "3":
+            $column_class = "col span_4";
+            break;
+        case "4":
+            $column_class = "col span_3";
+            break;
+        default:
+            $column_class = "col span_4";
+            break;
+    }
+
     if (!empty($category_id)) {
         $query_args["tax_query"] = [
             [
@@ -131,8 +167,10 @@ function projects_grid($atts, $content)
             ],
         ];
     }
-    $output = "";
+
     $projects_query = new WP_Query($query_args);
+    $output = "";
+
     $count = 0;
     ?>
         <?php
@@ -140,13 +178,31 @@ function projects_grid($atts, $content)
             $count = 0;
             while ($projects_query->have_posts()):
                 $projects_query->the_post();
-                if ($count == 0) {
-                    $output .= "";
-                }
 
+                if ($count == 0) {
+                    $output .= '<div class="grid-design-outer">';
+                }
+                $output .=
+                    '<div class="' . $column_class . ' grid-design-projects">';
+                $output .=
+                    '<img src="' .
+                    get_field("projects_full_color_image") .
+                    '"/>';
+                $output .= "<h3>" . get_field("projects_name") . "</h3>";
+                $output .=
+                    "<p>" .
+                    wp_trim_words(get_field("projects_excerpt"), 50) .
+                    "</p>";
+                $output .=
+                    '<a class="grid-design-projects-btn" href="' .
+                    get_permalink() .
+                    '" target="_blank" style="background-color:' .
+                    $accent_color .
+                    '">Learn More</a>';
+                $output .= "</div>";
                 $count++;
                 if (
-                    $count == 4 ||
+                    $count == $columns ||
                     $projects_query->current_post + 1 ==
                         $projects_query->post_count
                 ) {

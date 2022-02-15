@@ -1,21 +1,18 @@
 <?php
-
 // GET WP BAKERY CUSTOM MODULES
 require_once 'vc_addons/recent_posts_linux.php';
 require_once 'vc_addons/projects_linux.php';
 
 //GET CUSTOM POST TYPES
 //require_once 'custom_post_types/projects.php';
-
 // GET CHILD THEME LIBRARIES
 function salient_child_enqueue_styles()
 {
     $nectar_theme_version = nectar_get_theme_version();
     wp_enqueue_style('salient-child-style', get_stylesheet_directory_uri() . '/style.css', '', $nectar_theme_version);
-    wp_enqueue_style('recent-posts-linux-style', get_stylesheet_directory_uri() . '/vc_addons/recent_posts_linux.css', '', $nectar_theme_version);
-	
-	wp_enqueue_script( 'bringaze-font-awesome', 'https://kit.fontawesome.com/8511f9d0cf.js', false );
-   
+    wp_enqueue_style('vc-addons-style', get_stylesheet_directory_uri() . '/vc_addons/vc_addons.css', '', $nectar_theme_version);
+    wp_enqueue_script('bringaze-font-awesome', 'https://kit.fontawesome.com/8511f9d0cf.js', false);
+
     if (is_rtl())
     {
         wp_enqueue_style('salient-rtl', get_template_directory_uri() . '/rtl.css', array() , '1', 'screen');
@@ -46,12 +43,14 @@ function cc_mime_types($mimes)
 add_filter('upload_mimes', 'cc_mime_types');
 
 // REDIRECT PANTHEON LOGIN TO WORK CORRECTLY
-function redirect_pantheon_login() {
-    if ( strpos($_SERVER['REQUEST_URI'], '/wp-signup.php?') !== false ) {
+function redirect_pantheon_login()
+{
+    if (strpos($_SERVER['REQUEST_URI'], '/wp-signup.php?') !== false)
+    {
         wp_redirect('/wp-admin/');
         exit;
     }
 }
-add_action('init','redirect_pantheon_login');
+add_action('init', 'redirect_pantheon_login');
 
 ?>

@@ -1,5 +1,4 @@
 <?php
-
 class RecentPostsLinux
 {
     function __construct()
@@ -123,31 +122,25 @@ function recent_posts_linux($atts, $content)
                 "design" => "design",
                 "columns" => "",
                 "category_id" => "",
-                //"order" => "DESC",
-                //"orderby" => "date",
                 "suppress_filters" => true,
             ],
             $atts
         )
     );
 
-    $limit = !empty($limit) ? $limit : "8";
-    //$order = strtolower($order) == "asc" ? "ASC" : "DESC";
-    //$orderby = !empty($orderby) ? $orderby : "title";
-    $columns = !empty($columns) ? $columns : "4";
-    $design = !empty($design) ? $design : "basic-design";
-    $paged = get_query_var("paged") ? get_query_var("paged") : 1;
-
     $query_args = [
         "post_type" => "post",
         "post_status" => ["publish"],
         "posts_per_page" => 10,
-        //"order" => $order,
-        //"orderby" => $orderby,
         "ignore_sticky_posts" => true,
         "nopaging" => false,
         "paged" => $paged,
     ];
+
+    $limit = !empty($limit) ? $limit : "8";
+    $columns = !empty($columns) ? $columns : "4";
+    $design = !empty($design) ? $design : "basic-design";
+    $paged = get_query_var("paged") ? get_query_var("paged") : 1;
 
     if (!empty($category_id)) {
         $query_args["tax_query"] = [

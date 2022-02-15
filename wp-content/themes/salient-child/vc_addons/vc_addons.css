@@ -82,6 +82,12 @@
 	justify-content: flex-start;
 	align-content: stretch;
 	align-items: flex-start;
+	margin-bottom: 70px !important;
+}
+
+.grid-design-outer h3 {
+	font-size: 1.25rem;
+	line-height: 1.5rem;
 }
 
 .grid-design-outer .projects {
@@ -141,8 +147,8 @@
 
 .grid-design-projects-btn {
 	color: #ffffff;
-	font-size:1rem;
-	line-height:1rem;
+	font-size: 1rem;
+	line-height: 1rem;
 	padding: 10px;
 	border-radius: 5px;
 	transform: translateX(0);
