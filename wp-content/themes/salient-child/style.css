@@ -25,4 +25,24 @@ Version: 1.0
 		max-width: 270px;
 		vertical-align: middle;
 	}
+	div#ajax-content-wrap {
+		margin-top: 32px;
+	}
+}
+
+
+/* Icons for CSS Classes */
+
+.external-site:after {
+	content: "\f08e";
+	font-family: FontAwesome;
+	margin-left: 5px;
+}
+
+.sub-menu .external-site a {
+	display: inline-block;
+}
+
+.sf-menu li ul {
+	width: 21em;
 }

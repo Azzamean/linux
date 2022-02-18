@@ -41,13 +41,17 @@ class RecentPostsLinux
                         "admin_label" => true,
                         "value" => [
                             esc_html__(
-                                "Basic Design",
+                                "Basic Design", //lfenergy
                                 "salient-core"
                             ) => "basic-design",
                             esc_html__(
-                                "Grid Design",
+                                "Grid Design", //interuss
                                 "salient-core"
                             ) => "grid-design",
+                            esc_html__(
+                                "Simple Grid Design", //lfaidata
+                                "salient-core"
+                            ) => "simple-grid-design",
                         ],
                         "save_always" => true,
                         "description" => esc_html__(
@@ -87,6 +91,40 @@ class RecentPostsLinux
                         "description" => esc_html__("", "recent_posts"),
                         "save_always" => true,
                     ],
+                    [
+                        "type" => "textfield",
+                        "class" => "",
+                        "heading" => esc_html__(
+                            "Post Per Page",
+                            "recent_posts"
+                        ),
+                        "param_name" => "limit",
+                        "value" => "10",
+                        "description" => esc_html__(
+                            "Enter number of people to be displayed. Enter -1 to display all.",
+                            "recent_posts"
+                        ),
+                        "save_always" => true,
+                    ],
+                    [
+                        "type" => "checkbox",
+                        "class" => "",
+                        "heading" => esc_html__("Pagination", "recent_posts"),
+                        "param_name" => "pagination",
+                        "value" => [
+                            //esc_html__( 'Show Pagination', 'recent_posts' ) => 'show-pagination',
+                            esc_html__(
+                                "Hide Pagination",
+                                "recent_posts"
+                            ) => "hide-pagination",
+                        ],
+                        "std" => "show-pagination",
+                        "description" => esc_html__(
+                            "Check or uncheck the box if you want to show or hide pagination",
+                            "recent_posts"
+                        ),
+                        "save_always" => true,
+                    ],
                 ],
             ]);
         endif;
@@ -118,29 +156,31 @@ function recent_posts_linux($atts, $content)
     extract(
         shortcode_atts(
             [
-                "limit" => "-1",
-                "design" => "design",
+                "limit" => "",
+                "design" => "",
                 "columns" => "",
                 "category_id" => "",
+                "pagination" => "",
                 "suppress_filters" => true,
             ],
             $atts
         )
     );
 
+    $limit = !empty($limit) ? $limit : "4";
+    $columns = !empty($columns) ? $columns : "4";
+    $design = !empty($design) ? $design : "basic-design";
+    $paged = get_query_var("paged") ? get_query_var("paged") : 1;
+    $pagination = !empty($pagination) ? $pagination : "show-pagination";
+
     $query_args = [
         "post_type" => "post",
         "post_status" => ["publish"],
-        "posts_per_page" => 10,
+        "posts_per_page" => $limit,
         "ignore_sticky_posts" => true,
         "nopaging" => false,
         "paged" => $paged,
     ];
-
-    $limit = !empty($limit) ? $limit : "8";
-    $columns = !empty($columns) ? $columns : "4";
-    $design = !empty($design) ? $design : "basic-design";
-    $paged = get_query_var("paged") ? get_query_var("paged") : 1;
 
     if (!empty($category_id)) {
         $query_args["tax_query"] = [
@@ -177,8 +217,23 @@ function recent_posts_linux($atts, $content)
         case "grid-design":
             $design = "Grid Design";
             break;
+        case "simple-grid-design":
+            $design = "Simple Grid Design";
+            break;
         default:
             $design = "Basic Design";
+            break;
+    }
+
+    switch ($pagination) {
+        case "show-pagination":
+            $pagination = true;
+            break;
+        case "hide-pagination":
+            $pagination = false;
+            break;
+        default:
+            $pagination = true;
             break;
     }
 
@@ -192,23 +247,29 @@ function recent_posts_linux($atts, $content)
             //Basic DESIGN
             if ($design == "Basic Design") {
                 if ($count == 0) {
-                    $output .= '<div class="basic-design-outer">';
+                    $output .= '<div class="basic-design outer">';
                 }
+                $output .= '<div class="basic-design flex">';
                 // Left Side
-                $output .= '<div class="basic-design-flex">';
-                $output .= '<div class="basic-design-left">';
-                $output .=
-                    '<a href="' .
-                    get_permalink() .
-                    '">' .
-                    get_the_post_thumbnail($post->ID, "full", $image_attrs) .
-                    "</a>";
-                $output .= "</div>";
+                if (get_the_post_thumbnail($post->ID) != null) {
+                    $output .= '<div class="basic-design left">';
+                    $output .=
+                        '<a href="' .
+                        get_permalink() .
+                        '">' .
+                        get_the_post_thumbnail(
+                            $post->ID,
+                            "full",
+                            $image_attrs
+                        ) .
+                        "</a>";
+                    $output .= "</div>";
+                }
                 // Right Side
-                $output .= '<div class="basic-design-right">';
+                $output .= '<div class="basic-design right">';
 
                 $output .=
-                    '<h3 class="basic-design-title"><a href="' .
+                    '<h3 class="basic-design title"><a href="' .
                     get_permalink() .
                     '" style="color:' .
                     $accent_color .
@@ -216,14 +277,14 @@ function recent_posts_linux($atts, $content)
                     get_the_title() .
                     "</a></h3>";
                 $output .=
-                    '<p class="basic-design-date">' .
+                    '<p class="basic-design date">' .
                     get_the_date("M j, Y") .
                     "</p>";
                 $excerpt_length = !empty($nectar_options[""])
                     ? intval($nectar_options[""])
                     : 50;
                 $excerpt_markup =
-                    '<p class="basic-design-excerpt">' .
+                    '<p class="basic-design excerpt">' .
                     nectar_excerpt($excerpt_length) .
                     "</p>";
                 $output .= $excerpt_markup;
@@ -243,17 +304,17 @@ function recent_posts_linux($atts, $content)
             // GRID DESIGN
             if ($design == "Grid Design") {
                 if ($count == 0) {
-                    $output .= '<div class="grid-design-outer">';
+                    $output .= '<div class="grid-design outer">';
                 }
                 $output .=
-                    '<div class="' . $column_class . ' grid-design-square">';
+                    '<div class="' . $column_class . ' grid-design square">';
                 $output .=
-                    '<div class="grid-design-header"><h3 class="grid-design-title">' .
+                    '<div class="grid-design header"><h3 class="grid-design title">' .
                     get_the_title() .
                     "</h3>";
-                $output .= '<span class="grid-design-divider"> | </span>';
+                $output .= '<span class="grid-design divider"> | </span>';
                 $output .=
-                    '<span class="grid-design-date">' .
+                    '<span class="grid-design date">' .
                     get_the_date("M j, Y") .
                     "</span></div>";
                 $nectar_options = get_nectar_theme_options();
@@ -261,12 +322,12 @@ function recent_posts_linux($atts, $content)
                     ? intval($nectar_options["blog_excerpt_length"])
                     : 30;
                 $excerpt_markup =
-                    '<div class="grid-design-excerpt"><span>' .
+                    '<div class="grid-design excerpt"><span>' .
                     nectar_excerpt($excerpt_length) .
                     "</span></div>";
                 $output .= $excerpt_markup;
                 $output .=
-                    '<div class="grid-design-read"><a href="' .
+                    '<div class="grid-design read"><a href="' .
                     get_permalink() .
                     '" target="_blank" style="background-color:' .
                     $accent_color .
@@ -282,31 +343,67 @@ function recent_posts_linux($atts, $content)
                     $count = 0;
                 }
             }
+
+            // SIMPLE GRID DESIGN
+            if ($design == "Simple Grid Design") {
+                if ($count == 0) {
+                    $output .= '<div class="simple-grid-design outer">';
+                }
+                $output .= '<div class="' . $column_class . '">';
+                $output .=
+                    '<p class="simple-grid-design date">' .
+                    get_the_date("M j, Y") .
+                    "</p>";
+                $output .=
+                    '<a class="simple-grid-design title" href="' .
+                    get_permalink() .
+                    '" target="_blank">' .
+                    get_the_title() .
+                    "</a>";
+                $output .= "</div>";
+                $count++;
+                if (
+                    $count == $columns ||
+                    $recent_posts_query->current_post + 1 ==
+                        $recent_posts_query->post_count
+                ) {
+                    $output .= "</div>";
+                    $count = 0;
+                }
+            }
         endwhile;
 
         // PAGINATION
-        $big = 999999999;
-        $output .= '<div class="design-pagination" style="color:#ffffff">';
-        $output .= '<div class="links" style="color:' . $accent_color . '">';
-        $output .= paginate_links([
-            "base" => str_replace($big, "%#%", esc_url(get_pagenum_link($big))),
-            "format" => "?paged=%#%",
-            "current" => max(1, get_query_var("paged")),
-            "total" => $recent_posts_query->max_num_pages,
-            "before_page_number" =>
-                '<span style="background-color:' . $accent_color . '">',
-            "after_page_number" => "</span>",
-            "next_text" =>
-                '<span style="background-color:' .
-                $accent_color .
-                '">Next →</span>',
-            "prev_text" =>
-                '<span style="background-color:' .
-                $accent_color .
-                '">Prev ←</span>',
-        ]);
-        $output .= "</div>";
-        $output .= "</div>";
+
+        if ($pagination != false) {
+            $big = 999999999;
+            $output .= '<div class="design-pagination" style="color:#ffffff">';
+            $output .=
+                '<div class="links" style="color:' . $accent_color . '">';
+            $output .= paginate_links([
+                "base" => str_replace(
+                    $big,
+                    "%#%",
+                    esc_url(get_pagenum_link($big))
+                ),
+                "format" => "?paged=%#%",
+                "current" => max(1, get_query_var("paged")),
+                "total" => $recent_posts_query->max_num_pages,
+                "before_page_number" =>
+                    '<span style="background-color:' . $accent_color . '">',
+                "after_page_number" => "</span>",
+                "next_text" =>
+                    '<span style="background-color:' .
+                    $accent_color .
+                    '">Next →</span>',
+                "prev_text" =>
+                    '<span style="background-color:' .
+                    $accent_color .
+                    '">Prev ←</span>',
+            ]);
+            $output .= "</div>";
+            $output .= "</div>";
+        }
 
         wp_reset_postdata();
     } else {

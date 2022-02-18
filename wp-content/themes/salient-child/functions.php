@@ -11,7 +11,7 @@ function salient_child_enqueue_styles()
     $nectar_theme_version = nectar_get_theme_version();
     wp_enqueue_style('salient-child-style', get_stylesheet_directory_uri() . '/style.css', '', $nectar_theme_version);
     wp_enqueue_style('vc-addons-style', get_stylesheet_directory_uri() . '/vc_addons/vc_addons.css', '', $nectar_theme_version);
-    wp_enqueue_script('bringaze-font-awesome', 'https://kit.fontawesome.com/8511f9d0cf.js', false);
+    //wp_enqueue_script('bringaze-font-awesome', 'https://kit.fontawesome.com/8511f9d0cf.js', false);
 
     if (is_rtl())
     {
