@@ -8,88 +8,15 @@ class Projects
 
     function projects_grid_vc()
     {
-        $types = get_terms([
-            "taxonomy" => "category",
-            "hide_empty" => false,
-            "orderby" => "name",
-        ]);
+        $types = get_terms(["taxonomy" => "category", "hide_empty" => false, "orderby" => "name", ]);
 
         $pt = ["All" => ""];
-        foreach ($types as $type) {
-            $pt[$type->name] = $type->term_id;
+        foreach ($types as $type)
+        {
+            $pt[$type
+                ->name] = $type->term_id;
         }
-        vc_map([
-            "name" => __("Projects", "projects"),
-            "base" => "projects",
-            "icon" => "vc_element-icon icon-wpb-portfolio",
-            "class" => "",
-            "category" => __("Linux Foundation", "projects"),
-            "description" => __(
-                "Display list of Projects custom post type",
-                "projects"
-            ),
-            "params" => [
-                [
-                    "type" => "textfield",
-                    "class" => "",
-                    "heading" => __("Limit", "projects"),
-                    "param_name" => "limit",
-                    "value" => "-1",
-                    "description" => __(
-                        "Enter number of people to be displayed. Enter -1 to display all.",
-                        "projects"
-                    ),
-                ],
-                [
-                    "type" => "dropdown",
-                    "class" => "",
-                    "heading" => __("Order By", "projects"),
-                    "param_name" => "orderby",
-                    "value" => [
-                        __("Name", "projects") => "title",
-                        __("Date", "projects") => "date",
-                        __("ID", "projects") => "ID",
-                        __("Random", "projects") => "rand",
-                    ],
-                    "description" => __("Select order type.", "projects"),
-                ],
-                [
-                    "type" => "dropdown",
-                    "class" => "",
-                    "heading" => __("Sort order", "projects"),
-                    "param_name" => "order",
-                    "value" => [
-                        __("Descending", "projects") => "DESC",
-                        __("Ascending", "projects") => "ASC",
-                    ],
-                    "description" => __("Select sorting order.", "projects"),
-                ],
-                [
-                    "type" => "dropdown",
-                    "class" => "",
-                    "heading" => esc_html__("columns", "projects"),
-                    "param_name" => "columns",
-                    "value" => [
-                        esc_html__("2 columns", "projects") => "2",
-                        esc_html__("3 columns", "projects") => "3",
-                        esc_html__("4 columns", "projects") => "4",
-                    ],
-                    "description" => esc_html__(
-                        "Please select the number of columns you want displayed",
-                        "projects"
-                    ),
-                    "save_always" => true,
-                ],
-                [
-                    "type" => "dropdown",
-                    "class" => "",
-                    "heading" => __("Category", "projects"),
-                    "param_name" => "category_id",
-                    "value" => $pt,
-                    "description" => __("", "projects"),
-                ],
-            ],
-        ]);
+        vc_map(["name" => __("Projects", "projects") , "base" => "projects", "icon" => "vc_element-icon icon-wpb-portfolio", "class" => "", "category" => __("Linux Foundation", "projects") , "description" => __("Display list of Projects custom post type", "projects") , "params" => [["type" => "textfield", "class" => "", "heading" => __("Limit", "projects") , "param_name" => "limit", "value" => "-1", "description" => __("Enter number of people to be displayed. Enter -1 to display all.", "projects") , ], ["type" => "dropdown", "class" => "", "heading" => __("Order By", "projects") , "param_name" => "orderby", "value" => [__("Name", "projects") => "title", __("Date", "projects") => "date", __("ID", "projects") => "ID", __("Random", "projects") => "rand", ], "description" => __("Select order type.", "projects") , ], ["type" => "dropdown", "class" => "", "heading" => __("Sort order", "projects") , "param_name" => "order", "value" => [__("Descending", "projects") => "DESC", __("Ascending", "projects") => "ASC", ], "description" => __("Select sorting order.", "projects") , ], ["type" => "dropdown", "class" => "", "heading" => esc_html__("columns", "projects") , "param_name" => "columns", "value" => [esc_html__("2 columns", "projects") => "2", esc_html__("3 columns", "projects") => "3", esc_html__("4 columns", "projects") => "4", ], "description" => esc_html__("Please select the number of columns you want displayed", "projects") , "save_always" => true, ], ["type" => "dropdown", "class" => "", "heading" => __("Category", "projects") , "param_name" => "category_id", "value" => $pt, "description" => __("", "projects") , ], ], ]);
     }
 }
 
@@ -107,116 +34,77 @@ function projects_grid($atts, $content)
     $ac_r = hexdec(substr($accent_color, 0, 2));
     $ac_g = hexdec(substr($accent_color, 2, 2));
     $ac_b = hexdec(substr($accent_color, 4, 2));
-    $ac_rgba =
-        "rgba(" .
-        esc_attr($ac_r) .
-        "," .
-        esc_attr($ac_g) .
-        "," .
-        esc_attr($ac_b) .
-        ", 0.3)";
+    $ac_rgba = "rgba(" . esc_attr($ac_r) . "," . esc_attr($ac_g) . "," . esc_attr($ac_b) . ", 0.3)";
 
-    extract(
-        shortcode_atts(
-            [
-                "limit" => "-1",
-                "order" => "ASC",
-                "orderby" => "title",
-                "category_id" => "",
-                "columns" => "",
-            ],
-            $atts
-        )
-    );
+    extract(shortcode_atts(["limit" => "-1", "order" => "ASC", "orderby" => "title", "category_id" => "", "columns" => "", ], $atts));
 
-    $query_args = [
-        "post_type" => "projects",
-        "post_status" => ["publish"],
-        "posts_per_page" => $limit,
-        "order" => $order,
-        "orderby" => $orderby,
-        "ignore_sticky_posts" => true,
-    ];
+    $query_args = ["post_type" => "projects", "post_status" => ["publish"], "posts_per_page" => $limit, "order" => $order, "orderby" => $orderby, "ignore_sticky_posts" => true, ];
 
     $limit = !empty($limit) ? $limit : "15";
     $order = strtolower($order) == "asc" ? "ASC" : "DESC";
     $orderby = !empty($orderby) ? $orderby : "title";
     $columns = !empty($columns) ? $columns : "2";
 
-    switch ($columns) {
+    switch ($columns)
+    {
         case "2":
             $column_class = "col span_6";
-            break;
+        break;
         case "3":
             $column_class = "col span_4";
-            break;
+        break;
         case "4":
             $column_class = "col span_3";
-            break;
+        break;
         default:
             $column_class = "col span_4";
-            break;
+        break;
     }
 
-    if (!empty($category_id)) {
-        $query_args["tax_query"] = [
-            [
-                "taxonomy" => "category_id",
-                "field" => "term_id",
-                "terms" => $category_id,
-            ],
-        ];
+    if (!empty($category_id))
+    {
+        $query_args["tax_query"] = [["taxonomy" => "category_id", "field" => "term_id", "terms" => $category_id, ], ];
     }
 
     $projects_query = new WP_Query($query_args);
     $output = "";
 
     $count = 0;
-    ?>
+?>
         <?php
-        if ($projects_query->have_posts()) {
-            $count = 0;
-            while ($projects_query->have_posts()):
-                $projects_query->the_post();
+    if ($projects_query->have_posts())
+    {
+        $count = 0;
+        while ($projects_query->have_posts()):
+            $projects_query->the_post();
 
-                if ($count == 0) {
-                    $output .= '<div class="grid-design-outer">';
-                }
-                $output .=
-                    '<div class="' . $column_class . ' grid-design-projects">';
-                $output .=
-                    '<img src="' .
-                    get_field("projects_full_color_image") .
-                    '"/>';
-                $output .= "<h3>" . get_field("projects_name") . "</h3>";
-                $output .=
-                    "<p>" .
-                    wp_trim_words(get_field("projects_excerpt"), 50) .
-                    "</p>";
-                $output .=
-                    '<a class="grid-design-projects-btn" href="' .
-                    get_permalink() .
-                    '" target="_blank" style="background-color:' .
-                    $accent_color .
-                    '">Learn More</a>';
+            if ($count == 0)
+            {
+                $output .= '<div class="grid-design-outer">';
+            }
+            $output .= '<div class="' . $column_class . ' grid-design-projects">';
+            $output .= '<img src="' . get_field("projects_full_color_image") . '"/>';
+            $output .= "<h3>" . get_field("projects_name") . "</h3>";
+            $output .= "<p>" . wp_trim_words(get_field("projects_excerpt") , 50) . "</p>";
+            $output .= '<a class="grid-design-projects-btn" href="' . get_permalink() . '" target="_blank" style="background-color:' . $accent_color . '">Learn More</a>';
+            $output .= "</div>";
+            $count++;
+            if ($count == $columns || $projects_query->current_post + 1 == $projects_query->post_count)
+            {
                 $output .= "</div>";
-                $count++;
-                if (
-                    $count == $columns ||
-                    $projects_query->current_post + 1 ==
-                        $projects_query->post_count
-                ) {
-                    $output .= "</div>";
-                    $count = 0;
-                }
-            endwhile;
-            /* Restore original Post Data */
-            wp_reset_postdata();
-        } else {
-            $output .= "No projects listed";
-        }
+                $count = 0;
+            }
+        endwhile;
+        /* Restore original Post Data */
+        wp_reset_postdata();
+    }
+    else
+    {
+        $output .= "No projects listed";
+    }
 
-        return $output;
+    return $output;
 }
 
 add_shortcode("projects", "projects_grid");
+

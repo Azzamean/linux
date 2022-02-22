@@ -1,4 +1,5 @@
 <?php
+define('WP_CACHE', true); // WP-Optimize Cache
 /**
  * This config file is yours to hack on. It will work out of the box on Pantheon
  * but you may find there are a lot of neat tricks to be used here.
@@ -7,13 +8,11 @@
  *
  * https://pantheon.io/docs
  */
-
 /**
  * Pantheon platform settings. Everything you need should already be set.
  */
 if (file_exists(dirname(__FILE__) . '/wp-config-pantheon.php') && isset($_ENV['PANTHEON_ENVIRONMENT'])) {
 	require_once(dirname(__FILE__) . '/wp-config-pantheon.php');
-
 /**
  * Local configuration information.
  *
@@ -24,7 +23,6 @@ if (file_exists(dirname(__FILE__) . '/wp-config-pantheon.php') && isset($_ENV['P
 } elseif (file_exists(dirname(__FILE__) . '/wp-config-local.php') && !isset($_ENV['PANTHEON_ENVIRONMENT'])){
 	# IMPORTANT: ensure your local config does not include wp-settings.php
 	require_once(dirname(__FILE__) . '/wp-config-local.php');
-
 /**
  * This block will be executed if you are NOT running on Pantheon and have NO
  * wp-config-local.php. Insert alternate config here if necessary.
@@ -47,10 +45,7 @@ if (file_exists(dirname(__FILE__) . '/wp-config-pantheon.php') && isset($_ENV['P
 	define('LOGGED_IN_SALT',   'put your unique phrase here');
 	define('NONCE_SALT',       'put your unique phrase here');
 }
-
-
 /** Standard wp-config.php stuff from here on down. **/
-
 /**
  * WordPress Database Table prefix.
  *
@@ -58,7 +53,6 @@ if (file_exists(dirname(__FILE__) . '/wp-config-pantheon.php') && isset($_ENV['P
  * prefix. Only numbers, letters, and underscores please!
  */
 $table_prefix = 'wp_';
-
 /**
  * For developers: WordPress debugging mode.
  *
@@ -72,9 +66,7 @@ $table_prefix = 'wp_';
 if ( ! defined( 'WP_DEBUG' ) ) {
 	define('WP_DEBUG', false);
 }
-
 /* That's all, stop editing! Happy Pressing. */
-
 /**** MULTISITE INFORMATION ****/
 define( 'WP_ALLOW_MULTISITE', true );
 define( 'MULTISITE', true );
@@ -88,7 +80,6 @@ define('COOKIE_DOMAIN', $_SERVER['HTTP_HOST']);
 define('ADMIN_COOKIE_PATH', '/');
 define('COOKIEPATH', '');
 define('SITECOOKIEPATH', ''); 
-
 /**
  * Define DOMAIN_CURRENT_SITE conditionally.
  */
@@ -113,17 +104,10 @@ if ( ! empty( $_ENV['PANTHEON_ENVIRONMENT'] ) ) {
       break;
     }
 }
-
-
 /** Absolute path to the WordPress directory. */
 if ( !defined('ABSPATH') )
 	define('ABSPATH', dirname(__FILE__) . '/');
-
 /** Sets up WordPress vars and included files. */
 require_once(ABSPATH . 'wp-settings.php');
-
-
 /* ALLOW ALL FILE TYPES; EXAMPLE: SVG's */
 define('ALLOW_UNFILTERED_UPLOADS', true);
-
-

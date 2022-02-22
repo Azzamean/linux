@@ -48,7 +48,8 @@
 }
 
 .basic-design .title a:after {
-	content: "\f35d";
+	/* content: "\f35d"; */
+	content: "\f08e";
 	font-family: 'FontAwesome';
 	margin-left: 5px;
 	font-size: .75rem;
@@ -100,6 +101,8 @@
 	text-align: center;
 	border-radius: 10px;
 	box-shadow: 0px 0px 15px rgb(0 0 0 / 15%);
+	margin-bottom: 2%;
+	min-height: 250px;
 }
 
 .grid-design .header {
@@ -134,7 +137,8 @@
 }
 
 .grid-design .read a:after {
-	content: "\f35d";
+	/* content: "\f35d"; */
+	content: "\f08e";
 	font-family: 'FontAwesome';
 	color: #ffffff;
 	margin-left: 10px;
