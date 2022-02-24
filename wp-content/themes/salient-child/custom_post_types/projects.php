@@ -29,11 +29,11 @@ function cptui_register_my_cpts_projects()
         "capability_type" => "post",
         "map_meta_cap" => true,
         "hierarchical" => false,
-        "rewrite" => ["slug" => "projects", "with_front" => true],
+        "rewrite" => ["slug" => "projects/project", "with_front" => true],
         "query_var" => true,
         "menu_icon" => "dashicons-admin-page",
-        "supports" => ["title"],
-        "taxonomies" => ["category"],
+        "supports" => ["title", "author"],
+        "taxonomies" => ["projects_category"],
         "show_in_graphql" => false,
     ];
 
@@ -42,30 +42,79 @@ function cptui_register_my_cpts_projects()
 
 add_action("init", "cptui_register_my_cpts_projects");
 
+function cptui_register_my_taxes_projects_category()
+{
+    /**
+     * Taxonomy: Projects Categories.
+     */
+
+    $labels = [
+        "name" => __("Projects Categories", "custom-post-type-ui"),
+        "singular_name" => __("Project Category", "custom-post-type-ui"),
+    ];
+
+    $args = [
+        "label" => __("Projects Categories", "custom-post-type-ui"),
+        "labels" => $labels,
+        "public" => true,
+        "publicly_queryable" => true,
+        "hierarchical" => true,
+        "show_ui" => true,
+        "show_in_menu" => true,
+        "show_in_nav_menus" => true,
+        "query_var" => true,
+        "rewrite" => ["slug" => "projects_category", "with_front" => true],
+        "show_admin_column" => true,
+        "show_in_rest" => true,
+        "show_tagcloud" => false,
+        "rest_base" => "projects_category",
+        "rest_controller_class" => "WP_REST_Terms_Controller",
+        "show_in_quick_edit" => false,
+        "show_in_graphql" => false,
+    ];
+    register_taxonomy("projects_category", ["projects"], $args);
+}
+add_action("init", "cptui_register_my_taxes_projects_category");
+
+function cptui_register_my_taxes_projects_stage()
+{
+    /**
+     * Taxonomy: Projects Stages.
+     */
+
+    $labels = [
+        "name" => __("Projects Stages", "custom-post-type-ui"),
+        "singular_name" => __("Project Stage", "custom-post-type-ui"),
+    ];
+
+    $args = [
+        "label" => __("Projects Stages", "custom-post-type-ui"),
+        "labels" => $labels,
+        "public" => true,
+        "publicly_queryable" => true,
+        "hierarchical" => true,
+        "show_ui" => true,
+        "show_in_menu" => true,
+        "show_in_nav_menus" => true,
+        "query_var" => true,
+        "rewrite" => ["slug" => "projects_stage", "with_front" => true],
+        "show_admin_column" => false,
+        "show_in_rest" => true,
+        "show_tagcloud" => false,
+        "rest_base" => "projects_stage",
+        "rest_controller_class" => "WP_REST_Terms_Controller",
+        "show_in_quick_edit" => false,
+        "show_in_graphql" => false,
+    ];
+    register_taxonomy("projects_stage", ["projects"], $args);
+}
+add_action("init", "cptui_register_my_taxes_projects_stage");
+
 if (function_exists("acf_add_local_field_group")):
     acf_add_local_field_group([
         "key" => "group_6209367a2d7be",
         "title" => "Projects",
         "fields" => [
-            [
-                "key" => "field_6209379e15211",
-                "label" => "Name",
-                "name" => "projects_name",
-                "type" => "text",
-                "instructions" => "Please enter the name of the project",
-                "required" => 1,
-                "conditional_logic" => 0,
-                "wrapper" => [
-                    "width" => "",
-                    "class" => "",
-                    "id" => "",
-                ],
-                "default_value" => "",
-                "placeholder" => "",
-                "prepend" => "",
-                "append" => "",
-                "maxlength" => "",
-            ],
             [
                 "key" => "field_620937b715212",
                 "label" => "Stage",
@@ -73,14 +122,14 @@ if (function_exists("acf_add_local_field_group")):
                 "type" => "taxonomy",
                 "instructions" =>
                     "Please enter or select the stage of the project",
-                "required" => 1,
+                "required" => 0,
                 "conditional_logic" => 0,
                 "wrapper" => [
                     "width" => "",
                     "class" => "",
                     "id" => "",
                 ],
-                "taxonomy" => "category",
+                "taxonomy" => "projects_stage",
                 "field_type" => "checkbox",
                 "add_term" => 1,
                 "save_terms" => 0,
@@ -95,7 +144,7 @@ if (function_exists("acf_add_local_field_group")):
                 "name" => "projects_excerpt",
                 "type" => "textarea",
                 "instructions" => "Please enter the excerpt of the project",
-                "required" => 1,
+                "required" => 0,
                 "conditional_logic" => 0,
                 "wrapper" => [
                     "width" => "",
@@ -163,7 +212,7 @@ if (function_exists("acf_add_local_field_group")):
                 "name" => "projects_primary_description",
                 "type" => "wysiwyg",
                 "instructions" => "Please enter the description of the project",
-                "required" => 1,
+                "required" => 0,
                 "conditional_logic" => 0,
                 "wrapper" => [
                     "width" => "",
