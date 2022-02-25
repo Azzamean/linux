@@ -32,7 +32,7 @@ function cptui_register_my_cpts_projects()
         "rewrite" => ["slug" => "projects/project", "with_front" => true],
         "query_var" => true,
         "menu_icon" => "dashicons-admin-page",
-        "supports" => ["title", "author"],
+        "supports" => ["title", "editor", "author"],
         "taxonomies" => ["projects_category"],
         "show_in_graphql" => false,
     ];

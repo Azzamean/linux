@@ -152,13 +152,13 @@ function projects_grid($atts, $content)
             $projects_query->the_post();
             if ($count == 0)
             {
-                $output .= '<div class="grid-design-outer">';
+                $output .= '<div class="grid-design outer">';
             }
-            $output .= '<div class="' . $column_class . ' grid-design-projects">';
+            $output .= '<div class="' . $column_class . ' grid-design projects">';
             $output .= '<img src="' . get_field("projects_full_color_image") . '"/>';
             $output .= "<h3>" . get_field("projects_name") . "</h3>";
             $output .= "<p>" . wp_trim_words(get_field("projects_excerpt") , 50) . "</p>";
-            $output .= '<a class="grid-design-projects-btn" href="' . get_permalink() . '" target="_blank"">Learn More</a>';
+            $output .= '<a class="grid-design projects-btn" href="' . get_permalink() . '" target="_blank"">Learn More</a>';
             $output .= "</div>";
             $count++;
             if ($count == $columns || $projects_query->current_post + 1 == $projects_query->post_count)
