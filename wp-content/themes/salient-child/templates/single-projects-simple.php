@@ -1,7 +1,8 @@
 <?php
 
 /**
- *
+ * Template Name: Projects Template - Simple Style
+ * Template Post Type: projects
  * The template for displaying single projects custom post types.
  *
  * @package Salient WordPress Theme
