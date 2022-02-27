@@ -77,3 +77,62 @@ function cc_mime_types($mimes)
 }
 add_filter("upload_mimes", "cc_mime_types");
 
+// REMOVE COMMENTS FUNCTION; CAN BE PLACED IN A MU PLUGIN IF WANTED
+add_action('admin_init', function ()
+{
+    // REDIRECT USERS TRYING TO ACCESS COMMENTS PAGE
+    global $pagenow;
+
+    if ($pagenow === 'edit-comments.php' || $pagenow === 'options-discussion.php')
+    {
+        wp_redirect(admin_url());
+        exit;
+    }
+
+    // REMOVE COMMENTS METABOX FROM DASHBOARD
+    remove_meta_box('dashboard_recent_comments', 'dashboard', 'normal');
+
+    // DISABLE SUPPORT FOR COMMENTS AND TRACKBACKS IN POST TYPES
+    foreach (get_post_types() as $post_type)
+    {
+        if (post_type_supports($post_type, 'comments'))
+        {
+            remove_post_type_support($post_type, 'comments');
+            remove_post_type_support($post_type, 'trackbacks');
+        }
+    }
+});
+
+// CLOSE COMMENTS ON THE FRONT-END
+add_filter('comments_open', '__return_false', 20, 2);
+add_filter('pings_open', '__return_false', 20, 2);
+
+// HIDE EXISTING COMMENTS
+add_filter('comments_array', '__return_empty_array', 10, 2);
+
+// REMOVE COMMENTS PAGE AND OPTION PAGE IN MENU
+add_action('admin_menu', function ()
+{
+    remove_menu_page('edit-comments.php');
+    remove_submenu_page('options-general.php', 'options-discussion.php');
+});
+
+// REMOVE COMMENTS LINK FROM ADMIN BAR
+add_action('add_admin_bar_menus', function ()
+{
+    remove_action('admin_bar_menu', 'wp_admin_bar_comments_menu', 60);
+});
+
+// REMOVE COMMENTS FROM ADMIN BAR ON MULTISITE
+add_action('admin_bar_menu', 'remove_toolbar_items', PHP_INT_MAX - 1);
+function remove_toolbar_items($bar)
+{
+    // global $wp_admin_bar;
+    // $wp_admin_bar->remove_node( 'blog-1-c' );
+    $sites = get_blogs_of_user(get_current_user_id());
+    foreach ($sites as $site)
+    {
+        $bar->remove_node("blog-{$site->userblog_id}-c");
+    }
+}
+
