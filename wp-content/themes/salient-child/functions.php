@@ -35,10 +35,10 @@ function custom_post_types_templates($template)
         $template = "/code/wp-content/themes/salient-child/templates/single-projects.php";
     }
 
-    if (is_singular($post_types) && !file_exists(get_stylesheet_directory() . "/single-projects-info.php") && get_page_template_slug(get_queried_object_id()) != null)
-    {
-        $template = "/code/wp-content/themes/salient-child/" . get_page_template_slug(get_queried_object_id());
-    }
+    //if (is_singular($post_types) && !file_exists(get_stylesheet_directory() . "/single-projects-info.php") && get_page_template_slug(get_queried_object_id()) != null)
+    //{
+    //    $template = "/code/wp-content/themes/salient-child/" . get_page_template_slug(get_queried_object_id());
+    //}
 
     return $template;
 }

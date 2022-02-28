@@ -1,5 +1,4 @@
 <?php
-
 /**
  *
  * The template for displaying single projects custom post types.
@@ -7,17 +6,16 @@
  * @package Salient WordPress Theme
  * @version 13.1
  *
- **/
+ *
+ */
 
 // Exit if accessed directly
-if (!defined("ABSPATH")) {
+if (!defined("ABSPATH"))
+{
     exit();
 }
 
 $templateFile = get_page_template_slug(get_queried_object_id());
+if ($templateFile == null){echo "This is the default template";}else{echo "This is the template file: " . $templateFile;}
 
-if ($templateFile == null) {
-    echo "This is the default template";
-} else {
-    echo "This is the template file: " . $templateFile;
-}
+echo (get_stylesheet_directory() . "/single-projects.php");
