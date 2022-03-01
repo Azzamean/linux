@@ -17,7 +17,14 @@ if (!defined("ABSPATH"))
 }
 
 $templateFile = get_page_template_slug(get_queried_object_id());
-if ($templateFile == null){echo "This is the default template";}else{echo "This is the template file: " . $templateFile;}
+if ($templateFile == null)
+{
+    echo "This is the default template";
+}
+else
+{
+    echo "This is the template file: " . $templateFile;
+}
 get_header();
 
 ?>

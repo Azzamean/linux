@@ -155,8 +155,8 @@ function projects_grid($atts, $content)
                 $output .= '<div class="grid-design outer">';
             }
             $output .= '<div class="' . $column_class . ' grid-design projects">';
-            $output .= '<img src="' . get_field("projects_full_color_image") . '"/>';
-            $output .= "<h3>" . get_field("projects_name") . "</h3>";
+            $output .= '<img src="' . get_field("projects_logo") . '"/>';
+            $output .= "<h3>" . get_the_title() . "</h3>";
             $output .= "<p>" . wp_trim_words(get_field("projects_excerpt") , 50) . "</p>";
             $output .= '<a class="grid-design projects-btn" href="' . get_permalink() . '" target="_blank"">Learn More</a>';
             $output .= "</div>";

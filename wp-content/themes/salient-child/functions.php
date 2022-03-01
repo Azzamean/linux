@@ -24,21 +24,17 @@ add_action("wp_enqueue_scripts", "salient_child_enqueue_styles", 100);
 function custom_post_types_templates($template)
 {
     $post_types = ["projects"];
-
-    if (is_post_type_archive($post_types) && !file_exists(get_stylesheet_directory() . "/archive-projects.php"))
+    $defaultTemplate = locate_template('templates/single-projects.php');
+    $templateSlug = get_page_template_slug(get_queried_object_id()); // this is null if no template name is given; hence default
+    if (is_singular($post_types) && $defaultTemplate != '' && $templateSlug == null)
+    //if (is_singular($post_types) && !file_exists(get_stylesheet_directory() . "/single-projects.php") && get_page_template_slug(get_queried_object_id()) == null)
+    
     {
-        $template = "/code/wp-content/themes/salient-child/templates/archive-projects.php";
+        $template = $defaultTemplate;
     }
 
-    if (is_singular($post_types) && !file_exists(get_stylesheet_directory() . "/single-projects.php") && get_page_template_slug(get_queried_object_id()) == null)
-    {
-        $template = "/code/wp-content/themes/salient-child/templates/single-projects.php";
-    }
-
-    //if (is_singular($post_types) && !file_exists(get_stylesheet_directory() . "/single-projects-info.php") && get_page_template_slug(get_queried_object_id()) != null)
-    //{
-    //    $template = "/code/wp-content/themes/salient-child/" . get_page_template_slug(get_queried_object_id());
-    //}
+    //if (is_post_type_archive($post_types) && !file_exists(get_stylesheet_directory() . "/archive-projects.php")){}
+    
 
     return $template;
 }
