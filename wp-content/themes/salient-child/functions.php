@@ -1,4 +1,5 @@
 <?php
+
 // GET WP BAKERY CUSTOM MODULES
 require_once "vc-addons/recent-posts-linux.php";
 require_once "vc-addons/projects-linux.php";
@@ -12,7 +13,7 @@ function salient_child_enqueue_styles()
     $nectar_theme_version = nectar_get_theme_version();
     wp_enqueue_style("salient-child-style", get_stylesheet_directory_uri() . "/style.css", "", $nectar_theme_version);
     wp_enqueue_style("vc-addons-style", get_stylesheet_directory_uri() . "/vc-addons/vc-addons.css", "", $nectar_theme_version);
-    wp_enqueue_style("templates-style", get_stylesheet_directory_uri() . "/templates/templates.css", "", $nectar_theme_version);
+    wp_enqueue_style("templates-style", get_stylesheet_directory_uri() . "/templates/css/templates.css", "", $nectar_theme_version);
     //wp_enqueue_script('bringaze-font-awesome', 'https://kit.fontawesome.com/8511f9d0cf.js', false);
     if (is_rtl())
     {
