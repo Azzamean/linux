@@ -1,5 +1,4 @@
 <?php
-
 class Projects
 {
     function __construct()
@@ -9,89 +8,16 @@ class Projects
 
     function projects_grid_vc()
     {
-        $types = get_terms([
-            "taxonomy" => "projects_category",
-            "hide_empty" => false,
-            "orderby" => "name",
-        ]);
+        $types = get_terms(["taxonomy" => "projects_category", "hide_empty" => false, "orderby" => "name", ]);
 
         $all_projects_category = ["All Projects Categories" => ""];
-        foreach ($types as $type) {
-            $all_projects_category[$type->name] = $type->term_id;
+        foreach ($types as $type)
+        {
+            $all_projects_category[$type
+                ->name] = $type->term_id;
         }
 
-        vc_map([
-            "name" => __("Projects", "projects"),
-            "base" => "projects",
-            "icon" => "vc_element-icon icon-wpb-portfolio",
-            "class" => "",
-            "category" => __("Linux Foundation", "projects"),
-            "description" => __(
-                "Display list of Projects custom post type",
-                "projects"
-            ),
-            "params" => [
-                [
-                    "type" => "textfield",
-                    "class" => "",
-                    "heading" => __("Limit", "projects"),
-                    "param_name" => "limit",
-                    "value" => "-1",
-                    "description" => __(
-                        "Enter number of people to be displayed. Enter -1 to display all.",
-                        "projects"
-                    ),
-                ],
-                [
-                    "type" => "dropdown",
-                    "class" => "",
-                    "heading" => __("Order By", "projects"),
-                    "param_name" => "orderby",
-                    "value" => [
-                        __("Name", "projects") => "title",
-                        __("Date", "projects") => "date",
-                        __("ID", "projects") => "ID",
-                        __("Random", "projects") => "rand",
-                    ],
-                    "description" => __("Select order type.", "projects"),
-                ],
-                [
-                    "type" => "dropdown",
-                    "class" => "",
-                    "heading" => __("Sort order", "projects"),
-                    "param_name" => "order",
-                    "value" => [
-                        __("Descending", "projects") => "DESC",
-                        __("Ascending", "projects") => "ASC",
-                    ],
-                    "description" => __("Select sorting order.", "projects"),
-                ],
-                [
-                    "type" => "dropdown",
-                    "class" => "",
-                    "heading" => esc_html__("columns", "projects"),
-                    "param_name" => "columns",
-                    "value" => [
-                        esc_html__("2 columns", "projects") => "2",
-                        esc_html__("3 columns", "projects") => "3",
-                        esc_html__("4 columns", "projects") => "4",
-                    ],
-                    "description" => esc_html__(
-                        "Please select the number of columns you want displayed",
-                        "projects"
-                    ),
-                    "save_always" => true,
-                ],
-                [
-                    "type" => "dropdown",
-                    "class" => "",
-                    "heading" => __("Category", "projects"),
-                    "param_name" => "projects_category_id",
-                    "value" => $all_projects_category,
-                    "description" => __("", "projects"),
-                ],
-            ],
-        ]);
+        vc_map(["name" => __("Projects", "projects") , "base" => "projects", "icon" => "vc_element-icon icon-wpb-portfolio", "class" => "", "category" => __("Linux Foundation", "projects") , "description" => __("Display list of Projects custom post type", "projects") , "params" => [["type" => "textfield", "class" => "", "heading" => __("Limit", "projects") , "param_name" => "limit", "value" => "-1", "description" => __("Enter number of people to be displayed. Enter -1 to display all.", "projects") , ], ["type" => "dropdown", "class" => "", "heading" => __("Order By", "projects") , "param_name" => "orderby", "value" => [__("Name", "projects") => "title", __("Date", "projects") => "date", __("ID", "projects") => "ID", __("Random", "projects") => "rand", ], "description" => __("Select order type.", "projects") , ], ["type" => "dropdown", "class" => "", "heading" => __("Sort order", "projects") , "param_name" => "order", "value" => [__("Descending", "projects") => "DESC", __("Ascending", "projects") => "ASC", ], "description" => __("Select sorting order.", "projects") , ], ["type" => "dropdown", "class" => "", "heading" => esc_html__("columns", "projects") , "param_name" => "columns", "value" => [esc_html__("2 columns", "projects") => "2", esc_html__("3 columns", "projects") => "3", esc_html__("4 columns", "projects") => "4", ], "description" => esc_html__("Please select the number of columns you want displayed", "projects") , "save_always" => true, ], ["type" => "dropdown", "class" => "", "heading" => __("Category", "projects") , "param_name" => "projects_category_id", "value" => $all_projects_category, "description" => __("", "projects") , ], ], ]);
     }
 }
 

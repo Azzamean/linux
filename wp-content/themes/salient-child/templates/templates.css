@@ -1,0 +1,40 @@
+/* PROJECTS TEMPLATE */
+
+.projects-wrap {
+	padding: 0;
+}
+
+.projects-background {
+	background-position: center center;
+	background-repeat: no-repeat;
+}
+
+.projects-heading {
+	padding: 75px 0;
+}
+
+.projects-title {
+	text-align: center;
+	margin: 0;
+	float: none;
+}
+
+.projects-post-area {
+	margin: 30px 0;
+}
+
+.projects-post-area section {
+	margin-bottom: 35px;
+}
+
+section.projects-links a {
+	margin: 0 20px;
+}
+
+section.projects-links {
+	text-align: center;
+}
+
+section.projects-links a i {
+	font-size: 75px !important;
+}
