@@ -1,0 +1,91 @@
+@font-face {
+  font-family: "BwModelica-Bold";
+  src: url("bwmodelica/BwModelica-Bold.otf") format("opentype"),
+    url("bwmodelica/BwModelica-Bold.woff") format("woff"),
+    url("bwmodelica/BwModelica-Bold.woff2") format("woff2");
+  font-weight: 600;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "BwModelica-BoldItalic";
+  src: url("bwmodelica/BwModelica-BoldItalic.otf") format("opentype"),
+    url("bwmodelica/BwModelica-BoldItalic.woff") format("woff"),
+    url("bwmodelica/BwModelica-BoldItalic.woff2") format("woff2");
+  font-weight: 600;
+  font-style: italic;
+}
+@font-face {
+  font-family: "BwModelica-ExtraBold";
+  src: url("bwmodelica/BwModelica-ExtraBold.otf") format("opentype"),
+    url("bwmodelica/BwModelica-ExtraBold.woff") format("woff"),
+    url("bwmodelica/BwModelica-ExtraBold.woff2") format("woff2");
+  font-weight: 900;
+  font-style: normal;
+}
+@font-face {
+  font-family: "BwModelica-ExtraBoldItalic";
+  src: url("bwmodelica/BwModelica-ExtraBoldItalic.otf") format("opentype"),
+    url("bwmodelica/BwModelica-ExtraBoldItalic.woff") format("woff"),
+    url("bwmodelica/BwModelica-ExtraBoldItalic.woff2") format("woff2");
+  font-weight: 900;
+  font-style: italic;
+}
+@font-face {
+  font-family: "BwModelica-Light";
+  src: url("bwmodelica/BwModelica-Light.otf") format("opentype"),
+    url("bwmodelica/BwModelica-Light.woff") format("woff"),
+    url("bwmodelica/BwModelica-Light.woff2") format("woff2");
+  font-weight: 300;
+  font-style: normal;
+}
+@font-face {
+  font-family: "BwModelica-LightItalic";
+  src: url("bwmodelica/BwModelica-LightItalic.otf") format("opentype"),
+    url("bwmodelica/BwModelica-LightItalic.woff") format("woff"),
+    url("bwmodelica/BwModelica-LightItalic.woff2") format("woff2");
+  font-weight: 300;
+  font-style: italic;
+}
+@font-face {
+  font-family: "BwModelica-Medium";
+  src: url("bwmodelica/BwModelica-Medium.otf") format("opentype"),
+    url("bwmodelica/BwModelica-Medium.woff") format("woff"),
+    url("bwmodelica/BwModelica-Medium.woff2") format("woff2");
+  font-weight: 500;
+  font-style: normal;
+}
+@font-face {
+  font-family: "BwModelica-MediumItalic";
+  src: url("bwmodelica/BwModelica-MediumItalic.otf") format("opentype"),
+    url("bwmodelica/BwModelica-MediumItalic.woff") format("woff"),
+    url("bwmodelica/BwModelica-MediumItalic.woff2") format("woff2");
+  font-weight: 500;
+  font-style: italic;
+}
+@font-face {
+  font-family: "BwModelica-Regular";
+  src: url("bwmodelica/BwModelica-Regular.otf") format("opentype"),
+    url("bwmodelica/BwModelica-Regular.woff") format("woff");
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: "BwModelica-RegularItalic";
+  src: url("bwmodelica/BwModelica-RegularItalic.otf") format("opentype"),
+    url("bwmodelica/BwModelica-RegularItalic.woff") format("woff");
+  font-weight: normal;
+  font-style: italic;
+}
+@font-face {
+  font-family: "BwModelicaSS02-Regular";
+  src: url("bwmodelica/BwModelicaSS02-Regular.woff2") format("woff2");
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: "BwModelicaSS02-RegularItalic";
+  src: url("bwmodelica/BwModelicaSS02-RegularItalic.woff2") format("woff2");
+  font-weight: normal;
+  font-style: italic;
+}
