@@ -29,5 +29,5 @@ $projects_links = [
   'road_map_icon' => ['url' => $roadmap, 'name' => 'Roadmap', 'icon' => 'fa fa-map-o'],
   'contributions_icon' => ['url' => $contributions, 'name' => 'Contributions', 'icon' => 'fa fa-handshake-o'],
   'calendar_icon' => ['url' => $calendar, 'name' => 'Calendar', 'icon' => 'fa fa-calendar'],
-  'documentation_icon' => ['url' => $documentation, 'name' => 'Documentation', 'icon' => 'fa fa-text-o'],
+  'documentation_icon' => ['url' => $documentation, 'name' => 'Documentation', 'icon' => 'fa fa-file-text-o'],
 ];
