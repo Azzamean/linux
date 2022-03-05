@@ -131,8 +131,16 @@ function recent_posts_linux($atts, $content)
                 }
                 // Right Side
                 $output .= '<div class="basic-design right">';
-
-                $output .= '<h3 class="basic-design title"><a href="' . get_permalink() . '" style="color:' . $accent_color . '">' . get_the_title() . "</a></h3>";
+				if ( has_post_format('link') ) {
+					
+					global $post;
+					global $nectar_options;
+					$link = get_post_meta( $post->ID, '_nectar_link', true );
+					$output .= '<h3 class="basic-design title"><a class="external-site" href="' . $link. '" style="color:' . $accent_color . '">' . get_the_title() . "</a></h3>";
+				}
+				else {
+					$output .= '<h3 class="basic-design title"><a href="' . get_permalink() . '" style="color:' . $accent_color . '">' . get_the_title() . "</a></h3>";
+				}						
                 $output .= '<p class="basic-design date">' . get_the_date("M j, Y") . "</p>";
                 $excerpt_length = !empty($nectar_options[""]) ? intval($nectar_options[""]) : 50;
                 $excerpt_markup = '<p class="basic-design excerpt">' . nectar_excerpt($excerpt_length) . "</p>";

@@ -47,7 +47,7 @@
 	font-weight: 700;
 }
 
-.basic-design.title a:after {
+.basic-design.title .external-site:after {
 	/* content: "\f35d"; */
 	content: "\f08e";
 	font-family: 'FontAwesome';
