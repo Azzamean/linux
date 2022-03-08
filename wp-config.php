@@ -87,7 +87,7 @@ if ( ! empty( $_ENV['PANTHEON_ENVIRONMENT'] ) ) {
   switch( $_ENV['PANTHEON_ENVIRONMENT'] ) {
     case 'live':
       // Value should be the primary domain for the Site Network.
-      define( 'DOMAIN_CURRENT_SITE', 'live-lfprojects3.pantheonsite.io' );
+      define( 'DOMAIN_CURRENT_SITE', 'live-lfprojects3.linuxfoundation.org' );
       // Once you map a domain to Live, you can change DOMAIN_CURRENT_SITE
       // define( 'DOMAIN_CURRENT_SITE', 'example-network.com' );
       break;
