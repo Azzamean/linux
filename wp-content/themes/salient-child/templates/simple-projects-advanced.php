@@ -11,22 +11,18 @@
  */
 
 // Exit if accessed directly
-if (!defined("ABSPATH"))
-{
+if (!defined("ABSPATH")) {
     exit();
 }
 
-$templateFile = get_page_template_slug(get_queried_object_id());
-if ($templateFile == null)
-{
-    echo "This is the default template";
+$templateSlug = get_page_template_slug(get_queried_object_id());
+$templateID = get_queried_object_id();
+if ($templateSlug == null) {
+    echo "This is the advanced style template";
+    echo "<br>";
+    echo $templateID;
+} else {
+    echo "This is the template file: " . $templateSlug;
+    echo "<br>";
+    echo $templateID;
 }
-else
-{
-    echo "This is the template file: " . $templateFile;
-}
-get_header();
-
-?>
-
-<?php get_footer(); ?>
