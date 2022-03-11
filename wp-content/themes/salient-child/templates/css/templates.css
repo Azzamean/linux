@@ -66,9 +66,9 @@
 }
 
 .projects-link-wrap p {
-    color: #fff;
+    color: #ffffff;
     position: relative;
     font-size: 1rem;
-    line-height: 1.25rem;
-    margin-top: 20px;
+    line-height: 0;
+    margin-top: 0;
 }
