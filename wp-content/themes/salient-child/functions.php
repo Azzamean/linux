@@ -86,7 +86,7 @@ function lf_meta_header()
     echo '
   	<div class="lfprojects">
 		<div class="container">
-			<a href="https://www.linuxfoundation.org/projects" target="_blank" rel="noopener noreferrer"><img src="http://dev-lfprojects3.pantheonsite.io/wp-content/uploads/2022/01/lfprojects_banner.png"></a>
+			<a href="https://www.linuxfoundation.org/projects" target="_blank" rel="noopener noreferrer"><img src="https://live-lfprojects3.linuxfoundation.org/wp-content/uploads/2022/01/lfprojects_banner.png"></a>
 		</div>
 	</div>
 ';
