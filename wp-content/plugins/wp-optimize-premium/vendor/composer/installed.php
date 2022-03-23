@@ -5,7 +5,7 @@
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
-        'reference' => '6252cb3a2c44ae4dc2e1015171992b9bcb165855',
+        'reference' => '557f38d8f383d158ab5b9e4a1b170c46768cecb4',
         'name' => 'updraftplus/wp-optimize',
         'dev' => false,
     ),
@@ -29,12 +29,12 @@
             'dev_requirement' => false,
         ),
         'davidanderson684/simba-plugin-manager-updater' => array(
-            'pretty_version' => 'v1.8.12',
-            'version' => '1.8.12.0',
+            'pretty_version' => 'v1.8.13',
+            'version' => '1.8.13.0',
             'type' => 'library',
             'install_path' => __DIR__ . '/../davidanderson684/simba-plugin-manager-updater',
             'aliases' => array(),
-            'reference' => '64b882b6dfd4df297178ac843d1776023379aef9',
+            'reference' => '6a61a2e27e91029077a964ebd6fafe4c1ebbde2f',
             'dev_requirement' => false,
         ),
         'intervention/httpauth' => array(
@@ -240,7 +240,7 @@
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
-            'reference' => '6252cb3a2c44ae4dc2e1015171992b9bcb165855',
+            'reference' => '557f38d8f383d158ab5b9e4a1b170c46768cecb4',
             'dev_requirement' => false,
         ),
         'yahnis-elsts/plugin-update-checker' => array(
