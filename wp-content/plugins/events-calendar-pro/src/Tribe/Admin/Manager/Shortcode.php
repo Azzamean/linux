@@ -228,7 +228,7 @@ class Shortcode {
 	 * Modify the event object to change the permalinks.
 	 *
 	 * @since 5.9.0
-	 * @since 5.12.1 TEmporarily remove this from the 'tribe_get_event' filter to prevent infinite loops.
+	 * @since 5.12.1 Temporarily remove this from the 'tribe_get_event' filter to prevent infinite loops.
 	 *
 	 * @param \WP_Post $event Current event being filtered.
 	 *

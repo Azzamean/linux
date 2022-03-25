@@ -4,8 +4,8 @@ Contributors: theeventscalendar, borkweb, bordoni, brianjessee, aguseo, camwynsp
 Tags: events, calendar, event, venue, organizer, dates, date, google maps, conference, workshop, concert, meeting, seminar, summit, class, the events calendar, widget, pro
 Donate link: https://evnt.is/29
 Requires at least: 5.6
-Stable tag: 5.12.1
-Tested up to: 5.9.0
+Stable tag: 5.12.2
+Tested up to: 5.9.2
 Requires PHP: 7.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -207,6 +207,11 @@ Our Premium Plugins:
 * <a href="https://evnt.is/fa" target="_blank">The Events Calendar: Filter Bar</a>
 
 == Changelog ==
+
+= [5.12.2] 2022-03-17 =
+
+* Fix - Ensure the `Week View` is displayed correctly on Astra theme.  [ECP-1073]
+* Language - 0 new strings added, 1 updated, 0 fuzzied, and 0 obsoleted
 
 = [5.12.1] 2022-02-15 =
 
