@@ -25,12 +25,13 @@ extract(shortcode_atts(array(
 	'parent_hover_relationship' => '',
 	'mouse_indicator_style' => 'default',
 	'mouse_indicator_color' => '',
+  'nofollow_link' => '',
 	'box_shadow' => ''), $atts));
 
-$wp_image_size = ( !empty($image_size) ) ? $image_size : 'full';
-	
+$wp_image_size  = ( !empty($image_size) ) ? $image_size : 'full';
+$no_follow_attr = ( 'true' === $nofollow_link ) ? ' rel="nofollow" ': '';
+$extra_attrs    = ($link_style === 'nectar-button') ? 'data-color-override="false"': '';
 
-$extra_attrs = ($link_style === 'nectar-button') ? 'data-color-override="false"': null;
 
 $the_link_text_escaped = ($link_style === 'nectar-button') ? wp_kses_post($link_text) : '<span class="screen-reader-text">'.esc_html__('Play Video','salient-core').'</span><span class="play"><span class="inner-wrap inner"><svg version="1.1"
 	 xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="600px" height="800px" x="0px" y="0px" viewBox="0 0 600 800" enable-background="new 0 0 600 800" xml:space="preserve"><path fill="none" d="M0-1.79v800L600,395L0-1.79z"></path> </svg></span></span>';
@@ -81,7 +82,7 @@ if( $link_style === 'play_button_2' || $link_style === 'play_button_mouse_follow
 		}
 		
 	$mouse_markup = ( $link_style === 'play_button_mouse_follow' ) ? 'data-mouse-style="'.esc_attr($mouse_indicator_style).'" data-mouse-icon-color="'.esc_attr($mouse_indicator_color).'"': '';	
-	echo '<div class="nectar-video-box" data-color="'.esc_attr(strtolower($nectar_play_button_color)).'" '.$mouse_markup.' data-play-button-size="'.esc_attr($play_button_size).'" data-border-radius="'.esc_attr($border_radius).'" data-hover="'.esc_attr($hover_effect).'" data-shadow="'.esc_attr($box_shadow).'"><div class="inner-wrap"><a href="'.esc_url($video_url).'" class="full-link pp"></a>'. $image;
+	echo '<div class="nectar-video-box" data-color="'.esc_attr(strtolower($nectar_play_button_color)).'" '.$mouse_markup.' data-play-button-size="'.esc_attr($play_button_size).'" data-border-radius="'.esc_attr($border_radius).'" data-hover="'.esc_attr($hover_effect).'" data-shadow="'.esc_attr($box_shadow).'"><div class="inner-wrap"><a href="'.esc_url($video_url).'" '.$no_follow_attr.'class="full-link pp"></a>'. $image;
 }
 
 $pbwt_escaped = ($link_style === 'play_button_with_text') ? '<span class="link-text"><'.esc_html($font_style).'>'.wp_kses_post($link_text).'</'.esc_html($font_style).'></span>' : null;
@@ -89,7 +90,7 @@ if( $font_style === 'nectar-btn-medium' || $font_style === 'nectar-btn-large' ||
 	$pbwt_escaped = '<span class="link-text" data-font="'.esc_attr($font_style).'">'.wp_kses_post($link_text).'</span>';
 }
 
-echo '<a href="'.esc_url($video_url).'" '.$extra_attrs.' data-style="'. esc_attr($nectar_play_button_style) .'" data-parent-hover="'.esc_attr($parent_hover_relationship).'" data-font-style="'.esc_html($font_style).'" data-color="'.esc_attr(strtolower($the_color)).'" class="'.esc_attr($link_style).esc_attr($text_color_class).' large nectar_video_lightbox pp"><span>'.$the_link_text_escaped .$pbwt_escaped.'</span></a>';
+echo '<a href="'.esc_url($video_url).'" '.$extra_attrs.$no_follow_attr.' data-style="'. esc_attr($nectar_play_button_style) .'" data-parent-hover="'.esc_attr($parent_hover_relationship).'" data-font-style="'.esc_html($font_style).'" data-color="'.esc_attr(strtolower($the_color)).'" class="'.esc_attr($link_style).esc_attr($text_color_class).' large nectar_video_lightbox pp"><span>'.$the_link_text_escaped .$pbwt_escaped.'</span></a>';
 
 if( $link_style === 'play_button_2' || $link_style === 'play_button_mouse_follow' ) {
 	echo '</div></div>';

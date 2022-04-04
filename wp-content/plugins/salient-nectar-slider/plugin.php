@@ -5,7 +5,7 @@
  * Description: A stylish & simple slider to feature content.
  * Author: ThemeNectar
  * Author URI: https://themenectar.com
- * Version: 1.7.1
+ * Version: 1.7.2
  * Text Domain: salient-nectar-slider
  */
 
@@ -28,7 +28,7 @@ class Salient_Nectar_Slider {
 	
 	static $instance = false;
 	
-	public $plugin_version = '1.7.1';
+	public $plugin_version = '1.7.2';
 		
 	private function __construct() {
 		

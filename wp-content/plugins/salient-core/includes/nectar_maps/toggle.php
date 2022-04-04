@@ -32,7 +32,21 @@ return array(
 			),
 			'save_always' => true,
 			'description' => esc_html__( 'Choose a color from your','salient-core') . ' <a target="_blank" href="'. esc_url(NectarThemeInfo::global_colors_tab_url()) .'"> ' . esc_html__('globally defined color scheme','salient-core') . '</a>',
-		)
+		),
+		array(
+			"type" => "dropdown",
+			"class" => "",
+			'save_always' => true,
+			"heading" => "Typography",
+			"param_name" => "heading_tag",
+			"value" => array(
+				"Default" => "default",
+				"H6" => "h6",
+				"H5" => "h5",
+				"H4" => "h4",
+				"H3" => "h3",
+				"H2" => "h2"
+			)),
 	),
 	'js_view' => 'VcAccordionTabView'
 );

@@ -7,7 +7,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 
 return array(
-	"name" => esc_html__("Text With Inline Images", "salient-core"),
+	"name" => esc_html__("Text With Inline Media", "salient-core"),
 	"base" => "nectar_text_inline_images",
 	"icon" => "icon-wpb-split-line-heading",
 	"allowed_container_element" => 'vc_row',
@@ -16,11 +16,76 @@ return array(
 	"description" => esc_html__('Animated multi line heading', 'salient-core'),
 	"params" => array(
       array(
+        "type" => "dropdown",
+        "class" => "",
+        'save_always' => true,
+        "heading" => esc_html__("Media Type", "salient-core"),
+        "param_name" => "media_type",
+        "value" => array(
+          esc_html__("Images",'salient-core') => "images",
+          esc_html__("Videos",'salient-core') => "videos",
+        ),
+        "description" => '',
+        'std' => 'images',
+      ),
+      array(
         'type' => 'attach_images',
         'heading' => esc_html__( 'Images', 'js_composer' ),
         'param_name' => 'images',
         'value' => '',
+        'dependency' => array(
+          'element' => 'media_type',
+          'value' => array('images'),
+        ),
         'description' => esc_html__( 'Select images from media library. You can then use asterisks below in your text to mark where each image will display e.g. Lorem ipsum * dolor sit amet consectetur * adipiscing elit.', 'js_composer' )
+      ),
+      array(
+        "type" => "nectar_attach_video",
+        "class" => "",
+        "heading" => esc_html__("Video #1 MP4 File URL", "salient-core"),
+        "value" => "",
+        "param_name" => "video_1_mp4",
+        'dependency' => array(
+          'element' => 'media_type',
+          'value' => array('videos'),
+        ),
+        "description" => esc_html__("Enter the URL for your first video file here. You can then use asterisks below in your text to mark where each image will display e.g. Lorem ipsum * dolor sit amet consectetur * adipiscing elit.", "salient-core")
+      ),
+      array(
+        "type" => "nectar_attach_video",
+        "class" => "",
+        "heading" => esc_html__("Video #2 MP4 File URL", "salient-core"),
+        "value" => "",
+        "param_name" => "video_2_mp4",
+        'dependency' => array(
+          'element' => 'video_1_mp4',
+          'not_empty' => true,
+        ),
+        "description" => esc_html__("Enter the URL for your second mp4 video file here.", "salient-core")
+      ),
+      array(
+        "type" => "nectar_attach_video",
+        "class" => "",
+        "heading" => esc_html__("Video #3 MP4 File URL", "salient-core"),
+        "value" => "",
+        "param_name" => "video_3_mp4",
+        'dependency' => array(
+          'element' => 'video_2_mp4',
+          'not_empty' => true,
+        ),
+        "description" => esc_html__("Enter the URL for your third mp4 video file here.", "salient-core")
+      ),
+      array(
+        "type" => "nectar_attach_video",
+        "class" => "",
+        "heading" => esc_html__("Video #4 MP4 File URL", "salient-core"),
+        "value" => "",
+        "param_name" => "video_4_mp4",
+        'dependency' => array(
+          'element' => 'video_3_mp4',
+          'not_empty' => true,
+        ),
+        "description" => esc_html__("Enter the URL for your fourth mp4 video file here.", "salient-core")
       ),
 		array(
 			"type" => "textarea_html",
@@ -47,6 +112,10 @@ return array(
         esc_html__("Small Square",'salient-core') => 'nectar_small_square',
         esc_html__("Big Square",'salient-core') => 'medium_featured',
       ),
+      'dependency' => array(
+        'element' => 'media_type',
+        'value' => array('images'),
+      ),
 			"description" => esc_html__('Square sizing is recommended for the "Circle Crop" Image effect','salient-core'),
       'std' => 'medium',
     ),
@@ -57,6 +126,10 @@ return array(
 			"heading" => "Image Effect",
 			"description" => '',
 			"param_name" => "image_effect",
+      'dependency' => array(
+        'element' => 'media_type',
+        'value' => array('images'),
+      ),
 			"value" => array(
 				esc_html__("None",'salient-core') => "none",
 				esc_html__("Circle Mask Reveal",'salient-core') => "circle_reveal",
@@ -109,14 +182,14 @@ return array(
       "type" => "dropdown",
       "class" => "",
       'save_always' => true,
-      "heading" => esc_html__("Image Loading", "salient-core"),
+      "heading" => esc_html__("Media Loading", "salient-core"),
       "param_name" => "image_loading",
       "value" => array(
         "Default" => "default",
         "Skip Lazy Load" => "skip-lazy-load",
         "Lazy Load" => "lazy-load",
       ),
-      "description" => esc_html__("Determine whether to load the images on page load or to use a lazy load method for higher performance.", "salient-core"),
+      "description" => esc_html__("Determine whether to load the media on page load or to use a lazy load method for higher performance.", "salient-core"),
       'std' => 'default',
     ),
 		

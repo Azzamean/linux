@@ -22,6 +22,7 @@ return array(
 			"value" => array(
 				esc_html__("Default", "salient-core") => "default",
 				esc_html__("Minimal", "salient-core") => "minimal",
+				esc_html__("Minimal Shadow", "salient-core") => "minimal_shadow",
 				esc_html__("Minimal Small", "salient-core") => "minimal_small",
 			),
 			'save_always' => true,

@@ -104,6 +104,14 @@ return array(
 		),
 		array(
 			"type" => "textfield",
+			"class" => "",
+			"heading" => esc_html__("Animation Delay", "salient-core"),
+			"param_name" => "effect_delay",
+			"admin_label" => false,
+			"description" => esc_html__("Enter delay (in milliseconds) if needed e.g. 150.", "salient-core")
+		),
+		array(
+			"type" => "textfield",
 			"heading" => esc_html__("Milestone Number Font Size", "salient-core"),
 			"param_name" => "number_font_size",
 			"admin_label" => false,

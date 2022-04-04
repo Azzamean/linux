@@ -212,6 +212,15 @@ return array(
 				"description" => esc_html__("Enable this to cause your parent row BG to zoom in slightly when hovering over the video lightbox button", "salient-core"),
 				"value" => Array(esc_html__("Yes, please", "salient-core") => true),
 			),
+      array(
+        "type" => "checkbox",
+        "class" => "",
+        "heading" => esc_html__("Nofollow Link", "salient-core"),
+        "param_name" => "nofollow_link",
+        'edit_field_class' => 'vc_col-xs-12 salient-fancy-checkbox',
+        "value" => Array(esc_html__("Yes", "salient-core") => 'true'),
+        "description" => ""
+      ),
 			
 		)
 	);

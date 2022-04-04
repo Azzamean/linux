@@ -220,7 +220,7 @@ foreach( $bg_img_arr as $viewport => $image ) {
 				$parallax_class = ' parallax-layer';
 			}
 
-	    $image_bg_markup .= '<div class="column-image-bg-wrap viewport-'.esc_attr($viewport) . esc_attr($bg_img_arr[$viewport]['classes']).'" '.$parallax_bg_attr.'data-bg-pos="'.esc_attr($background_image_position).'" data-bg-animation="'.esc_attr($bg_image_animation).'" data-bg-overlay="'.esc_attr($using_bg_overlay).'"><div class="inner-wrap">';
+	    $image_bg_markup .= '<div class="column-image-bg-wrap column-bg-layer viewport-'.esc_attr($viewport) . esc_attr($bg_img_arr[$viewport]['classes']).'" '.$parallax_bg_attr.'data-bg-pos="'.esc_attr($background_image_position).'" data-bg-animation="'.esc_attr($bg_image_animation).'" data-bg-overlay="'.esc_attr($using_bg_overlay).'"><div class="inner-wrap">';
 	    $image_bg_markup .= '<div class="column-image-bg'.esc_attr($parallax_class).'" style="'.$image_style.'"'.$lazy_image_attr.'></div>';
 	    $image_bg_markup .= '</div></div>';
 
@@ -228,9 +228,10 @@ foreach( $bg_img_arr as $viewport => $image ) {
 
 } // End background loop.
 
-
+$using_custom_font_color = '';
 if( !empty($font_color) ) {
   $style .= ' color: '.$font_color.';';
+  $using_custom_font_color = 'data-cfc="true" ';
 }
 
 // Margins.
@@ -501,10 +502,10 @@ if( $video_bg ) {
 
   if( !empty($video_image_src) ) {
     $video_markup .= '
-    <div class="mobile-video-image column-video" style="background-image: url('. esc_url( $video_image_src ) .')"></div>';
+    <div class="mobile-video-image column-video column-bg-layer" style="background-image: url('. esc_url( $video_image_src ) .')"></div>';
   }
   $video_markup .= '
-  <div class="nectar-video-wrap column-video">';
+  <div class="nectar-video-wrap column-video column-bg-layer">';
       
     if( 'lazy-load' === $background_video_loading ) {
 
@@ -603,7 +604,7 @@ $col_bg_combined_output = $column_link_html . $border_html . $image_bg_markup . 
 
 
 if( !empty($column_overlay_layer_markup) || !empty($column_overlay_style) || true === $using_shadow || !empty($background_color_hover) ) {
-	$col_bg_combined_output .= '<div class="column-bg-overlay-wrap" data-bg-animation="'.esc_attr($bg_image_animation).'"><div class="column-bg-overlay"'.$column_overlay_style.'></div>'.$column_overlay_layer_markup.'</div>';
+	$col_bg_combined_output .= '<div class="column-bg-overlay-wrap column-bg-layer" data-bg-animation="'.esc_attr($bg_image_animation).'"><div class="column-bg-overlay"'.$column_overlay_style.'></div>'.$column_overlay_layer_markup.'</div>';
 }
 
 $nectar_use_modern_grid = ( function_exists('nectar_use_flexbox_grid') && true === nectar_use_flexbox_grid() ) ? true : false;
@@ -617,7 +618,7 @@ if( function_exists('nectar_el_dynamic_classnames') ) {
 }
 
 // Output.
-$output .= "\n\t".'<div '.$style.' class="'.esc_attr($css_class) . $dynamic_el_styles. '" '.$using_bg . $column_data_attrs . '>';
+$output .= "\n\t".'<div '.$style.' class="'.esc_attr($css_class) . $dynamic_el_styles. '" '. $using_custom_font_color . $using_bg . $column_data_attrs . '>';
 
 if( false === $nectar_use_modern_grid ) {
   $output .= $col_bg_combined_output;

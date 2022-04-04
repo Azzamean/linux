@@ -28,6 +28,8 @@ extract(shortcode_atts(array(
 	'margin_right' => '',
 	'margin_bottom' => '',
 	'margin_left' => '',
+	'zindex' => '',
+	'pointer_events' => ''
 ), $atts));
 
 // Icon.
@@ -162,18 +164,22 @@ else {
 }
 
 // Margins.
-$margins = '';
+$wrapping_styles = '';
 if( !empty($margin_top) ) {
-	$margins .= 'margin-top: '.intval($margin_top).'px; ';
+	$wrapping_styles .= 'margin-top: '.intval($margin_top).'px; ';
 }
 if( !empty($margin_right) ) {
-	$margins .= 'margin-right: '.intval($margin_right).'px; ';
+	$wrapping_styles .= 'margin-right: '.intval($margin_right).'px; ';
 }
 if( !empty($margin_bottom) ) {
-	$margins .= 'margin-bottom: '.intval($margin_bottom).'px; ';
+	$wrapping_styles .= 'margin-bottom: '.intval($margin_bottom).'px; ';
 }
 if( !empty($margin_left) ) {
-	$margins .= 'margin-left: '.intval($margin_left).'px;';
+	$wrapping_styles .= 'margin-left: '.intval($margin_left).'px; ';
+}
+
+if( !empty($zindex) ) {
+	$wrapping_styles .= 'z-index: '.esc_attr($zindex).';';
 }
 
 // Link.
@@ -185,10 +191,16 @@ if( !empty($url) ) {
 }
 
 // Dynamic style classes.
-if( function_exists('nectar_el_dynamic_classnames') ) {
+if( function_exists('nectar_el_dynamic_classnames') && 
+    function_exists('nectar_position_param_group_classes') ) {
 	$dynamic_el_styles = nectar_el_dynamic_classnames('nectar_icon', $atts);
+	$dynamic_position_classes = ' ' . nectar_position_param_group_classes( $atts );
+	if( 'none' === $pointer_events ) {
+		$dynamic_position_classes .= ' no-pointer-events';
+	}
 } else {
 	$dynamic_el_styles = '';
+	$dynamic_position_classes = '';
 }
 
 $icon_attributes_escaped = '';
@@ -200,7 +212,7 @@ if( 'linea' === $icon_family && 'true' === $enable_animation ) {
 	$icon_attributes_escaped .= ' data-draw="'.esc_attr($enable_animation).'"';
 }
 
-echo '<div class="nectar_icon_wrap"'.$icon_attributes_escaped.' data-style="'.esc_attr($icon_style).'" data-padding="'.esc_attr($icon_padding).'" data-color="'.esc_attr(strtolower($icon_color)).'" style="'.$margins.'" >
+echo '<div class="nectar_icon_wrap'.$dynamic_position_classes.'"'.$icon_attributes_escaped.' data-style="'.esc_attr($icon_style).'" data-padding="'.esc_attr($icon_padding).'" data-color="'.esc_attr(strtolower($icon_color)).'" style="'.$wrapping_styles.'" >
 		<div class="nectar_icon'.$dynamic_el_styles.'" '.$grad_dimensions.'>'. $icon_link. $icon_markup.'</div>
 	</div>';
 

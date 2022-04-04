@@ -67,6 +67,7 @@ return array(
 			'value' => array(
 				'16:9' => '169',
 				'4:3' => '43',
+        '1:1' => '11',
 				'2.35:1' => '235',
         '9:16' => '916',
 			),
@@ -83,6 +84,7 @@ return array(
         'Inherit' => 'inherit',
 				'16:9' => '169',
 				'4:3' => '43',
+        '1:1' => '11',
 				'2.35:1' => '235',
         '9:16' => '916',
 			),
@@ -98,6 +100,7 @@ return array(
         'Inherit' => 'inherit',
 				'16:9' => '169',
 				'4:3' => '43',
+        '1:1' => '11',
 				'2.35:1' => '235',
         '9:16' => '916',
 			),
@@ -202,6 +205,17 @@ return array(
       "dependency" => Array('element' => "player_functionality", 'value' => array('default')),
       'description' => esc_html__( 'This will automatically mute the video as well.', 'js_composer' ),
 		),
+    /*array(
+			'type' => 'dropdown',
+			'heading' => esc_html__( 'Autoplay functionality', 'js_composer' ),
+			'param_name' => 'autoplay_func',
+			'value' => array(
+				'Start Playing Immediately' => 'default',
+				'Start Playing When Scrolled Into View' => 'scroll_based',
+			),
+      "dependency" => Array('element' => "autoplay", 'not_empty' => true),
+			'description' => esc_html__( 'Select how the autoplay should function.', 'js_composer' ),
+		),*/
 		array(
 			'type' => 'el_id',
 			'heading' => esc_html__( 'Element ID', 'js_composer' ),

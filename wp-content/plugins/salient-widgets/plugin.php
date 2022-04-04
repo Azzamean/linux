@@ -16,12 +16,15 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 define( 'SALIENT_WIDGETS_ROOT_DIR_PATH', plugin_dir_path( __FILE__ ) );
 define( 'SALIENT_WIDGETS_PLUGIN_PATH', plugins_url( 'salient-widgets' ) );
+if ( ! defined( 'SALIENT_WIDGETS_PLUGIN_VERSION' ) ) {
+	define( 'SALIENT_WIDGETS_PLUGIN_VERSION', '1.3.0' );
+}
 
 class Salient_Widgets {
 
 	static $instance = false;
 
-	public $plugin_version = '1.3';
+	public $plugin_version = SALIENT_WIDGETS_PLUGIN_VERSION;
 
 	private function __construct() {
 

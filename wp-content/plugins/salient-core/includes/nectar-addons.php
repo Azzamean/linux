@@ -597,6 +597,63 @@ if(function_exists('vc_add_shortcode_param')) {
 	}
 
 
+
+	/**
+	 * Create radio HTML param.
+	 *
+	 * @since 14.1
+	 */
+	vc_add_shortcode_param( 'nectar_range_slider', 'nectar_range_slider_settings_field' );
+	function nectar_range_slider_settings_field( $param, $value ) {
+
+		$output = '';
+
+		$output .= '<div class="slider"><input type="range" min="0" max="200" step="1" value="' . esc_attr( $value ) . '" class="wpb_vc_param_value nectar-range-slider ' . esc_attr($param['param_name']) . ' ' . esc_attr($param['type']) . '" id="'.esc_attr( $param['param_name'] ).'" name="' . esc_attr($param['param_name']) . '"></div><output class="output"></output>';
+
+		return $output;
+	}
+
+	/**
+	 * Create radio HTML param.
+	 *
+	 * @since 14.1
+	 */
+	vc_add_shortcode_param( 'nectar_radio_html', 'nectar_radio_html_settings_field' );
+	function nectar_radio_html_settings_field( $param, $value ) {
+			$rnd_id = uniqid();
+			$options = isset($param['options']) ? $param['options'] : '';
+
+			$param_line = '';
+			$param_line .= '<input type="hidden" id="nectar-radio-html-'.$rnd_id.'" class="wpb_vc_param_value '.esc_attr($param['param_name']).' '.esc_attr($param['type']).'" name="'.esc_attr($param['param_name']).'" value="'.esc_attr($value).'"/>';
+	        $param_line .= '<div class="nectar-radio-html" data-grp-id="' . $rnd_id . '">';
+	        $param_line .= '<ul class="nectar-radio-html-list">';
+
+			foreach($options as $html => $v) {
+
+				if($value == $v) {
+					$checked = 'checked';
+				}
+				else {
+					$checked = '';
+				}
+
+				$helper_text = ( $v === 'custom' ) ? '<span>' . esc_html__('Use upload field below', 'salient') . '</span>' : '';
+				$param_line .= '<li><label>
+					<input type="radio" class="n_radio_html_val" value="'. $v .'" name="n_radio_html_' . $rnd_id . '" ' . $checked . ' />
+					<span class="n_radio_html">'.$html.'<div class="title">'.str_replace('-',' ',$v) . $helper_text . '</div></span>
+				</label></li>';
+				
+
+			}
+
+
+      $param_line .= '</ul>';
+      $param_line .= '</div>';
+
+      return $param_line;
+	}
+
+
 	/**
 	 * Create hotspot image preview param.
 	 *
@@ -1922,6 +1979,31 @@ function nectar_custom_maps() {
 					"value" => ""
 				),
 
+				/*array(
+					"type" => "checkbox",
+					"class" => "",
+					'edit_field_class' => 'vc_col-xs-12 salient-fancy-checkbox',
+					"heading" => esc_html__("Sticky Row", "salient-core"),
+					"value" => array("Sticky Content" => "true" ),
+					"param_name" => "sticky_row",
+					"description" => esc_html__("Enabling this option will stick the row to a specificed area on the window when scrolling.", "salient-core")
+				),
+
+        		array(
+					"type" => "dropdown",
+					"class" => "",
+					"heading" => esc_html__("Sticky Alignment", "salient-core"),
+					"param_name" => "sticky_row_alignment",
+					'save_always' => true,
+					"value" => array(
+						esc_html__('Top of Window', 'salient-core') => 'top',
+						esc_html__('Bottom of Window', 'salient-core') => 'bottom',
+						esc_html__('Top of Window Below Nav Bar', 'salient-core') => 'top_after_nav',
+					),
+					"dependency" => Array('element' => "sticky_row", 'not_empty' => true),
+					"description" => ''
+				),*/
+
 				array(
 					"type" => "dropdown",
 					"heading" => esc_html__("Overflow Visibility", "salient-core"),
@@ -2323,7 +2405,7 @@ function nectar_custom_maps() {
 		);
 
 		// Column.
-		vc_map( array(
+		$vc_column_map = array(
 			'name' => esc_html__( 'Column', 'salient-core' ),
 			'base' => 'vc_column',
 			'is_container' => true,
@@ -2742,7 +2824,7 @@ function nectar_custom_maps() {
 					"description" => ""
 				),
 
-        array(
+        		array(
 					"type" => "checkbox",
 					"class" => "",
 					'edit_field_class' => 'vc_col-xs-12 salient-fancy-checkbox',
@@ -3181,6 +3263,15 @@ function nectar_custom_maps() {
 					"param_name" => "zindex",
 					"description" => esc_html__("If you want to set a custom stacking order on this column, enter it here. Can be useful when overlapping elements from other columns with negative margins/translates.", "salient-core"),
 					"value" => ""
+				),
+				array(
+					"type" => "dropdown",
+					"heading" => esc_html__("Overflow Visibility", "salient-core"),
+					"param_name" => "overflow",
+					"value" => array(
+						  "Visible" => "visible",
+						  "Hidden" => "hidden",
+					)
 				),
 
 				array(
@@ -3838,11 +3929,26 @@ function nectar_custom_maps() {
 
 			),
 			'js_view' => 'VcColumnView'
-		) );
+		);
+
+
+		/*$mask_group = SalientWPbakeryParamGroups::mask_group( esc_html__( 'Background', 'salient-core' ) );
+	
+		$imported_groups = array( $mask_group );
+	
+		foreach ( $imported_groups as $group ) {
+	
+			foreach ( $group as $option ) {
+				$vc_column_map['params'][] = $option;
+			}
+	
+		}*/
+
+		vc_map($vc_column_map);
 
 
 		// Inner Column.
-		vc_map( array(
+		$vc_column_inner_map = array(
 			"name" => esc_html__( "Inner Column", "salient-core" ),
 			"base" => "vc_column_inner",
 			"class" => "",
@@ -5230,7 +5336,22 @@ function nectar_custom_maps() {
 
 			),
 			"js_view" => 'VcColumnView'
-		) );
+		);
+
+		
+		/*( esc_html__( 'Background', 'salient-core' ) );
+	
+		$imported_groups = array( $mask_group );
+	
+		foreach ( $imported_groups as $group ) {
+	
+			foreach ( $group as $option ) {
+				$vc_column_inner_map['params'][] = $option;
+			}
+	
+		}*/
+
+		vc_map($vc_column_inner_map);
 
 
 
@@ -5925,7 +6046,21 @@ function nectar_custom_maps() {
 
 
 	// Split Line Heading
-	class WPBakeryShortCode_Split_Line_Heading extends WPBakeryShortCode { }
+	class WPBakeryShortCode_Split_Line_Heading extends WPBakeryShortCode { 
+    /*
+    protected function paramsHtmlHolders( $atts ) {
+      $inner = '';
+      if ( isset( $this->settings['params'] ) && is_array( $this->settings['params'] ) ) {
+        
+        foreach ( $this->settings['params'] as $param ) {
+          $param_value = isset( $atts[ $param['param_name'] ] ) ? $atts[ $param['param_name'] ] : '';
+          $inner .= $this->singleParamHtmlHolder( $param, $param_value );
+        }
+      }
+  
+      return $inner;
+    }*/
+  }
 
 	vc_lean_map('split_line_heading', null, SALIENT_CORE_ROOT_DIR_PATH . 'includes/nectar_maps/split_line_heading.php');
 

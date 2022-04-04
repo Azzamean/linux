@@ -35,6 +35,7 @@ if (!empty($matches)) {
         $section_mp4 = ( isset($inner_atts['video_mp4']) ) ? $inner_atts['video_mp4'] : '';
         $section_webm = ( isset($inner_atts['video_webm']) ) ? $inner_atts['video_webm'] : '';
         $section_video_fit = ( isset($inner_atts['video_fit']) ) ? $inner_atts['video_fit'] : 'cover'; 
+        $section_video_align = ( isset($inner_atts['video_alignment']) ) ? $inner_atts['video_alignment'] : 'default'; 
         $section_video_func = ( isset($inner_atts['video_functionality']) ) ? $inner_atts['video_functionality'] : 'loop';  
         $media_asset = '';
         $video = '';
@@ -67,13 +68,17 @@ if (!empty($matches)) {
         //// Video.
         else if( 'video' === $section_type  ) {
             
-            $video_classes = array('fit-'.esc_attr($section_video_fit),'');
+            $video_classes = array('fit-'.esc_attr($section_video_fit));
 
             $loop_attr = 'loop autoplay';
 
             if('no-loop' === $section_video_func) {
                 $loop_attr = '';
                 $video_classes[] = 'no-loop';
+            }
+
+            if( 'cover' === $section_video_fit ) {
+                $video_classes[] = 'align-'.esc_attr($section_video_align);
             }
 
             // Lazy load.

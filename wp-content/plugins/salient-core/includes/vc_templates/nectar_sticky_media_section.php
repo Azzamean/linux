@@ -11,6 +11,7 @@ extract(shortcode_atts(array(
 	'video_mp4' => '',
 	'video_webm' => '',
 	'video_fit' => 'cover',
+	'video_alignment' => 'default',
 	'video_functionality' => 'loop'
 ), $atts));
 
@@ -55,8 +56,12 @@ if( 'image' === $section_type ) {
 //// Video.
 else if( 'video' === $section_type  ) {
 	
-	$video_classes = array('fit-'.esc_attr($video_fit),'');
+	$video_classes = array('fit-'.esc_attr($video_fit));
 
+	if( 'cover' === $video_fit ) {
+		$video_classes[] = 'align-'.esc_attr($video_alignment);
+	}
+	
 	$loop_attr = 'loop autoplay';
 
 	if('no-loop' === $video_functionality) {

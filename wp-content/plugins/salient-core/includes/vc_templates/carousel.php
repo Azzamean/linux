@@ -105,6 +105,10 @@ if( $script === 'carouFredSel' ) {
 
 // Owl.
 else if( $script === 'owl_carousel' ) {
+
+  wp_enqueue_script('owl-carousel');
+  wp_enqueue_style('nectar-owl-carousel');
+
 	$delay = intval($delay);
 	echo '<div class="owl-carousel" data-enable-animation="'.esc_attr($enable_animation).'" data-loop="'.esc_attr($loop).'"  data-animation-delay="'.esc_attr($delay).'" data-autorotate="' . esc_attr($autorotate) . '" data-autorotation-speed="'.esc_attr($autorotation_speed).'" data-column-padding="'.esc_attr($column_padding).'" data-desktop-cols="'.esc_attr($desktop_cols).'" data-desktop-small-cols="'.esc_attr($desktop_small_cols).'" data-tablet-cols="'.esc_attr($tablet_cols).'" data-mobile-cols="'.esc_attr($mobile_cols).'">';
 	echo do_shortcode($content);
@@ -113,6 +117,9 @@ else if( $script === 'owl_carousel' ) {
 
 // Flickity.
 else if( $script === 'flickity' ) {
+
+  wp_enqueue_script( 'flickity' );
+  wp_enqueue_style( 'nectar-flickity' );
 
 	if( $flickity_formatting === 'fixed_text_content_fullwidth' ) {
 

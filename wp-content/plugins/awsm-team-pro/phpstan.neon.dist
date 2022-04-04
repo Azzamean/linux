@@ -1,0 +1,21 @@
+includes:
+	- vendor/szepeviktor/phpstan-wordpress/extension.neon
+parameters:
+	level: 5
+	inferPrivatePropertyTypeFromConstructor: true
+	bootstrapFiles:
+		- lib/kernl/kernl-update-checker.php
+	paths:
+		- awsm-team.php
+	ignoreErrors:
+		# Uses func_get_args()
+		- '#^Function apply_filters(_ref_array)? invoked with [34567] parameters, 2 required\.$#'
+		-
+			message: '#Call to static method instance\(\) on an unknown class Elementor\\Plugin#'
+			path: awsm-team.php
+			count: 1
+		-
+			message: '#Instantiated class AWSMTeamElementorWidget not found#'
+			path: awsm-team.php
+			count: 1
+

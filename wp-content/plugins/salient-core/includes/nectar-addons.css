@@ -1934,6 +1934,10 @@ div[data-vc-shortcode] .nectar-one-half {
   padding: 15px;
 }
 
+div[data-vc-shortcode] .nectar-one-half.transform-device-group {
+  padding-top: 0px!important;
+}
+
 div[data-vc-shortcode] .movement-type.vc_col-xs-12 {
   width: 35%;
 }
@@ -2080,14 +2084,20 @@ div[data-vc-shortcode*="vc_column"] .vc_edit_form_elements .col-md-3.wpb_el_type
   margin-left: 15px;
 }
 
-div[data-vc-shortcode="vc_row_inner"] .col-25 {
+div[data-vc-shortcode="vc_row_inner"] .col-25,
+div[data-vc-shortcode="image_with_animation"] .col-25,
+div[data-vc-shortcode="nectar_icon"] .col-25 {
   width: calc(24.2% - 15px);
   margin-right: 15px;
 }
-div[data-vc-shortcode="vc_row_inner"] .col-25-first {
+div[data-vc-shortcode="vc_row_inner"] .col-25-first,
+div[data-vc-shortcode="image_with_animation"] .col-25-first,
+div[data-vc-shortcode="nectar_icon"] .col-25-first {
   margin-left: 15px;
 }
-div[data-vc-shortcode="vc_row_inner"] .col-25-last {
+div[data-vc-shortcode="vc_row_inner"] .col-25-last,
+div[data-vc-shortcode="image_with_animation"] .col-25-last
+div[data-vc-shortcode="nectar_icon"] .col-25-last {
   margin-right: 0px;
 }
 
@@ -2260,7 +2270,9 @@ div[data-vc-shortcode="item"] .flickity_specific_field {
 .font-size-device-group-wrap,
 .row-position-display-device-group-wrap,
 .image-custom-width-device-group-wrap,
-.video-aspect-ratio-device-group-wrap {
+.video-aspect-ratio-device-group-wrap,
+.position-display-device-group-wrap,
+.mask-alignment-device-group-wrap {
   padding: 0 15px;
 }
 .nectar-device-group-header.divider-height-device-group-header {
@@ -3494,6 +3506,15 @@ body .vc_edit_form_elements .vc_wrapper-param-type-nectar_numerical.no-device-gr
   min-width: 80px;
 }
 
+.vc_wrapper-param-type-attach_images .edit_form_line,
+.vc_wrapper-param-type-attach_images .gallery_widget_attached_images_list {
+  display: flex;
+  flex-wrap: wrap;
+}
+.vc_wrapper-param-type-attach_images .vc_description {
+  width: 100%;
+}
+
 .vc_edit_form_elements input[type=text],
 .vc_edit_form_elements textarea,
 .vc_edit_form_elements select,
@@ -3799,6 +3820,176 @@ div[data-vc-shortcode="nectar_image_with_hotspots"] .vc_icon-remove {
   text-decoration: underline;
   font-weight: 700;
 }
+
+
+.nectar-radio-html-list {
+  display: inline-flex;
+  flex-wrap: wrap;
+  width: 100%;
+  gap: 15px;
+}
+.nectar-radio-html-list li {
+  width: calc(33.3% - 10px);
+  background-color: #f2f2f2;
+  margin: 0;
+  border-radius: 4px;
+  box-sizing: border-box;
+  border: 1px solid transparent;
+  transition: border-color 0.2s ease;
+}
+
+.nectar-radio-html-list label input {
+  display: none;
+}
+
+.nectar-radio-html-list label {
+  padding: 20px;
+  box-sizing: border-box;
+  display: block;
+}
+
+.nectar-radio-html-list .n_radio_html {
+  display: block;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.nectar-radio-html-list .title {
+  text-transform: capitalize;
+  text-align: center;
+  font-size: 12px;
+  color: #000;
+  padding: 10px 0 0 0;
+}
+
+.nectar-radio-html-list .nectar-shape:after {
+  content: '';
+  padding: 49.6%;
+  pointer-events: none;
+  z-index: -1;
+  display: block;
+}
+.nectar-radio-html-list .nectar-shape {
+  display: inline-block;
+  width: 40%;
+  margin-top: 10px;
+  transition: background-color 0.25s ease;
+  background-color: #bfbfbf;
+}
+
+.nectar-radio-html-list li:hover {
+  border-color: #000;
+}
+
+.nectar-radio-html-list input:checked + .n_radio_html .nectar-shape { 
+  background-color: var(--nectar-blue);
+  transition: background-color 0.4s cubic-bezier(0.21,0, 0.49, 1) 0.15s;
+}
+
+.n_radio_html .svg.nectar-shape polygon,
+.n_radio_html .svg.nectar-shape path {
+  fill: #bfbfbf;
+  transition: fill 0.25s ease;
+}
+
+.nectar-radio-html-list input:checked + .n_radio_html .svg.nectar-shape polygon,
+.nectar-radio-html-list input:checked + .n_radio_html .svg.nectar-shape path {
+  fill: var(--nectar-blue);
+  transition: fill 0.4s cubic-bezier(0.21,0, 0.49, 1) 0.15s;
+}
+
+.nectar-radio-html-list .active .nectar-shape { 
+  animation: nectarElasticBounce 0.8s cubic-bezier(0.21,0, 0.49, 1) forwards;
+}
+
+.nectar-radio-html-list input + .n_radio_html  { 
+  filter: drop-shadow(0 0px 0px rgba(0, 0, 0, 0));
+}
+
+.nectar-radio-html-list input:checked + .n_radio_html  { 
+  filter: drop-shadow(0 10px 13px rgba(0, 0, 0, 0.3));
+  transition: all 0.4s cubic-bezier(0.21,0, 0.49, 1) 0.15s;
+}
+
+.nectar-radio-html-list .svg.nectar-shape  {
+  background-color: transparent!important;
+}
+
+.nectar-radio-html-list .title span {
+  display: block;
+  opacity: 0.7;
+  text-transform: none;
+  font-size: 10px;
+}
+
+
+@keyframes nectarElasticBounce {
+  0% {
+    transform: scale(1) translateZ(0);
+  }
+  30% {
+    transform: scale(0.8) translateZ(0);
+  }
+  60% {
+    transform: scale(1.08) translateZ(0);
+  }
+  80% {
+    transform: scale(0.96) translateZ(0);
+  }
+  100% {
+    transform: scale(1) translateZ(0);
+  }
+}
+
+
+.wpb_el_type_nectar_range_slider .edit_form_line {
+  display: flex;
+  align-items: center;
+}
+.wpb_el_type_nectar_range_slider .edit_form_line .slider {
+  flex: 1;
+  position: relative;
+}
+.wpb_el_type_nectar_range_slider .edit_form_line output {
+  margin-left: 20px;
+  min-width: 40px;
+  text-align: right;
+}
+.wpb_el_type_nectar_range_slider .edit_form_line output:after {
+  content: '%';
+}
+.wpb_el_type_nectar_range_slider .rangeslider--horizontal {
+  height: 6px;
+}
+.wpb_el_type_nectar_range_slider .rangeslider--horizontal .rangeslider__handle {
+  top: -7px;
+}
+.wpb_el_type_nectar_range_slider .rangeslider__handle {
+  width: 20px;
+  height: 20px;
+}
+.wpb_el_type_nectar_range_slider .rangeslider, .wpb_el_type_nectar_range_slider .rangeslider__fill {
+  box-shadow: none;
+}
+.wpb_el_type_nectar_range_slider .rangeslider__fill {
+  background-color: var(--nectar-blue);
+}
+.wpb_el_type_nectar_range_slider .rangeslider__handle{
+  box-shadow: 0 0 0 6px var(--nectar-blue) inset;
+  transition: box-shadow 0.3s ease;
+}
+.wpb_el_type_nectar_range_slider .rangeslider__handle:active, 
+.wpb_el_type_nectar_range_slider .rangeslider--active .rangeslider__handle {
+  box-shadow: 0 0 0 3px var(--nectar-blue) inset;
+}
+.wpb_el_type_nectar_range_slider .rangeslider__handle {
+ border: none;
+}
+
+
+
 
 .nectar-radio-tab {
   display: inline-block;

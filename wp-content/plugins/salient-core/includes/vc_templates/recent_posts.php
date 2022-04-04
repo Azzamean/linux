@@ -854,8 +854,10 @@ else if( $style === 'slider_multiple_visible' ) { //slider multiple visible
 
           <h3 class="post-ref-<?php echo esc_attr($i); ?>"><a href=" <?php echo esc_url(get_permalink()); ?>" class="full-slide-link"> <?php echo the_title(); ?> </a></h3>
 
-
           <?php
+
+          do_action('nectar_recent_posts_multiple_visible_after_title');
+
           //stop regular grad class for material skin
           $button_color = strtolower($button_color);
           $regular_btn_class = ' regular-button';

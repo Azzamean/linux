@@ -3,7 +3,7 @@
  * Plugin Name: AWSM Team Pro
  * Plugin URI: http://awsm.in/team-pro-documentation
  * Description: The most versatile plugin to create and manage your Team page. Packed with 8 unique presets and number of styles to choose from.
- * Version: 1.10.2
+ * Version: 1.11.0
  * Author: AWSM Innovations
  * Author URI: http://awsm.in/
  * License: GPL
@@ -31,7 +31,7 @@ if ( ! class_exists( 'Awsm_Team' ) ) :
 		/**
 		 * The single instance of the class.
 		 *
-		 * @var Awsm_Team
+		 * @var Awsm_Team|null
 		 */
 		private static $instance = null;
 
@@ -57,6 +57,13 @@ if ( ! class_exists( 'Awsm_Team' ) ) :
 		public $settings = array();
 
 		/**
+		 * Team filter.
+		 *
+		 * @var string
+		 */
+		public $team_filter = '';
+
+		/**
 		 * Awsm Team Constructor.
 		 */
 		public function __construct() {
@@ -66,7 +73,7 @@ if ( ! class_exists( 'Awsm_Team' ) ) :
 				'plugin_base'     => dirname( plugin_basename( __FILE__ ) ),
 				'plugin_base_url' => plugin_basename( __FILE__ ),
 				'plugin_file'     => __FILE__,
-				'plugin_version'  => '1.10.2',
+				'plugin_version'  => '1.11.0',
 			);
 
 			$this->run_plugin();
@@ -132,28 +139,27 @@ if ( ! class_exists( 'Awsm_Team' ) ) :
 			if ( ! defined( 'WPB_VC_VERSION' ) || ! function_exists( 'vc_map' ) ) {
 				return;
 			}
-			if ( function_exists( 'vc_map' ) ) {
-				vc_map(
-					array(
-						'name'        => __( 'Awsm Team', 'awsm-team-pro' ),
-						'description' => __( 'Awsm Team', 'awsm-team-pro' ),
-						'base'        => 'awsmteam',
-						'controls'    => 'full',
-						'icon'        => esc_url( plugins_url( 'images/team-vc-icon.png', __FILE__ ) ),
-						'category'    => __( 'Content', 'js_composer' ), // phpcs:ignore WordPress.WP.I18n.TextDomainMismatch
-						'params'      => array(
-							array(
-								'type'       => 'dropdown',
-								'holder'     => 'div',
-								'class'      => '',
-								'heading'    => __( 'Select Team', 'awsm-team-pro' ),
-								'param_name' => 'id',
-								'value'      => $this->vc_get_teams(),
-							),
+
+			vc_map(
+				array(
+					'name'        => __( 'Awsm Team', 'awsm-team-pro' ),
+					'description' => __( 'Awsm Team', 'awsm-team-pro' ),
+					'base'        => 'awsmteam',
+					'controls'    => 'full',
+					'icon'        => esc_url( plugins_url( 'images/team-vc-icon.png', __FILE__ ) ),
+					'category'    => __( 'Content', 'js_composer' ), // phpcs:ignore WordPress.WP.I18n.TextDomainMismatch
+					'params'      => array(
+						array(
+							'type'       => 'dropdown',
+							'holder'     => 'div',
+							'class'      => '',
+							'heading'    => __( 'Select Team', 'awsm-team-pro' ),
+							'param_name' => 'id',
+							'value'      => $this->vc_get_teams(),
 						),
-					)
-				);
-			}
+					),
+				)
+			);
 		}
 
 		/**
@@ -169,7 +175,7 @@ if ( ! class_exists( 'Awsm_Team' ) ) :
 			);
 			$teams    = new WP_Query( $args );
 			$teamlist = array();
-			if ( isset( $teams->posts ) && ! empty( $teams->posts ) ) {
+			if ( ! empty( $teams->posts ) ) {
 				$teamlist = wp_list_pluck( $teams->posts, 'post_title', 'ID' );
 			}
 			return $teamlist;
@@ -207,7 +213,7 @@ if ( ! class_exists( 'Awsm_Team' ) ) :
 				if ( ! empty( $member_teams ) ) {
 					foreach ( explode( ',', $member_teams ) as $team ) {
 						if ( $team ) {
-							$teamlist[ $team ] = get_the_title( $team );
+							$teamlist[ $team ] = get_the_title( intval( $team ) );
 						}
 					}
 				}
@@ -358,7 +364,7 @@ if ( ! class_exists( 'Awsm_Team' ) ) :
 			$orderby        = $settings['order_by'];
 			$order          = $settings['order'];
 			$limit          = intval( $settings['limit'] );
-			$filter_content = isset( $settings['filter_content'] ) && $settings['filter_content'] === 'no' ? false : true;
+			$filter_content = $settings['filter_content'] === 'no' ? false : true;
 
 			$options = $this->get_options( 'awsm_team', $id );
 			if ( ! $options ) {
@@ -462,7 +468,7 @@ if ( ! class_exists( 'Awsm_Team' ) ) :
 				$search_icon      = '<span class="awsm-team-search-btn awsm-team-search-icon-wrapper"><i class="awsm-icon-search"></i></span><span class="awsm-team-search-close-btn awsm-team-search-icon-wrapper awsm-team-hide"><i class="awsm-icon-close"></i></span>';
 				$search_content   = sprintf( '<div class="awsm-team-search"><div class="awsm-team-search-item"><input type="text" name="mq" value="%2$s" placeholder="%1$s" class="awsm-team-search-control">%3$s</div></div>', esc_attr( $placeholder_text ), esc_attr( $search_query ), $search_icon );
 
-				$search_content = sprintf( '<div class="awsm-team-search-wrap" data-team="%3$s" data-query="1"><form action="#search" method="POST">%1$s<input type="hidden" name="awsm_team_id" value="%3$s"><input type="hidden" name="awsm_team_filter" value="all"><input type="hidden" name="action" value="awsm_team_search"></form></div>', $search_content, esc_url( admin_url( 'admin-ajax.php' ) ), esc_attr( $team_id ) );
+				$search_content = sprintf( '<div class="awsm-team-search-wrap" data-team="%3$s" data-query="1"><form action="#search" method="POST">%1$s<input type="hidden" name="awsm_team_id" value="%3$s"><input type="hidden" name="awsm_team_filter" value="all"><input type="hidden" name="action" value="awsm_team_search"></form></div>', $search_content, esc_url( admin_url( 'admin-ajax.php' ) ), intval( $team_id ) );
 			}
 			/**
 			 * Filters the search HTML content.
@@ -501,6 +507,49 @@ if ( ! class_exists( 'Awsm_Team' ) ) :
 		}
 
 		/**
+		 * Get member wrapping element attributes.
+		 *
+		 * @param mixed $team Team members object.
+		 * @return array
+		 */
+		public function get_member_attrs( $team ) {
+			$attrs = array(
+				'class' => 'awsm-scale-anm awsm-all',
+				'style' => '',
+			);
+
+			$terms = get_the_terms( $team->post->ID, 'awsm_team_filters' );
+			if ( ! is_array( $terms ) ) {
+				$terms = array();
+			}
+
+			$terms_ids = array();
+			foreach ( $terms as $member_term ) {
+				$attrs['class'] .= ' awsm-' . $member_term->term_id;
+				$terms_ids[]     = $member_term->term_id;
+			}
+
+			if ( ! empty( $this->team_filter ) ) {
+				if ( ( ! in_array( $this->team_filter, $terms_ids, true ) ) || ( empty( $terms_ids ) ) ) {
+					$attrs['class'] = str_replace( 'awsm-scale-anm ', '', $attrs['class'] );
+					$attrs['style'] = 'display:none;';
+				}
+			}
+			return $attrs;
+		}
+
+		/**
+		 * Show all members in the filter or not.
+		 *
+		 * @param int $team_id The team ID.
+		 * @return boolean
+		 */
+		public static function show_all_members_filter( $team_id ) {
+			$filter_all_meta = get_post_meta( $team_id, 'awsm_team_filter_all', true );
+			return empty( $filter_all_meta ) || $filter_all_meta === 'yes';
+		}
+
+		/**
 		 * AWSM team filter.
 		 *
 		 * @since 1.0.0
@@ -512,8 +561,11 @@ if ( ! class_exists( 'Awsm_Team' ) ) :
 			$filter_output = '';
 			if ( get_post_meta( $id, 'enable_filter', true ) && get_post_meta( $id, 'enable_filter', true ) == 1 ) {
 				$filter_array   = array();
+				$filter_all     = self::show_all_members_filter( $id );
 				$filter_output .= '<div class="awsm-team-filter-wrap">';
-				$filter_output .= '<span class="awsm-filter-btn awsm-active-filter" data-rel="awsm-all" data-info="#all">' . __( 'All', 'awsm-team-pro' ) . '</span>';
+				if ( $filter_all ) {
+					$filter_output .= '<span class="awsm-filter-btn awsm-active-filter" data-rel="awsm-all" data-info="#all">' . __( 'All', 'awsm-team-pro' ) . '</span>';
+				}
 				if ( $team->have_posts() ) :
 					while ( $team->have_posts() ) :
 						$team->the_post();
@@ -549,10 +601,17 @@ if ( ! class_exists( 'Awsm_Team' ) ) :
 					$custom_terms_arr = $this->get_ordered_team_filters( $current_filters, $filter_array );
 
 					if ( ! empty( $custom_terms_arr ) ) {
+						$filter_count = 1;
 						foreach ( $custom_terms_arr as $term_id => $term_details ) {
 							if ( is_array( $term_details ) && $term_details['selected'] === true ) {
 								$info_data_attr = self::deep_link_attr( $term_id, false, false );
-								$filter_output .= '<span data-rel="' . esc_attr( 'awsm-' . str_replace( ' ', '-', $term_id ) ) . '" class="awsm-filter-btn"' . $info_data_attr . '>' . esc_html( $term_details['name'] ) . '</span>';
+								$filter_class   = 'awsm-filter-btn';
+								if ( ( ! $filter_all ) && $filter_count === 1 ) {
+									$this->team_filter = $term_id;
+									$filter_class     .= ' awsm-active-filter';
+								}
+								$filter_output .= sprintf( '<span class="%2$s" data-rel="%3$s"%4$s>%1$s</span>', esc_html( $term_details['name'] ), esc_attr( $filter_class ), esc_attr( 'awsm-' . str_replace( ' ', '-', $term_id ) ), $info_data_attr );
+								$filter_count++;
 							}
 						}
 					}
@@ -656,7 +715,7 @@ if ( ! class_exists( 'Awsm_Team' ) ) :
 		 * @since 1.0.0
 		 */
 		public function embed_front_script_styles() {
-			wp_register_style( 'awsm-team-css', plugins_url( 'css/team.min.css', $this->settings['plugin_file'] ), false, $this->settings['plugin_version'], 'all' );
+			wp_register_style( 'awsm-team-css', plugins_url( 'css/team.min.css', $this->settings['plugin_file'] ), array(), $this->settings['plugin_version'], 'all' );
 			wp_enqueue_style( 'awsm-team-css' );
 
 			wp_register_script( 'awsm-team', plugins_url( 'js/team.min.js', $this->settings['plugin_file'] ), array( 'jquery' ), $this->settings['plugin_version'], true );
@@ -813,7 +872,7 @@ if ( ! class_exists( 'Awsm_Team' ) ) :
 		/**
 		 * Get the post updated messages.
 		 *
-		 * @param array   $singular_label Post singular label.
+		 * @param string  $singular_label Post singular label.
 		 * @param WP_Post $post Post object.
 		 * @return array
 		 */
@@ -904,8 +963,8 @@ if ( ! class_exists( 'Awsm_Team' ) ) :
 				'search_items'               => __( 'Search Filters', 'awsm-team-pro' ),
 				'popular_items'              => __( 'Popular Filters', 'awsm-team-pro' ),
 				'all_items'                  => __( 'All Filters', 'awsm-team-pro' ),
-				'parent_item'                => null,
-				'parent_item_colon'          => null,
+				'parent_item'                => '',
+				'parent_item_colon'          => '',
 				'edit_item'                  => __( 'Edit Filter', 'awsm-team-pro' ),
 				'update_item'                => __( 'Update Filter', 'awsm-team-pro' ),
 				'add_new_item'               => __( 'Add New Filter', 'awsm-team-pro' ),
@@ -927,7 +986,7 @@ if ( ! class_exists( 'Awsm_Team' ) ) :
 					'hierarchical'       => true,
 					// added this for gutterberg compatibility.
 					'show_in_rest'       => true,
-					'show_in_menu'       => 'edit.php?post_type=awsm_team_member',
+					'show_in_menu'       => true,
 				)
 			);
 		}
@@ -1108,7 +1167,7 @@ if ( ! class_exists( 'Awsm_Team' ) ) :
 					echo esc_html( $options['preset'] );
 					break;
 				case 'shortcode':
-					printf( '<code>[awsmteam id="%s"]</code>', esc_html( $post_ID ) );
+					printf( '<code>[awsmteam id="%s"]</code>', intval( $post_ID ) );
 					break;
 			}
 		}
@@ -1121,7 +1180,7 @@ if ( ! class_exists( 'Awsm_Team' ) ) :
 		 */
 		public function shortcode_preview( $post ) {
 			if ( 'awsm_team' == $post->post_type && 'publish' == $post->post_status ) {
-				printf( '<p>%1$s: <code>[awsmteam id="%2$s"]</code><button id="copy-awsm" type="button" data-clipboard-text="[awsmteam id=&quot;%2$s&quot;]" class="button">%3$s</button></p>', esc_html__( 'Shortcode', 'awsm-team-pro' ), esc_attr( $post->ID ), esc_html__( 'Copy', 'awsm-team-pro' ) );
+				printf( '<p>%1$s: <code>[awsmteam id="%2$s"]</code><button id="copy-awsm" type="button" data-clipboard-text="[awsmteam id=&quot;%2$s&quot;]" class="button">%3$s</button></p>', esc_html__( 'Shortcode', 'awsm-team-pro' ), intval( $post->ID ), esc_html__( 'Copy', 'awsm-team-pro' ) );
 			}
 		}
 
@@ -1135,7 +1194,7 @@ if ( ! class_exists( 'Awsm_Team' ) ) :
 			 global $post;
 			if ( $hook == 'post-new.php' || $hook == 'post.php' ) {
 				if ( 'awsm_team_member' == $post->post_type || 'awsm_team' == $post->post_type ) {
-					wp_enqueue_style( 'awsm-team-admin', plugins_url( 'css/admin.css', $this->settings['plugin_file'] ), false, $this->settings['plugin_version'], 'all' );
+					wp_enqueue_style( 'awsm-team-admin', plugins_url( 'css/admin.css', $this->settings['plugin_file'] ), array(), $this->settings['plugin_version'], 'all' );
 					wp_enqueue_script( 'team-meta-box', plugins_url( 'js/team-admin.js', $this->settings['plugin_file'] ), array( 'jquery', 'jquery-ui-sortable', 'wp-util' ), $this->settings['plugin_version'] );
 					wp_localize_script(
 						'team-meta-box',
@@ -1152,8 +1211,8 @@ if ( ! class_exists( 'Awsm_Team' ) ) :
 						)
 					);
 					wp_enqueue_script( 'select2', plugins_url( 'js/select2.min.js', $this->settings['plugin_file'] ), array( 'jquery' ), $this->settings['plugin_version'] );
-					wp_enqueue_style( 'select2', plugins_url( 'css/select2.min.css', $this->settings['plugin_file'] ), false, $this->settings['plugin_version'], 'all' );
-					wp_enqueue_style( 'awsm-team-icomoon-css', plugins_url( 'css/icomoon.css', $this->settings['plugin_file'] ), false, $this->settings['plugin_version'], 'all' );
+					wp_enqueue_style( 'select2', plugins_url( 'css/select2.min.css', $this->settings['plugin_file'] ), array(), $this->settings['plugin_version'], 'all' );
+					wp_enqueue_style( 'awsm-team-icomoon-css', plugins_url( 'css/icomoon.css', $this->settings['plugin_file'] ), array(), $this->settings['plugin_version'], 'all' );
 				}
 			}
 		}
@@ -1166,7 +1225,7 @@ if ( ! class_exists( 'Awsm_Team' ) ) :
 		public function admin_enqueue_scripts_global() {
 			$screen = get_current_screen();
 
-			wp_register_style( 'awsm-team-admin-global', plugins_url( 'css/admin-global.css', $this->settings['plugin_file'] ), false, $this->settings['plugin_version'], 'all' );
+			wp_register_style( 'awsm-team-admin-global', plugins_url( 'css/admin-global.css', $this->settings['plugin_file'] ), array(), $this->settings['plugin_version'], 'all' );
 
 			wp_register_script( 'awsm-team-admin-global', plugins_url( 'js/admin-global.js', $this->settings['plugin_file'] ), array( 'jquery', 'jquery-ui-sortable', 'wp-util' ), $this->settings['plugin_version'], true );
 
@@ -1341,21 +1400,21 @@ if ( ! class_exists( 'Awsm_Team' ) ) :
 					}
 				}
 			} elseif ( $post->post_type == 'awsm_team' ) {
-				$team_meta = array( 'memberlist', 'team-style', 'preset', 'columns', 'custom_css', 'enable_member_search', 'enable_filter', 'team_filters', 'awsm_member_order', 'awsm_member_order_by' );
+				$team_meta = array( 'memberlist', 'team-style', 'preset', 'columns', 'custom_css', 'enable_member_search', 'enable_filter', 'awsm_team_filter_all', 'team_filters', 'awsm_member_order', 'awsm_member_order_by' );
 			}
 			foreach ( $team_meta as $meta_key ) {
 				$olddata = get_post_meta( $post_id, $meta_key, true );
 				$newdata = array();
 				if ( isset( $_POST[ $meta_key ] ) ) {
 					if ( is_array( $_POST[ $meta_key ] ) ) {
-						if ( $meta_key === 'awsm-member-teams' && ! empty( $_POST[ $meta_key ] ) ) {
-							$team_ids        = isset( $_POST['awsm-team-list'] ) ? array_map( 'intval', wp_unslash( $_POST['awsm-team-list'] ) ) : array();
+						if ( $meta_key === 'awsm-member-teams' ) {
+							$team_ids        = isset( $_POST['awsm-team-list'] ) && is_array( $_POST['awsm-team-list'] ) ? array_map( 'intval', wp_unslash( $_POST['awsm-team-list'] ) ) : array();
 							$member_team_ids = array_map( 'intval', wp_unslash( $_POST[ $meta_key ] ) );
 
 							$this->update_member_list( $post_id, $member_team_ids, $team_ids );
 							$newdata = implode( ',', $member_team_ids );
-						} elseif ( $meta_key === 'memberlist' && ! empty( $_POST[ $meta_key ] ) ) {
-							$member_ids      = isset( $_POST['members_list'] ) ? array_map( 'intval', wp_unslash( $_POST['members_list'] ) ) : array();
+						} elseif ( $meta_key === 'memberlist' ) {
+							$member_ids      = isset( $_POST['members_list'] ) && is_array( $_POST['members_list'] ) ? array_map( 'intval', wp_unslash( $_POST['members_list'] ) ) : array();
 							$team_member_ids = array_map( 'intval', wp_unslash( $_POST[ $meta_key ] ) );
 
 							$this->update_member_teams( $post_id, $team_member_ids, $member_ids );
@@ -1377,17 +1436,23 @@ if ( ! class_exists( 'Awsm_Team' ) ) :
 					}
 				} else {
 					if ( $meta_key === 'awsm-member-teams' && isset( $_POST['awsm-team-list'] ) ) {
-						$team_ids = isset( $_POST['awsm-team-list'] ) ? array_map( 'intval', wp_unslash( $_POST['awsm-team-list'] ) ) : array();
+						$team_ids = isset( $_POST['awsm-team-list'] ) && is_array( $_POST['awsm-team-list'] ) ? array_map( 'intval', wp_unslash( $_POST['awsm-team-list'] ) ) : array();
 
-						$this->update_member_list( $post_id, '', $team_ids );
+						$this->update_member_list( $post_id, array(), $team_ids );
 						delete_post_meta( $post_id, $meta_key, $olddata );
 					} elseif ( $meta_key === 'memberlist' && isset( $_POST['members_list'] ) ) {
-						$member_ids = isset( $_POST['members_list'] ) ? array_map( 'intval', wp_unslash( $_POST['members_list'] ) ) : array();
+						$member_ids = isset( $_POST['members_list'] ) && is_array( $_POST['members_list'] ) ? array_map( 'intval', wp_unslash( $_POST['members_list'] ) ) : array();
 
-						$this->update_member_teams( $post_id, '', $member_ids );
+						$this->update_member_teams( $post_id, array(), $member_ids );
 						delete_post_meta( $post_id, $meta_key, $olddata );
 					} else {
-						delete_post_meta( $post_id, $meta_key, $olddata );
+						if ( $meta_key === 'awsm_team_filter_all' ) {
+							if ( ! isset( $_POST[ $meta_key ] ) ) {
+								update_post_meta( $post_id, $meta_key, 'no' );
+							}
+						} else {
+							delete_post_meta( $post_id, $meta_key, $olddata );
+						}
 					}
 				}
 			}
@@ -1409,34 +1474,29 @@ if ( ! class_exists( 'Awsm_Team' ) ) :
 				foreach ( $allmems as $key => $member_id ) {
 					$teams_of_member = explode( ',', get_post_meta( $key, 'awsm-member-teams', true ) );
 
-					if ( $teams_of_member ) {
-						if ( in_array( $team_id, $teams_of_member ) ) {
-
-							$this->unset_team( $allmems, $team_id, $members );
-						}
+					if ( in_array( $team_id, $teams_of_member ) ) {
+						$this->unset_team( $allmems, $team_id, $members );
 					}
 				}
 			} else {
-				if ( $member_ids ) {
-					foreach ( $member_ids as $member_id ) {
-						$teams_of_member = array_keys( $this->get_teams_of_member( $member_id ) );
+				foreach ( $member_ids as $member_id ) {
+					$teams_of_member = array_keys( $this->get_teams_of_member( $member_id ) );
 
-						$teams_of_member     = explode( ',', get_post_meta( $member_id, 'awsm-member-teams', true ) );
-						$teams_of_member     = array_filter( $teams_of_member );
-						$teams_of_member_arr = $teams_of_member;
-						if ( $teams_of_member ) {
-							if ( ! in_array( $team_id, $teams_of_member ) ) {
-								$teams_of_member_arr[] = $team_id;
-
-							} else {
-								$this->unset_team( $member_ids, $team_id, $members );
-
-							}
-						} else {
+					$teams_of_member     = explode( ',', get_post_meta( $member_id, 'awsm-member-teams', true ) );
+					$teams_of_member     = array_filter( $teams_of_member );
+					$teams_of_member_arr = $teams_of_member;
+					if ( $teams_of_member ) {
+						if ( ! in_array( $team_id, $teams_of_member ) ) {
 							$teams_of_member_arr[] = $team_id;
+
+						} else {
+							$this->unset_team( $member_ids, $team_id, $members );
+
 						}
-						update_post_meta( $member_id, 'awsm-member-teams', implode( ',', $teams_of_member_arr ) );
+					} else {
+						$teams_of_member_arr[] = $team_id;
 					}
+					update_post_meta( $member_id, 'awsm-member-teams', implode( ',', $teams_of_member_arr ) );
 				}
 			}
 		}
@@ -1510,18 +1570,16 @@ if ( ! class_exists( 'Awsm_Team' ) ) :
 				),
 			);
 			$member_teams = new WP_Query( $teamargs );
-			if ( $member_teams->have_posts() ) :
-				while ( $member_teams->have_posts() ) :
-					$member_teams->the_post();
+			while ( $member_teams->have_posts() ) :
+				$member_teams->the_post();
 
-					$team_list  = explode( ',', get_post_meta( $member_teams->post->ID, 'awsm-member-teams', true ) );
-					$team_index = array_search( $team_id, $team_list );
-					if ( $team_index !== false ) {
-						unset( $team_list[ $team_index ] );
-						update_post_meta( $member_teams->post->ID, 'awsm-member-teams', implode( ',', $team_list ) );
-					}
-				endwhile;
-			endif;
+				$team_list  = explode( ',', get_post_meta( $member_teams->post->ID, 'awsm-member-teams', true ) );
+				$team_index = array_search( $team_id, $team_list );
+				if ( $team_index !== false ) {
+					unset( $team_list[ $team_index ] );
+					update_post_meta( $member_teams->post->ID, 'awsm-member-teams', implode( ',', $team_list ) );
+				}
+			endwhile;
 			wp_reset_postdata();
 		}
 
@@ -1554,18 +1612,15 @@ if ( ! class_exists( 'Awsm_Team' ) ) :
 			);
 
 			$member_teams = new WP_Query( $teamargs );
-			if ( $member_teams->have_posts() ) :
-				while ( $member_teams->have_posts() ) :
-					$member_teams->the_post();
-					$member_list  = $this->array_flatten( get_post_meta( $member_teams->post->ID, 'memberlist', true ) );
-					$member_index = array_search( $member_id, $member_list );
-					if ( $member_index !== false ) {
-						unset( $member_list[ $member_index ] );
-						update_post_meta( $member_teams->post->ID, 'memberlist', $member_list );
-					}
-				endwhile;
-			endif;
-
+			while ( $member_teams->have_posts() ) :
+				$member_teams->the_post();
+				$member_list  = $this->array_flatten( get_post_meta( $member_teams->post->ID, 'memberlist', true ) );
+				$member_index = array_search( $member_id, $member_list );
+				if ( $member_index !== false ) {
+					unset( $member_list[ $member_index ] );
+					update_post_meta( $member_teams->post->ID, 'memberlist', $member_list );
+				}
+			endwhile;
 			wp_reset_postdata();
 		}
 
@@ -1640,7 +1695,7 @@ if ( ! class_exists( 'Awsm_Team' ) ) :
 		 *
 		 * @since 1.0.0
 		 * @param string $postype Post type slug.
-		 * @param int    $post_id ID of post.
+		 * @param mixed  $post_id ID of post.
 		 */
 		public function get_options( $postype, $post_id ) {
 			$post = get_post( $post_id );
@@ -1663,6 +1718,7 @@ if ( ! class_exists( 'Awsm_Team' ) ) :
 				'custom_css',
 				'enable_member_search',
 				'enable_filter',
+				'awsm_team_filter_all',
 				'team_filters',
 				'awsm_member_order',
 				'awsm_member_order_by',
@@ -1681,6 +1737,7 @@ if ( ! class_exists( 'Awsm_Team' ) ) :
 				'custom_css'           => '',
 				'enable_member_search' => 0,
 				'enable_filter'        => 0,
+				'awsm_team_filter_all' => 'yes',
 				'team_filters'         => '',
 				'awsm_member_order'    => '',
 				'awsm_member_order_by' => 'drag-and-drop',
@@ -1944,7 +2001,7 @@ if ( ! class_exists( 'Awsm_Team' ) ) :
 			if ( ! $error ) {
 				$order   = sanitize_text_field( wp_unslash( $_POST['order'] ) );
 				$orderby = sanitize_text_field( wp_unslash( $_POST['orderby'] ) );
-				$members = array_map( 'intval', wp_unslash( $_POST['memberlist'] ) );
+				$members = is_array( $_POST['memberlist'] ) ? array_map( 'intval', wp_unslash( $_POST['memberlist'] ) ) : array();
 
 				if ( 'drag-and-drop' === $order ) {
 					$teamargs = array(
@@ -1965,18 +2022,13 @@ if ( ! class_exists( 'Awsm_Team' ) ) :
 
 				$team = new WP_Query( $teamargs );
 
-				if ( $team->have_posts() ) :
-					while ( $team->have_posts() ) :
-						$team->the_post();
+				while ( $team->have_posts() ) :
+					$team->the_post();
 
-						$members_list .= "<li data-member-id='" . esc_attr( $team->post->ID ) . "' class=''>
-						<img width='31' height='31' src='" . esc_url( $this->team_thumbnail( $team->post->ID, 'thumbnail' ) ) . "' />
-						<p>" . esc_html( get_the_title() ) . "</p><span class='remove-member-to-list' data-member='" . esc_attr( $team->post->ID ) . "'><i class='awsm-icon-close'></i></span>
-						<input type='hidden' name='memberlist[]' value='" . esc_attr( $team->post->ID ) . "'>
-						</li>";
-					endwhile;
-					wp_reset_postdata();
-				endif;
+					$members_list .= "<li data-member-id='" . intval( $team->post->ID ) . "' class=''>
+					<img width='31' height='31' src='" . esc_url( $this->team_thumbnail( $team->post->ID, 'thumbnail' ) ) . "' /><p>" . esc_html( get_the_title() ) . "</p><span class='remove-member-to-list' data-member='" . intval( $team->post->ID ) . "'><i class='awsm-icon-close'></i></span><input type='hidden' name='memberlist[]' value='" . intval( $team->post->ID ) . "'></li>";
+				endwhile;
+				wp_reset_postdata();
 			}
 
 			wp_send_json(
@@ -2092,7 +2144,7 @@ if ( ! class_exists( 'Awsm_Team' ) ) :
 		 * Server side rendering.
 		 *
 		 * @param array $atts Block attributes.
-		 * @return string Block output content.
+		 * @return void|string Block output content.
 		 */
 		public function awsm_team_render_callback( $atts ) {
 			if ( ! isset( $atts['shortcode'] ) ) {
@@ -2172,7 +2224,7 @@ if ( ! class_exists( 'Awsm_Team' ) ) :
 				}
 			}
 			wp_enqueue_script( 'atp_choose_team', plugins_url( 'js/awsm-block.js', $this->settings['plugin_file'] ), $script_deps, $this->settings['plugin_version'], true );
-			wp_enqueue_style( 'atp_choose_team', plugins_url( 'css/awsm-team-block.css', $this->settings['plugin_file'] ), false, $this->settings['plugin_version'], 'all' );
+			wp_enqueue_style( 'atp_choose_team', plugins_url( 'css/awsm-team-block.css', $this->settings['plugin_file'] ), array(), $this->settings['plugin_version'], 'all' );
 			wp_localize_script( 'atp_choose_team', 'team_settings', $this->team_data() );
 		}
 
@@ -2250,7 +2302,7 @@ if ( ! class_exists( 'Awsm_Team' ) ) :
 				$response = wp_remote_get( self::get_kernl_url( 'latest-version' ), $options );
 				if ( ! is_wp_error( $response ) ) {
 					$response_body = wp_remote_retrieve_body( $response );
-					if ( ! is_wp_error( $response_body ) ) {
+					if ( ! empty( $response_body ) ) {
 						if ( wp_remote_retrieve_response_code( $response ) === 200 ) {
 							set_transient( '_awsm_team_pro_latest_version_data', $response_body, HOUR_IN_SECONDS );
 						}
@@ -2324,7 +2376,7 @@ if ( ! class_exists( 'Awsm_Team' ) ) :
 		 * @param int     $id The member ID or the team filter term ID.
 		 * @param boolean $is_member Is member attribute or not.
 		 * @param boolean $echo Whether to echo the attribute or not.
-		 * @return string
+		 * @return void|string
 		 */
 		public static function deep_link_attr( $id, $is_member = true, $echo = true ) {
 			$attr     = '';

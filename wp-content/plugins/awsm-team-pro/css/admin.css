@@ -315,9 +315,18 @@ select.awsm-select-default {
 	border: solid 1px #ddd;
 	background-color: #fdfdfd;
 }*/
-.awsm-align-right { margin:0 10px 0 0px; }
-.awsm-filter-show.show{ display: block; }
-.awsm-filter-show{ display: none; }
+.awsm-align-right {
+	margin:0 10px 0 0px;
+}
+.awsm-filter-show.show {
+	display: block;
+}
+.awsm-filter-show{
+	display: none;
+}
+.awsm-filter-show p:last-of-type {
+	margin-bottom: 0;
+}
 
 #select2-awsm-members-results{
 	display: -webkit-box;

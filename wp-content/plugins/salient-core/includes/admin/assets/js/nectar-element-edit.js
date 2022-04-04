@@ -678,8 +678,30 @@
         $('.column-border-device-group-header').show();
       }
     }).trigger('change');
+
+    // Mask param group device group header toggle
+    $('input#mask_enable-true').on('change', function() {
+      if( $(this).prop('checked') != true ) {
+        $('.mask-alignment-device-group-header').hide();
+      } else {
+        $('.mask-alignment-device-group-header').show();
+      }
+    }).trigger('change');
   }
 
+
+  function nectarFancyRadioEvents() {
+
+    $("body").on('change','.n_radio_html_val',function(){
+      
+      var group_id = $(this).parents('.nectar-radio-html').data("grp-id");
+      $("#nectar-radio-html-"+group_id).val($(this).val()).trigger('change');
+      $('.nectar-radio-html-list li').removeClass('active');
+      $(this).parents('li').addClass('active');
+      
+    });
+
+  }
 
   function nectarFancyCheckboxes() {
 
@@ -943,6 +965,37 @@
         $(this).val($(this).attr('data-default-val')).trigger('change');
       }
 
+    });
+
+  }
+
+  function nectarRangeSliders() {
+
+    var textContent = ('textContent' in document) ? 'textContent' : 'innerText';
+    
+    function valueOutput(element) {
+      var value = element.value;
+      var output = $(element).parent().siblings('.output')[0];
+      output[textContent] = value;
+    }
+    
+    $('input[type="range"].nectar-range-slider').rangeslider({
+      polyfill: false,
+      onInit: function() {
+        valueOutput(this.$element[0]);
+      },
+      onSlideEnd: function(position, value) {
+        this.$element.val(value);
+        // fix overflow on slider 
+        if( value > 170) {
+          $(window).trigger('resize');
+        }
+        
+      }
+    });
+
+    $('body').on('input', '.nectar-range-slider', function(e) {
+      valueOutput(e.target);
     });
 
   }
@@ -1278,6 +1331,7 @@
         createDeviceGroup('column-margin-device-group');
         createDeviceGroup('column-border-device-group');
         createDeviceGroup('column-bg-img-device-group');
+        createDeviceGroup('mask-alignment-device-group');
 
         columnBorderToggle();
 
@@ -1301,6 +1355,10 @@
       if( 'image_with_animation' === $shortcode ) {
         createDeviceGroup('image-margin-device-group');
         createDeviceGroup('image-custom-width-device-group');
+        createDeviceGroup('position-display-device-group');
+        createDeviceGroup('position-device-group');
+        createDeviceGroup('transform-device-group');
+        createDeviceGroup('mask-alignment-device-group');
 
         $('[data-vc-shortcode="image_with_animation"] [data-vc-shortcode-param-name="max_width"] select[name="max_width"]').on('change', function(){
           if($(this).val() != 'custom') {
@@ -1310,6 +1368,12 @@
           }
         }).trigger('change');
 
+      }
+
+      if( 'nectar_icon' === $shortcode ) {
+        createDeviceGroup('position-device-group');
+        createDeviceGroup('position-display-device-group');
+        createDeviceGroup('transform-device-group');
       }
 
       if( 'nectar_cta' === $shortcode ) {
@@ -1356,7 +1420,8 @@
       'split_line_heading' === $shortcode ||
       'nectar_text_inline_images' === $shortcode ||
       'testimonial_slider' === $shortcode ||
-      'nectar_video_player_self_hosted' === $shortcode ) {
+      'nectar_video_player_self_hosted' === $shortcode ||
+      'nectar_icon' === $shortcode ) {
         deviceGroupEvents();
       }
 
@@ -1368,6 +1433,9 @@
 
       // Gradient Colorpickers.
       nectarGradientColorpicker();
+
+      // Range sliders.
+      nectarRangeSliders();
 
       // Video field.
       videoAttachFields();
@@ -1400,6 +1468,9 @@
 
     // Fancy checkbox events.
     nectarFancyCheckboxEvents();
+
+    // Custom radio parms
+    nectarFancyRadioEvents();
 
     // Dynamic el styling - front end page builder
     $(window).on('load', function() {

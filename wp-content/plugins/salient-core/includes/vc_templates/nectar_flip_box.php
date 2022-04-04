@@ -33,8 +33,8 @@ extract(shortcode_atts(array(
 	'flip_direction' => 'horizontal-to-left'
 ), $atts));
 
-$style  = null;
-$style2 = null;
+$style  = '';
+$style2 = '';
 $front_lazy_escaped = '';
 $back_lazy_escaped = '';
 
@@ -46,12 +46,15 @@ if( !empty($image_url_1) ) {
 		} else {          
 	    $style .= 'background-image: url('.esc_url($image_url_1) . '); ';
 		}
-  } else {
+  } else  {
 		$bg_image_src = wp_get_attachment_image_src($image_url_1, 'full');
-		if( 'lazy-load' === $image_loading || property_exists('NectarLazyImages', 'global_option_active') && true === NectarLazyImages::$global_option_active) {
-			$front_lazy_escaped .= 'data-nectar-img-src="'.esc_url($bg_image_src[0]).'"';
-		} else {
-			$style .= 'background-image: url(\''.esc_url($bg_image_src[0]).'\'); ';
+
+		if( isset($bg_image_src[0]) ) {
+			if( 'lazy-load' === $image_loading || property_exists('NectarLazyImages', 'global_option_active') && true === NectarLazyImages::$global_option_active) {
+				$front_lazy_escaped .= 'data-nectar-img-src="'.esc_url($bg_image_src[0]).'"';
+			} else {
+				$style .= 'background-image: url(\''.esc_url($bg_image_src[0]).'\'); ';
+			}
 		}
 		
 	}
@@ -69,10 +72,13 @@ if( !empty($image_url_2) ) {
 		
   } else {
 		$bg_image_src_2 = wp_get_attachment_image_src($image_url_2, 'full');
-		if( 'lazy-load' === $image_loading || property_exists('NectarLazyImages', 'global_option_active') && true === NectarLazyImages::$global_option_active) {
-			$back_lazy_escaped .= 'data-nectar-img-src="'.esc_url($bg_image_src_2[0]).'"';
-		} else {
-			$style2 .= 'background-image: url(\''.esc_url($bg_image_src_2[0]).'\'); ';
+
+		if( isset($bg_image_src_2[0]) ) {
+			if( 'lazy-load' === $image_loading || property_exists('NectarLazyImages', 'global_option_active') && true === NectarLazyImages::$global_option_active) {
+				$back_lazy_escaped .= 'data-nectar-img-src="'.esc_url($bg_image_src_2[0]).'"';
+			} else {
+				$style2 .= 'background-image: url(\''.esc_url($bg_image_src_2[0]).'\'); ';
+			}
 		}
 		
 	}
@@ -193,6 +199,3 @@ echo '<div class="nectar-flip-box" data-min-height="'.esc_attr($min_height).'" d
 echo '<div class="flip-box-front" '.$front_lazy_escaped.' data-bg-overlay="'.esc_attr($bg_color_overlay).'" data-text-color="'.esc_attr($text_color).'" style="'.$style.'"> <div class="inner">'.$icon_markup . do_shortcode($front_content).'</div> </div>';
 echo '<div class="flip-box-back" '.$back_lazy_escaped.' data-bg-overlay="'.esc_attr($bg_color_overlay_2).'" data-text-color="'.esc_attr($text_color_2).'" style="'.$style2.'"> <div class="inner">'.do_shortcode($content).'</div> </div>';
 echo '</div>';
-
-
-

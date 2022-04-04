@@ -40,6 +40,9 @@ extract(shortcode_atts(array(
   'image_size' => '',
   'custom_image_size' => '',
   'custom_sizes_attr' => '',
+  'mask_enable' => '',
+  'mask_shape' => '',
+  'mask_custom_image' => '',
   'el_class' => ''), $atts));
 
   $parsed_animation = str_replace(" ","-",$animation);
@@ -190,6 +193,19 @@ extract(shortcode_atts(array(
   $wrap_image_attrs_escaped .= 'data-animation="'.esc_attr(strtolower($parsed_animation)).'" ';
   $wrap_image_attrs_escaped .= $margin_style_attr;
 
+  if( 'true' === $mask_enable && 'custom' === $mask_shape ) {
+
+    $mask_image_src = $mask_custom_image;
+
+    if (preg_match('/^\d+$/', $mask_custom_image)) {
+      apply_filters('wpml_object_id', $mask_image_src, 'attachment', TRUE);
+      $mask_image_src = wp_get_attachment_image_src($mask_custom_image, 'full');
+      $mask_image_src = (isset($mask_image_src[0])) ? $mask_image_src[0] : '';
+    }
+
+    $wrap_image_attrs_escaped .= 'style="-webkit-mask-image: url('.esc_attr($mask_image_src).');"';
+  }
+
   // Attributes applied to img.
   $image_attrs_escaped = 'data-delay="'.esc_attr($delay).'" ';
   $image_attrs_escaped .= 'height="'.esc_attr($image_height).'" ';
@@ -229,12 +245,19 @@ extract(shortcode_atts(array(
   if( !empty($img_link) || !empty($img_link_large) ) {
 
     if( !empty($img_link) && empty($img_link_large) ) {
+
+      $link_classes = array(esc_attr($alignment));
+      if( 'lightbox' === $img_link_target ) {
+        $img_link_target = '_self';
+        $link_classes[] = 'pp';
+        $link_classes[] = 'nectar_video_lightbox';
+      }
       // Link image to larger version.
       echo '<div class="img-with-aniamtion-wrap '.esc_attr($alignment).$dynamic_el_styles.'" '.$wrap_image_attrs_escaped.'>
       <div class="inner">
         <div class="hover-wrap"'.$image_hover_attrs_escaped.'> '.$color_overlay_markup_escaped.'
           <div class="hover-wrap-inner">
-            <a href="'.esc_url($img_link).'" target="'.esc_attr($img_link_target).'" class="'.esc_attr($alignment).'">
+            <a href="'.esc_url($img_link).'" target="'.esc_attr($img_link_target).'" class="'.implode(' ',$link_classes).'">
               <img class="img-with-animation skip-lazy '.esc_attr($el_class).'" '.$image_attrs_escaped.' />
             </a>
           </div>

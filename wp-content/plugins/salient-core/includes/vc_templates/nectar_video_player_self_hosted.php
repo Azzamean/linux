@@ -16,6 +16,7 @@ extract(shortcode_atts(array(
 	"hide_controls" => "", 
 	'loop' => '', 
 	'autoplay' => '', 
+  'autoplay_func' => '',
 	'border_radius' => 'none',
 	'box_shadow' => '',
   'player_functionality' => '',
@@ -88,6 +89,7 @@ echo '<div class="' . esc_attr( $css_class ) . '" data-border-radius="'.esc_attr
 
 
 $video_attrs_arr = array();
+$video_classes_arr = array('nectar-video-self-hosted');
 
 if( 'yes' === $loop ) {
   $video_attrs_arr[] = 'loop';
@@ -96,7 +98,14 @@ if( 'yes' !== $hide_controls ) {
   $video_attrs_arr[] = 'controls controlsList="nodownload"';
 }
 if( 'yes' === $autoplay ) {
-  $video_attrs_arr[] = 'autoplay muted playsinline';
+
+  if( 'scroll_based' === $autoplay_func ) {
+    $video_attrs_arr[] = ' muted playsinline';
+    $video_classes_arr[] = 'scroll-triggered-play';
+  } else {
+    $video_attrs_arr[] = 'autoplay muted playsinline';
+  }
+
 }
 
 $preload_attr = 'auto';
@@ -112,7 +121,9 @@ if ( !('true' === $rm_on_mobile && wp_is_mobile()) ) {
 
   if( 'lazy-load' === $video_loading ) {
 
-    echo '<video width="1280" height="720" class="nectar-lazy-video" preload="'.esc_attr($preload_attr).'" '.$video_attrs_escaped.'>';
+    $video_classes_arr[] = 'nectar-lazy-video';
+
+    echo '<video width="1280" height="720" class="'.implode( ' ', $video_classes_arr ).'" preload="'.esc_attr($preload_attr).'" '.$video_attrs_escaped.'>';
     if (!empty($video_webm)) {
         echo '<source data-nectar-video-src="'. esc_url($video_webm) .'" type="video/webm">';
     }
@@ -124,7 +135,7 @@ if ( !('true' === $rm_on_mobile && wp_is_mobile()) ) {
   } 
   else {
 
-    echo '<video width="1280" height="720" preload="'.esc_attr($preload_attr).'" '.$video_attrs_escaped.'>';
+    echo '<video width="1280" height="720" class="'.implode( ' ', $video_classes_arr ).'" preload="'.esc_attr($preload_attr).'" '.$video_attrs_escaped.'>';
     if (!empty($video_webm)) {
         echo '<source src="'. esc_url($video_webm) .'" type="video/webm">';
     }
@@ -137,4 +148,3 @@ if ( !('true' === $rm_on_mobile && wp_is_mobile()) ) {
     
 }
 echo '</div></div></div>';
-  

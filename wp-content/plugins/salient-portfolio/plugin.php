@@ -16,6 +16,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 define( 'SALIENT_PORTFOLIO_ROOT_DIR_PATH', plugin_dir_path( __FILE__ ) );
 define( 'SALIENT_PORTFOLIO_PLUGIN_PATH', plugins_url( 'salient-portfolio' ) );
+if ( ! defined( 'SALIENT_PORTFOLIO_PLUGIN_VERSION' ) ) {
+	define( 'SALIENT_PORTFOLIO_PLUGIN_VERSION', '1.7.1' );
+}
 
 register_deactivation_hook( __FILE__, 'flush_rewrite_rules' );
 register_activation_hook( __FILE__, 'salient_portfolio_flush_rewrites' );
@@ -28,7 +31,7 @@ class Salient_Portfolio {
 	
 	static $instance = false;
 	
-	public $plugin_version = '1.7.1';
+	public $plugin_version = SALIENT_PORTFOLIO_PLUGIN_VERSION;
 		
 	private function __construct() {
 		

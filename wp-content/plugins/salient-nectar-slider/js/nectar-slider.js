@@ -3992,7 +3992,7 @@ if ('IntersectionObserver' in window) {
   
   var feEditorStored = false;
   function dynamicHeightSliders(){
-    
+ 
     var $adminBarHeight = ($('#wpadminbar').length > 0) ? 28 : 0 ;
     
     if( $('body.compose-mode').length > 0 && feEditorStored == false) {
@@ -4239,8 +4239,22 @@ if ('IntersectionObserver' in window) {
     });
   }
   
-  if(window.innerWidth > 690){
-    $(window).on('resize.dynamicHeights',dynamicHeightSliders);
+  var usingMobileBrowser = (navigator.userAgent.match(/(Android|iPod|iPhone|iPad|BlackBerry|IEMobile|Opera Mini)/)) ? true : false;
+
+  if(!usingMobileBrowser){
+
+    $(window).on('resize', function() {
+      dynamicHeightSliders();
+      nsSliderContentResize();
+    });
+    $(window).on('smartresize', function(){
+      setTimeout(function(){
+        dynamicHeightSliders();
+        nsSliderContentResize();
+      }, 100);
+      
+    });
+
   } else {
     
     //stop mobile browsers from firing the resize event on scroll (when toolbar hides)
@@ -4251,9 +4265,17 @@ if ('IntersectionObserver' in window) {
       $orientationChange = 1;
     });
     
-    $(window).resize(function(){
-      if( ($(window).width() != $windowWidth && $(window).height != $windowHeight) || $orientationChange == 1){
+    $(window).on('resize', function() {
+
+      if( ($(window).width() != $windowWidth && $(window).height != $windowHeight) || $orientationChange == 1) {
+    
         dynamicHeightSliders(); 
+        nsSliderContentResize();
+        $(window).trigger('salient-parallax-bg-recalculate');
+
+        $windowWidth = $(window).width();
+        $windowHeight = $(window).height();
+
         $orientationChange = 0;
       }
     });
@@ -4490,8 +4512,7 @@ if ('IntersectionObserver' in window) {
     
   }
   
-  
-  $(window).on('resize.nsSliderContent',nsSliderContentResize);
+
   
   
   function resizeToCover() {

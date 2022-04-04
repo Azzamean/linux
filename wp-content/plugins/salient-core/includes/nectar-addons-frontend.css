@@ -40,9 +40,22 @@ body.compose-mode .vc_element.vc_vc_row:hover .vc_controls {
   display: block;
 }
 
-.compose-mode .vc_row-o-full-height > .span_12 > .vc_element.vc_vc_column {
+.compose-mode .vc_row-o-full-height > .span_12 > .vc_element.vc_vc_column,
+.compose-mode .vc_element.vc_image_with_animation {
   position: static;
 }
+
+.compose-mode .vc_empty-shortcode-element.vc_image_with_animation,
+.compose-mode .vc_empty-shortcode-element.vc_nectar_icon {
+  min-height: 0;
+}
+
+.compose-mode  .wpb_wrapper .vc_element.absolute-parent {
+  display: inline!important;
+  position: static!important;
+  min-height: 0!important;
+}
+
 
 body.vc_editor.compose-mode #header-outer {
   top: 0!important;

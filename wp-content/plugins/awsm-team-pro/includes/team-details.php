@@ -229,7 +229,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 								echo '</select>';
 							}
 							?>
-
+							<p>
+								<label><input type="checkbox" name="awsm_team_filter_all" class="awsm_team_filter_all" value="yes" <?php checked( $options['awsm_team_filter_all'], 'yes', true ); ?>><?php esc_html_e( "Show 'All' tab", 'awsm-team-pro' ); ?></label>
+							</p>
 						</div><!-- .awsm-filter-show -->
 					</div><!-- .awsm-filter-wrap -->
 				</div>

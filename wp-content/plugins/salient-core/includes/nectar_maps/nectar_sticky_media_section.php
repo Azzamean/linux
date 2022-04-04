@@ -57,7 +57,7 @@ return array(
             "heading" => esc_html__("MP4 File URL", "salient-core"),
             "value" => "",
             "param_name" => "video_mp4",
-            "description" => esc_html__("Enter the URL for your mp4 video file here", "salient-core"),
+            "description" => esc_html__("Enter the URL for your mp4 video file here.", "salient-core"),
             "dependency" => Array('element' => "section_type", 'value' => array('video'))
         ),
 
@@ -86,6 +86,28 @@ return array(
             ),
             "description" => esc_html__("Cover will crop the video to fit the media area, where as contain will ensure the full video always displays. ", "salient-core")
           ),
+  
+          array(
+            "type" => "dropdown",
+            "heading" => esc_html__("Video Alignment", "salient-core"),
+            "param_name" => "video_alignment",
+            'save_always' => true,
+            "dependency" => Array('element' => "video_fit", 'value' => array('cover')),
+            "value" => array(
+              esc_html__("Default (Center Center)", "salient-core" ) => "default",
+              esc_html__("Left Top", "salient-core" ) => "left-top",
+              esc_html__("Left Center", "salient-core" ) => "left-center",
+              esc_html__("Left Bottom", "salient-core" ) => "left-bottom",
+              esc_html__("Center Top", "salient-core" ) => "center-top",
+              esc_html__("Center Center", "salient-core" ) => "center-center",
+              esc_html__("Center Bottom", "salient-core" ) => "center-bottom",
+              esc_html__("Right Top", "salient-core" ) => "right-top",
+              esc_html__("Right Center", "salient-core" ) => "right-center",
+              esc_html__("Right Bottom", "salient-core" ) => "right-bottom"   
+            ),
+            "description" => esc_html__("Select your desired video alignment.", "salient-core")
+          ),
+
         
 		
 	)

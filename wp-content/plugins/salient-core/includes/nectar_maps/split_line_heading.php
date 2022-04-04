@@ -20,7 +20,7 @@ return array(
 			"param_name" => "animation_type",
 			"value" => array(
 				esc_html__("Line reveal by available space", "salient-core") => "line-reveal-by-space",
-        		esc_html__("Line reveal by each new line", "salient-core") => "default",
+        esc_html__("Line reveal by each new line", "salient-core") => "default",
 				esc_html__("Twist in entire element", "salient-core") => "twist-in"
 			),
 			'save_always' => true,

@@ -18,6 +18,7 @@ extract(shortcode_atts(array(
   'number_font_size' => '62', 
   'symbol_font_size' => '62', 
   'effect' => 'count', 
+  'effect_delay' => '',
   'number' => '0', 
   'color' => 'Default'), $atts));
   
@@ -59,7 +60,7 @@ extract(shortcode_atts(array(
   if( $milestone_wrap === true ) {
     echo '<div class="milestone-wrap">';
   }
-  echo '<div class="nectar-milestone '. $motion_blur . '" '. $symbol_markup_escaped.' data-ms-align="'.esc_attr($milestone_alignment).'" > '.$number_markup_escaped.' '.$subject_markup_escaped.' </div>';
+  echo '<div class="nectar-milestone '. $motion_blur . '" '. $symbol_markup_escaped.' data-animation-delay="'.esc_attr($effect_delay).'" data-ms-align="'.esc_attr($milestone_alignment).'" > '.$number_markup_escaped.' '.$subject_markup_escaped.' </div>';
   if( $milestone_wrap_close ) {
     echo '</div>';
   }

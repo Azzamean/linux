@@ -18,14 +18,7 @@
 		<?php
 		while ( $team->have_posts() ) :
 			$team->the_post();
-			$teamdata     = $this->get_options( 'awsm_team_member', $team->post->ID );
-			$member_terms = 'awsm-all';
-			$terms        = get_the_terms( $team->post->ID, 'awsm_team_filters' );
-			if ( ! empty( $terms ) ) {
-				foreach ( $terms as $member_term ) {
-					$member_terms .= ' awsm-' . str_replace( ' ', '-', $member_term->term_id );
-				}
-			}
+			$teamdata = $this->get_options( 'awsm_team_member', $team->post->ID );
 
 			$personal_info = sprintf( '<div class="awsm-personal-info"><span>%2$s</span><h3>%1$s</h3></div>', get_the_title(), wp_kses( $teamdata['awsm-team-designation'], 'post' ) );
 			/**
@@ -39,8 +32,10 @@
 			 * @param int $id The Team Post ID.
 			 */
 			$personal_info = apply_filters( 'awsm_team_member_personal_info', $personal_info, $teamdata, $team, $id );
+
+			$member_attrs = $this->get_member_attrs( $team );
 			?>
-				<div id="<?php echo esc_attr( $this->add_id( array( 'awsm-member', $id, $team->post->ID ) ) ); ?>" class="awsm-grid-list awsm-grid-card awsm-team-item awsm-scale-anm <?php echo esc_attr( $member_terms ); ?>" data-griddercontent="#awsm-grid-content-<?php echo esc_attr( $team->post->ID ); ?>">
+				<div id="<?php echo esc_attr( $this->add_id( array( 'awsm-member', $id, $team->post->ID ) ) ); ?>" class="awsm-grid-list awsm-grid-card awsm-team-item <?php echo esc_attr( $member_attrs['class'] ); ?>"<?php echo ! empty( $member_attrs['style'] ) ? ' style="' . esc_attr( $member_attrs['style'] ) . '"' : ''; ?> data-griddercontent="#awsm-grid-content-<?php echo esc_attr( $team->post->ID ); ?>">
 					<span class="awsm-team-link-control awsm-grid-list-item awsm-grid-list-item-<?php echo esc_attr( $team->post->ID ); ?>"<?php Awsm_Team::deep_link_attr( $team->post->ID ); ?>>
 						<figure>
 						<?php echo $this->get_team_thumbnail( $team->post->ID ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>

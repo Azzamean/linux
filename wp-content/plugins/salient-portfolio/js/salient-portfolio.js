@@ -339,6 +339,11 @@
     else {
       setTimeout(this.updateMagPrettyPhotoGallery.bind(this),170);
     }
+
+    // Resize.
+    if (typeof window.Waypoint != 'undefined') {
+     Waypoint.refreshAll();
+    }
     
     return false;
   };
