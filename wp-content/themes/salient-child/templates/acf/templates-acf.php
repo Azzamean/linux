@@ -25,7 +25,7 @@ $projects_links = [
   'mailing_list_icon' => ['url' => $mailing_list, 'name' => 'Mailing List', 'icon' => 'fa fa-envelope-o'], 
   'lfx_insights_icon' => ['url' => $lfx_insights, 'name' => 'LFX Insights', 'icon' => 'fa fa-bar-chart'], 
   'lfx_security_icon' => ['url' => $lfx_security, 'name' => 'LFX Security', 'icon' => 'fa fa-shield'],
-  'wiki_icon' => ['url' => $wiki, 'name' => 'Wikipedia', 'icon' =>  'fa fa-wikipedia-w'],
+  'wiki_icon' => ['url' => $wiki, 'name' => 'Wiki', 'icon' =>  'fa fa-wikipedia-w'],
   'road_map_icon' => ['url' => $roadmap, 'name' => 'Roadmap', 'icon' => 'fa fa-map-o'],
   'contributions_icon' => ['url' => $contributions, 'name' => 'Contributions', 'icon' => 'fa fa-handshake-o'],
   'calendar_icon' => ['url' => $calendar, 'name' => 'Calendar', 'icon' => 'fa fa-calendar'],
