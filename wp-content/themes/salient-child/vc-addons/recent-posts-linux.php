@@ -125,6 +125,63 @@ class RecentPostsLinux
                         ),
                         "save_always" => true,
                     ],
+                    [
+                        "type" => "checkbox",
+                        "class" => "",
+                        "heading" => esc_html__("Categories", "recent_posts"),
+                        "param_name" => "categories",
+                        "value" => [
+                            esc_html__(
+                                "Show Categories",
+                                "recent_posts"
+                            ) => "show-categories",
+                        ],
+                        "std" => "hide-categories",
+                        "description" => esc_html__(
+                            "Check or uncheck the box if you want to show or hide categories",
+                            "recent_posts"
+                        ),
+                        "save_always" => true,
+                    ],
+                    [
+                        "type" => "checkbox",
+                        "class" => "",
+                        "heading" => esc_html__("Tags", "recent_posts"),
+                        "param_name" => "tags",
+                        "value" => [
+                            esc_html__(
+                                "Show Tags",
+                                "recent_posts"
+                            ) => "show-tags",
+                        ],
+                        "std" => "hide-tags",
+                        "description" => esc_html__(
+                            "Check or uncheck the box if you want to show or hide tags",
+                            "recent_posts"
+                        ),
+                        "save_always" => true,
+                    ],
+                    [
+                        "type" => "checkbox",
+                        "class" => "",
+                        "heading" => esc_html__(
+                            "Read More Link",
+                            "recent_posts"
+                        ),
+                        "param_name" => "read",
+                        "value" => [
+                            esc_html__(
+                                "Show Read More Link",
+                                "recent_posts"
+                            ) => "show-read",
+                        ],
+                        "std" => "hide-read",
+                        "description" => esc_html__(
+                            "Check or uncheck the box if you want to show or hide read more link",
+                            "recent_posts"
+                        ),
+                        "save_always" => true,
+                    ],
                 ],
             ]);
         endif;
@@ -161,6 +218,9 @@ function recent_posts_linux($atts, $content)
                 "columns" => "",
                 "category_id" => "",
                 "pagination" => "",
+                "categories" => "",
+                "tags" => "",
+                "read" => "",
                 "suppress_filters" => true,
             ],
             $atts
@@ -172,6 +232,9 @@ function recent_posts_linux($atts, $content)
     $design = !empty($design) ? $design : "basic-design";
     $paged = get_query_var("paged") ? get_query_var("paged") : 1;
     $pagination = !empty($pagination) ? $pagination : "show-pagination";
+    $categories = !empty($categories) ? $categories : "hide-categories";
+    $tags = !empty($tags) ? $tags : "hide-tags";
+    $read = !empty($read) ? $read : "hide-read";
 
     $query_args = [
         "post_type" => "post",
@@ -234,6 +297,42 @@ function recent_posts_linux($atts, $content)
             break;
         default:
             $pagination = true;
+            break;
+    }
+
+    switch ($categories) {
+        case "show-categories":
+            $categories = true;
+            break;
+        case "hide-categories":
+            $categories = false;
+            break;
+        default:
+            $categories = true;
+            break;
+    }
+
+    switch ($tags) {
+        case "show-tags":
+            $tags = true;
+            break;
+        case "hide-tags":
+            $tags = false;
+            break;
+        default:
+            $tags = true;
+            break;
+    }
+
+    switch ($read) {
+        case "show-read":
+            $read = true;
+            break;
+        case "hide-read":
+            $read = false;
+            break;
+        default:
+            $read = true;
             break;
     }
 
@@ -305,10 +404,27 @@ function recent_posts_linux($atts, $content)
                         get_the_title() .
                         "</a></h3>";
                 }
-                $output .=
-                    '<p class="basic-design date">' .
-                    get_the_date("M j, Y") .
-                    "</p>";
+
+                $output .= '<p class="basic-design date">';
+                $output .= "<span>" . get_the_date("M j, Y") . "</span>";
+
+                if ($categories != false && $tags != true) {
+                    $output .= " In " . get_the_category_list(", ");
+                }
+
+                if ($tags != false && $categories != true) {
+                    $output .= get_the_tag_list(" In ", ", ");
+                }
+
+                if ($tags != false && $categories != false) {
+                    $output .=
+                        " In " .
+                        get_the_category_list(", ") .
+                        get_the_tag_list(", ", ", ");
+                }
+
+                $output .= "</p>";
+
                 $excerpt_length = !empty($nectar_options[""])
                     ? intval($nectar_options[""])
                     : 50;
@@ -317,6 +433,12 @@ function recent_posts_linux($atts, $content)
                     nectar_excerpt($excerpt_length) .
                     "</p>";
                 $output .= $excerpt_markup;
+                if ($read != false) {
+                    $output .=
+                        '<a class="basic-design read" href=' .
+                        get_permalink() .
+                        ">Read More</a>";
+                }
                 $output .= "</div>";
                 $output .= "</div>";
                 $count++;

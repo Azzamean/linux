@@ -35,11 +35,32 @@ get_header();
 				<?php } ?>
 				</div>
 			</div>
+			
+	
+			
 			<div class="hentry projects-heading">
 				<div class="col span_12 section-title projects-title">
+							<?php
+       if ($logo_header == "Logo") {
+           $header = $logo; ?>
+					<img src="<?php echo $header; ?>" />
+					<?php
+       }
+       if ($logo_header == "White Logo") {
+           $header = $white_logo; ?>
+					<img src="<?php echo $header; ?>" />
+					<?php
+       }
+       if ($logo_header != "Logo" && $logo_header != "White Logo") { ?>
 					<h1 class="entry-title" style="color:#ffffff;"><?php the_title(); ?></h1>
+					<?php }
+       ?>
+					
 				</div>
 			</div>
+			
+			
+			
 		</div>
 
 		<div class="row">
@@ -48,7 +69,6 @@ get_header();
 				<div class="row">
 					<section class="projects-description">
 						<?php if ($description != null || $description != "") { ?>
-						<h2>Description</h2>
 						<?php echo $description;} ?>
 					</section>
 				</div>
@@ -56,7 +76,18 @@ get_header();
 				<div class="full-width-section">
 					<div class="row-bg-wrap">
 						<div class="inner-wrap">
-							<div class="row-bg projects-background" style="background-color:<?php echo $accent_color; ?>"></div>
+						
+						
+						<?php if ($icon_banner != null) {
+          $banner = "background: url(" . $icon_banner . ")";
+      } else {
+          $banner = "background-color: " . $accent_color;
+      } ?>
+						
+						
+						
+						
+							<div class="row-bg projects-background" style="<?php echo $banner; ?>"></div>
 						</div>
 					</div>
 					<section class="projects-links">
@@ -64,11 +95,15 @@ get_header();
 							<?php foreach ($projects_links as $link) {
            if ($link["url"] != null) { ?>
 							<div class="projects-link-wrap">
-								<a target="_blank" rel="noopener" href="<?php echo $link["url"]; ?>"><span class="screen-reader-text"><?php echo $link["name"]; ?></span><i class="<?php echo $link["icon"]; ?>" aria-hidden="true"></i></a>
+								<a target="_blank" rel="noopener" href="<?php echo $link[
+            "url"
+        ]; ?>"><span class="screen-reader-text"><?php echo $link[
+    "name"
+]; ?></span><i class="<?php echo $link["icon"]; ?>" aria-hidden="true"></i></a>
 								<p><?php echo $link["name"]; ?></p>
 							</div>
 							<?php }
-							} ?>
+       } ?>
 						</div>
 					</section>
 				</div>
@@ -76,7 +111,6 @@ get_header();
 				<div class="row">
 					<section class="projects-details">
 						<?php if ($details != null || $details != "") { ?>
-						<h3>Details</h3>
 						<?php echo $details;} ?>
 					</section>
 				</div>

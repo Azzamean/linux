@@ -72,3 +72,8 @@
     line-height: 0;
     margin-top: 0;
 }
+
+.projects-title img {
+    max-height: 200px;
+    margin: 0 auto;
+}

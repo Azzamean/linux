@@ -39,6 +39,7 @@
 	font-size: 1rem;
 	line-height: 1rem;
 	margin: 0 0 0.5rem 0 !important;
+	padding: 10px 0 !important;
 }
 
 .basic-design.title a {
@@ -50,27 +51,34 @@
 .basic-design.title .external-site:after {
 	/* content: "\f35d"; */
 	content: "\f08e";
-	font-family: 'FontAwesome';
+	font-family: "FontAwesome";
 	margin-left: 5px;
-	font-size: .75rem;
+	font-size: 0.75rem;
 }
 
 .basic-design.date {
 	font-size: 1rem;
-	line-height: 1rem;
+	line-height: 1.25rem;
 	padding: 0;
-	margin: 0 0 0.5rem 0 !important;
+	margin: 0 !important;
 }
 
 .basic-design.date:before {
 	content: "\f073";
-	font-family: 'FontAwesome';
+	font-family: "FontAwesome";
 	margin: 0 10px 0 0;
 }
 
 .basic-design.excerpt {
 	font-size: 14px;
 	line-height: 20px;
+	padding: 10px 0;
+}
+
+.basic-design.read:after {
+	font-family: "FontAwesome";
+	content: "\f178";
+	margin-left: 5px;
 }
 
 
@@ -138,7 +146,7 @@
 .grid-design.read a:after {
 	/* content: "\f35d"; */
 	content: "\f08e";
-	font-family: 'FontAwesome';
+	font-family: "FontAwesome";
 	color: #ffffff;
 	margin-left: 10px;
 }
@@ -182,4 +190,10 @@
 .page-numbers span {
 	color: #ffffff;
 	padding: 10px;
+}
+
+@media only screen and (max-width: 600px) {
+	.basic-design.right {
+		flex-basis: 100%;
+	}
 }
