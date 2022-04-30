@@ -40,7 +40,7 @@ if( !class_exists('Nectar_Woo_Cart') ) {
 
 	    global $nectar_options;
 
-	    // Emmpty Mini Cart Content.
+	    // Empty Mini Cart Content.
 	    if( isset($nectar_options['ajax-cart-style']) &&
 	        'slide_in_click' === $nectar_options['ajax-cart-style'] ) {
 	      add_action( 'woocommerce_after_mini_cart', array($this, 'empty_minicart_buttons'), 10);

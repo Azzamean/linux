@@ -1063,7 +1063,8 @@ if( !empty($nectar_options['overall-bg-color']) ) {
 	.nectar-global-section.after-nav,
 	body.box-rolling,
 	body[data-footer-reveal="1"].ascend.box-rolling,
-	body[data-footer-reveal="1"].box-rolling {
+	body[data-footer-reveal="1"].box-rolling,
+  .wpml-ls-statics-footer {
 		background-color: '.esc_attr($nectar_options['overall-bg-color']).';
 	}';
 }

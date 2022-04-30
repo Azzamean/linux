@@ -119,11 +119,11 @@ input[type=text]::-ms-clear{
   display:none
 }
 sup{
-  font-size:10px;
+  font-size:0.5em;
   vertical-align:super
 }
 sub{
-  font-size:10px;
+  font-size:0.5em;
   vertical-align:sub
 }
 p:empty{
@@ -2958,6 +2958,9 @@ html body .vc_row-fluid.legacy > .span_12 {
 .vc_row.vc_row-o-equal-height>.span_12>.wpb_column >.vc_column-inner >.wpb_wrapper{
   min-height:1px
 }
+.vc_row.vc_row-o-equal-height.vc_row-o-content-top>.span_12>.wpb_column >.vc_column-inner >.wpb_wrapper{
+  min-height:100%;
+}
 .vc_column_container>.vc_column-inner {
   position: relative;
 }
@@ -2983,6 +2986,10 @@ html body .vc_row-fluid.legacy > .span_12 {
 .col {
   position: relative;
   float: left;
+}
+
+.col-overflow-hidden > .vc_column-inner { 
+  overflow: hidden;
 }
 
 
@@ -3165,6 +3172,13 @@ body[data-bg-header="true"].single-portfolio #full_width_portfolio .main-content
 	padding-top: 20px;
 }
 
+/* WPML dev mode */
+.wpml-ls-legacy-list-horizontal.wpml-ls-statics-footer,
+.otgs-development-site-front-end {
+  z-index: 9;
+  position: relative;
+  margin-bottom: 0;
+}
 
 /* Revolution Slider */
 rs-module video, rs-module audio {
@@ -3403,6 +3417,9 @@ html:not(.js) .main-content iframe[src],
 
 #header-outer .wpml-ls-menu-item .wpml-ls-flag{
   margin-bottom:0
+}
+#slide-out-widget-area .wpml-ls-menu-item .wpml-ls-flag {
+  max-width: 100px;
 }
 
 
@@ -5387,6 +5404,10 @@ blockquote .image-icon[data-shadow="true"] {
 .wpb_video_widget.vc_video-aspect-ratio-916 .wpb_video_wrapper {
 	padding-top: 177.77%;
 }
+.wpb_video_widget.vc_video-aspect-ratio-11 .wpb_video_wrapper {
+	padding-top: 100%;
+}
+
 
 
 /* 9.35. Scrolling Text (Loaded conditionally) - See css/elements/scrolling-text.css */

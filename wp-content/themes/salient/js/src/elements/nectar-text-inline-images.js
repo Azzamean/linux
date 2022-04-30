@@ -23,8 +23,16 @@
         var that = this;
   
         this.$markers.each(function(i) {
-           
-            var $image = $(this).find('img');
+
+            var selector = ( $(this).find('img').length > 0 ) ? 'img' : 'video';
+            if( selector == 'video' ) {
+                var height = $(this).height();
+                $(this).find(selector).css({
+                  'width': (height*1.7) + "px"
+                });
+            }
+
+            var $image = $(this).find(selector);
 
             if( $image.length > 0 ) {
 

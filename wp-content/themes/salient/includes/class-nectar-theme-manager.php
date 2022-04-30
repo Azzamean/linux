@@ -113,6 +113,13 @@ if( !class_exists('NectarThemeManager') ) {
         
       }
 
+      // Overall Colors.
+      $overall_font_color = ( isset(self::$options['overall-font-color']) ) ? self::$options['overall-font-color'] : false;
+      if( $overall_font_color ) {
+        self::$colors['overall_font_color'] = $overall_font_color;
+      }
+
+
     }
 
 

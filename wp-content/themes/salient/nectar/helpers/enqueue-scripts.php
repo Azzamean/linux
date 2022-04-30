@@ -521,7 +521,7 @@ if( isset($nectar_options['defer-javascript']) &&
     $nectar_using_VC_front_end_editor = (isset($_GET['vc_editable'])) ? sanitize_text_field($_GET['vc_editable']) : '';
   	$nectar_using_VC_front_end_editor = ($nectar_using_VC_front_end_editor == 'true') ? true : false;
 
-    if( false === $nectar_using_VC_front_end_editor ) {
+    if( false === $nectar_using_VC_front_end_editor && !is_admin() ) {
       add_action( 'wp_default_scripts', 'nectar_defer_parsing_of_jquery', 20 );
     }
 }

@@ -50,7 +50,7 @@ if ( empty( $bg ) && empty( $bg_color ) && $inherit_and_has_featured_img !== tru
 								foreach ( $categories as $category ) {
 									$output .= '<a class="' . esc_attr( $category->slug ) . '" href="' . esc_url( get_category_link( $category->term_id ) ) . '" alt="' . esc_attr( sprintf( __( 'View all posts in %s', 'salient' ), $category->name ) ) . '">' . esc_html( $category->name ) . '</a>';
 								}
-								echo trim( $output );
+								echo apply_filters('nectar_blog_page_header_categories',trim( $output ));
 							}
 						}
 						?>

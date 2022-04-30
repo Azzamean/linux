@@ -48,7 +48,7 @@ function nectar_register_required_plugins() {
         'slug'               => 'js_composer_salient', // The plugin slug (typically the folder name)
         'source'             => get_template_directory() . '/plugins/js_composer_salient.zip', // The plugin source
         'required'           => true, // If false, the plugin is only 'recommended' instead of required
-        'version'            => '6.7', // E.g. 1.0.0. If set, the active plugin must be this version or higher, otherwise a notice is presented
+        'version'            => '6.7.1', // E.g. 1.0.0. If set, the active plugin must be this version or higher, otherwise a notice is presented
         'force_activation'   => false, // If true, plugin is activated upon theme activation and cannot be deactivated until theme switch
         'force_deactivation' => false, // If true, plugin is deactivated upon theme switch, useful for theme-specific plugins
     ),
@@ -57,7 +57,7 @@ function nectar_register_required_plugins() {
         'slug'               => 'salient-core', 
         'source'             => get_template_directory() . '/plugins/salient-core.zip', 
         'required'           => true, 
-        'version'            => '1.9.2', 
+        'version'            => '1.9.4', 
         'force_activation'   => false, 
         'force_deactivation' => false, 
     ),
@@ -102,7 +102,7 @@ function nectar_register_required_plugins() {
         'slug'               => 'salient-nectar-slider', 
         'source'             => get_template_directory() . '/plugins/salient-nectar-slider.zip', 
         'required'           => false,  
-        'version'            => '1.7.1', 
+        'version'            => '1.7.2', 
         'force_activation'   => false,
         'force_deactivation' => false, 
     ),

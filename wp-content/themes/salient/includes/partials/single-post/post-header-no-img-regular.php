@@ -56,7 +56,7 @@ if ( get_post_format() !== 'status' && get_post_format() !== 'aside' && 'image_u
 						foreach ( $categories as $category ) {
 							$output .= '<a class="' . esc_attr( $category->slug ) . '" href="' . esc_url( get_category_link( $category->term_id ) ) . '" alt="' . esc_attr( sprintf( __( 'View all posts in %s', 'salient' ), $category->name ) ) . '">' . esc_html( $category->name ) . '</a>';
 						}
-						echo trim( $output ); // WPCS: XSS ok.
+						echo apply_filters('nectar_blog_page_header_categories',trim( $output )); // WPCS: XSS ok.
 					}
 					?>
 			  </span>
@@ -91,7 +91,7 @@ if ( get_post_format() !== 'status' && get_post_format() !== 'aside' && 'image_u
 				}
 
 				if( $blog_header_type != 'default_minimal') {
-					echo '<span class="meta-category">'.get_the_category_list(', ').'</span>';
+					echo '<span class="meta-category">'.apply_filters('nectar_blog_page_header_categories',get_the_category_list(', ')).'</span>';
 				} else {
 					echo '<span class="meta-comment-count"><a href="'.get_comments_link().'">'. get_comments_number_text( esc_html__('No Comments', 'salient'), esc_html__('One Comment', 'salient'), esc_html__('% Comments', 'salient') ) . '</a></span>';
 				}

@@ -22,6 +22,7 @@
     this.prevScroll = 0;
     this.activeIndex = 0;
     this.prevIndex = -1;
+    this.timeout = '';
 
     this.events();
 
@@ -122,9 +123,11 @@
                   return;
                 }
 
-
-                $allSections.removeClass('active');
-                $activeSection.addClass('active');
+                clearTimeout(that.timeout);
+                that.timeout = setTimeout(function(){
+                  $allSections.removeClass('active');
+                  $activeSection.addClass('active');
+                }, 100);
 
                 
                 if( !$activeSection.hasClass('pause-trigger') ) {
@@ -150,7 +153,7 @@
           });
 
         }, {
-          rootMargin: '-50% 0% -50% 0%',
+          rootMargin: '-40% 0% -40% 0%',
           threshold: 0
         });
 

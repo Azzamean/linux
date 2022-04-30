@@ -16,7 +16,7 @@ class NectarElDynamicStyles {
 
   private static $instance;
 
-  public static $element_css  = array();
+  public static $element_css = array();
   public static $elements_arr = array(
     'vc_row',
     'vc_row_inner',
@@ -55,11 +55,19 @@ class NectarElDynamicStyles {
     'carousel',
     'item',
     'nectar_sticky_media_sections',
+    'nectar_sticky_media_section',
     'tabbed_section',
+    'toggles',
     'tab',
     'bar',
     'vc_pie',
     'button',
+  );
+
+  public static $devices = array(
+    'desktop' => '',
+    'tablet' => 'and (max-width: 999px)',
+    'phone' => 'and (max-width: 690px)'
   );
 
   public static $using_fullscreen_rows = false;
@@ -609,6 +617,50 @@ class NectarElDynamicStyles {
 
       // Parent Row specific.
       if( false !== strpos($shortcode[0],'[vc_row ') ) {
+
+        //// Sticky.
+        if( isset($atts['sticky_row']) && 'true' === $atts['sticky_row'] ) {
+
+          self::$element_css[] = '@media only screen and (min-width: 1000px) {
+            html body {
+              overflow: visible;
+            }
+            .nectar-sticky-row-wrap {
+              position: sticky;
+              z-index: 100;
+            }
+            #header-space {
+              z-index: 100;
+            }
+            .wpb_row .row-bg-wrap .row-bg {
+              transform: translateZ(0) scale(1.006);
+            }
+          }';
+
+          if (isset($atts['sticky_row_alignment']) && !empty($atts['sticky_row_alignment']) ) {
+            
+            if ('top' === $atts['sticky_row_alignment']) {
+              self::$element_css[] = '
+              .nectar-sticky-row-wrap--top {
+                top: 0;
+              }';
+            } 
+            else if ('bottom' === $atts['sticky_row_alignment']) {
+              self::$element_css[] = '
+              .nectar-sticky-row-wrap--bottom {
+                bottom: 0;
+              }';
+            }
+            else if( 'top_after_nav' === $atts['sticky_row_alignment'] ) {
+              self::$element_css[] = '
+              .nectar-sticky-row-wrap--top_after_nav {
+                top: calc(var(--nectar-sticky-top-distance) - 50px);
+              }';
+            }
+
+          }
+
+        }
 
         //// Border Radius.
         if( isset($atts['row_border_radius']) && !empty($atts['row_border_radius']) && 'none' !== $atts['row_border_radius'] ) {
@@ -1264,8 +1316,12 @@ class NectarElDynamicStyles {
         }
 
       }
+      
+      // Mask.
+      $shadow = (isset($atts['column_shadow'])) ? esc_attr($atts['column_shadow']) : false;
 
-
+      self::$element_css[] = self::mask_param_group_styles('wpb_column', ' .column-bg-layer', $shadow, $atts);
+      
       //// DESKTOP ONLY.
       if( isset($atts['right_margin']) && strlen($atts['right_margin']) > 0 ) {
         self::$element_css[] = $col_selector.'.right_margin_'. esc_attr( self::percent_unit_type_class($atts['right_margin']) ) .' {
@@ -1791,13 +1847,16 @@ class NectarElDynamicStyles {
 
       $atts = shortcode_parse_atts($shortcode_inner);
 
+       // Positioning.
+       self::$element_css[] = self::positioning_group_styles('nectar_icon_wrap',$atts);
+
+
       // Custom coloring.
       if( true === self::custom_color_bool('icon_color', $atts) ) {
 
         if( isset($atts['icon_style']) && !empty($atts['icon_style']) ) {
 
           $icon_color = ltrim($atts['icon_color_custom'],'#');
-
 
             // Default style.
             if( 'default' === $atts['icon_style'] ) {
@@ -1971,6 +2030,12 @@ class NectarElDynamicStyles {
           } // icon style is set.
 
         }
+
+        if( isset($atts['pointer_events']) && 'none' === $atts['pointer_events'] ) {
+          self::$element_css[] = '.no-pointer-events {
+            pointer-events: none;
+          }';
+         }
 
         // Icon Padding.
         if( isset($atts['icon_padding']) && '0px' !== $atts['icon_padding'] ) {
@@ -4137,6 +4202,14 @@ class NectarElDynamicStyles {
           width: auto;
         }
 
+        .nectar-text-inline-images__marker video {
+          position: absolute;
+          width: 100%;
+          height: 100%;
+          top: 0;
+          left: 0;
+        }
+
         .nectar-text-inline-images--calculated {
           opacity: 1;
         }
@@ -4785,10 +4858,17 @@ class NectarElDynamicStyles {
           }
         }
 
+        // Mask.
+        $shadow = (isset($atts['box_shadow'])) ? esc_attr($atts['box_shadow']) : false;
+        self::$element_css[] = self::mask_param_group_styles('img-with-aniamtion-wrap', '> .inner', $shadow, $atts);
+
+        // Positioning.
+        self::$element_css[] = self::positioning_group_styles('img-with-aniamtion-wrap',$atts);
+
+        // Device loop atts.
         foreach( $devices as $device => $media_query ) {
 
           // Margin.
-
           //// Top.
           if( isset($atts['margin_top_'.$device]) && strlen($atts['margin_top_'.$device]) > 0 ) {
             self::$element_css[] = '@media only screen and (max-width: '.$media_query.') { .img-with-aniamtion-wrap.margin_top_'.$device.'_'. esc_attr( self::percent_unit_type_class($atts['margin_top_'.$device]) ) .' {
@@ -4947,7 +5027,7 @@ class NectarElDynamicStyles {
 
           if( 'rotate' == $looped_animation ) {
 
-            self::$element_css[] = '.img-with-aniamtion-wrap.looped-animation-'. $looped_animation . ' {
+            self::$element_css[] = '.img-with-aniamtion-wrap.looped-animation-'. $looped_animation . ' .inner {
               animation: nectar_looped_rotate 12s forwards infinite linear;
             }
             @keyframes nectar_looped_rotate {
@@ -6145,11 +6225,11 @@ class NectarElDynamicStyles {
 
         
         .nectar-sticky-media-section__media-wrap {
-          transition: opacity 0.22s ease 0.12s;
+          transition: opacity 0.2s ease 0.1s;
         }
 
         .nectar-sticky-media-section__media-wrap.active {
-          transition: opacity 0.22s ease;
+          transition: opacity 0.2s ease;
           z-index: 100;
         }
 
@@ -6206,6 +6286,274 @@ class NectarElDynamicStyles {
         ';
 
       }
+
+
+      else if( false !== strpos($shortcode[0],'[nectar_sticky_media_section ') ) {
+        $atts = shortcode_parse_atts($shortcode_inner);
+
+        $acceptable_alignments = array('left-top','left-center','left-bottom','center-top','center-center','center-bottom','right-top','right-center','right-bottom');
+        
+        $video_alignment = ( isset($atts['video_alignment']) && in_array($atts['video_alignment'],$acceptable_alignments) ) ? $atts['video_alignment'] : false;
+        
+        if( $video_alignment ) {
+          self::$element_css[] = '.nectar-sticky-media-section__featured-media video.align-'.$video_alignment.' {
+            object-position: '.str_replace('-',' ',$video_alignment).';
+          }';
+        }
+
+      }
+
+
+      // Toggles.
+      else if( false !== strpos($shortcode[0],'[toggles ') ) {
+
+        $atts = shortcode_parse_atts($shortcode_inner);
+
+        $toggle_style = (isset($atts['style'])) ? $atts['style'] : 'default';
+
+        if( 'default' === $toggle_style ) {
+          self::$element_css[] = 'div[data-style="default"] .toggle h3 a,
+          div[data-style="default"] .toggle h3{
+            font-size:14px;
+            line-height:14px
+          }
+          .light .toggles[data-style="default"] .toggle h3 a {
+            color: #fff;
+          }
+          .light .toggles[data-style="default"] .toggle >div{
+            background-color: transparent;
+          }
+          ';
+
+        } 
+
+        else if( 'minimal' === $toggle_style ) {
+          self::$element_css[] = '
+          div[data-style="minimal"] .toggle[data-inner-wrap="true"] > div .inner-toggle-wrap {
+            padding: 0 0 30px 0;
+          }
+          div[data-style="minimal"] .toggle h3 a{
+            padding:30px 70px 30px 0px;
+            transition:color 0.15s ease;
+          }
+          div[data-style="minimal"] .toggle{
+            border-bottom:2px solid rgba(0,0,0,0.08);
+            transition:border-color 0.15s ease;
+          }
+          body div[data-style="minimal"] .toggle {
+            margin-bottom:0
+          }
+          div[data-style="minimal"] .toggle h3 i:before{
+            content:" ";
+            top:14px;
+            left:6px;
+            margin-top:-2px;
+            width:14px;
+            height:2px;
+            position:absolute;
+            background-color:#888;
+            transition:background-color 0.15s ease;
+          }
+          div[data-style="minimal"] .toggle h3 i:after{
+            content: " ";
+            top:6px;
+            left:14px;
+            width:2px;
+            margin-left:-2px;
+            height:14px;
+            position:absolute;
+            background-color:#888;
+            transition:transform 0.45s cubic-bezier(.3,.4,.2,1),background-color 0.15s ease;
+          }
+          .light div[data-style="minimal"] .toggle {
+            border-color:rgba(255,255,255,0.2)
+          }
+          @media only screen and (max-width : 690px) {
+            div[data-style="minimal"] .toggle h3 a {
+              font-size: 20px;
+              line-height: 24px;
+            }
+          }
+          
+          ';
+        }
+
+        else if( 'minimal_shadow' === $toggle_style ) {
+          
+          self::$element_css[] = '
+          .toggles--minimal-shadow .toggle h3 a {
+            color: inherit;
+          }
+          .toggles--minimal-shadow .toggle[data-inner-wrap="true"] > div .inner-toggle-wrap {
+            padding: 0 0 30px 0;
+          }
+          .toggles--minimal-shadow .toggle h3 a{
+            padding:30px 70px 30px 0px;
+            transition:color 0.15s ease;
+          }
+          .toggles--minimal-shadow .toggle{
+            border-bottom: 1px solid rgba(0,0,0,0.08);
+          }
+          body .toggles--minimal-shadow .toggle {
+            margin-bottom:0;
+            padding: 0 40px;
+            position: relative;
+            transition: border-color 0.15s ease;
+          }
+          div[data-style*="minimal"] .toggle.open {
+            border-color: transparent;
+          }
+          div[data-style*="minimal"] .toggle:before {
+            content: "";
+            display: block;
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            box-shadow: 0 90px 70px 0 rgb(0, 0, 0, 0.06), 
+                        0 40px 35px 0 rgb(0, 0, 0, 0.05), 
+                        0 15px 15px 0 rgb(0, 0, 0, 0.05), 
+                        0 11px 7px 0 rgb(0, 0, 0, 0.05), 
+                        0 2px 5px 0 rgb(0, 0, 0, 0.04);
+            transition: opacity 0.15s ease;
+            opacity: 0;
+          }
+          
+          div[data-style*="minimal"] .toggle.open:before {
+            opacity: 1;
+            transition: opacity 0.45s cubic-bezier(.3,.4,.2,1);
+          }
+
+          .toggles--minimal-shadow .toggle h3 i:before{
+            content:" ";
+            top:14px;
+            left:6px;
+            margin-top:-2px;
+            width:14px;
+            height:2px;
+            position:absolute;
+            transition:transform 0.45s cubic-bezier(.3,.4,.2,1),background-color 0.15s ease;
+          }
+          .toggles--minimal-shadow .toggle h3 i:after{
+            content: " ";
+            top:6px;
+            left:14px;
+            width:2px;
+            margin-left:-2px;
+            height:14px;
+            position:absolute;
+            transition:transform 0.45s cubic-bezier(.3,.4,.2,1),background-color 0.15s ease;
+          }
+          .light .toggles--minimal-shadow .toggle {
+            border-color:rgba(255,255,255,0.2)
+          }
+          div[data-style*="minimal"].toggles--minimal-shadow .toggle i {
+            transition:transform 0.45s cubic-bezier(.3,.4,.2,1),border-color 0.15s ease;
+          }
+          div[data-style*="minimal"] .toggle.open i {
+            transform: rotate(90deg);
+          }
+          div[data-style*="minimal"] .toggle.open i:before {
+            -ms-transform: scale(0,1);
+            transform: scale(0,1);
+            -webkit-transform: scale(0,1);
+          }
+          div[data-style*="minimal"] .toggle.open i:after {
+            -ms-transform: scale(1,1);
+            transform: scale(1,1);
+            -webkit-transform: scale(1,1);
+          }';
+
+          if (class_exists('NectarThemeManager') && 
+              isset(NectarThemeManager::$colors['overall_font_color']) ) {
+                self::$element_css[] = '
+                .toggles--minimal-shadow .toggle h3 i:before,
+                .toggles--minimal-shadow .toggle h3 i:after {
+                  background-color: '.esc_attr(NectarThemeManager::$colors['overall_font_color']).';
+                }
+                .dark div[data-style*="minimal"].toggles--minimal-shadow .toggle:not(.open):not(:hover) h3 i {
+                  border-color: '.esc_attr(NectarThemeManager::$colors['overall_font_color']).';
+                }';
+          }
+
+        }
+
+        else if( 'minimal_small' === $toggle_style ) {
+          self::$element_css[] = '
+          div[data-style="minimal_small"] .toggle[data-inner-wrap="true"] > div {
+            padding: 0;
+          }
+          body div[data-style="minimal_small"] .toggle > div .inner-toggle-wrap {
+            padding-top: 1.4em;
+            padding-bottom: 0;
+          }
+          
+          div[data-style="minimal_small"] .toggle h3 {
+            display: inline-block;
+            padding: 0 0 4px;
+          }
+          div[data-style="minimal_small"] .toggle h3 a {
+            padding: 0
+          }
+          div[data-style="minimal_small"] .toggle.default h3 a:hover,
+          div[data-style="minimal_small"] .toggle.default.open h3 a {
+            color: #000;
+          }
+          div[data-style="minimal_small"] .toggle.default > h3:after {
+            background-color: #000;
+          }
+          .span_12.light div[data-style="minimal_small"] .toggle.default h3 a:hover,
+          .span_12.light div[data-style="minimal_small"] .toggle.default.open h3 a {
+            color: #fff;
+          }
+          .span_12.light div[data-style="minimal_small"] .toggle > h3:before {
+            background-color: rgba(255,255,255,0.2);
+          }
+          .span_12.light div[data-style="minimal_small"] .toggle.default:hover > h3:after,
+          .span_12.light div[data-style="minimal_small"] .toggle.default.open > h3:after,
+          .span_12.light div[data-style="minimal_small"] .toggle.default > h3:after {
+            background-color: #fff;
+          }
+          div[data-style="minimal_small"] .toggle > h3:after,
+          div[data-style="minimal_small"] .toggle > h3:before {
+            display: block;
+            content: "";
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            background-color: rgba(0,0,0,0.1);
+            height: 2px;
+            left: 0;
+            pointer-events: none;
+          }
+          div[data-style="minimal_small"] .toggle > h3:after {
+            -webkit-transform: scaleX(0);
+            transform: scaleX(0);
+            -webkit-transition: transform 0.5s cubic-bezier(0.3, 0.4, 0.1, 1);
+            transition: transform 0.5s cubic-bezier(0.3, 0.4, 0.1, 1);
+            transform-origin: left;
+          }
+          div[data-style="minimal_small"] .toggle.open > h3:after,
+          div[data-style="minimal_small"] .toggle:hover > h3:after {
+            -webkit-transform: scaleX(1);
+            transform: scaleX(1);
+          }
+          div[data-style="minimal_small"] .toggle >div {
+            padding-top: 1.3em;
+            padding-bottom: 0;
+          }
+          div[data-style="minimal_small"] .toggle > h3 i {
+            display: none;
+          }
+          div[data-style="minimal_small"] .toggle {
+            margin-bottom: 1.4em;
+          }
+          ';
+        }
+
+      }
+
 
       // Tabbed.
       else if( false !== strpos($shortcode[0],'[tabbed_section ') ) {
@@ -8436,6 +8784,7 @@ class NectarElDynamicStyles {
           '43' => '75%',
           '235' => '42.55319149%',
           '916' => '177.77%',
+          '11' => '100%',
         );
 
         if( isset($atts['el_aspect_tablet']) && in_array($atts['el_aspect_tablet'], array('169','43','235','916')) ) {
@@ -8475,7 +8824,8 @@ class NectarElDynamicStyles {
         // Border Radius.
         if( isset($atts['border_radius']) && !empty($atts['border_radius']) && 'none' !== $atts['border_radius'] ) {
           self::$element_css[] = '
-          .nectar_video_player_self_hosted[data-border-radius="'.esc_attr($atts['border_radius']).'"] .wpb_video_wrapper {
+          .nectar_video_player_self_hosted[data-border-radius="'.esc_attr($atts['border_radius']).'"] .wpb_video_wrapper,
+          .nectar_video_player_self_hosted[data-border-radius="'.esc_attr($atts['border_radius']).'"] .wpb_video_wrapper video {
             border-radius: '.esc_attr($atts['border_radius']).';
           }';
         }
@@ -8775,6 +9125,7 @@ class NectarElDynamicStyles {
 
 
 
+
   /**
   * Prepares font sizing
   */
@@ -8897,6 +9248,250 @@ class NectarElDynamicStyles {
     }
   }
 
+  /**
+  * Generates the padding for a specific aspect ratio.
+  */
+  public static function shadow_output($shadow_size, $shadow_type) {
+
+    $shadow = '';
+
+    if( 'small_depth' === $shadow_size ) {
+
+      $shadow = 'box-shadow: rgba(0, 0, 0, 0.04) 0px 1px 0px, 
+      rgba(0, 0, 0, 0.05) 0px 2px 7px, 
+      rgba(0, 0, 0, 0.06) 0px 12px 22px;';
+
+      if( 'filter' === $shadow_type ) {
+        $shadow = 'filter: drop-shadow(0px 1px 0px rgba(0, 0, 0, 0.04) )
+        drop-shadow(0px 2px 7px rgba(0, 0, 0, 0.05) )
+        drop-shadow(0px 12px 22px rgba(0, 0, 0, 0.06) );';
+      } 
+      
+    } 
+    else if( 'medium_depth' === $shadow_size ) {
+
+      $shadow = '0 20px 30px rgba(0,0,0,0.20),
+      0 20px 40px rgba(0,0,0,0.20)';
+
+      if( 'filter' === $shadow_type ) {
+        $shadow = 'filter: drop-shadow(0 25px 30px rgba(0,0,0,0.2))
+        drop-shadow(0 20px 40px rgba(0,0,0,0.2));';
+      }
+
+    }
+    else if( 'large_depth' === $shadow_size ) {
+
+      $shadow = '0 40px 100px rgba(0,0,0,0.15),
+      0 25px 80px rgba(0,0,0,0.1)';
+
+      if( 'filter' === $shadow_type ) {
+        $shadow = 'filter: drop-shadow(0 40px 100px rgba(0,0,0,0.15))
+        drop-shadow(0 25px 80px rgba(0,0,0,0.1));';
+      }
+
+    }
+    else if( 'x_large_depth' === $shadow_size ) {
+
+      $shadow = '0 60px 135px rgba(0,0,0,0.14),
+        0 15px 65px rgba(0,0,0,0.14)';
+
+      if( 'filter' === $shadow_type ) {
+        $shadow = 'filter: drop-shadow(0 60px 135px rgba(0,0,0,0.14)) 
+                           drop-shadow(0 15px 65px rgba(0,0,0,0.14));';
+      } 
+
+    }
+    else if( 'x_large_layered_depth' === $shadow_size ) {
+
+      $shadow = '0 90px 70px 0 rgb(0, 0, 0, 0.06), 
+       0 40px 35px 0 rgb(0, 0, 0, 0.05), 
+       0 15px 15px 0 rgb(0, 0, 0, 0.05), 
+       0 11px 7px 0 rgb(0, 0, 0, 0.05), 
+       0 2px 5px 0 rgb(0, 0, 0, 0.04)';
+
+       if( 'filter' === $shadow_type ) {
+        $shadow = 'filter: drop-shadow(0 90px 70px 0 rgb(0, 0, 0, 0.06)) 
+                           drop-shadow(0 40px 35px 0 rgb(0, 0, 0, 0.05))
+                           drop-shadow(0 15px 15px 0 rgb(0, 0, 0, 0.05))
+                           drop-shadow(0 11px 7px 0 rgb(0, 0, 0, 0.05))
+                           drop-shadow(0 2px 5px 0 rgb(0, 0, 0, 0.04));';
+      } 
+       
+   }
+    return $shadow;
+  }
+
+
+   /**
+  * Reusable param group styles
+  */
+  public static function mask_param_group_styles( $element_name, $inner_selector, $shadow, $atts ) {
+
+    $css = '';
+    
+    if( isset($atts['mask_enable']) && $atts['mask_enable'] == 'true' && defined('SALIENT_CORE_PLUGIN_PATH') ) {
+      
+      $mask_shape = (isset($atts['mask_shape']) && !empty($atts['mask_shape'])) ? $atts['mask_shape'] : 'circle';
+      $mask_scale = (isset($atts['mask_scale']) && !empty($atts['mask_scale'])) ? $atts['mask_scale'] : '100';
+      $mask_size = (isset($atts['mask_size']) && !empty($atts['mask_size'])) ? $atts['mask_size'] : 'fit';
+      
+       // shape.
+       if( 'custom' !== $mask_shape ) {
+        $css .= '.'.$element_name.'.mask_shape_'.esc_attr($mask_shape).$inner_selector.'  {
+          -webkit-mask-image: url('.esc_html(SALIENT_CORE_PLUGIN_PATH).'/includes/img/masks/'.esc_attr($mask_shape).'.svg);
+        }';
+      }
+
+      $css .= '.'.$element_name.'.mask_shape_'.esc_attr($mask_shape).$inner_selector.' {
+        -webkit-mask-repeat: no-repeat;
+        -webkit-mask-position: center center;
+      }';
+
+      // shadow.
+      if( $shadow && $shadow !== 'none' ) {
+        $css .= '.'.$element_name.'.mask_shape_'.esc_attr($mask_shape).'[data-shadow="'.$shadow.'"] {
+         '. self::shadow_output($shadow, 'filter') .'
+        }';
+      }
+     
+      // size.
+      if( 'custom' === $mask_size ) {
+        $css .= '.'.$element_name.'.mask_shape_'.esc_attr($mask_shape).'.mask_size_custom.mask_scale_'.esc_attr($mask_scale).$inner_selector.' {
+          -webkit-mask-size: '.esc_attr($mask_scale).'%;
+        }';
+      } 
+      else {
+        $css .= '.'.$element_name.'.mask_shape_'.esc_attr($mask_shape).'.mask_size_'.esc_attr($mask_size).$inner_selector.' {
+          -webkit-mask-size: '.esc_attr($mask_size).';
+        }';
+      }
+      
+
+      // device groups
+      foreach( self::$devices as $device => $media_query_size) {
+
+        $device_group_params = array(
+          'mask_alignment'
+        );
+
+        foreach ($device_group_params as $param) {
+          
+          if( isset($atts[$param.'_'.$device]) && 
+          strlen($atts[$param.'_'.$device]) > 0) {
+           
+            $css .= '@media only screen '.$media_query_size.' { 
+              .'.$element_name.'.'.$param.'_'.$device.'_'. esc_attr($atts[$param.'_'.$device]) .$inner_selector.' {
+              -webkit-mask-position: '.esc_attr(str_replace('-',' ',$atts[$param.'_'.$device])).';
+            }
+          }';
+
+          } // param isset
+
+        } // param loop
+        
+      } // viewport loop
+
+    } // mask is enabled
+
+    return $css;
+
+  }
+
+
+  public static function positioning_group_styles($element_name, $atts) {
+
+    $css = '';
+
+
+    foreach( self::$devices as $device => $media_query_size) {
+
+      // Transforms.
+      $transform_vals = '';
+      $transform_x    = false;
+      $transform_y    = false;
+
+      //// Translate X.
+      if( isset($atts['translate_x_'.$device]) && strlen($atts['translate_x_'.$device]) > 0 ) {
+
+        $transform_vals .= 'translateX('. esc_attr( self::percent_unit_type($atts['translate_x_'.$device]) ).') ';
+        $transform_x = true;
+
+      }
+      //// Translate Y.
+      if( isset($atts['translate_y_'.$device]) && strlen($atts['translate_y_'.$device]) > 0 ) {
+
+        $transform_vals .= 'translateY('. esc_attr( self::percent_unit_type($atts['translate_y_'.$device]) ).')';
+        $transform_y = true;
+
+      }
+
+      if( !empty($transform_vals) ) {
+
+        // X only.
+        if( false === $transform_y && false !== $transform_x ) {
+
+          $css .= '@media only screen '.$media_query_size.'  {
+            .'.$element_name.'.translate_x_'.$device.'_'. esc_attr( self::percent_unit_type_class($atts['translate_x_'.$device]) ) .' {
+            -webkit-transform: '.esc_attr( $transform_vals ).';
+            transform: '.esc_attr( $transform_vals ).';
+          } }';
+
+        }
+        // Y only.
+        else if ( false !== $transform_y && false === $transform_x ) {
+
+          $css .= '@media only screen '.$media_query_size.'  {
+            .'.$element_name.'.translate_y_'.$device.'_'. esc_attr( self::percent_unit_type_class($atts['translate_y_'.$device]) ) .' {
+            -webkit-transform: '.esc_attr( $transform_vals ).';
+            transform: '.esc_attr( $transform_vals ).';
+          } }';
+
+        }
+        // X and Y.
+        else if( false !== $transform_y && false !== $transform_x ) {
+          $css .= '@media only screen '.$media_query_size.'  {
+            .'.$element_name.'.translate_x_'.$device.'_'. esc_attr( self::percent_unit_type_class($atts['translate_x_'.$device]) ) .'.translate_y_'.$device.'_'. esc_attr( self::percent_unit_type_class($atts['translate_y_'.$device]) ) .' {
+            -webkit-transform: '.esc_attr( $transform_vals ).';
+            transform: '.esc_attr( $transform_vals ).';
+          } }';
+
+        }
+
+      } // endif not empty transform vals.
+
+
+      // Positions.
+      if( isset($atts['position_'.$device]) && 
+        strlen($atts['position_'.$device]) > 0 && 
+        in_array($atts['position_'.$device], array('relative', 'absolute', 'fixed')) ) {
+
+          $css .= '@media only screen '.$media_query_size.' { .'.$element_name.'.position_'.$device.'_'. esc_attr($atts['position_'.$device]) .' {
+            position: '.esc_attr($atts['position_'.$device]).';
+          }
+         }';
+
+        }
+         
+
+        $positions = array('top','right','bottom','left');
+
+        foreach ($positions as $position) {
+            if (isset($atts[$position.'_position_'.$device]) && strlen($atts[$position.'_position_'.$device]) > 0) {
+                $css .= '@media only screen '.$media_query_size.' { .'.$element_name.'.'.$position.'_position_'.$device.'_'. esc_attr(self::percent_unit_type_class($atts[$position.'_position_'.$device])) .' {
+                '.$position.': '.esc_attr(self::percent_unit_type($atts[$position.'_position_'.$device])).';
+              }
+            }';
+          }
+        }
+
+        
+
+      }
+
+      return $css;
+
+  }
+
 
 
 }
@@ -8976,6 +9571,104 @@ if( !function_exists('nectar_el_padding_unit_type_class') ) {
 	}
 
  }
+
+/**
+* Reusable param group classes
+*
+* @since 14.1
+*/
+
+if( !function_exists('nectar_position_param_group_classes') ) {
+
+  function nectar_position_param_group_classes($atts) {
+    
+    $classnames = '';
+
+    if( isset($atts['position_desktop']) && 
+            strlen($atts['position_desktop']) > 0 &&
+            in_array($atts['position_desktop'], array('absolute','relative','fixed')) ) {
+            $classnames .= 'position_desktop_'. esc_attr($atts['position_desktop']) . ' ';
+        }
+        if( isset($atts['position_tablet']) && 
+            strlen($atts['position_tablet']) > 0 &&
+            in_array($atts['position_tablet'], array('absolute','relative','fixed')) ) {
+            $classnames .= 'position_tablet_'. esc_attr($atts['position_tablet']) . ' ';
+        }
+        if( isset($atts['position_phone']) && 
+            strlen($atts['position_phone']) > 0 &&
+            in_array($atts['position_phone'], array('absolute','relative','fixed')) ) {
+            $classnames .= 'position_phone_'. esc_attr($atts['position_phone']) . ' ';
+        }
+
+      $image_params = array();
+      $image_params[] = 'top_position';
+      $image_params[] = 'right_position';
+      $image_params[] = 'left_position';
+      $image_params[] = 'bottom_position';
+      $image_params[] = 'translate_y';
+      $image_params[] = 'translate_x';
+
+      // loop.
+      foreach( $image_params as $param ) {
+
+        if( isset($atts[$param.'_desktop']) && strlen($atts[$param.'_desktop']) > 0 ) {
+          $classnames .= $param.'_desktop_'. nectar_el_percent_unit_type_class(esc_attr($atts[$param.'_desktop'])) . ' ';
+        }
+        if( isset($atts[$param.'_tablet']) && strlen($atts[$param.'_tablet']) > 0 ) {
+          $classnames .= $param.'_tablet_'. nectar_el_percent_unit_type_class(esc_attr($atts[$param.'_tablet'])) . ' ';
+        }
+        if( isset($atts[$param.'_phone']) && strlen($atts[$param.'_phone']) > 0 ) {
+          $classnames .= $param.'_phone_'. nectar_el_percent_unit_type_class(esc_attr($atts[$param.'_phone'])) . ' ';
+        }
+
+      }
+
+      return $classnames;
+
+
+  }
+
+}
+
+if( !function_exists('nectar_mask_param_group_classes') ) {
+
+  function nectar_mask_param_group_classes($atts) {
+
+    $classnames = '';
+
+    if( isset($atts['mask_enable']) && $atts['mask_enable'] == 'true' ) {
+      
+      // Mask Shape
+      $mask_shape = (isset($atts['mask_shape']) && !empty($atts['mask_shape'])) ? $atts['mask_shape'] : 'circle';
+      $classnames .= 'mask_shape_'. esc_attr($mask_shape) . ' ';
+      
+      // Mask Size
+      if( isset($atts['mask_size']) && !empty($atts['mask_size']) ) {
+        $classnames .= 'mask_size_'. esc_attr($atts['mask_size']) . ' ';
+      }
+
+      // Mask Scale
+      if( isset($atts['mask_scale']) && !empty($atts['mask_scale']) ) {
+        $classnames .= 'mask_scale_'. esc_attr($atts['mask_scale']) . ' ';
+      }
+
+      $devices = array('desktop','tablet','phone');
+
+      foreach( $devices as $device ) {
+     
+        if (isset($atts['mask_alignment_'.$device]) && !empty($atts['mask_alignment_'.$device])) {
+         
+          $classnames .= 'mask_alignment_'.$device.'_'. esc_attr($atts['mask_alignment_'.$device]) . ' ';
+        }
+      }
+
+      
+    }
+
+    return $classnames;
+  }
+}
+
 
 /**
 * Nectar Dynamic Class Names.
@@ -9136,7 +9829,9 @@ if( !function_exists('nectar_el_padding_unit_type_class') ) {
 			 }
 
 
-		 } else if ( 'column' === $el || 'inner_column' === $el ) {
+		 } 
+     
+     else if ( 'column' === $el || 'inner_column' === $el ) {
 
 			 $column_params = array(
          'top_margin',
@@ -9149,6 +9844,7 @@ if( !function_exists('nectar_el_padding_unit_type_class') ) {
 
 			 // parent specifc.
 			 if( 'column' === $el ) {
+
 				 if( isset($atts['max_width_desktop']) && strlen($atts['max_width_desktop']) > 0 ) {
 				   $classnames .= 'max_width_desktop_'. nectar_el_percent_unit_type_class(esc_attr($atts['max_width_desktop'])) . ' ';
 			   }
@@ -9159,6 +9855,11 @@ if( !function_exists('nectar_el_padding_unit_type_class') ) {
              in_array($atts['column_position'], array('relative','static')) ) {
             $classnames .= 'column_position_'. esc_attr($atts['column_position']) . ' ';
         }
+
+         //overflow
+          if( isset($atts['overflow']) && 'hidden' === $atts['overflow'] ) {
+            $classnames .= 'col-overflow-hidden ';
+          }
 
 		   }
 
@@ -9252,6 +9953,8 @@ if( !function_exists('nectar_el_padding_unit_type_class') ) {
           $classnames .= 'br_br_'. nectar_el_percent_unit_type_class(esc_attr($atts['bottom_right_border_radius'])) . ' ';
         }
        }
+
+       $classnames .= nectar_mask_param_group_classes($atts);
 
 		 }
 
@@ -9805,6 +10508,13 @@ if( !function_exists('nectar_el_padding_unit_type_class') ) {
           $classnames .= 'looped-animation-' . $looped_animation . ' ';
         }
        }
+
+
+       // mask group.
+       $classnames .= nectar_mask_param_group_classes($atts);
+
+       // Image Positioning.
+       $classnames .= nectar_position_param_group_classes($atts);
 
 
 		 }

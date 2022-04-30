@@ -843,9 +843,22 @@ function nectar_page_sepcific_styles() {
 			}
 		}
 
-    if( is_account_page() ) {
-      wp_enqueue_style( 'font-awesome' );
-    }
+		/* Compatibility fix for when plugins enqueue selectWoo 
+		https://github.com/woocommerce/selectWoo/issues/41 */
+        if ( wp_script_is('selectWoo', 'enqueued')) {
+			$select_woo_css = '.woocommerce div.product form.variations_form .fancy-select-wrap {
+				position: relative;
+			 }
+			 .woocommerce div.product form.variations_form .select2-container--open:not(.select2) {
+				top: 105%!important;
+				min-width: 150px;
+			 }';
+			wp_add_inline_style( 'main-styles', $select_woo_css );
+        }
+
+		if( is_account_page() ) {
+			wp_enqueue_style( 'font-awesome' );
+		}
 
 	}
 
@@ -1236,7 +1249,7 @@ function nectar_page_sepcific_styles() {
 	}
 
 
-	// Lgeacy Dual Mobile Menu.
+	// Legacy Dual Mobile Menu.
 	$legacy_double_menu = nectar_legacy_mobile_double_menu();
 	if( true === $legacy_double_menu ) {
 

@@ -241,7 +241,7 @@ function nectar_blog_social_sharing() {
 							 
 						 }
 
-						 echo '<a href="' . esc_url( get_permalink( $previous_post_id ) ) . '"></a><h3><span>' . esc_html__( 'Previous Post', 'salient' ) . '</span><span class="text">' . wp_kses_post( $previous_post->post_title ) . '
+						 echo '<a href="' . esc_url( get_permalink( $previous_post_id ) ) . '" aria-label="'. esc_attr($previous_post->post_title) .'"></a><h3><span>' . esc_html__( 'Previous Post', 'salient' ) . '</span><span class="text">' . wp_kses_post( $previous_post->post_title ) . '
 						 <svg class="next-arrow" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 39 12"><line class="top" x1="23" y1="-0.5" x2="29.5" y2="6.5" stroke="#ffffff;"></line><line class="bottom" x1="23" y1="12.5" x2="29.5" y2="5.5" stroke="#ffffff;"></line></svg><span class="line"></span></span></h3>';
 					 }
 
@@ -279,7 +279,7 @@ function nectar_blog_social_sharing() {
 							 
 						 }
 
-						 echo '<a href="' . esc_url( get_permalink( $next_post_id ) ) . '"></a><h3><span>' . esc_html__( 'Next Post', 'salient' ) . '</span><span class="text">' . wp_kses_post( $next_post->post_title ) . '
+						 echo '<a href="' . esc_url( get_permalink( $next_post_id ) ) . '" aria-label="'. esc_attr($next_post->post_title) .'"></a><h3><span>' . esc_html__( 'Next Post', 'salient' ) . '</span><span class="text">' . wp_kses_post( $next_post->post_title ) . '
 						 <svg class="next-arrow" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 39 12"><line class="top" x1="23" y1="-0.5" x2="29.5" y2="6.5" stroke="#ffffff;"></line><line class="bottom" x1="23" y1="12.5" x2="29.5" y2="5.5" stroke="#ffffff;"></line></svg><span class="line"></span></span></h3>';
 
 					 }
@@ -473,7 +473,7 @@ function nectar_blog_social_sharing() {
 							 echo '</span>';
 							 ?>
 
-							 <a class="entire-meta-link" href="<?php the_permalink(); ?>"></a>
+							 <a class="entire-meta-link" href="<?php the_permalink(); ?>" aria-label="<?php echo get_the_title(); ?>"></a>
 
 							 <div class="article-content-wrap">
 								 <div class="post-header">

@@ -4,11 +4,13 @@ Description: Styles for the "Milestone" page builder element.
 */
 
 .nectar-milestone{
-  text-align:center
+  text-align:center;
+  transition: opacity 0.15s ease;
 }
 .nectar-milestone:not(.animated-in){
-  opacity:0
+  opacity:0;
 }
+
 .span_12.right .nectar-milestone, .nectar-milestone[data-ms-align="right"]{
   text-align:right
 }

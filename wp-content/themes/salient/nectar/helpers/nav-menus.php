@@ -426,10 +426,10 @@ if ( ! function_exists( 'nectar_walker_nav_menu' ) ) {
 				}
 
 				else if ( ! empty( $children_elements[ $element->$id_field ] ) && $element->menu_item_parent != 0 && $header_format != 'left-header') {
-					$element->title = $item_icon_output.'<span class="menu-title-text">'.$element->title . '</span>'.$menu_label.'<span class="sf-sub-indicator"><i class="fa fa-angle-right icon-in-menu" aria-hidden="true"></i></span>';
+					$element->title = $item_icon_output.'<span class="menu-title-text'.esc_attr($custom_typography_class).'">'.$element->title . '</span>'.$menu_label.'<span class="sf-sub-indicator"><i class="fa fa-angle-right icon-in-menu" aria-hidden="true"></i></span>';
 				}
 				else if ( ! empty( $children_elements[ $element->$id_field ] ) && $element->menu_item_parent != 0 && true === $forced_arrows ) {
-					$element->title = $item_icon_output.'<span class="menu-title-text">'.$element->title . '</span>'.$menu_label.'<span class="sf-sub-indicator"><i class="fa fa-angle-down icon-in-menu" aria-hidden="true"></i></span>';
+					$element->title = $item_icon_output.'<span class="menu-title-text'.esc_attr($custom_typography_class).'">'.$element->title . '</span>'.$menu_label.'<span class="sf-sub-indicator"><i class="fa fa-angle-down icon-in-menu" aria-hidden="true"></i></span>';
 				}
 				else {
 					$element->title = $item_icon_output.'<span class="menu-title-text'.esc_attr($custom_typography_class).'">'.$element->title . '</span>'.$menu_label;

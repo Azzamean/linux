@@ -2398,6 +2398,30 @@ if (!function_exists('nectar_page_specific_dynamic')) {
 		else if( $post && isset($post->post_content) && !is_archive() && !is_home() ) {
 		  echo NectarElDynamicStyles::generate_styles($post->post_content);
 		}
+
+    // PUM
+    if( function_exists('pum_get_all_popups') && 
+        function_exists('pum_is_popup_loadable') && 
+        !is_admin() ) {
+
+        $popups = pum_get_all_popups();
+    
+        if ( ! empty( $popups ) ) {
+
+            foreach ( $popups as $popup ) {
+              if ( isset($popup->ID) && 
+                  pum_is_popup_loadable( $popup->ID ) && 
+                  isset($popup->content) &&
+                  !empty($popup->content) ) {
+
+                  echo NectarElDynamicStyles::generate_styles($popup->content);
+              }
+            }
+
+         }
+
+    }
+   
 		
 		
 		// Global template theme options.

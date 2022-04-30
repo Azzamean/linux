@@ -11067,6 +11067,10 @@
 
         ';
 
+    } else {
+      echo '.woocommerce-verification-required {
+        margin-top: 15px; 
+      }';
     }
 
   }

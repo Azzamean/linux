@@ -1254,12 +1254,16 @@ if( !function_exists('nectar_single_product_review_empty') ) {
 
 		$woo_review_style = ( isset($nectar_options['product_reviews_style']) && !empty($nectar_options['product_reviews_style']) ) ? $nectar_options['product_reviews_style'] : 'default';
 
-		if( wc_review_ratings_enabled() && 'off_canvas' === $woo_review_style && get_option( 'woocommerce_review_rating_verification_required' ) === 'no' ) {
+		if( wc_review_ratings_enabled() && 'off_canvas' === $woo_review_style ) {
 
-			$nectar_title = '<div class="nectar-no-reviews">';
-			$nectar_title .= '<a class="nectar-button large regular accent-color regular-button nectar-product-reviews-trigger" href="#" data-color-override="false" data-hover-color-override="false"><span>'.esc_html__('Write a Review','salient').'</span></a></div>';
+			if( get_option( 'woocommerce_review_rating_verification_required' ) === 'no' || wc_customer_bought_product( '', get_current_user_id(), $product->get_id() ) ) {
 
-			return $title . $nectar_title;
+				$nectar_title = '<div class="nectar-no-reviews">';
+				$nectar_title .= '<a class="nectar-button large regular accent-color regular-button nectar-product-reviews-trigger" href="#" data-color-override="false" data-hover-color-override="false"><span>'.esc_html__('Write a Review','salient').'</span></a></div>';
+
+				return $title . $nectar_title;
+			}
+			
 
 		}
 
@@ -1531,6 +1535,9 @@ add_filter( 'wcml_multi_currency_ajax_actions', 'add_action_to_multi_currency_aj
 
 function add_action_to_multi_currency_ajax( $ajax_actions ) {
     $ajax_actions[] = 'nectar_woo_get_product';
+    $ajax_actions[] = 'nectar_ajax_add_to_cart';
+    $ajax_actions[] = 'nectar_minicart_update_quantity';
+
     return $ajax_actions;
 }
 
