@@ -182,6 +182,27 @@ class RecentPostsLinux
                         ),
                         "save_always" => true,
                     ],
+                    [
+                        "type" => "checkbox",
+                        "class" => "",
+                        "heading" => esc_html__(
+                            "Date of Publication",
+                            "recent_posts"
+                        ),
+                        "param_name" => "dop",
+                        "value" => [
+                            esc_html__(
+                                "Remove Date of Publication",
+                                "recent_posts"
+                            ) => "hide-dop",
+                        ],
+                        "std" => "show-dop",
+                        "description" => esc_html__(
+                            "Check or uncheck the box if you want to show or hide date of publication",
+                            "recent_posts"
+                        ),
+                        "save_always" => true,
+                    ],
                 ],
             ]);
         endif;
@@ -221,6 +242,7 @@ function recent_posts_linux($atts, $content)
                 "categories" => "",
                 "tags" => "",
                 "read" => "",
+                "dop" => "",
                 "suppress_filters" => true,
             ],
             $atts
@@ -235,6 +257,7 @@ function recent_posts_linux($atts, $content)
     $categories = !empty($categories) ? $categories : "hide-categories";
     $tags = !empty($tags) ? $tags : "hide-tags";
     $read = !empty($read) ? $read : "hide-read";
+    $dop = !empty($dop) ? $dop : "show-dop";
 
     $query_args = [
         "post_type" => "post",
@@ -336,6 +359,18 @@ function recent_posts_linux($atts, $content)
             break;
     }
 
+    switch ($dop) {
+        case "show-dop":
+            $dop = true;
+            break;
+        case "hide-dop":
+            $dop = false;
+            break;
+        default:
+            $dop = true;
+            break;
+    }
+
     $recent_posts_query = new WP_Query($query_args);
     $output = "";
     if ($recent_posts_query->have_posts()) {
@@ -406,7 +441,10 @@ function recent_posts_linux($atts, $content)
                 }
 
                 $output .= '<p class="basic-design date">';
-                $output .= "<span>" . get_the_date("M j, Y") . "</span>";
+
+                if ($dop != false) {
+                    $output .= "<span>" . get_the_date("M j, Y") . "</span>";
+                }
 
                 if ($categories != false && $tags != true) {
                     $output .= " In " . get_the_category_list(", ");
