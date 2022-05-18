@@ -68,8 +68,14 @@ get_header();
 
 				<div class="row">
 					<section class="projects-description">
-						<?php if ($description != null || $description != "") { ?>
-						<?php echo $description;} ?>
+						<?php if ($description != null || $description != "") 
+						{ 
+							wp_enqueue_style('nectar-slider');
+							wp_enqueue_style('font-awesome');
+							wp_enqueue_style('nectar-slider-fonts');
+							echo $description;
+						} 
+						?>
 					</section>
 				</div>
 
