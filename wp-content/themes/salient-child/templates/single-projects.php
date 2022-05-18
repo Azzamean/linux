@@ -70,10 +70,11 @@ get_header();
 					<section class="projects-description">
 						<?php if ($description != null || $description != "") 
 						{ 
+							// Pull Nectar Slider CSS
 							wp_enqueue_style('nectar-slider');
 							wp_enqueue_style('font-awesome');
 							wp_enqueue_style('nectar-slider-fonts');
-							
+							// Pull Nectar Slider JS
 							wp_enqueue_script( 'anime' );
 							wp_enqueue_script( 'nectar-slider' );
 							
