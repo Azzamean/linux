@@ -73,6 +73,10 @@ get_header();
 							wp_enqueue_style('nectar-slider');
 							wp_enqueue_style('font-awesome');
 							wp_enqueue_style('nectar-slider-fonts');
+							
+							wp_enqueue_script( 'anime' );
+							wp_enqueue_script( 'nectar-slider' );
+							
 							echo $description;
 						} 
 						?>
