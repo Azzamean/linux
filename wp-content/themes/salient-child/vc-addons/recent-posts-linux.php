@@ -475,7 +475,7 @@ function recent_posts_linux($atts, $content)
                     $output .=
                         '<a class="basic-design read" href=' .
                         get_permalink() .
-                        ">Read More</a>";
+                        "><span>Read More</span></a>";
                 }
                 $output .= "</div>";
                 $output .= "</div>";
