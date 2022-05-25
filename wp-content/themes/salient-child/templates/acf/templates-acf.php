@@ -73,3 +73,9 @@ $projects_links = [
         "icon" => "fa fa-file-text-o",
     ],
 ];
+
+
+// WEBINARS ACF'S
+$webinarDescription = get_field("webinars_description");
+$slides = get_field("webinars_slides");
+$video = get_field("webinars_video");
