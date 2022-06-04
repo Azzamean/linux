@@ -128,6 +128,27 @@ class RecentPostsLinux
                     [
                         "type" => "checkbox",
                         "class" => "",
+                        "heading" => esc_html__(
+                            "Featured Image",
+                            "recent_posts"
+                        ),
+                        "param_name" => "featured_image",
+                        "value" => [
+                            esc_html__(
+                                "Hide Featured Image",
+                                "recent_posts"
+                            ) => "hide-featured-image",
+                        ],
+                        "std" => "show-featured-image",
+                        "description" => esc_html__(
+                            "Check or uncheck the box if you want to show or hide the featured image",
+                            "recent_posts"
+                        ),
+                        "save_always" => true,
+                    ],
+                    [
+                        "type" => "checkbox",
+                        "class" => "",
                         "heading" => esc_html__("Categories", "recent_posts"),
                         "param_name" => "categories",
                         "value" => [
@@ -239,6 +260,7 @@ function recent_posts_linux($atts, $content)
                 "columns" => "",
                 "category_id" => "",
                 "pagination" => "",
+                "featured_image" => "",
                 "categories" => "",
                 "tags" => "",
                 "read" => "",
@@ -254,6 +276,9 @@ function recent_posts_linux($atts, $content)
     $design = !empty($design) ? $design : "basic-design";
     $paged = get_query_var("paged") ? get_query_var("paged") : 1;
     $pagination = !empty($pagination) ? $pagination : "show-pagination";
+    $featured_image = !empty($featured_image)
+        ? $featured_image
+        : "show-featured-image";
     $categories = !empty($categories) ? $categories : "hide-categories";
     $tags = !empty($tags) ? $tags : "hide-tags";
     $read = !empty($read) ? $read : "hide-read";
@@ -320,6 +345,18 @@ function recent_posts_linux($atts, $content)
             break;
         default:
             $pagination = true;
+            break;
+    }
+
+    switch ($featured_image) {
+        case "show-featured-image":
+            $featured_image = true;
+            break;
+        case "hide-featured-image":
+            $featured_image = false;
+            break;
+        default:
+            $featured_image = true;
             break;
     }
 
@@ -416,7 +453,12 @@ function recent_posts_linux($atts, $content)
                     $output .= "</div>";
                 }
                 // Right Side
-                $output .= '<div class="basic-design right">';
+                if ($featured_image != false) {
+                    $output .= '<div class="basic-design right">';
+                } else {
+                    $output .= '<div class="basic-design full-width">';
+                }
+
                 if (has_post_format("link")) {
                     global $post;
                     global $nectar_options;
