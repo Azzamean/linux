@@ -15,6 +15,7 @@ Version: 1.0
 	#header-outer {
 		margin-top: 32.4px;
 	}
+
 	.lfprojects {
 		background: #252525;
 		position: fixed;
@@ -23,12 +24,20 @@ Version: 1.0
 		line-height: 33px;
 		height: 33px;
 	}
+
 	.lfprojects img {
 		max-width: 270px;
 		vertical-align: middle;
 	}
+
 	div#ajax-content-wrap {
 		margin-top: 32px;
+	}
+}
+
+@media(max-width: 767px) {
+	.lfprojects {
+		display: none;
 	}
 }
 
