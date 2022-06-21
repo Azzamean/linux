@@ -2,10 +2,6 @@
 
 if (!defined('WPO_VERSION')) die('No direct access allowed');
 
-if (!class_exists('Updraft_Abstract_Logger')) require_once(WPO_PLUGIN_MAIN_PATH.'/includes/class-updraft-abstract-logger.php');
-if (!class_exists('Updraft_PHP_Logger')) require_once(WPO_PLUGIN_MAIN_PATH.'/includes/class-updraft-php-logger.php');
-
-
 /**
  * Class WP_Optimization_Images_Shutdown
  *

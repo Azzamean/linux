@@ -165,7 +165,6 @@ class WP_Optimize_CLI_Command extends WP_CLI_Command {
 			WP_CLI::error(__('Undefined command', 'wp-optimize'));
 		}
 
-		if (!class_exists('WP_Optimize_Cache_Commands')) include_once(WPO_PLUGIN_MAIN_PATH . 'cache/class-cache-commands.php');
 		$cache_commands = new WP_Optimize_Cache_Commands();
 
 		$result = call_user_func(array($cache_commands, $available_commands[$command]));
@@ -183,9 +182,6 @@ class WP_Optimize_CLI_Command extends WP_CLI_Command {
 	 * @return WP_Optimize_Commands
 	 */
 	private function get_commands() {
-		// Other commands, available for any remote method.
-		if (!class_exists('WP_Optimize_Commands')) include_once(WPO_PLUGIN_MAIN_PATH.'includes/class-commands.php');
-
 		return new WP_Optimize_Commands();
 	}
 
@@ -229,7 +225,6 @@ class WP_Optimize_CLI_Command extends WP_CLI_Command {
 			WP_CLI::error(__('Undefined command', 'wp-optimize'));
 		}
 
-		if (!class_exists('WP_Optimize_Minify_Commands')) include_once(WPO_PLUGIN_MAIN_PATH . 'minify/class-wp-optimize-minify-commands.php');
 		$minify_commands = new WP_Optimize_Minify_Commands();
 
 		// Handle activating / deactivating

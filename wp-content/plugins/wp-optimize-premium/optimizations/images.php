@@ -2,10 +2,6 @@
 
 if (!defined('WPO_VERSION')) die('No direct access allowed');
 
-if (!class_exists('Updraft_Abstract_Logger')) require_once(WPO_PLUGIN_MAIN_PATH.'/includes/class-updraft-abstract-logger.php');
-if (!class_exists('Updraft_PHP_Logger')) require_once(WPO_PLUGIN_MAIN_PATH.'/includes/class-updraft-php-logger.php');
-if (!class_exists('WP_Optimization_Images_Shutdown')) require_once(WPO_PLUGIN_MAIN_PATH.'/includes/class-wp-optimization-images-shutdown.php');
-
 /**
  * Class WP_Optimization_images
  */
@@ -264,7 +260,7 @@ class WP_Optimization_images extends WP_Optimization {
 					if (!empty($attachment['sizes'])) {
 						foreach ($attachment['sizes'] as $resized) {
 							$image_file = $base_dir.'/'.$sub_dir.'/'.$resized['file'];
-							$image_url = $base_url.'/'.$sub_dir.'/'.$attachment['file'];
+							$image_url = $base_url.'/'.$sub_dir.'/'.$resized['file'];
 
 							if (is_file($image_file)) {
 								fputcsv($output, array($blog_id, $id, $image_url, filesize($image_file)));
@@ -1141,7 +1137,7 @@ class WP_Optimization_images extends WP_Optimization {
 
 		$this->log('get_single_image_ids_in_post_meta()');
 
-		$post_meta_names = $this->get_acf_field_names();
+		$post_meta_names = $this->get_acf_image_field_names();
 
 		/**
 		 * Filter wpo_find_used_images_in_post_meta - List of post meta fields containing images
@@ -1159,6 +1155,29 @@ class WP_Optimization_images extends WP_Optimization {
 	}
 
 	/**
+	 * Get the ACF image fields.
+	 * We need this function as ACF's `acf_get_raw_fields` isn't capable of
+	 * handling nested `image` fields in `repeater` fields
+	 *
+	 * @return array An array of name of image fields
+	 */
+	private function get_acf_image_field_names() {
+		if (!function_exists('acf_get_raw_fields')) return array();
+
+		$acf_fields = acf_get_raw_fields('');
+		$repeater_fields = array_filter($acf_fields, function($field) {
+			return 'repeater' == $field['type'];
+		});
+	
+		if (count($repeater_fields)) {
+			global $wpdb;
+			$sql = "SELECT DISTINCT meta_key FROM {$wpdb->postmeta} WHERE meta_key LIKE '%image'";
+			return $wpdb->get_col($sql);
+		}
+		return $this->get_acf_field_names();
+	}
+
+	/**
 	 * Get list of attachment ids used in post meta, including Advanced Custom Fields Gallery fields.
 	 * Use this when the post meta is known to only store an array of IDs
 	 *
@@ -1168,14 +1187,15 @@ class WP_Optimization_images extends WP_Optimization {
 		global $wpdb;
 
 		$post_meta_names = apply_filters('wpo_get_multiple_image_ids_in_post_meta', array_merge(
-			$this->get_acf_field_names('gallery'), // ACF
+			$this->get_acf_gallery_field_names(), // ACF
 			array('_eg_in_gallery') // Envira Gallery
 		));
 
 		if (empty($post_meta_names)) return array();
 
 		// Select meta values where the Key is in $fields_name, and not empty.
-		$posts_meta_values = $wpdb->get_col("SELECT meta_value FROM {$wpdb->postmeta} WHERE meta_key IN ('".join("','", $post_meta_names)."') AND (meta_value != '')");
+		$sql = $wpdb->prepare("SELECT meta_value FROM {$wpdb->postmeta} WHERE meta_key IN ('%s') AND (meta_value != '')", join("','", $post_meta_names));
+		$posts_meta_values = $wpdb->get_col($sql);
 
 		$found_images_ids = array();
 
@@ -1189,6 +1209,42 @@ class WP_Optimization_images extends WP_Optimization {
 		return $found_images_ids;
 	}
 
+	/**
+	 * Get the ACF gallery fields.
+	 * We need this function as ACF's `acf_get_raw_fields` isn't capable of
+	 * handling nested `gallery` fields in `repeater` fields
+	 *
+	 * @return array An array of name of gallery fields
+	 */
+	private function get_acf_gallery_field_names() {
+		if (!function_exists('acf_get_raw_fields')) return array();
+		
+		$acf_fields = acf_get_raw_fields('');
+		$repeater_fields = array_filter($acf_fields, function($field) {
+			return 'repeater' == $field['type'];
+		});
+	
+		$gallery_fields = array();
+		foreach ($acf_fields as $field) {
+			if ('gallery' == $field['type']) {
+				$gallery_fields[] = $field['name'];
+			}
+		}
+		if (count($repeater_fields) && count($gallery_fields)) {
+			// Do the nested stuff
+			$where = '';
+			foreach ($gallery_fields as $gallery_field) {
+				$gallery_field = esc_sql($gallery_field);
+				$where .= "meta_key LIKE '%{$gallery_field}%' OR ";
+			}
+			$where = rtrim($where, 'OR ');
+			global $wpdb;
+			$sql = $wpdb->prepare("SELECT DISTINCT meta_key FROM {$wpdb->postmeta} WHERE %s", $where);
+			return $wpdb->get_col($sql);
+		}
+		return $this->get_acf_field_names('gallery');
+	}
+	
 	/**
 	 * Get the acf meta field names
 	 *

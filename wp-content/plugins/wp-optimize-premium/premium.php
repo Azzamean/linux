@@ -22,10 +22,7 @@ class WP_Optimize_Premium {
 		WP_Optimize()->get_task_manager();
 		include_once(WPO_PLUGIN_MAIN_PATH . '/includes/class-wp-optimize-queue-task.php');
 
-		if (!class_exists('WP_Optimize_Cron_Scheduler')) {
-			include_once(WPO_PLUGIN_MAIN_PATH . '/includes/class-wp-optimize-cron-scheduler.php');
-			$this->cron_scheduler = WP_Optimize_Cron_scheduler::get_instance();
-		}
+		$this->cron_scheduler = WP_Optimize_Cron_scheduler::get_instance();
 
 		include_once(WPO_PLUGIN_MAIN_PATH.'/includes/class-wp-optimize-lazy-load.php');
 		add_filter('wp_optimize_loggers_classes', array($this, 'loggers_classes'));

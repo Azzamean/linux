@@ -25,8 +25,6 @@ class WP_Optimize_Images_Trash_Manager extends Updraft_Task_Manager_1_3 {
 	public function __construct() {
 		parent::__construct();
 
-		if (!class_exists('WP_Optimize_Images_Trash_Manager_Commands')) include_once('class-wp-optimize-images-trash-manager-commands.php');
-
 		$this->commands = new WP_Optimize_Images_Trash_Manager_Commands($this);
 		$this->options = WP_Optimize()->get_options();
 	}
