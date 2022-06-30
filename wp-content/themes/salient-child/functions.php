@@ -1,4 +1,14 @@
 <?php
+
+/* Osano code for tracking */
+add_action('wp_head', 'osano_script');
+function osano_script(){
+?>
+<script src="https://cmp.osano.com/16A0DbT9yDNIaQkvZ/3b49aaa9-15ab-4d47-a8fb-96cc25b5543c/osano.js"></script>
+<?php
+};
+
+
 // GET WP BAKERY CUSTOM MODULES
 require_once "vc-addons/recent-posts-linux.php";
 require_once "vc-addons/projects-linux.php";
