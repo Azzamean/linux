@@ -8,6 +8,14 @@ Template: salient
 Version: 1.0
 */
 
+/* OSANO */
+.osano-cm-list__list-item {
+    list-style: none !important;
+}
+
+span.osano-cm-toggle__label.osano-cm-label {
+    color: #444 !important;
+}
 
 /* HEADER */
 
