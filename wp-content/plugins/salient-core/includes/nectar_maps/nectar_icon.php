@@ -273,7 +273,7 @@ $icon_params = array(
 
 );
 
-$position_group = SalientWPbakeryParamGroups::position_group( esc_html__( 'Positioning', 'salient-core' ) );
+$position_group = SalientWPbakeryParamGroups::position_group( esc_html__( 'Positioning', 'salient-core' ), false );
 
 $imported_groups = array( $position_group );
 
@@ -290,7 +290,7 @@ $icon_map = array(
     'base' => 'nectar_icon',
     'icon' => 'icon-wpb-icons',
     'category' => __( 'Content', 'salient-core' ),
-    'weight' => 1,
+    'weight' => 2,
     'description' => __( 'Add a icon', 'salient-core' ),
     'params' => $icon_params
 );

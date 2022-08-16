@@ -36,8 +36,9 @@
       this.rebuildMedia();
     }
 
+    this.observe();
+
     if (!(window.nectarDOMInfo && window.nectarDOMInfo.usingMobileBrowser && window.nectarDOMInfo.winW < 1000)) {
-      this.observe();
       this.trackDirection();
       this.verticallyCenter();
       $(window).on('resize', this.verticallyCenter.bind(this));
@@ -103,7 +104,7 @@
     if ('IntersectionObserver' in window) {
 
       if (!(window.nectarDOMInfo.usingMobileBrowser && window.nectarDOMInfo.winW < 1000)) {
-
+        
         this.observer = new IntersectionObserver(function (entries) {
 
           entries.forEach(function (entry) {
@@ -130,12 +131,19 @@
                 }, 100);
 
                 
-                if( !$activeSection.hasClass('pause-trigger') ) {
-                  if( $activeSection.find('video.no-loop').length > 0 && window.nectarDOMInfo.winW > 999 ) {
-                    that.playSectionVideo($activeSection.find('video.no-loop')[0]);
+                if( !$activeSection.hasClass('pause-trigger') || 
+                    that.prevIndex == 1 && that.activeIndex == 0 ||
+                    that.prevIndex == $allSections.length - 2 && that.activeIndex == $allSections.length - 1) {
+
+                  if( $activeSection.find('video').length > 0 && window.nectarDOMInfo.winW > 999 ) {
+                    that.playSectionVideo($activeSection.find('video')[0]);
                   }
-                  if( $activeMobileSection.find('video.no-loop').length > 0 && window.nectarDOMInfo.winW < 1000 ) {
-                    that.playSectionVideo($activeMobileSection.find('video.no-loop')[0]);
+                  if( $activeMobileSection.find('video').length > 0 && window.nectarDOMInfo.winW < 1000 ) {
+                    var vid = $activeMobileSection.find('video')[0];
+                    if( vid.currentTime == 0 ) {
+                      that.playSectionVideo($activeMobileSection.find('video')[0]);
+                    }
+                    
                   }
                 }
               
@@ -167,16 +175,22 @@
 
       else {
         // Mobile.
+        
         this.mobileObserver = new IntersectionObserver(function (entries) {
 
           entries.forEach(function (entry) {
             if (entry.isIntersecting) {
+           
               
               var index = $(entry.target).index();
               var $activeSection = that.$contentSections.find('> .nectar-sticky-media-section__content-section:eq(' + index + ')');
 
-              if( $activeSection.find('video.no-loop').length > 0 ) {
-                that.playSectionVideo($activeSection.find('video.no-loop')[0]);
+              if( $activeSection.find('video').length > 0 ) {
+
+                var vid = $activeSection.find('video')[0];
+                if( vid.currentTime == 0) {
+                  that.playSectionVideo($activeSection.find('video')[0]);
+                }
               }
               that.mobileObserver.unobserve(entry.target);
             }
@@ -200,9 +214,17 @@
 
 
   proto.playSectionVideo = function(video) {
-    video.pause();
-    video.currentTime = 0;
-    video.play();
+    var that = this;
+    if( video.readyState >= 2 ) {
+      video.pause();
+      video.currentTime = 0;
+      video.play();
+    } else {
+      setTimeout(function(){
+        that.playSectionVideo(video);
+      }, 70);
+    }
+    
   };
 
 

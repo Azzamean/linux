@@ -15,6 +15,7 @@ extract(shortcode_atts(array(
   'line_thickness' => '1', 
   'custom_line_width' => '20%', 
   'divider_color' => 'default', 
+  'divider_opacity' => '100',
   'animate' => '', 
   'delay' => ''), $atts));
   
@@ -63,7 +64,17 @@ extract(shortcode_atts(array(
 	} else {
 		$dynamic_el_styles = '';
 	}
+
+  // Opacity.
+  $styles = '';
+  if( !empty($divider_opacity) && $divider_opacity != '100' ) {
+    $styles .= 'opacity: ' . (floatval($divider_opacity)/100) . ';';
+  }
+  if( !empty($styles) ) {
+    $styles = ' style="' . $styles . '"';
+  }
+  
 	
-  echo '<div class="divider-wrap'.esc_attr($dynamic_el_styles).'" data-alignment="' . esc_attr($line_alignment) . '">'.$divider.'</div>';
+  echo '<div class="divider-wrap'.esc_attr($dynamic_el_styles).'"'.$styles.' data-alignment="' . esc_attr($line_alignment) . '">'.$divider.'</div>';
 
 ?>

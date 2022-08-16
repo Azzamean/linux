@@ -223,6 +223,64 @@ body .nectar_image_with_hotspots .nectar_hotspot_wrap .nttip[data-tooltip-positi
     animation:pulsate 3s cubic-bezier(0.2,1,0.2,1) infinite
 }
 
+@keyframes nectarBounceIn{
+    0%{
+      transform:translateY(80px);
+      opacity:0
+    }
+    33%{
+      transform:translateY(-13px);
+      opacity:1
+    }
+    66%{
+      transform:translateY(4px);
+      opacity:1
+    }
+    100%{
+      transform:translateY(0px);
+      opacity:1
+    }
+  }
+  @-webkit-keyframes nectarBounceIn{
+    0%{
+      transform:translateY(80px);
+      opacity:0
+    }
+    33%{
+      transform:translateY(-13px);
+      opacity:1
+    }
+    66%{
+      transform:translateY(4px);
+      opacity:1
+    }
+    100%{
+      transform:translateY(0px);
+      opacity:1
+    }
+  }
+  
+@-webkit-keyframes pulsate{
+    from{
+      opacity:1;
+      transform:scale(1)
+    }
+    to{
+      opacity:0;
+      transform:scale(3)
+    }
+  }
+  @keyframes pulsate{
+    from{
+      opacity:1;
+      transform:scale(1)
+    }
+    to{
+      opacity:0;
+      transform:scale(3)
+    }
+  }
+
 @media only screen and (min-width:690px){
     .nectar_image_with_hotspots[data-size="medium"] .nectar_hotspot{
        height:30px;

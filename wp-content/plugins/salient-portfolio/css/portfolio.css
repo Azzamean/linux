@@ -1392,6 +1392,20 @@ body .container-wrap[data-nav-pos="after_project_2"] .bottom_controls .container
 .container-wrap[data-nav-pos="after_project_next_only"] #portfolio-nav .controls li svg {
 	display: none;
 }
+
+.container-wrap[data-nav-pos="after_project_next_only"] .controls li.only:first-child {
+	display: block;
+	height: auto!important;
+	margin-top: 5%;
+	margin-bottom: 5%;
+	padding: 10%;
+	position: relative;
+	width: 100%;
+}
+.container-wrap[data-nav-pos="after_project_next_only"] .bottom_controls .controls .previous-project.only:hover .parallax-layer-wrap {
+    transform: scale(0.95);
+}
+
 .container-wrap[data-nav-pos="after_project_next_only"] .bottom_controls .container,
 .container-wrap[data-nav-pos="after_project_next_only"] #portfolio-nav,
 .container-wrap[data-nav-pos="after_project_next_only"] #portfolio-nav .controls li.next-project {
@@ -1642,8 +1656,9 @@ body .container-wrap[data-nav-pos="after_project_2"] .bottom_controls .previous-
 .portfolio-items[data-ps="8"] .col .work-item.style-2[data-custom-content="on"] .vert-center {
   -webkit-transform: none;
 	transform: none;
-  width: 100%; 
+	 width: 100%; 
 	left: 0; 
+	top: 0;
 	padding-left: 0;
 }
 
@@ -1789,6 +1804,9 @@ body .portfolio-items .col .work-item.style-3-alt {
 .recent-work-carousel .portfolio-items.carousel .work-item:not([class*="style"]):hover .work-info,
 .recent-work-carousel .portfolio-items.carousel .work-item:not([class*="style"]):hover .work-info .vert-center > * {
 	 opacity: 1;
+}
+.recent-work-carousel .portfolio-items.carousel .work-item:not([class*="style"]):hover .work-info .vert-center > a.default-link {
+	opacity: 0;
 }
 
 .recent-work-carousel .portfolio-items.carousel .work-item:not([class*="style"]):hover .work-info-bg {
@@ -2242,6 +2260,10 @@ body.material .portfolio-filters[data-color-scheme*="-underline"] > ul li .activ
 
 .portfolio-items .work-meta p {
    line-height: 22px;	
+}
+
+[data-ps="1"] .work-meta p {
+	position: relative;
 }
 
 .page-template-template-portfolio-php .portfolio-items .col.span_3, 

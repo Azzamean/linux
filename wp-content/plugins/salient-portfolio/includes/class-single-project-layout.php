@@ -23,6 +23,7 @@ class Salient_Portfolio_Single_Layout {
   
   public static $is_full_width  = false;
   public static $default_header = true;
+  public static $using_vcv = false;
   
   public function __construct() {
     
@@ -51,6 +52,10 @@ class Salient_Portfolio_Single_Layout {
       
       $options = get_nectar_theme_options(); 
       
+      if( isset($_GET['vcv-editable']) && '1' === sanitize_text_field($_GET['vcv-editable']) ) {
+        self::$using_vcv = true;
+      }
+
       // Page builder layout.
       if( isset($options['single_portfolio_project_layout']) && 
       !empty($options['single_portfolio_project_layout']) && 

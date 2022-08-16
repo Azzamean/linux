@@ -41,12 +41,25 @@ return array(
 			"param_name" => "heading_tag",
 			"value" => array(
 				"Default" => "default",
+				"span" => "span",
 				"H6" => "h6",
 				"H5" => "h5",
 				"H4" => "h4",
 				"H3" => "h3",
 				"H2" => "h2"
-			)),
+			)
+		),
+		array(
+			"type" => "dropdown",
+			"class" => "",
+			'save_always' => true,
+			"heading" => "Typography Functionality",
+			"param_name" => "heading_tag_functionality",
+			"value" => array(
+				"Inherit Styling Only" => "default",
+				"Change HTML Tag" => "change_html_tag"
+			)
+		),
 	),
 	'js_view' => 'VcAccordionTabView'
 );

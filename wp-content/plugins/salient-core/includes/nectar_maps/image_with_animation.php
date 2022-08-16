@@ -49,15 +49,17 @@ $image_with_animation_params = array(
     array(
         'type' => 'nectar_group_header',
         'class' => '',
-        'heading' => esc_html__( 'Animation', 'salient-core' ),
+        'heading' => esc_html__( 'Entrance Animation', 'salient-core' ),
         'param_name' => 'group_header_1',
-        'edit_field_class' => '',
+        "edit_field_class" => "first-field",
+        'group' => esc_html__('Animation'),
         'value' => ''
     ),
     array(
         'type' => 'dropdown',
         'heading' => esc_html__( 'Animation Type', 'salient-core' ),
         'param_name' => 'animation_type',
+        'group' => esc_html__('Animation'),
         'value' => array(
             esc_html__( 'Triggered on Entrance', 'salient-core' ) => 'entrance',
             esc_html__( 'Looped Infinitely', 'salient-core' ) => 'looped',
@@ -69,21 +71,23 @@ $image_with_animation_params = array(
         'type' => 'dropdown',
         'heading' => esc_html__( 'Animation', 'salient-core' ),
         'param_name' => 'animation',
+        'group' => esc_html__('Animation'),
         'dependency' => Array( 'element' => 'animation_type', 'value' => 'entrance' ),
         'admin_label' => true,
         'value' => array(
+            esc_html__( 'None', 'salient-core' ) => 'None',
             esc_html__( 'Fade In', 'salient-core' ) => 'Fade In',
             esc_html__( 'Fade In From Left', 'salient-core' ) => 'Fade In From Left',
             esc_html__( 'Fade In From Right', 'salient-core' ) => 'Fade In From Right',
             esc_html__( 'Fade In From Bottom', 'salient-core' ) => 'Fade In From Bottom',
             esc_html__( 'Grow In', 'salient-core' ) => 'Grow In',
+            esc_html__( 'Slide Up', 'salient-core' ) => 'slide-up',
             esc_html__( 'Flip In Horizontal', 'salient-core' ) => 'Flip In',
             esc_html__( 'Flip In Vertical', 'salient-core' ) => 'flip-in-vertical',
             esc_html__( 'Reveal Rotate From Top', 'salient-core' ) => 'ro-reveal-from-top',
             esc_html__( 'Reveal Rotate From Bottom', 'salient-core' ) => 'ro-reveal-from-bottom',
             esc_html__( 'Reveal Rotate From Left', 'salient-core' ) => 'ro-reveal-from-left',
             esc_html__( 'Reveal Rotate From Right', 'salient-core' ) => 'ro-reveal-from-right',
-            esc_html__( 'None', 'salient-core' ) => 'None'
         ),
         'save_always' => true,
         'description' => esc_html__( 'Select animation type if you want this element to be animated when it enters into the browsers viewport.', 'salient-core' )
@@ -92,11 +96,107 @@ $image_with_animation_params = array(
         'type' => 'textfield',
         'heading' => esc_html__( 'Animation Delay', 'salient-core' ),
         'param_name' => 'delay',
-        'dependency' => Array( 'element' => 'animation_type', 'value' => 'entrance' ),
-        'description' => esc_html__( 'Enter delay (in milliseconds) if needed e.g. 150. This parameter comes in handy when creating the animate in \'one by one\' effect in horizontal columns.', 'salient-core' )
+        'group' => esc_html__('Animation'),
+        'dependency' => Array( 
+            'element' => 'animation', 
+            'value' => array( 
+                'Fade In', 
+                'Fade In From Left', 
+                'Fade In From Right', 
+                'Fade In From Bottom', 
+                'slide-up', 
+                'Grow In', 
+                'Flip In', 
+                'flip-in-vertical',
+                'ro-reveal-from-top',
+                'ro-reveal-from-bottom',
+                'ro-reveal-from-left',
+                'ro-reveal-from-right',
+            ) 
+        ),
+        'edit_field_class' => 'nectar-one-half',
+        'description' => esc_html__( 'Enter delay (in milliseconds) if needed e.g. "150"', 'salient-core' )
+    ),
+    array(
+        "type" => 'checkbox',
+        'group' => esc_html__('Animation'),
+        'dependency' => Array( 
+            'element' => 'animation', 
+            'value' => array( 
+                'Fade In', 
+                'Fade In From Left', 
+                'Fade In From Right', 
+                'Fade In From Bottom', 
+                'slide-up', 
+                'Grow In', 
+                'Flip In', 
+                'flip-in-vertical',
+                'ro-reveal-from-top',
+                'ro-reveal-from-bottom',
+                'ro-reveal-from-left',
+                'ro-reveal-from-right',
+            ) 
+        ),
+        "heading" => esc_html__("Disable Animation on Mobile", "salient-core"),
+        'group' => esc_html__('Animation'),
+        "param_name" => "disable_mobile_animation",
+        'edit_field_class' => 'vc_col-xs-12 nectar-one-half salient-fancy-checkbox',
+        "description" => '',
+        "value" => array(esc_html__("Yes, please", "salient-core") => 'true'),
+    ),
+
+    array(
+        "type" => "dropdown",
+        "class" => "",
+        'save_always' => true,
+        'group' => esc_html__('Animation'),
+        "heading" => esc_html__("Animation Easing", "salient-core"),
+        "param_name" => "animation_easing",
+        'dependency' => Array( 
+            'element' => 'animation', 
+            'value' => array( 
+                'Fade In', 
+                'Fade In From Left', 
+                'Fade In From Right', 
+                'Fade In From Bottom', 
+                'slide-up', 
+                'Grow In', 
+                'Flip In', 
+                'flip-in-vertical',
+                'ro-reveal-from-top',
+                'ro-reveal-from-bottom',
+                'ro-reveal-from-left',
+                'ro-reveal-from-right',
+            ) 
+        ),
+        "value" => array(
+            "Inherit From Theme Options" => "default",
+            'easeInQuad'=>'easeInQuad',
+            'easeOutQuad' => 'easeOutQuad',
+            'easeInOutQuad'=>'easeInOutQuad',
+            'easeInCubic'=>'easeInCubic',
+            'easeOutCubic'=>'easeOutCubic',
+            'easeInOutCubic'=>'easeInOutCubic',
+            'easeInQuart'=>'easeInQuart',
+            'easeOutQuart'=>'easeOutQuart',
+            'easeInOutQuart'=>'easeInOutQuart',
+            'easeInQuint'=>'easeInQuint',
+            'easeOutQuint'=>'easeOutQuint',
+            'easeInOutQuint'=>'easeInOutQuint',
+            'easeInExpo'=>'easeInExpo',
+            'easeOutExpo'=>'easeOutExpo',
+            'easeInOutExpo'=>'easeInOutExpo',
+            'easeInSine'=>'easeInSine',
+            'easeOutSine'=>'easeOutSine',
+            'easeInOutSine'=>'easeInOutSine',
+            'easeInCirc'=>'easeInCirc',
+            'easeOutCirc'=>'easeOutCirc',
+            'easeInOutCirc'=>'easeInOutCirc'
+        ),
     ),
     array(
         'type' => 'dropdown',
+        'group' => esc_html__('Animation'),
         'heading' => esc_html__( 'Looped Animation', 'salient-core' ),
         'param_name' => 'loop_animation',
         'dependency' => Array( 'element' => 'animation_type', 'value' => 'looped' ),
@@ -109,7 +209,64 @@ $image_with_animation_params = array(
     ),
 
     array(
+        'type' => 'nectar_group_header',
+        'class' => '',
+        'heading' => esc_html__( 'Scroll Based Animation', 'salient-core' ),
+        'param_name' => 'group_header_6',
+        "edit_field_class" => "",
+        'group' => esc_html__('Animation'),
+        'value' => ''
+    ),
+    array(
+        "type" => "dropdown",
+        "class" => "",
+        'save_always' => true,
+        "heading" => esc_html__("Movement", "salient-core"),
+        'group' => esc_html__('Animation'),
+        'edit_field_class' => 'movement-type vc_col-xs-12',
+        "param_name" => "animation_movement_type",
+        "value" => array(
+            esc_html__("Move Y Axis", "salient-core") => "transform_y",
+            esc_html__("Move X Axis", "salient-core") => "transform_x",
+        ),
+    ),
+
+    array(
+        "type" => "nectar_numerical",
+        "class" => "",
+        'group' => esc_html__('Animation'),
+        'edit_field_class' => 'movement-intensity vc_col-xs-12',
+        "placeholder" => esc_html__("Movement Intensity ( -5 to 5 )",'salient-core'),
+        "heading" => "<span class='attr-title'>" . esc_html__("Movement Intensity", "salient-core") . "</span>",
+        "value" => "",
+        "param_name" => "animation_movement_intensity",
+        "description" => '',
+    ),
+
+    array(
+        "type" => "checkbox",
+        "class" => "",
+        "heading" => esc_html__("Persist Movement On Mobile", "salient-core"),
+        "value" => array("Enable" => "true" ),
+        "param_name" => "animation_movement_persist_on_mobile",
+        'edit_field_class' => 'vc_col-xs-12 salient-fancy-checkbox',
+        "description" => '',
+        'group' => esc_html__('Animation'),
+    ),
+    
+
+    array(
+        'type' => 'nectar_group_header',
+        'class' => '',
+        'heading' => esc_html__( 'Hover Animation', 'salient-core' ),
+        'param_name' => 'group_header_7',
+        "edit_field_class" => "",
+        'group' => esc_html__('Animation'),
+        'value' => ''
+    ),
+    array(
         'type' => 'dropdown',
+        'group' => esc_html__('Animation'),
         'heading' => esc_html__( 'Hover Animation', 'salient-core' ),
         'param_name' => 'hover_animation',
         'value' => array(
@@ -123,6 +280,7 @@ $image_with_animation_params = array(
     ),
     array(
         'type' => 'colorpicker',
+        'group' => esc_html__('Animation'),
         'class' => '',
         'heading' => esc_html__( 'Hover Overlay Color', 'salient-core' ),
         'param_name' => 'hover_overlay_color',
@@ -360,7 +518,8 @@ $image_with_animation_params = array(
             esc_html__( '5px', 'salient-core' ) => '5px',
             esc_html__( '10px', 'salient-core' ) => '10px',
             esc_html__( '15px', 'salient-core' ) => '15px',
-            esc_html__( '20px', 'salient-core' ) => '20px' ),
+            esc_html__( '20px', 'salient-core' ) => '20px',
+            esc_html__( 'Custom', 'salient-core' ) => 'custom' ),
         ),
         array(
             'type' => 'dropdown',
@@ -368,10 +527,84 @@ $image_with_animation_params = array(
             'save_always' => true,
             'edit_field_class' => 'col-md-6 col-md-6-last',
             'param_name' => 'box_shadow',
-            'value' => array( esc_html__( 'None', 'salient-core' ) => 'none', esc_html__( 'Small Depth', 'salient-core' ) => 'small_depth', esc_html__( 'Medium Depth', 'salient-core' ) => 'medium_depth', esc_html__( 'Large Depth', 'salient-core' ) => 'large_depth', esc_html__( 'Very Large Depth', 'salient-core' ) => 'x_large_depth' ),
+            'value' => array( 
+                esc_html__( 'None', 'salient-core' ) => 'none', 
+                esc_html__( 'Small Depth', 'salient-core' ) => 'small_depth', 
+                esc_html__( 'Medium Depth', 'salient-core' ) => 'medium_depth', 
+                esc_html__( 'Large Depth', 'salient-core' ) => 'large_depth', 
+                esc_html__( 'Very Large Depth', 'salient-core' ) => 'x_large_depth',
+                esc_html__( 'Custom', 'salient-core' ) => 'custom'  
+            ),
             'description' => '',
-            'dependency' => Array( 'element' => 'animation', 'value' => array( 'None', 'Fade In', 'Fade In From Left', 'Fade In From Right', 'Fade In From Bottom', 'Grow In', 'Flip In', 'flip-in-vertical' ) ),
+            'dependency' => Array( 'element' => 'animation', 'value' => array( 'None', 'Fade In', 'Fade In From Left', 'Fade In From Right', 'Fade In From Bottom', 'slide-up', 'Grow In', 'Flip In', 'flip-in-vertical' ) ),
         ),
+
+        array(
+            "type" => "nectar_numerical",
+            "class" => "",
+            "edit_field_class" => "nectar-one-fourth",
+            "heading" => '',
+            "value" => "",
+            "placeholder" => esc_html__("Top Left",'salient-core'),
+            "param_name" => "top_left_border_radius",
+            "description" => "",
+            "dependency" => Array('element' => "border_radius", 'value' => array('custom'))
+          ),
+          array(
+            "type" => "nectar_numerical",
+            "class" => "",
+            "placeholder" => esc_html__("Top Right",'salient-core'),
+            "edit_field_class" => "nectar-one-fourth",
+            "heading" => "<span class='attr-title'>" . esc_html__("Top Right", "salient-core") . "</span>",
+            "value" => "",
+            "param_name" => "top_right_border_radius",
+            "description" => "",
+            "dependency" => Array('element' => "border_radius", 'value' => array('custom'))
+          ),
+          array(
+            "type" => "nectar_numerical",
+            "class" => "",
+            "placeholder" => esc_html__("Bottom Right",'salient-core'),
+            "edit_field_class" => "nectar-one-fourth",
+            "heading" => "<span class='attr-title'>" . esc_html__("Bottom Right", "salient-core") . "</span>",
+            "value" => "",
+            "param_name" => "bottom_right_border_radius",
+            "description" => "",
+            "dependency" => Array('element' => "border_radius", 'value' => array('custom'))
+          ),
+  
+          array(
+            "type" => "nectar_numerical",
+            "class" => "",
+            "placeholder" => esc_html__("Bottom Left",'salient-core'),
+            "edit_field_class" => "nectar-one-fourth nectar-one-fourth-last",
+            "heading" => "<span class='attr-title'>" . esc_html__("Bottom Left", "salient-core") . "</span>",
+            "value" => "",
+            "param_name" => "bottom_left_border_radius",
+            "description" => "",
+            "dependency" => Array('element' => "border_radius", 'value' => array('custom'))
+          ),
+
+        array(
+            'type' => 'dropdown',
+            'heading' => esc_html__( 'Shadow Method', 'salient-core' ),
+            'save_always' => true,
+            'param_name' => 'box_shadow_method',
+            'value' => array( 
+                esc_html__( 'CSS Box Shadow', 'salient-core' ) => 'default', 
+                esc_html__( 'CSS Filter Drop Shadow', 'salient-core' ) => 'filter', 
+            ),
+            'description' => esc_html__( 'Using the CSS Filter method will connect the shadow to the image contents rather than the bounding box. When using a .png image, this will add the shadow to the edges of the elements within the .png.', 'salient-core' ),
+            'dependency' => Array( 'element' => 'box_shadow', 'value' => array( 'custom' ) )
+        ),
+        array(
+            'type' => 'nectar_box_shadow_generator',
+            'heading' => esc_html__( 'Custom Box Shadow', 'salient-core' ),
+            'save_always' => true,
+            'param_name' => 'custom_box_shadow',
+            'dependency' => Array( 'element' => 'box_shadow', 'value' => array( 'custom' ) )
+        ),
+        
 
         array(
             'type' => 'nectar_group_header',
@@ -426,6 +659,7 @@ $image_with_animation_params = array(
             'dependency' => Array( 'element' => 'max_width', 'value' => array( 'none', '50%', '75%', '100%', '110%', '125%', '150%', '165%', '175%', '200%' ) ),
             'value' => array(
                 esc_html__( 'Default', 'salient-core' ) => 'default',
+                esc_html__( '100%', 'salient-core' ) => '100%',
                 esc_html__( '110%', 'salient-core' ) => '110%',
                 esc_html__( '125%', 'salient-core' ) => '125%',
                 esc_html__( '150%', 'salient-core' ) => '150%',
@@ -466,6 +700,15 @@ $image_with_animation_params = array(
             'description' => esc_html__( 'Optionally define a set of media conditions (e.g. screen widths) to hint to the browser which size to download. e.g. (min-width: 400px) 400px, 100vw', 'salient-core' )
         ),
         array(
+            "type" => "dropdown",
+            "heading" => esc_html__("Overflow Visibility", "salient-core"),
+            "param_name" => "overflow",
+            "value" => array(
+                  "Visible" => "visible",
+                  "Hidden" => "hidden",
+            )
+        ),
+        array(
             'type' => 'textfield',
             'heading' => esc_html__( 'CSS Class Name', 'salient-core' ),
             'param_name' => 'el_class',
@@ -476,8 +719,7 @@ $image_with_animation_params = array(
     $mask_group = SalientWPbakeryParamGroups::mask_group( esc_html__( 'Mask', 'salient-core' ) );
     $position_group = SalientWPbakeryParamGroups::position_group( esc_html__( 'Positioning', 'salient-core' ) );
 
-    $imported_groups = array( $position_group );
-    //$imported_groups = array( $mask_group, $position_group );
+    $imported_groups = array( $mask_group, $position_group );
 
     foreach ( $imported_groups as $group ) {
 
@@ -492,7 +734,7 @@ $image_with_animation_params = array(
         'base' => 'image_with_animation',
         'icon' => 'icon-wpb-single-image',
         'category' => esc_html__( 'Media', 'salient-core' ),
-        'weight' => '2',
+        'weight' => 10,
         'description' => esc_html__( 'Simple image with CSS animation', 'salient-core' ),
         'params' => $image_with_animation_params
     );

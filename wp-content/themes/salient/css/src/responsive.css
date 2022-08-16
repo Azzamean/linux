@@ -858,7 +858,10 @@ Description: Global responsive styles
     background-image: none!important;
   }
 
-  .full-width-section,
+  .full-width-section {
+    margin-top: 0;
+  }
+
   body[data-bg-header="true"] .full-width-section.first-section,
   body[data-bg-header="true"] .full-width-content.first-section,
 	body[data-header-resize="0"] .container-wrap .portfolio-filters-inline.first-section,
@@ -1732,6 +1735,11 @@ Description: Global responsive styles
 
 
 /* Higher Res Tablets */
+@media only screen and (-webkit-min-device-pixel-ratio: 2) and (hover: none) and (pointer: coarse)  {
+  body .parallax_section .row-bg[data-parallax-speed="fixed"] {
+    background-attachment: scroll!important;
+  }
+}
 
 @media only screen and (max-device-width: 2600px) {
 

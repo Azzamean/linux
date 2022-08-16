@@ -6,107 +6,114 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
    extract(shortcode_atts(array(
-	  "type" => 'in_container',
-	  'bg_image'=> '',
-		'bg_image_tablet' => '',
-		'bg_image_phone' => '',
-    'bg_image_animation' => 'none',
-	  'background_image_mobile_hidden' => '',
-		'background_image_loading' => '',
-		'background_video_loading' => '',
-	  'bg_position'=> '',
-		'bg_position_x' => '50%',
-		'bg_position_y' => '50%',
-	  'bg_repeat' => '',
-	  'parallax_bg' => '',
-	  'parallax_bg_speed' => 'fast',
-	  'bg_color'=> '',
-	  'exclude_row_header_color_inherit' => '',
-	  'text_align'=> '',
-	  'vertically_center_columns' => '',
+	"type" => 'in_container',
+	'bg_image'=> '',
+	'bg_image_tablet' => '',
+	'bg_image_phone' => '',
+	'bg_image_animation' => 'none',
+	'bg_image_animation_delay' => '',
+	'background_image_mobile_hidden' => '',
+	'clip_path_animation_type' => '',
+	'background_image_loading' => '',
+	'background_video_loading' => '',
+	'bg_position'=> '',
+	'bg_position_x' => '50%',
+	'bg_position_y' => '50%',
+	'bg_repeat' => '',
+	'parallax_bg' => '',
+	'parallax_bg_speed' => 'fast',
+	'bg_color'=> '',
+	'exclude_row_header_color_inherit' => '',
+	'text_align'=> '',
+	'vertically_center_columns' => '',
 
-	  'mouse_based_parallax_bg' => '',
-	  'layer_one_image' => '',
-	  'layer_two_image' => '',
-	  'layer_three_image' => '',
-	  'layer_four_image' => '',
-	  'layer_five_image' => '',
+	'mouse_based_parallax_bg' => '',
+	'layer_one_image' => '',
+	'layer_two_image' => '',
+	'layer_three_image' => '',
+	'layer_four_image' => '',
+	'layer_five_image' => '',
 
-	  'layer_one_strength' => '.20',
-	  'layer_two_strength' => '.40',
-	  'layer_three_strength' => '.60',
-	  'layer_four_strength' => '.80',
-	  'layer_five_strength' => '1.00',
-	  'scene_position' => '',
-	  'mouse_sensitivity' => '10',
+	'layer_one_strength' => '.20',
+	'layer_two_strength' => '.40',
+	'layer_three_strength' => '.60',
+	'layer_four_strength' => '.80',
+	'layer_five_strength' => '1.00',
+	'scene_position' => '',
+	'mouse_sensitivity' => '10',
 
-	  'video_bg'=> '',
-	  'enable_video_color_overlay'=> '',
-	  'video_overlay_color'=> '',
-	  'video_external'=> '',
-	  'video_webm'=> '',
-	  'video_mp4'=> '',
-	  'video_ogv'=> '',
-	  'video_image'=> '',
-	  'video_mute' => '',
+	'video_bg'=> '',
+	'enable_video_color_overlay'=> '',
+	'video_overlay_color'=> '',
+	'video_external'=> '',
+	'video_webm'=> '',
+	'video_mp4'=> '',
+	'video_ogv'=> '',
+	'video_image'=> '',
+	'video_mute' => '',
 
-	  "top_padding" => "0",
-		"top_padding_tablet" => "",
-		"top_padding_phone" => "",
-	  "bottom_padding" => "0",
-		"bottom_padding_phone" => "",
-		"bottom_padding_tablet" => "",
+	"top_padding" => "0",
+	"top_padding_tablet" => "",
+	"top_padding_phone" => "",
+	"bottom_padding" => "0",
+	"bottom_padding_phone" => "",
+	"bottom_padding_tablet" => "",
 
-		'translate_x' => '',
-		'translate_x_tablet' => '',
-		'translate_x_phone' => '',
-    'translate_y' => '',
-		'translate_y_tablet' => '',
-		'translate_y_phone' => '',
+	'translate_x' => '',
+	'translate_x_tablet' => '',
+	'translate_x_phone' => '',
+	'translate_y' => '',
+	'translate_y_tablet' => '',
+	'translate_y_phone' => '',
 
-	  'text_color' => 'dark',
-	  'custom_text_color' => '',
-	  'id' => '',
-	  'class' => '',
-	  'full_height' => '',
-	  'columns_placement' => 'middle',
-    'column_margin' => 'default',
+	'text_color' => 'dark',
+	'custom_text_color' => '',
+	'id' => '',
+	'class' => '',
+	'full_height' => '',
+	'columns_placement' => 'middle',
+	'column_margin' => 'default',
 
-		'column_direction' => 'default',
-		'column_direction_tablet' => 'default',
-		'column_direction_phone' => 'default',
+	'column_direction' => 'default',
+	'column_direction_tablet' => 'default',
+	'column_direction_phone' => 'default',
 
-		'gradient_type' => '',
-		'advanced_gradient' => '',
-		'advanced_gradient_angle' => '',
+	'animated_gradient_bg' => '',
+	'animated_gradient_bg_color_1' => '',
+	'animated_gradient_bg_color_2' => '',
+	'animated_gradient_bg_blending_mode' => 'linear',
+	'animated_gradient_bg_speed' => 'slow',
+	'gradient_type' => '',
+	'advanced_gradient' => '',
+	'advanced_gradient_angle' => '',
 
-	  'enable_gradient' => 'false',
-	  'color_overlay' => '',
-	  'color_overlay_2' => '',
-	  'gradient_direction' => 'left_to_right',
-	  'overlay_strength' => '0.3',
-	  'equal_height' => '',
-	  'content_placement' => '',
-	  'row_name' => '',
-	  'full_screen_row_position' => 'middle',
-	  'disable_ken_burns' => '',
-	  'disable_element' => '',
+	'enable_gradient' => 'false',
+	'color_overlay' => '',
+	'color_overlay_2' => '',
+	'gradient_direction' => 'left_to_right',
+	'overlay_strength' => '0.3',
+	'equal_height' => '',
+	'content_placement' => '',
+	'row_name' => '',
+	'full_screen_row_position' => 'middle',
+	'disable_ken_burns' => '',
+	'disable_element' => '',
 
-		'row_border_radius' => 'none',
-		'row_border_radius_applies' => 'bg',
-	  'enable_shape_divider' => '',
-	  'shape_type' => '',
-	  'shape_divider_color' => '',
-    'shape_divider_bring_to_front' => '',
-	  'shape_divider_position' => '',
-	  'shape_divider_height' => '50',
-		'shape_divider_height_tablet' => '',
-		'shape_divider_height_phone' => '',
+	'row_border_radius' => 'none',
+	'row_border_radius_applies' => 'bg',
+	'enable_shape_divider' => '',
+	'shape_type' => '',
+	'shape_divider_color' => '',
+	'shape_divider_bring_to_front' => '',
+	'shape_divider_position' => '',
+	'shape_divider_height' => '50',
+	'shape_divider_height_tablet' => '',
+	'shape_divider_height_phone' => '',
 	'zindex' => '',
 	'sticky_row' => '',
 	'sticky_row_alignment' => 'top',
 
-	  ),
+	),
 	$atts));
 
   global $post;
@@ -171,8 +178,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 	}
 
   $style = '';
-	$using_image_class = null;
-	$using_custom_text_color = null;
+  $using_image_class = '';
+  $row_bg_classes = array('row-bg-wrap');
+  $using_custom_text_color = null;
 
   $nectar_using_VC_front_end_editor = (isset($_GET['vc_editable'])) ? sanitize_text_field($_GET['vc_editable']) : '';
   $nectar_using_VC_front_end_editor = ($nectar_using_VC_front_end_editor == 'true') ? true : false;
@@ -272,10 +280,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 				$bg_img_arr[$viewport]['props'] .= 'background-color: '. esc_attr($bg_color).'; ';
 
 				if( $exclude_row_header_color_inherit !== 'true' ) {
-	        $bg_img_arr[$viewport]['classes'] .= ' using-bg-color';
-	      } else {
-	        $bg_img_arr[$viewport]['classes'] .= ' using-bg-color-excluded';
-	      }
+					$bg_img_arr[$viewport]['classes'] .= ' using-bg-color';
+				} else {
+					$bg_img_arr[$viewport]['classes'] .= ' using-bg-color-excluded';
+				}
 
 			}
 			
@@ -353,46 +361,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 			} else {
 				$style .= 'padding-bottom: '. intval($bottom_padding) .'px; ';
 			}
-
-      // Transforms.
-      if( !empty($translate_y) || !empty($translate_x) ) {
-
-          for( $i = 0; $i < 2; $i++ ) {
-
-            if( $i == 0 ) {
-              $style .= '-webkit-transform: ';
-            } else {
-              $style .= ' transform: ';
-            }
-
-            if( !empty($translate_y) ) {
-                if( strpos($translate_y,'%' ) !== false){
-                    $style .= ' translateY('. intval($translate_y) .'%)';
-                }
-								else if( strpos($translate_y,'vh' ) !== false ) {
-									$style .= ' translateY('. intval($translate_y) .'vh)';
-								}
-								else {
-                    $style .= ' translateY('. intval($translate_y) .'px)';
-                }
-            }
-
-            if( !empty($translate_x) ) {
-                if( strpos($translate_x,'%' ) !== false){
-                    $style .= ' translateX('. intval($translate_x) .'%)';
-                }
-								else if( strpos($translate_x,'vh' ) !== false ) {
-									$style .= ' translateX('. intval($translate_x) .'vh)';
-								}
-								else {
-                    $style .= ' translateX('. intval($translate_x) .'px)';
-                }
-            }
-            $style .= ';';
-
-          } //loop
-
-      }
 
 
       // z-index.
@@ -482,6 +450,40 @@ if ( ! defined( 'ABSPATH' ) ) {
 			$border_radius_attrs = ' data-br="'.esc_attr($row_border_radius).'" data-br-applies="'.esc_attr($row_border_radius_applies).'"';
 		}
 
+		// Scroll based animation.
+		$json_animation_attrs = '';
+		if( 'scroll' === $clip_path_animation_type ) {
+
+			$inner_selector = ( isset($atts['clip_path_animation_applies']) && 'row' === $atts['clip_path_animation_applies']) ? '' : '.row-bg-layer';
+			
+			$animation_atts = array_merge(
+				$atts, 
+				array(
+					'animation_inner_selector' => $inner_selector
+				)
+			);
+			$animations = new NectarAnimations($animation_atts);
+			$json_animation_attrs = 'data-nectar-animate-settings="'.esc_attr($animations->json).'" ';
+		}
+
+		// Animated gradient
+		if( 'true' === $animated_gradient_bg ) {
+
+			$gradient_color = $animated_gradient_bg_color_1;
+			if( empty( $animated_gradient_bg_color_1 ) && defined( 'NECTAR_THEME_NAME' ) ) {
+				$gradient_color = NectarThemeManager::$colors['accent-color']['value'];
+			}
+			
+			$row_bg_classes[] = 'has-animated-gradient';
+
+			$animated_gradient_bg_attrs = array(
+				'color_1' => $gradient_color,
+				'color_2' => $animated_gradient_bg_color_2,
+				'speed' => $animated_gradient_bg_speed,
+				'blending_mode' => $animated_gradient_bg_blending_mode
+			);
+			$json_animation_attrs .= 'data-nectar-animated-gradient-settings="'.esc_attr(wp_json_encode($animated_gradient_bg_attrs)).'" ';
+		}
 
 		// Dynamic style classes.
 		if( function_exists('nectar_el_dynamic_classnames') ) {
@@ -510,7 +512,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 		echo '<div class="nectar-sticky-row-wrap nectar-sticky-row-wrap--'.esc_attr($sticky_row_alignment).'"'.$sticky_div_style.'>';
 	}
 	   echo'
-		<div id="'. esc_attr($row_id) .'" '.$fullscreen_anchor_id. $border_radius_attrs .' data-column-margin="'.esc_attr($column_margin).'" '.$midnight_attr.' '.$row_percent_padding_attr. $bg_mobile_hidden. ' class="'.nectar_clean_classnames($css_classes_combined).'" '.$using_custom_text_color.' style="'.$style.'">';
+		<div id="'. esc_attr($row_id) .'" '.$fullscreen_anchor_id . $border_radius_attrs .' data-column-margin="'.esc_attr($column_margin).'" '.$midnight_attr.' '.$row_percent_padding_attr . $json_animation_attrs . $bg_mobile_hidden. ' class="'.nectar_clean_classnames($css_classes_combined).'" '.$using_custom_text_color.' style="'.$style.'">';
 
 		if( $page_full_screen_rows === 'on' ) {
       echo '<div class="full-page-inner-wrap-outer"><div class="full-page-inner-wrap" data-name="'.esc_attr($row_name).'" data-content-pos="'.esc_attr($full_screen_row_position).'"><div class="full-page-inner">';
@@ -518,9 +520,13 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 	// Row bg.
 	$using_bg_overlay = ( !empty($color_overlay) || !empty($color_overlay_2) ) ? 'true' : 'false';
-	$base_bg_color_style = ( !empty($bg_color) && 'fade-in' == $bg_image_animation ) ? 'style="background-color: '. esc_attr($bg_color).';" ' : '';
+	$base_bg_color_style = '';
+
+	if( !empty($bg_color) && in_array($bg_image_animation, array('fade-in','clip-path')) ) {
+		$base_bg_color_style = 'style="background-color: '. esc_attr($bg_color).';" ';
+	}
 	
-	echo '<div class="row-bg-wrap" '.$base_bg_color_style.'data-bg-animation="'.esc_attr($bg_image_animation).'" data-bg-overlay="'.esc_attr($using_bg_overlay).'"><div class="inner-wrap' . $using_image_class . '">';
+	echo '<div class="'.nectar_clean_classnames(implode(' ',$row_bg_classes)).'" data-bg-animation="'.esc_attr($bg_image_animation).'" data-bg-animation-delay="'.esc_attr($bg_image_animation_delay).'" data-bg-overlay="'.esc_attr($using_bg_overlay).'"><div class="inner-wrap row-bg-layer' . $using_image_class . '" '.$base_bg_color_style.'>';
 	
 		foreach( $bg_img_arr as $viewport => $image ) {
 			if( true === $image['in_use'] ) {
@@ -641,14 +647,14 @@ if ( ! defined( 'ABSPATH' ) ) {
     }
 
 		if( !empty($row_overlay_style) ) {
-	    echo '<div class="row-bg-overlay" '. $row_overlay_style .'></div>';
+	    echo '<div class="row-bg-overlay row-bg-layer" '. $row_overlay_style .'></div>';
 		}
     echo '</div>';
 
 		// Mouse based parallax layer.
 		if( $mouse_based_parallax_bg === 'true' ) {
 
-	        echo '<ul class="nectar-parallax-scene" data-scene-position="'.esc_attr($scene_position).'" data-scene-strength="'.esc_attr($mouse_sensitivity).'">';
+	        echo '<ul class="nectar-parallax-scene row-bg-layer" data-scene-position="'.esc_attr($scene_position).'" data-scene-strength="'.esc_attr($mouse_sensitivity).'">';
 	        echo '<li class="layer" data-depth="0.00"></li>';
 
 	        if( !empty($layer_one_image) ) {
@@ -739,12 +745,12 @@ if ( ! defined( 'ABSPATH' ) ) {
       }
       ?>
 
-			<div class="video-color-overlay" data-color="<?php echo esc_attr( $video_overlay_color ); ?>"></div>
+			<div class="video-color-overlay row-bg-layer" data-color="<?php echo esc_attr( $video_overlay_color ); ?>"></div>
       <?php if( isset($video_image_src) && !empty($video_image_src) ) : ?>
 			     <div class="mobile-video-image" style="background-image: url(<?php echo esc_url( $video_image_src ); ?>)"></div>
       <?php endif; ?>
 
-			<div class="nectar-video-wrap" data-bg-alignment="<?php echo esc_attr( $bg_position ); ?>">
+			<div class="nectar-video-wrap row-bg-layer" data-bg-alignment="<?php echo esc_attr( $bg_position ); ?>">
 				<div class="nectar-video-inner">
         <?php
 				if( !empty($video_external) && vc_extract_youtube_id( $video_external ) ) {

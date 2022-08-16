@@ -34,12 +34,11 @@ if ( ! function_exists( 'nectar_portfolio_register' ) ) {
 
 		 $portolfio_menu_icon = 'dashicons-art';
 
+		 $portfolio_slug_rewrite = apply_filters('salient_portfolio_slug_rewrite', array('slug' => $custom_slug, 'with_front' => false) );
+
 		 $args = array(
 			 'labels'             => $portfolio_labels,
-			 'rewrite'            => array(
-				 'slug'       => $custom_slug,
-				 'with_front' => false,
-			 ),
+			 'rewrite'            => $portfolio_slug_rewrite,
 			 'singular_label'     => esc_html__( 'Project', 'salient-portfolio' ),
 			 'public'             => true,
 			 'publicly_queryable' => true,
@@ -82,6 +81,8 @@ if ( ! function_exists( 'nectar_add_portfolio_taxonomies' ) ) {
 			'menu_name'     => esc_html__( 'Project Categories', 'salient-portfolio' ),
 		);
 
+		$project_type_rewrite = apply_filters('salient_portfolio_project_type_rewrite', array( 'slug' => 'project-type' ));
+
 		register_taxonomy(
 			'project-type',
 			array( 'portfolio' ),
@@ -90,7 +91,7 @@ if ( ! function_exists( 'nectar_add_portfolio_taxonomies' ) ) {
 				'labels'       => $category_labels,
 				'show_ui'      => true,
 				'query_var'    => true,
-				'rewrite'      => array( 'slug' => 'project-type' ),
+				'rewrite'      => $project_type_rewrite,
 			)
 		);
 
@@ -107,6 +108,8 @@ if ( ! function_exists( 'nectar_add_portfolio_taxonomies' ) ) {
 			'menu_name'     => esc_html__( 'Project Attributes', 'salient-portfolio' ),
 		);
 
+		$project_attrs_rewrite = apply_filters('salient_portfolio_project_attributes_rewrite', array( 'slug' => 'project-attributes' ));
+
 		register_taxonomy(
 			'project-attributes',
 			array( 'portfolio' ),
@@ -115,7 +118,7 @@ if ( ! function_exists( 'nectar_add_portfolio_taxonomies' ) ) {
 				'labels'       => $attributes_labels,
 				'show_ui'      => true,
 				'query_var'    => true,
-				'rewrite'      => array( 'slug' => 'project-attributes' ),
+				'rewrite'      => $project_attrs_rewrite,
 			)
 		);
 		

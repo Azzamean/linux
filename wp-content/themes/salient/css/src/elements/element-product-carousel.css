@@ -87,11 +87,33 @@ body .wpb_row:not(.full-width-content) .woocommerce .nectar-woo-flickity:not([da
     padding: 45px 15px;
 }
 
+/* iOS fix */
+.nectar-woo-flickity .products.flickity-enabled {
+  display: block!important;
+}
 
 
 body .woocommerce .nectar-woo-flickity .flickity-slider li,
 body .woocommerce .nectar-woo-flickity ul.products[data-product-style="material"] li:nth-child(2n+2) {
   margin: 0!important;
+}
+
+#ajax-content-wrap .nectar-woo-flickity .flickity-page-dots .dot {
+	margin: 0;
+}
+
+
+
+.span_12.dark .nectar-woo-flickity[data-controls="arrows-and-text"] .nectar-woo-carousel-top a:after {
+  background-color: #000;
+}
+
+.span_12.dark .nectar-woo-flickity[data-controls="arrows-and-text"] .nectar-woo-carousel-top a {
+  color: #000;
+}
+
+.span_12.light .nectar-woo-flickity[data-controls="arrows-and-text"] .nectar-woo-carousel-top a {
+  color: #fff;
 }
 
 
@@ -582,12 +604,12 @@ body .products-carousel .carousel-prev:hover i {
 .nectar-woo-flickity[data-animation*="fade-in"] ul.products > li {
 	opacity: 0;
 }
-.nectar-woo-flickity[data-animation="fade-in-bottom"] ul.products .flickity-cell {
+.nectar-woo-flickity[data-animation="fade-in-bottom"] ul.products .flickity-cell > .product {
  transform: translate3d(0,70px,0);
  opacity: 0;
  transition: transform 1.15s cubic-bezier(0.25, 1, 0.5, 1), opacity 1.15s cubic-bezier(0.25, 1, 0.5, 1);
 }
-.nectar-woo-flickity[data-animation="fade-in-side"] ul.products .flickity-cell {
+.nectar-woo-flickity[data-animation="fade-in-side"] ul.products .flickity-cell > .product {
  transform: translate3d(70px,0,0);
  opacity: 0;
  transition: transform 1.15s cubic-bezier(0.25, 1, 0.5, 1), opacity 1.15s cubic-bezier(0.25, 1, 0.5, 1);

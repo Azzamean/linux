@@ -45,7 +45,7 @@ class Vc_Post_Admin {
 				$post = get_post( $post_id );
 				/*nectar addition*/
 				if( vc_post_param( 'nectar_post_type' ) == 'portfolio' ) {
-						update_post_meta( $post_id, '_nectar_portfolio_extra_content', stripslashes( vc_post_param( 'content' ) ) );
+					update_post_meta( $post_id, '_nectar_portfolio_extra_content', stripslashes( vc_post_param( 'content' ) ) );
 				} else {
 						$post->post_content = stripslashes( vc_post_param( 'content' ) );
 				}
@@ -76,7 +76,7 @@ class Vc_Post_Admin {
 				$this->setPostMeta( $post_id );
 			}
 
-			visual_composer()->buildShortcodesCustomCss( $post_id );
+			wpbakery()->buildShortcodesCustomCss( $post_id );
 			wp_cache_flush();
 			ob_clean();
 
@@ -192,6 +192,6 @@ class Vc_Post_Admin {
 			$post_custom_css = wp_strip_all_tags( $post_custom_css );
 			update_metadata( 'post', $id, '_wpb_post_custom_css', $post_custom_css );
 		}
-		visual_composer()->buildShortcodesCustomCss( $id );
+		wpbakery()->buildShortcodesCustomCss( $id );
 	}
 }

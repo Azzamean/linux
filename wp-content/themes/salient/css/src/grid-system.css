@@ -227,6 +227,7 @@ body[data-col-gap] .vc_row-fluid .span_12.post-area {
 /* Column Percent Based Padding */
 @media only screen and (max-width: 999px) and (min-width: 691px) {
   .wpb_column.col.no-extra-padding_tablet > .vc_column-inner,
+  .wpb_column.col.no-extra-padding_tablet > .n-sticky > .vc_column-inner,
   .full-width-content .wpb_column.col.no-extra-padding_tablet > .vc_column-inner { padding: 0; }
 }
 
@@ -236,7 +237,10 @@ body[data-col-gap] .vc_row-fluid .span_12.post-area {
 
   body .wpb_column.col.no-extra-padding_phone > .vc_column-inner,
   body .wpb_column.child_column.col.no-extra-padding_phone > .vc_column-inner,
-  body .full-width-content .wpb_column.col.no-extra-padding_phone > .vc_column-inner { padding: 0; }
+  body .full-width-content .wpb_column.col.no-extra-padding_phone > .vc_column-inner,
+  body .wpb_row .wpb_column.col.no-extra-padding_phone > .n-sticky > .vc_column-inner,
+  body .wpb_row .wpb_column.child_column.col.no-extra-padding_phone > .n-sticky > .vc_column-inner,
+  body .wpb_row .full-width-content .wpb_column.col.no-extra-padding_phone > .n-sticky > .vc_column-inner { padding: 0; }
 
   /* columns with border */
   .col.padding-1-percent[data-border-width*="px"] > .vc_column-inner,

@@ -213,7 +213,10 @@
         $('.nectar-box-roll').attr('data-midnight', 'dark');
       }
       
-      $('.overlaid-content').append($scrollDownOverlaid);
+      if( $('.overlaid-content .scroll-down-wrap').length == 0 ) {
+        $('.overlaid-content').append($scrollDownOverlaid);
+      }
+  
       
       if ($('.page-submenu[data-sticky="true"]').length > 0) {
         $('.container-wrap').addClass('no-trans');
@@ -667,5 +670,50 @@
   };
   
   window.NectarBoxRoll = NectarBoxRoll;
+
+
+  function NectarBoxRollHelper() {
+    this.setInitialSize = function() {
+
+       // Change content pos
+       var $overlaid = $('#page-header-bg .overlaid-content').clone();
+       var $scrollDownOverlaid = $('.scroll-down-wrap').clone();
+       
+       $('#page-header-bg .overlaid-content, #page-header-bg .scroll-down-wrap').remove();
+
+       if( $overlaid ) {
+         $('.nectar-box-roll').append($overlaid);
+       }
+       
+       if( $scrollDownOverlaid ) {
+         $('.overlaid-content').append($scrollDownOverlaid);
+       }
+
+
+      var $headerNavSpace = ($('body[data-header-format="left-header"]').length > 0 && $(window).width() > 1000) ? 0 : $('#header-space').height();
+    
+      if ($('#header-outer[data-transparent-header="true"]').length == 0) {
+        $('.nectar-box-roll .overlaid-content, .nectar-box-roll .canvas-bg, .container-wrap').css({
+          'height': window.innerHeight - $headerNavSpace,
+          'min-height': window.innerHeight - $headerNavSpace
+        });
+        if ($('.mobile').length == 0 && $('body[data-header-format="left-header"]').length == 0) {
+          $('#ajax-content-wrap').css('margin-top', $headerNavSpace);
+          $('#slide-out-widget-area.fullscreen').css('margin-top', '-' + $headerNavSpace + 'px');
+        } else {
+          $('#ajax-content-wrap, #slide-out-widget-area.fullscreen').css('margin-top', '0');
+        }
+      } else {
+        
+        if ($('.mobile').length > 0 && $('body[data-permanent-transparent="1"]').length == 0) {
+          $('.nectar-box-roll .overlaid-content, .nectar-box-roll .canvas-bg, .container-wrap').css('height', window.innerHeight - $headerNavSpace);
+        } else {
+          $('.nectar-box-roll .overlaid-content, .nectar-box-roll .canvas-bg, .container-wrap').css('height', window.innerHeight);
+        }
+        
+      }
+    };
+  }
+  window.NectarBoxRollHelper = NectarBoxRollHelper;
   
 }( jQuery ));

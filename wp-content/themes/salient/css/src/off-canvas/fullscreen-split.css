@@ -257,6 +257,36 @@ Description: Off canvas menu set to "Fullscreen Split" in theme options
   background-color: transparent;
 }
 
+/* link underline */
+.fullscreen-split .widget ul:not([class*="nectar_blog_posts"]) li > a:not(.tag-cloud-link):not(.nectar-button),
+.fullscreen-split .textwidget a:not(.nectar-button) {
+	background-repeat: no-repeat;
+	background-size: 0% 2px;
+	background-position: left bottom;
+	background-image: linear-gradient(to right, #000000 0%, #000000 100%);
+	-webkit-transition: background-size 0.55s cubic-bezier(.2,.75,.5,1), color 0.5s ease;
+	transition: background-size 0.55s cubic-bezier(.2,.75,.5,1), color 0.5s ease;
+  text-decoration: none;
+}
+
+.fullscreen-split .widget ul:not([class*="nectar_blog_posts"]) li > a:not(.tag-cloud-link):not(.nectar-button),
+.fullscreen-split .textwidget a:not(.nectar-button) {
+	background-image: linear-gradient(to right, #ffffff 0%, #ffffff 100%);
+}
+
+#slide-out-widget-area.fullscreen-split .widget ul:not([class*="nectar_blog_posts"]) li > a:not(.tag-cloud-link):not(.nectar-button),
+#slide-out-widget-area.fullscreen-split .textwidget a:not(.nectar-button) {
+	display: inline;
+}
+
+.fullscreen-split .widget ul:not([class*="nectar_blog_posts"]) li > a:not(.tag-cloud-link):not(.nectar-button):hover,
+.fullscreen-split .textwidget a:not(.nectar-button):hover {
+  background-size: 100% 2px;
+	opacity: 1;
+}
+
+
+
 @media only screen and (max-width: 690px) {
 
   #slide-out-widget-area.fullscreen-split .left-side,

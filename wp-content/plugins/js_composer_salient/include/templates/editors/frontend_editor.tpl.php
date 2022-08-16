@@ -23,7 +23,7 @@ $custom_tag = 'script';
 ?>
 	<div id="vc_preloader">
 		<!-- nectar addition -->
-			<div class="wpbakery-logo-and-salient"><span><?php include( vc_path_dir( 'ASSETS_DIR', 'images/salient.svg' ) ); ?></span></div>
+		<div class="wpbakery-logo-and-salient"><span><?php include( vc_path_dir( 'ASSETS_DIR', 'images/salient.svg' ) ); ?></span></div>
 		<!-- nectar addition end -->
 	</div>
 	<div id="vc_overlay_spinner" class="vc_ui-wp-spinner vc_ui-wp-spinner-dark vc_ui-wp-spinner-lg" style="display:none;"></div>
@@ -52,17 +52,17 @@ $add_element_box->render();
 // [/add element popup/box]
 
 // [shortcodes edit form panel render]
-visual_composer()->editForm()->render();
+wpbakery()->editForm()->render();
 // [/shortcodes edit form panel render]
 
 // [templates panel editor render]
 if ( vc_user_access()->part( 'templates' )->can()->get() ) {
-	visual_composer()->templatesPanelEditor()->renderUITemplate();
+	wpbakery()->templatesPanelEditor()->renderUITemplate();
 }
 // [/templates panel editor render]
 
 // [preset panel editor render]
-visual_composer()->presetPanelEditor()->renderUIPreset();
+wpbakery()->presetPanelEditor()->renderUIPreset();
 // [/preset panel editor render]
 
 // [post settings panel render]

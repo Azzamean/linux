@@ -7,7 +7,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 extract(shortcode_atts(array(
   "animation" => 'Fade In',
+  "animation_easing" => 'default',
   "loop_animation" => 'none',
+  'animation_movement_type' => 'transform_y',
+  'animation_movement_intensity' => '',
+  'animation_movement_persist_on_mobile' => '',
   "delay" => '0',
   "image_url" => '',
   'alt' => '',
@@ -135,6 +139,7 @@ extract(shortcode_atts(array(
 
   }
 
+  // Margins.
   $margins = '';
 
   if( !empty($margin_top) ) {
@@ -174,10 +179,13 @@ extract(shortcode_atts(array(
 
   }
 
-  $margin_style_attr = '';
 
+  $style_attrs = '';
+  $inner_style_attrs = '';
+
+  // Collect styles for main wrap.
   if( !empty($margins) ) {
-     $margin_style_attr = ' style="'.$margins.'"';
+    $style_attrs = ' style="'.$margins.'"';
   }
 
   // Attributes applied to img-with-animation-wrap.
@@ -191,7 +199,13 @@ extract(shortcode_atts(array(
 	}
   $wrap_image_attrs_escaped .= 'data-shadow="'.esc_attr($box_shadow).'" ';
   $wrap_image_attrs_escaped .= 'data-animation="'.esc_attr(strtolower($parsed_animation)).'" ';
-  $wrap_image_attrs_escaped .= $margin_style_attr;
+  $wrap_image_attrs_escaped .= $style_attrs;
+
+  // Movement animation.
+  if( !empty($animation_movement_intensity) ) {
+    $dynamic_el_styles .= ' nectar-el-parallax-scroll';
+    $wrap_image_attrs_escaped .= 'data-scroll-animation="true" data-scroll-animation-movement="'.esc_attr($animation_movement_type).'" data-scroll-animation-mobile="'.esc_attr($animation_movement_persist_on_mobile).'" data-scroll-animation-intensity="'.esc_attr(strtolower($animation_movement_intensity)).'" ';
+  }
 
   if( 'true' === $mask_enable && 'custom' === $mask_shape ) {
 
@@ -203,7 +217,13 @@ extract(shortcode_atts(array(
       $mask_image_src = (isset($mask_image_src[0])) ? $mask_image_src[0] : '';
     }
 
-    $wrap_image_attrs_escaped .= 'style="-webkit-mask-image: url('.esc_attr($mask_image_src).');"';
+    $inner_style_attrs .= '-webkit-mask-image: url('.esc_attr($mask_image_src).');';
+  }
+
+
+  // Collect attributes for inner div.
+  if( !empty($inner_style_attrs) ) {
+    $inner_style_attrs = ' style="'.$inner_style_attrs.'"';
   }
 
   // Attributes applied to img.
@@ -212,11 +232,22 @@ extract(shortcode_atts(array(
   $image_attrs_escaped .= 'width="'.esc_attr($image_width).'" ';
   $image_attrs_escaped .= 'data-animation="'.esc_attr(strtolower($parsed_animation)).'" ';
 
+  if( 'none' !== $parsed_animation && !empty($animation_easing) && 'default' !== $animation_easing ) {
+    $image_attrs_escaped .= 'data-animation-easing="'.esc_attr($animation_easing).'" ';
+  }
+
 	// Attributes applied to inner wrap for hover effect.
 	$image_hover_attrs_escaped = '';
 	if( !empty($hover_animation) && 'none' !== $hover_animation ) {
 		$image_hover_attrs_escaped .= ' data-hover-animation="'.esc_attr($hover_animation).'"';
 	}
+
+  // Custom shadows.
+  $custom_shadow_markup = nectar_generate_shadow_css($atts);
+  if( !empty($custom_shadow_markup) ) {
+    $image_hover_attrs_escaped .= ' style="'.$custom_shadow_markup.'"';
+  }
+
 
   if( 'lazy-load' === $image_loading && true === $has_dimension_data && NectarLazyImages::activate_lazy() ||
 	   ( true === $has_dimension_data && property_exists('NectarLazyImages', 'global_option_active') && true === NectarLazyImages::$global_option_active && 'skip-lazy-load' !== $image_loading ) ) {
@@ -254,7 +285,7 @@ extract(shortcode_atts(array(
       }
       // Link image to larger version.
       echo '<div class="img-with-aniamtion-wrap '.esc_attr($alignment).$dynamic_el_styles.'" '.$wrap_image_attrs_escaped.'>
-      <div class="inner">
+      <div class="inner"'.$inner_style_attrs.'>
         <div class="hover-wrap"'.$image_hover_attrs_escaped.'> '.$color_overlay_markup_escaped.'
           <div class="hover-wrap-inner">
             <a href="'.esc_url($img_link).'" target="'.esc_attr($img_link_target).'" class="'.implode(' ',$link_classes).'">
@@ -268,7 +299,7 @@ extract(shortcode_atts(array(
     } elseif(!empty($img_link_large)) {
       // Regular link image.
       echo '<div class="img-with-aniamtion-wrap '.esc_attr($alignment).$dynamic_el_styles.'" '.$wrap_image_attrs_escaped.'>
-      <div class="inner">
+      <div class="inner"'.$inner_style_attrs.'>
         <div class="hover-wrap"'.$image_hover_attrs_escaped.'> '.$color_overlay_markup_escaped.'
           <div class="hover-wrap-inner">
             <a href="'.esc_url($image_url).'" class="pp '.esc_attr($alignment).'"'.$wp_img_caption_markup_escaped.'>
@@ -283,7 +314,7 @@ extract(shortcode_atts(array(
   } else {
     // No link image.
     echo '<div class="img-with-aniamtion-wrap '.esc_attr($alignment).$dynamic_el_styles.'" '.$wrap_image_attrs_escaped.'>
-      <div class="inner">
+      <div class="inner"'.$inner_style_attrs.'>
         <div class="hover-wrap"'.$image_hover_attrs_escaped.'> '.$color_overlay_markup_escaped.'
           <div class="hover-wrap-inner">
             <img class="img-with-animation skip-lazy '.esc_attr($el_class).'" '.$image_attrs_escaped.' />

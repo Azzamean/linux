@@ -11,7 +11,7 @@ return array(
 	"base" => "nectar_text_inline_images",
 	"icon" => "icon-wpb-split-line-heading",
 	"allowed_container_element" => 'vc_row',
-    "weight" => '1',
+    "weight" => '2',
 	"category" => esc_html__('Typography', 'salient-core'),
 	"description" => esc_html__('Animated multi line heading', 'salient-core'),
 	"params" => array(
@@ -139,6 +139,16 @@ return array(
 
     array(
 			"type" => 'checkbox',
+			"heading" => esc_html__("Stagger Animation", "salient-core"),
+			"param_name" => "image_effect_stagger",
+			'edit_field_class' => 'vc_col-xs-12 salient-fancy-checkbox',
+			"description" => '',
+			"value" => Array(esc_html__("Yes, please", "salient-core") => 'yes'),
+			"dependency" => Array('element' => "image_effect", 'value' => array('circle_reveal','circle_fade_in')),
+		),
+
+    array(
+			"type" => 'checkbox',
 			"heading" => esc_html__("Remove Animation On Mobile", "salient-core"),
 			"param_name" => "image_effect_rm_mobile",
 			'edit_field_class' => 'vc_col-xs-12 salient-fancy-checkbox',
@@ -178,6 +188,185 @@ return array(
 			"heading" =>  esc_html__("Custom Line Height", "salient-core"),
 			"param_name" => "font_line_height",
 		),
+
+
+
+
+    array(
+      "type" => "nectar_numerical",
+      "class" => "",
+      "edit_field_class" => "col-md-4 desktop margin-device-group constrain_group_1",
+      "heading" => '<span class="group-title">' . esc_html__("Media Margin", "salient-core") . "</span><span class='attr-title'>" . esc_html__("Top", "salient-core") . "</span>",
+      "value" => "",
+      "placeholder" => esc_html__("Top",'salient-core'),
+      "param_name" => "top_margin_desktop",
+      "description" => ""
+    ),
+    array(
+      'type' => 'checkbox',
+      'heading' => esc_html__( 'Constrain 1', 'salient-core' ),
+      'param_name' => 'constrain_group_1',
+      'description' => '',
+      "edit_field_class" => "desktop margin-device-group constrain-icon",
+      'value' => array( esc_html__( 'Yes', 'salient-core' ) => 'yes' ),
+    ),
+    array(
+      "type" => "nectar_numerical",
+      "class" => "",
+      "edit_field_class" => "col-md-4 desktop margin-device-group constrain_group_1",
+      "heading" => "<span class='attr-title'>" . esc_html__("Bottom", "salient-core") . "</span>",
+      "value" => "",
+      "placeholder" => esc_html__("Bottom",'salient-core'),
+      "param_name" => "bottom_margin_desktop",
+      "description" => ""
+    ),
+    array(
+      "type" => "nectar_numerical",
+      "class" => "",
+      "edit_field_class" => "col-md-4 desktop col-md-6-last margin-device-group constrain_group_2",
+      "heading" => "<span class='attr-title'>" . esc_html__("Left", "salient-core") . "</span>",
+      "value" => "",
+      "placeholder" => esc_html__("Left",'salient-core'),
+      "param_name" => "left_margin_desktop",
+      "description" => ""
+    ),
+    array(
+      'type' => 'checkbox',
+      'heading' => esc_html__( 'Constrain 2', 'salient-core' ),
+      'param_name' => 'constrain_group_2',
+      'description' => '',
+      "edit_field_class" => "desktop margin-device-group constrain-icon",
+      'value' => array( esc_html__( 'Yes', 'salient-core' ) => 'yes' ),
+    ),
+    array(
+      "type" => "nectar_numerical",
+      "class" => "",
+      "placeholder" => esc_html__("Right",'salient-core'),
+      "edit_field_class" => "col-md-4 desktop margin-device-group constrain_group_2",
+      "heading" => "<span class='attr-title'>" . esc_html__("Right", "salient-core") . "</span>",
+      "value" => "",
+      "param_name" => "right_margin_desktop",
+      "description" => ""
+    ),
+
+
+    array(
+      "type" => "nectar_numerical",
+      "class" => "",
+      "edit_field_class" => "col-md-4 tablet margin-device-group constrain_group_3",
+      "heading" => "<span class='attr-title'>" . esc_html__("Top", "salient-core") . "</span>",
+      "value" => "",
+      "placeholder" => esc_html__("Top",'salient-core'),
+      "param_name" => "top_margin_tablet",
+      "description" => ""
+    ),
+    array(
+      'type' => 'checkbox',
+      'heading' => esc_html__( 'Constrain 3', 'salient-core' ),
+      'param_name' => 'constrain_group_3',
+      'description' => '',
+      "edit_field_class" => "tablet margin-device-group constrain-icon",
+      'value' => array( esc_html__( 'Yes', 'salient-core' ) => 'yes' ),
+    ),
+    array(
+      "type" => "nectar_numerical",
+      "class" => "",
+      "edit_field_class" => "col-md-4 tablet margin-device-group constrain_group_3",
+      "heading" => "<span class='attr-title'>" . esc_html__("Bottom", "salient-core") . "</span>",
+      "value" => "",
+      "placeholder" => esc_html__("Bottom",'salient-core'),
+      "param_name" => "bottom_margin_tablet",
+      "description" => ""
+    ),
+    array(
+      "type" => "nectar_numerical",
+      "class" => "",
+      "edit_field_class" => "col-md-4 col-md-4-last tablet margin-device-group constrain_group_4",
+      "heading" => "<span class='attr-title'>" . esc_html__("Left", "salient-core") . "</span>",
+      "value" => "",
+      "placeholder" => esc_html__("Left",'salient-core'),
+      "param_name" => "left_margin_tablet",
+      "description" => ""
+    ),
+    array(
+      'type' => 'checkbox',
+      'heading' => esc_html__( 'Constrain 4', 'salient-core' ),
+      'param_name' => 'constrain_group_4',
+      'description' => '',
+      "edit_field_class" => "tablet margin-device-group constrain-icon",
+      'value' => array( esc_html__( 'Yes', 'salient-core' ) => 'yes' ),
+    ),
+    array(
+      "type" => "nectar_numerical",
+      "class" => "",
+      "placeholder" => esc_html__("Right",'salient-core'),
+      "edit_field_class" => "col-md-4 tablet margin-device-group constrain_group_4",
+      "heading" => "<span class='attr-title'>" . esc_html__("Right", "salient-core") . "</span>",
+      "value" => "",
+      "param_name" => "right_margin_tablet",
+      "description" => ""
+    ),
+
+
+    array(
+      "type" => "nectar_numerical",
+      "class" => "",
+      "edit_field_class" => "col-md-4 phone margin-device-group constrain_group_5",
+      "heading" => "<span class='attr-title'>" . esc_html__("Top", "salient-core") . "</span>",
+      "value" => "",
+      "placeholder" => esc_html__("Top",'salient-core'),
+      "param_name" => "top_margin_phone",
+      "description" => ""
+    ),
+    array(
+      'type' => 'checkbox',
+      'heading' => esc_html__( 'Constrain 5', 'salient-core' ),
+      'param_name' => 'constrain_group_5',
+      'description' => '',
+      "edit_field_class" => "phone margin-device-group constrain-icon",
+      'value' => array( esc_html__( 'Yes', 'salient-core' ) => 'yes' ),
+    ),
+    array(
+      "type" => "nectar_numerical",
+      "class" => "",
+      "placeholder" => esc_html__("Bottom",'salient-core'),
+      "edit_field_class" => "col-md-4 phone margin-device-group constrain_group_5",
+      "heading" => "<span class='attr-title'>" . esc_html__("Bottom", "salient-core") . "</span>",
+      "value" => "",
+      "param_name" => "bottom_margin_phone",
+      "description" => ""
+    ),
+    array(
+      "type" => "nectar_numerical",
+      "class" => "",
+      "placeholder" => esc_html__("Left",'salient-core'),
+      "edit_field_class" => "col-md-4 col-md-4-last phone margin-device-group constrain_group_6",
+      "heading" => "<span class='attr-title'>" . esc_html__("Left", "salient-core") . "</span>",
+      "value" => "",
+      "param_name" => "left_margin_phone",
+      "description" => ""
+    ),
+    array(
+      'type' => 'checkbox',
+      'heading' => esc_html__( 'Constrain 6', 'salient-core' ),
+      'param_name' => 'constrain_group_6',
+      'description' => '',
+      "edit_field_class" => "phone margin-device-group constrain-icon",
+      'value' => array( esc_html__( 'Yes', 'salient-core' ) => 'yes' ),
+    ),
+    array(
+      "type" => "nectar_numerical",
+      "class" => "",
+      "placeholder" => esc_html__("Right",'salient-core'),
+      "edit_field_class" => "col-md-4 phone margin-device-group constrain_group_6",
+      "heading" => "<span class='attr-title'>" . esc_html__("Right", "salient-core") . "</span>",
+      "value" => "",
+      "param_name" => "right_margin_phone",
+      "description" => ""
+    ),
+
+
+
     array(
       "type" => "dropdown",
       "class" => "",

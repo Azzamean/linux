@@ -126,6 +126,10 @@ tr.font-family, tr.font-family, tr.font-option  {
 .nectar-metabox-table label .ui-button-text {
 	line-height: 16px;
 }
+
+.nectar-metabox-table .field__header_nav_entrance_animation_delay input {
+	max-width: 59%;
+}
 .nectar-metabox-table input, 
 .nectar-metabox-table textarea {
     float: left;

@@ -21,8 +21,8 @@ return array(
 		array(
 			'type' => 'checkbox',
 			'heading' => esc_html__( 'Equal height', 'js_composer' ),
-			'param_name' => 'equal_height',
 			'edit_field_class' => 'vc_col-xs-12 salient-fancy-checkbox', /* nectar addition - class */
+			'param_name' => 'equal_height',
 			'description' => esc_html__( 'If checked columns will be set to equal height.', 'js_composer' ),
 			'value' => array( esc_html__( 'Yes', 'js_composer' ) => 'yes' ),
 		),

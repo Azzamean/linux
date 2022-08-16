@@ -62,7 +62,7 @@ if( $nectar_header_format === 'centered-menu-bottom-bar' &&
 						<?php
 						// Pull left menu.
             
-            do_action('nectar_hook_before_pull_left_items');
+						do_action('nectar_hook_before_pull_left_items');
 
 						if ( has_nav_menu( 'top_nav_pull_left' ) ) {
 							wp_nav_menu(
@@ -202,7 +202,7 @@ if( $nectar_header_format === 'centered-menu-bottom-bar' &&
 										)
 									);
 								} else {
-									echo '<li class="no-menu-assigned"><a href="#">No menu assigned</a></li>';
+									echo '<li class="no-menu-assigned"><a href="#"></a></li>';
 								}
 
 								if ( ! empty( $nectar_options['enable_social_in_header'] ) &&

@@ -325,7 +325,12 @@ if( !empty($icon) ) {
 		if(!preg_match('/^\d+$/',$image_url)){
 			$parallax_bg_img = $image_url;
 		} else {
-			$parallax_bg_img = $bg_image_src[0];
+
+			$parallax_bg_img = '';
+			if( isset($bg_image_src[0]) ) {
+				$parallax_bg_img = $bg_image_src[0];
+			}
+			
 		}
 
 		$output = '<div class="nectar-fancy-box style-5 '.$using_img_class.' '.$css_class.esc_attr($dynamic_el_styles).'" data-align="'.esc_attr($parallax_hover_box_alignment).'" data-overlay-opacity="'.esc_attr($parallax_hover_box_overlay_opacity).'" data-overlay-opacity-hover="'.esc_attr($parallax_hover_box_overlay_opacity_hover).'" data-style="'. esc_attr($box_style) .'" data-border-radius="'. esc_attr($border_radius) .'" data-animation="'.strtolower(esc_attr($parsed_animation)).'" data-delay="'.esc_attr($delay).'" data-color="'.strtolower(esc_attr($color)).'">';
@@ -333,14 +338,14 @@ if( !empty($icon) ) {
 		$output .= $box_link;
 		$output .= '<div class="parallaxImg">';
 		$output .= '<div class="parallaxImg-layer" data-img="'.esc_url($parallax_bg_img).'"></div>';
-		$output .= '<div class="parallaxImg-layer"> <div class="meta-wrap" style="min-height: '.esc_attr($min_height).'px"><div class="inner">';
+		$output .= '<div class="parallaxImg-layer"> <div class="meta-wrap" style="min-height: '.esc_attr($min_height_with_unit).'"><div class="inner">';
 		$output .= $icon_markup . wp_kses_post($content);
 		$output .= '</div> </div></div></div>';
 		$output .= '</div>';
 
 	} else if( $box_style === 'hover_desc' ) {
 
-		$hover_only_content = null;
+		$hover_only_content = '';
 		if( !empty($hover_content) ) {
 			$hover_only_content = '<div class="hover-content">' . $hover_content . '</div>';
 		}

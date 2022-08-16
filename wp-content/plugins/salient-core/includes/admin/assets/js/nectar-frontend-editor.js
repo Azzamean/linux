@@ -216,7 +216,7 @@
     var el = vc.frame_window.jQuery('[data-model-id="'+id+'"]')[0];
     var elRect = el.getBoundingClientRect();
     
-    if( elRect.left < that.winW ) {
+    if( elRect.left < that.winW && vc.frame_window.jQuery('#nectar_fullscreen_rows').length == 0 ) {
       el.scrollIntoView({
         behavior: "smooth",
         block: (el.clientHeight < that.winH) ? "center" : "start"
@@ -230,6 +230,14 @@
     // Open edit settings.
     if( shortcode === 'vc_row' || shortcode === 'vc_row_inner' ) {
       controls = vc.frame_window.jQuery('[data-model-id="'+id+'"] > .wpb_row > .span_12 > .vc_container-block > .vc_controls');
+
+      if( vc.frame_window.jQuery('#nectar_fullscreen_rows').length > 0 && shortcode === 'vc_row' ) {
+        controls = vc.frame_window.jQuery('[data-model-id="'+id+'"] .full-page-inner .span_12').first();
+        if( controls ) {
+          controls = controls.find('> .vc_container-block > .vc_controls');
+        }
+      }
+
       controls.find('.vc_controls-out-tl .vc_parent .vc_advanced .vc_control-btn-edit')[0].click();
     } 
 
@@ -333,12 +341,14 @@
     // Open.
     if( this.state.open == false ) {
       body.style.paddingLeft = '320px';
+      document.querySelector("body").classList.add('el-navigator-open');
       this.$el[0].classList.add('open');
       setTimeout(function() { that.updateListView(); },100);
     } 
     // Close.
     else {
       body.style.paddingLeft = '0px';
+      document.querySelector("body").classList.remove('el-navigator-open');
       this.$el[0].classList.remove('open');
     }
 
@@ -422,11 +432,13 @@
   NectarWPBakerySettingsPosition.prototype.updateLayout = function(toggle) {
     if( toggle == 'sidebar' ) {
       document.querySelector("body").style.paddingRight = '350px';
+      document.querySelector("body").classList.add('sidebar-settings-open');
       this.$modal[0].setAttribute('data-sidebar-view','true');
     } 
     // Close.
     else {
       document.querySelector("body").style.paddingRight = '0px';
+      document.querySelector("body").classList.remove('sidebar-settings-open');
       this.$modal[0].setAttribute('data-sidebar-view','false');
       this.$modal[0].style.left = '400px';
       this.$modal[0].style.width = '450px';

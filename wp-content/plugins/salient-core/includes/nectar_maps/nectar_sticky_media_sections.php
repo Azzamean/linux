@@ -102,6 +102,20 @@ return array(
               ),
             'save_always' => true,
           ),
+
+          array(
+            "type" => "dropdown",
+            "heading" => esc_html__("Media Border Radius", "salient-core"),
+            'save_always' => true,
+            "param_name" => "border_radius",
+            "value" => array(
+                esc_html__("0px", "salient-core") => "none",
+                esc_html__("3px", "salient-core") => "3px",
+                esc_html__("5px", "salient-core") => "5px", 
+                esc_html__("10px", "salient-core") => "10px", 
+                esc_html__("15px", "salient-core") => "15px", 
+                esc_html__("20px", "salient-core") => "20px"),
+            ),	
         
         
 	)

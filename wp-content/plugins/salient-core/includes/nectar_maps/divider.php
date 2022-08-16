@@ -118,6 +118,21 @@ return array(
 			"dependency" => Array('element' => "line_type", 'value' => array('Full Width Line','Small Line','Vertical Line')),
 			'description' => __( 'Choose a color from your','salient-core') . ' <a target="_blank" href="'. esc_url(NectarThemeInfo::global_colors_tab_url()) .'"> ' . esc_html__('globally defined color scheme','salient-core') . '</a>',
 		),
+
+		array(
+			'type' => 'nectar_range_slider',
+			'heading' => esc_html__('Opacity', 'salient-core'),
+			'param_name' => 'divider_opacity',
+			'value' => '100',
+			'options' => array(
+				'min' => '0',
+				'max' => '100',
+				'step' => '1',
+				'suffix' => '%'
+			),
+			'description' => ''
+		),
+
 		array(
 			"type" => 'checkbox',
 			"heading" => esc_html__("Animate Line", "salient-core"),

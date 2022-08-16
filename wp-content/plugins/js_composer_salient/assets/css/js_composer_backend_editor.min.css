@@ -1,5 +1,5 @@
 /*! * WPBakery Page Builder v6.0.0 (https://wpbakery.com) * Copyright 2011-2019 Michael M, WPBakery * License: Commercial. More details: http://go.wpbakery.com/licensing */
- .vc_general.fade{
+.vc_general.fade{
     opacity:0;
     -webkit-transition:opacity .15s linear;
     -o-transition:opacity .15s linear;
@@ -16141,7 +16141,7 @@ i.icon{
 .vc_gitem-navbar-dropdown{
     padding:15px
 }
-#wpb_visual_composer a{
+#wpb_wpbakery a{
     -webkit-box-shadow:none;
     box-shadow:none
 }
@@ -16604,14 +16604,14 @@ i.icon{
 .vc_arrow-icon-navicon:before{
     content:"\f0c9"
 }
-#wpb_visual_composer{
+#wpb_wpbakery{
     display:none
 }
-#wpb_visual_composer>.inside{
+#wpb_wpbakery>.inside{
     margin:0;
     padding:0
 }
-#wpb_visual_composer .vc_navbar{
+#wpb_wpbakery .vc_navbar{
     border-bottom:1px solid #0473aa
 }
 @media (max-width:767px){
@@ -16690,7 +16690,7 @@ i.icon{
 .vc_hidden-lg .vc_hidden-lg>*{
     opacity:1!important
 }
-#visual_composer_content{
+#wpbakery_content{
     margin:14px 14px 0 14px;
     line-height:1.2
 }
@@ -16899,6 +16899,55 @@ body .vc_ui-button.vc_ui-button-action:hover {
 .compose-mode .modal-backdrop.white {
   left: 0;
   opacity: 0.87!important;
+}
+
+
+#post-body #wpb_wpbakery .vc_navbar .vc_icon-btn.vc_templates-button.salient-studio-templates,
+#post-body #wpb_wpbakery .vc_navbar .vc_icon-btn.vc_element-button {
+  border: 2px #3a67ff solid;
+  color: #4F5C64;
+  transition: border-color 0.25s ease, box-shadow 0.25s ease;
+}
+
+#post-body #wpb_wpbakery .vc_navbar .vc_icon-btn.salient-studio-templates:hover,
+#post-body #wpb_wpbakery .vc_navbar .vc_icon-btn.vc_element-button:hover {
+  background-color: transparent;
+  border: 2px #3057d8 solid;
+  box-shadow: 0px 3px 8px rgba(0,0,0,0.1);
+}
+
+
+#post-body #wpb_wpbakery .vc_navbar .vc_icon-btn.vc_templates-button.user-templates:hover{
+  background-color: rgb(232, 232, 232);
+}
+
+#post-body #wpb_wpbakery .vc_navbar {
+  background-color: #FCFCFC;
+  border-bottom: 1px solid #F5F5F5;
+}
+
+#post-body #wpb_wpbakery .vc_navbar .vc_icon-btn:hover {
+  background-color: #F5F5F5;
+}
+
+#post-body #wpb_wpbakery .vc_navbar .vc_icon-btn .vc-composer-icon,
+#post-body #wpb_wpbakery .vc_navbar .vc_icon-btn .vc_navbar-icon.fa-repeat,
+#post-body #wpb_wpbakery .vc_navbar .vc_icon-btn .vc_navbar-icon.fa-undo{
+  color: #4F5C64;
+}
+
+#wpb_wpbakery .vc_element-icon[data-is-container=true] {
+  background-image: none;
+}
+
+#wpb_wpbakery .wpb_content_element > .vc_controls {
+  display: none;
+}
+
+#wpb_wpbakery .vc_row:hover  .wpb_content_element > .vc_controls,
+#wpb_wpbakery .wpb_content_element.wpb_vc_tabs > .vc_controls,
+#wpb_wpbakery .wpb_content_element.wpb_vc_accordion > .vc_controls  {
+  display: block;
 }
 
 /*nectar addition end*/

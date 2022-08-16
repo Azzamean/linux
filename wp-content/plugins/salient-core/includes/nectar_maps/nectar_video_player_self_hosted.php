@@ -10,6 +10,7 @@ return array(
 	"name" => esc_html__("Self Hosted Video Player", "salient-core"),
 	"base" => "nectar_video_player_self_hosted",
 	"icon" => "icon-wpb-video-lightbox",
+	'weight' => 6,
 	"allowed_container_element" => 'vc_row',
 	"category" => esc_html__('Media', 'salient-core'),
 	"description" => esc_html__('Self Hosted Video', 'salient-core'),
@@ -158,8 +159,16 @@ return array(
 				esc_html__("Follow Mouse", "salient-core") => "follow_mouse",
 			),
 			'save_always' => true,
-      "dependency" => Array('element' => "player_functionality", 'value' => array('lightbox')),
+			"dependency" => Array('element' => "player_functionality", 'value' => array('lightbox')),
 			"description" => esc_html__("Determines the functionality of your video player element.", "salient-core")	  
+		),
+		array(
+			"type" => 'checkbox',
+			"heading" => esc_html__("Hide Play Button Until Hovered", "salient-core"),
+			"param_name" => "play_button_hide",
+			'edit_field_class' => 'vc_col-xs-12 salient-fancy-checkbox',
+			"value" => Array(esc_html__("Yes, please", "salient-core") => 'yes'),
+     	 "dependency" => Array('element' => "play_button_style", 'value' => array('follow_mouse')),
 		),
     array(
 			"type" => "colorpicker",
@@ -205,7 +214,7 @@ return array(
       "dependency" => Array('element' => "player_functionality", 'value' => array('default')),
       'description' => esc_html__( 'This will automatically mute the video as well.', 'js_composer' ),
 		),
-    /*array(
+    array(
 			'type' => 'dropdown',
 			'heading' => esc_html__( 'Autoplay functionality', 'js_composer' ),
 			'param_name' => 'autoplay_func',
@@ -215,7 +224,7 @@ return array(
 			),
       "dependency" => Array('element' => "autoplay", 'not_empty' => true),
 			'description' => esc_html__( 'Select how the autoplay should function.', 'js_composer' ),
-		),*/
+		),
 		array(
 			'type' => 'el_id',
 			'heading' => esc_html__( 'Element ID', 'js_composer' ),

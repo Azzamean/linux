@@ -212,22 +212,22 @@
 				//make sure the ul has space
 				if(!$ul.hasClass('tracked-pos') &&
 					 !$($ul).parents('li').hasClass('megamenu') &&
-				   !$($ul).parents('ul').hasClass('sub-menu') &&
+					!$($ul).parents('ul').hasClass('sub-menu') &&
 					 $ul.offset() ) {
 
 					$ul.addClass('temp-hidden-display');
 					var docW = $("#top .container").width();
 					var elm = $ul;
-	        var off = elm.offset();
-	        var l = off.left - ($(window).width() - docW)/2;
-	        var w = elm.width();
+					var off = elm.offset();
+					var l = off.left - ($(window).width() - docW)/2;
+					var w = elm.width();
 					var isEntirelyVisible = (l+w <= $(window).width()-100);
 
-	        if ( ! isEntirelyVisible ) {
-	            $ul.parents('li').addClass('edge');
-	        } else {
-	            $ul.parents('li').removeClass('edge');
-	        }
+					if ( ! isEntirelyVisible ) {
+						$ul.parents('li').addClass('edge');
+					} else {
+						$ul.parents('li').removeClass('edge');
+					}
 
 					$ul.removeClass('temp-hidden-display');
 

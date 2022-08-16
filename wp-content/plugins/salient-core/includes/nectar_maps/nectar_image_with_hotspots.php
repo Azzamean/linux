@@ -8,7 +8,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 return array(
 	"name" => esc_html__("Image With Hotspots", "salient-core"),
 	"base" => "nectar_image_with_hotspots",
-	"weight" => 2,
+	"weight" => 1,
 	"icon" => "icon-wpb-nectar-image-withhotspots",
 	"category" => esc_html__('Interactive', 'salient-core'),
 	"description" => esc_html__('Add Hotspots On Your Image', 'salient-core'),

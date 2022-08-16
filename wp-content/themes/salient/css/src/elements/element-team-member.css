@@ -626,7 +626,7 @@ body .team-member[data-style="bio_fullscreen"] .team-meta .arrow-end{
     height:50px;
     -webkit-font-smoothing:antialiased;
     letter-spacing:0;
-    content:"\f105";
+    content:"\e607";
     margin-left:15px;
     position:absolute;
     right:0;

@@ -8,7 +8,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * Manager controls and access to all modules and classes of VC.
  *
- * @package WPBakeryVisualComposer
+ * @package WPBakery
  * @since   4.2
  */
 class Vc_Manager {
@@ -84,9 +84,9 @@ class Vc_Manager {
 	/**
 	 * @var string
 	 */
-	 /*nectar addition*/
-  private $plugin_name = 'js_composer_salient/js_composer.php';
-  /*nectar addition end*/
+	/*nectar addition*/
+	private $plugin_name = 'js_composer_salient/js_composer.php';
+	/*nectar addition end*/
 
 	/**
 	 * Core singleton class
@@ -351,7 +351,7 @@ class Vc_Manager {
 	 */
 	protected function asAdmin() {
 		/* nectar addition
-		vc_license()->init(); */
+		 vc_license()->init(); */
 		vc_backend_editor()->addHooksSettings();
 	}
 

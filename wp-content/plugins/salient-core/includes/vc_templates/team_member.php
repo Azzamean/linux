@@ -157,7 +157,7 @@ extract(shortcode_atts(array(
     }
     
 		if( 'html' === $team_member_bio_full_html ) {
-			$main_bio_markup = do_shortcode($content);
+			$main_bio_markup = do_shortcode(wpb_js_remove_wpautop($content, true));
 		} else {
 			$main_bio_markup = $team_member_bio;
     }

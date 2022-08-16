@@ -39,7 +39,7 @@ Description: Header Layout set to "Centered Logo Between Menu Alt" in theme opti
     display: flex;
     pointer-events: none;
   }
-  #header-outer #top > .container > .row > .right-aligned-menu-items nav,
+  #header-outer:not(.material-search-open) #top > .container > .row > .right-aligned-menu-items nav,
   #header-outer #top > .container > .row > .span_9 nav {
     pointer-events: all;
   }

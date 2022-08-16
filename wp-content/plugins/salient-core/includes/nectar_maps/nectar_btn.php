@@ -10,7 +10,7 @@ return array(
 	"base" => "nectar_btn",
 	"icon" => "icon-wpb-btn",
 	"category" => esc_html__('Interactive', 'salient-core'),
-	"weight" => '1',
+	"weight" => 9,
 	"description" => esc_html__('Add a button', 'salient-core'),
 	"params" => array(
 		

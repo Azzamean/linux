@@ -288,7 +288,6 @@ body #slide-out-widget-area .inner .off-canvas-menu-container li.menu-item-has-i
      position:relative;
      padding:6px 20px;
      color:#fff;
-     outline:none
 }
  #slide-out-widget-area.fullscreen-alt .menuwrapper li a{
     overflow:hidden

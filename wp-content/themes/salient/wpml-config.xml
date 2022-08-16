@@ -11,6 +11,12 @@
   </taxonomies>
   <custom-fields>
     <custom-field action="copy">nectar_menu_options</custom-field>
+    <custom-field action="copy">_nectar_header_bg_color</custom-field>
+    <custom-field action="copy">_nectar_header_font_color</custom-field>
+    <custom-field action="copy">_nectar_header_bg_height</custom-field>
+    <custom-field action="copy">_nectar_header_bg</custom-field>
+    <custom-field action="copy">_nectar_page_header_alignment_v</custom-field>
+    <custom-field action="copy">_nectar_page_header_alignment</custom-field>
     <custom-field action="translate">_nectar_header_title</custom-field>
     <custom-field action="translate">_nectar_header_subtitle</custom-field>
     <custom-field action="copy-once">_nectar_portfolio_extra_content</custom-field>
@@ -47,11 +53,12 @@
       <key name="cta-text"/>
       <key name="cta-btn"/>
       <key name="cta-btn-link"/>
-	    <key name="carousel-title"/>
+	<key name="carousel-title"/>
       <key name="carousel-link"/>
       <key name="portfolio-sortable-text"/>
       <key name="main-portfolio-link"/>
       <key name="header-account-button-url"/>
+      <key name="header-text-widget"/>
       <key name="header-slide-out-widget-area-bottom-text"/>
       <key name="recent-posts-title"/>
       <key name="recent-posts-link"/>
@@ -84,6 +91,14 @@
             <tag>bar</tag>
             <attributes>
                 <attribute>title</attribute>
+            </attributes>
+      </shortcode>
+      <shortcode>
+            <tag>nectar_rotating_words_title</tag>
+            <attributes>
+                <attribute>beginning_text</attribute>
+                <attribute>dynamic_text</attribute>
+                <attribute>ending_text</attribute>
             </attributes>
       </shortcode>
       <shortcode>
@@ -177,11 +192,17 @@
       </shortcode>
       <shortcode>
             <tag>tabbed_section</tag>
+            <attributes>
+                <attribute>vs_text_content</attribute>
+                <attribute>vs_cta_text</attribute>
+                <attribute>vs_cta_link</attribute>
+            </attributes>
       </shortcode>
       <shortcode>
             <tag>tab</tag>
             <attributes>
                 <attribute>title</attribute>
+                <attribute>sub_desc</attribute>
             </attributes>
       </shortcode>
       <shortcode>

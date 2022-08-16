@@ -152,11 +152,28 @@ if ( class_exists( 'WPBakeryVisualComposerAbstract' ) && defined( 'SALIENT_VC_AC
 
                 if ( vc_is_frontend_editor() ||
                 vc_backend_editor()->isValidPostType( get_post_type() ) ) {
+
+                    $depends_on = (vc_is_frontend_editor()) ? 'vc-frontend-editor-min-js' : 'vc-backend-min-js';
               
                     wp_enqueue_style( 'font-awesome', get_template_directory_uri() . '/css/font-awesome-legacy.min.css' );
                     wp_enqueue_style( 'grapick', SALIENT_CORE_PLUGIN_PATH.'/includes/admin/assets/css/grapick.css', array(), $Salient_Core->plugin_version );
-                     wp_enqueue_script( 'grapick', SALIENT_CORE_PLUGIN_PATH.'/includes/admin/assets/js/grapick.js', array(), $Salient_Core->plugin_version );
+                    wp_enqueue_script( 'grapick', SALIENT_CORE_PLUGIN_PATH.'/includes/admin/assets/js/grapick.js', array($depends_on), $Salient_Core->plugin_version, true );
+                    wp_enqueue_script( 'nectar_multi_range_slider', SALIENT_CORE_PLUGIN_PATH.'/includes/admin/assets/js/multi-rangeslider.js', array($depends_on), $Salient_Core->plugin_version, true );
+                    wp_enqueue_style( 'nectar_range_slider', SALIENT_CORE_PLUGIN_PATH.'/includes/admin/assets/css/rangeslider.css', array(), $Salient_Core->plugin_version );
+                    wp_enqueue_script( 'nectar_range_slider', SALIENT_CORE_PLUGIN_PATH.'/includes/admin/assets/js/rangeslider.js', array($depends_on), $Salient_Core->plugin_version, true );
+                    wp_enqueue_script( 'nectar_lottie_player', SALIENT_CORE_PLUGIN_PATH.'/includes/admin/assets/js/lottie-player.js', array($depends_on), $Salient_Core->plugin_version, true );
+                    wp_register_script( 'wnumb', SALIENT_CORE_PLUGIN_PATH.'/includes/admin/assets/js/wnumb.js', array(), $Salient_Core->plugin_version);
 
+                    wp_enqueue_script( 'spectrum', SALIENT_CORE_PLUGIN_PATH.'/includes/admin/assets/js/spectrum.js', array($depends_on), $Salient_Core->plugin_version, true );
+            
+
+                    wp_enqueue_script( 'nectar-page-builder-edit', SALIENT_CORE_PLUGIN_PATH.'/includes/admin/assets/js/nectar-element-edit.js', array($depends_on, 'wnumb', 'nectar_lottie_player', 'spectrum'), $Salient_Core->plugin_version, true );
+                    $translation_array = array(
+                        'alphabetical' => __( 'Alphabetical', 'salient-core' ),
+                        'date'         => __( 'Date', 'salient-core' ),
+                        'sortby'       => __( 'Sort By', 'salient-core' )
+                    );
+                    wp_localize_script( 'nectar-page-builder-edit', 'nectar_translations', $translation_array );
                 }
             }
 
@@ -167,18 +184,7 @@ if ( class_exists( 'WPBakeryVisualComposerAbstract' ) && defined( 'SALIENT_VC_AC
 
             // Page Builder Deps.
             wp_enqueue_style( 'spectrum', SALIENT_CORE_PLUGIN_PATH.'/includes/admin/assets/css/spectrum.css', array(), $Salient_Core->plugin_version );
-            wp_enqueue_script( 'spectrum', SALIENT_CORE_PLUGIN_PATH.'/includes/admin/assets/js/spectrum.js', array(), $Salient_Core->plugin_version );
             
-            
-            wp_enqueue_style( 'nectar_range_slider', SALIENT_CORE_PLUGIN_PATH.'/includes/admin/assets/css/rangeslider.css', array(), $Salient_Core->plugin_version );
-            wp_enqueue_script( 'nectar_range_slider', SALIENT_CORE_PLUGIN_PATH.'/includes/admin/assets/js/rangeslider.js', array(), $Salient_Core->plugin_version );
-            wp_enqueue_script( 'nectar-page-builder-edit', SALIENT_CORE_PLUGIN_PATH.'/includes/admin/assets/js/nectar-element-edit.js', array(), $Salient_Core->plugin_version );
-            $translation_array = array(
-                'alphabetical' => __( 'Alphabetical', 'salient-core' ),
-                'date'         => __( 'Date', 'salient-core' ),
-                'sortby'       => __( 'Sort By', 'salient-core' )
-            );
-            wp_localize_script( 'nectar-page-builder-edit', 'nectar_translations', $translation_array );
 
         }
     }
@@ -241,6 +247,7 @@ if ( class_exists( 'WPBakeryVisualComposerAbstract' ) && defined( 'SALIENT_VC_AC
                 esc_html__( 'General', 'salient-core' )        => 'general',
                 esc_html__( 'Icons', 'salient-core' )          => 'icons',
                 esc_html__( 'Hero Section', 'salient-core' )   => 'hero_section',
+                esc_html__( 'Lottie', 'salient-core' )   => 'lottie',
                 esc_html__( 'Map', 'salient-core' )            => 'map',
                 esc_html__( 'Project', 'salient-core' )        => 'portfolio',
                 esc_html__( 'Pricing', 'salient-core' )        => 'pricing',

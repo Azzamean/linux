@@ -3267,7 +3267,14 @@ jQuery(document).ready(function($){
     $('.nectar-slider-wrap, .slide-bg-overlay').show();
     
     //set bg colors / textures after js has made the slider fullwidth
-    $('.swiper-container, .swiper-slide').css('background-color','#000');
+    $('.swiper-container').each(function(){
+      if( $(this).parents('.wpb_gallery').length == 0 ) {
+        $(this).css('background-color','#000');
+        $(this).find('.swiper-slide').css('background-color','#000');
+      } 
+    });
+
+    
     $('.video-texture').css('opacity','1');
     
     
@@ -4520,7 +4527,7 @@ if ('IntersectionObserver' in window) {
       
       
       if( $(this).css('visibility') != 'hidden') {
-        
+        var $that = $(this);
         var $leftHeaderSize = ($('#header-outer[data-format="left-header"]').length > 0 && window.innerWidth >= 1000) ? parseInt($('#header-outer[data-format="left-header"]').width()) : 0;
         var $windowWidth = $(window).width() - $leftHeaderSize;
         
@@ -4566,7 +4573,19 @@ if ('IntersectionObserver' in window) {
         $(this).parents('.vc_col-sm-12').length > 0 &&
          $('#boxed').length === 0 &&
          lrPadding === false ) {
+
           $sliderWidth = $windowWidth;
+
+          /* nested column setup */
+          if( $(this).parents('.vc_col-sm-12.child_column').length > 0 ) {
+    
+            var parentChildCol = $(this).parents('.vc_col-sm-12.child_column');
+            if( parentChildCol.parents('.vc_col-sm-12').length == 0 ) {
+   
+              $sliderWidth = $that.width();
+            }
+          }
+
         }
 
 
@@ -5274,6 +5293,7 @@ if ('IntersectionObserver' in window) {
   
   function nectarSlideRotate(slider, sliderNum){
 
+
     if($(slider).hasClass('out-of-view')) {
       return true;
     }
@@ -5294,13 +5314,16 @@ if ('IntersectionObserver' in window) {
       
       //classic style
       if($(slider).attr('data-overall_style') != 'directional') {
+        $nectarSliders[sliderNum].updateActiveSlide();
         $nectarSliders[sliderNum].swipeNext();
+        
       } else {
         //directional based
         $($nectarSliders[sliderNum].container).find('.slider-next').trigger('click');
       }
       
     } else {
+     
       //looped sliders
       if($(slider).find('.swiper-container').is("[data-loop]") && $(slider).find('.swiper-container').attr('data-loop') === 'true') {
         
@@ -5352,6 +5375,13 @@ if ('IntersectionObserver' in window) {
     var $activeIndex = ($($obj.container).attr('data-loop') === 'true') ? $obj.activeIndex + 1: $obj.activeIndex+1;
     var $activeIndex2 = ($($obj.container).attr('data-loop') === 'true') ? $obj.activeIndex: $obj.activeIndex+1;
     
+    if(isNaN($activeIndex)) {
+      $activeIndex = 1;
+    }
+    if(isNaN($activeIndex2)) {
+      $activeIndex2 = 1;
+    }
+
     //dark slide header 
     if($($obj.container).parent().attr('data-overall_style') !== 'directional') {
       if( $($obj.container).parents('.first-section').length > 0 && $($obj.container).find('.swiper-slide-active[data-color-scheme="dark"]').length > 0 ||
@@ -5393,7 +5423,6 @@ if ('IntersectionObserver' in window) {
     
     //light and dark controls
     if($($obj.container).parent().attr('data-overall_style') != 'directional') {
-      
       if($($obj.container).find('.swiper-slide:nth-child('+ ($activeIndex) +')').attr('data-color-scheme') === 'dark') {
         $($obj.container).find('.slider-pagination').addClass('dark-cs');
         $($obj.container).find('.slider-prev, .slider-next').addClass('dark-cs');

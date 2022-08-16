@@ -69,6 +69,10 @@ ul.products li.minimal.product .product-wrap {
   overflow: visible;
 }
 
+ul.products li.minimal.product .product-wrap > a {
+  position: relative;
+}
+
 .products li.product.minimal .product-meta {
   position: relative;
 }

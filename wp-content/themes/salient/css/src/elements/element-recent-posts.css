@@ -68,10 +68,34 @@ body .blog-recent[data-style].columns-1 div:nth-child(1n+1){
  .blog-recent.columns-2 div:nth-child(2n+3){
     clear:both
 }
+
+body[data-col-gap*="px"] .blog-recent.columns-1 .col.span_12 {
+    margin-left: 0;
+    margin-right: 0;
+}
+
  .video-wrap iframe{
     opacity:0;
      visibility:hidden
 }
+
+.blog-recent[data-style*="classic_enhanced"][data-remove-post-date="1"] .post-header > span,
+.blog-recent[data-style="title_only"][data-remove-post-date="1"] .post-header > span,
+.blog-recent[data-style="minimal"][data-remove-post-date="1"] .post-header > .meta > span {
+  display: none;
+}
+
+.blog-recent[data-style="default"][data-remove-post-author="1"] .meta-author,
+.blog-recent[data-style*="classic_enhanced"][data-remove-post-author="1"] .meta-author,
+.nectar-recent-posts-single_featured[data-remove-post-author="1"] .grav-wrap > a,
+.nectar-recent-posts-single_featured[data-remove-post-author="1"] .grav-wrap .text > span {
+  display: none;
+}
+.blog-recent[data-style="default"][data-remove-post-comment-number="1"] .meta-comment-count,
+.blog-recent[data-style*="classic_enhanced"][data-remove-post-comment-number="1"] .meta-comment-count {
+  display: none;
+}
+
  .blog-recent .col .audio-wrap{
     margin-bottom:15px
 }
@@ -632,6 +656,9 @@ body .blog-recent[data-style].columns-1 div:nth-child(1n+1){
  body[data-button-style*="slightly_rounded"] .nectar-recent-posts-single_featured .inner-wrap .strong a {
      border-radius: 5px;
 }
+body[data-button-style*="slightly_rounded"] .blog-recent .more-link span {
+	border-radius:4px;
+}
  body[data-button-style^="rounded"] .nectar-recent-posts-single_featured .inner-wrap .strong a {
      border-radius: 50px;
      padding: 4px 12px 
@@ -662,6 +689,14 @@ body .blog-recent[data-style].columns-1 div:nth-child(1n+1){
  .nectar-recent-posts-single_featured .inner-wrap {
      color: #fff;
 }
+
+.blog-recent[data-style="list_featured_first_row"] .small {
+    position: relative;
+    transform: none;
+    top: 0;
+    display: inline-block;
+    vertical-align: middle;
+  }
  .blog-recent[data-style="list_featured_first_row"] a.small {
      width: 80px;
      height: 100%;
@@ -716,7 +751,8 @@ body .blog-recent[data-style].columns-1 div:nth-child(1n+1){
      height: 60px;
 }
  .blog-recent[data-style="list_featured_first_row"] .col.span_4 a.small, 
- .blog-recent[data-style="list_featured_first_row"] .col.span_6 a.small {
+ .blog-recent[data-style="list_featured_first_row"] .col.span_6 a.small,
+ .blog-recent[data-style="list_featured_first_row"] .col.span_12 a.small {
      width: 80px;
      height: 80px;
 }
@@ -869,6 +905,30 @@ body .blog-recent[data-style].columns-1 div:nth-child(1n+1){
      transform: translateY(-4px);
      box-shadow: 0px 25px 60px rgba(0,0,0,0.17);
 }
+
+.blog-recent[data-style="list_featured_first_row"] .img-thumbnail,
+.blog-recent[data-style="list_featured_first_row"] .post-featured-img {
+    position: relative;
+}
+#ajax-content-wrap .blog-recent[data-style="list_featured_first_row"] .featured img,
+#ajax-content-wrap .blog-recent[data-style="list_featured_first_row"] .small img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 5px;
+}
+
+.blog-recent[data-style="list_featured_first_row"] img.nectar-lazy {
+	opacity: 0;
+	transition: opacity 0.5s ease;
+}
+.blog-recent[data-style="list_featured_first_row"] img.nectar-lazy.loaded {
+	opacity: 1;
+}
+
  .blog-recent[data-style="list_featured_first_row"] .small:hover > img,
  .blog-recent[data-style="list_featured_first_row"] .small:hover > .img-thumbnail {
      -webkit-transform: translateY(-3px);
@@ -924,6 +984,16 @@ body .blog-recent[data-style].columns-1 div:nth-child(1n+1){
 }
  .span_12.light [data-style="list_featured_first_row"] .meta-category a:before {
      background-color: #fff;
+}
+.blog-recent[data-style*="classic_enhanced"] .entire-meta-link,
+.blog-recent[data-style="material"] .entire-meta-link {
+  position:absolute;
+  top:0;
+  left:0;
+  display:block;
+  width:100%;
+  z-index:101;
+  height:100%
 }
  .blog-recent[data-style*="classic_enhanced"] .inner-wrap{
     background-color:#fff

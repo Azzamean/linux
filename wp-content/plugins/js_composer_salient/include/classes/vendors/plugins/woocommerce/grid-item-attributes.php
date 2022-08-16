@@ -23,6 +23,7 @@ function vc_gitem_template_attribute_woocommerce_product( $value, $data ) {
 	), $data ) );
 	require_once WC()->plugin_path() . '/includes/abstracts/abstract-wc-product.php';
 	/** @noinspection PhpUndefinedClassInspection */
+	/** @var WC_Product $product */
 	$product = new WC_Product( $post );
 	if ( preg_match( '/_labeled$/', $data ) ) {
 		$data = preg_replace( '/_labeled$/', '', $data );
@@ -70,7 +71,7 @@ function vc_gitem_template_attribute_woocommerce_product( $value, $data ) {
 			$value = $product->is_on_sale() ? 'yes' : 'no'; // TODO: change
 			break;
 		default:
-      $value = method_exists( $product, 'get_' . $data ) ? $product->{'get_' . $data}() : $product->$data;
+			$value = method_exists( $product, 'get_' . $data ) ? $product->{'get_' . $data}() : $product->$data;
 	}
 
 	return strlen( $value ) > 0 ? $label . apply_filters( 'vc_gitem_template_attribute_woocommerce_product_' . $data . '_value', $value ) : '';

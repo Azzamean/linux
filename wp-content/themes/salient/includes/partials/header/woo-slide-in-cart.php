@@ -23,7 +23,7 @@ if ( $woocommerce && $nav_cart_style === 'slide_in' ) {
 	echo '<div class="nectar-slide-in-cart style_'.esc_attr($nav_cart_style).'">';
 
 	if ( version_compare( WOOCOMMERCE_VERSION, '2.0.0' ) >= 0 ) {
-		$instance_params = ( defined('ICL_SITEPRESS_VERSION') ) ? array('wpml_language' => 'all') : array();
+		$instance_params = ( defined('ICL_SITEPRESS_VERSION') ) ? array('wpml_language' => 'all', 'title' => '') : array('title' => '');
 		the_widget( 'WC_Widget_Cart', $instance_params );
 	} else {
 		the_widget( 'WooCommerce_Widget_Cart', 'title= ' );

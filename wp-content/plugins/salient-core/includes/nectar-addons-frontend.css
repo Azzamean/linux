@@ -1357,7 +1357,18 @@ body.compose-mode .testimonial_slider[data-style*="multiple_visible"] blockquote
 
 
 @media only screen and (min-width:1300px) {
-
+  .compose-mode .nectar-flickity.nectar-carousel[data-desktop-columns="10"][data-format="default"] .flickity-slider > .vc_element {
+    width: calc(100% / 10);
+  }
+  .compose-mode .nectar-flickity.nectar-carousel[data-desktop-columns="9"][data-format="default"] .flickity-slider > .vc_element {
+    width: calc(100% / 9);
+  }
+  .compose-mode .nectar-flickity.nectar-carousel[data-desktop-columns="8"][data-format="default"] .flickity-slider > .vc_element {
+    width: calc(100% / 8);
+  }
+  .compose-mode .nectar-flickity.nectar-carousel[data-desktop-columns="7"][data-format="default"] .flickity-slider > .vc_element {
+    width: calc(100% / 7);
+  }
   .compose-mode .nectar-flickity.nectar-carousel[data-desktop-columns="6"][data-format="default"] .flickity-slider > .vc_element {
     width: 16.6%;
   }
@@ -1473,6 +1484,15 @@ body.compose-mode .testimonial_slider[data-style*="multiple_visible"] blockquote
 }
 
 @media only screen and (max-width: 1300px) and (min-width: 1000px) {
+  .compose-mode .nectar-flickity.nectar-carousel[data-small-desktop-columns="9"] .flickity-slider > .vc_element {
+    width: calc(100% / 9);
+  }
+  .compose-mode .nectar-flickity.nectar-carousel[data-small-desktop-columns="8"] .flickity-slider > .vc_element {
+    width: calc(100% / 8);
+  }
+  .compose-mode .nectar-flickity.nectar-carousel[data-small-desktop-columns="7"] .flickity-slider > .vc_element {
+    width: calc(100% / 7);
+  }
   .compose-mode .nectar-flickity.nectar-carousel[data-small-desktop-columns="6"][data-format="default"] .flickity-slider > .vc_element {
     width: 16.6%;
   }
@@ -1589,7 +1609,10 @@ body.compose-mode .testimonial_slider[data-style*="multiple_visible"] blockquote
 
 
 @media only screen and (max-width:1000px) and (min-width:690px) {
-  .compose-mode .nectar-flickity.nectar-carousel[data-tablet-columns="6"][data-format="default"] .flickity-slider > .vc_elementl {
+  .compose-mode .nectar-flickity.nectar-carousel[data-tablet-columns="7"] .flickity-slider > .vc_element {
+    width: calc(100% / 7);
+  }
+  .compose-mode .nectar-flickity.nectar-carousel[data-tablet-columns="6"] .flickity-slider > .vc_elementl {
     width: 16.6%;
   }
 
@@ -1633,6 +1656,18 @@ body.compose-mode .testimonial_slider[data-style*="multiple_visible"] blockquote
 @media only screen and (max-width:690px) {
   .compose-mode .nectar-flickity.nectar-carousel .flickity-slider > .vc_element {
     width: 100%!important;
+  }
+  .compose-mode .nectar-flickity.nectar-carousel[data-phone-columns="2"] .flickity-slider > .vc_element {
+    width: calc(100% / 2)!important;
+  }
+  .compose-mode .nectar-flickity.nectar-carousel[data-phone-columns="3"] .flickity-slider > .vc_element {
+    width: calc(100% / 3)!important;
+  }
+  .compose-mode .nectar-flickity.nectar-carousel[data-phone-columns="4"] .flickity-slider > .vc_element {
+    width: calc(100% / 4)!important;
+  }
+  .compose-mode .nectar-flickity.nectar-carousel[data-phone-columns="5"] .flickity-slider > .vc_element {
+    width: calc(100% / 5)!important;
   }
 }
 

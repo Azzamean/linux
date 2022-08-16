@@ -74,7 +74,9 @@ if( !function_exists('nectar_create_meta_box') ) {
 							'editor_class'  => '',
 							'wpautop'       => true
 						);
-						wp_editor($meta, $field['id'], $settings );
+						echo'<td>';
+							wp_editor($meta, $field['id'], $settings );
+						echo '</td>';
 					
 					break;
 					

@@ -8,8 +8,8 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @package VPBakeryVisualComposer
  *
  */
- $vc_config_path = vc_path_dir( 'CONFIG_DIR' );
- vc_lean_map( 'vc_row_inner', null, $vc_config_path . '/containers/shortcode-vc-row-inner.php' );
+$vc_config_path = vc_path_dir( 'CONFIG_DIR' );
+vc_lean_map( 'vc_row_inner', null, $vc_config_path . '/containers/shortcode-vc-row-inner.php' );
  vc_lean_map( 'vc_column_text', null, $vc_config_path . '/content/shortcode-vc-column-text.php' );
 
  vc_lean_map( 'vc_text_separator', null, $vc_config_path . '/content/shortcode-vc-text-separator.php' );
@@ -47,7 +47,8 @@ if ( ! defined( 'ABSPATH' ) ) {
  		'vc_button'      => '/deprecated/shortcode-vc-button.php',
  		'vc_button2'     => '/deprecated/shortcode-vc-button2.php',
  		'vc_cta_button'  => '/deprecated/shortcode-vc-cta-button.php',
- 		'vc_cta_button2' => '/deprecated/shortcode-vc-cta-button2.php'
+ 		'vc_cta_button2' => '/deprecated/shortcode-vc-cta-button2.php',
+		'vc_section'     => '/containers/shortcode-vc-section.php'
  	);
  	
  	$el_list_keys = array_keys($el_list);
@@ -155,7 +156,6 @@ if ( ! defined( 'ABSPATH' ) ) {
  vc_lean_map( 'vc_cta_button2', null, $vc_config_path . '/deprecated/shortcode-vc-cta-button2.php' );
 
  */
-
 if ( is_admin() ) {
 	add_action( 'admin_print_scripts-post.php', array(
 		Vc_Shortcodes_Manager::getInstance(),

@@ -145,7 +145,10 @@ body.material [data-bullet_style="see_through"] .slider-pagination .swiper-pagin
 .swiper-slide .container {
 	z-index: 100;
 	height: 100%;
+	transform: translateZ(0);
 }
+
+
 
 .swiper-slide .image-bg {
 	position: absolute;

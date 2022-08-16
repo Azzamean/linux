@@ -14,38 +14,35 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 
 /* Admin notice that Salient post types are now separated into plugins */
+add_action( 'wp_ajax_nectar_dismiss_plugin_notice', 'nectar_dismiss_plugin_notice' );
+
 if( get_option( 'nectar_dismiss_plugin_notice' ) !== 'true' ) {
 		
-		// Do not show on welcome page/install page.
-		if( isset( $_GET['page'] ) && 'salient-welcome-screen' === $_GET['page'] ||
-			isset( $_GET['page'] ) && 'tgmpa-install-plugins' === $_GET['page'] ) {
-			return;
+	$theme = wp_get_theme();
+	$salient_on_theme_options_page_bool = ( is_admin() && isset($_GET['page']) && $_GET['page'] === sanitize_html_class($theme->get( 'Name' )) ) ? true : false;
+
+	if( ! class_exists('Salient_Portfolio') ||
+		! class_exists('Salient_Nectar_Slider') ||
+		! class_exists('Salient_Home_Slider') ||
+		! class_exists('Salient_Shortcodes') ||
+		! class_exists('Salient_Demo_Importer') ||
+		! class_exists('Salient_Core') ||
+		! class_exists('Salient_Widgets') ||
+		! class_exists('Salient_Social') ) {
+		
+		if( current_user_can( 'install_plugins' ) && $salient_on_theme_options_page_bool )	{
+			add_action( 'admin_notices', 'nectar_add_dismissible_plugin_notice' );
+			add_action( 'admin_enqueue_scripts', 'nectar_add_plugin_notice_admin_notice_script' );
 		}
 		
-		if( ! class_exists('Salient_Portfolio') ||
-			! class_exists('Salient_Nectar_Slider') ||
-			! class_exists('Salient_Home_Slider') ||
-			! class_exists('Salient_Shortcodes') ||
-			! class_exists('Salient_Demo_Importer') ||
-			! class_exists('Salient_Core') ||
-			! class_exists('Salient_Widgets') ||
-			! class_exists('Salient_Social') ) {
-			
-			if( current_user_can( 'install_plugins' ) )	{
-		    add_action( 'admin_notices', 'nectar_add_dismissible_plugin_notice' );
-				add_action( 'admin_enqueue_scripts', 'nectar_add_plugin_notice_admin_notice_script' );
-				add_action( 'wp_ajax_nectar_dismiss_plugin_notice', 'nectar_dismiss_plugin_notice' );
-			}
-			
-		}
-		
+	}
+	
 }
 
 function nectar_add_dismissible_plugin_notice() { ?>
       <div class='notice nectar-dismiss-cpt-notice nectar-bold-notice is-dismissible'>
-          <h3><?php echo esc_html__('Important Salient Plugin Notice','salient'); ?></h3>
-          <p><?php echo esc_html__('In accordance with new','salient') . ' <a href="//help.author.envato.com/hc/en-us/articles/360000481223" target="_blank">'. esc_html__('Envato guidelines', 'salient') .'</a>, ' . esc_html__('Salient has separated all of the custom post types and plugin territory functionality into individual plugins. Please install and activate the required plugins and any of the desired optional plugins which you wish to use on your site.','salient'); ?></p>
-          
+          <h3><?php echo esc_html__('Salient Plugin Notice','salient'); ?></h3>
+
           <p><?php echo esc_html__('The following Salient plugins are not installed or activated: ','salient'); ?></p>
 					<ul>
           <?php 
@@ -102,5 +99,5 @@ function nectar_add_plugin_notice_admin_notice_script() {
 
 function nectar_dismiss_plugin_notice() {
     update_option( 'nectar_dismiss_plugin_notice', 'true' );
-		wp_die();
+	wp_die();
 }

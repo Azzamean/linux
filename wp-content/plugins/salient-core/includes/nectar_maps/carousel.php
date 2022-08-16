@@ -16,7 +16,7 @@ return array(
 	"base" => "carousel",
 	"show_settings_on_create" => true,
 	"is_container" => true,
-  "weight" => '10',
+  "weight" => 8,
 	"icon" => "icon-wpb-carousel",
 	"category" => esc_html__('Interactive', 'salient-core'),
 	"description" => esc_html__('A simple carousel for any content', 'salient-core'),
@@ -209,6 +209,9 @@ return array(
 				"4" => "4",
 				"5" => "5",
 				"6" => "6",
+				"7" => "7",
+				"8" => "8",
+				"9" => "9",
 			),
 			"edit_field_class" => "col-md-2 vc_column",
 			"dependency" => array('element' => "script", 'value' => array('flickity')),
@@ -228,6 +231,9 @@ return array(
 				"4" => "4",
 				"5" => "5",
 				"6" => "6",
+				"7" => "7",
+				"8" => "8",
+				"9" => "9",
 			),
 			"edit_field_class" => "col-md-2 vc_column",
 			"dependency" => array('element' => "script", 'value' => array('flickity')),
@@ -243,7 +249,29 @@ return array(
 				"Default (2)" => "2",
 				"1" => "1",
 				"2" => "2",
-				"3" => "3"
+				"3" => "3",
+				"4" => "4",
+				"5" => "5",
+				"6" => "6"
+			),
+			"edit_field_class" => "col-md-2 vc_column",
+			"dependency" => array('element' => "script", 'value' => array('flickity')),
+			"description" => ''
+		),
+		array(
+			"type" => "dropdown",
+			"class" => "",
+			"heading" => "<span>" . esc_html__('Phone','salient-core') . "</span>",
+			'save_always' => true,
+			"param_name" => "phone_cols_flickity",
+			"value" => array(
+				"Default (1)" => "1",
+				"1" => "1",
+				"2" => "2",
+				"3" => "3",
+				"4" => "4",
+				"5" => "5",
+				"6" => "6"
 			),
 			"edit_field_class" => "col-md-2 vc_column",
 			"dependency" => array('element' => "script", 'value' => array('flickity')),
@@ -256,8 +284,9 @@ return array(
 			  "param_name" => "flickity_controls",
 			  "value" => array(
 				    esc_html__("Pagination",'salient-core') => "default",
-						esc_html__("Next/Prev Arrows Overlaid",'salient-core') => "next_prev_arrows_overlaid",
-						esc_html__("Touch Indicator and Total Visualized",'salient-core') => "touch_total"
+					esc_html__("Next/Prev Arrows Overlaid",'salient-core') => "next_prev_arrows_overlaid",
+					esc_html__("Touch Indicator and Total Visualized",'salient-core') => "touch_total",
+					esc_html__("None",'salient-core') => "none",
 				),
 			  'save_always' => true,
 				"dependency" => array('element' => "flickity_formatting", 'value' => array('default')),
@@ -438,11 +467,25 @@ return array(
 				"20px" => "20px",
 				"30px" => "30px",
 				"40px" => "40px",
-				"50px" => "50px"
+				"50px" => "50px",
+				esc_html__('Custom','salient-core') => 'custom'
 			),
 			"dependency" => array('element' => "script", 'value' => array('owl_carousel','flickity')),
 			"description" => esc_html__("Please select your desired column padding " , 'salient-core')
 		),
+
+		array(
+			"type" => "nectar_numerical",
+			"class" => "",
+			"placeholder" => '',
+			"heading" =>  esc_html__("Custom Column Padding", "salient-core"),
+			"value" => "",
+			"edit_field_class" => "zero-floor vc_col-xs-12",
+			"param_name" => "column_padding_custom",
+			"dependency" => array('element' => "column_padding", 'value' => array('custom')),
+			"description" => ""
+		),
+
 		array(
 			"type" => "dropdown",
 			"class" => "",
@@ -839,10 +882,37 @@ return array(
 				"description" => ""
 			),
 			array(
+				"type" => "dropdown",
+				"class" => "",
+				"heading" => esc_html__("Slider Transition Type", 'salient-core'),
+				'save_always' => true,
+				"param_name" => "autorotate_type",
+				"value" => array(
+					esc_html__("Default","salient-core") => "default",
+					esc_html__("Ticker Movement","salient-core") => "ticker",
+				),
+				"dependency" => array('element' => "autorotate", 'not_empty' => true),
+				"description" => ''
+			),
+			array(
+				"type" => "dropdown",
+				"class" => "",
+				"heading" => esc_html__("Ticker Movement Speed", 'salient-core'),
+				'save_always' => true,
+				"param_name" => "ticker_speed",
+				"value" => array(
+					esc_html__("Slow",'salient-core') => 'slow',
+					esc_html__("Medium",'salient-core') => 'medium',
+					esc_html__("Fast",'salient-core') => 'fast',
+				),
+				"dependency" => array('element' => "autorotate_type", 'value' => 'ticker'),
+				"description" => ''
+			),
+			array(
 				"type" => "textfield",
 				"heading" => esc_html__("Autorotation Speed", 'salient-core'),
 				"param_name" => "autorotation_speed",
-				"dependency" => array('element' => "script", 'value' => array('owl_carousel','flickity','simple_slider')),
+				"dependency" => array('element' => "autorotate_type", 'value' => array('default')),
 				"description" => esc_html__("Enter in milliseconds (default is 5000)" , 'salient-core')
 			),
 			array(

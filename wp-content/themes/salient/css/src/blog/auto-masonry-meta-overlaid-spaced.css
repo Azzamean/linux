@@ -210,6 +210,18 @@ body .auto_meta_overlaid_spaced .masonry-blog-item .post-featured-img.no-img {
   position: absolute;
   left: 0;
   top: 0;
+  object-fit: cover;
+}
+.auto_meta_overlaid_spaced .masonry-blog-item .post-featured-img img:not([srcset]) {
+  width: 100%;
+}
+
+.auto_meta_overlaid_spaced .post-featured-img img.nectar-lazy {
+	opacity: 0;
+	transition: opacity 0.5s ease;
+}
+.auto_meta_overlaid_spaced .post-featured-img img.nectar-lazy.loaded {
+	opacity: 1;
 }
 
 .auto_meta_overlaid_spaced .masonry-blog-item .content-inner > a {

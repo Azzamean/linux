@@ -678,9 +678,30 @@
      Redux::setSection( $opt_name, array(
        'title'            => esc_html__( 'Performance', 'salient' ),
        'id'               => 'general-settings-performance',
-       'desc' => esc_html__('Performance options related to asset reduction/loading optimization.', 'salient'),
+       'desc' => esc_html__('Performance options related to asset reduction/loading optimization. Options are ordered from the largest to smallest impact on overall performance.', 'salient'),
        'subsection'       => true,
        'fields'           => array(
+        array(
+          'id' => 'delay-js-execution',
+          'type' => 'switch',
+          'class' => 'salient-new-badge',
+          'title' => esc_html__('Delay Javascript Execution', 'salient'),
+          'subtitle' => esc_html__('Prevents theme javascript from running until the user makes an interaction such as scrolling, tapping etc.', 'salient'),
+          'desc' => '',
+          'default' => '0'
+        ),
+        array(
+          'id' => 'delay-js-execution-devices',
+          'type' => 'select',
+          'title' => esc_html__('Devices to Activate "Delay Javascript" Logic', 'salient'),
+          'subtitle' => esc_html__('If you are using a performance plugin that caches your pages, this will need to be set to "All Devices" in order to take effect.', 'salient'),
+          'required' => array( 'delay-js-execution', '=', '1' ),
+          'options' => array(
+            "mobile" => esc_html__("Mobile (Default)", "salient"),
+            "all" => esc_html__("All Devices", "salient"),
+          ),
+          'default' => 'mobile'
+        ),
          array(
            'id' => 'global_lazy_load_images',
            'type' => 'switch',
@@ -689,6 +710,16 @@
            'desc' => '',
            'default' => '0'
          ),
+
+         array(
+          'id' => 'defer-javascript',
+          'type' => 'switch',
+          'title' => esc_html__('Move jQuery to Footer', 'salient'),
+          'subtitle' => esc_html__('Attempts to move jQuery to the footer to make it non render-blocking. Note that this can break third party plugins/scripts which require JavaScript to be loaded in the head. Additionally certain WordPress plugins will still force jQuery to load in the head, such as WooCommerce.', 'salient'),
+          'desc' => '',
+          'default' => '0'
+        ),
+         
          array(
            'id' => 'typography_font_swap',
            'type' => 'switch',
@@ -697,19 +728,12 @@
            'desc' => '',
            'default' => '0'
          ),
+        
          array(
-          'id' => 'page_header_responsive_images',
-          'type' => 'switch',
-          'title' => esc_html__('Responsive Page/Post Header Image Sizing', 'salient'),
-          'subtitle' => esc_html__('This will swap the background image of all page/post headers to use smaller sizes on mobile devices. Enabling this will decrease the Google lighthouse largest contentful paint metric wherever page headers are used.', 'salient'),
-          'desc' => '',
-          'default' => '0'
-        ),
-         array(
-           'id' => 'rm-legacy-icon-css',
+           'id' => 'rm-block-editor-css',
            'type' => 'switch',
-           'title' => esc_html__('Remove Legacy Icon CSS', 'salient'),
-           'subtitle' => esc_html__('Removes extra icon CSS for legacy users.', 'salient'),
+           'title' => esc_html__('Remove Block Editor (Gutenberg) CSS', 'salient'),
+           'subtitle' => esc_html__('Removes the block editor element css.', 'salient'),
            'desc' => '',
            'default' => '0'
          ),
@@ -721,38 +745,30 @@
           'desc' => '',
           'default' => '0'
         ),
-        /*array(
-          'id' => 'defer-google-fonts',
-          'type' => 'switch',
-          'title' => esc_html__('Defer Google Fonts', 'salient'),
-          'subtitle' => esc_html__('Enabling this will cause fonts to load later than normal, but be non render-blocking.', 'salient'),
-          'desc' => '',
-          'default' => '0'
-        ),*/
         array(
-          'id' => 'defer-javascript',
+          'id' => 'rm-legacy-icon-css',
           'type' => 'switch',
-          'title' => esc_html__('Move jQuery to Footer', 'salient'),
-          'subtitle' => esc_html__('Attempts to move jQuery to the footer to make it non render-blocking. Note that this can break third party plugins/scripts which require JavaScript to be loaded in the head. Additionally certain WordPress plugins will still force jQuery to load in the head, such as WooCommerce.', 'salient'),
+          'title' => esc_html__('Remove Legacy Icon CSS', 'salient'),
+          'subtitle' => esc_html__('Removes extra icon CSS for legacy users.', 'salient'),
           'desc' => '',
           'default' => '0'
         ),
          array(
-           'id' => 'rm-wp-emojis',
-           'type' => 'switch',
-           'title' => esc_html__('Remove WordPress Emoji Script/CSS', 'salient'),
-           'subtitle' => esc_html__('Removes the WordPress Emoji assets which automatically convert emoticons to WP specific emojis.', 'salient'),
-           'desc' => '',
-           'default' => '0'
-         ),
+          'id' => 'rm-wp-emojis',
+          'type' => 'switch',
+          'title' => esc_html__('Remove WordPress Emoji Script/CSS', 'salient'),
+          'subtitle' => esc_html__('Removes the WordPress Emoji assets which automatically convert emoticons to WP specific emojis.', 'salient'),
+          'desc' => '',
+          'default' => '0'
+        ),
          array(
-           'id' => 'rm-block-editor-css',
-           'type' => 'switch',
-           'title' => esc_html__('Remove Block Editor (Gutenberg) CSS', 'salient'),
-           'subtitle' => esc_html__('Removes the block editor element css.', 'salient'),
-           'desc' => '',
-           'default' => '0'
-         ),
+          'id' => 'page_header_responsive_images',
+          'type' => 'switch',
+          'title' => esc_html__('Responsive Page/Post Header Image Sizing', 'salient'),
+          'subtitle' => esc_html__('This will swap the background image of all page/post headers to use smaller sizes on mobile devices. Enabling this will decrease the Google lighthouse largest contentful paint metric wherever page headers are used.', 'salient'),
+          'desc' => '',
+          'default' => '0'
+        ),
        )
      ) );
 
@@ -1863,6 +1879,30 @@
          ),
 
          array(
+          'id' => 'header-blur-bg',
+          'type' => 'switch',
+          'title' => esc_html__('Header Blur Background', 'salient'),
+          'subtitle' => esc_html__('This will cause your header to blur the area behind it, giving a frosted glass effect.', 'salient'),
+          'desc' => '',
+          'switch' => true,
+          'default' => '0'
+        ),
+
+        array(
+          'id' => 'header-blur-bg-func',
+          'type' => 'select',
+          'title' => esc_html__('Header Blur Background Functionality', 'salient'),
+          'subtitle' => '',
+          'desc' => '',
+          'required' => array( array( 'header-blur-bg', '=', '1' ) ),
+          'options' => array(
+            'active_non_transparent' => esc_html__('Active when "Transparent header effect" is not', 'salient'),
+            'active_all' => esc_html__('Active in all header states', 'salient')
+          ),
+          'default' => 'active_non_transparent'
+        ),
+
+         array(
            'id' => 'header-button-styling',
            'type' => 'select',
            'title' => esc_html__('Header Button Link Style', 'salient'),
@@ -1970,10 +2010,9 @@
            'id' => 'header-fullwidth-padding',
            'type' => 'text',
            'title' => esc_html__('Full Width Left/Right Padding', 'salient'),
-           'subtitle' => esc_html__('Don\'t include "px" in the string. e.g. 28', 'salient'),
+           'subtitle' => '',
            'desc' => '',
-           'required' => array( 'header-fullwidth', '=', '1' ),
-           'validate' => 'numeric'
+           'required' => array( 'header-fullwidth', '=', '1' )
          ),
 
          array(
@@ -2294,6 +2333,14 @@
            'subtitle' => '',
            'desc' => ''
          ),
+         array(
+          'id' => 'use-patreon-icon-header',
+          'type' => 'checkbox',
+          'required' => array( 'enable_social_in_header', '=', '1' ),
+          'title' => esc_html__('Use Patreon Icon', 'salient'),
+          'subtitle' => '',
+          'desc' => ''
+        ),
          array(
           'id' => 'use-xing-icon-header',
           'type' => 'checkbox',
@@ -3893,6 +3940,13 @@
            'desc' => ''
          ),
          array(
+          'id' => 'use-patreon-icon',
+          'type' => 'checkbox',
+          'title' => esc_html__('Use Patreon Icon', 'salient'),
+          'subtitle' => '',
+          'desc' => ''
+        ),
+         array(
           'id' => 'use-xing-icon',
           'type' => 'checkbox',
           'title' => esc_html__('Use Xing Icon', 'salient'),
@@ -4394,7 +4448,7 @@
        )
      ) );
 
-     $nectar_salient_portfolio_active_str = null;
+     $nectar_salient_portfolio_active_str = '';
 
      if( !class_exists('Salient_Portfolio') ) {
        $nectar_salient_portfolio_active_str = '<span class="salient-plugin-notice"><b>'. __('"Salient Portfolio" Plugin Not Active.', 'salient') . '</b> ' . '<a href="'. esc_url( admin_url( 'themes.php?page=tgmpa-install-plugins' ) ). '">' . esc_html__('Click here to go to the plugin install page.', 'salient') . '</a></span>';
@@ -4551,6 +4605,21 @@
              ),
              'default' => 'after_project'
            ),
+
+           array(
+            'id' => 'portfolio_single_nav_order',
+            'type' => 'select',
+            'title' => esc_html__('Project Navigation Ordering', 'salient'),
+            'subtitle' => esc_html__('Please select how you would like your next/previous post links to function.', 'salient'),
+            'desc' => '',
+            'hint' => array('content' => '<strong>'. esc_html__('Default:','salient') . '</strong> '. esc_html__('the next pproject link will be the next','salient') . ' <i>'. esc_html__('oldest','salient') .'</i> ' . esc_html__('project.','salient') . '<br/> <strong>' . esc_html__('Reverse Order:','salient') .'</strong> ' . esc_html__('the next project link will be the next', 'salient') . ' <i>'. esc_html__('newest', 'salient') . '</i> ' . esc_html__('project.','salient'), 'title' => ''),
+            'options' => array(
+              "default" => esc_html__("Default", 'salient'),
+              "reverse" => esc_html__("Reverse Order", 'salient')
+            ),
+            'default' => 'default'
+          ),
+
            
            array(
              'id' => 'portfolio_remove_single_header',
@@ -6325,6 +6394,13 @@
              'desc' => ''
            ),
            array(
+            'id' => 'patreon-url',
+            'type' => 'text',
+            'title' => esc_html__('Patreon URL', 'salient'),
+            'subtitle' => esc_html__('Please enter in your Patreon URL.', 'salient'),
+            'desc' => ''
+          ),
+           array(
             'id' => 'xing-url',
             'type' => 'text',
             'title' => esc_html__('Xing URL', 'salient'),
@@ -6776,7 +6852,7 @@
      } // Using contact template conditional.
 
 
-       $nectar_home_slider_active_str = null;
+       $nectar_home_slider_active_str = '';
 
        if( !class_exists('Salient_Home_Slider') ) {
          $nectar_home_slider_active_str = '<span class="salient-plugin-notice"><b>'. esc_html__('"Salient Home Slider" Plugin Not Active.', 'salient') . '</b> ' . '<a href="'. esc_url( admin_url( 'themes.php?page=tgmpa-install-plugins' ) ). '">' . esc_html__('Click here to go to the plugin install page.', 'salient') . '</a></span>';

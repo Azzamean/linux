@@ -779,7 +779,7 @@ foreach ( $images as $attach_id ) {
 								if($masonry_sizing_type == 'photography' && !empty($masonry_item_sizing)) {
 									$masonry_item_sizing = $masonry_item_sizing.'_photography';
 
-                }
+								}
 							}
 
 							//adaptive image sizing
@@ -798,30 +798,30 @@ foreach ( $images as $attach_id ) {
 
 									if(!empty($image_meta['sizes']) && !empty($image_meta['sizes'][$masonry_item_sizing])) {
 										$small_size = wp_get_attachment_image_src($attach_id, $masonry_item_sizing, array('title' => ''));
-                  }
+									}
 
 								} else if($masonry_item_sizing == 'wide_tall') {
 
 									if(!empty($image_meta['sizes']) && !empty($image_meta['sizes']['regular'])) {
 										$small_size = wp_get_attachment_image_src($attach_id,'regular', array('title' => ''));
-                  }
+									}
 
 								} else if($masonry_item_sizing == 'wide_tall_photography') {
 
 									if(!empty($image_meta['sizes']) && !empty($image_meta['sizes']['regular_photography'])) {
 										$small_size = wp_get_attachment_image_src($attach_id,'regular_photography', array('title' => ''));
-                  }
+									}
 
 								} else if($masonry_item_sizing == 'wide' || $masonry_item_sizing == 'wide_photography' || $masonry_item_sizing == 'regular' || $masonry_item_sizing == 'regular_photography') {
 
 									if(!empty($image_meta['sizes']) && !empty($image_meta['sizes'][$masonry_item_sizing.'_small'])) {
 										$small_size = wp_get_attachment_image_src($attach_id, $masonry_item_sizing.'_small', array('title' => ''));
-                  }
+									}
 								}
 
 
 								if($masonry_layout == 'false' || $layout == '3' || $layout == '4' || $layout == '2') {
-                  if($layout == '2') {
+									if($layout == '2') {
 										$image_sizes = 'sizes="(min-width: 1000px) 50vw, (min-width: 690px) 50vw, 100vw"';
 									} else if($layout == '3') {
 										$image_sizes = 'sizes="(min-width: 1000px) 33.3vw, (min-width: 690px) 50vw, 100vw"';
@@ -973,30 +973,30 @@ foreach ( $images as $attach_id ) {
 
 											$post_thumbnail = array();
 
-                      $masonry_image_sizes = array(
-                        'regular_width' => '500',
-                        'regular_height' => '500',
-                        'tall_width' => '500',
-                        'tall_height' => '1000',
-                        'wide_tall_width' => '1000',
-                        'wide_tall_height' => '1000',
-                        'wide_width' => '1000',
-                        'wide_height' => '500',
-                        'regular_photography_width' => '450',
-                        'regular_photography_height' => '600',
-                        'wide_photography_width' => '900',
-                        'wide_photography_height' => '600',
-                        'wide_tall_photography_width' => '900',
-                        'wide_tall_photography_height' => '1200',
-                      );
+											$masonry_image_sizes = array(
+												'regular_width' => '500',
+												'regular_height' => '500',
+												'tall_width' => '500',
+												'tall_height' => '1000',
+												'wide_tall_width' => '1000',
+												'wide_tall_height' => '1000',
+												'wide_width' => '1000',
+												'wide_height' => '500',
+												'regular_photography_width' => '450',
+												'regular_photography_height' => '600',
+												'wide_photography_width' => '900',
+												'wide_photography_height' => '600',
+												'wide_tall_photography_width' => '900',
+												'wide_tall_photography_height' => '1200',
+											);
 
-                      $simulated_lazy_fade_class = ( $i < 8 ) ? ' top-level-image' : '';
+											$simulated_lazy_fade_class = ( $i < 8 ) ? ' top-level-image' : '';
 
-                      if( 'lazy-load' === $image_grid_loading && $i >= 8 ) {
-                        $post_thumbnail['thumbnail'] = '<img class="size-'.esc_attr($masonry_item_sizing).' skip-lazy nectar-lazy keep-calculated-size image-gallery-portfolio-item" data-nectar-img-src="'.esc_url($image_src).'" alt="'.esc_attr($wp_img_alt_tag).'" height="'.esc_attr($masonry_image_sizes[$masonry_item_sizing.'_height']).'" width="'.esc_attr($masonry_image_sizes[$masonry_item_sizing.'_width']).'" ' .$image_srcset.' '.$image_sizes.' />';
-                      } else {
-                        $post_thumbnail['thumbnail'] = '<img class="size-'.esc_attr($masonry_item_sizing).$simulated_lazy_fade_class.'" src="'.esc_url($image_src).'" alt="'.esc_attr($wp_img_alt_tag).'" height="'.esc_attr($image_height).'" width="'.esc_attr($image_width).'" ' .$image_srcset.' '.$image_sizes.' />';
-                      }
+											if( 'lazy-load' === $image_grid_loading && $i >= 8 ) {
+												$post_thumbnail['thumbnail'] = '<img class="size-'.esc_attr($masonry_item_sizing).' skip-lazy nectar-lazy keep-calculated-size image-gallery-portfolio-item" data-nectar-img-src="'.esc_url($image_src).'" alt="'.esc_attr($wp_img_alt_tag).'" height="'.esc_attr($masonry_image_sizes[$masonry_item_sizing.'_height']).'" width="'.esc_attr($masonry_image_sizes[$masonry_item_sizing.'_width']).'" ' .$image_srcset.' '.$image_sizes.' />';
+											} else {
+												$post_thumbnail['thumbnail'] = '<img class="size-'.esc_attr($masonry_item_sizing).$simulated_lazy_fade_class.'" src="'.esc_url($image_src).'" alt="'.esc_attr($wp_img_alt_tag).'" height="'.esc_attr($image_height).'" width="'.esc_attr($image_width).'" ' .$image_srcset.' '.$image_sizes.' />';
+											}
 											
 											$post_thumbnail['p_img_large'][0] = '';
 
@@ -1004,11 +1004,11 @@ foreach ( $images as $attach_id ) {
 
 										else {
 
-                      $simulated_lazy_fade_class = ( $i < 8 ) ? ' top-level-image' : '';
+											 $simulated_lazy_fade_class = ( $i < 8 ) ? ' top-level-image' : '';
 
 											$post_thumb_classes = ( 'lazy-load' === $image_grid_loading && $i >= 8 ) ? 'skip-lazy nectar-lazy image-gallery-portfolio-item' : 'skip-lazy' .  $simulated_lazy_fade_class;
 
-                      if( $masonry_layout == 'true' && $bypass_image_cropping == 'true' && 'full' !== $img_size ) {
+											if( $masonry_layout == 'true' && $bypass_image_cropping == 'true' && 'full' !== $img_size ) {
 												$img_size = 'large';
 											}
 
@@ -1017,14 +1017,14 @@ foreach ( $images as $attach_id ) {
 											// lazy.
 											if( 'lazy-load' === $image_grid_loading && isset($post_thumbnail['thumbnail']) && $i >= 8 ) {
 
-				                $content = false;
-				                // Srcset.
-												if( strpos($post_thumbnail['thumbnail'],'srcset') !== false ) {
-					                preg_match( '/< *img[^>]*srcset *= *["\']?([^"\']*)/i', $post_thumbnail['thumbnail'], $srcset_match);
-					                if($srcset_match && isset($srcset_match[1]) ) {
-					                  $content = preg_replace( '#<img([^>]+?)srcset=[\'"](.*)[\'"]?([^>]*)>#', '<img${1} data-nectar-img-srcset="'.esc_attr($srcset_match[1]).'"${3}>', $post_thumbnail['thumbnail'] );
-					                }
+										$content = false;
+										 // Srcset.
+											if( strpos($post_thumbnail['thumbnail'],'srcset') !== false ) {
+												preg_match( '/< *img[^>]*srcset *= *["\']?([^"\']*)/i', $post_thumbnail['thumbnail'], $srcset_match);
+												if($srcset_match && isset($srcset_match[1]) ) {
+												$content = preg_replace( '#<img([^>]+?)srcset=[\'"](.*)[\'"]?([^>]*)>#', '<img${1} data-nectar-img-srcset="'.esc_attr($srcset_match[1]).'"${3}>', $post_thumbnail['thumbnail'] );
 												}
+											}
 
 				                // Src.
 				                preg_match( '/< *img[^>]*src *= *["\']?([^"\']*)/i', $post_thumbnail['thumbnail'], $src_match);

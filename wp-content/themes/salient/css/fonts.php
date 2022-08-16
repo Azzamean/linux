@@ -615,7 +615,7 @@ $header_search_font = (isset($nectar_options['header-search-type'])) ? $nectar_o
 
 	echo 'body h3,
 	.row .col h3,
-	.toggle h3 a,
+	.toggle > h3.toggle-title a,
 	.ascend #respond h3,
 	.ascend h3#comments,
 	.woocommerce ul.products li.product.text_on_hover h3,
@@ -1101,9 +1101,14 @@ if( $woocommerce && 'h3' === $product_tab_heading_typography ) {
 
 	if( $nectar_options['i_font_family']['attrs_in_use'] ) {
 
-		echo 'body i, body em, .masonry.meta_overlaid article.post .post-header .meta-author > span, .post-area.masonry.meta_overlaid article.post .post-meta .date,
-		.post-area.masonry.meta_overlaid article.post.quote .quote-inner .author, .post-area.masonry.meta_overlaid  article.post.link .post-content .destination,
-		body .testimonial_slider[data-style="minimal"] blockquote span.title { ';
+		echo 'body i, 
+		body em, 
+		.masonry.meta_overlaid article.post .post-header .meta-author > span, 
+		.post-area.masonry.meta_overlaid article.post .post-meta .date,
+		.post-area.masonry.meta_overlaid article.post.quote .quote-inner .author, 
+		.post-area.masonry.meta_overlaid  article.post.link .post-content .destination,
+		body .testimonial_slider[data-style="minimal"] blockquote span.title,
+		#ajax-content-wrap .nectar-inherit-italic { ';
 
 			// Output font properties.
 			nectar_output_font_props('i_font', $line_height, $nectar_options);

@@ -9,7 +9,6 @@ global $vc_grid_item_editor;
  * @since 4.4
  */
 function vc_grid_item_editor_create_post_type() {
-	
 	/* nectar addition */ 
 	$enable_raw_wpbakery_post_grid = false;
 	if( has_filter('salient_enable_core_wpbakery_post_grid') ) {
@@ -44,7 +43,7 @@ function vc_vendor_qtranslate_enqueue_js_backend_grid_editor() {
  */
 function vc_grid_item_editor_init() {
 	global $vc_grid_item_editor;
-	
+
 	/* nectar addition */ 
 	$enable_raw_wpbakery_post_grid = false;
 	if( has_filter('salient_enable_core_wpbakery_post_grid') ) {
@@ -87,6 +86,10 @@ function vc_grid_item_render_preview() {
 		'addCssBackgroundImage',
 	) );
 	add_filter( 'vc_gitem_template_attribute_post_image_url_value', array(
+		$vcGridPreview,
+		'addImageUrl',
+	) );
+	add_filter( 'vc_gitem_template_attribute_post_full_image_url_value', array(
 		$vcGridPreview,
 		'addImageUrl',
 	) );
@@ -148,7 +151,6 @@ function vc_grid_item_get_post_type() {
  * @since 4.5
  */
 function vc_grid_item_editor_shortcodes() {
-	
 	/* nectar addition */ 
 	$enable_raw_wpbakery_post_grid = false;
 	if( has_filter('salient_enable_core_wpbakery_post_grid') ) {
@@ -176,7 +178,6 @@ function vc_grid_item_editor_shortcodes() {
 		}
 		
 	}
-	
 }
 
 /**
@@ -329,6 +330,7 @@ function vc_gitem_menu_highlight() {
 		}
 	}
 	/* nectar addition end */ 
+
 }
 
 add_action( 'admin_head', 'vc_gitem_menu_highlight' );

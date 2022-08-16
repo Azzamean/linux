@@ -8,18 +8,19 @@ wp_enqueue_style( 'nectar-element-tabbed-section' );
 
 $output = $title = $interval = $el_class = '';
 extract(shortcode_atts(array(
-    'title' => '',
-    'interval' => 0,
-    'el_class' => '',
-    'style' => 'default',
-    'alignment' => 'left',
-    'spacing' => '',
-    'tab_color' => 'accent-color',
-    'cta_button_text' => '',
-    'cta_button_link' => '',
-    'cta_button_style' => 'accent-color',
-    'full_width_line' => '',
+	'title' => '',
+	'interval' => 0,
+	'el_class' => '',
+	'style' => 'default',
+	'alignment' => 'left',
+	'spacing' => '',
+	'tab_color' => 'accent-color',
+	'cta_button_text' => '',
+	'cta_button_link' => '',
+	'cta_button_style' => 'accent-color',
+ 	'full_width_line' => '',
 	'icon_size' => '24',
+	'tab_change_animation' => '',
 	'vs_sticky_aspect' => 'default',
 	'vs_navigation_width' => 'regular',
 	'vs_navigation_spacing' => '15px',
@@ -30,7 +31,7 @@ extract(shortcode_atts(array(
 	'vs_content_animation' => '',
 	'vs_link_animation' => '',
 	'vs_tab_tag' => 'p',
-  'vs_text_content' => '',
+	'vs_text_content' => '',
 	'vs_enable_cta' => '',
 	'vs_cta_link' => '',
 	'vs_cta_text' => '',
@@ -41,8 +42,8 @@ extract(shortcode_atts(array(
 	'vs_cta_padding_bottom' => '',
 	'vs_cta_padding_left' => '',
 	'vs_cta_padding_right' => '',
-  'vs_cta_heading_tag' => 'h6',
-  'vs_navigation_func' => '',
+	'vs_cta_heading_tag' => 'h6',
+	'vs_navigation_func' => '',
 
 ), $atts));
 
@@ -51,7 +52,7 @@ $nectar_using_VC_front_end_editor = (isset($_GET['vc_editable'])) ? sanitize_tex
 $nectar_using_VC_front_end_editor = ($nectar_using_VC_front_end_editor == 'true') ? true : false;
 $true_style = '';
 $front_end_editor_classes = '';
-$front_end_editor_heading_class = '';
+$tabbed_li_classes = array('tab-item');
 
 // Can't use vs on front-end editor.
 if( $nectar_using_VC_front_end_editor && 'vertical_scrolling' === $style ) {
@@ -63,7 +64,7 @@ if( $nectar_using_VC_front_end_editor && 'vertical_scrolling' === $style ) {
 		$true_style .= ' data-stored-style-aspect="content"';
 		$true_style .= ' data-tab-align="'.esc_attr($vs_navigation_alignment).'" data-navigation-width="'.esc_attr($vs_navigation_width_2).'"';
 		$front_end_editor_classes = '';
-		$front_end_editor_heading_class = ' class="nectar-inherit-'.$vs_tab_tag.'"';
+		$tabbed_li_classes[] = 'nectar-inherit-'.$vs_tab_tag.'';
 		if( function_exists('nectar_el_dynamic_classnames') ) {
 			$front_end_editor_classes = nectar_el_dynamic_classnames('tabbed_section', $atts);
 		}
@@ -74,7 +75,7 @@ if( $nectar_using_VC_front_end_editor && 'vertical_scrolling' === $style ) {
 
 		if( 'active_link_only' === $vs_navigation_func ) {
 
-      $front_end_editor_heading_class = ' class="nectar-inherit-'.$vs_tab_tag.'"';
+			$tabbed_li_classes[] = 'nectar-inherit-'.$vs_tab_tag.'';
       
 			$true_style .= ' data-stored-style-aspect="active_link_only" data-navigation-width="'.esc_attr($vs_navigation_width).'"';
 		}
@@ -100,7 +101,7 @@ if( $style === 'default' || $style === 'vertical' ) {
 if( 'vertical_scrolling' !== $style ) {
 
 	// Extract tab titles
-	preg_match_all( '/tab[^]]+title="([^\"]+)"(\sid\=\"([^\"]+)\"){0,1}/i', $content, $matches, PREG_OFFSET_CAPTURE );
+	preg_match_all( '/tab [^]]+title="([^\"]+)"(\sid\=\"([^\"]+)\"){0,1}/i', $content, $matches, PREG_OFFSET_CAPTURE );
 
 	$tab_titles = array();
 
@@ -109,14 +110,37 @@ if( 'vertical_scrolling' !== $style ) {
 	$tabs_nav = '';
 	$tabs_nav .= '<ul class="wpb_tabs_nav ui-tabs-nav clearfix">';
 	$tab_index = 0;
+
+	// Toggle button requires no more than two elements.
+	if( $style === 'toggle_button' && count($tab_titles) > 2 ) {
+		$style = 'default';
+	}
+	
 	foreach ( $tab_titles as $tab ) {
-	    preg_match('/title="([^\"]+)"(\sid\=\"([^\"]+)\"){0,1}/i', $tab[0], $tab_matches, PREG_OFFSET_CAPTURE );
+	    
+		preg_match('/title="([^\"]+)"(\sid\=\"([^\"]+)\"){0,1}/i', $tab[0], $tab_matches, PREG_OFFSET_CAPTURE );
+
 	    if(isset($tab_matches[1][0])) {
-				  $active_class = ( $tab_index === 0 ) ? 'class="active-tab"' : '';
-	        $tabs_nav .= '<li'.$front_end_editor_heading_class.'><a href="#tab-'. (isset($tab_matches[3][0]) ? $tab_matches[3][0] : sanitize_title( $tab_matches[1][0] ) ) .'" '.$active_class.'><span>' . $tab_matches[1][0] . '</span></a></li>';
+			
+			$active_class = '';
+
+			if( $tab_index === 0 ) {
+				$active_class = 'class="active-tab"';
+				$tabbed_li_classes[] = 'active-tab';
+			} else if( $tab_index === 1 ) {
+				array_pop($tabbed_li_classes);
+			}
+
+	        $tabs_nav .= '<li class="'.implode(' ',$tabbed_li_classes).'"><a href="#tab-'. (isset($tab_matches[3][0]) ? $tab_matches[3][0] : sanitize_title( $tab_matches[1][0] ) ) .'" '.$active_class.'><span>' . $tab_matches[1][0] . '</span></a></li>';
 
 	    }
-			$tab_index++;
+
+		$tab_index++;
+
+		if( $style === 'toggle_button' && $tab_index === 1) {
+			$tabs_nav .= '<li class="toggle-button"><span class="toggle-button-inner nectar-color-'.strtolower($tab_color).' nectar-bg-'.strtolower($tab_color).'"><span class="circle"></span></span></li>';
+		}
+
 	}
 
 	//cta button
@@ -129,7 +153,7 @@ if( 'vertical_scrolling' !== $style ) {
 	$css_class = apply_filters(VC_SHORTCODE_CUSTOM_CSS_FILTER_TAG, trim('wpb_content_element '.$el_class), $this->settings['base'], $atts);
 
 	$output .= "\n\t".'<div class="'.$css_class.$front_end_editor_classes.'"'.$true_style.' data-interval="'.$interval.'">';
-	$output .= "\n\t\t".'<div class="wpb_wrapper tabbed clearfix" data-style="'.esc_attr($style).'" data-spacing="'.esc_attr($spacing).'" data-icon-size="'.esc_attr($icon_size).'" data-full-width-line="'.esc_attr($full_width_line).'" data-color-scheme="'.esc_attr(strtolower($tab_color)).'" data-alignment="'.esc_attr($alignment).'">';
+	$output .= "\n\t\t".'<div class="wpb_wrapper tabbed clearfix" data-style="'.esc_attr($style).'" data-animation="'.esc_attr($tab_change_animation).'" data-spacing="'.esc_attr($spacing).'" data-icon-size="'.esc_attr($icon_size).'" data-full-width-line="'.esc_attr($full_width_line).'" data-color-scheme="'.esc_attr(strtolower($tab_color)).'" data-alignment="'.esc_attr($alignment).'">';
 	$output .= wpb_widget_title(array('title' => $title, 'extraclass' => $element.'_heading'));
 	$output .= "\n\t\t\t".$tabs_nav;
 	$output .= "\n\t\t\t".wpb_js_remove_wpautop($content);

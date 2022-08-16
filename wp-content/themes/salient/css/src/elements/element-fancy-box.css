@@ -150,7 +150,7 @@ body .nectar-fancy-box[data-style="parallax_hover"] .inner > .arrow {
 }
  .nectar-fancy-box .link-text .arrow:before,
  .nectar-fancy-box[data-style="parallax_hover"] .inner > .arrow:before {
-     content:"\f105";
+     content:"\e607";
      color:#fff;
      top:-2px;
      right:-1px;

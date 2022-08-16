@@ -515,6 +515,11 @@
       group.find('> div').hide();
       group.find('> div.'+filter).fadeIn();
 
+      // Trigger resize.
+      if( group.find('.nectar_range_slider').length > 0 ) {
+        $(window).trigger('resize');
+      }
+
     });
 
     $('.nectar-device-group-header .device-selection i').each(function(){
@@ -670,7 +675,7 @@
   }
 
 
-  function columnBorderToggle() {
+  function columnDeviceGroupHeaderToggles() {
     $('select[name="border_type"]').on('change', function() {
       if( 'simple' === $(this).val() ) {
         $('.column-border-device-group-header').hide();
@@ -685,6 +690,29 @@
         $('.mask-alignment-device-group-header').hide();
       } else {
         $('.mask-alignment-device-group-header').show();
+      }
+    }).trigger('change');
+
+    // column padding device group header toggle
+    $('input[name="column_padding_type"]').on('change', function() {
+      if( $(this).val() === 'advanced' ) {
+        $('.column-padding-adv-device-group-header').show();
+        $('.column-padding-device-group-header').hide();
+      } else {
+        $('.column-padding-adv-device-group-header').hide();
+        $('.column-padding-device-group-header').show();
+      }
+    }).trigger('change');
+
+  }
+
+
+  function nectarClipPathDependency() {
+    $('select[name="bg_image_animation"]').on('change', function() {
+      if( 'clip-path' !== $(this).val() ) {
+        $('.clip-path-device-group-header, .clip-path-end-device-group-header').hide();
+      } else {
+        $('.clip-path-device-group-header, .clip-path-end-device-group-header').show();
       }
     }).trigger('change');
   }
@@ -765,7 +793,7 @@
   }
 
   NectarGradientColorPickerAngle.prototype.events = function() {
-
+    
     var that = this;
 
     this.$el.find('.nectar-angle-selection-input').on('mousedown', function() {
@@ -809,9 +837,11 @@
 
     if( !this.value ) {
       this.value = '0';
+      this.$input.val('');
+    } else {
+      this.$input.val(this.value);
     }
-    
-    this.$input.val(this.value);
+  
     
     this.$el.find('.inner').css('transform','rotate('+this.value+'deg)');
     if( graPickers[0] && $gradientType == 'advanced' || graPickers[0] && $('.generate-color-overlay-preview').length > 0 ) {
@@ -941,14 +971,68 @@
         },300);
        
       }
+      
+    }
 
       // Angles
       $('.nectar-angle-selection-wrap').each(function(i){
         new NectarGradientColorPickerAngle($(this));
       });
-      
-    }
   }
+
+
+  function nectarBoxShadowGeneratorInit() {
+    $('div.nectar-box-shadow-generator').each(function(){
+      new NectarBoxShadowGenerator($(this)); 
+    });
+  }
+
+  function NectarBoxShadowGenerator(el) {
+    this.el = el;
+    this.input = el.find('.wpb_vc_param_value');
+    this.state = {
+      'horizontal': 0,
+      'vertical': 0,
+      'blur': 0,
+      'spread': 0,
+      'opacity': 0,
+    };
+
+    this.events();
+  }
+
+  NectarBoxShadowGenerator.prototype.events = function() {
+    this.el.find('input.nectar-range-slider').on('change', this.calculateValue.bind(this));
+  };
+
+  NectarBoxShadowGenerator.prototype.calculateValue = function() {
+
+    var that = this;
+
+    this.el.find('.nectar-range-slider').each(function(){
+
+      var name = $(this).attr('name');
+      that.state[name] = $(this).val();      
+    });
+
+    this.input.val(this.parseToShortcodeAttr(this.state));
+  };
+
+  NectarBoxShadowGenerator.prototype.parseToShortcodeAttr = function() {
+
+    var that = this;
+    var string = '';
+
+    Object.keys(this.state).forEach(function(key) {
+      string += key + ':' + that.state[key] + ',';
+    });
+
+    string = string.slice(0, -1);
+    return string;
+
+  }
+
+  
 
   function nectarRadioTabEvents() {
 
@@ -971,11 +1055,14 @@
 
   function nectarRangeSliders() {
 
+    /* Single Range */
     var textContent = ('textContent' in document) ? 'textContent' : 'innerText';
     
     function valueOutput(element) {
       var value = element.value;
-      var output = $(element).parent().siblings('.output')[0];
+      var output = $(element).parent().siblings('.output');
+      output = output.find('.number')[0];
+
       output[textContent] = value;
     }
     
@@ -986,8 +1073,11 @@
       },
       onSlideEnd: function(position, value) {
         this.$element.val(value);
+        var min = this.$element.attr('min');
+        var max = this.$element.attr('max');
+
         // fix overflow on slider 
-        if( value > 170) {
+        if( value > (max * 0.6)) {
           $(window).trigger('resize');
         }
         
@@ -998,6 +1088,37 @@
       valueOutput(e.target);
     });
 
+
+
+    /* Multi Range */
+    $('.nectar-multi-range-slider').each(function(){
+
+      var slider = $(this)[0];
+      var sliderInput = $(this).find('.wpb_vc_param_value');
+
+      var startingValue = sliderInput.val().indexOf(',') > -1 ? sliderInput.val().split(',') : [0,100];
+      var min = parseInt(sliderInput.attr('data-min'));
+      var max = parseInt(sliderInput.attr('data-max'));
+
+      noUiSlider.create(slider, {
+        start: startingValue,
+        connect: true,
+        tooltips: [wNumb({decimals: 0}), wNumb({decimals: 0})],
+        step: 1,
+        range: {
+            'min': min,
+            'max': max
+        }
+      });
+
+      // Set value to input for saving.
+      slider.noUiSlider.on('update', function (values, handle) {
+          sliderInput.val(slider.noUiSlider.get().join(','));
+      });
+
+    });
+
+  
   }
 
   function nectarFancyCheckboxEvents() {
@@ -1051,6 +1172,68 @@
     }
 
   }
+
+  function NectarLottiePreview(el) {
+    this.$el = el;
+    this.$input = this.$el.find('input');
+    this.rendered = false;
+    this.events();
+  }
+
+  NectarLottiePreview.prototype.events = function() {
+    var that = this;
+    this.$input.on('change', function(){
+      that.source = $(this).val();
+     
+      if( that.source.length === 0 ) {
+        that.$el.find('.nectar-lottie-preview-render').hide();
+      } else {
+
+        if( !that.source.endsWith('.json') ) {
+          that.source = '';
+        } else {
+          that.$el.find('.nectar-lottie-preview-render').show();
+        }
+       
+      }
+
+      that.init();
+
+    }).trigger('change');   
+
+     // error.
+     this.player.addEventListener("error", (e) => {
+      that.$el.find('.error').show();
+    });
+    
+    this.player.addEventListener("play", (e) => {
+      that.$el.find('.error').hide();
+    });
+
+  };
+
+  NectarLottiePreview.prototype.init = function() {
+
+    var that = this;
+
+    this.player = this.$el.find("lottie-player")[0];
+
+    // Changing sources
+    if( this.rendered && this.source.length > 0) {
+      this.player.load(this.source);
+    }
+
+    // Initial load.
+    this.player.addEventListener("rendered", (e) => {
+      if( this.source.length > 0 ) {
+        that.player.load(this.source);
+      }
+
+      that.rendered = true;
+    });
+
+  };
+
 
   function videoAttachFields() {
 
@@ -1303,6 +1486,9 @@
         createDeviceGroup('column-direction-device-group');
         createDeviceGroup('shape-divider-device-group');
         createDeviceGroup('row-bg-img-device-group');
+        createDeviceGroup('clip-path-device-group');
+        createDeviceGroup('clip-path-end-device-group');
+        nectarClipPathDependency();
 
         colorOverlayPreview('row');
 
@@ -1332,8 +1518,11 @@
         createDeviceGroup('column-border-device-group');
         createDeviceGroup('column-bg-img-device-group');
         createDeviceGroup('mask-alignment-device-group');
-
-        columnBorderToggle();
+        createDeviceGroup('column-padding-adv-device-group');
+        createDeviceGroup('column-el-direction-device-group');
+        createDeviceGroup('column-text-align-device-group');
+        
+        columnDeviceGroupHeaderToggles();
 
         if( 'vc_column' === $shortcode ) {
           createDeviceGroup('column-max-width-device-group');
@@ -1341,6 +1530,8 @@
 
         colorOverlayPreview('column');
       }
+
+     
       
       if( 'vc_column' !== $shortcode && 
           'vc_column_inner' !== $shortcode && 
@@ -1380,6 +1571,9 @@
         createDeviceGroup('alignment-device-group');
         createDeviceGroup('display-device-group');
         createDeviceGroup('font-size-device-group');
+        createDeviceGroup('position-display-device-group');
+        createDeviceGroup('position-device-group');
+        createDeviceGroup('transform-device-group');
       }
 
       if( 'divider' === $shortcode ) {
@@ -1392,11 +1586,16 @@
       }
 
       if( 'nectar_text_inline_images' === $shortcode ) {
+        createDeviceGroup('margin-device-group');
         createDeviceGroup('font-size-device-group');
       }
 
       if( 'fancy_box' === $shortcode ) {
         createDeviceGroup('fancybox-min-height-device-group');
+      }
+
+      if('fancy-ul' === $shortcode) {
+        createDeviceGroup('font-size-device-group');
       }
 
       if( 'item' === $shortcode ) {
@@ -1405,6 +1604,50 @@
 
       if( 'nectar_video_player_self_hosted' === $shortcode ) {
         createDeviceGroup('video-aspect-ratio-device-group');
+      }
+
+      if( 'nectar_lottie' === $shortcode ) {
+        createDeviceGroup('lottie-dimensions-device-group');
+        createDeviceGroup('position-device-group');
+        createDeviceGroup('position-display-device-group');
+        createDeviceGroup('transform-device-group');
+      }
+
+      if( 'nectar_circle_images' === $shortcode ) {
+        createDeviceGroup('circle-images-alignment-device-group');
+      }
+      
+      if( 'nectar_badge' === $shortcode ) {
+        createDeviceGroup('position-device-group');
+        createDeviceGroup('position-display-device-group');
+        createDeviceGroup('transform-device-group');
+      }
+
+      if( 'nectar_highlighted_text' === $shortcode ) {
+        createDeviceGroup('font-size-device-group');
+      }
+
+      if( 'nectar_price_typography' === $shortcode ) {
+        createDeviceGroup('font-size-device-group');
+      }
+
+      if( 'nectar_responsive_text' === $shortcode ) {
+        createDeviceGroup('font-size-device-group');
+      }
+
+      if ('nectar_animated_shape' === $shortcode) {
+        createDeviceGroup('dimensions-device-group');
+        createDeviceGroup('position-device-group');
+        createDeviceGroup('transform-device-group');
+        createDeviceGroup('position-display-device-group');
+      }
+
+      if ('nectar_lottie' === $shortcode) {
+
+        $('.vc_edit_form_elements .nectar-lottie-preview').each(function(){
+          new NectarLottiePreview($(this));
+        });
+        
       }
 
 
@@ -1421,7 +1664,15 @@
       'nectar_text_inline_images' === $shortcode ||
       'testimonial_slider' === $shortcode ||
       'nectar_video_player_self_hosted' === $shortcode ||
-      'nectar_icon' === $shortcode ) {
+      'nectar_icon' === $shortcode ||
+      'nectar_lottie' === $shortcode ||
+      'nectar_animated_shape' === $shortcode ||
+      'nectar_price_typography' === $shortcode ||
+      'nectar_responsive_text' === $shortcode ||
+      'nectar_badge' === $shortcode ||
+      'nectar_highlighted_text' === $shortcode ||
+      'fancy-ul' === $shortcode ||
+      'nectar_circle_images' === $shortcode ) {
         deviceGroupEvents();
       }
 
@@ -1436,6 +1687,9 @@
 
       // Range sliders.
       nectarRangeSliders();
+
+      // Box Shadow Generators.
+      nectarBoxShadowGeneratorInit();
 
       // Video field.
       videoAttachFields();

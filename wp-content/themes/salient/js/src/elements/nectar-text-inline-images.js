@@ -55,26 +55,54 @@
         $(window).on('nectar-waypoints-reinit', this.waypoint.bind(this));
 
         //$(document).ready(function(){
-          that.waypoint();
+            if( window.Waypoint ) {
+                that.waypoint();
+            }
+            else {
+                $(window).on('salient-delayed-js-loaded', that.waypoint.bind(that));
+            }
         //});
     };
 
     NectarTextInlineImages.prototype.waypoint = function () {
 
         var waypoints = [];
+        var that = this;
 
-        this.$markers.each(function(i) {
-            var $that = $(this);
-            waypoints[i] = new Waypoint({
-                element: $(this)[0],
+        if(this.$el.hasClass('nectar-text-inline-images--stagger-animation')) {
+            waypoints = new Waypoint({
+                element: that.$el[0],
                 handler: function () {
     
-                    $that.addClass('animated-in');
-                    waypoints[i].destroy();
+                    that.$markers.each(function(i){
+
+                        var $that = $(this);
+                        setTimeout(function() {
+                            $that.addClass('animated-in');
+                        }, (i * 150));
+                    });
+
+                    waypoints.destroy();
                 },
                 offset: 'bottom-in-view'
             });
-        });
+        } 
+        
+        else {
+
+            this.$markers.each(function(i) {
+                var $that = $(this);
+                waypoints[i] = new Waypoint({
+                    element: $(this)[0],
+                    handler: function () {
+        
+                        $that.addClass('animated-in');
+                        waypoints[i].destroy();
+                    },
+                    offset: 'bottom-in-view'
+                });
+            });
+        }
 
     };
 
@@ -83,10 +111,41 @@
         
         var textWithImgEls = [];
 
+        function lazyInitInlineImages($el, index) {
+    
+            var observer = new IntersectionObserver(function(entries) {
+        
+                entries.forEach(function(entry){
+                var isIntersecting = entry.isIntersecting;
+        
+                if (isIntersecting) {
+                    textWithImgEls[index] = new NectarTextInlineImages($el);
+                    observer.unobserve(entry.target);
+                } 
+                });
+        
+            }, {
+                rootMargin: '300px 0px 300px 0px',
+                threshold: 0
+            });
+            
+            observer.observe($el[0]);
+        }
+
         function initInlineImages() {
             textWithImgEls = [];
+
+            var usingFrontEndEditor = (typeof window.vc_iframe === 'undefined') ? false : true;
+
             $('.nectar-text-inline-images').each(function(i){
-                textWithImgEls[i] = new NectarTextInlineImages($(this));
+
+                if( usingFrontEndEditor == false ) {
+                    lazyInitInlineImages($(this), i);
+                }
+                else {
+                    textWithImgEls[i] = new NectarTextInlineImages($(this));
+                }
+                
             });
         }
         initInlineImages();

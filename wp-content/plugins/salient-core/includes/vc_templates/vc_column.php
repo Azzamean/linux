@@ -24,6 +24,7 @@ extract(shortcode_atts(array(
 		'column_padding_tablet' => 'inherit',
 		'column_padding_phone' => 'inherit',
     'column_padding_position'=> 'all',
+    'column_padding_type' => 'default',
 
     'top_margin' => '',
 		'top_margin_tablet' => '',
@@ -34,6 +35,7 @@ extract(shortcode_atts(array(
 
     'delay' => '0',
     'animation_offset' => '',
+    'animation_easing' => 'default',
     'background_color' => '',
     'background_color_hover' => '',
     'background_hover_color_opacity' => '1',
@@ -76,17 +78,22 @@ extract(shortcode_atts(array(
 		'border_type' => 'simple',
     'column_border_width' => 'none',
     'column_border_color' => '',
-    'column_border_style' => '',
+    'column_border_style' => 'solid',
     'enable_border_animation' => '',
     'border_animation_delay' => '',
     'column_shadow' => 'none',
+    'custom_box_shadow' => '',
     'column_border_radius' => 'none',
     'tablet_width_inherit' => 'default',
     'video_bg'=> '',
 	  'video_webm'=> '',
 	  'video_mp4'=> '',
 	  'video_ogv'=> '',
-	  'video_image'=> ''
+	  'video_image'=> '',
+
+    'mask_enable' => '',
+    'mask_shape' => '',
+    'mask_custom_image' => '',
 
 ), $atts));
 
@@ -96,7 +103,7 @@ $el_class         = $this->getExtraClass($el_class);
 $width            = wpb_translateColumnWidthToSpan($width);
 $width            = vc_column_offset_class_merge($offset, $width);
 $box_border       = null;
-$parsed_animation = null;
+$parsed_animation = '';
 
 $style = 'style="';
 $inner_columns_style = '';
@@ -127,13 +134,6 @@ if( $sticky_content === 'true' ) {
   }
 }
 
-// Responsive text alignment.
-if( !empty($tablet_text_alignment) && $tablet_text_alignment !== 'default' ) {
-  $el_class .= ' force-tablet-text-align-'.$tablet_text_alignment;
-}
-if( !empty($phone_text_alignment) && $phone_text_alignment !== 'default' ) {
-  $el_class .= ' force-phone-text-align-'.$phone_text_alignment;
-}
 
 
 $background_color_string = null;
@@ -143,6 +143,22 @@ if(!empty($background_color)) {
 	$background_color_string .= $background_color;
   $has_bg_color = 'true';
 }
+
+// column overlay attrs.
+$column_bg_overlay_wrap_attrs_escaped = '';
+if( 'true' === $mask_enable && 'custom' === $mask_shape ) {
+
+  $mask_image_src = $mask_custom_image;
+
+  if (preg_match('/^\d+$/', $mask_custom_image)) {
+    apply_filters('wpml_object_id', $mask_image_src, 'attachment', TRUE);
+    $mask_image_src = wp_get_attachment_image_src($mask_custom_image, 'full');
+    $mask_image_src = (isset($mask_image_src[0])) ? $mask_image_src[0] : '';
+  }
+
+  $column_bg_overlay_wrap_attrs_escaped .= ' style="-webkit-mask-image: url('.esc_attr($mask_image_src).');"';
+}
+
 
 // Img bg.
 $image_bg_markup = '';
@@ -220,7 +236,7 @@ foreach( $bg_img_arr as $viewport => $image ) {
 				$parallax_class = ' parallax-layer';
 			}
 
-	    $image_bg_markup .= '<div class="column-image-bg-wrap column-bg-layer viewport-'.esc_attr($viewport) . esc_attr($bg_img_arr[$viewport]['classes']).'" '.$parallax_bg_attr.'data-bg-pos="'.esc_attr($background_image_position).'" data-bg-animation="'.esc_attr($bg_image_animation).'" data-bg-overlay="'.esc_attr($using_bg_overlay).'"><div class="inner-wrap">';
+	    $image_bg_markup .= '<div class="column-image-bg-wrap column-bg-layer viewport-'.esc_attr($viewport) . esc_attr($bg_img_arr[$viewport]['classes']).'" '.$parallax_bg_attr.'data-bg-pos="'.esc_attr($background_image_position).'"'.$column_bg_overlay_wrap_attrs_escaped.' data-bg-animation="'.esc_attr($bg_image_animation).'" data-bg-overlay="'.esc_attr($using_bg_overlay).'"><div class="inner-wrap">';
 	    $image_bg_markup .= '<div class="column-image-bg'.esc_attr($parallax_class).'" style="'.$image_style.'"'.$lazy_image_attr.'></div>';
 	    $image_bg_markup .= '</div></div>';
 
@@ -274,6 +290,17 @@ if( isset($zindex) && !empty($zindex) ) {
 	$style .= 'z-index: '. intval($zindex) .'; ';
 }
 
+// Custom shadows.
+if( 'custom' === $column_shadow ) {
+  if( 'true' === $mask_enable) {
+    $atts['box_shadow_method'] = 'filter'; 
+  }
+  $custom_shadow_markup = nectar_generate_shadow_css($atts);
+  if( !empty($custom_shadow_markup) ) {
+    $inner_columns_style.= $custom_shadow_markup;
+  }
+}
+
 // Transforms.
 if( !empty($translate_y) || !empty($translate_x) ) {
 
@@ -307,13 +334,22 @@ if( !empty($translate_y) || !empty($translate_x) ) {
 }
 
 
-
-(empty($background_color) && empty($background_image) && empty($font_color) && empty($zindex) && empty($top_margin) && empty($bottom_margin) ) ? $style = null : $style .= '"';
+if( empty($background_color) && 
+  empty($background_image) && 
+  empty($font_color) && 
+  empty($zindex) && 
+  empty($top_margin) && 
+  empty($bottom_margin) ) {
+    $style = '';
+} else {
+  $style .= '"';
+}
 
 $using_bg = (!empty($background_image) || !empty($background_color)) ? 'data-using-bg="true"': null;
 
 
 $active_animation_offset = false;
+$active_animation_easing = false;
 
 if( !empty($animation) && $animation !== 'none' && $enable_animation === 'true' ) {
 
@@ -322,10 +358,12 @@ if( !empty($animation) && $animation !== 'none' && $enable_animation === 'true' 
      $parsed_animation = str_replace(" ","-",$animation);
      $delay = intval($delay);
      $active_animation_offset = true;
+     $active_animation_easing = true;
 }
 
-
-$el_class .= ' '. $column_padding;
+if( $column_padding_type !== 'advanced' ) {
+  $el_class .= ' '. $column_padding;
+}
 
 $border_html = null;
 
@@ -336,9 +374,9 @@ if( 'advanced' === $border_type) {
 if( !empty($column_border_width) && $column_border_width !== 'none' ) {
 
     // regular border when using border radius
-    if(strpos($column_border_radius, 'px') !== false || $column_border_radius == 'custom') {
+    if((strpos($column_border_radius, 'px') !== false || $column_border_radius == 'custom') && 'true' !== $enable_border_animation) {
 
-      $inner_columns_style .= 'border: '. esc_attr($column_border_width).' solid '.esc_attr($column_border_color).';';
+      $inner_columns_style .= 'border: '. esc_attr($column_border_width).' '.esc_attr($column_border_style).' '.esc_attr($column_border_color).';';
 
     } else {
 
@@ -505,7 +543,7 @@ if( $video_bg ) {
     <div class="mobile-video-image column-video column-bg-layer" style="background-image: url('. esc_url( $video_image_src ) .')"></div>';
   }
   $video_markup .= '
-  <div class="nectar-video-wrap column-video column-bg-layer">';
+  <div class="nectar-video-wrap column-video column-bg-layer"'.$column_bg_overlay_wrap_attrs_escaped.'>';
       
     if( 'lazy-load' === $background_video_loading ) {
 
@@ -594,6 +632,10 @@ if( $active_animation_offset && !empty($animation_offset) ) {
   $column_data_attrs .= 'data-animation-offset="'.esc_attr($animation_offset).'" ';
 }
 
+if( $active_animation_easing && !empty($animation_easing) && 'default' !== $animation_easing ) {
+  $column_data_attrs .= 'data-animation-easing="'.esc_attr($animation_easing).'" ';
+}
+
 if( $animation_type == 'parallax' ) {
   $column_data_attrs .= 'data-scroll-animation="true" data-scroll-animation-movement="'.esc_attr($animation_movement_type).'" data-scroll-animation-mobile="'.esc_attr($persist_movement_on_mobile).'" data-scroll-animation-intensity="'.esc_attr(strtolower($column_parallax_intensity)).'" ';
 }
@@ -604,7 +646,7 @@ $col_bg_combined_output = $column_link_html . $border_html . $image_bg_markup . 
 
 
 if( !empty($column_overlay_layer_markup) || !empty($column_overlay_style) || true === $using_shadow || !empty($background_color_hover) ) {
-	$col_bg_combined_output .= '<div class="column-bg-overlay-wrap column-bg-layer" data-bg-animation="'.esc_attr($bg_image_animation).'"><div class="column-bg-overlay"'.$column_overlay_style.'></div>'.$column_overlay_layer_markup.'</div>';
+	$col_bg_combined_output .= '<div class="column-bg-overlay-wrap column-bg-layer" data-bg-animation="'.esc_attr($bg_image_animation).'"'.$column_bg_overlay_wrap_attrs_escaped.'><div class="column-bg-overlay"'.$column_overlay_style.'></div>'.$column_overlay_layer_markup.'</div>';
 }
 
 $nectar_use_modern_grid = ( function_exists('nectar_use_flexbox_grid') && true === nectar_use_flexbox_grid() ) ? true : false;

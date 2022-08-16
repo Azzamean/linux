@@ -31,11 +31,15 @@ $hidden_featured_media     = get_post_meta( $post->ID, '_nectar_hide_featured', 
 $hidden_project_title      = get_post_meta( $post->ID, '_nectar_hide_title', true );
 $portfolio_remove_comments = ( ! empty( $options['portfolio_remove_comments'] ) ) ? $options['portfolio_remove_comments'] : '0';
 $theme_skin                = ( ! empty( $options['theme-skin'] ) && $options['theme-skin'] == 'ascend' ) ? 'ascend' : 'default';
+$using_vcv                 = false; // core vc
 
 if( class_exists('Salient_Portfolio_Single_Layout') && Salient_Portfolio_Single_Layout::$is_full_width ) {
 	$fwp = 'enabled';
 	$hidden_featured_media = 'on';
 } 
+if ( class_exists('Salient_Portfolio_Single_Layout') && Salient_Portfolio_Single_Layout::$using_vcv == true ) {
+	$using_vcv = true;
+}
 
 ?>
 
@@ -90,7 +94,8 @@ if( class_exists('Salient_Portfolio_Single_Layout') && Salient_Portfolio_Single_
   
 	<?php
 	// extra content
-	if ( ! post_password_required() ) {
+	//// Skip for password protected & core visual composer.
+	if ( ! post_password_required() && $using_vcv !== true ) {
 
 		$portfolio_extra_content = get_post_meta( $post->ID, '_nectar_portfolio_extra_content', true );
 		

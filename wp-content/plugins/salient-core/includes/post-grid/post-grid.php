@@ -40,6 +40,7 @@ class NectarPostGrid {
     $category         = sanitize_text_field( $_POST['category'] );
     $action           = sanitize_text_field( $_POST['load_action'] );
     $ignore_sticky    = sanitize_text_field( $_POST['ignore_sticky_posts'] );
+    $posts_shown      = isset($_POST['posts_shown']) ? sanitize_text_field( $_POST['posts_shown'] ) : false;
     
     // Post Grid Instance Settings.
     $attributes = array();
@@ -79,7 +80,20 @@ class NectarPostGrid {
       }
       
     } 
-    
+
+    $excluded_posts = $sticky_post_IDs;
+
+    // Random order prevent duplicates.
+    if( 'load-more' === $action && $current_page > 0 && 'rand' === $orderby && $posts_shown ) {
+      
+      $posts_shown_arr = explode(',', $posts_shown);
+      foreach($posts_shown_arr as $id) {
+        $excluded_posts[] = $id;
+      }
+
+      $post_offset = 0;
+    }
+
     // Query
     $nectar_post_grid_query_args = array(
       'post_status'         => 'publish',
@@ -87,7 +101,7 @@ class NectarPostGrid {
       'order'               => $order,
       'orderby'             => $orderby,
       'offset'              => $post_offset,
-      'post__not_in'        => $sticky_post_IDs
+      'post__not_in'        => $excluded_posts
     );
 
     if( 'portfolio' === $post_type ) {

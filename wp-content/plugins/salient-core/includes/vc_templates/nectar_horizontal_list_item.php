@@ -139,10 +139,10 @@ echo '<div class="nectar-hor-list-item '.$hasbtn_class.'" data-hover-effect="'.e
 			$atts['col_'.$index_to_grab.'_text_element'] = null; 
 		}
 		if(!isset($atts['col_'.$index_to_grab.'_content'])) {
-			$atts['col_'.$index_to_grab.'_content'] = null; 
+			$atts['col_'.$index_to_grab.'_content'] = ''; 
 		}
 
-		$cta_1_markup = $cta_2_markup = null;
+		$cta_1_markup = $cta_2_markup = '';
 
 		// Add btns into last col.
 		if( $index_to_grab == intval($columns) ) {
@@ -179,7 +179,7 @@ echo '<div class="nectar-hor-list-item '.$hasbtn_class.'" data-hover-effect="'.e
 		echo '<div class="nectar-list-item"'.$icon_attr.' data-text-align="'.esc_attr($atts['col_'.$index_to_grab.'_text_align']).'">'. $icon_tag . $opening_tag . wp_kses_post($atts['col_'.$index_to_grab.'_content']) . $closing_tag . $cta_1_markup . $cta_2_markup. '</div>';
 	}
 
-$url_markup = null;
+$url_markup = '';
 
 if( !empty($url) ) {
 	

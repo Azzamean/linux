@@ -58,8 +58,8 @@
     limitY: false,
     scalarX: 10.0,
     scalarY: 10.0,
-    frictionX: 0.1,
-    frictionY: 0.1,
+    frictionX: 0.07,
+    frictionY: 0.07,
     originX: 0.5,
     originY: 0.5
   };

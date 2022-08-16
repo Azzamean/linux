@@ -247,27 +247,27 @@ class Vc_Shared_Templates {
 	/**
 	 * @param $request
 	 *
-	 * @return bool|string
+	 * @return bool|string|array
 	 */
 	private function parseRequest( $request ) {
- 		$body = json_decode( $request['body'], true );
- 		if ( isset( $body['status'], $body['url'] ) && 1 === $body['status'] ) {
- 			$downloadUrl = $body['url'];
- 			$downloadedTemplateFile = download_url( $downloadUrl );
- 			if ( is_wp_error( $downloadedTemplateFile ) || ! $downloadedTemplateFile ) {
- 				return false;
- 			}
+		$body = json_decode( $request['body'], true );
+		if ( isset( $body['status'], $body['url'] ) && 1 === $body['status'] ) {
+			$downloadUrl = $body['url'];
+			$downloadedTemplateFile = download_url( $downloadUrl );
+			if ( is_wp_error( $downloadedTemplateFile ) || ! $downloadedTemplateFile ) {
+				return false;
+			}
 
- 			return $downloadedTemplateFile;
- 		} elseif ( isset( $body['error'] ) ) {
- 			return array(
- 				'code' => 1,
- 				'message' => $body['error'],
- 			);
- 		}
+			return $downloadedTemplateFile;
+		} elseif ( isset( $body['error'] ) ) {
+			return array(
+				'code' => 1,
+				'message' => $body['error'],
+			);
+		}
 
- 		return false;
- 	}
+		return false;
+	}
 
 	/**
 	 * @param $data

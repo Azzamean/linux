@@ -361,7 +361,7 @@
                     // Display admin notices in dev_mode
                     if ( true == $this->args['dev_mode'] ) {
                         if ( true == $this->args['update_notice'] ) {
-                            add_action( 'admin_init', array( $this, '_update_check' ) );
+                            //add_action( 'admin_init', array( $this, '_update_check' ) );
                         }
                     }
 

@@ -24,6 +24,7 @@ global $woocommerce;
 
 // Main Accent Color: color property.
 echo '
+
 .nectar-color-accent-color,
 body a,
 label span,
@@ -39,8 +40,8 @@ body [class^="icon-"].icon-default-style,
 [data-style="list_featured_first_row"] .meta-category a,
 [data-style="list_featured_first_row"] .meta-category a,
 .nectar-fancy-box[data-style="color_box_hover"][data-color="accent-color"] .icon-default-style,
-div[data-style="minimal"] .toggle:hover h3 a,
-div[data-style="minimal"] .toggle.open h3 a,
+div[data-style="minimal"] .toggle:hover > .toggle-title a,
+div[data-style="minimal"] .toggle.open > .toggle-title a,
 #footer-outer #copyright li a i:hover,
 .ascend .comment-list .reply a,
 body.material .widget:not(.nectar_popular_posts_widget):not(.recent_posts_extra_widget) li a:hover,
@@ -160,8 +161,8 @@ body .wpb_row .span_12 .portfolio-filters-inline[data-color-scheme="accent-color
 .post-area.featured_img_left .meta-category a,
 .post-meta .icon-salient-heart-2.loved,
 body.material .nectar-button.see-through.accent-color[data-color-override="false"],
-div[data-style="minimal_small"] .toggle.accent-color > h3 a:hover,
-div[data-style="minimal_small"] .toggle.accent-color.open > h3 a,
+div[data-style="minimal_small"] .toggle.accent-color > .toggle-title a:hover,
+div[data-style="minimal_small"] .toggle.accent-color.open > .toggle-title a,
 .testimonial_slider[data-rating-color="accent-color"] .star-rating .filled:before,
 .nectar_single_testimonial[data-color="accent-color"] p .open-quote,
 .nectar-quick-view-box .star-rating,
@@ -203,12 +204,12 @@ echo '
 .nectar-flickity[data-controls="default"][data-control-color="accent-color"] .flickity-page-dots .dot:before,
 .nectar-flickity[data-controls="touch_total"][data-control-color="accent-color"] .visualized-total span,
 [class*=" icon-"],
-.toggle.open h3 a,
-div[data-style="minimal"] .toggle.open h3 i:after,
-div[data-style="minimal"] .toggle:hover h3 i:after,
-div[data-style="minimal"] .toggle.open h3 i:before,
-div[data-style="minimal"] .toggle:hover h3 i:before,
-div[data-style="minimal_small"] .toggle.accent-color > h3:after,
+.toggle.open > .toggle-title a,
+div[data-style="minimal"] .toggle.open > .toggle-title i:after,
+div[data-style="minimal"] .toggle:hover > .toggle-title i:after,
+div[data-style="minimal"] .toggle.open > .toggle-title i:before,
+div[data-style="minimal"] .toggle:hover > .toggle-title i:before,
+div[data-style="minimal_small"] .toggle.accent-color > .toggle-title:after,
 .main-content .widget_calendar caption,
 #footer-outer .widget_calendar caption,
 .post .more-link span:hover,
@@ -357,7 +358,8 @@ body.material .nectar-video-box[data-color="default-accent-color"] .nectar_video
 button[type=submit]:hover,
 button[type=submit]:focus,
 body[data-form-submit="see-through"] input[type=submit]:hover,
-body[data-form-submit="see-through"] button[type=submit]:hover,
+body[data-form-submit="see-through"].woocommerce #respond input#submit:hover,
+html body[data-form-submit="see-through"] button[type=submit]:hover,
 body[data-form-submit="see-through"] .container-wrap .span_12.light input[type=submit]:hover,
 body[data-form-submit="see-through"] .container-wrap .span_12.light button[type=submit]:hover,
 body.original .bypostauthor .comment-body:before,
@@ -562,6 +564,7 @@ if ($woocommerce) {
 		.woocommerce #sidebar div ul li a:hover ~ .count,
 		.woocommerce #sidebar div ul li.chosen > a ~ .count,
 		.woocommerce #sidebar div ul .current-cat > .count,
+		.woocommerce #sidebar .wc-block-product-categories-list-item:hover .wc-block-product-categories-list-item-count,
 		.woocommerce .widget_price_filter .ui-slider .ui-slider-range,
 		.material.woocommerce-page .widget_price_filter .ui-slider .ui-slider-range,
 		.woocommerce-account .woocommerce-form-login button.button,
@@ -796,10 +799,10 @@ foreach( $nectar_extra_accent_colors as $selector => $color ){
 		echo '
 		.nectar-color-'.$selector.',
 		.testimonial_slider[data-rating-color="'.$selector.'"] .star-rating .filled:before,
-		div[data-style="minimal"] .toggle.'.$selector.':hover h3 a,
-		div[data-style="minimal"] .toggle.'.$selector.'.open h3 a,
-		div[data-style="minimal_small"] .toggle.'.$selector.' > h3 a:hover,
-		div[data-style="minimal_small"] .toggle.'.$selector.'.open > h3 a {
+		div[data-style="minimal"] .toggle.'.$selector.':hover > .toggle-title a,
+		div[data-style="minimal"] .toggle.'.$selector.'.open > .toggle-title a,
+		div[data-style="minimal_small"] .toggle.'.$selector.' > .toggle-title a:hover,
+		div[data-style="minimal_small"] .toggle.'.$selector.'.open > .toggle-title a {
 			color: '. esc_attr($color) .';
 		}
 
@@ -836,8 +839,8 @@ foreach( $nectar_extra_accent_colors as $selector => $color ){
 		div[data-style="minimal"] .toggle.'.$selector.':hover i:after,
 		div[data-style="minimal"] .toggle.open.'.$selector.' i:before,
 		div[data-style="minimal"] .toggle.'.$selector.':hover i:before,
-		div[data-style="minimal_small"] .toggle.'.$selector.' > h3:after,
-		.toggle.open.'.$selector.' h3 a,
+		div[data-style="minimal_small"] .toggle.'.$selector.' > .toggle-title:after,
+		.toggle.open.'.$selector.' > .toggle-title a,
     .nectar-hor-list-item[data-hover-effect="full_border"][data-color="'.$selector.'"] .nectar-list-item-btn:hover {
 			background-color: '. esc_attr($color) .';
 		}
@@ -1033,6 +1036,17 @@ foreach( $nectar_gradient_colors as $selector => $color_grad ){
 	} // End color gradient is set.
 } // End main gradient color loop.
 
+
+// CSS Color vars.
+echo ':root { --nectar-accent-color: '. esc_attr($nectar_options["accent-color"]) .';';
+
+foreach( $nectar_extra_accent_colors as $selector => $color ) {
+	if( false !== $color ) {
+		echo '--nectar-'.esc_attr($selector).': '. esc_attr($color) .'; ';
+	}
+}
+
+echo '}';
 
 
 
@@ -1793,7 +1807,7 @@ if( !empty($nectar_options['header-color']) && $nectar_options['header-color'] =
 		body #slide-out-widget-area.slide-out-from-right a:hover,
 		body #slide-out-widget-area.fullscreen-alt .inner .off-canvas-menu-container li a:hover,
 		#slide-out-widget-area.slide-out-from-right-hover .inner .off-canvas-menu-container li a:hover,
-		#slide-out-widget-area.slide-out-from-right-hover .inner .off-canvas-menu-container li.current-menu-item a,
+		#slide-out-widget-area.slide-out-from-right-hover .inner .off-canvas-menu-container li.current-menu-item > a,
 		#slide-out-widget-area.slide-out-from-right-hover.no-text-effect .inner .off-canvas-menu-container li a:hover,
 		body #slide-out-widget-area .slide_out_area_close:hover .icon-default-style[class^="icon-"],
 		body.material #slide-out-widget-area.slide-out-from-right .off-canvas-menu-container .current-menu-item > a,

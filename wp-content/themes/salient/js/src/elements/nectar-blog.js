@@ -48,14 +48,16 @@
       if(!this.el.parent().hasClass('meta_overlaid') &&
       !this.el.parent().hasClass('auto_meta_overlaid_spaced')) {
 
-        if(this.el.parent().hasClass('classic_enhanced')) {
-          this.el.parent().parents('.full-width-content').css({
-            'padding' : '0px 0.2% 0px 2.4%'
-          });
-        } else {
-          this.el.parent().parents('.full-width-content').css({
-            'padding' : '0px 0.2% 0px 3.2%'
-          });
+        if( $('#salient-delay-js-js').length == 0 ) {
+          if(this.el.parent().hasClass('classic_enhanced')) {
+            this.el.parent().parents('.full-width-content').css({
+              'padding' : '0px 0.2% 0px 2.4%'
+            });
+          } else {
+            this.el.parent().parents('.full-width-content').css({
+              'padding' : '0px 0.2% 0px 3.2%'
+            });
+          }
         }
 
       } else {

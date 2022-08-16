@@ -53,7 +53,14 @@ function nectar_metabox_salient_headers_page($post_type) {
           "fade-in" => esc_html__("Fade In", "salient-core"),
           "fade-in-from-top" => esc_html__("Fade In From Top", "salient-core")
          )
-       )
+        ),
+        array( 
+          'name' => esc_html__('Header Navigation Entrance Animation Delay', 'salient-core'),
+          'desc' => esc_html__('Optionally specify a delay in milliseconds to wait before triggering the header animation e.g. 500', 'salient-core'),
+          'id' => '_header_nav_entrance_animation_delay',
+          'type' => 'text',
+          'std' => ''
+        ),
      )
    );
 

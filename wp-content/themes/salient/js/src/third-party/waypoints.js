@@ -137,12 +137,22 @@ https://github.com/imakewebthings/waypoints/blob/master/licenses.txt
   /* Public */
   /* http://imakewebthings.com/waypoints/api/viewport-height */
   Waypoint.viewportHeight = function() {
+
+    if( window.nectarDOMInfo && window.nectarDOMInfo.winH ) {
+      return window.nectarDOMInfo.winH;
+    }
+
     return window.innerHeight || document.documentElement.clientHeight
   }
 
   /* Public */
   /* http://imakewebthings.com/waypoints/api/viewport-width */
   Waypoint.viewportWidth = function() {
+    
+    if( window.nectarDOMInfo && window.nectarDOMInfo.winW ) {
+      return window.nectarDOMInfo.winW;
+    }
+
     return document.documentElement.clientWidth
   }
 
@@ -192,6 +202,7 @@ https://github.com/imakewebthings/waypoints/blob/master/licenses.txt
       x: this.adapter.scrollLeft(),
       y: this.adapter.scrollTop()
     }
+   
     this.waypoints = {
       vertical: {},
       horizontal: {}
@@ -323,6 +334,7 @@ https://github.com/imakewebthings/waypoints/blob/master/licenses.txt
       return Waypoint.viewportHeight()
     }
     /*eslint-enable eqeqeq */
+
     return this.adapter.innerHeight()
   }
 

@@ -4,7 +4,7 @@
 *
 * @package    Salient WordPress Theme
 * @subpackage Partials
-* @version 10.5
+* @version 14.1
 */
 
 // Exit if accessed directly
@@ -23,7 +23,7 @@ $mobile_fixed              = ( ! empty( $nectar_options['header-mobile-fixed'] )
 $bg_header                 = ( ! empty( $post->ID ) && $post->ID != 0 ) ? $using_page_header : 0;
 $bg_header                 = ( $bg_header == 1 ) ? 'true' : 'false';
 $trans_header              = ( ! empty( $nectar_options['transparent-header'] ) && $nectar_options['transparent-header'] === '1' ) ? $nectar_options['transparent-header'] : 'false';
-$perm_trans              	 = ( ! empty( $nectar_options['header-permanent-transparent'] ) && $trans_header != 'false' && $bg_header === 'true' && $header_format != 'centered-menu-bottom-bar' ) ? $nectar_options['header-permanent-transparent'] : 'false';
+$perm_trans                = ( ! empty( $nectar_options['header-permanent-transparent'] ) && $trans_header != 'false' && $bg_header === 'true' && $header_format != 'centered-menu-bottom-bar' ) ? $nectar_options['header-permanent-transparent'] : 'false';
 $header_remove_stickiness  = ( ! empty( $nectar_options['header-remove-fixed'] ) ) ? $nectar_options['header-remove-fixed'] : '0';
 $header_mobile_func        = ( ! empty( $nectar_options['secondary-header-mobile-display'] ) && $perm_trans !== '1' ) ? $nectar_options['secondary-header-mobile-display'] : 'default';
 
@@ -40,6 +40,9 @@ if ( $using_secondary === 'header_with_secondary' ) { ?>
 		<div class="container">
 			<nav>
 				<?php
+
+				nectar_hook_secondary_header_after_nav_open();
+
 				if ( ! empty( $nectar_options['enable_social_in_header'] ) && 
 					$nectar_options['enable_social_in_header'] === '1' && 
 					$header_format !== 'centered-menu-bottom-bar' ) {
@@ -76,6 +79,8 @@ if ( $using_secondary === 'header_with_secondary' ) { ?>
 					</ul>
 					<?php
 				}
+
+				nectar_hook_secondary_header_before_nav_close();
 				
 				?>
 				

@@ -48,6 +48,21 @@ return array(
 			"dependency" => Array('element' => "accordion", 'not_empty' => true),
 			'save_always' => true,
 		),
+		array(
+            "type" => "dropdown",
+            "heading" => esc_html__("Border Radius", "salient-core"),
+            'save_always' => true,
+			"dependency" => Array('element' => "style", 'value' => array('minimal_shadow', 'default')),
+            "param_name" => "border_radius",
+            "value" => array(
+              esc_html__("0px", "salient-core") => "none",
+              esc_html__("3px", "salient-core") => "3px",
+              esc_html__("5px", "salient-core") => "5px",
+              esc_html__("10px", "salient-core") => "10px",
+              esc_html__("15px", "salient-core") => "15px",
+              esc_html__("20px", "salient-core") => "20px"),
+            "description" => ''
+          ),
 	),
 	"custom_markup" => '
 	<div class="wpb_accordion_holder wpb_holder clearfix vc_container_for_children">

@@ -82,21 +82,77 @@ return array(
     ),
     array(
       "type" => "textfield",
-      "heading" => esc_html__("Auto rotate?", "salient-core"),
+      "heading" => esc_html__("Auto-Rotate", "salient-core"),
       "param_name" => "autorotate",
       "value" => '',
       "description" => esc_html__("If you would like this to autorotate, enter the rotation speed in milliseconds here. i.e 5000", "salient-core")
     ),
     array(
+      "type" => "dropdown",
+      "heading" => esc_html__("Controls", "salient-core"),
+      "param_name" => "slider_controls",
+      "value" => array(
+        esc_html__("Pagination",'salient-core') => "default",
+        esc_html__("Next/Prev Arrows",'salient-core') => "next_prev_arrows",
+      ),
+      'save_always' => true,
+      "dependency" => array('element' => "style", 'value' => array('multiple_visible','multiple_visible_minimal')),
+      "description" => ''
+  ),
+    array(
       "type" => "checkbox",
       "class" => "",
 			'edit_field_class' => 'vc_col-xs-12 salient-fancy-checkbox',
-      "heading" => "Disable height animation?",
+      "heading" => "Disable height animation",
       "value" => array("Yes, please" => "true" ),
       "param_name" => "disable_height_animation",
       "dependency" => Array('element' => "style", 'value' => array('default','minimal')),
       "description" => esc_html__("Your testimonial slider will animate the height of itself to match the height of the testimonial being shown - this will remove that and simply set the height equal to the tallest testimonial to allow your content below to remain stagnant instead of moving up/down.", "salient-core")
     ),
+    array(
+      "type" => "dropdown",
+      "heading" => esc_html__("Testimonial Border Radius", "salient-core"),
+      'save_always' => true,
+      "param_name" => "flickity_border_radius",
+      "dependency" => Array('element' => "style", 'value' => array('multiple_visible','multiple_visible_minimal')),
+      "value" => array(
+        esc_html__("Default", "salient-core") => "default",
+        esc_html__("0px", "salient-core") => "0px",
+        esc_html__("3px", "salient-core") => "3px",
+        esc_html__("5px", "salient-core") => "5px",
+        esc_html__("10px", "salient-core") => "10px",
+        esc_html__("15px", "salient-core") => "15px",
+        esc_html__("20px", "salient-core") => "20px",
+        esc_html__("50px", "salient-core") => "50px",
+      ),
+      "description" => ''
+    ),
+    array(
+      "type" => "checkbox",
+      "class" => "",
+			'edit_field_class' => 'vc_col-xs-12 salient-fancy-checkbox',
+      "heading" => "Add Shadow To Active Testimonial",
+      "value" => array("Yes, please" => "true" ),
+      "param_name" => "enable_shadow",
+      "dependency" => Array('element' => "style", 'value' => array('multiple_visible')),
+    ),
+    array(
+      'type' => 'nectar_box_shadow_generator',
+      'heading' => esc_html__( 'Shadow', 'salient-core' ),
+      'param_name' => 'custom_box_shadow',
+      'save_always' => true,
+      'dependency' => Array( 'element' => 'enable_shadow', 'not_empty' => true ) 
+  ),
+    array(
+      "type" => "nectar_numerical",
+      "class" => "",
+      "heading" => esc_html__("Custom Testimonial Width Desktop", "salient-core"),
+      "value" => "",
+      "edit_field_class" => "vc_col-xs-12 zero-floor",
+      "dependency" => Array('element' => "style", 'value' => array('multiple_visible','multiple_visible_minimal')),
+      "param_name" => "custom_width_desktop",
+      "description" => ""
+  ),
     array(
 			"type" => "textfield",
 			"heading" => '<span class="group-title">' . esc_html__("Custom Font Size", "salient-core") . "</span>",

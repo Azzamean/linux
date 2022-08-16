@@ -1,11 +1,11 @@
 <?php
 /**
 * Plugin Name: Salient Core
-* Plugin URI: --
+* Plugin URI: https://themenectar.com
 * Description: Core functionality required by the Salient theme. Adds the Salient collection of WPBakery page builder elements, template library and page/post options.
 * Author: ThemeNectar
 * Author URI: https://themenectar.com
-* Version: 1.9.4
+* Version: 1.9.5
 * Text Domain: salient-core
 */
 
@@ -18,7 +18,7 @@ define( 'SALIENT_CORE_ROOT_DIR_PATH', plugin_dir_path( __FILE__ ) );
 define( 'SALIENT_CORE_PLUGIN_PATH', plugins_url( 'salient-core' ) );
 
 if ( ! defined( 'SALIENT_CORE_VERSION' ) ) {
-    define( 'SALIENT_CORE_VERSION', '1.9.4' );
+    define( 'SALIENT_CORE_VERSION', '1.9.5' );
 }
 
 class Salient_Core {
@@ -148,6 +148,9 @@ class Salient_Core {
             require_once( SALIENT_CORE_ROOT_DIR_PATH.'includes/global-sections/class-global-sections.php' );
         }
 
+        // Animations.
+        require_once( SALIENT_CORE_ROOT_DIR_PATH.'includes/class-nectar-animations.php' );
+        
         // Post Grid.
         require_once( SALIENT_CORE_ROOT_DIR_PATH.'includes/post-grid/post-grid.php' );
 

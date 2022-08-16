@@ -325,6 +325,10 @@
 
       var $parent = $(this).parents('.nectar-setting-switch_toggle');
       
+      if( $(this).parents('.setting-field').attr('data-cat') !== that.state.category ) {
+        return;
+      }
+      
       if( $parent.is('[data-toggles]') ) {
 
         var toggles = $parent.attr('data-toggles');

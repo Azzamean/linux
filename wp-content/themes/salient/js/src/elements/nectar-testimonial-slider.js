@@ -168,62 +168,14 @@
     
     
     if( this.type == 'multiple_visible' || this.type == 'multiple_visible_minimal' ) {
-      
-      objectStore = this;
-      $that = this.el; 
-      var $element = $that;
-      var $autoplay = ($that.attr('data-autorotate').length > 1 && parseInt($that.attr('data-autorotate')) > 100) ? parseInt($that.attr('data-autorotate')) : false;
-      if($that.find('img').length == 0) { $element = $('body'); }
-      
-      // move img pos
-      if( this.el.attr('data-style') != 'multiple_visible_minimal') {
-        this.el.find('blockquote').each(function(){
-          $(this).find('.image-icon').insertBefore($(this).find('.testimonial-name'));
-        });
-      } else {
-        // has alf class
-        if(this.el.find('blockquote').length > 4) {
-          this.el.addClass('has-alf');
-        }
+
+      if( !window.nectarDOMInfo.usingFrontEndEditor ) {
+        this.lazyFlickityInit();
       }
-      
-      var $testimonialGroupCells = (this.el.attr('data-style') == 'multiple_visible_minimal') ? true : false;
-      var $frontEndEditorDrag =  ($('body.vc_editor').length > 0) ? false: true;
-      var $frontEndEditorPause =  ($('body.vc_editor').length > 0) ? true: false;
-      
-      this.flickityEl = $that.find('.slides').flickity({
-        contain: true,
-        draggable: $frontEndEditorDrag,
-        groupCells: $testimonialGroupCells,
-        lazyLoad: false,
-        imagesLoaded: true,
-        percentPosition: true,
-        prevNextButtons: false,
-        pageDots: true,
-        resize: true,
-        setGallerySize: true,
-        wrapAround: true,
-        autoPlay: $autoplay,
-        pauseAutoPlayOnHover: $frontEndEditorPause,
-        accessibility: false
-      });
-      
-      if(this.flickityEl.find('.vc_element.is-selected > blockquote').length > 0) {
-        
-        // starting
-        this.flickityEl.find('.vc_element.is-selected > blockquote').addClass('is-selected');
-        
-        // changed
-        this.flickityEl.on( 'select.flickity', function() {
-          objectStore.flickityEl.find('.vc_element > blockquote').removeClass('is-selected');
-          objectStore.flickityEl.find('.vc_element.is-selected > blockquote').addClass('is-selected');
-        });
+      else {
+        this.flickityInit();
       }
-      
-      
-      $that.css('opacity','1');
-      
-      
+
     }
 		
 		var testimonialObj = this;
@@ -232,8 +184,111 @@
 			return false;
 		});
     
+  };
+
+  NectarTestimonialSlider.prototype.flickityInit = function() {
+
+    var objectStore = this;
+    var $that = this.el; 
+    var $element = $that;
+    var $autoplay = ($that.attr('data-autorotate').length > 1 && parseInt($that.attr('data-autorotate')) > 100) ? parseInt($that.attr('data-autorotate')) : false;
+    if($that.find('img').length == 0) { $element = $('body'); }
+    
+    // move img pos
+    if( this.el.attr('data-style') != 'multiple_visible_minimal') {
+      this.el.find('blockquote').each(function(){
+        $(this).find('.image-icon').insertBefore($(this).find('.testimonial-name'));
+      });
+    } else {
+      // has alf class
+      if(this.el.find('blockquote').length > 4) {
+        this.el.addClass('has-alf');
+      }
+    }
+    
+    var $testimonialGroupCells = (this.el.attr('data-style') == 'multiple_visible_minimal') ? true : false;
+    var $frontEndEditorDrag =  ($('body.vc_editor').length > 0) ? false: true;
+    var $frontEndEditorPause =  ($('body.vc_editor').length > 0) ? true: false;
+    
+    var arrowShape = {
+      x0: 10,
+      x1: 60, y1: 50,
+      x2: 70, y2: 40,
+      x3: 30
+    }
+    var pageDotsBool = true;
+    var nextPrev = false;
+    if(this.el.is('[data-controls]') && this.el.attr('data-controls') == 'next_prev_arrows') {
+      nextPrev = true;
+      pageDotsBool = false;
+    }
+    
+    this.flickityEl = $that.find('.slides').flickity({
+      contain: true,
+      draggable: $frontEndEditorDrag,
+      groupCells: $testimonialGroupCells,
+      lazyLoad: false,
+      imagesLoaded: true,
+      percentPosition: true,
+      prevNextButtons: nextPrev,
+      arrowShape: arrowShape,
+      pageDots: pageDotsBool,
+      resize: true,
+      setGallerySize: true,
+      wrapAround: true,
+      autoPlay: $autoplay,
+      pauseAutoPlayOnHover: $frontEndEditorPause,
+      accessibility: false
+    });
+    
+    if(this.flickityEl.find('.vc_element.is-selected > blockquote').length > 0) {
+      
+      // starting
+      this.flickityEl.find('.vc_element.is-selected > blockquote').addClass('is-selected');
+      
+      // changed
+      this.flickityEl.on( 'select.flickity', function() {
+        objectStore.flickityEl.find('.vc_element > blockquote').removeClass('is-selected');
+        objectStore.flickityEl.find('.vc_element.is-selected > blockquote').addClass('is-selected');
+      });
+    }
+
+    // custom shadow
+    // changed
+    
+    var shadow = (this.el.is('[data-shadow]')) ? this.el.attr('data-shadow') : '';
+ 
+    if( objectStore.type == 'multiple_visible' && shadow.length > 0 ) {
+      objectStore.flickityEl.find('blockquote p').each(function(){
+        $(this)[0].style = shadow;
+      });
+    }
+    
+    
+    $that.css('opacity','1');
     
   };
+
+  NectarTestimonialSlider.prototype.lazyFlickityInit = function() {
+
+    var that = this;
+    this.observer = new IntersectionObserver(function(entries) {
+
+      entries.forEach(function(entry){
+        if (entry.isIntersecting) {
+        that.flickityInit();
+        that.observer.unobserve(entry.target);
+        } 
+      });
+    
+      }, {
+      rootMargin: '400px 0px 400px 0px',
+      threshold: 0
+    });
+
+    this.observer.observe(this.el[0]);
+
+  }
 
 
   NectarTestimonialSlider.prototype.defaultPaginationSelect = function(clicked) {

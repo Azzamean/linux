@@ -421,7 +421,9 @@ if ( ! function_exists( 'nectar_options_img' ) ) {
 
 		// check if URL or ID is passed
 		if ( isset( $image_arr_or_str['id'] ) ) {
-			$image = wp_get_attachment_image_src( $image_arr_or_str['id'], 'full' );
+			
+			$image_id = apply_filters('wpml_object_id', $image_arr_or_str['id'], 'attachment', TRUE);
+			$image = wp_get_attachment_image_src( $image_id, 'full' );
 			
 			if( isset($image[0]) ) {
 				return $image[0];
@@ -438,6 +440,9 @@ if ( ! function_exists( 'nectar_options_img' ) ) {
 			$image_id = fjarrett_get_attachment_id_from_url( $image_arr_or_str );
 
 			if ( ! is_null( $image_id ) && ! empty( $image_id ) ) {
+
+				$image_id = apply_filters('wpml_object_id', $image_id, 'attachment', TRUE);
+
 				$image = wp_get_attachment_image_src( $image_id, 'full' );
 				return $image[0];
 			} else {

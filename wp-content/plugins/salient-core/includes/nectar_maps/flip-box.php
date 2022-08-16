@@ -184,7 +184,7 @@ return array(
 			"param_name" => "min_height",
 			"admin_label" => false,
 			"group" => esc_html__("General Settings", "salient-core"),
-			"description" => esc_html__("Please enter the minimum height you would like for you box. Enter in number of pixels - Don't enter \"px\", default is \"300\"", "salient-core")
+			"description" => esc_html__("Please enter the minimum height you would like for you box.", "salient-core")
 		),
 		
 		array(

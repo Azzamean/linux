@@ -714,8 +714,28 @@ fieldset[id*="salient_redux"] .switch-options.activated:before {
 }
 
 
-/* Color Grid */
+/* Badges */
+.salient-new-badge {
+	position: relative;
+}
 
+.salient-new-badge .description {
+	position: static!important;
+}
+
+.salient-new-badge .redux_field_th .description:before {
+	position: absolute;
+	top: 17px;
+    left: 195px;
+	content: 'Beta';
+	background-color: #3d5cff;
+	color: #fff;
+	border-radius: 10px;
+	padding: 5px 10px;
+	line-height: 1;
+}
+
+/* Color Grid */
 body > .select2-drop {
 	z-index: 10001;
 }
@@ -817,7 +837,8 @@ body .redux-container {
  }
  
  .redux-container .redux-main .wbc_importer .theme-browser .theme:hover .button-primary,
- .redux-container .nectar-demo-importer-selection-modal a.submit {
+ .redux-container .nectar-demo-importer-selection-modal a.submit,
+ .redux-container .redux-main .wbc_importer .theme-browser .theme .button-primary.wbc-progress-bar {
 	 background-color: #3d5cff!important;
 }
 

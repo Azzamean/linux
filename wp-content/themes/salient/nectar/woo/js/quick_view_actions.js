@@ -426,7 +426,7 @@ function quantityButtons() {
           e.preventDefault(e);
           // ensure variations are set.
           if( $('.nectar-quick-view-box .summary-content .single_add_to_cart_button.wc-variation-selection-needed').length == 0 ) {
-            $('.nectar-quick-view-box .summary-content .single_add_to_cart_button').trigger('click');
+            $('.nectar-quick-view-box .summary-content .single_add_to_cart_button').last().trigger('click');
           }
         });
 

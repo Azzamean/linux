@@ -63,12 +63,12 @@ if( !function_exists('nectar_wpbakery_element_list') ) {
 			'team_member',
 			'testimonial',
 			'testimonial_slider',
-      'nectar_star_rating',
-      'nectar_circle_images',
-      'nectar_sticky_media_sections',
-      'nectar_sticky_media_section',
-      'nectar_scrolling_text',
-      'nectar_text_inline_images',
+			'nectar_star_rating',
+			'nectar_circle_images',
+			'nectar_sticky_media_sections',
+			'nectar_sticky_media_section',
+			'nectar_scrolling_text',
+			'nectar_text_inline_images',
 			'toggle',
 			'toggles',
 			'vc_column',
@@ -219,6 +219,7 @@ if( !function_exists('salient_remove_core_common_wpbakery_els') ) {
 			'vc_button2',
 			'vc_cta_button',
 			'vc_cta_button2',
+			'vc_section'
 		);
 
 		if( true !== $enable_raw_wpbakery_post_grid ) {
@@ -254,7 +255,6 @@ if( true !== $enable_raw_wpbakery_post_grid ) {
 	vc_remove_element("vc_masonry_grid");
 }
 
-vc_remove_element("vc_section");
 vc_remove_element("vc_posts_slider");
 vc_remove_element("vc_gmaps");
 vc_remove_element("vc_teaser_grid");
@@ -599,7 +599,24 @@ if(function_exists('vc_add_shortcode_param')) {
 
 
 	/**
-	 * Create radio HTML param.
+	 * Create range slider param.
+	 *
+	 * @since 14.1
+	 */
+	vc_add_shortcode_param( 'nectar_lottie', 'nectar_lottie_settings_field' );
+	function nectar_lottie_settings_field( $param, $value ) {
+
+		$output = '';
+		$output .= '<div class="nectar-lottie-preview">';
+		$output .= '<div class="nectar-lottie-preview-render"><div class="error">'.esc_html__('Error loading Lottie file','salient-core').'</div><lottie-player autoplay controls mode="normal" style="width: 150px"></lottie-player></div>';
+		$output .= '<input type="text" value="' . esc_attr( $value ) . '" class="wpb_vc_param_value nectar-lottie ' . esc_attr($param['param_name']) . ' ' . esc_attr($param['type']) . '" id="'.esc_attr( $param['param_name'] ).'" name="' . esc_attr($param['param_name']) . '">';
+		$output .= '</div>';
+		return $output;
+	}
+
+
+	/**
+	 * Create range slider param.
 	 *
 	 * @since 14.1
 	 */
@@ -607,8 +624,112 @@ if(function_exists('vc_add_shortcode_param')) {
 	function nectar_range_slider_settings_field( $param, $value ) {
 
 		$output = '';
+		$suffix = isset($param['options']['suffix']) ? $param['options']['suffix'] : '%';
+		$step = isset($param['options']['step']) ? $param['options']['step'] : '1';
+		$output .= '<div class="slider"><input type="range" min="'.esc_attr($param['options']['min']).'" max="'.esc_attr($param['options']['max']).'" step="'.$step.'" value="' . esc_attr( $value ) . '" class="wpb_vc_param_value nectar-range-slider ' . esc_attr($param['param_name']) . ' ' . esc_attr($param['type']) . '" id="'.esc_attr( $param['param_name'] ).'" name="' . esc_attr($param['param_name']) . '"></div><output class="output"><span class="number"></span><span class="suffix">'.$suffix.'</span></output>';
 
-		$output .= '<div class="slider"><input type="range" min="0" max="200" step="1" value="' . esc_attr( $value ) . '" class="wpb_vc_param_value nectar-range-slider ' . esc_attr($param['param_name']) . ' ' . esc_attr($param['type']) . '" id="'.esc_attr( $param['param_name'] ).'" name="' . esc_attr($param['param_name']) . '"></div><output class="output"></output>';
+		return $output;
+	}
+	
+
+	/**
+	 * Create multi range slider param..
+	 *
+	 * @since 14.1
+	 */
+	vc_add_shortcode_param( 'nectar_multi_range_slider', 'nectar_multi_range_slider_settings_field' );
+	function nectar_multi_range_slider_settings_field( $param, $value ) {
+
+		$output = '';
+
+		$output .= '<div class="nectar-multi-range-slider">
+			<input type="hidden" value="' . esc_attr( $value ) . '" data-min="'.esc_attr($param['options']['min']).'" data-max="'.esc_attr($param['options']['max']).'" class="wpb_vc_param_value nectar-range-slider" name="' . esc_attr($param['param_name']) . '" id="' . esc_attr($param['param_name']) . '">
+		</div>';
+
+		return $output;
+		}
+
+	/**
+	 * Create shadow generator
+	 *
+	 * @since 14.1
+	 */
+	vc_add_shortcode_param( 'nectar_box_shadow_generator', 'nectar_box_shadow_generator_settings_field' );
+	function nectar_box_shadow_generator_settings_field( $param, $value ) {
+
+		$output = '';
+
+		$sliders = array(
+			'horizontal' => array(
+				'label' => esc_html__('X Axis', 'salient-core'),
+				'min' => -125,
+				'max' => 125,
+				'step' => 1,
+				'suffix' => 'px'
+			),
+			'vertical' => array(
+				'label' => esc_html__('Y Axis', 'salient-core'),
+				'min' => -125,
+				'max' => 125,
+				'step' => 1,
+				'suffix' => 'px'
+			),
+			'spread' => array(
+				'label' => esc_html__('Spread', 'salient-core'),
+				'min' => -125,
+				'max' => 125,
+				'step' => 1,
+				'suffix' => 'px'
+			),
+			'blur'=> array(
+				'label' => esc_html__('Blur', 'salient-core'),
+				'min' => 0,
+				'max' => 120,
+				'step' => 1,
+				'suffix' => 'px'
+			),
+			'opacity' => array(
+				'label' => esc_html__('Opacity', 'salient-core'),
+				'min' => 0,
+				'max' => 1,
+				'step' => 0.025,
+				'suffix' => ''
+			),
+		);
+
+		$output .= '<div class="nectar-box-shadow-generator">
+			<div class="nectar-box-shadow-generator__controls wpb_el_type_nectar_range_slider">';
+
+				// Parse values
+				$parsed_values = array();
+
+				if( !empty($value) ) {
+					$kaboom = explode(',', $value);
+					foreach($kaboom as $item) {
+						$data = explode(':', $item);
+						$parsed_values[$data[0]] = $data[1];
+					}
+
+				} 
+
+				// Render sliders
+				foreach($sliders as $slider => $props) {
+
+					$parsed_val = ( isset($parsed_values[$slider]) ) ? $parsed_values[$slider] : '';
+
+					$output .= '<div class="inner-wrap"><span class="label">'.$props['label'].'</span><div class="slider">
+						<input type="range" min="'.$props['min'].'" max="'.$props['max'].'" step="'.$props['step'].'" value="'.esc_attr($parsed_val).'" class="nectar-range-slider" name="'.$slider.'">
+						</div>
+						<output class="output">
+							<span class="number"></span>
+							<span class="suffix">'.$props['suffix'].'</span>
+						</output></div>
+					';
+				}	
+				
+				$output .= '</div><div class="nectar-box-shadow-generator__preview"></div>
+			<input type="hidden" value="' . esc_attr( $value ) . '" class="wpb_vc_param_value nectar-box-shadow-generator" name="' . esc_attr($param['param_name']) . '" id="' . esc_attr($param['param_name']) . '" />
+		</div>';
 
 		return $output;
 	}
@@ -796,7 +917,9 @@ if(function_exists('vc_add_shortcode_param')) {
 		$value = htmlspecialchars( $value );
 
 		$placeholder_active = ( !empty($value) || '0' === $value ) ? ' focus' : '';
-		return '<span class="placeholder'.esc_attr($placeholder_active).'">'.esc_attr($settings['placeholder']).'</span><input name="' . $settings['param_name'] . '" class="wpb_vc_param_value nectar-numerical wpb-textinput ' . $settings['param_name'] . ' ' . $settings['type'] . '" type="text" value="' . $value . '"/>';
+		$placeholder_text = ( isset($settings['placeholder']) ) ? $settings['placeholder'] : '';
+
+		return '<span class="placeholder'.esc_attr($placeholder_active).'">'.esc_attr($placeholder_text).'</span><input name="' . $settings['param_name'] . '" class="wpb_vc_param_value nectar-numerical wpb-textinput ' . $settings['param_name'] . ' ' . $settings['type'] . '" type="text" value="' . $value . '"/>';
 
 	}
 
@@ -878,8 +1001,8 @@ function nectar_custom_maps() {
 			"param_name" => "column_margin",
 			"value" => array(
 				esc_html__("Default", "salient-core") => "default",
-        esc_html__("5px", "salient-core") => "5px",
-        esc_html__("10px", "salient-core") => "10px",
+				esc_html__("5px", "salient-core") => "5px",
+				esc_html__("10px", "salient-core") => "10px",
 				esc_html__("20px", "salient-core") => "20px",
 				esc_html__("30px", "salient-core") => "30px",
 				esc_html__("40px", "salient-core") => "40px",
@@ -889,7 +1012,8 @@ function nectar_custom_maps() {
 				esc_html__("80px", "salient-core") => "80px",
 				esc_html__("90px", "salient-core") => "90px",
 				esc_html__("100px", "salient-core") => "100px",
-				esc_html__("None", "salient-core") => "none"
+				esc_html__("None", "salient-core") => "none",
+				esc_html__("Custom", "salient-core") => "custom"
 			)
 		);
 	} else {
@@ -911,7 +1035,7 @@ function nectar_custom_maps() {
 			'name' => esc_html__( 'Row', 'salient-core' ),
 			'base' => 'vc_row',
 			'is_container' => true,
-			'weight' => 11,
+			'weight' => 40,
 			'icon' => 'icon-wpb-row',
 			'show_settings_on_create' => false,
 			'category' => esc_html__( 'Structure', 'salient-core' ),
@@ -937,7 +1061,7 @@ function nectar_custom_maps() {
 						esc_html__("In Container", "salient-core" ) => "in_container",
 						esc_html__("Full Width Background", "salient-core" ) => "full_width_background",
 						esc_html__("Full Width Content", "salient-core" ) => "full_width_content"
-						)
+					)
 				),
 
 				 array(
@@ -956,6 +1080,17 @@ function nectar_custom_maps() {
 				),
 
 				$row_column_margin,
+				
+				array(
+					"type" => "nectar_numerical",
+					"class" => "",
+					"heading" => esc_html__("Custom Column Margin", "salient-core"),
+					"value" => "",
+					"param_name" => "column_margin_custom",
+					"description" => '',
+					"edit_field_class" => "no-placeholder vc_col-xs-12",
+					"dependency" => Array('element' => "column_margin", 'value' => array('custom'))
+				),
 
 				 array(
 					'type' => 'checkbox',
@@ -1303,6 +1438,71 @@ function nectar_custom_maps() {
 					'std' => 'default',
 				  ),
 
+				  array(
+					"type" => "checkbox",
+					"class" => "",
+					"group" => "Background",
+					'edit_field_class' => 'vc_col-xs-12 salient-fancy-checkbox nectar-animated-gradient',
+					"heading" => esc_html__("Animated Gradient", "salient-core" ),
+					"description" => esc_html__("Creates subtlety moving blurred blobs similar to the movement of a lavalamp.", "salient-core"),
+					"value" => array("Enable" => "true" ),
+					"param_name" => "animated_gradient_bg"
+				),
+
+				array(
+					"type" => "colorpicker",
+					"class" => "",
+					"group" => "Background",
+					"heading" => esc_html__("Animated Color", "salient-core"),
+					"param_name" => "animated_gradient_bg_color_1",
+					'edit_field_class' => 'nectar-one-half nectar-fee-full',
+					"value" => "",
+					"description" => "",
+					"dependency" => Array('element' => "animated_gradient_bg", 'not_empty' => true)
+				),
+
+				array(
+					"type" => "colorpicker",
+					"class" => "",
+					"group" => "Background",
+					"heading" => esc_html__("Animated Color 2 (Optional)", "salient-core"),
+					"param_name" => "animated_gradient_bg_color_2",
+					'edit_field_class' => 'nectar-one-half nectar-one-half-last nectar-fee-full',
+					"value" => "",
+					"description" => '',
+					"dependency" => Array('element' => "animated_gradient_bg", 'not_empty' => true)
+				),
+
+				array(
+					"type" => "dropdown",
+					"group" => "Background",
+					"heading" => esc_html__("Animated Gradient Speed", "salient-core"),
+					"param_name" => "animated_gradient_bg_speed",
+					'edit_field_class' => 'nectar-one-half nectar-fee-full',
+					'save_always' => true,
+					"value" => array(
+						 esc_html__("Slow", "salient-core") => "1300",
+						 esc_html__("Medium", "salient-core") => "850",
+						 esc_html__("Fast", "salient-core") => "250"
+					  ),
+					  "dependency" => Array('element' => "animated_gradient_bg", 'not_empty' => true),
+					"description" => ''
+			  ),
+			  array(
+				"type" => "dropdown",
+				"group" => "Background",
+				"heading" => esc_html__("Animated Gradient Color Mix", "salient-core"),
+				"param_name" => "animated_gradient_bg_blending_mode",
+				'edit_field_class' => 'nectar-one-half nectar-one-half=last nectar-fee-full',
+				'save_always' => true,
+				"value" => array(
+					 esc_html__("Linear", "salient-core") => "linear",
+					 esc_html__("Organic", "salient-core") => "organic",
+				  ),
+				  "dependency" => Array('element' => "animated_gradient_bg", 'not_empty' => true),
+				"description" => esc_html__("Determines how to blend the colors when using more than one.", "salient-core")
+		  ),
+
 				array(
 					"type" => "checkbox",
 					"class" => "",
@@ -1311,7 +1511,7 @@ function nectar_custom_maps() {
 					"heading" => esc_html__("Mouse Based Parallax Scene", "salient-core" ),
 					"value" => array("Enable Mouse Based Parallax BG?" => "true" ),
 					"param_name" => "mouse_based_parallax_bg",
-					"description" => ""
+					"description" => esc_html__("Allows stacking of image layers that move at different speeds based on the mouse position.", "salient-core"),
 				),
 
 				 array(
@@ -1821,9 +2021,8 @@ function nectar_custom_maps() {
 				array(
 					"type" => "nectar_numerical",
 					"class" => "",
-					"heading" => '<span class="group-title">' . esc_html__("Transform", "salient-core") . "</span><span class='attr-title'>" . esc_html__("Translate Y", "salient-core") . "</span>",
+					"heading" => '<span class="group-title">' . esc_html__("Transform", "salient-core") . "</span>".esc_html__("Translate Y", "salient-core"),
 					"value" => "",
-					"placeholder" => esc_html__("Translate Y",'salient-core'),
 					"edit_field_class" => "col-md-6 desktop row-transform-device-group",
 					"param_name" => "translate_y",
 					"description" => ""
@@ -1832,8 +2031,7 @@ function nectar_custom_maps() {
 				array(
 					"type" => "nectar_numerical",
 					"class" => "",
-					"placeholder" => esc_html__("Translate X",'salient-core'),
-					"heading" => "<span class='attr-title'>" . esc_html__("Translate X", "salient-core") . "</span>",
+					"heading" => esc_html__("Translate X", "salient-core") ,
 					"value" => "",
 					"edit_field_class" => "col-md-6 col-md-6-last desktop row-transform-device-group",
 					"param_name" => "translate_x",
@@ -1841,10 +2039,34 @@ function nectar_custom_maps() {
 				),
 
 				array(
+					'type' => 'nectar_range_slider',
+					'heading' => esc_html__( 'Scale', 'salient-core' ),
+					'param_name' => 'scale_desktop',
+					'value' => '1',
+					'options' => array(
+						'min' => '0',
+						'max' => '2',
+						'step' => '0.01',
+						'suffix' => 'x'
+					),
+					"edit_field_class" => "col-md-6 desktop row-transform-device-group",
+					'description' => ''
+				),
+
+				array(
+					"type" => "nectar_angle_selection",
+					"class" => "",
+					"edit_field_class" => "col-md-6 col-md-6-last desktop row-transform-device-group",
+					"heading" => "<span class='attr-title'>" . esc_html__("Rotate", "salient-core") . "</span>",
+					"param_name" => "rotate_desktop",
+					"value" => "",
+					"description" => ''
+				),
+
+				array(
 					"type" => "nectar_numerical",
 					"class" => "",
-					"placeholder" => esc_html__("Translate Y",'salient-core'),
-					"heading" => "<span class='attr-title'>" . esc_html__("Translate Y", "salient-core") . "</span>",
+					"heading" => esc_html__("Translate Y", "salient-core"),
 					"value" => "",
 					"edit_field_class" => "col-md-6 tablet row-transform-device-group",
 					"param_name" => "translate_y_tablet",
@@ -1854,34 +2076,77 @@ function nectar_custom_maps() {
 				array(
 					"type" => "nectar_numerical",
 					"class" => "",
-					"placeholder" => esc_html__("Translate X",'salient-core'),
-					"heading" => "<span class='attr-title'>" . esc_html__("Translate X", "salient-core") . "</span>",
+					"heading" => esc_html__("Translate X", "salient-core"),
 					"value" => "",
 					"edit_field_class" => "col-md-6 col-md-6-last tablet row-transform-device-group",
 					"param_name" => "translate_x_tablet",
 					"description" => ""
 				),
 				array(
+                    'type' => 'nectar_range_slider',
+                    'heading' => esc_html__( 'Scale', 'salient-core' ),
+                    'param_name' => 'scale_tablet',
+                    'value' => '1',
+					'options' => array(
+						'min' => '0',
+						'max' => '2',
+						'step' => '0.01',
+						'suffix' => 'x'
+					),
+					"edit_field_class" => "col-md-6 tablet row-transform-device-group",
+                    'description' => ''
+                ),
+				array(
+					"type" => "nectar_angle_selection",
+					"class" => "",
+					"edit_field_class" => "col-md-6 col-md-6-last tablet row-transform-device-group",
+					"heading" => "<span class='attr-title'>" . esc_html__("Rotate", "salient-core"),
+					"param_name" => "rotate_tablet",
+					"value" => "",
+					"description" => ''
+				),
+				array(
 					"type" => "nectar_numerical",
 					"class" => "",
-					"placeholder" => esc_html__("Translate Y",'salient-core'),
-					"heading" => "<span class='attr-title'>" . esc_html__("Translate Y", "salient-core") . "</span>",
+					"heading" =>  esc_html__("Translate Y", "salient-core"),
 					"value" => "",
 					"edit_field_class" => "col-md-6 phone row-transform-device-group",
 					"param_name" => "translate_y_phone",
 					"description" => ""
 				),
-
 				array(
 					"type" => "nectar_numerical",
 					"class" => "",
-					"placeholder" => esc_html__("Translate X",'salient-core'),
-					"heading" => "<span class='attr-title'>" . esc_html__("Translate X", "salient-core") . "</span>",
+					"heading" => esc_html__("Translate X", "salient-core"),
 					"value" => "",
 					"edit_field_class" => "col-md-6 col-md-6-last phone row-transform-device-group",
 					"param_name" => "translate_x_phone",
 					"description" => ""
 				),
+				array(
+                    'type' => 'nectar_range_slider',
+                    'heading' => esc_html__( 'Scale', 'salient-core' ),
+                    'param_name' => 'scale_phone',
+                    'value' => '1',
+					'options' => array(
+						'min' => '0',
+						'max' => '2',
+						'step' => '0.01',
+						'suffix' => 'x'
+					),
+					"edit_field_class" => "col-md-6 phone row-transform-device-group",
+                    'description' => ''
+                ),
+				array(
+					"type" => "nectar_angle_selection",
+					"class" => "",
+					"edit_field_class" => "col-md-6 col-md-6-last phone row-transform-device-group",
+					"heading" => "<span class='attr-title'>" . esc_html__("Rotate", "salient-core") . "</span>",
+					"param_name" => "rotate_phone",
+					"value" => "",
+					"description" => ''
+				),
+				
 
 				array(
 				 "type" => "nectar_group_header",
@@ -1946,7 +2211,7 @@ function nectar_custom_maps() {
 							esc_html__("0px", "salient-core") => "none",
 							esc_html__("5px", "salient-core") => "5px",
 							esc_html__("10px", "salient-core") => "10px",
-              esc_html__("15px", "salient-core") => "15px",
+							esc_html__("15px", "salient-core") => "15px",
 							esc_html__("20px", "salient-core") => "20px"),
 						"description" => ''
 					),
@@ -1979,7 +2244,7 @@ function nectar_custom_maps() {
 					"value" => ""
 				),
 
-				/*array(
+				array(
 					"type" => "checkbox",
 					"class" => "",
 					'edit_field_class' => 'vc_col-xs-12 salient-fancy-checkbox',
@@ -2002,7 +2267,7 @@ function nectar_custom_maps() {
 					),
 					"dependency" => Array('element' => "sticky_row", 'not_empty' => true),
 					"description" => ''
-				),*/
+				),
 
 				array(
 					"type" => "dropdown",
@@ -2138,7 +2403,7 @@ function nectar_custom_maps() {
 					"heading" => esc_html__("Gradient Angle", "salient-core"),
 					"param_name" => "advanced_gradient_angle",
 					"value" => "",
-          "dependency" => Array('element' => "advanced_gradient_display_type", 'value' => array('linear')),
+          			"dependency" => Array('element' => "advanced_gradient_display_type", 'value' => array('linear')),
 					"description" => ''
 				),
         array(
@@ -2303,7 +2568,7 @@ function nectar_custom_maps() {
 					"type" => "dropdown",
 					"class" => "",
 					'save_always' => true,
-					"heading" => esc_html__("Background Image Animation", "salient-core"),
+					"heading" => esc_html__("Background Layer Animation", "salient-core"),
 					"param_name" => "bg_image_animation",
 					"group" => "Animation",
 					"value" => array(
@@ -2312,16 +2577,433 @@ function nectar_custom_maps() {
 						esc_html__("Zoom Out", "salient-core") => 'zoom-out',
 						esc_html__("Zoom Out Reveal", "salient-core" ) => 'zoom-out-reveal',
 						esc_html__("Slight Zoom Out Reveal", "salient-core" ) => 'slight-zoom-out-reveal',
-						esc_html__("Zoom Out Slowly", "salient-core") => 'zoom-out-slow'
+						esc_html__("Zoom Out Slowly", "salient-core") => 'zoom-out-slow',
+						esc_html__("Clip Path Inset", "salient-core") => 'clip-path'
 					),
 				),
+
+
+				array(
+					"type" => "dropdown",
+					"class" => "",
+					'save_always' => true,
+					"heading" => esc_html__("Clip Path Animation Type", "salient-core"),
+					"param_name" => "clip_path_animation_type",
+					"group" => "Animation",
+					"dependency" => Array('element' => "bg_image_animation", 'value' => array('clip-path')),
+					"description" => '',
+					"value" => array(
+						esc_html__("Triggered Once When Visible", "salient-core") => "default",
+						esc_html__("Scroll Position Animation", "salient-core") => "scroll",
+					),
+				),
+
+				array(
+					"type" => "dropdown",
+					"class" => "",
+					'save_always' => true,
+					"heading" => esc_html__("Clip Path Applies To", "salient-core"),
+					"param_name" => "clip_path_animation_applies",
+					"group" => "Animation",
+					"dependency" => Array('element' => "bg_image_animation", 'value' => array('clip-path')),
+					"description" => '',
+					"value" => array(
+						esc_html__("Background Layer", "salient-core") => "default",
+						esc_html__("Entire Row", "salient-core") => "row",
+					),
+				),
+
+				array(
+					"type" => "nectar_numerical",
+					"class" => "",
+					"group" => "Animation",
+					"dependency" => Array('element' => "bg_image_animation", 'value' => array('clip-path')),
+					"edit_field_class" => "col-md-4 desktop clip-path-device-group zero-floor",
+					"heading" => '<span class="group-title">' . esc_html__("Inset Start", "salient-core") . "</span><span class='attr-title'>" . esc_html__("Top", "salient-core") . "</span>",
+					"value" => "",
+					"placeholder" => esc_html__("Top",'salient-core'),
+					"param_name" => "clip_path_start_top_desktop",
+					"description" => ""
+				),
+				array(
+					"type" => "nectar_numerical",
+					"class" => "",
+					"placeholder" => esc_html__("Bottom",'salient-core'),
+					"edit_field_class" => "col-md-4 desktop clip-path-device-group zero-floor",
+					"heading" => "<span class='attr-title'>" . esc_html__("Bottom", "salient-core") . "</span>",
+					"group" => "Animation",
+					"dependency" => Array('element' => "bg_image_animation", 'value' => array('clip-path')),
+					"value" => "",
+					"param_name" => "clip_path_start_bottom_desktop",
+					"description" => ""
+				),
+				array(
+					"type" => "nectar_numerical",
+					"class" => "",
+					"placeholder" => esc_html__("Left",'salient-core'),
+					"edit_field_class" => "col-md-4 desktop clip-path-device-group zero-floor",
+					"heading" => "<span class='attr-title'>" . esc_html__("Left", "salient-core") . "</span>",
+					"group" => "Animation",
+					"dependency" => Array('element' => "bg_image_animation", 'value' => array('clip-path')),
+					"value" => "",
+					"param_name" => "clip_path_start_left_desktop",
+					"description" => ""
+				),
+				array(
+					"type" => "nectar_numerical",
+					"class" => "",
+					"placeholder" => esc_html__("Right",'salient-core'),
+					"edit_field_class" => "col-md-4 desktop clip-path-device-group zero-floor",
+					"heading" => "<span class='attr-title'>" . esc_html__("Right", "salient-core") . "</span>",
+					"group" => "Animation",
+					"dependency" => Array('element' => "bg_image_animation", 'value' => array('clip-path')),
+					"value" => "",
+					"param_name" => "clip_path_start_right_desktop",
+					"description" => ""
+				),
+
+
+				array(
+					"type" => "nectar_numerical",
+					"class" => "",
+					"placeholder" => esc_html__("Top",'salient-core'),
+					"edit_field_class" => "col-md-4 tablet clip-path-device-group zero-floor",
+					"heading" => "<span class='attr-title'>" . esc_html__("Top", "salient-core") . "</span>",
+					"group" => "Animation",
+					"dependency" => Array('element' => "bg_image_animation", 'value' => array('clip-path')),
+					"value" => "",
+					"param_name" => "clip_path_start_top_tablet",
+					"description" => ""
+				),
+				array(
+					"type" => "nectar_numerical",
+					"class" => "",
+					"placeholder" => esc_html__("Bottom",'salient-core'),
+					"edit_field_class" => "col-md-4 tablet clip-path-device-group zero-floor",
+					"heading" => "<span class='attr-title'>" . esc_html__("Bottom", "salient-core") . "</span>",
+					"group" => "Animation",
+					"dependency" => Array('element' => "bg_image_animation", 'value' => array('clip-path')),
+					"value" => "",
+					"param_name" => "clip_path_start_bottom_tablet",
+					"description" => ""
+				),
+				array(
+					"type" => "nectar_numerical",
+					"class" => "",
+					"placeholder" => esc_html__("Left",'salient-core'),
+					"edit_field_class" => "col-md-4 col-md-4-last tablet clip-path-device-group zero-floor",
+					"heading" => "<span class='attr-title'>" . esc_html__("Left", "salient-core") . "</span>",
+					"group" => "Animation",
+					"dependency" => Array('element' => "bg_image_animation", 'value' => array('clip-path')),
+					"value" => "",
+					"param_name" => "clip_path_start_left_tablet",
+					"description" => ""
+				),
+				array(
+					"type" => "nectar_numerical",
+					"class" => "",
+					"placeholder" => esc_html__("Right",'salient-core'),
+					"edit_field_class" => "col-md-4 tablet clip-path-device-group zero-floor",
+					"heading" => "<span class='attr-title'>" . esc_html__("Right", "salient-core") . "</span>",
+					"group" => "Animation",
+					"dependency" => Array('element' => "bg_image_animation", 'value' => array('clip-path')),
+					"value" => "",
+					"param_name" => "clip_path_start_right_tablet",
+					"description" => ""
+				),
+
+
+				array(
+					"type" => "nectar_numerical",
+					"class" => "",
+					"edit_field_class" => "col-md-4 phone clip-path-device-group zero-floor",
+					"heading" => "<span class='attr-title'>" . esc_html__("Top", "salient-core") . "</span>",
+					"group" => "Animation",
+					"dependency" => Array('element' => "bg_image_animation", 'value' => array('clip-path')),
+					"value" => "",
+					"placeholder" => esc_html__("Top",'salient-core'),
+					"param_name" => "clip_path_start_top_phone",
+					"description" => ""
+				),
+				array(
+					"type" => "nectar_numerical",
+					"class" => "",
+					"edit_field_class" => "col-md-4 phone clip-path-device-group zero-floor",
+					"heading" => "<span class='attr-title'>" . esc_html__("Bottom", "salient-core") . "</span>",
+					"group" => "Animation",
+					"dependency" => Array('element' => "bg_image_animation", 'value' => array('clip-path')),
+					"value" => "",
+					"placeholder" => esc_html__("Bottom",'salient-core'),
+					"param_name" => "clip_path_start_bottom_phone",
+					"description" => ""
+				),
+				array(
+					"type" => "nectar_numerical",
+					"class" => "",
+					"edit_field_class" => "col-md-4 col-md-4-last phone clip-path-device-group zero-floor",
+					"heading" => "<span class='attr-title'>" . esc_html__("Left", "salient-core") . "</span>",
+					"group" => "Animation",
+					"dependency" => Array('element' => "bg_image_animation", 'value' => array('clip-path')),
+					"value" => "",
+					"placeholder" => esc_html__("Left",'salient-core'),
+					"param_name" => "clip_path_start_left_phone",
+					"description" => ""
+				),
+			
+				array(
+					"type" => "nectar_numerical",
+					"class" => "",
+					"placeholder" => esc_html__("Right",'salient-core'),
+					"edit_field_class" => "col-md-4 phone clip-path-device-group zero-floor",
+					"heading" => "<span class='attr-title'>" . esc_html__("Right", "salient-core") . "</span>",
+					"group" => "Animation",
+					"dependency" => Array('element' => "bg_image_animation", 'value' => array('clip-path')),
+					"value" => "",
+					"param_name" => "clip_path_start_right_phone",
+					"description" => ""
+				),
+
+				
+
+				array(
+					"type" => "nectar_numerical",
+					"class" => "",
+					"group" => "Animation",
+					"dependency" => Array('element' => "bg_image_animation", 'value' => array('clip-path')),
+					"edit_field_class" => "col-md-4 desktop clip-path-end-device-group zero-floor",
+					"heading" => '<span class="group-title">' . esc_html__("Inset End", "salient-core") . "</span><span class='attr-title'>" . esc_html__("Top", "salient-core") . "</span>",
+					"value" => "",
+					"placeholder" => esc_html__("Top",'salient-core'),
+					"param_name" => "clip_path_end_top_desktop",
+					"description" => ""
+				),
+				array(
+					"type" => "nectar_numerical",
+					"class" => "",
+					"placeholder" => esc_html__("Bottom",'salient-core'),
+					"edit_field_class" => "col-md-4 desktop clip-path-end-device-group zero-floor",
+					"heading" => "<span class='attr-title'>" . esc_html__("Bottom", "salient-core") . "</span>",
+					"group" => "Animation",
+					"dependency" => Array('element' => "bg_image_animation", 'value' => array('clip-path')),
+					"value" => "",
+					"param_name" => "clip_path_end_bottom_desktop",
+					"description" => ""
+				),
+				array(
+					"type" => "nectar_numerical",
+					"class" => "",
+					"placeholder" => esc_html__("Left",'salient-core'),
+					"edit_field_class" => "col-md-4 desktop clip-path-end-device-group zero-floor",
+					"heading" => "<span class='attr-title'>" . esc_html__("Left", "salient-core") . "</span>",
+					"group" => "Animation",
+					"dependency" => Array('element' => "bg_image_animation", 'value' => array('clip-path')),
+					"value" => "",
+					"param_name" => "clip_path_end_left_desktop",
+					"description" => ""
+				),
+				array(
+					"type" => "nectar_numerical",
+					"class" => "",
+					"placeholder" => esc_html__("Right",'salient-core'),
+					"edit_field_class" => "col-md-4 desktop clip-path-end-device-group zero-floor",
+					"heading" => "<span class='attr-title'>" . esc_html__("Right", "salient-core") . "</span>",
+					"group" => "Animation",
+					"dependency" => Array('element' => "bg_image_animation", 'value' => array('clip-path')),
+					"value" => "",
+					"param_name" => "clip_path_end_right_desktop",
+					"description" => ""
+				),
+
+
+				array(
+					"type" => "nectar_numerical",
+					"class" => "",
+					"placeholder" => esc_html__("Top",'salient-core'),
+					"edit_field_class" => "col-md-4 tablet clip-path-end-device-group zero-floor",
+					"heading" => "<span class='attr-title'>" . esc_html__("Top", "salient-core") . "</span>",
+					"group" => "Animation",
+					"dependency" => Array('element' => "bg_image_animation", 'value' => array('clip-path')),
+					"value" => "",
+					"param_name" => "clip_path_end_top_tablet",
+					"description" => ""
+				),
+				array(
+					"type" => "nectar_numerical",
+					"class" => "",
+					"placeholder" => esc_html__("Bottom",'salient-core'),
+					"edit_field_class" => "col-md-4 tablet clip-path-end-device-group zero-floor",
+					"heading" => "<span class='attr-title'>" . esc_html__("Bottom", "salient-core") . "</span>",
+					"group" => "Animation",
+					"dependency" => Array('element' => "bg_image_animation", 'value' => array('clip-path')),
+					"value" => "",
+					"param_name" => "clip_path_end_bottom_tablet",
+					"description" => ""
+				),
+				array(
+					"type" => "nectar_numerical",
+					"class" => "",
+					"placeholder" => esc_html__("Left",'salient-core'),
+					"edit_field_class" => "col-md-4 col-md-4-last tablet clip-path-end-device-group zero-floor",
+					"heading" => "<span class='attr-title'>" . esc_html__("Left", "salient-core") . "</span>",
+					"group" => "Animation",
+					"dependency" => Array('element' => "bg_image_animation", 'value' => array('clip-path')),
+					"value" => "",
+					"param_name" => "clip_path_end_left_tablet",
+					"description" => ""
+				),
+				array(
+					"type" => "nectar_numerical",
+					"class" => "",
+					"placeholder" => esc_html__("Right",'salient-core'),
+					"edit_field_class" => "col-md-4 tablet clip-path-end-device-group zero-floor",
+					"heading" => "<span class='attr-title'>" . esc_html__("Right", "salient-core") . "</span>",
+					"group" => "Animation",
+					"dependency" => Array('element' => "bg_image_animation", 'value' => array('clip-path')),
+					"value" => "",
+					"param_name" => "clip_path_end_right_tablet",
+					"description" => ""
+				),
+
+
+				array(
+					"type" => "nectar_numerical",
+					"class" => "",
+					"edit_field_class" => "col-md-4 phone clip-path-end-device-group zero-floor",
+					"heading" => "<span class='attr-title'>" . esc_html__("Top", "salient-core") . "</span>",
+					"group" => "Animation",
+					"dependency" => Array('element' => "bg_image_animation", 'value' => array('clip-path')),
+					"value" => "",
+					"placeholder" => esc_html__("Top",'salient-core'),
+					"param_name" => "clip_path_end_top_phone",
+					"description" => ""
+				),
+				array(
+					"type" => "nectar_numerical",
+					"class" => "",
+					"edit_field_class" => "col-md-4 phone clip-path-end-device-group zero-floor",
+					"heading" => "<span class='attr-title'>" . esc_html__("Bottom", "salient-core") . "</span>",
+					"group" => "Animation",
+					"dependency" => Array('element' => "bg_image_animation", 'value' => array('clip-path')),
+					"value" => "",
+					"placeholder" => esc_html__("Bottom",'salient-core'),
+					"param_name" => "clip_path_end_bottom_phone",
+					"description" => ""
+				),
+				array(
+					"type" => "nectar_numerical",
+					"class" => "",
+					"edit_field_class" => "col-md-4 col-md-4-last phone clip-path-end-device-group zero-floor",
+					"heading" => "<span class='attr-title'>" . esc_html__("Left", "salient-core") . "</span>",
+					"group" => "Animation",
+					"dependency" => Array('element' => "bg_image_animation", 'value' => array('clip-path')),
+					"value" => "",
+					"placeholder" => esc_html__("Left",'salient-core'),
+					"param_name" => "clip_path_end_left_phone",
+					"description" => ""
+				),
+			
+				array(
+					"type" => "nectar_numerical",
+					"class" => "",
+					"placeholder" => esc_html__("Right",'salient-core'),
+					"edit_field_class" => "col-md-4 phone clip-path-end-device-group zero-floor",
+					"heading" => "<span class='attr-title'>" . esc_html__("Right", "salient-core") . "</span>",
+					"group" => "Animation",
+					"dependency" => Array('element' => "bg_image_animation", 'value' => array('clip-path')),
+					"value" => "",
+					"param_name" => "clip_path_end_right_phone",
+					"description" => ""
+				),
+
+				array(
+					"type" => "nectar_numerical",
+					"class" => "",
+					"group" => "Animation",
+					"edit_field_class" => "vc_col-xs-12 nectar-one-half slim-top-spacing zero-floor",
+					"dependency" => Array('element' => "bg_image_animation", 'value' => array('clip-path')),
+					"heading" => esc_html__("Roundess Start", "salient-core"),
+					"value" => "",
+					"param_name" => "clip_path_start_roundness",
+					"description" => ""
+				),
+
+				array(
+					"type" => "nectar_numerical",
+					"class" => "",
+					"group" => "Animation",
+					"edit_field_class" => "vc_col-xs-12 nectar-one-half nectar-one-half-last slim-top-spacing zero-floor",
+					"dependency" => Array('element' => "bg_image_animation", 'value' => array('clip-path')),
+					"heading" => esc_html__("Roundess End", "salient-core"),
+					"value" => "",
+					"param_name" => "clip_path_end_roundness",
+					"description" => ""
+				),
+
+				array(
+					'type' => 'nectar_multi_range_slider',
+					"group" => "Animation",
+					'heading' => esc_html__('Viewport Trigger Offset', 'salient-core'),
+					'param_name' => 'animation_trigger_offset',
+					'value' => '0,50',
+					'options' => array(
+						'min' => '0',
+						'max' => '100',
+					),
+					"dependency" => Array('element' => "clip_path_animation_type", 'value' => array('scroll')),
+					'description' => esc_html__('Set the percentage of the viewport that the animation will trigger and end at.', 'salient-core'),
+				),
+
+				array(
+					"type" => "dropdown",
+					"class" => "",
+					'save_always' => true,
+					"heading" => esc_html__("Viewport Trigger Origin", "salient-core"),
+					"param_name" => "animation_trigger_origin",
+					"group" => "Animation",
+					"dependency" => Array('element' => "clip_path_animation_type", 'value' => array('scroll')),
+					"description" => '',
+					"value" => array(
+						esc_html__("Top of Element", "salient-core") => "top",
+						esc_html__("Bottom of Element", "salient-core") => "bottom",
+					),
+				),
+
+				array(
+					"type" => "dropdown",
+					"class" => "",
+					'save_always' => true,
+					"heading" => esc_html__("Clip Path Animation Addon", "salient-core"),
+					"param_name" => "clip_path_animation_addon",
+					"group" => "Animation",
+					"dependency" => Array('element' => "clip_path_animation_type", 'value' => array('default')),
+					"description" => esc_html__('Add an accompanying animation to your background media in addition to the clip path','salient-core'),
+					"value" => array(
+						esc_html__("None", "salient-core") => "none",
+						esc_html__("Fade In", "salient-core") => "fade",
+						esc_html__("Zoom Fade In", "salient-core") => 'zoom'
+					),
+				),
+
+
+				array(
+					"type" => "textfield",
+					"class" => "",
+					"group" => "Animation",
+					"heading" => esc_html__("Background Animation Delay", "salient-core" ),
+					"param_name" => "bg_image_animation_delay",
+					"admin_label" => false,
+					"description" => esc_html__("Optionally enter a delay in milliseconds for when the animation will trigger e.g. 150. This will only take effect when using animations that are not synced to the scroll position.", "salient-core"),
+					"dependency" => Array('element' => "bg_image_animation", 'value' => array('fade-in','zoom-out','zoom-out-reveal','slight-zoom-out-reveal','zoom-out-slow','clip-path')),
+				),
+
+
 				array(
 					"type" => "checkbox",
 					"class" => "",
 					"group" => "Animation",
-					"dependency" => Array('element' => "bg_image_animation", 'value' => array('fade-in','zoom-out','zoom-out-reveal','slight-zoom-out-reveal','zoom-out-slow')),
+					"dependency" => Array('element' => "bg_image_animation", 'value' => array('fade-in','zoom-out','zoom-out-reveal','slight-zoom-out-reveal','zoom-out-slow','clip-path')),
 					'edit_field_class' => 'vc_col-xs-12 salient-fancy-checkbox',
-					"heading" => esc_html__("Disable Background Image Animation On Mobile", "salient-core"),
+					"heading" => esc_html__("Disable Background Layer Animation On Mobile", "salient-core"),
 					"param_name" => "mobile_disable_bg_image_animation",
 					"value" => array(esc_html__("Yes", "salient-core") => 'true'),
 				),
@@ -2422,12 +3104,219 @@ function nectar_custom_maps() {
 			 ),
 
 				array(
+					"type" => "nectar_radio_tab_selection",
+					"class" => "",
+					'save_always' => true,
+					"heading" => esc_html__("Padding Type", "salient-core"),
+					"param_name" => "column_padding_type",
+					"options" => array(
+						esc_html__("Simple", "salient-core") => "default",
+						esc_html__("Advanced", "salient-core") => "advanced",
+					),
+				),
+
+
+				array(
+					"type" => "nectar_numerical",
+					"class" => "",
+					"edit_field_class" => "col-md-4 desktop column-padding-adv-device-group constrain_group_100",
+					"heading" => '<span class="group-title">' . esc_html__("Column Padding", "salient-core") . "</span><span class='attr-title'>" . esc_html__("Top", "salient-core") . "</span>",
+					"value" => "",
+					"placeholder" => esc_html__("Top",'salient-core'),
+					"param_name" => "top_padding_desktop",
+					"dependency" => Array('element' => "column_padding_type", 'value' => 'advanced'),
+					"description" => ""
+				),
+				array(
+					'type' => 'checkbox',
+					'heading' => esc_html__( 'Constrain 1', 'salient-core' ),
+					'param_name' => 'constrain_group_100',
+					'description' => '',
+					"edit_field_class" => "desktop column-padding-adv-device-group constrain-icon",
+					'value' => array( esc_html__( 'Yes', 'salient-core' ) => 'yes' ),
+					"dependency" => Array('element' => "column_padding_type", 'value' => 'advanced'),
+				),
+				array(
+					"type" => "nectar_numerical",
+					"class" => "",
+					"placeholder" => esc_html__("Bottom",'salient-core'),
+					"edit_field_class" => "col-md-4 desktop column-padding-adv-device-group constrain_group_100",
+					"heading" => "<span class='attr-title'>" . esc_html__("Bottom", "salient-core") . "</span>",
+					"value" => "",
+					"param_name" => "bottom_padding_desktop",
+					"dependency" => Array('element' => "column_padding_type", 'value' => 'advanced'),
+					"description" => ""
+				),
+				array(
+					"type" => "nectar_numerical",
+					"class" => "",
+					"placeholder" => esc_html__("Left",'salient-core'),
+					"edit_field_class" => "col-md-4 desktop col-md-6-last column-padding-adv-device-group constrain_group_101",
+					"heading" => "<span class='attr-title'>" . esc_html__("Left", "salient-core") . "</span>",
+					"value" => "",
+					"param_name" => "left_padding_desktop",
+					"dependency" => Array('element' => "column_padding_type", 'value' => 'advanced'),
+					"description" => ""
+				),
+				array(
+					'type' => 'checkbox',
+					'heading' => esc_html__( 'Constrain 2', 'salient-core' ),
+					'param_name' => 'constrain_group_101',
+					'description' => '',
+					"edit_field_class" => "desktop column-padding-adv-device-group constrain-icon",
+					'value' => array( esc_html__( 'Yes', 'salient-core' ) => 'yes' ),
+					"dependency" => Array('element' => "column_padding_type", 'value' => 'advanced'),
+				),
+				array(
+					"type" => "nectar_numerical",
+					"class" => "",
+					"placeholder" => esc_html__("Right",'salient-core'),
+					"edit_field_class" => "col-md-4 desktop column-padding-adv-device-group constrain_group_101",
+					"heading" => "<span class='attr-title'>" . esc_html__("Right", "salient-core") . "</span>",
+					"value" => "",
+					"param_name" => "right_padding_desktop",
+					"dependency" => Array('element' => "column_padding_type", 'value' => 'advanced'),
+					"description" => ""
+				),
+
+
+				array(
+					"type" => "nectar_numerical",
+					"class" => "",
+					"placeholder" => esc_html__("Top",'salient-core'),
+					"edit_field_class" => "col-md-4 tablet column-padding-adv-device-group constrain_group_102",
+					"heading" => "<span class='attr-title'>" . esc_html__("Top", "salient-core") . "</span>",
+					"value" => "",
+					"param_name" => "top_padding_tablet",
+					"dependency" => Array('element' => "column_padding_type", 'value' => 'advanced'),
+					"description" => ""
+				),
+				array(
+					'type' => 'checkbox',
+					'heading' => esc_html__( 'Constrain 3', 'salient-core' ),
+					'param_name' => 'constrain_group_102',
+					'description' => '',
+					"edit_field_class" => "tablet column-padding-adv-device-group constrain-icon",
+					'value' => array( esc_html__( 'Yes', 'salient-core' ) => 'yes' ),
+					"dependency" => Array('element' => "column_padding_type", 'value' => 'advanced'),
+				),
+				array(
+					"type" => "nectar_numerical",
+					"class" => "",
+					"placeholder" => esc_html__("Bottom",'salient-core'),
+					"edit_field_class" => "col-md-4 tablet column-padding-adv-device-group constrain_group_102",
+					"heading" => "<span class='attr-title'>" . esc_html__("Bottom", "salient-core") . "</span>",
+					"value" => "",
+					"param_name" => "bottom_padding_tablet",
+					"dependency" => Array('element' => "column_padding_type", 'value' => 'advanced'),
+					"description" => ""
+				),
+				array(
+					"type" => "nectar_numerical",
+					"class" => "",
+					"placeholder" => esc_html__("Left",'salient-core'),
+					"edit_field_class" => "col-md-4 col-md-4-last tablet column-padding-adv-device-group constrain_group_103",
+					"heading" => "<span class='attr-title'>" . esc_html__("Left", "salient-core") . "</span>",
+					"value" => "",
+					"param_name" => "left_padding_tablet",
+					"dependency" => Array('element' => "column_padding_type", 'value' => 'advanced'),
+					"description" => ""
+				),
+				array(
+					'type' => 'checkbox',
+					'heading' => esc_html__( 'Constrain 4', 'salient-core' ),
+					'param_name' => 'constrain_group_103',
+					'description' => '',
+					"edit_field_class" => "tablet column-padding-adv-device-group constrain-icon",
+					'value' => array( esc_html__( 'Yes', 'salient-core' ) => 'yes' ),
+					"dependency" => Array('element' => "column_padding_type", 'value' => 'advanced'),
+				),
+				array(
+					"type" => "nectar_numerical",
+					"class" => "",
+					"placeholder" => esc_html__("Right",'salient-core'),
+					"edit_field_class" => "col-md-4 tablet column-padding-adv-device-group constrain_group_103",
+					"heading" => "<span class='attr-title'>" . esc_html__("Right", "salient-core") . "</span>",
+					"value" => "",
+					"param_name" => "right_padding_tablet",
+					"dependency" => Array('element' => "column_padding_type", 'value' => 'advanced'),
+					"description" => ""
+				),
+
+
+				array(
+					"type" => "nectar_numerical",
+					"class" => "",
+					"edit_field_class" => "col-md-4 phone column-padding-adv-device-group constrain_group_104",
+					"heading" => "<span class='attr-title'>" . esc_html__("Top", "salient-core") . "</span>",
+					"value" => "",
+					"placeholder" => esc_html__("Top",'salient-core'),
+					"param_name" => "top_padding_phone",
+					"dependency" => Array('element' => "column_padding_type", 'value' => 'advanced'),
+					"description" => ""
+				),
+				array(
+					'type' => 'checkbox',
+					'heading' => esc_html__( 'Constrain 5', 'salient-core' ),
+					'param_name' => 'constrain_group_104',
+					'description' => '',
+					"edit_field_class" => "phone column-padding-adv-device-group constrain-icon",
+					'value' => array( esc_html__( 'Yes', 'salient-core' ) => 'yes' ),
+					"dependency" => Array('element' => "column_padding_type", 'value' => 'advanced'),
+				),
+				array(
+					"type" => "nectar_numerical",
+					"class" => "",
+					"edit_field_class" => "col-md-4 phone column-padding-adv-device-group constrain_group_104",
+					"heading" => "<span class='attr-title'>" . esc_html__("Bottom", "salient-core") . "</span>",
+					"value" => "",
+					"placeholder" => esc_html__("Bottom",'salient-core'),
+					"param_name" => "bottom_padding_phone",
+					"dependency" => Array('element' => "column_padding_type", 'value' => 'advanced'),
+					"description" => ""
+				),
+				array(
+					"type" => "nectar_numerical",
+					"class" => "",
+					"edit_field_class" => "col-md-4 col-md-4-last phone column-padding-adv-device-group constrain_group_105",
+					"heading" => "<span class='attr-title'>" . esc_html__("Left", "salient-core") . "</span>",
+					"value" => "",
+					"placeholder" => esc_html__("Left",'salient-core'),
+					"param_name" => "left_padding_phone",
+					"dependency" => Array('element' => "column_padding_type", 'value' => 'advanced'),
+					"description" => ""
+				),
+				array(
+					'type' => 'checkbox',
+					'heading' => esc_html__( 'Constrain 6', 'salient-core' ),
+					'param_name' => 'constrain_group_105',
+					'description' => '',
+					"edit_field_class" => "phone column-padding-adv-device-group constrain-icon",
+					'value' => array( esc_html__( 'Yes', 'salient-core' ) => 'yes' ),
+					"dependency" => Array('element' => "column_padding_type", 'value' => 'advanced'),
+				),
+				array(
+					"type" => "nectar_numerical",
+					"class" => "",
+					"placeholder" => esc_html__("Right",'salient-core'),
+					"edit_field_class" => "col-md-4 phone column-padding-adv-device-group constrain_group_105",
+					"heading" => "<span class='attr-title'>" . esc_html__("Right", "salient-core") . "</span>",
+					"value" => "",
+					"dependency" => Array('element' => "column_padding_type", 'value' => 'advanced'),
+					"param_name" => "right_padding_phone",
+					"description" => ""
+				),
+
+				
+			
+				array(
 					"type" => "dropdown",
 					"class" => "",
 					'save_always' => true,
 					"edit_field_class" => "desktop column-padding-device-group",
 					"heading" => '<span class="group-title">' . esc_html__("Column Padding", "salient-core") . "</span>",
 					"param_name" => "column_padding",
+					"dependency" => Array('element' => "column_padding_type", 'value' => 'default'),
 					"value" => array(
 						"None" => "no-extra-padding",
 						"1%" => "padding-1-percent",
@@ -2461,6 +3350,7 @@ function nectar_custom_maps() {
 					"edit_field_class" => "tablet column-padding-device-group",
 					"heading" => '',
 					"param_name" => "column_padding_tablet",
+					"dependency" => Array('element' => "column_padding_type", 'value' => 'default'),
 					"value" => array(
 						"Inherit" => "inherit",
 						"None" => "no-extra-padding",
@@ -2495,6 +3385,7 @@ function nectar_custom_maps() {
 					"edit_field_class" => "phone column-padding-device-group",
 					"heading" => '',
 					"param_name" => "column_padding_phone",
+					"dependency" => Array('element' => "column_padding_type", 'value' => 'default'),
 					"value" => array(
 						"Inherit" => "inherit",
 						"None" => "no-extra-padding",
@@ -2528,6 +3419,7 @@ function nectar_custom_maps() {
 					"heading" => esc_html__("Column Padding Position", "salient-core"),
 					"param_name" => "column_padding_position",
 					'save_always' => true,
+					"dependency" => Array('element' => "column_padding_type", 'value' => 'default'),
 					"value" => array(
 						esc_html__('All Sides', 'salient-core') => 'all',
 						esc_html__('Top', 'salient-core') => "top",
@@ -2796,6 +3688,59 @@ function nectar_custom_maps() {
 			 ),
 
 			 array(
+				"type" => "dropdown",
+				"class" => "",
+				"param_name" => "column_element_direction_desktop",
+				"edit_field_class" => "desktop column-el-direction-device-group",
+				"heading" => '<span class="group-title">' . esc_html__("Column Element Direction", "salient-core") . "</span>",
+				'save_always' => true,
+				"value" => array(
+					esc_html__('Stacked Vertically', 'salient-core') => 'default',
+					esc_html__('Inline Horizontal', 'salient-core') => 'horizontal',
+				),
+				"description" => esc_html__("Determines the direction to display elements within this column.", "salient-core")
+			),
+			array(
+				"type" => "dropdown",
+				"class" => "",
+				"param_name" => "column_element_direction_tablet",
+				"edit_field_class" => "tablet column-el-direction-device-group",
+				"heading" => '',
+				"value" => array(
+					esc_html__('Default (Stacked Vertically)', 'salient-core') => 'default',
+					esc_html__('Inline Horizontal', 'salient-core') => 'horizontal',
+				),
+				"description" => ''
+			),
+			array(
+				"type" => "dropdown",
+				"class" => "",
+				"param_name" => "column_element_direction_phone",
+				"edit_field_class" => "phone column-el-direction-device-group",
+				"heading" => '',
+				"value" => array(
+					esc_html__('Default (Stacked Vertically)', 'salient-core') => 'default',
+					esc_html__('Inline Horizontal', 'salient-core') => 'horizontal',
+				),
+				"description" => ''
+			),
+
+			array(
+				"type" => "dropdown",
+				"class" => "",
+				"heading" => esc_html__("Column Element Alignment", "salient-core"),
+				"param_name" => "column_element_alignment",
+				'save_always' => true,
+				"value" => array(
+					esc_html__('Center', 'salient-core') => 'center',
+					esc_html__('Top', 'salient-core') => 'flex-start',
+					esc_html__('Bottom', 'salient-core') => 'flex-end',
+				),
+				"dependency" => Array('element' => "column_element_direction_desktop", 'value' => 'horizontal'),
+				"description" => esc_html__("Determines the direction to display elements within this column.", "salient-core")
+			),
+
+			 array(
 				 "type" => "dropdown",
 				 "class" => "",
 				 "heading" => esc_html__("Column Element Spacing", "salient-core"),
@@ -2824,6 +3769,50 @@ function nectar_custom_maps() {
 					"description" => ""
 				),
 
+
+				array(
+					"type" => "dropdown",
+					"class" => "",
+					'save_always' => true,
+					"heading" => '<span class="group-title">' . esc_html__("Text Align", "salient-core") . "</span>",
+					"param_name" => "desktop_text_alignment",
+					"edit_field_class" => "desktop column-text-align-device-group",
+					"value" => array(
+						esc_html__("Default", "salient-core") => "default",
+						esc_html__("Left", "salient-core") => "left",
+						esc_html__("Center", "salient-core") => "center",
+						esc_html__("Right", "salient-core") => "right"
+					)
+				),
+				array(
+					"type" => "dropdown",
+					"class" => "",
+					'save_always' => true,
+					"heading" => '',
+					"param_name" => "tablet_text_alignment",
+					"edit_field_class" => "tablet column-text-align-device-group",
+					"value" => array(
+						esc_html__("Default", "salient-core") => "default",
+						esc_html__("Left", "salient-core") => "left",
+						esc_html__("Center", "salient-core") => "center",
+						esc_html__("Right", "salient-core") => "right"
+					)
+				),
+				array(
+					"type" => "dropdown",
+					"class" => "",
+					'save_always' => true,
+					"heading" => '',
+					"param_name" => "phone_text_alignment",
+					"edit_field_class" => "phone column-text-align-device-group",
+					"value" => array(
+						esc_html__("Default", "salient-core") => "default",
+						esc_html__("Left", "salient-core") => "left",
+						esc_html__("Center", "salient-core") => "center",
+						esc_html__("Right", "salient-core") => "right"
+					)
+				),
+
         		array(
 					"type" => "checkbox",
 					"class" => "",
@@ -2831,6 +3820,7 @@ function nectar_custom_maps() {
 					"heading" => esc_html__("Sticky Content", "salient-core"),
 					"value" => array("Sticky Content" => "true" ),
 					"param_name" => "sticky_content",
+					"dependency" => Array('element' => "column_element_direction_desktop", 'value' => 'default'),
 					"description" => esc_html__("Enabling this will make the inner content of this column sticky when neighboring columns are taller.", "salient-core")
 				),
 
@@ -2981,6 +3971,19 @@ function nectar_custom_maps() {
 					),
 					"dependency" => Array('element' => "background_image", 'not_empty' => true)
 				),
+				array(
+					"type" => "dropdown",
+					"class" => "",
+					"group" => "Background",
+					'save_always' => true,
+					"heading" => esc_html__("Background Image Stacking Order", "salient-core" ),
+					"param_name" => "background_image_stacking",
+					"value" => array(
+						 esc_html__("Behind Background Color", "salient-core" ) => "default",
+						 esc_html__("In Front of Background Color", "salient-core" ) => "front",
+					),
+					"dependency" => Array('element' => "background_image", 'not_empty' => true)
+				),
 
 				array(
 					"type" => "checkbox",
@@ -3080,6 +4083,32 @@ function nectar_custom_maps() {
 						  "description" => esc_html__("Determine whether to load the background video on page load or to use a lazy load method for higher performance.", "salient-core"),
 					'std' => 'default',
 				  ),
+				  
+				  array(
+					"type" => "dropdown",
+					"heading" => esc_html__("Backdrop Filter", "salient-core"),
+					'save_always' => true,
+					'group' => esc_html__( 'Background', 'salient-core' ),
+					"param_name" => "column_backdrop_filter",
+					"value" => array(
+						esc_html__("None", "salient-core") => "none",
+						esc_html__("Blur", "salient-core") => "blur",
+					),
+					"description" => esc_html__('Add a filter effect to the area behind this column.','salient')
+				),
+				array(
+                    'group' => esc_html__( 'Background', 'salient-core' ),
+                    'type' => 'nectar_range_slider',
+                    'dependency' => array( 'element' => 'column_backdrop_filter', 'value' => array( 'blur' ) ),
+                    'heading' => esc_html__( 'Blur Amount', 'salient-core' ),
+                    'param_name' => 'column_backdrop_filter_blur',
+                    'value' => '0',
+					'options' => array(
+						'min' => '0',
+						'max' => '50',
+					),
+                    'description' => ''
+                ),
 
 				array(
 					"type" => "colorpicker",
@@ -3104,8 +4133,22 @@ function nectar_custom_maps() {
 						"heading" => esc_html__("Box Shadow", "salient-core"),
 						'save_always' => true,
 						"param_name" => "column_shadow",
-						"value" => array(esc_html__("None", "salient-core") => "none", esc_html__("Small Depth", "salient-core") => "small_depth", esc_html__("Medium Depth", "salient-core") => "medium_depth", esc_html__("Large Depth", "salient-core") => "large_depth", esc_html__("Very Large Depth", "salient-core") => "x_large_depth"),
+						"value" => array(
+							esc_html__("None", "salient-core") => "none", 
+							esc_html__("Small Depth", "salient-core") => "small_depth", 
+							esc_html__("Medium Depth", "salient-core") => "medium_depth", 
+							esc_html__("Large Depth", "salient-core") => "large_depth", 
+							esc_html__("Very Large Depth", "salient-core") => "x_large_depth",
+							esc_html__("Custom", "salient-core") => "custom"
+						),
 						"description" => ''
+					),
+					array(
+						'type' => 'nectar_box_shadow_generator',
+						'heading' => esc_html__( 'Custom Box Shadow', 'salient-core' ),
+						'save_always' => true,
+						'param_name' => 'custom_box_shadow',
+						'dependency' => Array( 'element' => 'column_shadow', 'value' => array( 'custom' ) )
 					),
 					array(
 							"type" => "dropdown",
@@ -3121,7 +4164,7 @@ function nectar_custom_maps() {
 								esc_html__("20px", "salient-core") => "20px",
 								esc_html__("50px", "salient-core") => "50px",
 								esc_html__("100px", "salient-core") => "100px",
-                esc_html__("Custom", "salient-core") => "custom"),
+                				esc_html__("Custom", "salient-core") => "custom"),
 							"description" => ''
 						),
 
@@ -3469,40 +4512,8 @@ function nectar_custom_maps() {
 					"description" => esc_html__("This allows you to determine what your column width will inherit from when viewed on tablets in a portrait orientation.", "salient-core" )
 				),
 
-				array(
-					"type" => "dropdown",
-					"class" => "",
-					'group' => esc_html__( 'Responsive Options', 'salient-core' ),
-					'save_always' => true,
-					"heading" => esc_html__('Tablet Text Alignment', 'salient-core' ),
-					"param_name" => "tablet_text_alignment",
-					"value" => array(
-						esc_html__("Default", "salient-core" ) => "default",
-						esc_html__("Left", "salient-core" ) => "left",
-						esc_html__("Center", "salient-core" ) => "center",
-						esc_html__("Right", "salient-core" ) => "right",
-					),
-					"description" => esc_html__("Text alignment that will be used on tablet devices", "salient-core" )
-				),
 
 				array(
-					"type" => "dropdown",
-					"class" => "",
-					'group' => esc_html__( 'Responsive Options', 'salient-core' ),
-					'save_always' => true,
-					"heading" => "Smartphone Text Alignment",
-					"param_name" => "phone_text_alignment",
-					"value" => array(
-						esc_html__("Default", "salient-core" ) => "default",
-						esc_html__("Left", "salient-core" ) => "left",
-						esc_html__("Center", "salient-core" ) => "center",
-						esc_html__("Right", "salient-core" ) => "right",
-					),
-					"description" => esc_html__("Text alignment that will be used on smartphones", "salient-core" )
-				),
-
-
-        array(
 					"type" => "dropdown",
 					"class" => "",
 					'save_always' => true,
@@ -3510,8 +4521,8 @@ function nectar_custom_maps() {
 					"group" => "Animation",
 					"param_name" => "animation_type",
 					"value" => array(
-						 esc_html__("Triggered once when visible", "salient-core") => "default",
-						 esc_html__("Continuous movement by scroll position", "salient-core") => "parallax",
+						 esc_html__("Triggered Once When Visible", "salient-core") => "default",
+						 esc_html__("Scroll Position Animation", "salient-core") => "parallax",
 					),
 				),
 
@@ -3525,21 +4536,21 @@ function nectar_custom_maps() {
 					"param_name" => "animation_movement_type",
 					"dependency" => Array('element' => "animation_type", 'value' => array('parallax')),
 					"value" => array(
-						esc_html__("Move On Y Axis", "salient-core") => "default",
-						esc_html__("Move On X Axis", "salient-core") => "transform_x",
+						esc_html__("Move Y Axis", "salient-core") => "default",
+						esc_html__("Move X Axis", "salient-core") => "transform_x",
 					),
 				),
 
         array(
 					"type" => "nectar_numerical",
 					"class" => "",
-		  "group" => "Animation",
+					"group" => "Animation",
 		  			'edit_field_class' => 'movement-intensity vc_col-xs-12',
-					"placeholder" => esc_html__("Movement Intensity ( -5 to 5 )",'salient-core'),
+					"placeholder" => esc_html__("Movement Intensity ( -8 to 8 )",'salient-core'),
 					"heading" => "<span class='attr-title'>" . esc_html__("Movement Intensity", "salient-core") . "</span>",
 					"value" => "",
 					"param_name" => "column_parallax_intensity",
-          "dependency" => Array('element' => "animation_type", 'value' => array('parallax')),
+					"dependency" => Array('element' => "animation_type", 'value' => array('parallax')),
 					"description" => '',
 				),
 
@@ -3549,7 +4560,7 @@ function nectar_custom_maps() {
 					"heading" => esc_html__("Persist Movement On Mobile", "salient-core"),
 					"value" => array("Enable" => "true" ),
 					"param_name" => "persist_movement_on_mobile",
-          "dependency" => Array('element' => "animation_type", 'value' => array('parallax')),
+					"dependency" => Array('element' => "animation_type", 'value' => array('parallax')),
 					'edit_field_class' => 'vc_col-xs-12 salient-fancy-checkbox',
 					"description" => '',
 					"group" => "Animation"
@@ -3581,6 +4592,7 @@ function nectar_custom_maps() {
 						 esc_html__("Fade In From Left", "salient-core" ) => "fade-in-from-left",
 						 esc_html__("Fade In Right", "salient-core" ) => "fade-in-from-right",
 						 esc_html__("Fade In From Bottom", "salient-core" ) => "fade-in-from-bottom",
+						 esc_html__("Slight Fade In From Bottom", "salient-core" ) => "slight-fade-in-from-bottom",
 						 esc_html__("Grow In", "salient-core" ) => "grow-in",
 						 esc_html__("Zoom Out", "salient-core" ) => 'zoom-out',
 						 esc_html__("Slight Twist", "salient-core" ) => 'slight-twist',
@@ -3608,7 +4620,7 @@ function nectar_custom_maps() {
 					"type" => "textfield",
 					"class" => "",
 					"group" => "Animation",
-					"edit_field_class" => "col-md-6",
+					"edit_field_class" => "nectar-one-half",
 					"heading" => esc_html__("Column Animation Delay", "salient-core" ),
 					"param_name" => "delay",
 					"admin_label" => false,
@@ -3620,22 +4632,55 @@ function nectar_custom_maps() {
 					"type" => "textfield",
 					"class" => "",
 					"group" => "Animation",
-					"edit_field_class" => "col-md-6 col-md-6-last",
+					"edit_field_class" => "nectar-one-half nectar-one-half-last",
 					"heading" => esc_html__("Column Animation Offset", "salient-core" ),
 					"param_name" => "animation_offset",
 					"admin_label" => false,
 					"description" => esc_html__("Optionally specify the offset from the top of the screen for when the animation will trigger. Defaults to 95%.", "salient-core"),
 					"dependency" => Array('element' => "enable_animation", 'not_empty' => true)
 				),
-
-        array(
+				array(
 					"type" => "dropdown",
 					"class" => "",
 					'save_always' => true,
-					"heading" => esc_html__("Background Image Animation", "salient-core" ),
+					"heading" => esc_html__("Column Animation Easing", "salient-core"),
+					"param_name" => "animation_easing",
+					"group" => "Animation",
+					"dependency" => Array('element' => "enable_animation", 'not_empty' => true),
+					"value" => array(
+						"Inherit From Theme Options" => "default",
+						'easeInQuad'=>'easeInQuad',
+						'easeOutQuad' => 'easeOutQuad',
+						'easeInOutQuad'=>'easeInOutQuad',
+						'easeInCubic'=>'easeInCubic',
+						'easeOutCubic'=>'easeOutCubic',
+						'easeInOutCubic'=>'easeInOutCubic',
+						'easeInQuart'=>'easeInQuart',
+						'easeOutQuart'=>'easeOutQuart',
+						'easeInOutQuart'=>'easeInOutQuart',
+						'easeInQuint'=>'easeInQuint',
+						'easeOutQuint'=>'easeOutQuint',
+						'easeInOutQuint'=>'easeInOutQuint',
+						'easeInExpo'=>'easeInExpo',
+						'easeOutExpo'=>'easeOutExpo',
+						'easeInOutExpo'=>'easeInOutExpo',
+						'easeInSine'=>'easeInSine',
+						'easeOutSine'=>'easeOutSine',
+						'easeInOutSine'=>'easeInOutSine',
+						'easeInCirc'=>'easeInCirc',
+						'easeOutCirc'=>'easeOutCirc',
+						'easeInOutCirc'=>'easeInOutCirc'
+					),
+				),
+
+        	array(
+					"type" => "dropdown",
+					"class" => "",
+					'save_always' => true,
+					"heading" => esc_html__("Background Layer Animation", "salient-core" ),
 					"param_name" => "bg_image_animation",
 					"group" => "Animation",
-					"description" => esc_html__("This will animate the optional background image layer of your column only when scrolled into view", "salient-core" ),
+					"description" => esc_html__("This will animate the background layer of your column only when scrolled into view", "salient-core" ),
 					"value" => array(
 						esc_html__("None", "salient-core" ) => "none",
 						esc_html__("Fade In", "salient-core" ) => "fade-in",
@@ -3647,6 +4692,44 @@ function nectar_custom_maps() {
 						esc_html__("Reveal Rotate From Bottom", "salient-core") => "ro-reveal-from-bottom",
 						esc_html__("Reveal Rotate From Left", "salient-core") => "ro-reveal-from-left",
 						esc_html__("Reveal Rotate From Right", "salient-core") => "ro-reveal-from-right",
+						esc_html__("Mask Reveal", "salient-core") => "mask-reveal",
+					),
+				),
+				array(
+					"type" => "dropdown",
+					"class" => "",
+					'save_always' => true,
+					"heading" => esc_html__("Background Mask Reveal Direction", "salient-core" ),
+					"param_name" => "bg_image_animation_mask_direction",
+					"group" => "Animation",
+					"description" => '', 
+					"dependency" => Array('element' => "bg_image_animation", 'value' => 'mask-reveal'),
+					"edit_field_class" => "nectar-one-half",
+					"value" => array(
+						esc_html__("Top", "salient-core" ) => "top",
+						esc_html__("Right Top", "salient-core" ) => "right_top",
+						esc_html__("Right", "salient-core" ) => "right",
+						esc_html__("Right Bottom", "salient-core" ) => "right_bottom",
+						esc_html__("Bottom", "salient-core" ) => "bottom",
+						esc_html__("Left Bottom", "salient-core" ) => "left_bottom",
+						esc_html__("Left", "salient-core" ) => "left",
+						esc_html__("Left Top", "salient-core" ) => "left_top",
+						esc_html__("Middle", "salient-core" ) => "middle",
+					),
+				),
+				array(
+					"type" => "dropdown",
+					"class" => "",
+					'save_always' => true,
+					"heading" => esc_html__("Background Mask Reveal Shape", "salient-core" ),
+					"param_name" => "bg_image_animation_mask_shape",
+					"group" => "Animation",
+					"description" => '', 
+					"dependency" => Array('element' => "bg_image_animation", 'value' => 'mask-reveal'),
+					"edit_field_class" => "nectar-one-half nectar-one-half-last",
+					"value" => array(
+						esc_html__("Straight", "salient-core" ) => "straight",
+						esc_html__("Circle", "salient-core" ) => "circle",
 					),
 				),
 
@@ -3901,7 +4984,7 @@ function nectar_custom_maps() {
 						esc_html__("Double Offset", "salient-core" ) => "double_offset"
 					),
 					"description" => "",
-					"dependency" => Array('element' => "column_border_radius", 'value' => 'none')
+					/*"dependency" => Array('element' => "column_border_radius", 'value' => 'none')*/
 				),
 				array(
 					"type" => "checkbox",
@@ -3932,7 +5015,7 @@ function nectar_custom_maps() {
 		);
 
 
-		/*$mask_group = SalientWPbakeryParamGroups::mask_group( esc_html__( 'Background', 'salient-core' ) );
+		$mask_group = SalientWPbakeryParamGroups::mask_group( esc_html__( 'Background', 'salient-core' ) );
 	
 		$imported_groups = array( $mask_group );
 	
@@ -3942,7 +5025,7 @@ function nectar_custom_maps() {
 				$vc_column_map['params'][] = $option;
 			}
 	
-		}*/
+		}
 
 		vc_map($vc_column_map);
 
@@ -3968,6 +5051,211 @@ function nectar_custom_maps() {
 				 "edit_field_class" => "first-field",
 				 "value" => ''
 			 ),
+
+			 array(
+				"type" => "nectar_radio_tab_selection",
+				"class" => "",
+				'save_always' => true,
+				"heading" => esc_html__("Padding Type", "salient-core"),
+				"param_name" => "column_padding_type",
+				"options" => array(
+					esc_html__("Simple", "salient-core") => "default",
+					esc_html__("Advanced", "salient-core") => "advanced",
+				),
+			),
+
+
+			array(
+				"type" => "nectar_numerical",
+				"class" => "",
+				"edit_field_class" => "col-md-4 desktop column-padding-adv-device-group constrain_group_100",
+				"heading" => '<span class="group-title">' . esc_html__("Column Padding", "salient-core") . "</span><span class='attr-title'>" . esc_html__("Top", "salient-core") . "</span>",
+				"value" => "",
+				"placeholder" => esc_html__("Top",'salient-core'),
+				"param_name" => "top_padding_desktop",
+				"dependency" => Array('element' => "column_padding_type", 'value' => 'advanced'),
+				"description" => ""
+			),
+			array(
+				'type' => 'checkbox',
+				'heading' => esc_html__( 'Constrain 1', 'salient-core' ),
+				'param_name' => 'constrain_group_100',
+				'description' => '',
+				"edit_field_class" => "desktop column-padding-adv-device-group constrain-icon",
+				'value' => array( esc_html__( 'Yes', 'salient-core' ) => 'yes' ),
+				"dependency" => Array('element' => "column_padding_type", 'value' => 'advanced'),
+			),
+			array(
+				"type" => "nectar_numerical",
+				"class" => "",
+				"placeholder" => esc_html__("Bottom",'salient-core'),
+				"edit_field_class" => "col-md-4 desktop column-padding-adv-device-group constrain_group_100",
+				"heading" => "<span class='attr-title'>" . esc_html__("Bottom", "salient-core") . "</span>",
+				"value" => "",
+				"param_name" => "bottom_padding_desktop",
+				"dependency" => Array('element' => "column_padding_type", 'value' => 'advanced'),
+				"description" => ""
+			),
+			array(
+				"type" => "nectar_numerical",
+				"class" => "",
+				"placeholder" => esc_html__("Left",'salient-core'),
+				"edit_field_class" => "col-md-4 desktop col-md-6-last column-padding-adv-device-group constrain_group_101",
+				"heading" => "<span class='attr-title'>" . esc_html__("Left", "salient-core") . "</span>",
+				"value" => "",
+				"param_name" => "left_padding_desktop",
+				"dependency" => Array('element' => "column_padding_type", 'value' => 'advanced'),
+				"description" => ""
+			),
+			array(
+				'type' => 'checkbox',
+				'heading' => esc_html__( 'Constrain 2', 'salient-core' ),
+				'param_name' => 'constrain_group_101',
+				'description' => '',
+				"edit_field_class" => "desktop column-padding-adv-device-group constrain-icon",
+				'value' => array( esc_html__( 'Yes', 'salient-core' ) => 'yes' ),
+				"dependency" => Array('element' => "column_padding_type", 'value' => 'advanced'),
+			),
+			array(
+				"type" => "nectar_numerical",
+				"class" => "",
+				"placeholder" => esc_html__("Right",'salient-core'),
+				"edit_field_class" => "col-md-4 desktop column-padding-adv-device-group constrain_group_101",
+				"heading" => "<span class='attr-title'>" . esc_html__("Right", "salient-core") . "</span>",
+				"value" => "",
+				"param_name" => "right_padding_desktop",
+				"dependency" => Array('element' => "column_padding_type", 'value' => 'advanced'),
+				"description" => ""
+			),
+
+
+			array(
+				"type" => "nectar_numerical",
+				"class" => "",
+				"placeholder" => esc_html__("Top",'salient-core'),
+				"edit_field_class" => "col-md-4 tablet column-padding-adv-device-group constrain_group_102",
+				"heading" => "<span class='attr-title'>" . esc_html__("Top", "salient-core") . "</span>",
+				"value" => "",
+				"param_name" => "top_padding_tablet",
+				"dependency" => Array('element' => "column_padding_type", 'value' => 'advanced'),
+				"description" => ""
+			),
+			array(
+				'type' => 'checkbox',
+				'heading' => esc_html__( 'Constrain 3', 'salient-core' ),
+				'param_name' => 'constrain_group_102',
+				'description' => '',
+				"edit_field_class" => "tablet column-padding-adv-device-group constrain-icon",
+				'value' => array( esc_html__( 'Yes', 'salient-core' ) => 'yes' ),
+				"dependency" => Array('element' => "column_padding_type", 'value' => 'advanced'),
+			),
+			array(
+				"type" => "nectar_numerical",
+				"class" => "",
+				"placeholder" => esc_html__("Bottom",'salient-core'),
+				"edit_field_class" => "col-md-4 tablet column-padding-adv-device-group constrain_group_102",
+				"heading" => "<span class='attr-title'>" . esc_html__("Bottom", "salient-core") . "</span>",
+				"value" => "",
+				"param_name" => "bottom_padding_tablet",
+				"dependency" => Array('element' => "column_padding_type", 'value' => 'advanced'),
+				"description" => ""
+			),
+			array(
+				"type" => "nectar_numerical",
+				"class" => "",
+				"placeholder" => esc_html__("Left",'salient-core'),
+				"edit_field_class" => "col-md-4 col-md-4-last tablet column-padding-adv-device-group constrain_group_103",
+				"heading" => "<span class='attr-title'>" . esc_html__("Left", "salient-core") . "</span>",
+				"value" => "",
+				"param_name" => "left_padding_tablet",
+				"dependency" => Array('element' => "column_padding_type", 'value' => 'advanced'),
+				"description" => ""
+			),
+			array(
+				'type' => 'checkbox',
+				'heading' => esc_html__( 'Constrain 4', 'salient-core' ),
+				'param_name' => 'constrain_group_103',
+				'description' => '',
+				"edit_field_class" => "tablet column-padding-adv-device-group constrain-icon",
+				'value' => array( esc_html__( 'Yes', 'salient-core' ) => 'yes' ),
+				"dependency" => Array('element' => "column_padding_type", 'value' => 'advanced'),
+			),
+			array(
+				"type" => "nectar_numerical",
+				"class" => "",
+				"placeholder" => esc_html__("Right",'salient-core'),
+				"edit_field_class" => "col-md-4 tablet column-padding-adv-device-group constrain_group_103",
+				"heading" => "<span class='attr-title'>" . esc_html__("Right", "salient-core") . "</span>",
+				"value" => "",
+				"param_name" => "right_padding_tablet",
+				"dependency" => Array('element' => "column_padding_type", 'value' => 'advanced'),
+				"description" => ""
+			),
+
+
+			array(
+				"type" => "nectar_numerical",
+				"class" => "",
+				"edit_field_class" => "col-md-4 phone column-padding-adv-device-group constrain_group_104",
+				"heading" => "<span class='attr-title'>" . esc_html__("Top", "salient-core") . "</span>",
+				"value" => "",
+				"placeholder" => esc_html__("Top",'salient-core'),
+				"param_name" => "top_padding_phone",
+				"dependency" => Array('element' => "column_padding_type", 'value' => 'advanced'),
+				"description" => ""
+			),
+			array(
+				'type' => 'checkbox',
+				'heading' => esc_html__( 'Constrain 5', 'salient-core' ),
+				'param_name' => 'constrain_group_104',
+				'description' => '',
+				"edit_field_class" => "phone column-padding-adv-device-group constrain-icon",
+				'value' => array( esc_html__( 'Yes', 'salient-core' ) => 'yes' ),
+				"dependency" => Array('element' => "column_padding_type", 'value' => 'advanced'),
+			),
+			array(
+				"type" => "nectar_numerical",
+				"class" => "",
+				"edit_field_class" => "col-md-4 phone column-padding-adv-device-group constrain_group_104",
+				"heading" => "<span class='attr-title'>" . esc_html__("Bottom", "salient-core") . "</span>",
+				"value" => "",
+				"placeholder" => esc_html__("Bottom",'salient-core'),
+				"param_name" => "bottom_padding_phone",
+				"dependency" => Array('element' => "column_padding_type", 'value' => 'advanced'),
+				"description" => ""
+			),
+			array(
+				"type" => "nectar_numerical",
+				"class" => "",
+				"edit_field_class" => "col-md-4 col-md-4-last phone column-padding-adv-device-group constrain_group_105",
+				"heading" => "<span class='attr-title'>" . esc_html__("Left", "salient-core") . "</span>",
+				"value" => "",
+				"placeholder" => esc_html__("Left",'salient-core'),
+				"param_name" => "left_padding_phone",
+				"dependency" => Array('element' => "column_padding_type", 'value' => 'advanced'),
+				"description" => ""
+			),
+			array(
+				'type' => 'checkbox',
+				'heading' => esc_html__( 'Constrain 6', 'salient-core' ),
+				'param_name' => 'constrain_group_105',
+				'description' => '',
+				"edit_field_class" => "phone column-padding-adv-device-group constrain-icon",
+				'value' => array( esc_html__( 'Yes', 'salient-core' ) => 'yes' ),
+				"dependency" => Array('element' => "column_padding_type", 'value' => 'advanced'),
+			),
+			array(
+				"type" => "nectar_numerical",
+				"class" => "",
+				"placeholder" => esc_html__("Right",'salient-core'),
+				"edit_field_class" => "col-md-4 phone column-padding-adv-device-group constrain_group_105",
+				"heading" => "<span class='attr-title'>" . esc_html__("Right", "salient-core") . "</span>",
+				"value" => "",
+				"dependency" => Array('element' => "column_padding_type", 'value' => 'advanced'),
+				"param_name" => "right_padding_phone",
+				"description" => ""
+			),
+
 
 				array(
 					"type" => "dropdown",
@@ -3999,6 +5287,7 @@ function nectar_custom_maps() {
 						"19%" => "padding-19-percent",
 						"20%" => "padding-20-percent"
 					),
+					"dependency" => Array('element' => "column_padding_type", 'value' => 'default'),
 					"description" => '',
 				),
 
@@ -4033,6 +5322,7 @@ function nectar_custom_maps() {
 						"19%" => "padding-19-percent",
 						"20%" => "padding-20-percent"
 					),
+					"dependency" => Array('element' => "column_padding_type", 'value' => 'default'),
 					"description" => '',
 				),
 
@@ -4067,6 +5357,7 @@ function nectar_custom_maps() {
 						"19%" => "padding-19-percent",
 						"20%" => "padding-20-percent"
 					),
+					"dependency" => Array('element' => "column_padding_type", 'value' => 'default'),
 					"description" => '',
 				),
 
@@ -4089,6 +5380,7 @@ function nectar_custom_maps() {
 						esc_html__('Bottom + Right', 'salient-core' ) => 'bottom-right',
 						esc_html__('Bottom + Left', 'salient-core' ) => 'bottom-left',
 					),
+					"dependency" => Array('element' => "column_padding_type", 'value' => 'default'),
 					"description" => esc_html__("Use this to fine tune where the column padding will take effect", "salient-core" )
 				),
 
@@ -4341,6 +5633,59 @@ function nectar_custom_maps() {
 			 ),
 
 			 array(
+				"type" => "dropdown",
+				"class" => "",
+				"param_name" => "column_element_direction_desktop",
+				"edit_field_class" => "desktop column-el-direction-device-group",
+				"heading" => '<span class="group-title">' . esc_html__("Column Element Direction", "salient-core") . "</span>",
+				'save_always' => true,
+				"value" => array(
+					esc_html__('Stacked Vertically', 'salient-core') => 'default',
+					esc_html__('Inline Horizontal', 'salient-core') => 'horizontal',
+				),
+				"description" => esc_html__("Determines the direction to display elements within this column.", "salient-core")
+			),
+			array(
+				"type" => "dropdown",
+				"class" => "",
+				"param_name" => "column_element_direction_tablet",
+				"edit_field_class" => "tablet column-el-direction-device-group",
+				"heading" => '',
+				"value" => array(
+					esc_html__('Default (Stacked Vertically)', 'salient-core') => 'default',
+					esc_html__('Inline Horizontal', 'salient-core') => 'horizontal',
+				),
+				"description" => ''
+			),
+			array(
+				"type" => "dropdown",
+				"class" => "",
+				"param_name" => "column_element_direction_phone",
+				"edit_field_class" => "phone column-el-direction-device-group",
+				"heading" => '',
+				"value" => array(
+					esc_html__('Default (Stacked Vertically)', 'salient-core') => 'default',
+					esc_html__('Inline Horizontal', 'salient-core') => 'horizontal',
+				),
+				"description" => ''
+			),
+
+			array(
+				"type" => "dropdown",
+				"class" => "",
+				"heading" => esc_html__("Column Element Alignment", "salient-core"),
+				"param_name" => "column_element_alignment",
+				'save_always' => true,
+				"value" => array(
+					esc_html__('Center', 'salient-core') => 'center',
+					esc_html__('Top', 'salient-core') => 'flex-start',
+					esc_html__('Bottom', 'salient-core') => 'flex-end',
+				),
+				"dependency" => Array('element' => "column_element_direction_desktop", 'value' => 'horizontal'),
+				"description" => esc_html__("Determines the direction to display elements within this column.", "salient-core")
+			),
+			
+			 array(
 				 "type" => "dropdown",
 				 "class" => "",
 				 "heading" => esc_html__("Column Element Spacing", "salient-core"),
@@ -4366,7 +5711,51 @@ function nectar_custom_maps() {
 					"heading" => esc_html__("Centered Content", "salient-core" ),
 					"value" => array("Centered Content Alignment" => "true" ),
 					"param_name" => "centered_text",
+					"dependency" => Array('element' => "column_element_direction_desktop", 'value' => 'default'),
 					"description" => ""
+				),
+
+				array(
+					"type" => "dropdown",
+					"class" => "",
+					'save_always' => true,
+					"heading" => '<span class="group-title">' . esc_html__("Text Align", "salient-core") . "</span>",
+					"param_name" => "desktop_text_alignment",
+					"edit_field_class" => "desktop column-text-align-device-group",
+					"value" => array(
+						esc_html__("Default", "salient-core") => "default",
+						esc_html__("Left", "salient-core") => "left",
+						esc_html__("Center", "salient-core") => "center",
+						esc_html__("Right", "salient-core") => "right"
+					)
+				),
+				array(
+					"type" => "dropdown",
+					"class" => "",
+					'save_always' => true,
+					"heading" => '',
+					"param_name" => "tablet_text_alignment",
+					"edit_field_class" => "tablet column-text-align-device-group",
+					"value" => array(
+						esc_html__("Default", "salient-core") => "default",
+						esc_html__("Left", "salient-core") => "left",
+						esc_html__("Center", "salient-core") => "center",
+						esc_html__("Right", "salient-core") => "right"
+					)
+				),
+				array(
+					"type" => "dropdown",
+					"class" => "",
+					'save_always' => true,
+					"heading" => '',
+					"param_name" => "phone_text_alignment",
+					"edit_field_class" => "phone column-text-align-device-group",
+					"value" => array(
+						esc_html__("Default", "salient-core") => "default",
+						esc_html__("Left", "salient-core") => "left",
+						esc_html__("Center", "salient-core") => "center",
+						esc_html__("Right", "salient-core") => "right"
+					)
 				),
 
 				array(
@@ -4488,6 +5877,20 @@ function nectar_custom_maps() {
 				),
 
 				array(
+					"type" => "dropdown",
+					"class" => "",
+					"group" => "Background",
+					'save_always' => true,
+					"heading" => esc_html__("Background Image Stacking Order", "salient-core" ),
+					"param_name" => "background_image_stacking",
+					"value" => array(
+						 esc_html__("Behind Background Color", "salient-core" ) => "default",
+						 esc_html__("In Front of Background Color", "salient-core" ) => "front",
+					),
+					"dependency" => Array('element' => "background_image", 'not_empty' => true)
+				),
+
+				array(
 					"type" => "checkbox",
 					"class" => "",
 					"heading" => esc_html__("Scale Background Image To Column", "salient-core" ),
@@ -4565,6 +5968,32 @@ function nectar_custom_maps() {
 					'std' => 'default',
 				  ),
 
+				  array(
+					"type" => "dropdown",
+					"heading" => esc_html__("Backdrop Filter", "salient-core"),
+					'save_always' => true,
+					'group' => esc_html__( 'Background', 'salient-core' ),
+					"param_name" => "column_backdrop_filter",
+					"value" => array(
+						esc_html__("None", "salient-core") => "none",
+						esc_html__("Blur", "salient-core") => "blur",
+					),
+					"description" => esc_html__('Add a filter effect to the area behind this column.','salient')
+				),
+				array(
+                    'group' => esc_html__( 'Background', 'salient-core' ),
+                    'type' => 'nectar_range_slider',
+                    'dependency' => array( 'element' => 'column_backdrop_filter', 'value' => array( 'blur' ) ),
+                    'heading' => esc_html__( 'Blur Amount', 'salient-core' ),
+                    'param_name' => 'column_backdrop_filter_blur',
+                    'value' => '0',
+					'options' => array(
+						'min' => '0',
+						'max' => '50',
+					),
+                    'description' => ''
+                ),
+
 				array(
 					"type" => "colorpicker",
 					"class" => "",
@@ -4588,9 +6017,23 @@ function nectar_custom_maps() {
 			      "heading" => esc_html__("Box Shadow", "salient-core"),
 			      'save_always' => true,
 			      "param_name" => "column_shadow",
-			      "value" => array(esc_html__("None", "salient-core") => "none", esc_html__("Small Depth", "salient-core") => "small_depth", esc_html__("Medium Depth", "salient-core") => "medium_depth", esc_html__("Large Depth", "salient-core") => "large_depth", esc_html__("Very Large Depth", "salient-core") => "x_large_depth"),
+			      "value" => array(
+					  esc_html__("None", "salient-core") => "none", 
+					  esc_html__("Small Depth", "salient-core") => "small_depth", 
+					  esc_html__("Medium Depth", "salient-core") => "medium_depth", 
+					  esc_html__("Large Depth", "salient-core") => "large_depth", 
+					  esc_html__("Very Large Depth", "salient-core") => "x_large_depth",
+					  esc_html__("Custom", "salient-core") => "custom",
+					),
 			      "description" => ''
 			    ),
+				array(
+					'type' => 'nectar_box_shadow_generator',
+					'heading' => esc_html__( 'Custom Box Shadow', 'salient-core' ),
+					'save_always' => true,
+					'param_name' => 'custom_box_shadow',
+					'dependency' => Array( 'element' => 'column_shadow', 'value' => array( 'custom' ) )
+				),
           array(
             "type" => "dropdown",
             "heading" => esc_html__("Border Radius", "salient-core"),
@@ -4708,6 +6151,16 @@ function nectar_custom_maps() {
 					"description" => esc_html__("If you want to set a custom stacking order on this column, enter it here. Can be useful when overlapping elements from other columns with negative margins/translates.", "salient-core"),
 					"value" => ""
 				),
+				array(
+					"type" => "dropdown",
+					"heading" => esc_html__("Overflow Visibility", "salient-core"),
+					"param_name" => "overflow",
+					"value" => array(
+						  "Visible" => "visible",
+						  "Hidden" => "hidden",
+					),
+					'save_always' => true
+				),
 
 				array(
 					"type" => "textfield",
@@ -4756,7 +6209,7 @@ function nectar_custom_maps() {
 					"heading" => esc_html__("Enable Gradient", "salient-core"),
 					"value" => array("Yes, please" => "true" ),
 					"param_name" => "enable_gradient",
-          "dependency" => Array('element' => "gradient_type", 'value' => array('default')),
+					"dependency" => Array('element' => "gradient_type", 'value' => array('default')),
 					'edit_field_class' => 'vc_col-xs-12 salient-fancy-checkbox',
 					"description" => ""
 				),
@@ -4767,7 +6220,7 @@ function nectar_custom_maps() {
 					"param_name" => "color_overlay",
 					"value" => "",
 					"edit_field_class" => "col-md-6",
-          "dependency" => Array('element' => "gradient_type", 'value' => array('default')),
+					"dependency" => Array('element' => "gradient_type", 'value' => array('default')),
 					"group" => "Color Overlay",
 					"description" => ""
 				),
@@ -4908,7 +6361,7 @@ function nectar_custom_maps() {
 				),
 
 	
-        array(
+				 array(
 					"type" => "dropdown",
 					"class" => "",
 					'save_always' => true,
@@ -4916,8 +6369,9 @@ function nectar_custom_maps() {
 					"group" => "Animation",
 					"param_name" => "animation_type",
 					"value" => array(
-						esc_html__("Triggered once when visible", "salient-core") => "default",
-						esc_html__("Continuous movement by scroll position", "salient-core") => "parallax",
+						esc_html__("Triggered Once When Visible", "salient-core") => "default",
+						esc_html__("Scroll Position Animation", "salient-core") => "parallax",
+						esc_html__("Scroll Position Animation + Entrance", "salient-core") => "entrance_and_parallax",
 					),
 				),
 		
@@ -4929,23 +6383,23 @@ function nectar_custom_maps() {
 					"group" => "Animation",
 					'edit_field_class' => 'movement-type vc_col-xs-12',
 					"param_name" => "animation_movement_type",
-					"dependency" => Array('element' => "animation_type", 'value' => array('parallax')),
+					"dependency" => Array('element' => "animation_type", 'value' => array('parallax','entrance_and_parallax')),
 					"value" => array(
-						esc_html__("Move On Y Axis", "salient-core") => "default",
-						esc_html__("Move On X Axis", "salient-core") => "transform_x",
+						esc_html__("Move Y Axis", "salient-core") => "default",
+						esc_html__("Move X Axis", "salient-core") => "transform_x",
 					),
 				),
 
         array(
 					"type" => "nectar_numerical",
 					"class" => "",
-		  "group" => "Animation",
-		 		 'edit_field_class' => 'movement-intensity vc_col-xs-12',
-					"placeholder" => esc_html__("Movement Intensity ( -5 to 5 )",'salient-core'),
+					"group" => "Animation",
+					'edit_field_class' => 'movement-intensity vc_col-xs-12',
+					"placeholder" => esc_html__("Movement Intensity ( -8 to 8 )",'salient-core'),
 					"heading" => "<span class='attr-title'>" . esc_html__("Movement Intensity", "salient-core") . "</span>",
 					"value" => "",
 					"param_name" => "column_parallax_intensity",
-          "dependency" => Array('element' => "animation_type", 'value' => array('parallax')),
+					"dependency" => Array('element' => "animation_type", 'value' => array('parallax','entrance_and_parallax')),
 					"description" => '',
 				),
 
@@ -4955,7 +6409,7 @@ function nectar_custom_maps() {
 					"heading" => esc_html__("Persist Movement On Mobile", "salient-core"),
 					"value" => array("Enable" => "true" ),
 					"param_name" => "persist_movement_on_mobile",
-          "dependency" => Array('element' => "animation_type", 'value' => array('parallax')),
+					"dependency" => Array('element' => "animation_type", 'value' => array('parallax','entrance_and_parallax')),
 					'edit_field_class' => 'vc_col-xs-12 salient-fancy-checkbox',
 					"description" => '',
 					"group" => "Animation"
@@ -4968,7 +6422,7 @@ function nectar_custom_maps() {
 					"heading" => esc_html__("Column Entrance Animation", "salient-core"),
 					"value" => array("Enable?" => "true" ),
 					"param_name" => "enable_animation",
-          "dependency" => Array('element' => "animation_type", 'value' => array('default')),
+					"dependency" => Array('element' => "animation_type", 'value' => array('default','entrance_and_parallax','')),
 					'edit_field_class' => 'vc_col-xs-12 salient-fancy-checkbox',
 					"description" => esc_html__("This will animate the entire column and all of its contents when scrolled into view", "salient-core"),
 				),
@@ -4987,6 +6441,7 @@ function nectar_custom_maps() {
 						 esc_html__("Fade In From Left", "salient-core") => "fade-in-from-left",
 						 esc_html__("Fade In Right", "salient-core") => "fade-in-from-right",
 						 esc_html__("Fade In From Bottom", "salient-core") => "fade-in-from-bottom",
+						 esc_html__("Slight Fade In From Bottom", "salient-core" ) => "slight-fade-in-from-bottom",
 						 esc_html__("Grow In", "salient-core") => "grow-in",
 						 esc_html__("Zoom Out", "salient-core") => 'zoom-out',
 						 esc_html__("Slight Twist", "salient-core") => 'slight-twist',
@@ -4995,9 +6450,47 @@ function nectar_custom_maps() {
 						 esc_html__("Reveal From Right", "salient-core") => "reveal-from-right",
 						 esc_html__("Reveal From Bottom", "salient-core") => "reveal-from-bottom",
 						 esc_html__("Reveal From Left", "salient-core") => "reveal-from-left",
-						 esc_html__("Reveal From Top", "salient-core") => "reveal-from-top"
+						 esc_html__("Reveal From Top", "salient-core") => "reveal-from-top",
+						 esc_html__("Mask Reveal", "salient-core") => "mask-reveal",
 					),
 					"dependency" => Array('element' => "enable_animation", 'not_empty' => true)
+				),
+				array(
+					"type" => "dropdown",
+					"class" => "",
+					'save_always' => true,
+					"heading" => esc_html__("Mask Reveal Direction", "salient-core" ),
+					"param_name" => "animation_mask_direction",
+					"group" => "Animation",
+					"description" => '', 
+					"dependency" => Array('element' => "animation", 'value' => 'mask-reveal'),
+					"edit_field_class" => "nectar-one-half",
+					"value" => array(
+						esc_html__("Top", "salient-core" ) => "top",
+						esc_html__("Right Top", "salient-core" ) => "right_top",
+						esc_html__("Right", "salient-core" ) => "right",
+						esc_html__("Right Bottom", "salient-core" ) => "right_bottom",
+						esc_html__("Bottom", "salient-core" ) => "bottom",
+						esc_html__("Left Bottom", "salient-core" ) => "left_bottom",
+						esc_html__("Left", "salient-core" ) => "left",
+						esc_html__("Left Top", "salient-core" ) => "left_top",
+						esc_html__("Middle", "salient-core" ) => "middle",
+					),
+				),
+				array(
+					"type" => "dropdown",
+					"class" => "",
+					'save_always' => true,
+					"heading" => esc_html__("Mask Reveal Shape", "salient-core" ),
+					"param_name" => "animation_mask_shape",
+					"group" => "Animation",
+					"description" => '', 
+					"dependency" => Array('element' => "animation", 'value' => 'mask-reveal'),
+					"edit_field_class" => "nectar-one-half nectar-one-half-last",
+					"value" => array(
+						esc_html__("Straight", "salient-core" ) => "straight",
+						esc_html__("Circle", "salient-core" ) => "circle",
+					),
 				),
 				array(
 					"type" => "checkbox",
@@ -5016,7 +6509,7 @@ function nectar_custom_maps() {
 					"heading" => esc_html__("Column Animation Delay", "salient-core"),
 					"group" => "Animation",
 					"param_name" => "delay",
-					"edit_field_class" => "col-md-6",
+					"edit_field_class" => "nectar-one-half",
 					"admin_label" => false,
 					"description" => esc_html__("Optionally enter a delay in milliseconds for when the animation will trigger e.g. 150.", "salient-core"),
 					"dependency" => Array('element' => "enable_animation", 'not_empty' => true)
@@ -5025,7 +6518,7 @@ function nectar_custom_maps() {
 					"type" => "textfield",
 					"class" => "",
 					"group" => "Animation",
-					"edit_field_class" => "col-md-6 col-md-6-last",
+					"edit_field_class" => "nectar-one-half nectar-one-half-last",
 					"heading" => esc_html__("Column Animation Offset", "salient-core" ),
 					"param_name" => "animation_offset",
 					"admin_label" => false,
@@ -5033,14 +6526,48 @@ function nectar_custom_maps() {
 					"dependency" => Array('element' => "enable_animation", 'not_empty' => true)
 				),
 
-        array(
+				array(
 					"type" => "dropdown",
 					"class" => "",
 					'save_always' => true,
-					"heading" => esc_html__("Background Image Animation", "salient-core"),
+					"heading" => esc_html__("Column Animation Easing", "salient-core"),
+					"param_name" => "animation_easing",
+					"group" => "Animation",
+					"dependency" => Array('element' => "enable_animation", 'not_empty' => true),
+					"value" => array(
+						"Inherit From Theme Options" => "default",
+						'easeInQuad'=>'easeInQuad',
+						'easeOutQuad' => 'easeOutQuad',
+						'easeInOutQuad'=>'easeInOutQuad',
+						'easeInCubic'=>'easeInCubic',
+						'easeOutCubic'=>'easeOutCubic',
+						'easeInOutCubic'=>'easeInOutCubic',
+						'easeInQuart'=>'easeInQuart',
+						'easeOutQuart'=>'easeOutQuart',
+						'easeInOutQuart'=>'easeInOutQuart',
+						'easeInQuint'=>'easeInQuint',
+						'easeOutQuint'=>'easeOutQuint',
+						'easeInOutQuint'=>'easeInOutQuint',
+						'easeInExpo'=>'easeInExpo',
+						'easeOutExpo'=>'easeOutExpo',
+						'easeInOutExpo'=>'easeInOutExpo',
+						'easeInSine'=>'easeInSine',
+						'easeOutSine'=>'easeOutSine',
+						'easeInOutSine'=>'easeInOutSine',
+						'easeInCirc'=>'easeInCirc',
+						'easeOutCirc'=>'easeOutCirc',
+						'easeInOutCirc'=>'easeInOutCirc'
+					),
+				),
+
+				array(
+					"type" => "dropdown",
+					"class" => "",
+					'save_always' => true,
+					"heading" => esc_html__("Background Layer Animation", "salient-core"),
 					"param_name" => "bg_image_animation",
 					"group" => "Animation",
-					"description" => esc_html__("This will animate the optional background image layer of your column only when scrolled into view", "salient-core"),
+					"description" => esc_html__("This will animate the background layer layer of your column only when scrolled into view", "salient-core"),
 					"value" => array(
 						"None" => "none",
 						"Fade In" => "fade-in",
@@ -5052,6 +6579,44 @@ function nectar_custom_maps() {
 						esc_html__("Reveal Rotate From Bottom", "salient-core") => "ro-reveal-from-bottom",
 						esc_html__("Reveal Rotate From Left", "salient-core") => "ro-reveal-from-left",
 						esc_html__("Reveal Rotate From Right", "salient-core") => "ro-reveal-from-right",
+						esc_html__("Mask Reveal", "salient-core") => "mask-reveal",
+					),
+				),
+				array(
+					"type" => "dropdown",
+					"class" => "",
+					'save_always' => true,
+					"heading" => esc_html__("Background Mask Reveal Direction", "salient-core" ),
+					"param_name" => "bg_image_animation_mask_direction",
+					"group" => "Animation",
+					"description" => '', 
+					"dependency" => Array('element' => "bg_image_animation", 'value' => 'mask-reveal'),
+					"edit_field_class" => "nectar-one-half",
+					"value" => array(
+						esc_html__("Top", "salient-core" ) => "top",
+						esc_html__("Right Top", "salient-core" ) => "right_top",
+						esc_html__("Right", "salient-core" ) => "right",
+						esc_html__("Right Bottom", "salient-core" ) => "right_bottom",
+						esc_html__("Bottom", "salient-core" ) => "bottom",
+						esc_html__("Left Bottom", "salient-core" ) => "left_bottom",
+						esc_html__("Left", "salient-core" ) => "left",
+						esc_html__("Left Top", "salient-core" ) => "left_top",
+						esc_html__("Middle", "salient-core" ) => "middle",
+					),
+				),
+				array(
+					"type" => "dropdown",
+					"class" => "",
+					'save_always' => true,
+					"heading" => esc_html__("Background Mask Reveal Shape", "salient-core" ),
+					"param_name" => "bg_image_animation_mask_shape",
+					"group" => "Animation",
+					"description" => '', 
+					"dependency" => Array('element' => "bg_image_animation", 'value' => 'mask-reveal'),
+					"edit_field_class" => "nectar-one-half nectar-one-half-last",
+					"value" => array(
+						esc_html__("Straight", "salient-core" ) => "straight",
+						esc_html__("Circle", "salient-core" ) => "circle",
 					),
 				),
 
@@ -5339,7 +6904,7 @@ function nectar_custom_maps() {
 		);
 
 		
-		/*( esc_html__( 'Background', 'salient-core' ) );
+		$mask_group = SalientWPbakeryParamGroups::mask_group( esc_html__( 'Background', 'salient-core' ) );
 	
 		$imported_groups = array( $mask_group );
 	
@@ -5349,7 +6914,7 @@ function nectar_custom_maps() {
 				$vc_column_inner_map['params'][] = $option;
 			}
 	
-		}*/
+		}
 
 		vc_map($vc_column_inner_map);
 
@@ -5371,8 +6936,8 @@ function nectar_custom_maps() {
 				"param_name" => "column_margin",
 				"value" => array(
 					esc_html__("Default", "salient-core") => "default",
-          esc_html__("5px", "salient-core") => "5px",
-          esc_html__("10px", "salient-core") => "10px",
+					esc_html__("5px", "salient-core") => "5px",
+					esc_html__("10px", "salient-core") => "10px",
 					esc_html__("20px", "salient-core") => "20px",
 					esc_html__("30px", "salient-core") => "30px",
 					esc_html__("40px", "salient-core") => "40px",
@@ -5382,11 +6947,22 @@ function nectar_custom_maps() {
 					esc_html__("80px", "salient-core") => "80px",
 					esc_html__("90px", "salient-core") => "90px",
 					esc_html__("100px", "salient-core") => "100px",
-					esc_html__("None", "salient-core") => "none"
+					esc_html__("None", "salient-core") => "none",
+					esc_html__("Custom", "salient-core") => "custom",
 				)
 			));
 		}
 
+		vc_add_param("vc_row_inner", array(
+			"type" => "nectar_numerical",
+			"class" => "",
+			"heading" => esc_html__("Custom Column Margin", "salient-core"),
+			"value" => "",
+			"param_name" => "column_margin_custom",
+			"description" => '',
+			"edit_field_class" => "no-placeholder vc_col-xs-12",
+			"dependency" => Array('element' => "column_margin", 'value' => array('custom'))
+		));
 
 		vc_add_param("vc_row_inner", array(
 			"type" => "dropdown",
@@ -5620,9 +7196,8 @@ function nectar_custom_maps() {
 
 		vc_add_param("vc_row_inner", array(
 			"type" => "nectar_numerical",
-			"placeholder" => esc_html__("Translate Y",'salient-core'),
 			"class" => "",
-			"heading" => '<span class="group-title">' . esc_html__("Transform", "salient-core") . "</span><span class='attr-title'>" . esc_html__("Translate Y", "salient-core") . "</span>",
+			"heading" => '<span class="group-title">' . esc_html__("Transform", "salient-core") . "</span>" . esc_html__("Translate Y", "salient-core") ,
 			"value" => "",
 			"edit_field_class" => "col-md-6 desktop row-transform-device-group",
 			"param_name" => "translate_y",
@@ -5631,20 +7206,42 @@ function nectar_custom_maps() {
 
 		vc_add_param("vc_row_inner", array(
 			"type" => "nectar_numerical",
-			"placeholder" => esc_html__("Translate X",'salient-core'),
 			"class" => "",
-			"heading" => "<span class='attr-title'>" . esc_html__("Translate X", "salient-core") . "</span>",
+			"heading" => esc_html__("Translate X", "salient-core"),
 			"value" => "",
 			"edit_field_class" => "col-md-6 col-md-6-last desktop row-transform-device-group",
 			"param_name" => "translate_x",
 			"description" => ""
 		));
+		vc_add_param("vc_row_inner", array(
+			'type' => 'nectar_range_slider',
+			'heading' => esc_html__( 'Scale', 'salient-core' ),
+			'param_name' => 'scale_desktop',
+			'value' => '1',
+			'options' => array(
+				'min' => '0',
+				'max' => '2',
+				'step' => '0.01',
+				'suffix' => 'x'
+			),
+			"edit_field_class" => "col-md-6 desktop row-transform-device-group",
+			'description' => ''
+		));
+
+		vc_add_param("vc_row_inner", array(
+			"type" => "nectar_angle_selection",
+			"class" => "",
+			"edit_field_class" => "col-md-6 col-md-6-last desktop row-transform-device-group",
+			"heading" => "<span class='attr-title'>" . esc_html__("Rotate", "salient-core") . "</span>",
+			"param_name" => "rotate_desktop",
+			"value" => "",
+			"description" => ''
+		));
 
 		vc_add_param("vc_row_inner", array(
 			"type" => "nectar_numerical",
-			"placeholder" => esc_html__("Translate Y",'salient-core'),
 			"class" => "",
-			"heading" => "<span class='attr-title'>" . esc_html__("Translate Y", "salient-core") . "</span>",
+			"heading" =>  esc_html__("Translate Y", "salient-core"),
 			"value" => "",
 			"edit_field_class" => "col-md-6 tablet row-transform-device-group",
 			"param_name" => "translate_y_tablet",
@@ -5653,19 +7250,40 @@ function nectar_custom_maps() {
 
 		vc_add_param("vc_row_inner", array(
 			"type" => "nectar_numerical",
-			"placeholder" => esc_html__("Translate X",'salient-core'),
 			"class" => "",
-			"heading" => "<span class='attr-title'>" . esc_html__("Translate X", "salient-core") . "</span>",
+			"heading" => esc_html__("Translate X", "salient-core"),
 			"value" => "",
 			"edit_field_class" => "col-md-6 col-md-6-last tablet row-transform-device-group",
 			"param_name" => "translate_x_tablet",
 			"description" => ""
 		));
 		vc_add_param("vc_row_inner", array(
-			"type" => "nectar_numerical",
-			"placeholder" => esc_html__("Translate Y",'salient-core'),
+			'type' => 'nectar_range_slider',
+			'heading' => esc_html__( 'Scale', 'salient-core' ),
+			'param_name' => 'scale_tablet',
+			'value' => '1',
+			'options' => array(
+				'min' => '0',
+				'max' => '2',
+				'step' => '0.01',
+				'suffix' => 'x'
+			),
+			"edit_field_class" => "col-md-6 tablet row-transform-device-group",
+			'description' => ''
+		));
+		vc_add_param("vc_row_inner", array(
+			"type" => "nectar_angle_selection",
 			"class" => "",
-			"heading" => "<span class='attr-title'>" . esc_html__("Translate Y", "salient-core") . "</span>",
+			"edit_field_class" => "col-md-6 col-md-6-last tablet row-transform-device-group",
+			"heading" => "<span class='attr-title'>" . esc_html__("Rotate", "salient-core"),
+			"param_name" => "rotate_tablet",
+			"value" => "",
+			"description" => ''
+		));
+		vc_add_param("vc_row_inner", array(
+			"type" => "nectar_numerical",
+			"class" => "",
+			"heading" =>  esc_html__("Translate Y", "salient-core"),
 			"value" => "",
 			"edit_field_class" => "col-md-6 phone row-transform-device-group",
 			"param_name" => "translate_y_phone",
@@ -5674,13 +7292,45 @@ function nectar_custom_maps() {
 
 		vc_add_param("vc_row_inner", array(
 			"type" => "nectar_numerical",
-			"placeholder" => esc_html__("Translate X",'salient-core'),
 			"class" => "",
-			"heading" => "<span class='attr-title'>" . esc_html__("Translate X", "salient-core") . "</span>",
+			"heading" => esc_html__("Translate Y", "salient-core"),
+			"value" => "",
+			"edit_field_class" => "col-md-6 phone row-transform-device-group",
+			"param_name" => "translate_y_phone",
+			"description" => ""
+		));
+
+		vc_add_param("vc_row_inner", array(
+			"type" => "nectar_numerical",
+			"class" => "",
+			"heading" => esc_html__("Translate X", "salient-core"),
 			"value" => "",
 			"edit_field_class" => "col-md-6 col-md-6-last phone row-transform-device-group",
 			"param_name" => "translate_x_phone",
 			"description" => ""
+		));
+		vc_add_param("vc_row_inner", array(
+			'type' => 'nectar_range_slider',
+			'heading' => esc_html__( 'Scale', 'salient-core' ),
+			'param_name' => 'scale_phone',
+			'value' => '1',
+			'options' => array(
+				'min' => '0',
+				'max' => '2',
+				'step' => '0.01',
+				'suffix' => 'x'
+			),
+			"edit_field_class" => "col-md-6 phone row-transform-device-group",
+			'description' => ''
+		));
+		vc_add_param("vc_row_inner", array(
+			"type" => "nectar_angle_selection",
+			"class" => "",
+			"edit_field_class" => "col-md-6 col-md-6-last phone row-transform-device-group",
+			"heading" => "<span class='attr-title'>" . esc_html__("Rotate", "salient-core") . "</span>",
+			"param_name" => "rotate_phone",
+			"value" => "",
+			"description" => ''
 		));
 
 		vc_add_param("vc_row_inner", array(
@@ -6218,7 +7868,12 @@ function nectar_custom_maps() {
 		          $image_bg = wp_get_attachment_image_src( $thumbnail_id, 'large');
 
 							if( $lazy_load ) {
-								$bg_style_markup = 'data-nectar-img-src="'.esc_url($image_bg[0]).'"';
+								if( isset($image_bg[0]) ) {
+									$bg_style_markup = 'data-nectar-img-src="'.esc_url($image_bg[0]).'"';
+								} else {
+									$bg_style_markup = '';
+								}
+								
 							} else {
 			          $bg_style_markup = (!empty($image_bg)) ? 'style="background-image:url('. $image_bg[0] .');"' : '';
 							}
@@ -6331,13 +7986,29 @@ function nectar_custom_maps() {
 	class WPBakeryShortCode_Nectar_Badge extends WPBakeryShortCode { }
 	vc_lean_map('nectar_badge', null, SALIENT_CORE_ROOT_DIR_PATH . 'includes/nectar_maps/nectar_badge.php');
 
-	// Circle Images
-	//class WPBakeryShortCode_Nectar_Circle_Images extends WPBakeryShortCode { }
-	//vc_lean_map('nectar_circle_images', null, SALIENT_CORE_ROOT_DIR_PATH . 'includes/nectar_maps/nectar_circle_images.php');
+	// Lottie
+	class WPBakeryShortCode_Nectar_Lottie extends WPBakeryShortCode { }
+	vc_lean_map('nectar_lottie', null, SALIENT_CORE_ROOT_DIR_PATH . 'includes/nectar_maps/nectar_lottie.php');
 
-  // Star Rating
-  //class WPBakeryShortCode_Nectar_Star_Rating extends WPBakeryShortCode { }
-  //vc_lean_map('nectar_star_rating', null, SALIENT_CORE_ROOT_DIR_PATH . 'includes/nectar_maps/nectar_star_rating.php');
+	// Circle Images
+	class WPBakeryShortCode_Nectar_Circle_Images extends WPBakeryShortCode { }
+	vc_lean_map('nectar_circle_images', null, SALIENT_CORE_ROOT_DIR_PATH . 'includes/nectar_maps/nectar_circle_images.php');
+
+	// Star Rating
+	class WPBakeryShortCode_Nectar_Star_Rating extends WPBakeryShortCode { }
+	vc_lean_map('nectar_star_rating', null, SALIENT_CORE_ROOT_DIR_PATH . 'includes/nectar_maps/nectar_star_rating.php');
+
+	// Price Typography
+	class WPBakeryShortCode_Nectar_Price_Typography extends WPBakeryShortCode { }
+	vc_lean_map('nectar_price_typography', null, SALIENT_CORE_ROOT_DIR_PATH . 'includes/nectar_maps/nectar_price_typography.php');
+
+	// Responsive Text
+	class WPBakeryShortCode_Responsive_Text extends WPBakeryShortCode { }
+	vc_lean_map('nectar_responsive_text', null, SALIENT_CORE_ROOT_DIR_PATH . 'includes/nectar_maps/nectar_responsive_text.php');
+
+	// Animated Shape
+	class WPBakeryShortCode_Nectar_Animated_Shape extends WPBakeryShortCode { }
+	vc_lean_map('nectar_animated_shape', null, SALIENT_CORE_ROOT_DIR_PATH . 'includes/nectar_maps/nectar_animated_shape.php');
 
 	
 	// Fancy Title
@@ -7262,16 +8933,31 @@ function nectar_custom_maps() {
 				$icon = str_replace('icon-', 'fa fa-', $icon);
 			}
 			$icon_markup = 'data-list-icon="'.$icon.'" data-animation="'.$enable_animation.'" data-animation-delay="'.$delay.'" data-color="'. strtolower($color).'"';
-		} else if($icon_type === 'none') {
+		} 
+		else if($icon_type === 'none') {
 			$icon_markup = 'data-list-icon="none" data-animation="'.$enable_animation.'" data-animation-delay="'.$delay.'" data-color="'. strtolower($color).'"';
-		} else if($icon_type === 'standard_dot') {
+		} 
+		else if($icon_type === 'standard_dot') {
 			$icon_markup = 'data-list-icon="dot" data-animation="'.$enable_animation.'" data-animation-delay="'.$delay.'"';
-		} else {
+		} 
+		else if($icon_type === 'standard_check') {
+			$icon_markup = 'data-list-icon="icon-salient-check" data-animation="'.$enable_animation.'" data-animation-delay="'.$delay.'" data-color="'. strtolower($color).'"';
+		} 
+		else {
 			$icon_markup = 'data-list-icon="icon-salient-thin-line" data-animation="'.$enable_animation.'" data-animation-delay="'.$delay.'" data-color="'. strtolower($color).'"';
 		}
 
-		$output .= '<div class="nectar-fancy-ul" '.$icon_markup.' data-spacing="'.esc_attr($spacing).'" data-alignment="'.esc_attr($alignment).'"> '.do_shortcode($content).' </div>';
+		$el_classes = array('nectar-fancy-ul');
 
+		// Dyanmic classes.
+		if( function_exists('nectar_el_dynamic_classnames') ) {
+			$el_classes[] = nectar_el_dynamic_classnames('nectar-fancy-ul', $atts);
+		} else {
+			$el_classes[] = '';
+		}
+
+		$output .= '<div class="'.nectar_clean_classnames(implode(' ',$el_classes)).'" '.$icon_markup.' data-spacing="'.esc_attr($spacing).'" data-alignment="'.esc_attr($alignment).'"> '.do_shortcode($content).' </div>';
+		
 	    return $output;
 	}
 
@@ -7318,6 +9004,753 @@ function nectar_custom_maps() {
 	vc_lean_map('nectar_video_player_self_hosted', null, SALIENT_CORE_ROOT_DIR_PATH . 'includes/nectar_maps/nectar_video_player_self_hosted.php');
 
 
+
+	if( version_compare(WPB_VC_VERSION, '6.9.0', '>=') && !class_exists('WPBakeryShortCode_One_Half') ) {
+
+		class WPBakeryShortCode_One_Half extends WPBakeryShortCode_VC_Column {
+
+			public function mainHtmlBlockParams($width, $i) {
+				return 'data-element_type="vc_column" data-vc-column-width="'.wpb_vc_get_column_width_indent($width[$i]).'" class="wpb_' . $this->settings['base'] . ' wpb_vc_column vc_col-sm-6 wpb_sortable ' . $this->templateWidth() . ' wpb_content_holder"' . $this->customAdminBlockParams();
+			}
+			
+			public function contentAdmin($atts, $content = null) {
+					$width = $el_class = '';
+				extract( vc_map_get_attributes( $this->getShortcode(), $atts ) );
+				$output = '';
+
+				$column_controls = $this->getColumnControls( $this->settings( 'controls' ) );
+				$column_controls_bottom = $this->getColumnControls( 'add', 'bottom-controls' );
+
+
+				$width = array( 'vc_col-sm-6' );
+				
+				for ( $i = 0; $i < count( $width ); $i ++ ) {
+					$output .= '<div ' . $this->mainHtmlBlockParams( $width, $i ) . '>';
+					$output .= str_replace( "%column_size%", wpb_translateColumnWidthToFractional( $width[$i] ), $column_controls );
+					$output .= '<div class="wpb_element_wrapper">';
+					$output .= '<div ' . $this->containerHtmlBlockParams( $width, $i ) . '>';
+					$output .= do_shortcode( shortcode_unautop( $content ) );
+					$output .= '</div>';
+					if ( isset( $this->settings['params'] ) ) {
+						$inner = '';
+						foreach ( $this->settings['params'] as $param ) {
+							$param_value = isset( ${$param['param_name']} ) ? ${$param['param_name']} : '';
+							if ( is_array( $param_value ) ) {
+								// Get first element from the array
+								reset( $param_value );
+								$first_key = key( $param_value );
+								$param_value = $param_value[ $first_key ];
+							}
+							$inner .= $this->singleParamHtmlHolder( $param, $param_value );
+						}
+						$output .= $inner;
+					}
+					$output .= '</div>';
+					$output .= str_replace( "%column_size%", wpb_translateColumnWidthToFractional( $width[$i] ), $column_controls_bottom );
+					$output .= '</div>';
+				}
+				return $output;
+			}
+		}
+
+
+		class WPBakeryShortCode_One_Half_Last extends WPBakeryShortCode_VC_Column {
+			public function mainHtmlBlockParams($width, $i) {
+				return 'data-element_type="vc_column" data-vc-column-width="'.wpb_vc_get_column_width_indent($width[$i]).'" class="wpb_' . $this->settings['base'] . ' wpb_vc_column vc_col-sm-6 wpb_sortable ' . $this->templateWidth() . ' wpb_content_holder"' . $this->customAdminBlockParams();
+			}
+			
+			public function contentAdmin($atts, $content = null) {
+					$width = $el_class = '';
+				extract( vc_map_get_attributes( $this->getShortcode(), $atts ) );
+				$output = '';
+
+				$column_controls = $this->getColumnControls( $this->settings( 'controls' ) );
+				$column_controls_bottom = $this->getColumnControls( 'add', 'bottom-controls' );
+
+
+				$width = array( 'vc_col-sm-6' );
+				
+				for ( $i = 0; $i < count( $width ); $i ++ ) {
+					$output .= '<div ' . $this->mainHtmlBlockParams( $width, $i ) . '>';
+					$output .= str_replace( "%column_size%", wpb_translateColumnWidthToFractional( $width[$i] ), $column_controls );
+					$output .= '<div class="wpb_element_wrapper">';
+					$output .= '<div ' . $this->containerHtmlBlockParams( $width, $i ) . '>';
+					$output .= do_shortcode( shortcode_unautop( $content ) );
+					$output .= '</div>';
+					if ( isset( $this->settings['params'] ) ) {
+						$inner = '';
+						foreach ( $this->settings['params'] as $param ) {
+							$param_value = isset( ${$param['param_name']} ) ? ${$param['param_name']} : '';
+							if ( is_array( $param_value ) ) {
+								// Get first element from the array
+								reset( $param_value );
+								$first_key = key( $param_value );
+								$param_value = $param_value[ $first_key ];
+							}
+							$inner .= $this->singleParamHtmlHolder( $param, $param_value );
+						}
+						$output .= $inner;
+					}
+					$output .= '</div>';
+					$output .= str_replace( "%column_size%", wpb_translateColumnWidthToFractional( $width[$i] ), $column_controls_bottom );
+					$output .= '</div>';
+				}
+				return $output;
+			}
+		}
+
+
+
+		class WPBakeryShortCode_One_Third extends WPBakeryShortCode_VC_Column {
+			
+			public function mainHtmlBlockParams($width, $i) {
+				return 'data-element_type="vc_column" data-vc-column-width="'.wpb_vc_get_column_width_indent($width[$i]).'" class="wpb_' . $this->settings['base'] . ' wpb_vc_column vc_col-sm-4 wpb_sortable ' . $this->templateWidth() . ' wpb_content_holder"' . $this->customAdminBlockParams();
+			}
+			
+			public function contentAdmin($atts, $content = null) {
+					$width = $el_class = '';
+				extract( vc_map_get_attributes( $this->getShortcode(), $atts ) );
+				$output = '';
+
+				$column_controls = $this->getColumnControls( $this->settings( 'controls' ) );
+				$column_controls_bottom = $this->getColumnControls( 'add', 'bottom-controls' );
+
+
+				$width = array( 'vc_col-sm-4' );
+				
+				for ( $i = 0; $i < count( $width ); $i ++ ) {
+					$output .= '<div ' . $this->mainHtmlBlockParams( $width, $i ) . '>';
+					$output .= str_replace( "%column_size%", wpb_translateColumnWidthToFractional( $width[$i] ), $column_controls );
+					$output .= '<div class="wpb_element_wrapper">';
+					$output .= '<div ' . $this->containerHtmlBlockParams( $width, $i ) . '>';
+					$output .= do_shortcode( shortcode_unautop( $content ) );
+					$output .= '</div>';
+					if ( isset( $this->settings['params'] ) ) {
+						$inner = '';
+						foreach ( $this->settings['params'] as $param ) {
+							$param_value = isset( ${$param['param_name']} ) ? ${$param['param_name']} : '';
+							if ( is_array( $param_value ) ) {
+								// Get first element from the array
+								reset( $param_value );
+								$first_key = key( $param_value );
+								$param_value = $param_value[ $first_key ];
+							}
+							$inner .= $this->singleParamHtmlHolder( $param, $param_value );
+						}
+						$output .= $inner;
+					}
+					$output .= '</div>';
+					$output .= str_replace( "%column_size%", wpb_translateColumnWidthToFractional( $width[$i] ), $column_controls_bottom );
+					$output .= '</div>';
+				}
+				return $output;
+			}
+			
+		}
+
+
+		class WPBakeryShortCode_One_Third_Last extends WPBakeryShortCode_VC_Column {
+			
+			public function mainHtmlBlockParams($width, $i) {
+				return 'data-element_type="vc_column" data-vc-column-width="'.wpb_vc_get_column_width_indent($width[$i]).'" class="wpb_' . $this->settings['base'] . ' wpb_vc_column vc_col-sm-4 wpb_sortable ' . $this->templateWidth() . ' wpb_content_holder"' . $this->customAdminBlockParams();
+			}
+			
+			public function contentAdmin($atts, $content = null) {
+					$width = $el_class = '';
+				extract( vc_map_get_attributes( $this->getShortcode(), $atts ) );
+				$output = '';
+
+				$column_controls = $this->getColumnControls( $this->settings( 'controls' ) );
+				$column_controls_bottom = $this->getColumnControls( 'add', 'bottom-controls' );
+
+
+				$width = array( 'vc_col-sm-4' );
+				
+				for ( $i = 0; $i < count( $width ); $i ++ ) {
+					$output .= '<div ' . $this->mainHtmlBlockParams( $width, $i ) . '>';
+					$output .= str_replace( "%column_size%", wpb_translateColumnWidthToFractional( $width[$i] ), $column_controls );
+					$output .= '<div class="wpb_element_wrapper">';
+					$output .= '<div ' . $this->containerHtmlBlockParams( $width, $i ) . '>';
+					$output .= do_shortcode( shortcode_unautop( $content ) );
+					$output .= '</div>';
+					if ( isset( $this->settings['params'] ) ) {
+						$inner = '';
+						foreach ( $this->settings['params'] as $param ) {
+							$param_value = isset( ${$param['param_name']} ) ? ${$param['param_name']} : '';
+							if ( is_array( $param_value ) ) {
+								// Get first element from the array
+								reset( $param_value );
+								$first_key = key( $param_value );
+								$param_value = $param_value[ $first_key ];
+							}
+							$inner .= $this->singleParamHtmlHolder( $param, $param_value );
+						}
+						$output .= $inner;
+					}
+					$output .= '</div>';
+					$output .= str_replace( "%column_size%", wpb_translateColumnWidthToFractional( $width[$i] ), $column_controls_bottom );
+					$output .= '</div>';
+				}
+				return $output;
+			}
+			
+		}
+
+
+
+
+		class WPBakeryShortCode_One_Fourth extends WPBakeryShortCode_VC_Column {
+			
+			public function mainHtmlBlockParams($width, $i) {
+				return 'data-element_type="vc_column" data-vc-column-width="'.wpb_vc_get_column_width_indent($width[$i]).'" class="wpb_' . $this->settings['base'] . ' wpb_vc_column vc_col-sm-3 wpb_sortable ' . $this->templateWidth() . ' wpb_content_holder"' . $this->customAdminBlockParams();
+			}
+			
+			public function contentAdmin($atts, $content = null) {
+					$width = $el_class = '';
+				extract( vc_map_get_attributes( $this->getShortcode(), $atts ) );
+				$output = '';
+
+				$column_controls = $this->getColumnControls( $this->settings( 'controls' ) );
+				$column_controls_bottom = $this->getColumnControls( 'add', 'bottom-controls' );
+
+
+				$width = array( 'vc_col-sm-3' );
+				
+				for ( $i = 0; $i < count( $width ); $i ++ ) {
+					$output .= '<div ' . $this->mainHtmlBlockParams( $width, $i ) . '>';
+					$output .= str_replace( "%column_size%", wpb_translateColumnWidthToFractional( $width[$i] ), $column_controls );
+					$output .= '<div class="wpb_element_wrapper">';
+					$output .= '<div ' . $this->containerHtmlBlockParams( $width, $i ) . '>';
+					$output .= do_shortcode( shortcode_unautop( $content ) );
+					$output .= '</div>';
+					if ( isset( $this->settings['params'] ) ) {
+						$inner = '';
+						foreach ( $this->settings['params'] as $param ) {
+							$param_value = isset( ${$param['param_name']} ) ? ${$param['param_name']} : '';
+							if ( is_array( $param_value ) ) {
+								// Get first element from the array
+								reset( $param_value );
+								$first_key = key( $param_value );
+								$param_value = $param_value[ $first_key ];
+							}
+							$inner .= $this->singleParamHtmlHolder( $param, $param_value );
+						}
+						$output .= $inner;
+					}
+					$output .= '</div>';
+					$output .= str_replace( "%column_size%", wpb_translateColumnWidthToFractional( $width[$i] ), $column_controls_bottom );
+					$output .= '</div>';
+				}
+				return $output;
+			}
+			
+		}
+
+
+		class WPBakeryShortCode_One_Fourth_Last extends WPBakeryShortCode_VC_Column {
+			
+			public function mainHtmlBlockParams($width, $i) {
+				return 'data-element_type="vc_column" data-vc-column-width="'.wpb_vc_get_column_width_indent($width[$i]).'" class="wpb_' . $this->settings['base'] . ' wpb_vc_column vc_col-sm-3 wpb_sortable ' . $this->templateWidth() . ' wpb_content_holder"' . $this->customAdminBlockParams();
+			}
+			
+			public function contentAdmin($atts, $content = null) {
+					$width = $el_class = '';
+				extract( vc_map_get_attributes( $this->getShortcode(), $atts ) );
+				$output = '';
+
+				$column_controls = $this->getColumnControls( $this->settings( 'controls' ) );
+				$column_controls_bottom = $this->getColumnControls( 'add', 'bottom-controls' );
+
+
+				$width = array( 'vc_col-sm-3' );
+				
+				for ( $i = 0; $i < count( $width ); $i ++ ) {
+					$output .= '<div ' . $this->mainHtmlBlockParams( $width, $i ) . '>';
+					$output .= str_replace( "%column_size%", wpb_translateColumnWidthToFractional( $width[$i] ), $column_controls );
+					$output .= '<div class="wpb_element_wrapper">';
+					$output .= '<div ' . $this->containerHtmlBlockParams( $width, $i ) . '>';
+					$output .= do_shortcode( shortcode_unautop( $content ) );
+					$output .= '</div>';
+					if ( isset( $this->settings['params'] ) ) {
+						$inner = '';
+						foreach ( $this->settings['params'] as $param ) {
+							$param_value = isset( ${$param['param_name']} ) ? ${$param['param_name']} : '';
+							if ( is_array( $param_value ) ) {
+								// Get first element from the array
+								reset( $param_value );
+								$first_key = key( $param_value );
+								$param_value = $param_value[ $first_key ];
+							}
+							$inner .= $this->singleParamHtmlHolder( $param, $param_value );
+						}
+						$output .= $inner;
+					}
+					$output .= '</div>';
+					$output .= str_replace( "%column_size%", wpb_translateColumnWidthToFractional( $width[$i] ), $column_controls_bottom );
+					$output .= '</div>';
+				}
+				return $output;
+			}
+			
+		}
+
+
+		class WPBakeryShortCode_One_Sixth extends WPBakeryShortCode_VC_Column {
+			
+			public function mainHtmlBlockParams($width, $i) {
+				return 'data-element_type="vc_column" data-vc-column-width="'.wpb_vc_get_column_width_indent($width[$i]).'" class="wpb_' . $this->settings['base'] . ' wpb_vc_column vc_col-sm-2 wpb_sortable ' . $this->templateWidth() . ' wpb_content_holder"' . $this->customAdminBlockParams();
+			}
+			
+			public function contentAdmin($atts, $content = null) {
+					$width = $el_class = '';
+				extract( vc_map_get_attributes( $this->getShortcode(), $atts ) );
+				$output = '';
+
+				$column_controls = $this->getColumnControls( $this->settings( 'controls' ) );
+				$column_controls_bottom = $this->getColumnControls( 'add', 'bottom-controls' );
+
+
+				$width = array( 'vc_col-sm-2' );
+				
+				for ( $i = 0; $i < count( $width ); $i ++ ) {
+					$output .= '<div ' . $this->mainHtmlBlockParams( $width, $i ) . '>';
+					$output .= str_replace( "%column_size%", wpb_translateColumnWidthToFractional( $width[$i] ), $column_controls );
+					$output .= '<div class="wpb_element_wrapper">';
+					$output .= '<div ' . $this->containerHtmlBlockParams( $width, $i ) . '>';
+					$output .= do_shortcode( shortcode_unautop( $content ) );
+					$output .= '</div>';
+					if ( isset( $this->settings['params'] ) ) {
+						$inner = '';
+						foreach ( $this->settings['params'] as $param ) {
+							$param_value = isset( ${$param['param_name']} ) ? ${$param['param_name']} : '';
+							if ( is_array( $param_value ) ) {
+								// Get first element from the array
+								reset( $param_value );
+								$first_key = key( $param_value );
+								$param_value = $param_value[ $first_key ];
+							}
+							$inner .= $this->singleParamHtmlHolder( $param, $param_value );
+						}
+						$output .= $inner;
+					}
+					$output .= '</div>';
+					$output .= str_replace( "%column_size%", wpb_translateColumnWidthToFractional( $width[$i] ), $column_controls_bottom );
+					$output .= '</div>';
+				}
+				return $output;
+			}
+			
+		}
+
+
+
+
+		class WPBakeryShortCode_One_Sixth_Last extends WPBakeryShortCode_VC_Column {
+			
+			public function mainHtmlBlockParams($width, $i) {
+				return 'data-element_type="vc_column" data-vc-column-width="'.wpb_vc_get_column_width_indent($width[$i]).'" class="wpb_' . $this->settings['base'] . ' wpb_vc_column vc_col-sm-2 wpb_sortable ' . $this->templateWidth() . ' wpb_content_holder"' . $this->customAdminBlockParams();
+			}
+			
+			public function contentAdmin($atts, $content = null) {
+					$width = $el_class = '';
+				extract( vc_map_get_attributes( $this->getShortcode(), $atts ) );
+				$output = '';
+
+				$column_controls = $this->getColumnControls( $this->settings( 'controls' ) );
+				$column_controls_bottom = $this->getColumnControls( 'add', 'bottom-controls' );
+
+
+				$width = array( 'vc_col-sm-2' );
+				
+				for ( $i = 0; $i < count( $width ); $i ++ ) {
+					$output .= '<div ' . $this->mainHtmlBlockParams( $width, $i ) . '>';
+					$output .= str_replace( "%column_size%", wpb_translateColumnWidthToFractional( $width[$i] ), $column_controls );
+					$output .= '<div class="wpb_element_wrapper">';
+					$output .= '<div ' . $this->containerHtmlBlockParams( $width, $i ) . '>';
+					$output .= do_shortcode( shortcode_unautop( $content ) );
+					$output .= '</div>';
+					if ( isset( $this->settings['params'] ) ) {
+						$inner = '';
+						foreach ( $this->settings['params'] as $param ) {
+							$param_value = isset( ${$param['param_name']} ) ? ${$param['param_name']} : '';
+							if ( is_array( $param_value ) ) {
+								// Get first element from the array
+								reset( $param_value );
+								$first_key = key( $param_value );
+								$param_value = $param_value[ $first_key ];
+							}
+							$inner .= $this->singleParamHtmlHolder( $param, $param_value );
+						}
+						$output .= $inner;
+					}
+					$output .= '</div>';
+					$output .= str_replace( "%column_size%", wpb_translateColumnWidthToFractional( $width[$i] ), $column_controls_bottom );
+					$output .= '</div>';
+				}
+				return $output;
+			}
+			
+		}
+
+
+		class WPBakeryShortCode_Two_Thirds extends WPBakeryShortCode_VC_Column {
+			
+			public function mainHtmlBlockParams($width, $i) {
+				return 'data-element_type="vc_column" data-vc-column-width="'.wpb_vc_get_column_width_indent($width[$i]).'" class="wpb_' . $this->settings['base'] . ' wpb_vc_column vc_col-sm-8 wpb_sortable ' . $this->templateWidth() . ' wpb_content_holder"' . $this->customAdminBlockParams();
+			}
+			
+			public function contentAdmin($atts, $content = null) {
+					$width = $el_class = '';
+				extract( vc_map_get_attributes( $this->getShortcode(), $atts ) );
+				$output = '';
+
+				$column_controls = $this->getColumnControls( $this->settings( 'controls' ) );
+				$column_controls_bottom = $this->getColumnControls( 'add', 'bottom-controls' );
+
+
+				$width = array( 'vc_col-sm-8' );
+				
+				for ( $i = 0; $i < count( $width ); $i ++ ) {
+					$output .= '<div ' . $this->mainHtmlBlockParams( $width, $i ) . '>';
+					$output .= str_replace( "%column_size%", wpb_translateColumnWidthToFractional( $width[$i] ), $column_controls );
+					$output .= '<div class="wpb_element_wrapper">';
+					$output .= '<div ' . $this->containerHtmlBlockParams( $width, $i ) . '>';
+					$output .= do_shortcode( shortcode_unautop( $content ) );
+					$output .= '</div>';
+					if ( isset( $this->settings['params'] ) ) {
+						$inner = '';
+						foreach ( $this->settings['params'] as $param ) {
+							$param_value = isset( ${$param['param_name']} ) ? ${$param['param_name']} : '';
+							if ( is_array( $param_value ) ) {
+								// Get first element from the array
+								reset( $param_value );
+								$first_key = key( $param_value );
+								$param_value = $param_value[ $first_key ];
+							}
+							$inner .= $this->singleParamHtmlHolder( $param, $param_value );
+						}
+						$output .= $inner;
+					}
+					$output .= '</div>';
+					$output .= str_replace( "%column_size%", wpb_translateColumnWidthToFractional( $width[$i] ), $column_controls_bottom );
+					$output .= '</div>';
+				}
+				return $output;
+			}
+			
+		}
+
+
+
+		class WPBakeryShortCode_Two_Thirds_Last extends WPBakeryShortCode_VC_Column {
+			
+			public function mainHtmlBlockParams($width, $i) {
+				return 'data-element_type="vc_column" data-vc-column-width="'.wpb_vc_get_column_width_indent($width[$i]).'" class="wpb_' . $this->settings['base'] . ' wpb_vc_column vc_col-sm-8 wpb_sortable ' . $this->templateWidth() . ' wpb_content_holder"' . $this->customAdminBlockParams();
+			}
+			
+			public function contentAdmin($atts, $content = null) {
+					$width = $el_class = '';
+				extract( vc_map_get_attributes( $this->getShortcode(), $atts ) );
+				$output = '';
+
+				$column_controls = $this->getColumnControls( $this->settings( 'controls' ) );
+				$column_controls_bottom = $this->getColumnControls( 'add', 'bottom-controls' );
+
+
+				$width = array( 'vc_col-sm-8' );
+				
+				for ( $i = 0; $i < count( $width ); $i ++ ) {
+					$output .= '<div ' . $this->mainHtmlBlockParams( $width, $i ) . '>';
+					$output .= str_replace( "%column_size%", wpb_translateColumnWidthToFractional( $width[$i] ), $column_controls );
+					$output .= '<div class="wpb_element_wrapper">';
+					$output .= '<div ' . $this->containerHtmlBlockParams( $width, $i ) . '>';
+					$output .= do_shortcode( shortcode_unautop( $content ) );
+					$output .= '</div>';
+					if ( isset( $this->settings['params'] ) ) {
+						$inner = '';
+						foreach ( $this->settings['params'] as $param ) {
+							$param_value = isset( ${$param['param_name']} ) ? ${$param['param_name']} : '';
+							if ( is_array( $param_value ) ) {
+								// Get first element from the array
+								reset( $param_value );
+								$first_key = key( $param_value );
+								$param_value = $param_value[ $first_key ];
+							}
+							$inner .= $this->singleParamHtmlHolder( $param, $param_value );
+						}
+						$output .= $inner;
+					}
+					$output .= '</div>';
+					$output .= str_replace( "%column_size%", wpb_translateColumnWidthToFractional( $width[$i] ), $column_controls_bottom );
+					$output .= '</div>';
+				}
+				return $output;
+			}
+		}
+
+
+		class WPBakeryShortCode_Three_Fourths extends WPBakeryShortCode_VC_Column {
+			
+			public function mainHtmlBlockParams($width, $i) {
+				return 'data-element_type="vc_column" data-vc-column-width="'.wpb_vc_get_column_width_indent($width[$i]).'" class="wpb_' . $this->settings['base'] . ' wpb_vc_column vc_col-sm-9 wpb_sortable ' . $this->templateWidth() . ' wpb_content_holder"' . $this->customAdminBlockParams();
+			}
+			
+			public function contentAdmin($atts, $content = null) {
+					$width = $el_class = '';
+				extract( vc_map_get_attributes( $this->getShortcode(), $atts ) );
+				$output = '';
+
+				$column_controls = $this->getColumnControls( $this->settings( 'controls' ) );
+				$column_controls_bottom = $this->getColumnControls( 'add', 'bottom-controls' );
+
+
+				$width = array( 'vc_col-sm-9' );
+				
+				for ( $i = 0; $i < count( $width ); $i ++ ) {
+					$output .= '<div ' . $this->mainHtmlBlockParams( $width, $i ) . '>';
+					$output .= str_replace( "%column_size%", wpb_translateColumnWidthToFractional( $width[$i] ), $column_controls );
+					$output .= '<div class="wpb_element_wrapper">';
+					$output .= '<div ' . $this->containerHtmlBlockParams( $width, $i ) . '>';
+					$output .= do_shortcode( shortcode_unautop( $content ) );
+					$output .= '</div>';
+					if ( isset( $this->settings['params'] ) ) {
+						$inner = '';
+						foreach ( $this->settings['params'] as $param ) {
+							$param_value = isset( ${$param['param_name']} ) ? ${$param['param_name']} : '';
+							if ( is_array( $param_value ) ) {
+								// Get first element from the array
+								reset( $param_value );
+								$first_key = key( $param_value );
+								$param_value = $param_value[ $first_key ];
+							}
+							$inner .= $this->singleParamHtmlHolder( $param, $param_value );
+						}
+						$output .= $inner;
+					}
+					$output .= '</div>';
+					$output .= str_replace( "%column_size%", wpb_translateColumnWidthToFractional( $width[$i] ), $column_controls_bottom );
+					$output .= '</div>';
+				}
+				return $output;
+			}
+			
+		}
+
+
+		class WPBakeryShortCode_Three_Fourths_Last extends WPBakeryShortCode_VC_Column {
+			
+			public function mainHtmlBlockParams($width, $i) {
+				return 'data-element_type="vc_column" data-vc-column-width="'.wpb_vc_get_column_width_indent($width[$i]).'" class="wpb_' . $this->settings['base'] . ' wpb_vc_column vc_col-sm-9 wpb_sortable ' . $this->templateWidth() . ' wpb_content_holder"' . $this->customAdminBlockParams();
+			}
+			
+			public function contentAdmin($atts, $content = null) {
+					$width = $el_class = '';
+				extract( vc_map_get_attributes( $this->getShortcode(), $atts ) );
+				$output = '';
+
+				$column_controls = $this->getColumnControls( $this->settings( 'controls' ) );
+				$column_controls_bottom = $this->getColumnControls( 'add', 'bottom-controls' );
+
+
+				$width = array( 'vc_col-sm-9' );
+				
+				for ( $i = 0; $i < count( $width ); $i ++ ) {
+					$output .= '<div ' . $this->mainHtmlBlockParams( $width, $i ) . '>';
+					$output .= str_replace( "%column_size%", wpb_translateColumnWidthToFractional( $width[$i] ), $column_controls );
+					$output .= '<div class="wpb_element_wrapper">';
+					$output .= '<div ' . $this->containerHtmlBlockParams( $width, $i ) . '>';
+					$output .= do_shortcode( shortcode_unautop( $content ) );
+					$output .= '</div>';
+					if ( isset( $this->settings['params'] ) ) {
+						$inner = '';
+						foreach ( $this->settings['params'] as $param ) {
+							$param_value = isset( ${$param['param_name']} ) ? ${$param['param_name']} : '';
+							if ( is_array( $param_value ) ) {
+								// Get first element from the array
+								reset( $param_value );
+								$first_key = key( $param_value );
+								$param_value = $param_value[ $first_key ];
+							}
+							$inner .= $this->singleParamHtmlHolder( $param, $param_value );
+						}
+						$output .= $inner;
+					}
+					$output .= '</div>';
+					$output .= str_replace( "%column_size%", wpb_translateColumnWidthToFractional( $width[$i] ), $column_controls_bottom );
+					$output .= '</div>';
+				}
+				return $output;
+			}
+			
+		}
+
+
+		class WPBakeryShortCode_Five_Sixths extends WPBakeryShortCode_VC_Column {
+			
+			public function mainHtmlBlockParams($width, $i) {
+				return 'data-element_type="vc_column" data-vc-column-width="'.wpb_vc_get_column_width_indent($width[$i]).'" class="wpb_' . $this->settings['base'] . ' wpb_vc_column vc_col-sm-10 wpb_sortable ' . $this->templateWidth() . ' wpb_content_holder"' . $this->customAdminBlockParams();
+			}
+			
+			public function contentAdmin($atts, $content = null) {
+					$width = $el_class = '';
+				extract( vc_map_get_attributes( $this->getShortcode(), $atts ) );
+				$output = '';
+
+				$column_controls = $this->getColumnControls( $this->settings( 'controls' ) );
+				$column_controls_bottom = $this->getColumnControls( 'add', 'bottom-controls' );
+
+
+				$width = array( 'vc_col-sm-10' );
+				
+				for ( $i = 0; $i < count( $width ); $i ++ ) {
+					$output .= '<div ' . $this->mainHtmlBlockParams( $width, $i ) . '>';
+					$output .= str_replace( "%column_size%", wpb_translateColumnWidthToFractional( $width[$i] ), $column_controls );
+					$output .= '<div class="wpb_element_wrapper">';
+					$output .= '<div ' . $this->containerHtmlBlockParams( $width, $i ) . '>';
+					$output .= do_shortcode( shortcode_unautop( $content ) );
+					$output .= '</div>';
+					if ( isset( $this->settings['params'] ) ) {
+						$inner = '';
+						foreach ( $this->settings['params'] as $param ) {
+							$param_value = isset( ${$param['param_name']} ) ? ${$param['param_name']} : '';
+							if ( is_array( $param_value ) ) {
+								// Get first element from the array
+								reset( $param_value );
+								$first_key = key( $param_value );
+								$param_value = $param_value[ $first_key ];
+							}
+							$inner .= $this->singleParamHtmlHolder( $param, $param_value );
+						}
+						$output .= $inner;
+					}
+					$output .= '</div>';
+					$output .= str_replace( "%column_size%", wpb_translateColumnWidthToFractional( $width[$i] ), $column_controls_bottom );
+					$output .= '</div>';
+				}
+				return $output;
+			}
+			
+		}
+
+		class WPBakeryShortCode_Five_Sixths_Last extends WPBakeryShortCode_VC_Column {
+			
+			public function mainHtmlBlockParams($width, $i) {
+				return 'data-element_type="vc_column" data-vc-column-width="'.wpb_vc_get_column_width_indent($width[$i]).'" class="wpb_' . $this->settings['base'] . ' wpb_vc_column vc_col-sm-10 wpb_sortable ' . $this->templateWidth() . ' wpb_content_holder"' . $this->customAdminBlockParams();
+			}
+			
+			public function contentAdmin($atts, $content = null) {
+					$width = $el_class = '';
+				extract( vc_map_get_attributes( $this->getShortcode(), $atts ) );
+				$output = '';
+
+				$column_controls = $this->getColumnControls( $this->settings( 'controls' ) );
+				$column_controls_bottom = $this->getColumnControls( 'add', 'bottom-controls' );
+
+
+				$width = array( 'vc_col-sm-10' );
+				
+				for ( $i = 0; $i < count( $width ); $i ++ ) {
+					$output .= '<div ' . $this->mainHtmlBlockParams( $width, $i ) . '>';
+					$output .= str_replace( "%column_size%", wpb_translateColumnWidthToFractional( $width[$i] ), $column_controls );
+					$output .= '<div class="wpb_element_wrapper">';
+					$output .= '<div ' . $this->containerHtmlBlockParams( $width, $i ) . '>';
+					$output .= do_shortcode( shortcode_unautop( $content ) );
+					$output .= '</div>';
+					if ( isset( $this->settings['params'] ) ) {
+						$inner = '';
+						foreach ( $this->settings['params'] as $param ) {
+							$param_value = isset( ${$param['param_name']} ) ? ${$param['param_name']} : '';
+							if ( is_array( $param_value ) ) {
+								// Get first element from the array
+								reset( $param_value );
+								$first_key = key( $param_value );
+								$param_value = $param_value[ $first_key ];
+							}
+							$inner .= $this->singleParamHtmlHolder( $param, $param_value );
+						}
+						$output .= $inner;
+					}
+					$output .= '</div>';
+					$output .= str_replace( "%column_size%", wpb_translateColumnWidthToFractional( $width[$i] ), $column_controls_bottom );
+					$output .= '</div>';
+				}
+				return $output;
+			}
+			
+		}
+
+		class WPBakeryShortCode_One_Whole extends WPBakeryShortCode_VC_Column {
+			
+			public function mainHtmlBlockParams($width, $i) {
+				return 'data-element_type="vc_column" data-vc-column-width="'.wpb_vc_get_column_width_indent($width[$i]).'" class="wpb_' . $this->settings['base'] . ' wpb_vc_column vc_col-sm-12 wpb_sortable ' . $this->templateWidth() . ' wpb_content_holder"' . $this->customAdminBlockParams();
+			}
+			
+			public function contentAdmin($atts, $content = null) {
+					$width = $el_class = '';
+				extract( vc_map_get_attributes( $this->getShortcode(), $atts ) );
+				$output = '';
+
+				$column_controls = $this->getColumnControls( $this->settings( 'controls' ) );
+				$column_controls_bottom = $this->getColumnControls( 'add', 'bottom-controls' );
+
+
+				$width = array( 'vc_col-sm-12' );
+				
+				for ( $i = 0; $i < count( $width ); $i ++ ) {
+					$output .= '<div ' . $this->mainHtmlBlockParams( $width, $i ) . '>';
+					$output .= str_replace( "%column_size%", wpb_translateColumnWidthToFractional( $width[$i] ), $column_controls );
+					$output .= '<div class="wpb_element_wrapper">';
+					$output .= '<div ' . $this->containerHtmlBlockParams( $width, $i ) . '>';
+					$output .= do_shortcode( shortcode_unautop( $content ) );
+					$output .= '</div>';
+					if ( isset( $this->settings['params'] ) ) {
+						$inner = '';
+						foreach ( $this->settings['params'] as $param ) {
+							$param_value = isset( ${$param['param_name']} ) ? ${$param['param_name']} : '';
+							if ( is_array( $param_value ) ) {
+								// Get first element from the array
+								reset( $param_value );
+								$first_key = key( $param_value );
+								$param_value = $param_value[ $first_key ];
+							}
+							$inner .= $this->singleParamHtmlHolder( $param, $param_value );
+						}
+						$output .= $inner;
+					}
+					$output .= '</div>';
+					$output .= str_replace( "%column_size%", wpb_translateColumnWidthToFractional( $width[$i] ), $column_controls_bottom );
+					$output .= '</div>';
+				}
+				return $output;
+			}
+			
+		}
+
+
+
+		vc_lean_map( 'one_half', null, SALIENT_CORE_ROOT_DIR_PATH . 'includes/nectar_maps/one_half.php');
+		vc_lean_map( 'one_half_last', null, SALIENT_CORE_ROOT_DIR_PATH . 'includes/nectar_maps/one_half_last.php');
+
+		vc_lean_map( 'one_third', null, SALIENT_CORE_ROOT_DIR_PATH . 'includes/nectar_maps/one_third.php');
+		vc_lean_map( 'one_third_last', null, SALIENT_CORE_ROOT_DIR_PATH . 'includes/nectar_maps/one_third_last.php');
+
+		vc_lean_map( 'one_fourth', null, SALIENT_CORE_ROOT_DIR_PATH . 'includes/nectar_maps/one_fourth.php');
+		vc_lean_map( 'one_fourth_last', null, SALIENT_CORE_ROOT_DIR_PATH . 'includes/nectar_maps/one_fourth_last.php');
+
+		vc_lean_map( 'one_sixth', null, SALIENT_CORE_ROOT_DIR_PATH . 'includes/nectar_maps/one_sixth.php');
+		vc_lean_map( 'one_sixth_last', null, SALIENT_CORE_ROOT_DIR_PATH . 'includes/nectar_maps/one_sixth_last.php');
+
+		vc_lean_map( 'three_fourths', null, SALIENT_CORE_ROOT_DIR_PATH . 'includes/nectar_maps/three_fourths.php');
+		vc_lean_map( 'three_fourths_last', null, SALIENT_CORE_ROOT_DIR_PATH . 'includes/nectar_maps/three_fourths_last.php');
+
+		vc_lean_map( 'two_thirds', null, SALIENT_CORE_ROOT_DIR_PATH . 'includes/nectar_maps/two_thirds.php');
+		vc_lean_map( 'two_thirds_last', null, SALIENT_CORE_ROOT_DIR_PATH . 'includes/nectar_maps/two_thirds_last.php');
+
+		vc_lean_map( 'five_sixths', null, SALIENT_CORE_ROOT_DIR_PATH . 'includes/nectar_maps/five_sixths.php');
+		vc_lean_map( 'five_sixths_last', null, SALIENT_CORE_ROOT_DIR_PATH . 'includes/nectar_maps/five_sixths_last.php');
+
+		vc_lean_map( 'one_whole', null, SALIENT_CORE_ROOT_DIR_PATH . 'includes/nectar_maps/one_whole.php');
+	}
 
 
 

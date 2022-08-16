@@ -7,9 +7,8 @@ return array(
 	'name' => esc_html__( 'Image Gallery', 'js_composer' ),
 	'base' => 'vc_gallery',
 	'icon' => 'icon-wpb-images-stack',
-	'category' => esc_html__( 'Media', 'js_composer' ),
+	'category' => esc_html__( 'Content', 'js_composer' ),
 	'description' => esc_html__( 'Responsive image gallery', 'js_composer' ),
-  'weight' => '10',
 	'params' => array(
 		array(
 			'type' => 'textfield',

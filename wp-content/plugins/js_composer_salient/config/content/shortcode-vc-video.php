@@ -7,7 +7,7 @@ return array(
 	'name' => esc_html__( 'Video Player', 'js_composer' ),
 	'base' => 'vc_video',
 	'icon' => 'icon-wpb-film-youtube',
-	'category' => esc_html__( 'Media', 'js_composer' ),
+	'category' => esc_html__( 'Content', 'js_composer' ),
 	'description' => esc_html__( 'Embed YouTube/Vimeo player', 'js_composer' ),
 	'params' => array(
 		array(

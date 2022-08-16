@@ -26,4 +26,7 @@ function vc_page_automapper_build() {
 
 // TODO: move to separate file in autoload
 add_filter( 'vc_settings-render-tab-vc-automapper', 'vc_page_automapper_build' );
-is_admin() && ( strpos( vc_request_param( 'action' ), 'vc_automapper' ) !== false || 'vc-automapper' === vc_get_param( 'page' ) ) && add_action( 'admin_init', 'vc_automapper_init' );
+/* nectar addition */
+// php 8.1 compat - changes default to empty string instead of null in vc_request_param
+is_admin() && ( strpos( vc_request_param( 'action', '' ), 'vc_automapper' ) !== false || 'vc-automapper' === vc_get_param( 'page' ) ) && add_action( 'admin_init', 'vc_automapper_init' );
+/* nectar addition end */

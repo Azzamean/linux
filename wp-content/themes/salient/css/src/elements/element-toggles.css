@@ -6,21 +6,21 @@ Description: Styles for the "Toggles" page builder element.
 body .toggle{
   margin-bottom:15px
 }
-.toggle.open h3 a{
+.toggle.open > .toggle-title a{
   color:#fff;
   background-color:#000
 }
-body .toggle h3,
-body .row .toggle h3 {
+body .toggle .toggle-title,
+body .row .toggle .toggle-title {
   margin-bottom:0
 }
-.toggle h3 {
+.toggle > .toggle-title {
   position:relative;
   z-index:10;
   font-size:12px;
 }
 
-.toggle h3 a{
+.toggle > .toggle-title a{
   display:block;
   color: rgba(0,0,0,0.65);
   letter-spacing:0;
@@ -33,7 +33,7 @@ body .row .toggle h3 {
   -webkit-transition:all 0.2s linear;
 }
 
-.toggle h3 a i{
+.toggle > .toggle-title a i{
   position:absolute;
   left:13px;
   background-color:transparent;
@@ -46,10 +46,10 @@ body .row .toggle h3 {
   transition:all 0.2s linear;
   -webkit-transition:all 0.2s linear;
 }
-.toggle.open h3 a i{
+.toggle.open > .toggle-title a i{
   color:#fff
 }
-.toggle h3 a:hover{
+.toggle > .toggle-title a:hover{
   background-color:rgba(0,0,0,0.035)
 }
 body .toggle >div{
@@ -65,7 +65,6 @@ body .toggle >div{
 }
 
 body .toggle[data-inner-wrap="true"] > div {
-	-webkit-transition: max-height 0.5s ease;
 	transition: max-height 0.5s ease;
 	max-height: 0;
 	overflow: hidden;
@@ -73,7 +72,7 @@ body .toggle[data-inner-wrap="true"] > div {
 	display: block;
 }
 @media only screen and (max-width: 999px) {
-  body .accordion .toggle[data-inner-wrap="true"]:not(.open) > div {
+  body .accordion .toggle[data-inner-wrap="true"] > div {
     -webkit-transition: none;
   	transition: none;
   }
@@ -104,8 +103,8 @@ body .toggle[data-inner-wrap="true"] > div .inner-toggle-wrap {
   color:#676767
 }
 
-body div[data-style*="minimal"] .toggle.open h3 a,
-body div[data-style*="minimal"] .toggle h3 a{
+body div[data-style*="minimal"] .toggle.open > .toggle-title a,
+body div[data-style*="minimal"] .toggle > .toggle-title a{
   background-color:transparent
 }
 div[data-style*="minimal"] .toggle >div{
@@ -115,7 +114,7 @@ div[data-style*="minimal"] .toggle >div{
   background-color:transparent
 }
 
-div[data-style*="minimal"] .toggle h3 i{
+div[data-style*="minimal"] .toggle > .toggle-title i{
   width:30px;
   height:30px;
   position:absolute;
@@ -131,14 +130,14 @@ div[data-style*="minimal"] .toggle h3 i{
 }
 
 
-.light div[data-style*="minimal"] .toggle h3 i{
+.light div[data-style*="minimal"] .toggle > .toggle-title i{
   border-color:#fff
 }
-.light div[data-style*="minimal"] .toggle h3 i:before,
-.light div[data-style*="minimal"] .toggle h3 i:after{
+.light div[data-style*="minimal"] .toggle > .toggle-title i:before,
+.light div[data-style*="minimal"] .toggle > .toggle-title i:after{
   background-color:#fff
 }
-.light div[data-style*="minimal"] .toggle h3 a{
+.light div[data-style*="minimal"] .toggle > .toggle-title a{
   color:#fff
 }
 div[data-style*="minimal"] .toggle.open i:after{

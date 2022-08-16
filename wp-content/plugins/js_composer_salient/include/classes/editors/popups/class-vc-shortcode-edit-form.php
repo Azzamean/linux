@@ -62,9 +62,9 @@ class Vc_Shortcode_Edit_Form {
 			'edit_post',
 			(int) vc_request_param( 'post_id' ),
 		) )->validateDie( esc_html__( 'Access denied', 'js_composer' ) )->check( 'vc_user_access_check_shortcode_edit', $tag )->validateDie( esc_html__( 'Access denied', 'js_composer' ) );
-				 
+
 		$params = (array) stripslashes_deep( vc_post_param( 'params' ) );
- 		$params = array_map( 'vc_htmlspecialchars_decode_deep', $params );
+		$params = array_map( 'vc_htmlspecialchars_decode_deep', $params );
 
 		require_once vc_path_dir( 'EDITORS_DIR', 'class-vc-edit-form-fields.php' );
 		$fields = new Vc_Edit_Form_Fields( $tag, $params );

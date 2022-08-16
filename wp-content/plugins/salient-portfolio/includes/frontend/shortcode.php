@@ -72,6 +72,21 @@ if( !function_exists('nectar_portfolio_processing') ) {
 				break; 
 				
 			}
+
+			// Forced project style change when using delay ks.
+			if( isset($nectar_options['delay-js-execution']) && 
+				'1' === $nectar_options['delay-js-execution'] &&
+				$project_style === '6' ) {
+				
+				$delay_js_devices = (isset( $nectar_options['delay-js-execution-devices'] )) ? $nectar_options['delay-js-execution-devices'] : 'mobile';
+
+				if( wp_is_mobile() || 'all' === $delay_js_devices ) {
+					$project_style = '3';
+					if( $item_spacing === 'default' ) {
+						$item_spacing = '15px';
+					} 
+				}
+			}
 			
 			if($masonry_style === 'true' && 
 			$project_style === '6' && 

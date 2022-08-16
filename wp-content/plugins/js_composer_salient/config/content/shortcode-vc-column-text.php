@@ -7,6 +7,7 @@ return array(
 	'name' => esc_html__( 'Text Block', 'js_composer' ),
 	'icon' => 'icon-wpb-layer-shape-text',
 	'wrapper_class' => 'clearfix',
+	'weight' => 11, // nectar addition
 	'category' => esc_html__( 'Content', 'js_composer' ),
 	'description' => esc_html__( 'A block of text with WYSIWYG editor', 'js_composer' ),
 	'params' => array(

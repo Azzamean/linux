@@ -314,19 +314,23 @@ if( $style !== 'slider' &&
 
                 if( 'lazy-load' === $image_loading && NectarLazyImages::activate_lazy() || 
 								     property_exists('NectarLazyImages', 'global_option_active') && true === NectarLazyImages::$global_option_active && 'skip-lazy-load' !== $image_loading ) {
-            			$lazy_escaped_markup = 'data-nectar-img-src="'.get_the_post_thumbnail_url($post->ID, 'medium_featured', array('title' => '')).'"';
-            		} else {
-                  $lazy_escaped_markup = 'style="background-image: url('.get_the_post_thumbnail_url($post->ID, 'medium_featured', array('title' => '')).');"';
+                    
+                  $lazy_escaped_markup = nectar_lazy_loaded_image_markup(get_post_thumbnail_id(), 'medium_featured');
+      
+                } else {
+                  $lazy_escaped_markup = get_the_post_thumbnail($post->ID, 'medium_featured', array('title' => ''));
                 }
-
-                 echo'<a href="' . esc_url(get_permalink()) . '" aria-label="'.get_the_title().'" class="'.esc_attr($list_featured_image_class).'"><span class="post-featured-img" '.$lazy_escaped_markup.'></span></a>';
-              } else {
+                 echo'<a href="' . esc_url(get_permalink()) . '" aria-label="'.get_the_title().'" class="'.esc_attr($list_featured_image_class).'"><span class="post-featured-img">'.$lazy_escaped_markup.'</span></a>';
+              
+                } else {
 
                 if( 'lazy-load' === $image_loading && NectarLazyImages::activate_lazy() || 
 								     property_exists('NectarLazyImages', 'global_option_active') && true === NectarLazyImages::$global_option_active && 'skip-lazy-load' !== $image_loading ) {
-            			$lazy_escaped_markup = '<span class="img-thumbnail" data-nectar-img-src="'.get_the_post_thumbnail_url($post->ID, 'regular', array('title' => '')).'"></span>';
+            			
+                      $lazy_thumb = nectar_lazy_loaded_image_markup(get_post_thumbnail_id(), 'regular');
+                      $lazy_escaped_markup = '<span class="img-thumbnail">'.$lazy_thumb.'</span>';
             		} else {
-                  $lazy_escaped_markup = get_the_post_thumbnail($post->ID, $list_featured_image_size, array('title' => ''));
+                  $lazy_escaped_markup = '<span class="img-thumbnail">'.get_the_post_thumbnail($post->ID, $list_featured_image_size, array('title' => '')).'</span>';
                 }
 
                 echo '<a class="'.$list_featured_image_class.'" aria-label="'.get_the_title().'" href="' . esc_url(get_permalink()) . '">' . $lazy_escaped_markup . '</a>';

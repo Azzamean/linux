@@ -288,24 +288,24 @@ function nectar_blog_social_sharing() {
 
 				 } else {
 
-           $next_post = get_previous_post($blog_limit_cat);
-           $hidden_class = ( empty( $next_post ) ) ? ' hidden' : '';
-
+					$next_post = get_previous_post($blog_limit_cat);
+					$hidden_class = ( empty( $next_post ) ) ? ' hidden' : '';
+					
 					 // next only
 					 if ( ! empty( $bg ) ) {
 
 						 // page header
 						 echo ' '.$blog_nav_img_wrap_o.'<div class="post-bg-img" style="background-image: url(' . esc_url( $bg ) . ');"></div>'.$blog_nav_img_wrap_c;
 
-					 } elseif ( has_post_thumbnail( $next_post->ID ) ) {
+					 } elseif ( !empty($next_post) && has_post_thumbnail( $next_post->ID ) ) {
 						 // featured image
 						 $post_thumbnail_id  = get_post_thumbnail_id( $next_post->ID );
 						 $post_thumbnail_url = wp_get_attachment_url( $post_thumbnail_id );
 						 echo ' '.$blog_nav_img_wrap_o.'<div class="post-bg-img" style="background-image: url(' . esc_url( $post_thumbnail_url ) . ');"></div>'.$blog_nav_img_wrap_c;
 					 }
-           else {
-             echo ' '.$blog_nav_img_wrap_o.'<div class="post-bg-img"></div>'.$blog_nav_img_wrap_c;
-           }
+					else {
+						echo ' '.$blog_nav_img_wrap_o.'<div class="post-bg-img"></div>'.$blog_nav_img_wrap_c;
+					}
 					 ?>
 
 					 <div class="col span_12 dark left<?php echo esc_html($hidden_class); ?>">

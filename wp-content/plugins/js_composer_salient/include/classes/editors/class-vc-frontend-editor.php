@@ -176,7 +176,7 @@ class Vc_Frontend_Editor {
 		if ( 'vc_load_shortcode' === vc_request_param( 'action' ) ) {
 			return;
 		}
-		visual_composer()->shared_templates->init();
+		wpbakery()->shared_templates->init();
 		add_filter( 'the_title', array(
 			$this,
 			'setEmptyTitlePlaceholder',
@@ -378,19 +378,19 @@ class Vc_Frontend_Editor {
 	 *
 	 */
 	public function setPost() {
- 		global $post, $wp_query;
- 		$this->post = get_post(); // fixes #1342 if no get/post params set
- 		$this->post_id = vc_get_param( 'post_id' );
- 		if ( vc_post_param( 'post_id' ) ) {
- 			$this->post_id = vc_post_param( 'post_id' );
- 		}
- 		if ( $this->post_id ) {
- 			$this->post = get_post( $this->post_id );
- 		}
- 		do_action_ref_array( 'the_post', array( $this->post, $wp_query ) );
- 		$post = $this->post;
- 		$this->post_id = $this->post->ID;
- 	}
+		global $post, $wp_query;
+		$this->post = get_post(); // fixes #1342 if no get/post params set
+		$this->post_id = vc_get_param( 'post_id' );
+		if ( vc_post_param( 'post_id' ) ) {
+			$this->post_id = vc_post_param( 'post_id' );
+		}
+		if ( $this->post_id ) {
+			$this->post = get_post( $this->post_id );
+		}
+		do_action_ref_array( 'the_post', array( $this->post, $wp_query ) );
+		$post = $this->post;
+		$this->post_id = $this->post->ID;
+	}
 
 	/**
 	 * @return mixed
@@ -430,8 +430,8 @@ class Vc_Frontend_Editor {
 		}
 		$this->registerJs();
 		$this->registerCss();
-		visual_composer()->registerAdminCss(); // bc
-		visual_composer()->registerAdminJavascript(); // bc
+		wpbakery()->registerAdminCss(); // bc
+		wpbakery()->registerAdminJavascript(); // bc
 		if ( $this->post && 'auto-draft' === $this->post->post_status ) {
 			$post_data = array(
 				'ID' => $this->post_id,
@@ -671,7 +671,7 @@ class Vc_Frontend_Editor {
 				print apply_filters( 'vc_frontend_editor_load_shortcode_ajax_output', $output );
 			} elseif ( 'vc_frontend_load_template' === $action ) {
 				$this->setPost();
-				visual_composer()->templatesPanelEditor()->renderFrontendTemplate();
+				wpbakery()->templatesPanelEditor()->renderFrontendTemplate();
 			} elseif ( '' !== $action ) {
 				do_action( 'vc_front_load_page_' . esc_attr( vc_post_param( 'action' ) ) );
 			}
@@ -710,8 +710,8 @@ class Vc_Frontend_Editor {
 	 */
 	public function enqueueRequired() {
 		do_action( 'wp_enqueue_scripts' );
-		visual_composer()->frontCss();
-		visual_composer()->frontJsRegister();
+		wpbakery()->frontCss();
+		wpbakery()->frontJsRegister();
 	}
 
 	/**
@@ -727,7 +727,7 @@ class Vc_Frontend_Editor {
 		foreach ( $shortcodes as $shortcode ) {
 			if ( isset( $shortcode['id'] ) && isset( $shortcode['string'] ) ) {
 				if ( isset( $shortcode['tag'] ) ) {
-					$shortcode_obj = visual_composer()->getShortCode( $shortcode['tag'] );
+					$shortcode_obj = wpbakery()->getShortCode( $shortcode['tag'] );
 					if ( is_object( $shortcode_obj ) ) {
 						$output .= '<div data-type="element" data-model-id="' . $shortcode['id'] . '">';
 						$is_container = $shortcode_obj->settings( 'is_container' ) || ( null !== $shortcode_obj->settings( 'as_parent' ) && false !== $shortcode_obj->settings( 'as_parent' ) );
@@ -782,7 +782,7 @@ class Vc_Frontend_Editor {
 		wp_register_script( 'wpb_scrollTo_js', vc_asset_url( 'lib/bower/scrollTo/jquery.scrollTo.min.js' ), array( 'jquery-core' ), WPB_VC_VERSION, true );
 		wp_register_script( 'vc_accordion_script', vc_asset_url( 'lib/vc_accordion/vc-accordion.min.js' ), array( 'jquery-core' ), WPB_VC_VERSION, true );
 		wp_register_script( 'vc-frontend-editor-min-js', vc_asset_url( 'js/dist/frontend-editor.min.js' ), array(), WPB_VC_VERSION, true );
-		wp_localize_script( 'vc-frontend-editor-min-js', 'i18nLocale', visual_composer()->getEditorsLocale() );
+		wp_localize_script( 'vc-frontend-editor-min-js', 'i18nLocale', wpbakery()->getEditorsLocale() );
 	}
 
 	/**
@@ -1012,7 +1012,7 @@ class Vc_Frontend_Editor {
 	 * @since 4.2
 	 */
 	public function toString( $shortcode, $content ) {
-		$shortcode_obj = visual_composer()->getShortCode( $shortcode['tag'] );
+		$shortcode_obj = wpbakery()->getShortCode( $shortcode['tag'] );
 		$is_container = $shortcode_obj->settings( 'is_container' ) || ( null !== $shortcode_obj->settings( 'as_parent' ) && false !== $shortcode_obj->settings( 'as_parent' ) );
 		$shortcode = apply_filters( 'vc_frontend_editor_to_string', $shortcode, $shortcode_obj );
 

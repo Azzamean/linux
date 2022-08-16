@@ -22,12 +22,13 @@ class NectarElAssets {
 
   private static $instance;
 
-  public static $using_woocommerce   = false;
-  public static $post_content        = '';
-  public static $portfolio_content   = '';
-  public static $woo_shop_content    = '';
-  public static $woo_taxonmy_content = '';
-	public static $templatera_content  = array();
+  public static $using_woocommerce      = false;
+  public static $post_content           = '';
+  public static $portfolio_content      = '';
+  public static $woo_shop_content       = '';
+  public static $woo_taxonmy_content    = '';
+  public static $woo_short_desc_content = '';
+  public static $templatera_content     = array();
 
 	/**
 	 * Constructor.
@@ -86,6 +87,10 @@ class NectarElAssets {
         $current_query = get_queried_object();
         self::$woo_taxonmy_content = ( !empty($current_query) && !empty($current_query->description) && isset( $current_query->description ) ) ? $current_query->description : '';
       }
+
+	  if( is_product() ) {
+		self::$woo_short_desc_content = ( isset( $post->post_excerpt ) && !empty($post->post_excerpt) ) ? $post->post_excerpt : '';
+	  }
 
     }
 

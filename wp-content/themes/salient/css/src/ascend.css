@@ -925,7 +925,7 @@ body.ascend .mfp-arrow-right,
 }
 .ascend .pp_arrow_previous .icon-default-style:before,.mfp-arrow-left:before,
 .woocommerce .pswp__button--arrow--left:before {
-    content:"\f104";
+    content:"\e608";
     color:#fff
 }
 .mfp-arrow-left:before, .woocommerce .pswp__button--arrow--left:before {
@@ -938,7 +938,7 @@ body.ascend .mfp-arrow-right,
 }
 .ascend .pp_arrow_next .icon-default-style:before, .mfp-arrow-right:before,
 .woocommerce .pswp__button--arrow--right:before {
-    content:"\f105";
+    content:"\e607";
     color:#fff
 }
 .mfp-arrow-right:before,

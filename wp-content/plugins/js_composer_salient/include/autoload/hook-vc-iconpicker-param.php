@@ -56,6 +56,7 @@ function vc_iconpicker_base_register_css() {
 	wp_register_style( 'vc_material', vc_asset_url( 'css/lib/vc-material/vc_material.min.css' ), false, WPB_VC_VERSION );
 	*/
 	/* nectar addition end */
+
 	// Theme
 	wp_register_style( 'vc-icon-picker-main-css', vc_asset_url( 'lib/bower/vcIconPicker/css/jquery.fonticonpicker.min.css' ), false, WPB_VC_VERSION );
 	wp_register_style( 'vc-icon-picker-main-css-theme', vc_asset_url( 'lib/bower/vcIconPicker/themes/grey-theme/jquery.fonticonpicker.vcgrey.min.css' ), false, WPB_VC_VERSION );
@@ -84,15 +85,13 @@ function vc_iconpicker_editor_jscss() {
 	wp_enqueue_style( 'vc-icon-picker-main-css-theme' );
 
 	// Fonts
-	/* nectar addition */
-	wp_enqueue_style( 'font-awesome' );
-	//wp_enqueue_style( 'vc_font_awesome_5' );
-	//wp_enqueue_style( 'vc_material' );
-	/* nectar addition end */
 	wp_enqueue_style( 'vc_openiconic' );
 	wp_enqueue_style( 'vc_typicons' );
 	wp_enqueue_style( 'vc_entypo' );
 	wp_enqueue_style( 'vc_linecons' );
 	wp_enqueue_style( 'vc_monosocialiconsfont' );
-	
+	/* nectar addition */
+	//wp_enqueue_style( 'vc_font_awesome_5' );
+	//wp_enqueue_style( 'vc_material' );
+	/* nectar addition end */
 }

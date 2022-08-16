@@ -331,6 +331,19 @@ Description: CSS for the frontned editor
   font-weight: 600;
 }
 
+.vc_ui-panel-window[data-sidebar-view="true"] .movement-type.vc_col-xs-12 {
+  width: 42%!important;
+}
+.vc_ui-panel-window[data-sidebar-view="true"] .movement-intensity.vc_col-xs-12 {
+  width: 57%!important;
+}
+
+.vc_ui-panel-window[data-sidebar-view="true"] .col-md-6[data-vc-shortcode-param-name="delay"],
+.vc_ui-panel-window[data-sidebar-view="true"] .col-md-6[data-vc-shortcode-param-name="animation_offset"] {
+  width: 100%!important;
+  padding-right: 15px;
+}
+
 .vc_ui-panel-window[data-sidebar-view="true"][data-vc-shortcode*="vc_column"] [data-vc-shortcode-param-name="background_hover_color_opacity"], 
 .vc_ui-panel-window[data-sidebar-view="true"][data-vc-shortcode*="vc_column"] [data-vc-shortcode-param-name="background_color_opacity"] {
   width: calc(40% - 15px);
@@ -344,6 +357,15 @@ Description: CSS for the frontned editor
   width: 100%;
   padding: 0 15px;
   margin: 0;
+}
+
+.vc_ui-panel-window[data-sidebar-view="true"][data-vc-shortcode="carousel"] .col-md-2 {
+  width: 40%;
+  padding: 0 15px;
+  margin: 0;
+}
+.vc_ui-panel-window[data-sidebar-view="true"][data-vc-shortcode="carousel"] .col-md-2[data-vc-shortcode-param-name="desktop_small_cols_flickity"] {
+  padding-top: 38px!important;
 }
 
 .vc_ui-panel-window[data-sidebar-view="true"] .vc_edit_form_elements .vc_column+.vc_column {
@@ -374,6 +396,10 @@ Description: CSS for the frontned editor
 .vc_ui-panel-window[data-sidebar-view="true"] .vc_edit_form_elements .vc_wrapper-param-type-nectar_numerical.no-device-group[data-vc-shortcode-param-name*="left"], .vc_edit_form_elements .vc_wrapper-param-type-nectar_numerical.no-device-group[data-vc-shortcode-param-name*="left"] {
   margin-left: 3%;
 } 
+
+.vc_ui-panel-window[data-sidebar-view="true"] .nectar-fee-full {
+  width: 100%!important;
+}
 
 .vc_ui-panel-window[data-sidebar-view="true"] .vc_edit-form-tab .wpb_el_type_dropdown .chosen-container .chosen-results li {
   width: 50%;

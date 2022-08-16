@@ -150,6 +150,7 @@ class WPBakeryShortCode_VC_Accordion_Tab extends WPBakeryShortCode_VC_Tab {
 	}
 }
 
+
 /* nectar addition */ 
 
 Class WPBakeryShortCode_Toggle extends WPBakeryShortCode_VC_Tab {

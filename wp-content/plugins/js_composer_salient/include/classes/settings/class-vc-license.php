@@ -352,7 +352,6 @@ class Vc_License {
 				$this,
 				'adminNoticeLicenseActivation',
 			) );*/
-			/*nectar addition end*/
 		}
 	}
 

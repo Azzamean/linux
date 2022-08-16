@@ -11,7 +11,7 @@
 
   "use strict";
   
-  function NectarFullScreenRows(waypoints,$mouseParallaxScenes,nectarLiquidBGFP,nectarDOMInfo,responsiveTooltips,$standAnimatedColTimeout,$svgIcons) {
+  function NectarFullScreenRows(waypoints,$mouseParallaxScenes,nectarLiquidBGFP,nectarDOMInfo,responsiveTooltips,$standAnimatedColTimeout,$svgIcons,animeAnimations) {
     
     this.$mouseParallaxScenes     = $mouseParallaxScenes;
     this.nectarDOMInfo            = nectarDOMInfo;
@@ -19,6 +19,7 @@
     this.nectarLiquidBGFP         = nectarLiquidBGFP;
     this.responsiveTooltips       = responsiveTooltips;
     this.$standAnimatedColTimeout = $standAnimatedColTimeout;
+    this.animeAnimations          = animeAnimations;
     this.$svgIcons                = $svgIcons;
     this.$usingFullScreenRows     = false;
     this.$frontEndEditorFPRDiv    = (window.vc_iframe) ? '> .vc_element': '> .wpb_row';
@@ -499,8 +500,9 @@
     $('.column-image-bg-wrap[data-bg-animation*="ro-reveal-from-"]').parents('.vc_column-inner').removeClass('revealed-bg');
     
     // Row BG animations
-    $('.row-bg-wrap[data-bg-animation]:not([data-bg-animation="none"]):not([data-bg-animation*="displace-filter"]) .inner-wrap.using-image').removeClass('animated-in');
-    $('.column-image-bg-wrap[data-bg-animation]:not([data-bg-animation="none"]):not([data-bg-animation*="displace-filter"]) .inner-wrap').removeClass('animated-in');
+    $('.row-bg-wrap[data-bg-animation]:not([data-bg-animation="none"]) .inner-wrap.using-image').removeClass('animated-in');
+    $('.row-bg-wrap[data-bg-animation]:not([data-bg-animation="none"]) .inner-wrap.using-image .row-bg').removeClass('animated-in');
+    $('.column-image-bg-wrap[data-bg-animation]:not([data-bg-animation="none"]) .inner-wrap').removeClass('animated-in');
     
     // Reveal columns
     $('.wpb_column.has-animation[data-animation*="reveal"], .nectar_cascading_images').removeClass('animated-in');
@@ -570,8 +572,8 @@
     
     // Woo Carousel
     $('.nectar-woo-flickity[data-animation*="fade"]').removeClass('animated-in');
-    $('.nectar-woo-flickity[data-animation="fade-in-bottom"] ul.products .flickity-cell').css({'opacity':'0','transform':'translate3d(0,70px,0)'});
-    $('.nectar-woo-flickity[data-animation="fade-in-side"] ul.products .flickity-cell').css({'opacity':'0','transform':'translate3d(70px,0,0)'});
+    $('.nectar-woo-flickity[data-animation="fade-in-bottom"] ul.products .flickity-cell .product').css({'opacity':'0','transform':'translate3d(0,70px,0)'});
+    $('.nectar-woo-flickity[data-animation="fade-in-side"] ul.products .flickity-cell .product').css({'opacity':'0','transform':'translate3d(70px,0,0)'});
     
     // Image with hotspots
     $('.nectar_image_with_hotspots[data-animation="true"]').removeClass('completed');
@@ -596,6 +598,13 @@
       // Clear previous timeout (needed for fullscreen rows)
       clearTimeout(that.$standAnimatedColTimeout[i]); 
     });
+
+    if( this.animeAnimations && this.animeAnimations.length > 0 ) {
+      $.each(this.animeAnimations, function(k, el){
+       el.reset();
+      });
+    }
+    
     
   };
   
@@ -672,7 +681,9 @@
     if( that.$fpAnimation == 'free-scroll' ) {
       autoScrollBool = false;
     }
-    
+
+    var canTriggerAfterLoad = true;
+
     $('#nectar_fullscreen_rows').fullpage({
       sectionSelector: '#nectar_fullscreen_rows '+this.$frontEndEditorFPRDiv,
       navigation: true,
@@ -685,8 +696,11 @@
       autoScrolling: autoScrollBool,
       afterLoad: function(anchorLink, index){ 
         
+        if( canTriggerAfterLoad == false ) {
+          return;
+        }
         that.activeIndex = index;
-
+        
         if($('#nectar_fullscreen_rows').hasClass('afterLoaded')) {
           
           // Ensure no scrolling body occurs
@@ -720,10 +734,11 @@
           if($row_id != 'footer-outer' && 
              $('#nectar_fullscreen_rows '+ that.$frontEndEditorFPRDiv +':nth-child('+index+').last-before-footer').length == 0
              && that.activeIndex !== that.prevIndex ) {
-
+              
               that.waypoints();
               
               if(!navigator.userAgent.match(/(Android|iPod|iPhone|iPad|BlackBerry|IEMobile|Opera Mini)/) && !that.nectarDOMInfo.usingFrontEndEditor) {
+            
                 that.resetWaypoints();
                 Waypoint.destroyAll();
                 that.startMouseParallax();
@@ -735,6 +750,7 @@
 
               that.responsiveTooltips();
               $(window).trigger('nectar-waypoints-reinit');
+              $(window).trigger('fp-section-init');
           }
           
           if($row_id !='footer-outer') {
@@ -790,6 +806,11 @@
         
         $('#nectar_fullscreen_rows').removeClass('nextSectionAllowed');
         
+        canTriggerAfterLoad = false;
+
+        setTimeout(function(){
+          canTriggerAfterLoad = true;
+        }, 200);
         
       },
       onLeave: function(index, nextIndex, direction){ 

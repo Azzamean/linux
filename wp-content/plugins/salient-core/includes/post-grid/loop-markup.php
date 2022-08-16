@@ -67,12 +67,13 @@ if(!function_exists('nectar_post_grid_item_markup')) {
 
       if( $post ) {
 
-          $bg_style_markup = '';
           $category_markup = null;
           $excerpt_markup = '';
           $image_size = 'large';
           $skip_image = false;
           $has_image = 'false';
+          $regular_image_markup = '';
+          $secondary_image_markup = '';
 
           if( isset($atts['image_size']) && !empty($atts['image_size']) ) {
             $image_size = sanitize_text_field($atts['image_size']);
@@ -120,16 +121,7 @@ if(!function_exists('nectar_post_grid_item_markup')) {
               $heading_tag = 'h3';
           }
 
-          // Aspect Ratio Image size.
-          $regular_image = false;
-          $regular_image_markup = '';
-          if( isset($atts['aspect_ratio_image_size']) &&
-              !empty($atts['aspect_ratio_image_size']) &&
-              'yes' === $atts['aspect_ratio_image_size'] &&
-              'content_under_image' === $atts['grid_style'] ) {
-            $regular_image = true;
-          }
-
+ 
           // Card design
           $card_color_style = '';
           if( 'content_under_image' === $atts['grid_style'] &&
@@ -170,53 +162,15 @@ if(!function_exists('nectar_post_grid_item_markup')) {
 
               // Lazy Load.
               if( 'lazy-load' === $atts['image_loading'] && NectarLazyImages::activate_lazy() ||
-              ( property_exists('NectarLazyImages', 'global_option_active') && true === NectarLazyImages::$global_option_active ) ) {
-
-                if( true === $regular_image ) {
-
-                  $new_img = false;
-                  $stored_img = get_the_post_thumbnail($post->ID, $image_size, array( 'class' => 'nectar-lazy' ));
-
-                  // Srcset.
-                  preg_match( '/< *img[^>]*srcset *= *["\']?([^"\']*)/i', $stored_img, $srcset_match);
-
-                  if( $srcset_match && isset($srcset_match[1]) ) {
-                    $new_img = preg_replace( '#<img([^>]+?)srcset=[\'"](.*)[\'"]?([^>]*)>#', '<img${1} data-nectar-img-srcset="'.esc_attr($srcset_match[1]).'"${3}>', $stored_img );
-                  }
-
-                  // Src.
-                  preg_match( '/< *img[^>]*src *= *["\']?([^"\']*)/i', $stored_img, $src_match);
-                  if( $src_match && isset($src_match[1]) ) {
-                    if(false === $new_img) {
-                      $new_img = $stored_img;
-                    }
-                    $new_img = preg_replace( '#<img([^>]+?)src=[\'"]?([^\'"\s>]+)[\'"]?([^>]*)>#', '<img${1} data-nectar-img-src="'.esc_attr($src_match[1]).'"${3}>', $new_img );
-                  }
-
-                  // Set lazy loading img
-                  if( false !== $new_img ) {
-                    $regular_image_markup = '<div class="img-wrap nectar-lazy-wrap">'.$new_img.'</div>';
-                  } else {
-                    // Default to regular.
-                    $regular_image_markup = $stored_img;
-                  }
-
-                } else {
-                  $bg_style_markup = 'data-nectar-img-src="'. get_the_post_thumbnail_url( $post->ID, $image_size, array( 'title' => '' ) ) .'"';
-                }
-
+              ( property_exists('NectarLazyImages', 'global_option_active') && true === NectarLazyImages::$global_option_active && 'skip-lazy-load' !== $atts['image_loading']) ) {
+                
+                $regular_image_markup = nectar_lazy_loaded_image_markup(get_post_thumbnail_id( $post->ID ), $image_size);
+                
               }
 
               // No Lazy Load.
               else {
-
-                if( true === $regular_image ) {
-                  $regular_image_markup = '<div class="img-wrap">'.get_the_post_thumbnail($post->ID, $image_size).'</div>';
-                }
-                else {
-                  $bg_style_markup = 'style="background-image:url('. get_the_post_thumbnail_url( $post->ID, $image_size, array( 'title' => '' ) ) .');"';
-                }
-
+                $regular_image_markup = get_the_post_thumbnail($post->ID, $image_size);
               }
 
             } // endif has featured img.
@@ -310,14 +264,14 @@ if(!function_exists('nectar_post_grid_item_markup')) {
                   $custom_class_name .= ' nectar-post-grid-item__has-secondary';
 
                   if( 'lazy-load' === $atts['image_loading'] && NectarLazyImages::activate_lazy() ||
-                  ( property_exists('NectarLazyImages', 'global_option_active') && true === NectarLazyImages::$global_option_active ) ) {
+                  ( property_exists('NectarLazyImages', 'global_option_active') && true === NectarLazyImages::$global_option_active && 'skip-lazy-load' !== $atts['image_loading'] ) ) {
 
                     $secondary_project_image_markup = wp_get_attachment_image($secondary_project_image_id, 'large', '', array( 'class' => 'nectar-lazy nectar-post-grid-item__overlaid-img' ));
-                    $regular_image_markup = NectarLazyImages::generate_image_markup($secondary_project_image_markup);
+                    $secondary_image_markup .= NectarLazyImages::generate_image_markup($secondary_project_image_markup);
                   } else {
 
-                    $secondary_project_image_markup = wp_get_attachment_image($secondary_project_image_id, 'large', '', array( 'class' => 'nectar-post-grid-item__overlaid-img' ));
-                    $regular_image_markup = $secondary_project_image_markup;
+                    $secondary_image_markup = wp_get_attachment_image($secondary_project_image_id, 'large', '', array( 'class' => 'nectar-post-grid-item__overlaid-img' ));
+          
                   }
        
                 }
@@ -333,98 +287,42 @@ if(!function_exists('nectar_post_grid_item_markup')) {
 
               // Lazy load.
               if( 'lazy-load' === $atts['image_loading'] && NectarLazyImages::activate_lazy() ||
-                 ( property_exists('NectarLazyImages', 'global_option_active') && true === NectarLazyImages::$global_option_active ) ) {
+                 ( property_exists('NectarLazyImages', 'global_option_active') && true === NectarLazyImages::$global_option_active && 'skip-lazy-load' !== $atts['image_loading'] ) ) {
 
-                if( true === $regular_image ) {
-                  $regular_image_markup .= '<div class="img-wrap nectar-lazy-wrap"><img class="nectar-lazy" data-nectar-img-src="'.nectar_ssl_check( esc_url( $custom_thumbnail ) ).'" alt="'. get_the_title() .'" /></div>';
-                } else {
-                  $bg_style_markup = 'data-nectar-img-src="'. nectar_ssl_check( esc_url( $custom_thumbnail ) ) .'"';
-                }
-
+                $regular_image_markup .= '<img class="nectar-lazy" data-nectar-img-src="'.nectar_ssl_check( esc_url( $custom_thumbnail ) ).'" alt="'. get_the_title() .'" />';
+                
               }
 
               // Regular load.
-              else {
-
-                if( true === $regular_image ) {
-                  $regular_image_markup .= '<div class="img-wrap"><img class="skip-lazy" src="'.nectar_ssl_check( esc_url( $custom_thumbnail ) ).'" alt="'. get_the_title() .'" /></div>';
-                } else {
-                  $bg_style_markup = 'style="background-image:url('. nectar_ssl_check( esc_url( $custom_thumbnail ) ) .');"';
-                }
-
+              else {              
+                $regular_image_markup .= '<img class="skip-lazy" src="'.nectar_ssl_check( esc_url( $custom_thumbnail ) ).'" alt="'. get_the_title() .'" />';
+                
               }
 
             }
 
             // Featured Img.
-            else if( !$skip_image ) {
+            else if( !$skip_image && has_post_thumbnail()) {
 
+              $has_image = 'true';
               $thumbnail_id = get_post_thumbnail_id( $post->ID );
-              $image_bg = wp_get_attachment_image_src( $thumbnail_id, $image_size);
-
+              
               // Lazy load.
               if( 'lazy-load' === $atts['image_loading'] && NectarLazyImages::activate_lazy() ||
-                  ( property_exists('NectarLazyImages', 'global_option_active') && true === NectarLazyImages::$global_option_active ) ) {
+                  ( property_exists('NectarLazyImages', 'global_option_active') && true === NectarLazyImages::$global_option_active && 'skip-lazy-load' !== $atts['image_loading'] ) ) {
 
-                if( true === $regular_image ) {
-
-                  $new_img = false;
-                  $stored_img = wp_get_attachment_image($thumbnail_id, $image_size, '', array( 'class' => 'nectar-lazy' ));
-
-                  // Srcset.
-                  preg_match( '/< *img[^>]*srcset *= *["\']?([^"\']*)/i', $stored_img, $srcset_match);
-
-                  if( $srcset_match && isset($srcset_match[1]) ) {
-                    $new_img = preg_replace( '#<img([^>]+?)srcset=[\'"](.*)[\'"]?([^>]*)>#', '<img${1} data-nectar-img-srcset="'.esc_attr($srcset_match[1]).'"${3}>', $stored_img );
-                  }
-
-                  // Src.
-                  preg_match( '/< *img[^>]*src *= *["\']?([^"\']*)/i', $stored_img, $src_match);
-                  if( $src_match && isset($src_match[1]) ) {
-                    if(false === $new_img) {
-                      $new_img = $stored_img;
-                    }
-                    $new_img = preg_replace( '#<img([^>]+?)src=[\'"]?([^\'"\s>]+)[\'"]?([^>]*)>#', '<img${1} data-nectar-img-src="'.esc_attr($src_match[1]).'"${3}>', $new_img );
-                  }
-
-                  // Set lazy loading img
-                  if( false !== $new_img ) {
-                    $regular_image_markup .= '<div class="img-wrap nectar-lazy-wrap">'.$new_img.'</div>';
-                  } else {
-                    // Default to regular.
-                    $regular_image_markup .= $stored_img;
-                  }
-
-                }
-
-                else {
-
-                  if(!empty($image_bg)) {
-                    $has_image = 'true';
-                  }
-
-                  $bg_style_markup = (!empty($image_bg)) ? 'data-nectar-img-src="'. esc_url( $image_bg[0] ) .'"' : '';
-                }
-
+                  $regular_image_markup = nectar_lazy_loaded_image_markup($thumbnail_id, $image_size);
+                  
               }
 
               // Regular Load.
               else {
-
-                  if( true === $regular_image ) {
-                    $regular_image_markup .= '<div class="img-wrap">'.wp_get_attachment_image($thumbnail_id, $image_size).'</div>';
-                  } else {
-                    
-                    if(!empty($image_bg)) {
-                      $has_image = 'true';
-                    }
-                    
-                    $bg_style_markup = (!empty($image_bg)) ? 'style="background-image:url('. esc_url( $image_bg[0] ) .');"' : '';
-                  }
+                  $regular_image_markup .= wp_get_attachment_image($thumbnail_id, $image_size);
               }
 
             } // End Featured Img.
 
+            
             // Categories.
             $category_markup = null;
 
@@ -496,16 +394,12 @@ if(!function_exists('nectar_post_grid_item_markup')) {
 
           }
 
-
-
-
+          
           $bg_overlay_markup = (isset($atts['color_overlay']) && !empty($atts['color_overlay'])) ? 'style=" background-color: '. esc_attr($atts['color_overlay']) .';"' : '';
 
 
-
-
           /****************** Output Markup ******************/
-          $markup .= '<div class="nectar-post-grid-item'.esc_attr($custom_class_name).'"'.$card_color_style.' data-has-img="'.$has_image.'"> <div class="inner">';
+          $markup .= '<div class="nectar-post-grid-item'.esc_attr($custom_class_name).'"'.$card_color_style.' data-post-id="'.esc_attr($post->ID).'" data-has-img="'.$has_image.'"> <div class="inner">';
 
           // Conditional based on style
           if( 'content_overlaid' !== $atts['grid_style'] && 
@@ -513,7 +407,7 @@ if(!function_exists('nectar_post_grid_item_markup')) {
             $markup .= '<div class="nectar-post-grid-item-bg-wrap"><div class="nectar-post-grid-item-bg-wrap-inner"><a class="bg-wrap-link" aria-label="'.get_the_title().'" href="'. esc_attr($post_perma) .'"></a>';
           }
 
-          $markup .= $regular_image_markup . '<div class="nectar-post-grid-item-bg" '.$bg_style_markup.'></div>';
+          $markup .= $secondary_image_markup . '<div class="nectar-post-grid-item-bg">'.$regular_image_markup.'</div>';
 
           if( 'content_overlaid' !== $atts['grid_style'] && 
               'vertical_list' !== $atts['grid_style'] ) {
@@ -547,10 +441,12 @@ if(!function_exists('nectar_post_grid_item_markup')) {
 
             if( function_exists('get_nectar_theme_options') && $atts['post_type'] === 'post' ) {
 
-              $date_functionality = (isset($nectar_options['post_date_functionality']) && !empty($nectar_options['post_date_functionality'])) ? $nectar_options['post_date_functionality'] : 'published_date';
+              $nectar_options = get_nectar_theme_options();
 
+              $date_functionality = (isset($nectar_options['post_date_functionality']) && !empty($nectar_options['post_date_functionality'])) ? $nectar_options['post_date_functionality'] : 'published_date';
               if( 'last_editied_date' === $date_functionality ) {
-                $date = get_the_modified_date();
+
+                $date = get_the_modified_date( );
               }
 
             }

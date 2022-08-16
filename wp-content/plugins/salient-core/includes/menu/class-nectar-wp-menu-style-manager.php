@@ -528,7 +528,8 @@
                   #header-outer .menu-item-'.esc_attr($item->ID) .'[class*="menu-item-btn-style"]:not([class*="menu-item-btn-style-button-border"]) > a,
                   #header-outer #top .sf-menu .menu-item-'.esc_attr($item->ID) .'[class*="menu-item-btn-style"]:not([class*="menu-item-btn-style-button-border"]) > a,
                   #header-outer.transparent nav > ul.sf-menu .menu-item.menu-item-'.esc_attr($item->ID) .'[class*="menu-item-btn-style"]:not([class*="menu-item-btn-style-button-border"]) > a,
-                  #header-outer.transparent #top nav > ul.sf-menu .menu-item.menu-item-'.esc_attr($item->ID) .'[class*="menu-item-btn-style"]:not([class*="menu-item-btn-style-button-border"]) > a {
+                  #header-outer.transparent #top nav > ul.sf-menu .menu-item.menu-item-'.esc_attr($item->ID) .'[class*="menu-item-btn-style"]:not([class*="menu-item-btn-style-button-border"]) > a,
+                  #header-outer #top nav .sf-menu > .menu-item-'.esc_attr($item->ID) .'[class*="menu-item-btn-style"]:not([class*="menu-item-btn-style-button-border"]).sfHover:not(#social-in-menu) > a {
                     color: '.esc_attr($p_text_color) .'!important;
                   }';
 
@@ -714,6 +715,7 @@
                   height: calc(100% + 24px);
                   content: "";
                   display: block;
+                  z-index: -1;
                   transform-origin: top;
                   transform: translateY(-50%)!important;
                   transition: opacity .45s cubic-bezier(0.25, 1, 0.33, 1), transform .45s cubic-bezier(0.25, 1, 0.33, 1), border-color .45s cubic-bezier(0.25, 1, 0.33, 1), color .45s cubic-bezier(0.25, 1, 0.33, 1), background-color .45s cubic-bezier(0.25, 1, 0.33, 1), box-shadow .45s cubic-bezier(0.25, 1, 0.33, 1);

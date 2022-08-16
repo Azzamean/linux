@@ -176,6 +176,7 @@ if ( ! function_exists( 'nectar_project_single_controls' ) ) {
 			$project_cat    = null;
 			$portfolio_link = null;
 			$single_nav_pos = ( ! empty( $nectar_options['portfolio_single_nav'] ) ) ? $nectar_options['portfolio_single_nav'] : 'in_header';
+			$navigation_order = (isset($nectar_options['portfolio_single_nav_order']) && 'reverse' === $nectar_options['portfolio_single_nav_order']) ? 'reverse' : 'default';
 
 			if ( empty( $terms ) ) {
 				$terms = array(
@@ -214,13 +215,23 @@ if ( ! function_exists( 'nectar_project_single_controls' ) ) {
 					<ul class="controls">                                 
 				   <?php if ( $single_nav_pos === 'after_project' ) { ?>
 
-							<li id="prev-link"><?php be_next_post_link( '%link', '<i class="fa fa-angle-left"></i> <span>' . esc_html__( 'Previous Project', 'salient-portfolio' ) . '</span>', true, null, 'project-type' ); ?></li>
-							<li id="next-link"><?php be_previous_post_link( '%link', '<span>' . esc_html__( 'Next Project', 'salient-portfolio' ) . '</span><i class="fa fa-angle-right"></i>', true, null, 'project-type' ); ?></li> 
+							<?php if( 'default' === $navigation_order ) { ?>
+								<li id="prev-link"><?php be_next_post_link( '%link', '<i class="fa fa-angle-left"></i> <span>' . esc_html__( 'Previous Project', 'salient-portfolio' ) . '</span>', true, null, 'project-type' ); ?></li>
+								<li id="next-link"><?php be_previous_post_link( '%link', '<span>' . esc_html__( 'Next Project', 'salient-portfolio' ) . '</span><i class="fa fa-angle-right"></i>', true, null, 'project-type' ); ?></li> 
+							<?php } else { ?>
+								<li id="prev-link"><?php be_previous_post_link( '%link', '<span>' . esc_html__( 'Next Project', 'salient-portfolio' ) . '</span><i class="fa fa-angle-right"></i>', true, null, 'project-type' ); ?></li>
+								<li id="next-link"><?php be_next_post_link( '%link', '<i class="fa fa-angle-left"></i> <span>' . esc_html__( 'Previous Project', 'salient-portfolio' ) . '</span>', true, null, 'project-type' ); ?></li> 
+							<?php } ?>
 					
-						<?php } else { ?>
+						<?php } else { 
 
-							<li id="prev-link"><?php be_next_post_link( '%link', '<i class="icon-salient-left-arrow-thin"></i>', true, null, 'project-type' ); ?></li>
-							<li id="next-link"><?php be_previous_post_link( '%link', '<i class="icon-salient-right-arrow-thin"></i>', true, null, 'project-type' ); ?></li> 
+							if( 'default' === $navigation_order ) { ?>
+								<li id="prev-link"><?php be_next_post_link( '%link', '<i class="icon-salient-left-arrow-thin"></i>', true, null, 'project-type' ); ?></li>
+								<li id="next-link"><?php be_previous_post_link( '%link', '<i class="icon-salient-right-arrow-thin"></i>', true, null, 'project-type' ); ?></li> 
+							<?php } else { ?>
+								<li id="prev-link"><?php be_previous_post_link( '%link', '<i class="icon-salient-right-arrow-thin"></i>', true, null, 'project-type' ); ?></li>
+								<li id="next-link"><?php be_next_post_link( '%link', '<i class="icon-salient-left-arrow-thin"></i>', true, null, 'project-type' ); ?></li> 
+							<?php } ?>
 
 						<?php } ?>
 						
@@ -298,8 +309,14 @@ if ( ! function_exists( 'nectar_project_single_controls' ) ) {
 							// get and echo previous and next post in the same taxonomy
 							$thisindex = array_search( $post->ID, $ids );
 
-							$nextid = ( isset( $ids[ $thisindex - 1 ] ) ) ? $ids[ $thisindex - 1 ] : null;
-              $previd = ( isset( $ids[ $thisindex + 1 ] ) ) ? $ids[ $thisindex + 1 ] : null;
+							if( 'default' === $navigation_order ) {
+								$nextid = ( isset( $ids[ $thisindex - 1 ] ) ) ? $ids[ $thisindex - 1 ] : null;
+								$previd = ( isset( $ids[ $thisindex + 1 ] ) ) ? $ids[ $thisindex + 1 ] : null;
+							} else {
+								$nextid = ( isset( $ids[ $thisindex + 1 ] ) ) ? $ids[ $thisindex + 1 ] : null;
+								$previd = ( isset( $ids[ $thisindex - 1 ] ) ) ? $ids[ $thisindex - 1 ] : null;
+							}
+							
 
 
 						if ( ! empty( $previd ) ) {
@@ -384,15 +401,25 @@ if ( ! function_exists( 'nectar_project_single_controls' ) ) {
 					else {
 						
 			
-						if ( $single_nav_pos === 'after_project' ) { ?>
-						<li id="prev-link"><?php next_post_link( '%link', '<i class="fa fa-angle-left"></i><span>' . esc_html__( 'Previous Project', 'salient-portfolio' ) . '</span>' ); ?></li>
-						<li id="next-link"><?php previous_post_link( '%link', '<span>' . esc_html__( 'Next Project', 'salient-portfolio' ) . '</span><i class="fa fa-angle-right"></i>' ); ?></li> 
-							<?php
+						if ( $single_nav_pos === 'after_project' ) { 
+							if( 'default' === $navigation_order ) { ?>
+								<li id="prev-link"><?php next_post_link( '%link', '<i class="fa fa-angle-left"></i><span>' . esc_html__( 'Previous Project', 'salient-portfolio' ) . '</span>' ); ?></li>
+								<li id="next-link"><?php previous_post_link( '%link', '<span>' . esc_html__( 'Next Project', 'salient-portfolio' ) . '</span><i class="fa fa-angle-right"></i>' ); ?></li> 
+							<?php } else { ?>
+								<li id="prev-link"><?php previous_post_link( '%link', '<i class="fa fa-angle-left"></i><span>' . esc_html__( 'Previous Project', 'salient-portfolio' ) . '</span>' ); ?></li>
+								<li id="next-link"><?php next_post_link( '%link', '<span>' . esc_html__( 'Next Project', 'salient-portfolio' ) . '</span><i class="fa fa-angle-right"></i>' ); ?></li> 
+							<?php }
 						} 
 						elseif ( in_array($single_nav_pos ,array('after_project_next_only','after_project_2')) ) {
 
-							$previous_post = get_next_post();
-							$next_post     = get_previous_post();
+							if( 'default' === $navigation_order ) {
+								$previous_post = get_next_post();
+								$next_post     = get_previous_post();
+							} else {
+								$previous_post = get_previous_post();
+								$next_post     = get_next_post();
+							}
+
 							$hidden_class  = ( empty( $previous_post ) ) ? 'hidden' : null;
 							$only_class    = ( empty( $next_post ) ) ? ' only' : null;
 							
@@ -457,18 +484,31 @@ if ( ! function_exists( 'nectar_project_single_controls' ) ) {
 
 						else {
 							?>
-								<li id="prev-link"><?php next_post_link( '%link', '<i class="icon-salient-left-arrow-thin"></i>' ); ?>
-										 <?php
-											if ( $single_nav_pos === 'after_project' ) {
-												echo esc_html__( 'Previous Project', 'salient-portfolio' );}
-											?>
+								<li id="prev-link">
+									<?php
+										if( 'default' === $navigation_order ) {
+											next_post_link( '%link', '<i class="icon-salient-left-arrow-thin"></i>' ); 
+										} 
+										else {
+											previous_post_link( '%link', '<i class="icon-salient-left-arrow-thin"></i>' );
+										}
+										
+										if ( $single_nav_pos === 'after_project' ) {
+											echo esc_html__( 'Previous Project', 'salient-portfolio' );}
+										?>
 									</li>
 								<li id="next-link">
 									<?php
 									if ( $single_nav_pos === 'after_project' ) {
 										echo esc_html__( 'Next Project', 'salient-portfolio' );
 									}
-									previous_post_link( '%link', '<i class="icon-salient-right-arrow-thin"></i>' ); ?>
+									if( 'default' === $navigation_order ) {
+										previous_post_link( '%link', '<i class="icon-salient-right-arrow-thin"></i>' ); 
+									} else {
+										next_post_link( '%link', '<i class="icon-salient-right-arrow-thin"></i>' ); 
+									}
+
+									?>
 								</li> 
 							<?php 
 						} 

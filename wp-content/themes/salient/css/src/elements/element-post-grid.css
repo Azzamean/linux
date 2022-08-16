@@ -391,6 +391,7 @@ Description: Styles for the "Category Grid" page builder element.
 
 
 
+.nectar-post-grid .nectar-post-grid-item-bg img,
 .nectar-post-grid .nectar-post-grid-item-bg,
 .nectar-post-grid .nectar-post-grid-link,
 .nectar-post-grid .bg-overlay,
@@ -405,6 +406,13 @@ Description: Styles for the "Category Grid" page builder element.
   height: 100%;
 }
 
+.nectar-post-grid .nectar-post-grid-item-bg img {
+  object-fit: cover;
+}
+.row .nectar-post-grid .nectar-post-grid-item-bg img:not([srcset]) {
+  width: 100%;
+}
+
 .nectar-post-grid .bg-overlay {
   transition: opacity 0.45s cubic-bezier(.15,.75,.5,1);
 }
@@ -415,14 +423,22 @@ Description: Styles for the "Category Grid" page builder element.
 }
 
 .nectar-post-grid-item-bg[data-nectar-img-src],
+.nectar-post-grid-item-bg img.nectar-lazy,
+.nectar-post-grid-item__overlaid-img.nectar-lazy,
 .nectar-post-grid[data-lock-aspect="yes"] .img-wrap img[data-nectar-img-src] {
   opacity: 0;
 }
 .nectar-post-grid-item-bg,
+.nectar-post-grid-item-bg img.nectar-lazy.loaded,
+.nectar-post-grid-item__overlaid-img.nectar-lazy.loaded,
 .nectar-post-grid[data-lock-aspect="yes"] .img-wrap img {
-  -webkit-transition: opacity 0.6s ease 0.25s;
-  transition: opacity 0.6s ease 0.25s;
+  -webkit-transition: opacity 0.6s ease 0.12s;
+  transition: opacity 0.6s ease 0.12s;
   opacity: 1;
+}
+.nectar-post-grid-item .nectar-post-grid-item__overlaid-img.nectar-lazy.loaded {
+  -webkit-transition: opacity 0.6s ease 0.12s, transform 0.4s ease;
+  transition: opacity 0.6s ease 0.12s, transform 0.4s ease;
 }
 
 /* Content under image style */
@@ -496,7 +512,13 @@ Description: Styles for the "Category Grid" page builder element.
 
 /* Aspect lock */
 .nectar-post-grid-wrap[data-style="content_under_image"] .nectar-post-grid[data-lock-aspect="yes"] .nectar-post-grid-item-bg {
-  display: none;
+  height: auto;
+  line-height: 0;
+}
+.nectar-post-grid-wrap[data-style="content_under_image"] .nectar-post-grid[data-lock-aspect="yes"] .nectar-post-grid-item-bg img {
+  position: relative;
+  height: auto;
+  margin-bottom: 0;
 }
 
 .nectar-post-grid-wrap[data-style="content_under_image"] .nectar-post-grid[data-lock-aspect="yes"] .img-wrap img {

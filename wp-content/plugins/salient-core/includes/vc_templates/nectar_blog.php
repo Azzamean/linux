@@ -165,6 +165,8 @@ ob_start(); ?>
      );
      
    }
+
+   $nectar_blog_arr = apply_filters('nectar_blog_query', $nectar_blog_arr);
    
    $nectar_blog_el_query = new WP_Query( $nectar_blog_arr );
    

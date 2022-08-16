@@ -50,6 +50,7 @@ extract( shortcode_atts( array(
 	'mouse_indicator_style' => 'default',
 	'mouse_indicator_color' => '#000',
 	'mouse_indicator_text' => 'view',
+	'mouse_indicator_blurred_bg' => '',
   'mouse_indicator_text_color' => '#fff',
   'hover_effect' => '',
   'border_radius' => 'none',
@@ -318,6 +319,9 @@ if( $featured_top_item == 'yes' ) {
 // Grid output.
 $data_attrs_escaped = 'data-indicator="'.esc_attr($enable_indicator).'" '; 
 $data_attrs_escaped .= 'data-indicator-style="'.esc_attr($mouse_indicator_style).'" '; 
+if( $mouse_indicator_blurred_bg == 'yes' ) {
+	$data_attrs_escaped .= 'data-indicator-blur="true" '; 
+}
 $data_attrs_escaped .= 'data-indicator-text-color="'.esc_attr($mouse_indicator_text_color).'" '; 
 $data_attrs_escaped .= 'data-indicator-color="'.esc_attr($mouse_indicator_color).'" ';
 $data_attrs_escaped .= 'data-indicator-text="'. esc_html($indicator_text). '" ';

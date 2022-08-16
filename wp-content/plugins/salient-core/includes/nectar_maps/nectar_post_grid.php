@@ -82,7 +82,7 @@ return array(
   'base' => 'nectar_post_grid',
   'icon' => 'icon-wpb-portfolio',
   "category" => esc_html__('Query', 'salient-core'),
-  'weight' => '10',
+  'weight' => 9,
   'description' => esc_html__('Show posts/projects in a stylish grid', 'salient-core' ),
   'params' => array(
     array(
@@ -298,6 +298,10 @@ return array(
         "35px" => "35px",
         "40px" => "40px",
         "45px" => "45px",
+        "2%" => "1vw",
+        "4%" => "2vw",
+        "6%" => "3vw",
+        "8%" => "4vw",
       ),
       "description" => esc_html__("Please select the spacing you would like between your items. ", "salient-core")
     ),
@@ -452,6 +456,7 @@ return array(
       "param_name" => "image_loading",
       "value" => array(
         "Default" => "default",
+        'Skip Lazy Load' => 'skip-lazy-load',
 				"Lazy Load" => "lazy-load",
       ),
 			"description" => esc_html__("Determine whether to load all images on page load or to use a lazy load method for higher performance.", "salient-core"),
@@ -524,6 +529,7 @@ return array(
       ),
       'std' => 'default',
     ),
+
 		array(
       "type" => "dropdown",
       "class" => "",
@@ -537,6 +543,7 @@ return array(
       ),
       'std' => 'view',
     ),
+    
 		array(
       "type" => "colorpicker",
       "class" => "",
@@ -555,6 +562,16 @@ return array(
       "dependency" => array('element' => "mouse_indicator_style", 'value' => 'default'),
 			"description" => ''	
 		),
+
+    array(
+      "type" => 'checkbox',
+      "heading" => esc_html__("Mouse Indicator Blurred BG", "salient-core"),
+      "param_name" => "mouse_indicator_blurred_bg",
+			'edit_field_class' => 'vc_col-xs-12 salient-fancy-checkbox',
+      "description" => esc_html__("This will blur the background behind your indicator. This effect will only be visible when using semi-transparent coloring.", "salient-core"),
+			"dependency" => array('element' => "mouse_indicator_style", 'value' => 'default'),
+      "value" => Array(esc_html__("Yes, please", "salient-core") => 'yes')
+    ),
 		
 		array(
 		 "type" => "nectar_group_header",

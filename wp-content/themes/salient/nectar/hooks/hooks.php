@@ -86,6 +86,15 @@ function nectar_hook_secondary_header_menu_items() {
 	do_action( 'nectar_hook_secondary_header_menu_items' );
 }
 
+function nectar_hook_secondary_header_after_nav_open() {
+	do_action( 'nectar_hook_secondary_header_after_nav_open' );
+}
+
+function nectar_hook_secondary_header_before_nav_close() {
+	do_action( 'nectar_hook_secondary_header_before_nav_close' );
+}
+
+
 /**
  * Off canvas menu before menu.
  */

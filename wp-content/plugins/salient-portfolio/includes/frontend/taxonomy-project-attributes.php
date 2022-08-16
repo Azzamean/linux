@@ -64,6 +64,21 @@ $display_sortable = get_post_meta( $post->ID, 'nectar-metabox-portfolio-display-
 $inline_filters   = ( ! empty( $options['portfolio_inline_filters'] ) && $options['portfolio_inline_filters'] == '1' ) ? '1' : '0';
 $filters_id       = ( ! empty( $options['portfolio_inline_filters'] ) && $options['portfolio_inline_filters'] == '1' ) ? 'portfolio-filters-inline' : 'portfolio-filters';
 $bg               = get_post_meta( $post->ID, '_nectar_header_bg', true );
+
+// Forced project style change when using delay ks.
+if( isset($options['delay-js-execution']) && 
+	'1' === $options['delay-js-execution'] &&
+	$project_style === '6' ) {
+	
+	$delay_js_devices = (isset( $options['delay-js-execution-devices'] )) ? $options['delay-js-execution-devices'] : 'mobile';
+
+	if( wp_is_mobile() || 'all' === $delay_js_devices ) {
+		$project_style = '3';
+		if( $item_spacing === 'default' ) {
+			$item_spacing = '15px';
+		} 
+	}
+}
 ?>
 
 

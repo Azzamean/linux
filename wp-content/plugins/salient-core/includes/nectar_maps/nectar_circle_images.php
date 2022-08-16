@@ -65,10 +65,39 @@ return array(
         ),
         array(
             "type" => "dropdown",
-            "heading" => esc_html__("Alignment", "salient-core"),
-            "param_name" => "alignment",
+            "heading" => '<span class="group-title">' . esc_html__("Aligment", "salient-core") . "</span>",
+            "param_name" => "alignment_desktop",
+            "edit_field_class" => "desktop circle-images-alignment-device-group",
             'save_always' => true,
             "value" => array(
+              esc_html__( "Left", "salient-core") => "left",
+              esc_html__( "Middle", "salient-core") => "middle",
+              esc_html__( "Right", "salient-core") => "right",      
+            ),
+            "description" => '',
+          ),
+          array(
+            "type" => "dropdown",
+            "heading" => '',
+            "param_name" => "alignment_tablet",
+            "edit_field_class" => "tablet circle-images-alignment-device-group",
+            'save_always' => true,
+            "value" => array(
+              esc_html__( "Inherit", "salient-core") => "inherit",
+              esc_html__( "Left", "salient-core") => "left",
+              esc_html__( "Middle", "salient-core") => "middle",
+              esc_html__( "Right", "salient-core") => "right",      
+            ),
+            "description" => '',
+          ),
+          array(
+            "type" => "dropdown",
+            "heading" => '',
+            "param_name" => "alignment_phone",
+            "edit_field_class" => "phone circle-images-alignment-device-group",
+            'save_always' => true,
+            "value" => array(
+              esc_html__( "Inherit", "salient-core") => "inherit",
               esc_html__( "Left", "salient-core") => "left",
               esc_html__( "Middle", "salient-core") => "middle",
               esc_html__( "Right", "salient-core") => "right",      
@@ -120,24 +149,50 @@ return array(
             "description" => esc_html__("Determine whether to load the images on page load or to use a lazy load method for higher performance.", "salient-core"),
             'std' => 'default',
           ),
-          /*
          array(
+           "group" => esc_html__('Text', 'salient-core'),
+          "type" => 'textarea',
+          "heading" => esc_html__("Text Content", "salient-core"),
+          "param_name" => "text_content",
+          "description" => esc_html__("Optionally add text to display beside your star rating", "salient-core")
+        ),
+         array(
+           "group" => esc_html__('Text', 'salient-core'),
           "type" => 'checkbox',
           "heading" => esc_html__("Numerical Last Circle", "salient-core"),
           "param_name" => "numerical_circle",
           'edit_field_class' => 'vc_col-xs-12 salient-fancy-checkbox',
-          "description" => esc_html__("Checking this will add a circle showing a number as the circle in the group", "salient-core"),
+          "description" => esc_html__("Checking this will add a circle showing a number as the last circle in the group.", "salient-core"),
           "value" => Array(esc_html__("Yes", "js_composer") => 'true')
         ),
         array(
+          "group" => esc_html__('Text', 'salient-core'),
+          "type" => "textfield",
+          "heading" => esc_html__("Last Circle Number Text", "salient-core"),
+          "param_name" => "numerical_circle_number",
+          "dependency" => array('element' => "numerical_circle", 'not_empty' => true),
+          "description" => esc_html__("The text used in the last circle e.g. +4k", "salient-core")
+        ),
+        array(
+          "group" => esc_html__('Text', 'salient-core'),
           "type" => "colorpicker",
           "class" => "",
           "heading" => esc_html__("Numerical Circle Color", "salient-core"),
           "param_name" => "numerical_circle_color",
-          "value" => "",
-          "dependency" => array('element' => "post_type", 'value' => 'products'),
+          "value" => "#000000",
+          "dependency" => array('element' => "numerical_circle", 'not_empty' => true),
           "description" => ""
-        ), */
+        ), 
+        array(
+          "group" => esc_html__('Text', 'salient-core'),
+          "type" => "colorpicker",
+          "class" => "",
+          "heading" => esc_html__("Numerical Circle Text Color", "salient-core"),
+          "param_name" => "numerical_circle_text_color",
+          "value" => "#ffffff",
+          "dependency" => array('element' => "numerical_circle", 'not_empty' => true),
+          "description" => ""
+        ), 
 
 	)
 );

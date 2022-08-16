@@ -107,11 +107,11 @@ function nectar_salient_welcome_content() {
   <div class="salient-welcome-wrap">
 		<div class="salient-version-box">
 				<div class="content">
-				  <h1><?php echo esc_html__('Salient Version 14','salient'); ?></h1>
-					<p class="subtitle"><?php echo esc_html__('To explore what\'s new in version 14 and view a full list of changes, check out the','salient'); ?> <a href="https://themenectar.com/salient/changelog/version-14/" target="_blank"><?php echo esc_html__('changelog','salient'); ?>.</a></p>
+				  <h1><?php echo esc_html__('Salient Version 15','salient'); ?></h1>
+					<p class="subtitle"><?php echo esc_html__('To explore what\'s new in version 15 and view a full list of changes, check out the','salient'); ?> <a href="https://themenectar.com/changelogs/salient.html" target="_blank"><?php echo esc_html__('changelog','salient'); ?>.</a></p>
 			  </div>
         <div class="cache-notice"><h3><?php echo esc_html('A note for upgrading users','salient'); ?></h3><p><?php echo esc_html__('This is a major release. If you\'re using a performance plugin to cache or minify your assets, you must clear the cache, or else layout issues are likely to occur.','salient'); ?></p></div>
-        <img src="<?php echo get_template_directory_uri(). '/nectar/welcome/img/version-14.jpg'; ?>" alt="Salient verison 14" width="" height="" />
+        <div class="salient-version-box__img-wrap"><img src="<?php echo get_template_directory_uri(). '/nectar/welcome/img/version-15.jpg'; ?>" alt="Salient verison 15" width="" height="" /></div>
 		</div>
 		<?php 
 		if( ! class_exists('Salient_Portfolio') ||
@@ -171,7 +171,7 @@ function nectar_salient_welcome_content() {
       </div>
       <div class="col col-3">
         <h3><?php echo esc_html__('What\'s New','salient'); ?></h3></p>
-        <p><?php echo esc_html__('Salient has been going strong for over 8 years and is constantly evolving. ','salient'); ?></p>
+        <p><?php echo esc_html__('Salient has been going strong for over 9 years and is constantly evolving. ','salient'); ?></p>
         <a class="button button-primary" href="//themenectar.com/changelogs/salient.html" target="_blank"><?php echo esc_html__('View Changelog','salient'); ?> </a>
       </div>
       <div class="col col-3">
@@ -211,6 +211,6 @@ function nectar_salient_welcome_assets($hook) {
     return;
   }
   
-  wp_register_style( 'nectar_salient_welcome_css', get_template_directory_uri() . '/nectar/welcome/css/style.css', false, '14.0' );
+  wp_register_style( 'nectar_salient_welcome_css', get_template_directory_uri() . '/nectar/welcome/css/style.css', false, '15.0' );
   wp_enqueue_style( 'nectar_salient_welcome_css' );
 }

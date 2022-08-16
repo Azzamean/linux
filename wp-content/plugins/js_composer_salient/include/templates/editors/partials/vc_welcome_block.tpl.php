@@ -3,8 +3,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 	die( '-1' );
 }
 
-$total_templates = visual_composer()->templatesPanelEditor()->loadDefaultTemplates();
-$templates_total_count = count( $total_templates );
+$total_templates = wpbakery()->templatesPanelEditor()->loadDefaultTemplates();
+$templates_total_count = ($total_templates) ? count( $total_templates ) : 0; // nectar addition
 ?>
 <div id="vc_no-content-helper" class="vc_welcome vc_ui-font-open-sans">
 	<?php
@@ -62,9 +62,9 @@ $templates_total_count = count( $total_templates );
 			</div>
 		<?php endif; ?>
 		<p class="vc_ui-help-block vc_welcome-visible-e">
-			<?php 
+		<?php 
 			// nectar addition
-			echo sprintf( esc_html__( 'Don\'t know where to start? Visit our %s.', 'js_composer' ), '<a href="http://themenectar.com/docs/salient" target="_blank">' . esc_html__( 'knowledge base', 'js_composer' ) . '</a>' ); 
+			echo sprintf( esc_html__( 'Don\'t know where to start? Visit our %s.', 'js_composer' ), '<a href="https://themenectar.com/docs/salient" target="_blank">' . esc_html__( 'knowledge base', 'js_composer' ) . '</a>' ); 
 			// nectar addition end 
 			?>
 		</p>

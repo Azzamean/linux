@@ -137,6 +137,7 @@ return array(
 			"heading" => esc_html__("Flickity Item Custom Desktop Width", "salient-core"),
 			"param_name" => "flickity_custom_item_width",
 			"admin_label" => false,
+      "placeholder" => '',
 			"description" => ''
 		),
 

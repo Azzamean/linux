@@ -89,7 +89,11 @@ if( function_exists('nectar_el_dynamic_classnames') ) {
 } 
 
 if( !empty($link_href) ) {
-  echo '<a href="'.esc_url($link_href).'" target="'.esc_attr($link_target).'" data-nectar-link-indicator="'.esc_attr($link_indicator).'" data-indicator-bg="'.esc_attr($link_indicator_bg_color).'" data-indicator-icon="'.esc_attr($link_indicator_icon_color).'">';
+  $link_indicator_attrs = '';
+  if( $link_indicator ) {
+    $link_indicator_attrs = ' data-nectar-link-indicator="'.esc_attr($link_indicator).'" data-indicator-bg="'.esc_attr($link_indicator_bg_color).'" data-indicator-icon="'.esc_attr($link_indicator_icon_color).'"';
+  }
+  echo '<a href="'.esc_url($link_href).'" target="'.esc_attr($link_target).'"'.$link_indicator_attrs.'>';
 }
 
 echo '<div class="'. esc_attr(implode(' ', $el_classnames)).'" data-align="'.esc_attr($content_alignment).'" data-m-align="'.esc_attr($mobile_content_alignment).'" data-text-effect="'.esc_attr($line_reveal_by_space_text_effect).'" data-animation-type="'.esc_attr($animation_type).'" data-animation-delay="'.esc_attr($animation_delay).'" data-animation-offset="'.esc_attr($animation_offset).'" data-m-rm-animation="'.esc_attr($mobile_disable_animation).'" data-stagger="'.esc_attr($stagger_animation).'" data-custom-font-size="'.esc_attr($custom_font_size).'" '.$font_style_markup_escaped.'>';

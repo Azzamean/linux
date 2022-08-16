@@ -241,7 +241,15 @@ else if( 'two_column_images' === $product_gallery_style ) {
 				);
 				
 				echo '<div class="woocommerce-product-gallery__image"><a href="'. wp_get_attachment_url($product_attach_id) .'" class="no-ajaxy">';
-				echo wp_get_attachment_image($product_attach_id, 'shop_single', false, $attributes);
+				
+				$gallery_img_size = 'shop_single';
+				if( isset( $nectar_options['single_product_custom_image_dimensions'] ) && 
+					'1' === $nectar_options['single_product_custom_image_dimensions'] ) {
+
+					$gallery_img_size = 'woocommerce_single';
+				}
+	
+				echo wp_get_attachment_image($product_attach_id, $gallery_img_size, false, $attributes);
 				echo '</a></div>';
 				
 			}

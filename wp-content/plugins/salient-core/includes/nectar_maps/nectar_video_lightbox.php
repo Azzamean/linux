@@ -8,6 +8,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 return array(
 	"name" => esc_html__("Video Lightbox", "salient-core"),
 	"base" => "nectar_video_lightbox",
+	'weight' => 6,
 	"icon" => "icon-wpb-video-lightbox",
 	"category" => esc_html__('Media', 'salient-core'),
 	"description" => esc_html__('Add a video lightbox link', 'salient-core'),

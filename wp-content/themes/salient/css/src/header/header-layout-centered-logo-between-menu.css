@@ -114,6 +114,7 @@ body #header-outer[data-format="centered-logo-between-menu"] #top #logo {
 
 @media only screen and (min-width : 1px) and (max-width: 999px) {
 
+  body #header-outer[data-format="centered-logo-between-menu"] #top #logo,
   #header-outer[data-format="centered-logo-between-menu"] .span_3,
   #header-outer[data-format="centered-logo-between-menu"] .span_3 #logo:not(.no-image) img {
     transform: none;

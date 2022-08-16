@@ -29,6 +29,7 @@ return array(
 				esc_html__("Minimal", "salient-core") => "minimal",
 				esc_html__("Minimal Alt", "salient-core") => "minimal_alt",
 				esc_html__("Minimal Flexible Width", "salient-core") => "minimal_flexible",
+				esc_html__("Toggle Button", "salient-core") => "toggle_button",
 				esc_html__("Vertical", "salient-core") => "vertical",
 				esc_html__("Vertical Material", "salient-core") => "vertical_modern",
 				esc_html__("Vertical Sticky Scrolling", "salient-core") => "vertical_scrolling",
@@ -36,6 +37,31 @@ return array(
 			'save_always' => true,
 			"description" => esc_html__("Please select the style you desire for your tabbed element.", "salient-core")
 		),
+
+		array(
+			"type" => "dropdown",
+			"heading" => esc_html__("Tab Change Animation", "salient-core"),
+			"param_name" => "tab_change_animation",
+			"admin_label" => false,
+			"value" => array(
+				esc_html__("Fade",'salient-core') => 'fade',
+				esc_html__("None",'salient-core') => "none"
+			),
+			'save_always' => true,
+			"dependency" => Array('element' => "style", 'value' => array('minimal','default', 'minimal_alt', 'material', 'toggle_button')),
+			"description" => ''
+		),
+
+		array(
+			"type" => "nectar_group_header",
+			"class" => "",
+			"heading" => esc_html__("Create exactly two tabs to display in the toggle format. If more than two tabs exist, the Toggle Button style will not be utilized.", "salient-core"),
+			"param_name" => "toggle_button_info_box",
+			"edit_field_class" => "info-box",
+			"value" => '',
+			"dependency" => Array('element' => "style", 'value' => array('toggle_button')),
+		),
+
 		array(
 			"type" => "nectar_radio_tab_selection",
 			"class" => "",
@@ -293,9 +319,9 @@ return array(
 			"holder" => "hidden",
 			"heading" => esc_html__("Text Content", "salient-core"),
 			"param_name" => "vs_text_content",
-      "dependency" => Array('element' => "vs_sticky_aspect", 'value' => array('content')),
+			"dependency" => Array('element' => "vs_sticky_aspect", 'value' => array('content')),
 			"value" => '',
-      "description" => esc_html__("Text to display before the tab links.", "salient-core"),
+			"description" => esc_html__("Text to display before the tab links.", "salient-core"),
 		),
 
 		array(

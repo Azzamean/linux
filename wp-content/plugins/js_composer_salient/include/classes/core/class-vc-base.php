@@ -290,16 +290,17 @@ class Vc_Base {
 		 * vc_filter: vc_base_build_shortcodes_custom_css
 		 * @since 4.4
 		 */
+
 		 /* nectar addition */ 
-		$portfolio_extra_content = (isset($post->ID)) ? get_post_meta($post->ID, '_nectar_portfolio_extra_content', true) : '';
+		 $portfolio_extra_content = (isset($post->ID)) ? get_post_meta($post->ID, '_nectar_portfolio_extra_content', true) : '';
 		
-		if(!empty($portfolio_extra_content)) {
-			$css = apply_filters( 'vc_base_build_shortcodes_custom_css', $this->parseShortcodesCustomCss( $portfolio_extra_content ), $id  );
-		} else {
-			$css = apply_filters( 'vc_base_build_shortcodes_custom_css', $this->parseShortcodesCustomCss( $post->post_content ), $id  );
-		}
-		/* nectar addition end */ 
-		
+		 if(!empty($portfolio_extra_content)) {
+			 $css = apply_filters( 'vc_base_build_shortcodes_custom_css', $this->parseShortcodesCustomCss( $portfolio_extra_content ), $id  );
+		 } else {
+			 $css = apply_filters( 'vc_base_build_shortcodes_custom_css', $this->parseShortcodesCustomCss( $post->post_content ), $id  );
+		 }
+		 /* nectar addition end */ 
+
 		if ( empty( $css ) ) {
 			delete_metadata( 'post', $id, '_wpb_shortcodes_custom_css' );
 		} else {
@@ -317,7 +318,7 @@ class Vc_Base {
 	 *
 	 * @return string
 	 * @throws \Exception
-	 * @see    WPBakeryVisualComposerCssEditor
+	 * @see    WPBakeryCssEditor
 	 * @since  4.2
 	 * @access public
 	 */
@@ -424,9 +425,9 @@ class Vc_Base {
 	/**
 	 * Add css styles for current page and elements design options added w\ editor.
 	 */
-	public function addFrontCss() {
-		$this->addPageCustomCss();
-		$this->addShortcodesCustomCss();
+	public function addFrontCss( $id = null ) {
+		$this->addPageCustomCss( $id );
+		$this->addShortcodesCustomCss( $id );
 	}
 
 	public function addNoScript() {
@@ -456,10 +457,9 @@ class Vc_Base {
 		/* nectar addition */  
 		//wp_register_style( 'vc_font_awesome_5_shims', vc_asset_url( 'lib/bower/font-awesome/css/v4-shims.min.css' ), array(), WPB_VC_VERSION );
 		//wp_register_style( 'vc_font_awesome_5', vc_asset_url( 'lib/bower/font-awesome/css/all.min.css' ), array( 'vc_font_awesome_5_shims' ), WPB_VC_VERSION );
-		//wp_register_style( 'lightbox2', vc_asset_url( 'lib/bower/lightbox2/dist/css/lightbox.min.css' ), array(), WPB_VC_VERSION );
-		/* nectar addition end */
 		wp_register_style( 'vc_animate-css', vc_asset_url( 'lib/bower/animate-css/animate.min.css' ), array(), WPB_VC_VERSION );
-
+		//wp_register_style( 'lightbox2', vc_asset_url( 'lib/lightbox2/dist/css/lightbox.min.css' ), array(), WPB_VC_VERSION );
+		/* nectar addition end */
 		$front_css_file = vc_asset_url( 'css/js_composer.min.css' );
 		$upload_dir = wp_upload_dir();
 		$vc_upload_dir = vc_upload_dir();
@@ -509,7 +509,7 @@ class Vc_Base {
 	 */
 	public function frontJsRegister() {
 		wp_register_script( 'prettyphoto', vc_asset_url( 'lib/prettyphoto/js/jquery.prettyPhoto.min.js' ), array( 'jquery-core' ), WPB_VC_VERSION, true );
-		wp_register_script( 'lightbox2', vc_asset_url( 'lib/bower/lightbox2/dist/js/lightbox.min.js' ), array( 'jquery-core' ), WPB_VC_VERSION, true );
+		wp_register_script( 'lightbox2', vc_asset_url( 'lib/lightbox2/dist/js/lightbox.min.js' ), array( 'jquery-core' ), WPB_VC_VERSION, true );
 		wp_register_script( 'vc_waypoints', vc_asset_url( 'lib/vc_waypoints/vc-waypoints.min.js' ), array( 'jquery-core' ), WPB_VC_VERSION, true );
 
 		// @deprecated used in old tabs
@@ -528,6 +528,11 @@ class Vc_Base {
 		wp_register_script( 'nivo-slider', vc_asset_url( 'lib/bower/nivoslider/jquery.nivo.slider.pack.js' ), array( 'jquery-core' ), WPB_VC_VERSION, true );
 		wp_register_script( 'flexslider', vc_asset_url( 'lib/flexslider/jquery.flexslider.min.js' ), array( 'jquery-core' ), WPB_VC_VERSION, true );
 		wp_register_script( 'wpb_composer_front_js', vc_asset_url( 'js/dist/js_composer_front.min.js' ), array( 'jquery-core' ), WPB_VC_VERSION, true );
+		wp_localize_script( 'wpb_composer_front_js', 'vcData', array(
+			'currentTheme' => array(
+				'slug' => wpb_get_current_theme_slug(),
+			),
+		) );
 
 		/**
 		 * @since 4.4
@@ -645,23 +650,23 @@ class Vc_Base {
 	 * @access public
 	 *
 	 */
-	 public function excerptFilter( $output ) {
- 		global $post;
- 		/* nectar addition */ 
- 		if ( empty( $output ) && ! empty( $post->post_content ) ) {
- 			$post_content =  preg_replace ('/\[recent_posts[^\]]*\]/', ' ', $post->post_content);
- 			$text = wp_strip_all_tags( do_shortcode( $post_content ) );
- 			$options = get_option('salient_redux');
- 			$the_excerpt_length = (!empty($options['blog_excerpt_length'])) ? intval($options['blog_excerpt_length']) : 30; 
- 			$excerpt_length = apply_filters('excerpt_length', $the_excerpt_length);
- 			$excerpt_more = apply_filters( 'excerpt_more', ' ' . '[...]' );
- 			$text = wp_trim_words( $text, $the_excerpt_length, $excerpt_more );
- 			return $text;
- 		}
- 		/* nectar addition end */ 
+	public function excerptFilter( $output ) {
+		global $post;
+		/* nectar addition */ 
+		if ( empty( $output ) && ! empty( $post->post_content ) ) {
+			$post_content =  preg_replace ('/\[recent_posts[^\]]*\]/', ' ', $post->post_content);
+			$text = wp_strip_all_tags( do_shortcode( $post_content ) );
+			$options = get_option('salient_redux');
+			$the_excerpt_length = (!empty($options['blog_excerpt_length'])) ? intval($options['blog_excerpt_length']) : 30; 
+			$excerpt_length = apply_filters('excerpt_length', $the_excerpt_length);
+			$excerpt_more = apply_filters( 'excerpt_more', ' ' . '[...]' );
+			$text = wp_trim_words( $text, $the_excerpt_length, $excerpt_more );
+			return $text;
+		}
+		/* nectar addition end */ 
 
- 		return $output;
- 	}
+		return $output;
+	}
 
 	/**
 	 * Remove unwanted wraping with p for content.

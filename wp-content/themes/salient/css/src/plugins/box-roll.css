@@ -53,6 +53,41 @@ body .nectar-box-roll #page-header-bg{
    margin-top:0
 }
 
+.nectar-box-roll .overlaid-content .subheader{
+    font-size:28px;
+    line-height: 1.3;
+    color:#fff!important;
+    font-family:'Open Sans';
+    font-weight:300
+  }
+.nectar-box-roll .overlaid-content[data-text-alignment="center"]{
+    text-align:center
+  }
+
+.nectar-box-roll .overlaid-content[data-text-alignment="right"]{
+    text-align:right
+  }
+.nectar-box-roll .overlaid-content[data-text-alignment="center"] .span_6{
+    left:0;
+    width:100%!important
+  }
+.nectar-box-roll .overlaid-content[data-text-alignment="center"] h1{
+    margin-bottom:12px
+  }
+
+.nectar-box-roll .overlaid-content[data-text-alignment="center"] .subheader{
+    max-width:900px;
+    margin:0 auto;
+    display:block
+}
+  
+body[data-button-style^="rounded"] .nectar-box-roll .section-down-arrow i{
+    transition:none;
+    -webkit-transition:none
+}
+
+
+
 .nectar-box-roll .overlaid-content .span_6{
    backface-visibility:visible;
     transform-style:preserve-3d;

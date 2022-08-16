@@ -1133,27 +1133,54 @@
       var $timeOut = ($(canvasID).parents('#page-header-bg[data-text-effect="rotate_in"]').length > 0) ? 800 : 0;
       setTimeout(function(){
         $(canvasID).parents($selector).find('.inner-wrap.shape-1').css('z-index',100);
-        $(canvasID).parents($selector).find('.inner-wrap.shape-1 .top-heading').transition({'opacity':1, 'y': 0},0);
+
+        if( $().transition ) {
+          $(canvasID).parents($selector).find('.inner-wrap.shape-1 .top-heading').transition({'opacity':1, 'y': 0},0);
+        }
         
         $(canvasID).parents($selector).find('.span_6').find('.wraped').each(function(i){
-          $(this).find('span').delay(i*370).transition({ rotateX: '0', 'opacity' : 1, y: 0},400,'easeOutQuad');
+          if( $().transition ) {
+            $(this).find('span').delay(i*370).transition({ rotateX: '0', 'opacity' : 1, y: 0},400,'easeOutQuad');
+          }
+          
         });
         
         setTimeout(function(){
           
           $(canvasID).parents($selector).find('.span_6').find('.inner-wrap.shape-1 > *:not(.top-heading)').each(function(i){
-            $(this).delay(i*370).transition({ rotateX: '0', 'opacity' : 1, y: 0 },650,'easeOutQuad');
+            if( $().transition ) {
+              $(this).delay(i*370).transition({ rotateX: '0', 'opacity' : 1, y: 0 },650,'easeOutQuad');
+            }
+            
           });
           
           setTimeout(function(){
             $('.scroll-down-wrap').removeClass('hidden');
             
             if( Nodes.imgsToDraw.length > 1) {
-              $('.pagination-dots .pagination-dot').each(function(i){
-                $(this).delay(i*75).transition({ y: 0, 'opacity': 1}, 400);
+              $('.pagination-dots .pagination-dot:not(.pagination-current)').each(function(i){
+
+                  anime({
+                    targets: $(this)[0],
+                    translateY: [50,0],
+                    opacity: [0,1],
+                    duration: 400,
+                    delay: i*75,
+                    easing: 'easeOutCubic'
+                  });
               });
+
               $('.pagination-navigation .pagination-current').each(function(i){
-                $(this).delay(i*75).transition({ y: 0, 'opacity': 1, scale: 1.15}, 400);
+                anime({
+                  targets: $(this)[0],
+                  translateY: [50,0],
+                  opacity: [0,1],
+                  duration: 400,
+                  scale: 1.15,
+                  delay: i*75,
+                  easing: 'easeOutCubic'
+                });
+
               });
               
               //init pag

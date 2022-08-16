@@ -10,14 +10,14 @@ $vc_is_wp_version_3_6_more = version_compare(preg_replace('/^([\d\.]+)(\-.*$)/',
 return array(
 	"name" => esc_html__("Star Rating", "salient-core"),
 	"base" => "star_rating",
-  "icon" => "icon-wpb-star",
+	"icon" => "icon-wpb-star",
 	"category" => __('Content', 'salient-core'),
 	"params" => array(
 		array(
 			"type" => "dropdown",
 			"heading" => esc_html__("Star Rating", "salient-core"),
 			"param_name" => "star_rating",
-			"admin_label" => false,
+			"admin_label" => true,
 			"value" => array(
 				"5 Stars" => "5",
 				"4.5 Stars" => "4-5",
@@ -37,7 +37,7 @@ return array(
       'edit_field_class' => 'zero-floor vc_col-xs-12',
       "heading" => esc_html__("Star Sizing",'salient-core'),
       "value" => "",
-      "admin_label" => true,
+      "admin_label" => false,
       "param_name" => "sizing",
       "description" => esc_html__( 'Enter a size for your star icons. When left empty, a default of 20px will be used.', 'salient-core' )
    ),
@@ -64,10 +64,8 @@ return array(
 			"type" => "textarea_html",
 			"heading" => esc_html__("Text Content", "salient-core"),
 			"param_name" => "content",
-			"admin_label" => true,
+			"admin_label" => false,
 			"description" => esc_html__("Optionally add text to display beside your star rating", "salient-core")
 		),
 	),
 );
-
-?>

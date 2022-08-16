@@ -1,7 +1,7 @@
-<?php 
+<?php
 
 // Exit if accessed directly.
-if ( ! defined( 'ABSPATH' ) ) {
+if (!defined('ABSPATH')) {
 	exit;
 }
 
@@ -15,8 +15,8 @@ return array(
 	"description" => esc_html__('Animated text that scrolls', 'salient-core'),
 	"params" => array(
 
-    
-    array(
+
+		array(
 			"type" => "dropdown",
 			"heading" => esc_html__("Scrolling Direction", "salient-core"),
 			"param_name" => "scroll_direction",
@@ -24,10 +24,10 @@ return array(
 				esc_html__("Standard", "salient-core") => "ltr",
 				esc_html__("Reverse", "salient-core") => "rtl"
 			),
-      "edit_field_class" => "col-md-6",
+			"edit_field_class" => "col-md-6",
 			'save_always' => true
 		),
-    array(
+		array(
 			"type" => "dropdown",
 			"heading" => esc_html__("Scrolling Speed", "salient-core"),
 			"param_name" => "scroll_speed",
@@ -39,7 +39,7 @@ return array(
 				esc_html__("Fast", "salient-core") => "fast",
 				esc_html__("Static", "salient-core") => "static",
 			),
-      "edit_field_class" => "col-md-6 col-md-6-last",
+			"edit_field_class" => "col-md-6 col-md-6-last",
 			'save_always' => true
 		),
 		array(
@@ -55,7 +55,7 @@ return array(
 			"heading" => esc_html__("Text Content", "salient-core"),
 			"param_name" => "content",
 			"value" => '',
-      "description" => esc_html__("Please ensure your text is using a heading tag - The text you enter will appear in a single line.", "salient-core"),
+			"description" => esc_html__("Please ensure your text is using a heading tag - The text you enter will appear in a single line.", "salient-core"),
 			"admin_label" => false
 		),
 
@@ -74,9 +74,9 @@ return array(
 			"type" => "dropdown",
 			"heading" => esc_html__("Outline Thickness", "salient-core"),
 			"param_name" => "outline_thickness",
-			"dependency" => Array('element' => "style", 'value' => array('text_outline')),
+			"dependency" => array('element' => "style", 'value' => array('text_outline')),
 			"value" => array(
-        esc_html__("Ultra Thin", "salient-core") => "ultra-thin",
+				esc_html__("Ultra Thin", "salient-core") => "ultra-thin",
 				esc_html__("Thin", "salient-core") => "thin",
 				esc_html__("Regular", "salient-core") => "regular",
 				esc_html__("Thick", "salient-core") => "thick",
@@ -89,14 +89,14 @@ return array(
 			"type" => "textfield",
 			"heading" => esc_html__("Custom Font Size", "salient-core"),
 			"param_name" => "custom_font_size",
-      "edit_field_class" => "col-md-6",
+			"edit_field_class" => "col-md-6",
 			"description" => ''
 		),
-    array(
+		array(
 			"type" => "textfield",
 			"heading" => esc_html__("Custom Font Size Mobile", "salient-core"),
 			"param_name" => "custom_font_size_mobile",
-      "edit_field_class" => "col-md-6 col-md-6-last",
+			"edit_field_class" => "col-md-6 col-md-6-last",
 			"description" => ''
 		),
 		array(
@@ -127,17 +127,29 @@ return array(
 			'save_always' => true,
 		),
 		array(
+			"type" => "dropdown",
+			"heading" => esc_html__("Text Space Amount", "salient-core"),
+			"param_name" => "text_space_amount",
+			"value" => array(
+				esc_html__("Small", "salient-core") => "default",
+				esc_html__("Medium", "salient-core") => "medium",
+				esc_html__("Large", "salient-core") => "large",
+			),
+			"dependency" => array('element' => "text_repeat_divider", 'value' => array('space')),
+			'save_always' => true,
+		),
+		array(
 			"type" => "textfield",
 			"heading" => esc_html__("Custom Text Repeat Divider", "salient-core"),
 			"param_name" => "text_repeat_divider_custom",
-			"dependency" => Array('element' => "text_repeat_divider", 'value' => array('custom')),
+			"dependency" => array('element' => "text_repeat_divider", 'value' => array('custom')),
 			"description" => esc_html__("Add a custom entity that will be used as the divider.", "salient-core")
 		),
 		array(
 			"type" => "dropdown",
 			"heading" => esc_html__("Custom Text Repeat Divider Size", "salient-core"),
 			"param_name" => "text_repeat_divider_scale",
-			"dependency" => Array('element' => "text_repeat_divider", 'value' => array('custom')),
+			"dependency" => array('element' => "text_repeat_divider", 'value' => array('custom')),
 			"value" => array(
 				esc_html__("Full Scale Font Size", "salient-core") => "full",
 				esc_html__("3/4 Font Size", "salient-core") => "three-fourths",
@@ -156,7 +168,7 @@ return array(
 			'save_always' => true,
 			"description" => ''
 		),
-    array(
+		array(
 			"type" => "fws_image",
 			"heading" => esc_html__("Background Image", "salient-core"),
 			"param_name" => "background_image_url",
@@ -164,16 +176,16 @@ return array(
 			"group" => esc_html__('Background', 'salient-core'),
 			"description" => esc_html__("Select a background image from the media library.", "salient-core")
 		),
-    array(
+		array(
 			"type" => "dropdown",
-      "group" => esc_html__('Background', 'salient-core'),
+			"group" => esc_html__('Background', 'salient-core'),
 			"heading" => esc_html__("Background Image Animation", "salient-core"),
 			"param_name" => "background_image_animation",
 			"admin_label" => true,
 			"value" => array(
-        esc_html__("None", "salient-core") => "None",
-				esc_html__("Fade In", "salient-core") => "fade-in", 
-				esc_html__("Fade In From Bottom", "salient-core") => "fade-in-from-bottom", 
+				esc_html__("None", "salient-core") => "None",
+				esc_html__("Fade In", "salient-core") => "fade-in",
+				esc_html__("Fade In From Bottom", "salient-core") => "fade-in-from-bottom",
 				esc_html__("Reveal Rotate From Top", "salient-core") => "ro-reveal-from-top",
 				esc_html__("Reveal Rotate From Bottom", "salient-core") => "ro-reveal-from-bottom",
 				esc_html__("Reveal Rotate From Left", "salient-core") => "ro-reveal-from-left",
@@ -182,33 +194,31 @@ return array(
 			'save_always' => true,
 			"description" => esc_html__("Select animation type if you want your background image to be animated when it enters into the browsers viewport.", "salient-core")
 		),
-    array(
+		array(
 			"type" => "textfield",
 			"heading" => esc_html__("Background Image Height", "salient-core"),
 			"param_name" => "background_image_height",
-      "group" => esc_html__('Background', 'salient-core'),
+			"group" => esc_html__('Background', 'salient-core'),
 			"description" => ''
 		),
-    array(
+		array(
 			"type" => 'checkbox',
 			"heading" => esc_html__("Separate Text Coloring When on top of Image", "salient-core"),
 			"param_name" => "separate_text_coloring",
 			"description" => '',
 			'edit_field_class' => 'vc_col-xs-12 salient-fancy-checkbox',
-      "group" => esc_html__('Background', 'salient-core'),
-			"value" => Array(esc_html__("Yes", "salient-core") => 'true')
+			"group" => esc_html__('Background', 'salient-core'),
+			"value" => array(esc_html__("Yes", "salient-core") => 'true')
 		),
-    array(
+		array(
 			"type" => "colorpicker",
 			"class" => "",
 			"heading" => esc_html__("Text Color on top of Image", "salient-core"),
-      "group" => esc_html__('Background', 'salient-core'),
+			"group" => esc_html__('Background', 'salient-core'),
 			"param_name" => "text_color_front",
 			"value" => "",
-      "dependency" => Array('element' => "separate_text_coloring", 'not_empty' => true)
+			"dependency" => array('element' => "separate_text_coloring", 'not_empty' => true)
 		),
-    
+
 	)
 );
-
-?>

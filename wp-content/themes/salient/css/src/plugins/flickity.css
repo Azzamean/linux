@@ -34,6 +34,10 @@
   transition: transform 0.3s cubic-bezier(0.2, 0.6, 0.3, 1);
 }
 
+.nectar-flickity.nectar-carousel[data-format="default"][data-wrap="no-wrap"][data-ticker-speed] .flickity-slider {
+  transition: none;
+}
+
 .flickity-slider {
   position: absolute;
   width: 100%;
@@ -828,20 +832,24 @@
 
 
 @media only screen and (min-width: 1000px) {
-  .nectar-flickity[data-drag-scale="true"] .cell {
+  .wpb_gallery .nectar-flickity[data-drag-scale="true"]:not(.masonry) .cell > img {
+    transition: transform 0.45s ease, opacity 0.5s ease;
+  }
+  .nectar-flickity[data-drag-scale="true"] .cell .inner-wrap-outer {
     -webkit-transition: transform 0.45s ease;
     transition: transform 0.45s ease;
   }
-  .nectar-flickity[data-drag-scale="true"] .is-pointer-down .cell {
+  .nectar-flickity[data-drag-scale="true"] .is-pointer-down .cell .inner-wrap-outer,
+  .wpb_gallery .nectar-flickity[data-drag-scale="true"] .is-pointer-down .cell > img {
     -webkit-transform: scale(0.97);
     transform: scale(0.97);
   }
-  .nectar-flickity[data-drag-scale="true"][data-desktop-columns="4"] .is-pointer-down .cell,
-  .nectar-flickity[data-drag-scale="true"][data-desktop-columns="5"] .is-pointer-down .cell {
+  .nectar-flickity[data-drag-scale="true"][data-desktop-columns="4"] .is-pointer-down .cell .inner-wrap-outer,
+  .nectar-flickity[data-drag-scale="true"][data-desktop-columns="5"] .is-pointer-down .cell .inner-wrap-outer {
     -webkit-transform: scale(0.94);
     transform: scale(0.94);
   }
-  .nectar-flickity[data-drag-scale="true"][data-desktop-columns="6"] .is-pointer-down .cell {
+  .nectar-flickity[data-drag-scale="true"][data-desktop-columns="6"] .is-pointer-down .cell .inner-wrap-outer {
     -webkit-transform: scale(0.92);
     transform: scale(0.92);
   }
@@ -889,6 +897,9 @@
   right: 15px;
   z-index: 1000;
   cursor: pointer;
+}
+.nectar-flickity[data-controls="none"].nectar-carousel.nectar-carousel:not(.masonry) .flickity-viewport {
+  margin: 0;
 }
 
 .nectar-flickity[data-controls="next_prev_arrows"] .flickity-prev-next-button.next,
@@ -1305,15 +1316,13 @@
   border-radius: 5px;
   overflow: hidden;
   transform: rotate(-135deg);
-  -ms-transform: rotate(-135deg);
   -webkit-transform: rotate(-135deg);
   top: 100%;
   left: 50%;
-  margin-left: -20px;
+  margin-left: -14px;
   margin-top: -19px;
   opacity: 0;
   transition: all 0.2s ease;
-  -webkit-transition: all 0.2s ease;
 }
 
 .testimonial_slider[data-style="multiple_visible"] blockquote p .bottom-arrow:after {

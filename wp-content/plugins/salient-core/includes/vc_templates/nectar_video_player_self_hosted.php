@@ -84,7 +84,7 @@ $bg_overlay = '';
 if( !empty($advanced_gradient) ) {
   $bg_overlay = '<div class="nectar_video_player_self_hosted__overlay" style="background:'.esc_attr($advanced_gradient).';"></div>';
 }
-echo '<div class="' . esc_attr( $css_class ) . '" data-border-radius="'.esc_attr($border_radius).'" data-shadow="'.esc_attr($box_shadow).'">
+echo '<div class="' . nectar_clean_classnames(esc_attr( $css_class )) . '" data-border-radius="'.esc_attr($border_radius).'" data-shadow="'.esc_attr($box_shadow).'">
 <div class="wpb_wrapper"><div class="wpb_video_wrapper"'.$preview_image_bg.'>' . $bg_overlay . $play_button_markup;
 
 

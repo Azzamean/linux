@@ -43,11 +43,7 @@ function vc_page_welcome_add_sub_page() {
 
 function vc_welcome_menu_hooks() {
 	$settings_tab_enabled = vc_user_access()->wpAny( 'manage_options' )->part( 'settings' )->can( 'vc-general-tab' )->get();
-	/* nectar addition */
-	
 	add_action( 'vc_menu_page_build', 'vc_page_welcome_add_sub_page', $settings_tab_enabled ? 11 : 1 );
-	
-	/* nectar addition */
 }
 
 function vc_welcome_menu_hooks_network() {

@@ -192,6 +192,53 @@ if( !function_exists('nectar_output_font_props') ) {
 }
 
 
+/**
+ * CSS Cubic Bezier Easings
+ *
+ * @since 14.1
+ */
+if( !function_exists('nectar_cubic_bezier_easings') ) { 
+
+	function nectar_cubic_bezier_easings() {
+
+		return array(
+			'linear' => '0,0,1,1',
+			'swing' => '0.25,0.1,0.25,1',
+			'easeInSine' => '0.12, 0, 0.39, 0',
+			'easeOutSine' => '0.61, 1, 0.88, 1',
+			'easeInOutSine' => '0.37, 0, 0.63, 1',
+			'easeInQuad' => '0.11, 0, 0.5, 0',
+			'easeOutQuad' => '0.5, 1, 0.89, 1',
+			'easeInOutQuad' => '0.45, 0, 0.55, 1',
+			'easeInCubic' => '0.32, 0, 0.67, 0',
+			'easeOutCubic' => '0.33, 1, 0.68, 1',
+			'easeInOutCubic' => '0.65, 0, 0.35, 1',
+			'easeInQuart' => '0.5, 0, 0.75, 0',
+			'easeOutQuart' => '0.25, 1, 0.5, 1',
+			'easeInOutQuart' => '0.76, 0, 0.24, 1',
+			'easeInQuint' => '0.64, 0, 0.78, 0',
+			'easeOutQuint' => '0.22, 1, 0.36, 1',
+			'easeInOutQuint' => '0.83, 0, 0.17, 1',
+			'easeInExpo' => '0.8, 0, 0.2, 0',
+			'easeOutExpo' => '0.19, 1, 0.22, 1',
+			'easeInOutExpo' => '0.87, 0, 0.13, 1',
+			'easeInCirc' => '0.6, 0, 0.98, 0',
+			'easeOutCirc' => '0, 0.55, 0.45, 1',
+			'easeInOutCirc' => '0.85, 0, 0.15, 1',
+			'easeInBack' => '0.6, -0.28, 0.735, 0.045',
+			'easeOutBack' => '0.175, 0.885, 0.32, 1.275',
+			'easeInOutBack' => '0.68, -0.55, 0.265, 1.55',
+			'easeInBounce' => '0.01, 0, 0.99, 0',
+			'easeOutBounce' => '0.7, 0, 0.7, 1',
+			'easeInOutBounce' => '0.65, 0, 0.35, 1',
+			'easeInElastic' => '0.04, 0, 0.99, 0',
+			'easeOutElastic' => '0.04, 0, 0.99, 0',
+			'easeInOutElastic' => '0.04, 0, 0.99, 0',
+		);
+	}
+}
+
+
 
 /**
  * Quick minification helper function
@@ -274,7 +321,7 @@ function nectar_generate_options_css() {
 		nectar_fonts_output();
 
 		$css = ob_get_clean();
-    $css = nectar_quick_minify($css);
+		$css = nectar_quick_minify($css);
     
 		// Write css to file.
 		global $wp_filesystem;
@@ -798,6 +845,15 @@ if (!function_exists('nectar_page_specific_dynamic')) {
         bottom: 0;
         height: calc(100% + 75px);
       }
+	  .featured-media-under-header__featured-media .post-featured-img img {
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+		object-position: top;
+	  }	
       @media only screen and (max-width: 690px) {
         .featured-media-under-header__featured-media .post-featured-img {
           height: calc(100% + 45px);
@@ -806,11 +862,11 @@ if (!function_exists('nectar_page_specific_dynamic')) {
           font-size: 14px;
         }
       }
-      .featured-media-under-header__featured-media[data-align="center"] .post-featured-img {
-        background-position: center;
+      .featured-media-under-header__featured-media[data-align="center"] .post-featured-img img {
+		object-position: center;
       }
-      .featured-media-under-header__featured-media[data-align="bottom"] .post-featured-img {
-        background-position: bottom;
+      .featured-media-under-header__featured-media[data-align="bottom"] .post-featured-img img {
+        object-position: bottom;
       }
       .featured-media-under-header h1 {
         margin: max(min(0.35em,35px),20px) 0 max(min(0.25em,25px),15px) 0;
@@ -1210,6 +1266,18 @@ if (!function_exists('nectar_page_specific_dynamic')) {
 			}
 			';
 		}
+
+		// navigation animation delay.
+		$header_nav_entrance_animation_delay = ( isset($post->ID) ) ? get_post_meta($post->ID, '_header_nav_entrance_animation_delay', true) : false;
+		if( is_page() && in_array($header_nav_entrance_animation,array('fade-in-from-top','fade-in')) && $header_nav_entrance_animation_delay ) {
+			echo '
+			#header-outer.entrance-animation,
+			#header-outer.entrance-animation #top,
+			#header-outer.entrance-animation #header-secondary-outer  {
+				animation-delay: '.floatval($header_nav_entrance_animation_delay).'ms;	
+			}';
+		}
+
 		//// Page header text effect.
 		$page_header_text_effect = get_post_meta($post->ID, '_nectar_page_header_text-effect', true);
 		if( 'rotate_in' === $page_header_text_effect ) {
@@ -2264,6 +2332,12 @@ if (!function_exists('nectar_page_specific_dynamic')) {
 			}';
 		}
 
+		if( 'none' === $page_full_screen_rows_animation ) {
+			echo '#nectar_fullscreen_rows {
+				background-color: transparent;
+			}';
+		}
+
 		global $woocommerce;
 		// WooCommerce items.
 		if( $woocommerce && !empty($nectar_options['product_archive_bg_color']) ) {
@@ -2390,6 +2464,9 @@ if (!function_exists('nectar_page_specific_dynamic')) {
 		else if( !empty(NectarElAssets::$woo_taxonmy_content) ) {
 			echo NectarElDynamicStyles::generate_styles(NectarElAssets::$woo_taxonmy_content);
 		}
+		if( !empty(NectarElAssets::$woo_short_desc_content) ) {
+			echo NectarElDynamicStyles::generate_styles(NectarElAssets::$woo_short_desc_content);
+		}
 		// Portfolio.
 		if( is_singular( 'portfolio' ) && $portfolio_content ) {
 			echo NectarElDynamicStyles::generate_styles($portfolio_content);
@@ -2460,6 +2537,25 @@ if (!function_exists('nectar_page_specific_dynamic')) {
 		  width: 1px;
 		  word-wrap: normal!important;
 		}';
+
+		/* SVG image sizing */
+		if ( false === apply_filters('salient_bypass_svg_img_sizing', false) ) {
+			echo '.row .col img:not([srcset]){
+				width: auto;
+			}
+			.row .col img.img-with-animation.nectar-lazy:not([srcset]) {
+				width: 100%;
+			}';
+		} 
+		else {
+			echo '.row .col img:not([srcset]):not([src*="svg"]){
+				width: auto;
+			}
+			.row .col img.img-with-animation.nectar-lazy:not([srcset]):not(.loaded) {
+				width: 100%;
+			}';
+		}
+		  
     
 
 

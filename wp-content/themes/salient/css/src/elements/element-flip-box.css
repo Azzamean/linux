@@ -41,6 +41,7 @@ Description: Styles for the "Flip Box" page builder element.
      backface-visibility:hidden
 }
 
+
 .nectar-flip-box .flip-box-front[data-nectar-img-src],
 .nectar-flip-box .flip-box-back[data-nectar-img-src] {
   opacity: 0;
@@ -71,7 +72,7 @@ Description: Styles for the "Flip Box" page builder element.
      opacity:0.6;
      background-color:inherit;
      backface-visibility:hidden;
-     transform: translateZ(10px);
+     transform: translateZ(2px);
 }
  .nectar-flip-box:hover .flip-box-front,
  .nectar-flip-box:hover .flip-box-back{
@@ -237,6 +238,10 @@ Description: Styles for the "Flip Box" page builder element.
      height:auto;
      display:block;
      width:auto
+}
+.nectar-flip-box .flip-box-front i[data-color="extra-color-gradient-1"].icon-default-style.no-grad:before,
+.nectar-flip-box .flip-box-front i[data-color="extra-color-gradient-2"].icon-default-style.no-grad:before{
+  -webkit-text-fill-color:initial
 }
  .nectar-flip-box .flip-box-front .im-icon-wrap {
      margin-bottom: 15px;

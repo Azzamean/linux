@@ -818,15 +818,10 @@ if ( ! function_exists( 'nectar_page_trans_markup' ) ) {
 				if ( $loading_icon === 'material' ) {
 
 					echo '<div class="material-icon">
-									 <div class="spinner">
-										 <div class="right-side"><div class="bar"></div></div>
-										 <div class="left-side"><div class="bar"></div></div>
-									 </div>
-									 <div class="spinner color-2">
-										 <div class="right-side"><div class="bar"></div></div>
-										 <div class="left-side"><div class="bar"></div></div>
-									 </div>
-								 </div>';
+						<svg class="nectar-material-spinner" width="60px" height="60px" viewBox="0 0 60 60">
+							<circle stroke-linecap="round" cx="30" cy="30" r="26" fill="none" stroke-width="6"></circle>
+				  		</svg>	 
+					</div>';
 
 				} else {
 
@@ -888,12 +883,12 @@ if( !function_exists('nectar_get_social_media_list') ) {
 
 			'twitter'       => array(
 				'icon_class' => 'fa-twitter',
-				'icon_code'  => '\f099',
+				'icon_code'  => '\e60c',
 				'icon_type'  => 'font-awesome',
 			),
 			'facebook'      => array(
 				'icon_class' => 'fa-facebook',
-				'icon_code'  => '\f09a',
+				'icon_code'  => '\e60d',
 				'icon_type'  => 'font-awesome',
 			),
 			'vimeo'         => array(
@@ -903,7 +898,7 @@ if( !function_exists('nectar_get_social_media_list') ) {
 			),
 			'pinterest'     => array(
 				'icon_class' => 'fa-pinterest',
-				'icon_code'  => '\f0d2',
+				'icon_code'  => '\e60b',
 				'icon_type'  => 'font-awesome',
 			),
 			'linkedin'      => array(
@@ -1022,9 +1017,9 @@ if( !function_exists('nectar_get_social_media_list') ) {
 				'icon_type'  => 'font-awesome',
 			),
 			'medium'        => array(
-				'icon_class' => 'fa-medium',
-				'icon_code'  => '\f23a',
-				'icon_type'  => 'font-awesome',
+				'icon_class' => 'icon-salient-medium',
+				'icon_code'  => '\e914',
+				'icon_type'  => 'salient',
 			),
 			'artstation'    => array(
 				'icon_class' => 'icon-salient-artstation',
@@ -1059,6 +1054,11 @@ if( !function_exists('nectar_get_social_media_list') ) {
 			'applemusic'       => array(
 				'icon_class' => 'icon-salient-apple-music',
 				'icon_code'  => '\e903',
+				'icon_type'  => 'salient',
+			),
+			'patreon'       => array(
+				'icon_class' => 'icon-salient-patreon',
+				'icon_code'  => '\e912',
 				'icon_type'  => 'salient',
 			),
 			'xing'          => array(
@@ -1195,6 +1195,7 @@ if ( ! function_exists( 'nectar_ocm_add_social' ) ) {
 			'tiktok-url',
 			'twitch-url',
 			'applemusic-url',
+			'patreon-url',
 			'xing-url',
 			'phone-url',
 			'email-url'
@@ -1235,6 +1236,7 @@ if ( ! function_exists( 'nectar_ocm_add_social' ) ) {
 			'icon-salient-tiktok',
 			'icon-salient-twitch',
 			'icon-salient-apple-music',
+			'icon-salient-patreon',
 			'fa fa-xing',
 			'fa fa-phone',
 			'fa fa-envelope' );

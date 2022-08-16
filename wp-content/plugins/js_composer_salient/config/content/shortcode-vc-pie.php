@@ -45,19 +45,29 @@ return array(
 		),
 		/* nectar addition */ 
 		array(
-			 "type" => "dropdown",
-			  "heading" => __("Color", "js_composer"),
-			  "param_name" => "color",
-			  "value" => array(
-				 "Accent-Color" => ($options != '') ? $options["accent-color"] : 'None',
-				 "Extra-Color-1" => ($options != '') ? $options["extra-color-1"] : 'None',
-				 "Extra-Color-2" => ($options != '') ? $options["extra-color-2"] : 'None',
-				 "Extra-Color-3" =>  ($options != '') ? $options["extra-color-3"] : 'None'
-			   ),
-			  'save_always' => true,
-			  "description" => __("Please select the color you wish for your social links to display in.", "js_composer")
+			"type" => "dropdown",
+			 "heading" => __("Color", "js_composer"),
+			 "param_name" => "color",
+			 "value" => array(
+				"Accent-Color" => ($options != '') ? $options["accent-color"] : 'None',
+				"Extra-Color-1" => ($options != '') ? $options["extra-color-1"] : 'None',
+				"Extra-Color-2" => ($options != '') ? $options["extra-color-2"] : 'None',
+				"Extra-Color-3" =>  ($options != '') ? $options["extra-color-3"] : 'None'
+			  ),
+			 'save_always' => true,
+			 "description" => __("Please select the color you wish for your social links to display in.", "js_composer")
+	   ),
+	   /* nectar addition end */ 
+		array(
+			'type' => 'dropdown',
+			'heading' => esc_html__( 'Color', 'js_composer' ),
+			'param_name' => 'color',
+			'value' => vc_get_shared( 'colors-dashed' ) + array( esc_html__( 'Custom', 'js_composer' ) => 'custom' ),
+			'description' => esc_html__( 'Select pie chart color.', 'js_composer' ),
+			'admin_label' => true,
+			'param_holder_class' => 'vc_colored-dropdown',
+			'std' => 'grey',
 		),
-		/* nectar addition end */ 
 		array(
 			'type' => 'colorpicker',
 			'heading' => esc_html__( 'Custom color', 'js_composer' ),

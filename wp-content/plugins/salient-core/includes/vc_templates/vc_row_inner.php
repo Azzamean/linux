@@ -105,7 +105,7 @@ if ( ! defined( 'ABSPATH' ) ) {
   if ( 'yes' !== $disable_element ) {
   
     	if($this->shortcode == 'vc_row_inner') {
-        $text_color = null;
+        $text_color = '';
       }
     	
     	if(!empty($bg_image)) {
@@ -176,51 +176,7 @@ if ( ! defined( 'ABSPATH' ) ) {
     		$style .= 'padding-bottom: '. esc_attr(intval($bottom_padding)) .'px; ';
     	}
       
-      
-      // Transforms.
-      if( !empty($translate_y) || !empty($translate_x)) {
-          
-          for($i=0;$i<2;$i++) {
-            
-            if($i == 0) {
-              $style .= '-webkit-transform: ';
-            } else {
-              $style .= ' transform: ';
-            } 
-            
-            
-            if(!empty($translate_y)) {
-            
-                if(strpos($translate_y,'%') !== false){
-                    $style .= ' translateY('. intval($translate_y) .'%)';
-                } 
-								else if( strpos($translate_y,'vh' ) !== false ) {
-									$style .= ' translateY('. intval($translate_y) .'vh)';
-								}
-								else {    
-                    $style .= ' translateY('. intval($translate_y) .'px)';
-                }
-              
-            }  
-            
-            if(!empty($translate_x)) {
-            
-                if(strpos($translate_x,'%') !== false){
-                    $style .= ' translateX('. intval($translate_x) .'%)';
-                } 
-								else if( strpos($translate_x,'vh' ) !== false ) {
-									$style .= ' translateX('. intval($translate_x) .'vh)';
-								}
-								else {    
-                    $style .= ' translateX('. intval($translate_x) .'px)';
-                }
-              
-            }  
-            $style .= ';';
-            
-          } //loop
-          
-      }
+    
 			
 			// z-index.
       if( !empty($zindex) ) {

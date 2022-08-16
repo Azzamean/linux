@@ -98,6 +98,6 @@ if( false !== $background_markup) {
   $data_attrs_escaped .= 'data-using-bg="true"';
 }
 
-echo '<div class="nectar-scrolling-text'.$dynamic_el_styles.'" '.$data_attrs_escaped.'>'.$background_markup.'<div class="nectar-scrolling-text-inner"'.$style_markup.'>' . $inner_content . '</div></div>';
+echo '<div class="nectar-scrolling-text'.$dynamic_el_styles.'" '.$data_attrs_escaped.'>'.$background_markup.'<div class="nectar-scrolling-text-inner"'.$style_markup.'>' . do_shortcode($inner_content) . '</div></div>';
 
 ?>

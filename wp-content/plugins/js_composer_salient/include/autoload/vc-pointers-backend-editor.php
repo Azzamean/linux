@@ -68,7 +68,7 @@ function vc_backend_editor_register_pointer( $pointers ) {
 						),
 						'buttonsEvent' => 'vcPointersEditorsTourEvents',
 					),
-					'closeEvent' => 'click #wpb_visual_composer',
+					'closeEvent' => 'click #wpb_wpbakery',
 					'showEvent' => 'shortcodeView:ready',
 				),
 				array(
@@ -82,7 +82,7 @@ function vc_backend_editor_register_pointer( $pointers ) {
 						'buttonsEvent' => 'vcPointersEditorsTourEvents',
 					),
 					'showCallback' => 'vcPointersShowOnContentElementControls',
-					'closeEvent' => 'click #wpb_visual_composer',
+					'closeEvent' => 'click #wpb_wpbakery',
 				),
 			),
 		);

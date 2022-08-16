@@ -62,7 +62,7 @@ else if( 'video' === $section_type  ) {
 		$video_classes[] = 'align-'.esc_attr($video_alignment);
 	}
 	
-	$loop_attr = 'loop autoplay';
+	$loop_attr = 'loop';
 
 	if('no-loop' === $video_functionality) {
 		$loop_attr = '';
@@ -70,7 +70,7 @@ else if( 'video' === $section_type  ) {
 	}
 
 	// Lazy load.
-    if ($count != 0) {
+    //if ($count != 0) {
 
 		$video_classes[] = 'nectar-lazy-video';
 
@@ -78,13 +78,13 @@ else if( 'video' === $section_type  ) {
         if (!empty($video_webm)) { $video .= '<source data-nectar-video-src="'. esc_url($video_webm) .'" type="video/webm">'; }
 		if (!empty($video_mp4)) { $video .= '<source data-nectar-video-src="'. esc_url($video_mp4) .'"  type="video/mp4">'; }
 		$video .= '</video>';
-    } else {
-		$video = '<video width="1800" height="700" preload="auto" '.$loop_attr.' muted playsinline class="'.nectar_clean_classnames(implode(' ',$video_classes)).'">';
-		if (!empty($video_webm)) { $video .= '<source src="'. esc_url($video_webm) .'" type="video/webm">'; }
-		if (!empty($video_mp4)) { $video .= '<source src="'. esc_url($video_mp4) .'"  type="video/mp4">'; }
-		$video .= '</video>';
+    // } else {
+	// 	$video = '<video width="1800" height="700" preload="auto" '.$loop_attr.' muted playsinline class="'.nectar_clean_classnames(implode(' ',$video_classes)).'">';
+	// 	if (!empty($video_webm)) { $video .= '<source src="'. esc_url($video_webm) .'" type="video/webm">'; }
+	// 	if (!empty($video_mp4)) { $video .= '<source src="'. esc_url($video_mp4) .'"  type="video/mp4">'; }
+	// 	$video .= '</video>';
 		
-	}
+	// }
 	
 }
 

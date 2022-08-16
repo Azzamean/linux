@@ -39,6 +39,7 @@
 		headerHideUntilNeeded       = ($body.is('[data-hhun]')) ? $body.attr('data-hhun') : '',
 		$animationEasing            = ($body.is('[data-cae]') && $body.attr('data-cae') !== 'swing' ) ? $body.attr('data-cae') : 'easeOutCubic',
 		$animationDuration          = ($body.is('[data-cad]')) ? $body.attr('data-cad') : '650',
+		$animatedAnchorLinks        = ($('body[data-animated-anchors="true"]').length > 0) ? true : false,
 		bypassAnimations            = (!$body.is('[data-m-animate="1"]') && navigator.userAgent.match(/(Android|iPod|iPhone|iPad|BlackBerry|IEMobile|Opera Mini)/) ) ? true : false,
 		headerOCMButtonPos          = (window.nectarOptions && window.nectarOptions.ocm_btn_position && window.nectarOptions.ocm_btn_position === 'left') ? 'left' : 'default',
 		$portfolio_containers       = [],
@@ -47,12 +48,13 @@
 		$flickitySliders            = [],
 		flickityDragArr             = [],
 		viewIndicatorArr            = [],
-    linkIndicatorArr            = [],
+		linkIndicatorArr            = [],
 		iconMouseFollowArr          = [],
 		postGridImgMouseFollowArr   = [],
 		parallaxItemsArr            = [],
 		cascadingParallaxArr        = [],
-    elParallaxArr               = [],
+		elParallaxArr               = [],
+		animateElArr                = [],
 		$fsProjectSliderArr         = [],
 		$wooFlickityCarousels       = [],
 		$liquidBG_EL                = [],
@@ -60,20 +62,22 @@
 		$mouseParallaxScenes        = [],
 		$nectarMasonryBlogs         = [],
 		$standAnimatedColTimeout    = [],
+		animeAnimations             = [],
 		$animatedSVGIconTimeout     = [],
 		$projectCarouselSliderArr   = [],
 		$nectarPostGridArr          = [],
 		$verticalScrollingTabs      = [],
 		rotatingTitles              = [],
-    fullHeightRows              = [],
+		fullHeightRows              = [],
 		$tabbedClickCount           = 0,
 		$fullscreenSelector         = '',
 		$fullscreenMarkupBool       = false,
 		$bodyBorderHeaderColorMatch = false,
+		lazyItemObserver            = {},
 		nectarBoxRoll               = {
 			animating: 'false',
 			perspect: 'not-rolled',
-      inUse: false
+			inUse: false
 		},
 		$nectarFullPage             = {
 			$usingFullScreenRows: false
@@ -131,12 +135,10 @@
 						nectarDOMInfo.clientY = e.clientY;
 					});
 
-				} else {
-					requestAnimationFrame(nectarDOMInfo.scrollPosRAF);
 				}
 
 				$window.on('resize', nectarDOMInfo.getWindowSize);
-        window.addEventListener("orientationchange", nectarDOMInfo.getWindowSize);
+				window.addEventListener("orientationchange", nectarDOMInfo.getWindowSize);
 
 			},
 			init: function() {
@@ -145,7 +147,7 @@
 
 				// Get values and bind events
 				this.getWindowSize();
-        this.usingPhoneBrowser = ( nectarDOMInfo.usingMobileBrowser && nectarDOMInfo.winW < 690 ) ? true : false;
+				this.usingPhoneBrowser = ( nectarDOMInfo.usingMobileBrowser && nectarDOMInfo.winW < 690 ) ? true : false;
 				this.scrollTop = this.scrollPosMouse();
 				this.bindEvents();
 
@@ -155,6 +157,8 @@
 		};
 		window.nectarDOMInfo = nectarDOMInfo;
 
+		// Initialize Nectar DOM helper.
+		nectarDOMInfo.init();
 
 
 		/**
@@ -168,9 +172,9 @@
 			permanentTransHeader: ( $headerOuterEl.is('[data-permanent-transparent="1"]') ) ? true : false,
 			animatedScrolling: false,
 			preventScroll: false,
-      ocmOpen: false,
-      ocmAnimating: false,
-      ocmInit: false,
+			ocmOpen: false,
+			ocmAnimating: false,
+			ocmInit: false,
 			mobileHeader: ''
 		}
 		window.nectarState = nectarState;
@@ -201,9 +205,9 @@
 		*/
 		function orientationChangeInit() {
 
-      setTimeout(function(){
-        parallaxRowsBGCals();
-      }, 100);
+			setTimeout(function(){
+				parallaxRowsBGCals();
+			}, 100);
 			
 		}
 
@@ -259,6 +263,9 @@
 					$('.flex-gallery .flex-direction-nav li a.flex-next').html('<i class="fa fa-angle-right"></i>');
 					$('.flex-gallery .flex-direction-nav li a.flex-prev').html('<i class="fa fa-angle-left"></i>');
 
+					$(window).trigger('salient-parallax-bg-recalculate');
+					nectarParallaxElRefresh();
+
 				});
 
 			});
@@ -281,12 +288,12 @@
 			this.timeout = false;
 			this.overEl = false;
 			this.initialCalc = false;
-      this.styleType = 'default';
+			this.styleType = 'default';
 			this.bgElSelector = '';
 			this.$dragEl = '';
-      this.$innerParallaxEl = '';
-      this.parallaxLastX = 0;
-      this.parallaxLastY = 0;
+			this.$innerParallaxEl = '';
+			this.parallaxLastX = 0;
+			this.parallaxLastY = 0;
 			this.$viewEl = '';
 			this.$closeEl = '';
 			this.lerpDamp = 0.18;
@@ -300,9 +307,9 @@
 		NectarIconMouseFollow.prototype.setup = function() {
 
 			if( this.iconType === 'post-grid-images' || 
-          this.iconType === 'horizontal-movement' ||
-          this.iconType === 'link-indicator' ||
-          this.iconType === 'view-indicator') {
+				this.iconType === 'horizontal-movement' ||
+				this.iconType === 'link-indicator' ||
+				this.iconType === 'view-indicator') {
 				  this.viewportTracking();
 			}
 
@@ -322,7 +329,7 @@
 				this.observer = new IntersectionObserver(function(entries) {
 
 					entries.forEach(function(entry) {
-            
+
 						if ( entry.isIntersecting ) {
 							that.$el.addClass('active').addClass('el-in-view');
 							that.$el.find( that.bgElSelector ).css('visibility','visible');
@@ -330,16 +337,16 @@
 						} else {
 							that.$el.find( that.bgElSelector ).css('visibility','hidden');
 							that.activeViewRAF = false;
-              that.$el.removeClass('el-in-view');
+							that.$el.removeClass('el-in-view');
 
-              if( $('.el-in-view').length == 0 ) {
-                if( that.$dragEl.length > 0 ) {
-                  that.$dragEl.removeClass('visible');
-                }
-                else if( that.$viewEl.length > 0 ) {
-                  that.$viewEl.removeClass('visible');
-                }
-              }
+							if( $('.el-in-view').length == 0 ) {
+								if( that.$dragEl.length > 0 ) {
+								that.$dragEl.removeClass('visible');
+								}
+								else if( that.$viewEl.length > 0 ) {
+								that.$viewEl.removeClass('visible');
+								}
+							}
 
 						}
 					});
@@ -359,10 +366,10 @@
 
 			if( this.iconType === 'horizontal-movement' ) {
 
-        // Solid BG icon flag.
-        if( this.$el.is('[data-indicator-bg]') ) {
-          this.styleType = 'solid';
-        }
+				// Solid BG icon flag.
+				if( this.$el.is('[data-indicator-bg]') ) {
+					this.styleType = 'solid';
+				}
 
 				if( $('.nectar-drag-indicator').length == 0 ) {
 					var $usingBoxedClass = ($('body > #boxed').length > 0) ? ' in-boxed' : '';
@@ -375,14 +382,14 @@
 				}
 
       
-        if( this.styleType != 'default' ) {
-          this.$innerParallaxEl = $('.nectar-drag-indicator .inner-layer');
-        }
+				if( this.styleType != 'default' ) {
+				this.$innerParallaxEl = $('.nectar-drag-indicator .inner-layer');
+				}
 
 			}
 
 			if( this.iconType === 'view-indicator' || 
-          this.iconType === 'link-indicator' ) {
+				this.iconType === 'link-indicator' ) {
 
 				this.activeViewRAF = true;
 
@@ -410,7 +417,7 @@
 					this.$viewEl = $('.nectar-view-indicator');
 				}
 
-        this.$innerParallaxEl = $('.nectar-view-indicator .inner-layer');
+				this.$innerParallaxEl = $('.nectar-view-indicator .inner-layer');
 
 			}
 
@@ -424,7 +431,7 @@
 					this.$closeEl = $('.nectar-close-indicator');
 				}
 
-        this.$innerParallaxEl = $('.nectar-close-indicator .inner-layer');
+				this.$innerParallaxEl = $('.nectar-close-indicator .inner-layer');
 
 			}
 
@@ -456,25 +463,25 @@
 			if( this.iconType === 'horizontal-movement' ) {
 
 				that.$el.find('.flickity-viewport').on('mouseover', function() {
-          that.$dragEl.attr('data-type',that.styleType);
+				that.$dragEl.attr('data-type',that.styleType);
 					that.$dragEl.addClass('visible');
 
 					var $iconColor = (that.$el.is('[data-touch-icon-color]')) ? 'color-' + that.$el.attr('data-touch-icon-color') : '';
 					that.$dragEl.removeClass('color-dark').removeClass('color-light').removeClass('color-default');
 
-          if( that.styleType == 'default') {
-            that.$dragEl.addClass($iconColor);
-            that.$dragEl.find('> span, i').css('color', '');
-            that.$dragEl.find('.color-circle').css('background-color', '');
-          } 
-          else if( that.styleType == 'solid' ) {
-            var indicator_bg_color = that.$el.attr('data-indicator-bg');
-            that.$dragEl.find('.color-circle').css('background-color', indicator_bg_color);
-            that.$dragEl.find('> span').css('color', indicator_bg_color);
+					if( that.styleType == 'default') {
+						that.$dragEl.addClass($iconColor);
+						that.$dragEl.find('> span, i').css('color', '');
+						that.$dragEl.find('.color-circle').css('background-color', '');
+					} 
+					else if( that.styleType == 'solid' ) {
+						var indicator_bg_color = that.$el.attr('data-indicator-bg');
+						that.$dragEl.find('.color-circle').css('background-color', indicator_bg_color);
+						that.$dragEl.find('> span').css('color', indicator_bg_color);
 
-            var indicator_icon_color = that.$el.attr('data-indicator-icon');
-            that.$dragEl.find('i').css('color', indicator_icon_color);
-          }
+						var indicator_icon_color = that.$el.attr('data-indicator-icon');
+						that.$dragEl.find('i').css('color', indicator_icon_color);
+					}
 					
 				});
 
@@ -504,6 +511,10 @@
 					that.$closeEl.find('.inner').addClass('visible');
 				});
 
+				$('body').on('click','.nectar_team_member_overlay:not(.animating) a[target="_blank"]',function(e){
+					e.stopPropagation();
+				});
+
 				$('body').on('click','.nectar_team_member_overlay:not(.animating)',function(){
 					that.$closeEl.removeClass('visible');
 					that.$closeEl.find('.inner').removeClass('visible');
@@ -518,37 +529,40 @@
 				});
 
 			}
-      else if( this.iconType === 'link-indicator' ) {
+			else if( this.iconType === 'link-indicator' ) {
 
-        that.$el.off();
+				that.$el.off();
 
-        that.$el.on('mouseenter', function() {
-          that.$viewEl.addClass('visible');
-					that.$viewEl.attr('class', function(i, c){
-            return c.replace(/(^|\s)style-\S+/g, '');
-          });
+				that.$el.on('mouseenter', function() {
+				that.$viewEl.addClass('visible');
+							that.$viewEl.attr('class', function(i, c){
+					return c.replace(/(^|\s)style-\S+/g, '');
+				});
 
-          // Coloring.
-          var indicator_bg_color = that.$el.attr('data-indicator-bg');
-          var indicator_icon_color = that.$el.attr('data-indicator-icon');
+				// Coloring.
+				var indicator_bg_color = that.$el.attr('data-indicator-bg');
+				var indicator_icon_color = that.$el.attr('data-indicator-icon');
 
-          that.$viewEl.find('.color-circle').css('background-color', indicator_bg_color);
- 
-          // Icon.
-          var arrowMarkup = '<div class="nectar-cta loaded" data-style="arrow-animation"><span class="link_wrap" style="color: '+indicator_icon_color+'"><svg class="next-arrow" width="20px" height="25px" viewBox="0 0 50 80"><polyline stroke-width="9" fill="none" stroke-linecap="round" stroke-linejoin="round" points="0, 0 45, 40 0, 80"></polyline></svg><span class="line" style="background-color: '+indicator_icon_color+'"></span></span></div>';
-          
-          that.$viewEl.find('span').html(arrowMarkup);
-      
-          
-        });
-        that.$el.on('mouseleave', function() {
-					that.$viewEl.removeClass('visible');
-        });
+				that.$viewEl.find('.color-circle').css('background-color', indicator_bg_color);
+		
+				// Icon.
+				var arrowMarkup = '<div class="nectar-cta loaded" data-style="arrow-animation"><span class="link_wrap" style="color: '+indicator_icon_color+'"><svg class="next-arrow" width="20px" height="25px" viewBox="0 0 50 80"><polyline stroke-width="9" fill="none" stroke-linecap="round" stroke-linejoin="round" points="0, 0 45, 40 0, 80"></polyline></svg><span class="line" style="background-color: '+indicator_icon_color+'"></span></span></div>';
+				that.$viewEl.find('span').html(arrowMarkup);
+				
+				// Blurred class.
+				if( that.$el.is('[data-indicator-blur="true"]') ) {
+					that.$viewEl.addClass('blurred-bg');
+				}
+				
+				});
+				that.$el.on('mouseleave', function() {
+					that.$viewEl.removeClass('visible').removeClass('blurred-bg');
+				});
 
-      }
+			}
 			else if( this.iconType === 'view-indicator' ) {
 
-        var $text_color = ( that.$el.is('[data-indicator-text-color]') ) ? that.$el.attr('data-indicator-text-color') : '#fff';
+        		var $text_color = ( that.$el.is('[data-indicator-text-color]') ) ? that.$el.attr('data-indicator-text-color') : '#fff';
 				var $color = that.$el.attr('data-indicator-color');
 				var $style = that.$el.attr('data-indicator-style');
 
@@ -556,9 +570,9 @@
 				that.$el.find('.nectar-post-grid-item').off();
 
 				that.$el.find('.nectar-post-grid-item').on('mouseenter', function() {
-          that.activeViewRAF = true;
-					that.$viewEl.addClass('visible');
-          that.$viewEl.find('span').text( $('.nectar-post-grid').attr('data-indicator-text') );
+				that.activeViewRAF = true;
+				that.$viewEl.addClass('visible');
+				that.$viewEl.find('span').text( $('.nectar-post-grid').attr('data-indicator-text') );
 
 					// Handle style class.
 					that.$viewEl.attr('class', function(i, c){
@@ -567,7 +581,12 @@
 					that.$viewEl.addClass('style-'+$style);
 					if( $style !== 'see-through' ) {
 						that.$viewEl.find('.color-circle').css('background-color', $color);
-            that.$viewEl.find('.inner-layer').css('color', $text_color);
+						that.$viewEl.find('.inner-layer').css('color', $text_color);
+					}
+
+					// Blurred class.
+					if( that.$el.is('[data-indicator-blur="true"]') ) {
+						that.$viewEl.addClass('blurred-bg');
 					}
 
 					clearTimeout(that.timeout);
@@ -576,6 +595,7 @@
 				that.$el.find('.nectar-post-grid-item').on('mouseleave', function() {
 					that.timeout = setTimeout(function(){
 						that.$viewEl.removeClass('visible');
+						that.$viewEl.removeClass('blurred-bg');
 					},100);
 
 				});
@@ -594,7 +614,7 @@
 			else if( this.iconType === 'post-grid-images' ) {
 				that.$el.on('mouseenter', function() {
 					$(this).addClass('mouse-over');
-          that.activeViewRAF = true;
+          			that.activeViewRAF = true;
 				});
 				that.$el.on('mouseleave', function() {
 					$(this).removeClass('mouse-over');
@@ -603,21 +623,21 @@
 
 		};
 
-    NectarIconMouseFollow.prototype.updatePos = function() {
-      this.lastY = linearInterpolate(this.lastY, nectarDOMInfo.clientY, this.lerpDamp);
+		NectarIconMouseFollow.prototype.updatePos = function() {
+			this.lastY = linearInterpolate(this.lastY, nectarDOMInfo.clientY, this.lerpDamp);
 			this.lastX = linearInterpolate(this.lastX, nectarDOMInfo.clientX, this.lerpDamp);
-    }
+		}
 
-    NectarIconMouseFollow.prototype.parallaxIcon = function() {
+		NectarIconMouseFollow.prototype.parallaxIcon = function() {
 
-      this.parallaxLastX = linearInterpolate(this.parallaxLastX, parseInt(nectarDOMInfo.clientX) - parseInt(this.lastX), this.lerpDamp)/1.7;
-      this.parallaxLastY = linearInterpolate(this.parallaxLastY, parseInt(nectarDOMInfo.clientY) - parseInt(this.lastY), this.lerpDamp)/1.7;
+			this.parallaxLastX = linearInterpolate(this.parallaxLastX, parseInt(nectarDOMInfo.clientX) - parseInt(this.lastX), this.lerpDamp)/1.7;
+			this.parallaxLastY = linearInterpolate(this.parallaxLastY, parseInt(nectarDOMInfo.clientY) - parseInt(this.lastY), this.lerpDamp)/1.7;
 
-      if( this.$innerParallaxEl.length > 0 ) {
-        this.$innerParallaxEl[0].style.transform = 'translateX(' + clamp(this.parallaxLastX,10,-10) + 'px) translateY(' + clamp(this.parallaxLastY,10,-10) + 'px)';
-      }
+			if( this.$innerParallaxEl.length > 0 ) {
+				this.$innerParallaxEl[0].style.transform = 'translateX(' + clamp(this.parallaxLastX,10,-10) + 'px) translateY(' + clamp(this.parallaxLastY,10,-10) + 'px)';
+			}
 
-    }
+		}
 
 		NectarIconMouseFollow.prototype.dragRAF = function() {
 
@@ -625,7 +645,7 @@
 
 			this.$dragEl[0].style.transform = 'translateX(' + this.lastX + 'px) translateY(' + this.lastY + 'px)';
       
-      this.parallaxIcon();
+			this.parallaxIcon();
 
 			requestAnimationFrame(this.dragRAF.bind(this));
 
@@ -641,7 +661,7 @@
 					this.$viewEl[i].style.transform = 'translateX(' + this.lastX + 'px) translateY(' + this.lastY + 'px)';
 				}
 
-        this.parallaxIcon();
+				this.parallaxIcon();
 			}
 
 			requestAnimationFrame(this.viewRAF.bind(this));
@@ -656,7 +676,7 @@
 				'transform': 'translateX(' + this.lastX + 'px) translateY(' + this.lastY + 'px)'
 			});
 
-      this.parallaxIcon();
+			this.parallaxIcon();
 
 			requestAnimationFrame(this.closeRAF.bind(this));
 
@@ -716,6 +736,7 @@
 		*
 		* @since 7.0
 		*/
+
 		function flickityInit() {
 
 			if ($('.nectar-flickity:not(.masonry)').length == 0) {
@@ -725,678 +746,14 @@
 			$flickitySliders = [];
 			flickityDragArr = [];
 
-
-			$('.nectar-flickity:not(.masonry)').each(function (i) {
-
-				$(this).removeClass(function (index, className) {
-					return (className.match(/(^|\s)instance-\S+/g) || []).join(' ');
-				});
-				$(this).addClass('instance-' + i);
-
-				var $freeScrollBool   = ($(this).is('[data-free-scroll]') && $(this).attr('data-free-scroll') == 'true') ? true : false,
-				$groupCellsBool       = true,
-				$flickContainBool     = true,
-				$flcikAttr            = 0.025,
-				$paginationBool       = false,
-				$nextPrevArrowBool    = true,
-				$setGallerySizeBool   = true,
-				$imagesLoaded         = true,
-				$flickCellAlign       = 'center',
-				fadeBool              = false;
-
-				// Fixed Text Style.
-				if($(this).is('[data-format="fixed_text_content_fullwidth"]')) {
-
-					$flickCellAlign   = 'left';
-					$groupCellsBool   = false;
-					$flickContainBool = false;
-					$flcikAttr        = 0.02;
-
-					if( $(this).parent().is('[data-alignment="right"]') ) {
-						$flickCellAlign   = 'right';
-					}
-
-				}
-
-				if($freeScrollBool == true ) {
-					$groupCellsBool = false;
-				}
-        if( $(this).find('.nectar-el-parallax-scroll').length > 0 &&
-            $(this).parents('[class*="wpb_gallery_slidesflickity_"]').length > 0 ) {
-					$groupCellsBool = false;
-				}
-
-
-				// Controls.
-				if ($(this).attr('data-controls').length > 0 &&
-				$(this).attr('data-controls') == 'next_prev_arrows'||
-				$(this).attr('data-controls').length > 0 &&
-				$(this).attr('data-controls') == 'next_prev_arrows_overlaid') {
-					$paginationBool     = false;
-					$nextPrevArrowBool  = true;
-				} else {
-					$paginationBool     = true;
-					$nextPrevArrowBool  = false;
-				}
-
-
-				if ($(this).attr('data-controls').length > 0 &&
-				$(this).attr('data-controls') == 'none') {
-					$paginationBool     = false;
-					$nextPrevArrowBool  = false;
-				}
-
-				var $flickity_autoplay = false;
-        var $flickity_stored_autoplay = false;
-
-				if ($(this).is('[data-autoplay]') &&
-				$(this).attr('data-autoplay') == 'true') {
-
-					$flickity_autoplay = true;
-					$flickity_stored_autoplay = 5000;
-
-					if ($(this).is('[data-autoplay-dur]') &&
-					$(this).attr('data-autoplay-dur').length > 0) {
-
-						if (parseInt($(this).attr('data-autoplay-dur')) > 100 &&
-						parseInt($(this).attr('data-autoplay-dur')) < 30000) {
-							$flickity_autoplay = parseInt($(this).attr('data-autoplay-dur'));
-							$flickity_stored_autoplay = $flickity_autoplay;
-						}
-
-					}
-
-				}
-
-				var $that 							 = $(this);
-				var $frontEndEditorDrag  = ($('body.vc_editor').length > 0) ? false : true;
-				var $frontEndEditorPause = ($('body.vc_editor').length > 0) ? true : false;
-				var $arrowShape = '';
-				var $wrapAround = ( $(this).is('[data-wrap]') && $(this).attr('data-wrap') == 'no-wrap' ) ? false : true;
-
-				// Pause on hover.
-				if($(this).is('[data-pause-on-hover="true"]')) {
-					$frontEndEditorPause = true;
-				}
-
-				// Centered cells.
-				if($(this).is('[data-centered-cells="true"]')) {
-					$groupCellsBool = 1;
-				}
-
-				// Adaptive height.
-				var $flickity_adaptive_height = false;
-				if( $(this).is('[data-adaptive-height="true"]') ) {
-					$flickity_adaptive_height = true;
-				}
-
-				// Lazy load.
-				var $lazyload = ($(this).find('img[data-flickity-lazyload]').length > 0) ? 1 : false;
-				if( $(this).find('img[data-flickity-lazyload]').length > 0 && $(this).is('[data-overflow="visible"]') && $(this).is('[data-wrap="no-wrap"]') ) {
-					$lazyload = 2;
-				}
-
-				// RTL.
-				var $flickity_rtl = ( $body.hasClass('rtl') ) ? true : false;
-
-				// Arrow shape.
-				if( $(this).attr('data-controls').length > 0 && $(this).attr('data-controls') == 'next_prev_arrows_overlaid' ||
-						$(this).attr('data-controls').length > 0 && $(this).attr('data-controls') == 'touch_total' ||
-						$(this).hasClass('nectar-simple-slider') ) {
-					$arrowShape	= {
-						x0: 10,
-						x1: 60, y1: 50,
-						x2: 70, y2: 40,
-						x3: 30
-					}
-				} else {
-					$arrowShape = {
-						x0: 20,
-						x1: 70,
-						y1: 30,
-						x2: 70,
-						y2: 25,
-						x3: 70
-					}
-				}
-
-				if( $(this).is('[data-format="fixed_text_content_fullwidth"]') &&
-				    $(this).parents('.full-width-content.wpb_row').length > 0 ) {
-					  $(this).parents('.full-width-content.wpb_row')
-							.removeClass('full-width-content')
-							.addClass('full-width-section');
-				}
-
-				// Nectar Simple Slider
-				if( $(this).hasClass('nectar-simple-slider') ) {
-
-					$flickity_adaptive_height = false;
-					$paginationBool           = false;
-					$nextPrevArrowBool        = false;
-					$setGallerySizeBool       = false;
-					$wrapAround               = false;
-					$imagesLoaded             = false;
-					$flcikAttr                = 0.022;
-
-					if( $(this).attr('data-pagination') == 'true') {
-						$paginationBool = true;
-					}
-
-					if( $(this).attr('data-wrap') == 'true') {
-						$wrapAround = true;
-					}
-
-					if( $(this).is('[data-simple-slider-transition="fade"]') ) {
-						fadeBool = true;
-					}
-
-				}
-
-				$flickitySliders[i] = new Flickity('.nectar-flickity.instance-' + i, {
-					setGallerySize: $setGallerySizeBool,
-					contain: $flickContainBool,
-					draggable: $frontEndEditorDrag,
-					lazyLoad: $lazyload,
-					imagesLoaded: $imagesLoaded,
-					percentPosition: true,
-					adaptiveHeight: $flickity_adaptive_height,
-					cellAlign: $flickCellAlign,
-					groupCells: $groupCellsBool,
-					prevNextButtons: $nextPrevArrowBool,
-					freeScroll: $freeScrollBool,
-					pageDots: $paginationBool,
-					resize: true,
-					selectedAttraction: $flcikAttr,
-					autoPlay: $flickity_autoplay,
-					rightToLeft: $flickity_rtl,
-					pauseAutoPlayOnHover: $frontEndEditorPause,
-					wrapAround: $wrapAround,
-					accessibility: false,
-					fade: fadeBool,
-					arrowShape: $arrowShape
-				});
-
-
-				// Simple Slider Arrows
-				if( $that.attr('data-arrows') == 'true' ) {
-
-					if( $that.find('.flickity-prev-next-button').length == 0 ) {
-
-						$that.append('<button class="flickity-button flickity-prev-next-button previous" aria-label="'+ nectar_front_i18n.previous +'" type="button"><svg class="flickity-button-icon" viewBox="0 0 100 100"><path d="M 10,50 L 60,100 L 70,90 L 30,50  L 70,10 L 60,0 Z" class="arrow"></path></svg></button>');
-						$that.append('<button class="flickity-button flickity-prev-next-button next" aria-label="'+ nectar_front_i18n.next +'" type="button"><svg class="flickity-button-icon" viewBox="0 0 100 100"><path d="M 10,50 L 60,100 L 70,90 L 30,50  L 70,10 L 60,0 Z" class="arrow" transform="translate(100, 100) rotate(180) "></path></svg></button>');
-
-						// Previous.
-						$that.find('.flickity-prev-next-button.previous').on( 'click', function() {
-
-							if( $wrapAround === false &&
-									$flickitySliders[i].selectedIndex == 0 &&
-								  ( $flickitySliders[i].isAnimating == false || typeof $flickitySliders[i].isAnimating === 'undefined') ) {
-
-								// Nudge.
-								var currentX = $flickitySliders[i].x;
-								anime({
-									targets: $flickitySliders[i],
-									x: currentX + 100,
-									duration: 350,
-									easing: 'easeOutCubic'
-								});
-								$flickitySliders[i].startAnimation();
-
-							}
-
-							 $flickitySliders[i].previous();
-						});
-
-						// Next.
-						$that.find('.flickity-prev-next-button.next').on( 'click', function() {
-
-							// Nudge.
-							if( $wrapAround === false &&
-									$flickitySliders[i].selectedIndex == $flickitySliders[i].slides.length - 1 &&
-								  $flickitySliders[i].isAnimating == false) {
-
-								// Nudge.
-								var currentX = $flickitySliders[i].x;
-								anime({
-									targets: $flickitySliders[i],
-									x: currentX - 100,
-									duration: 350,
-									easing: 'easeOutCubic'
-								});
-								$flickitySliders[i].startAnimation();
-
-							}
-
-							$flickitySliders[i].next();
-						});
-
-					}
-
-				} // End Simple Slider Arrows.
-
-				// Simple Slider BG Color emit.
-				var $rowBG = '';
-				var $rowBGStored = '';
-
-				if( $(this).is('.nectar-simple-slider[data-row-bg-connection="true"]') ) {
-
-					$rowBG = $(this).parents('.wpb_row');
-					$rowBG = $rowBG.find('> .row-bg-wrap .row-bg');
-					$rowBGStored = ( $rowBG.length > 0 ) ? $rowBG.css('background-color') : '';
-
-					$flickitySliders[i].on('change', simpleSlideBGConnection);
-					simpleSlideBGConnection();
-
-				}
-
-				function simpleSlideBGConnection() {
-				
-					var $activeCell = ($('body.vc_editor').length > 0) ? $that.find('.is-selected > .cell') : $that.find('.is-selected');
-					
-					if( $rowBG && $activeCell ) {
-						$rowBG.css({
-							'transition': 'background-color 0.5s ease-out',
-							'background-color': ( $activeCell.is('.has-bg-color') ) ? $activeCell.find('.bg-layer-wrap').css('background-color') : $rowBGStored
-						});
-					}
-				}
-
-				// Simple Slider Lazy Load.
-				if( $(this).hasClass('nectar-simple-slider') && $that.find('.bg-layer[data-nectar-img-src]').length > 0 ) {
-
-					var waypoint = new Waypoint({
-						element: $that[0],
-						handler: function () {
-
-							$that.find('.bg-layer[data-nectar-img-src]').each(function() {
-								var entry = $(this)[0];
-								var imgSrc = entry.getAttribute('data-nectar-img-src');
-								entry.style.backgroundImage = "url('" + imgSrc + "')";
-								entry.classList.add('loaded');
-							});
-
-							waypoint.destroy();
-						},
-						offset: '95%'
-
-					});
-
-				}
-
-				// Simple Slider Parallax
-				if( $(this).hasClass('nectar-simple-slider') && $(this).is('[data-parallax="true"]') ) {
-
-				  var slides = $(this).find('.cell');
-					var j = i;
-
-					// limit time between slide changes when wrapping.
-					if( $wrapAround === true ) {
-						$that.find('.flickity-prev-next-button').on('click', function () {
-							$that.addClass('disabled-nav');
-							setTimeout(function(){
-								$that.removeClass('disabled-nav');
-							},500);
-						});
-					}
-
-
-					// parallax effect.
-          var rtlChangeDir = ( $flickity_rtl ) ? 1 : -1;
-
-					$flickitySliders[i].on('scroll', function () {
-
-					  $.each( $flickitySliders[i].slides, function(i,slide) {
-
-					    var imageBG = slides[i].querySelector('.bg-layer');
-							var content = slides[i].querySelector('.inner');
-
-							var flkty = $flickitySliders[j];
-							var x = 0;
-
-							if( 0 === i ) {
-								x = Math.abs( flkty.x ) > flkty.slidesWidth ? ( flkty.slidesWidth + flkty.x + flkty.slides[flkty.slides.length - 1 ].outerWidth + slide.target ) : ( slide.target + flkty.x );
-							} else if( i === flkty.slides.length - 1 ) {
-								x = Math.abs( flkty.x ) + flkty.slides[i].outerWidth < flkty.slidesWidth ? ( slide.target - flkty.slidesWidth + flkty.x - flkty.slides[i].outerWidth ) : ( slide.target + flkty.x );
-							} else {
-								x = slide.target + flkty.x;
-							}
-
-						  imageBG.style.transform = 'translate3d(' + x * ( rtlChangeDir / 2 ) + 'px,0,0)';
-						  content.style.transform = 'translate3d(' + x * ( rtlChangeDir / 4 ) + 'px,0,0)';
-
-
-					  });
-					});
-			  }
-
-        // Fancybox/ Image gallery parallax.
-        if( $(this).is('.nectar-carousel[data-wrap="no-wrap"]') && 
-            $(this).find('.nectar-fancy-box[data-n-parallax-bg="true"]').length > 0 ||
-            $(this).parents('[class*="wpb_gallery_slidesflickity_"]').length > 0 && 
-            $(this).find('.nectar-el-parallax-scroll').length > 0 ) {
-              
-            var slides = $(this).find('.cell');
-            var j = i;
-            
-            var selector = ( $(this).find('.nectar-fancy-box').length > 0 ) ? '.parallax-layer .box-bg' : '.nectar-el-parallax-scroll .img-wrap';
-            var looped = ( $(this).is('[data-wrap="wrap"]') ) ? true : false;
-    
-            // parallax effect.
-            var rtlChangeDir = ( $flickity_rtl ) ? 1 : -1;
-          
-
-            $flickitySliders[i].on('scroll', function () {
-
-
-              $.each( $flickitySliders[i].slides, function(i,slide) {
-
-                var imageBG = slides[i].querySelector(selector);
-                var flkty = $flickitySliders[j];
-                var x = 0;
-                
-                if( 0 === i && looped ) {
-                  x = Math.abs( flkty.x ) > flkty.slidesWidth ? ( flkty.slidesWidth + flkty.x + flkty.slides[flkty.slides.length - 1 ].outerWidth + slide.target ) : ( slide.target + flkty.x );
-                } 
-                else if( 1 === i && looped ) {
-                  x = Math.abs( flkty.x ) > flkty.slidesWidth ? ( flkty.slidesWidth + flkty.x + flkty.slides[flkty.slides.length - 2 ].outerWidth + slide.target ) : ( slide.target + flkty.x );
-                } 
-                else if( i === flkty.slides.length - 1 && looped ) {
-                  x = Math.abs( flkty.x ) + flkty.slides[i].outerWidth < flkty.slidesWidth ? ( slide.target - flkty.slidesWidth + flkty.x - flkty.slides[i].outerWidth ) : ( slide.target + flkty.x );
-                } 
-                else if( i === flkty.slides.length - 2 && looped ) {
-                  x = Math.abs( flkty.x ) + flkty.slides[i].outerWidth + flkty.slides[i+1].outerWidth < flkty.slidesWidth ? ( slide.target - flkty.slidesWidth + flkty.x - flkty.slides[i].outerWidth ) : ( slide.target + flkty.x );
-                } 
-                else {
-                  x = slide.target + flkty.x;
-                }
-
-                if(imageBG) {
-                  imageBG.style.transform = 'translate3d(' + x * ( rtlChangeDir / 11 ) + 'px,0,0)';
-                  imageBG.style.willChange = 'transform';
-                }
-
-              });
-
-          
-
-            });
-      
-            $flickitySliders[i].reposition();
-
-        }
-
-				// Simple Slider Pagination
-				if( $(this).hasClass('nectar-simple-slider') && true == $paginationBool ) {
-
-					$(this).find('.flickity-page-dots li').append('<svg width="65px" height="65px" viewBox="0 0 72 72" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><circle class="time" stroke-width="5" fill="none" stroke-linecap="round" cx="33" cy="33" r="28"></circle></svg>');
-
-					if( $flickity_stored_autoplay ) {
-						$(this).find('.flickity-page-dots li circle.time').css('transition', 'stroke-dashoffset '+ (parseInt($flickity_stored_autoplay) + 100) +'ms linear, stroke 0.2s ease');
-
-						$(this).find('.flickity-page-dots li:first').addClass('no-trans');
-						setTimeout(function() {
-							$that.find('.flickity-page-dots li:first').removeClass('no-trans');
-						},60);
-
-						$flickitySliders[i].on('select', function (event) {
-							$flickitySliders[i].playPlayer();
-						});
-
-						$flickitySliders[i].on('dragEnd', function (event) {
-							$flickitySliders[i].playPlayer();
-							$that.find('.flickity-page-dots .is-selected').removeClass('no-trans');
-						});
-
-						$flickitySliders[i].on('dragStart', function (event) {
-							$that.find('.flickity-page-dots .is-selected').addClass('no-trans');
-						});
-
-					}
-
-				}
-
-				// Visualized total controls
-				if( $(this).is('[data-controls="touch_total"]') || $(this).is('[data-touch-indicator="true"]') ) {
-
-          		var dragIndicatorOnly = ($(this).hasClass('drag-indicator-only') || $(this).is('[data-r-bottom-total="true"]')) ? true : false;
-          
-					// Create markup.
-					if( $(this).find('.visualized-total').length == 0 && !dragIndicatorOnly ) {
-						if( $(this).parents('.full-width-content').length > 0 && $(this).parents('.vc_col-sm-12').length > 0 ) {
-							$(this).append('<div class="container normal-container"><div class="visualized-total"><span></span></div></div>');
-						} else {
-							$(this).append('<div class="visualized-total"><span></span></div>');
-						}
-					}
-
-
-					// Init drag indicator.
-					if( !nectarDOMInfo.usingMobileBrowser ) {
-
-						flickityDragArr[i] = new NectarIconMouseFollow($(this),'horizontal-movement');
-
-						$flickitySliders[i].on('dragMove', function (event, pointer) {
-							nectarDOMInfo.clientY = pointer.clientY;
-							nectarDOMInfo.clientX = pointer.clientX;
-						});
-
-						$flickitySliders[i].on('pointerDown', function (event, pointer) {
-							$('.nectar-drag-indicator').addClass('pointer-down');
-						});
-						$flickitySliders[i].on('pointerUp', function (event, pointer) {
-							$('.nectar-drag-indicator').removeClass('pointer-down');
-						});
-
-					}
-
-					var $totalImgs      = $(this).find('.flickity-page-dots li').length;
-					var $totalIndicator = $(this).find('.visualized-total span');
-					var $totalPosition  = 1;
-					var $totalWidth     = $(this).find('.visualized-total').width();
-
-          if( !dragIndicatorOnly ) {
-
-            $window.on('smartresize',function() {
-
-              setTimeout(function() {
-
-                $totalImgs  = $that.find('.flickity-page-dots li').length;
-                $totalWidth = $that.find('.visualized-total').width();
-
-                $totalPosition = ($totalWidth / $totalImgs) * $that.find('.flickity-page-dots .is-selected').index();
-
-                // Update pos on interaction.
-                $totalIndicator.css('width', 100/$totalImgs + '%');
-                $totalIndicator.css({
-                  'x' : $totalPosition + 'px'
-                });
-
-              },200);
-
-			});
-			
-
-            // Set initial total tracker width.
-            setTimeout(function(){
-				
-              $totalImgs  = $that.find('.flickity-page-dots li').length;
-              $totalWidth = $that.find('.visualized-total').width();
-
-              $totalIndicator.css('width', 100/$totalImgs + '%');
-            },200);
-
-            $flickitySliders[i].on('change', function (event, progress) {
-
-              $totalPosition = ($totalWidth / $totalImgs) * $that.find('.flickity-page-dots .is-selected').index();
-
-              // Update pos on interaction.
-              $totalIndicator.css({
-                'x' : $totalPosition + 'px'
-              });
-
-            });
-            
-          }
-
-				}
-
-
-				// Fixed text content style
-				if ($(this).is('[data-format="fixed_text_content_fullwidth"]') && !nectarDOMInfo.usingFrontEndEditor) {
-
-					var $onMobileBrowser = nectarDOMInfo.usingMobileBrowser;
-
-          if( $flickity_stored_autoplay ) {
-            $(window).on('nectar-material-ocm-open', function(){
-              $flickitySliders[i].stopPlayer();
-            });
-            $(window).on('nectar-material-ocm-close', function(){
-              $flickitySliders[i].playPlayer();
-            });
-          }
-         
-
-					$flickitySliders[i].on('scroll', function () {
-
-						if ($onMobileBrowser ) {
-							return;
-						}
-            if( nectarState.materialOffCanvasOpen == true ) {
-              $flickitySliders[i].slides.forEach(function (slide, j) {
-
-                var flkInstanceSlide  = $('.nectar-flickity.instance-' + i + ' .cell:nth-child(' + (j + 1) + ')');
-
-                flkInstanceSlide.find('.inner-wrap-outer').css({
-                  'transform': 'perspective(800px) translateX(0) rotateY(0) translateZ(0)',
-                  'opacity': '1'
-                });
-  
-                flkInstanceSlide.find('.inner-wrap').css({
-                  'transform': 'scale(1) translateZ(0)'
-                });
-
-              });
-              return;
-            }
-
-						var $flkSlideWidth 	= $that.find('.cell').outerWidth() + 25,
-						$leftHeaderSize 		= ($('body[data-header-format="left-header"]').length > 0 && $window.width() > 1000) ? 275 : 0,
-						$extraWindowSpace 	= (($window.width() + $leftHeaderSize) - $that.parents('.main-content').width()) / 2;
-
-						$extraWindowSpace += parseInt($that.css('margin-left')) + 2;
-
-						$flickitySliders[i].slides.forEach(function (slide, j) {
-
-							var $scaleAmt     = 1,
-							$translateXAmt    = 0,
-							$rotateAmt        = 0,
-							$slideZIndex      = 10,
-							$opacityAmt       = 1,
-							$slideOffset      = $(slide.cells[0].element).offset().left,
-							flkInstanceSlide  = $('.nectar-flickity.instance-' + i + ' .cell:nth-child(' + (j + 1) + ')');
-
-							if ($slideOffset - $extraWindowSpace < 0 &&
-								$slideOffset - $extraWindowSpace > $flkSlideWidth * -1) {
-
-								$scaleAmt       = 1 + (($slideOffset - $extraWindowSpace) / 1500);
-								$opacityAmt     = 1 + (($slideOffset - $extraWindowSpace + 70) / 550);
-								$translateXAmt  = (($slideOffset - $extraWindowSpace)) * -1;
-								$rotateAmt      = (($slideOffset - $extraWindowSpace) / 25) * -1;
-
-							} else {
-								$scaleAmt       = 1;
-								$opacityAmt     = 1;
-								$translateXAmt  = 0;
-								$rotateAmt      = 0;
-							}
-
-							if ($slideOffset + 5 - $extraWindowSpace < 0 &&
-								$slideOffset - $extraWindowSpace > $flkSlideWidth * -1) {
-
-								$slideZIndex = 5;
-							} else {
-								$slideZIndex = 10;
-							}
-
-							flkInstanceSlide.css({
-								'z-index': $slideZIndex
-							});
-
-							flkInstanceSlide.find('.inner-wrap-outer').css({
-								'transform': 'perspective(800px) translateX(' + $translateXAmt + 'px) rotateY(' + $rotateAmt + 'deg) translateZ(0)',
-								'opacity': $opacityAmt
-							});
-
-							flkInstanceSlide.find('.inner-wrap').css({
-								'transform': 'scale(' + $scaleAmt + ') translateZ(0)'
-							});
-
-						});
-
-					});
-
-				}
-
-				var $removeHiddenTimeout;
-				var $removeMovingTimeout;
-
-				$flickitySliders[i].on('dragStart', function () {
-
-					clearTimeout($removeHiddenTimeout);
-					clearTimeout($removeMovingTimeout);
-					$that.addClass('is-dragging');
-					$that.addClass('is-moving');
-
-					$that.find('.flickity-prev-next-button').addClass('hidden');
-				});
-
-				$flickitySliders[i].on('dragEnd', function () {
-
-					$that.removeClass('is-dragging');
-
-					$removeHiddenTimeout = setTimeout(function () {
-
-						$that.removeClass('is-moving');
-						$that.find('.flickity-prev-next-button').removeClass('hidden');
-
-					}, 600);
-
-					$removeMovingTimeout = setTimeout(function () {
-						$that.removeClass('is-moving');
-					}, 300);
-
-				});
-
-				$('.flickity-prev-next-button').on('click', function () {
-
-					clearTimeout($removeHiddenTimeout);
-
-					$(this).parents('.nectar-flickity')
-						.find('.flickity-prev-next-button')
-						.addClass('hidden');
-
-					$removeHiddenTimeout = setTimeout(function () {
-						$that
-							.find('.flickity-prev-next-button')
-							.removeClass('hidden');
-					}, 600);
-
-				});
-
-
-				// Images loaded.
-				if ($that.hasClass('nectar-carousel') && !$that.is('[data-adaptive-height="true"]') ) {
-					imagesLoaded($that, function () {
-						nectarCarouselFlkEH($that);
-					});
-				}
-
+			// Create instances
+			$('.nectar-flickity:not(.masonry)').each(function (index) {
+				$flickitySliders.push(new NectarFlickity($(this), index));
 			});
 
 
 			// Resize event.
 			var $usingNectarCarouselFlk = ($('.nectar-carousel.nectar-flickity:not(.masonry)').length > 0) ? true : false;
-
 			if ($usingNectarCarouselFlk) {
 
 				if( !nectarDOMInfo.usingMobileBrowser ) {
@@ -1407,16 +764,856 @@
 
 			}
 
-			var handleCaptions = ( $('.wpb_gallery_slidesflickity_static_height_style .item-meta').length > 0 ) ? true : false;
+			
+		}
+		function NectarFlickity(el, index) {
 
-			if( handleCaptions ) {
-				$window.on('resize', setNectarFlickityCaptions);
-				setNectarFlickityCaptions();
+			this.$el = el;
+			this.index = index;
+			this.instance = {};
+
+			// Defaults.
+			this.$freeScrollBool     = (this.$el.is('[data-free-scroll]') && this.$el.attr('data-free-scroll') == 'true') ? true : false,
+			this.$groupCellsBool     = true,
+			this.$flickContainBool   = true,
+			this.$flcikAttr          = 0.025,
+			this.$paginationBool     = false,
+			this.$nextPrevArrowBool  = true,
+			this.$setGallerySizeBool = true,
+			this.$imagesLoaded       = true,
+			this.$flickCellAlign     = 'center',
+			this.fadeBool            = false;
+
+			this.setup();
+	
+		}
+
+		NectarFlickity.prototype.setup = function() {
+
+			// Add instance classname.
+			this.$el.removeClass(function (index, className) {
+				return (className.match(/(^|\s)instance-\S+/g) || []).join(' ');
+			});
+			this.$el.addClass('instance-' + this.index);
+
+			var sliderControls = ( this.$el.attr('data-controls').length > 0 ) ?  this.$el.attr('data-controls') : '';
+
+			// Fixed Text Style.
+			if (this.$el.is('[data-format="fixed_text_content_fullwidth"]')) {
+
+				this.$flickCellAlign   = 'left';
+				this.$groupCellsBool   = false;
+				this.$flickContainBool = false;
+				this.$flcikAttr        = 0.02;
+
+				if ( this.$el.parent().is('[data-alignment="right"]') ) {
+					this.$flickCellAlign   = 'right';
+				}
+
 			}
+
+			if (this.$freeScrollBool == true ) {
+				this.$groupCellsBool = false;
+			}
+
+			if ( this.$el.find('.nectar-el-parallax-scroll').length > 0 &&
+				this.$el.parents('[class*="wpb_gallery_slidesflickity_"]').length > 0 ) {
+					this.$groupCellsBool = false;
+			}
+
+
+			// Controls.
+			if (sliderControls == 'next_prev_arrows'||
+				sliderControls == 'next_prev_arrows_overlaid') {
+				this.$paginationBool     = false;
+				this.$nextPrevArrowBool  = true;
+			} else {
+				this.$paginationBool     = true;
+				this.$nextPrevArrowBool  = false;
+			}
+
+
+			if (sliderControls == 'none') {
+				this.$paginationBool     = false;
+				this.$nextPrevArrowBool  = false;
+			}
+
+			this.$wrapAround = ( this.$el.is('[data-wrap]') && this.$el.attr('data-wrap') == 'no-wrap' ) ? false : true;
+
+			this.ticker = (this.$el.is('.ticker-rotate')) ? true : false;
+			this.tickerPaused = false;
+			if( this.ticker ) {
+				var tickerSpeed = ( this.$el.is('[data-ticker-speed]') ) ? this.$el.attr('data-ticker-speed') : 'slow';
+				
+				if( 'slow' === tickerSpeed ) {
+					this.tickerSpeed = 0.4;
+				} 
+				else if( 'medium' === tickerSpeed ) {
+					this.tickerSpeed = 1.2;
+				} 
+				else {
+					this.tickerSpeed = 2;
+				}
+				
+				this.$wrapAround = true;
+				this.$paginationBool = false;
+			}
+			this.$flickity_autoplay = false;
+			this.$flickity_stored_autoplay = false;
+			this.inView = false;
+
+			if (this.$el.is('[data-autoplay]') && this.$el.attr('data-autoplay') == 'true' && !this.ticker) {
+
+				this.$flickity_autoplay = true;
+				this.$flickity_stored_autoplay = 5000;
+
+				if (this.$el.is('[data-autoplay-dur]') && this.$el.attr('data-autoplay-dur').length > 0) {
+
+					if (parseInt(this.$el.attr('data-autoplay-dur')) > 100 &&
+						parseInt(this.$el.attr('data-autoplay-dur')) < 30000) {
+						this.$flickity_autoplay = parseInt(this.$el.attr('data-autoplay-dur'));
+						this.$flickity_stored_autoplay = this.$flickity_autoplay;
+					}
+
+				}
+
+			}
+
+			this.$frontEndEditorDrag  = ($('body.vc_editor').length > 0) ? false : true;
+			this.$frontEndEditorPause = ($('body.vc_editor').length > 0) ? true : false;
+			this.$arrowShape = '';
+
+			// Pause on hover.
+			if (this.$el.is('[data-pause-on-hover="true"]')) {
+				this.$frontEndEditorPause = true;
+			}
+
+			// Centered cells.
+			if (this.$el.is('[data-centered-cells="true"]')) {
+				this.$groupCellsBool = 1;
+			}
+
+			// Adaptive height.
+			this.$flickity_adaptive_height = false;
+			if( this.$el.is('[data-adaptive-height="true"]') ) {
+				this.$flickity_adaptive_height = true;
+			}
+
+			// Lazy load.
+			this.$lazyload = (this.$el.find('img[data-flickity-lazyload]').length > 0) ? 1 : false;
+			if( this.$el.find('img[data-flickity-lazyload]').length > 0 && 
+				this.$el.is('[data-overflow="visible"]') && 
+				this.$el.is('[data-wrap="no-wrap"]') ) {
+				this.$lazyload = 2;
+			}
+
+			// RTL.
+			this.$flickity_rtl = ( $body.hasClass('rtl') ) ? true : false;
+
+			// Arrow shape.
+			if( sliderControls == 'next_prev_arrows_overlaid' ||
+				sliderControls == 'touch_total' ||
+				this.$el.hasClass('nectar-simple-slider') ) {
+
+				this.$arrowShape = {
+					x0: 10,
+					x1: 60, y1: 50,
+					x2: 70, y2: 40,
+					x3: 30
+				}
+			} else {
+				this.$arrowShape = {
+					x0: 20,
+					x1: 70,
+					y1: 30,
+					x2: 70,
+					y2: 25,
+					x3: 70
+				}
+			}
+
+			if( this.$el.is('[data-format="fixed_text_content_fullwidth"]') &&
+				this.$el.parents('.full-width-content.wpb_row').length > 0 ) {
+				this.$el.parents('.full-width-content.wpb_row')
+					.removeClass('full-width-content')
+					.addClass('full-width-section');
+			}
+
+			//// Nectar Simple Slider
+			if( this.$el.hasClass('nectar-simple-slider') ) {
+
+				this.$flickity_adaptive_height = false;
+				this.$paginationBool           = false;
+				this.$nextPrevArrowBool        = false;
+				this.$setGallerySizeBool       = false;
+				this.$wrapAround               = false;
+				this.$imagesLoaded             = false;
+				this.$flcikAttr                = 0.022;
+
+				if( this.$el.attr('data-pagination') == 'true') {
+					this.$paginationBool = true;
+				}
+
+				if( this.$el.attr('data-wrap') == 'true') {
+					this.$wrapAround = true;
+				}
+
+				if( this.$el.is('[data-simple-slider-transition="fade"]') ) {
+					this.fadeBool = true;
+				}
+
+			}
+
+
+			// Init.
+			if( !nectarDOMInfo.usingFrontEndEditor ) {
+				this.lazyInit();
+			}
+			else {
+				this.init();
+			}
+			
+		};
+
+		NectarFlickity.prototype.lazyInit = function() {
+
+			var that = this;
+			this.observer = new IntersectionObserver(function(entries) {
+
+				entries.forEach(function(entry){
+				  if (entry.isIntersecting) {
+					that.init();
+					that.observer.unobserve(entry.target);
+				  } 
+				});
+		  
+			  }, {
+				rootMargin: '400px 0px 400px 0px',
+				threshold: 0
+			});
+
+			this.observer.observe(this.$el[0]);
 
 		}
 
+		NectarFlickity.prototype.init = function() {
+			
+			// Initialize instance
+			this.instance = new Flickity('.nectar-flickity.instance-' + this.index, {
+				setGallerySize: this.$setGallerySizeBool,
+				contain: this.$flickContainBool,
+				draggable: this.$frontEndEditorDrag,
+				lazyLoad: this.$lazyload,
+				imagesLoaded: this.$imagesLoaded,
+				percentPosition: true,
+				adaptiveHeight: this.$flickity_adaptive_height,
+				cellAlign: this.$flickCellAlign,
+				groupCells: this.$groupCellsBool,
+				prevNextButtons: this.$nextPrevArrowBool,
+				freeScroll: this.$freeScrollBool,
+				pageDots: this.$paginationBool,
+				resize: true,
+				selectedAttraction: this.$flcikAttr,
+				autoPlay: this.$flickity_autoplay,
+				rightToLeft: this.$flickity_rtl,
+				pauseAutoPlayOnHover: this.$frontEndEditorPause,
+				wrapAround: this.$wrapAround,
+				accessibility: false,
+				fade: this.fadeBool,
+				arrowShape: this.$arrowShape
+			});
 
+			// Initialize events.
+			this.events();
+		}
+
+
+		NectarFlickity.prototype.trackView = function() {
+			var that = this;
+			var track = new IntersectionObserver(function(entries) {
+
+				entries.forEach(function(entry){
+				  if (entry.isIntersecting) {
+					that.inView = true;
+				  } else {
+					that.inView = false;
+				  }
+				});
+		  
+			  }, {
+				rootMargin: '200px 0px 200px 0px',
+				threshold: 0
+			});
+
+			track.observe(this.$el[0]);
+		};
+
+		NectarFlickity.prototype.events = function() {
+
+			//// Carousel Specific Styles.
+			// Simple Slider.
+			if (this.$el.hasClass('nectar-simple-slider')) {
+				this.simpleSliderStyle();
+			}
+			
+			// Fancybox/Image Gallery Parallax.
+			else if ( this.$el.is('.nectar-carousel[data-wrap="no-wrap"]') && 
+				this.$el.find('.nectar-fancy-box[data-n-parallax-bg="true"]').length > 0 ||
+				this.$el.parents('[class*="wpb_gallery_slidesflickity_"]').length > 0 && 
+				this.$el.find('.nectar-el-parallax-scroll').length > 0 ) {
+
+				this.galleryParallax();
+			}
+
+			if ( this.$el.is('[data-controls="touch_total"]') || 
+				this.$el.is('[data-touch-indicator="true"]') ) {
+				this.visualizedTotalControls();
+			}
+
+			if (this.$el.is('[data-format="fixed_text_content_fullwidth"]') && 
+				!nectarDOMInfo.usingFrontEndEditor) {
+				this.fixedContentStyle();
+			}
+
+			if( this.$el.parents('.wpb_gallery_slidesflickity_static_height_style').length > 0 && 
+				this.$el.find('.item-meta').length > 0 ) {
+				this.imageCaptionWidth();
+				$window.on('resize', this.imageCaptionWidth.bind(this));
+			}
+
+			// Ticker.
+			if( this.ticker ) {
+				this.trackView();
+				this.tickerRotate();
+
+				this.instance.on('dragStart', function() {
+					this.tickerPaused = true;
+				}.bind(this));
+
+				this.$el[0].addEventListener('mouseleave', function(){
+					this.tickerPaused = false;
+				}.bind(this));
+
+				if (this.$el.is('[data-pause-on-hover="true"]') || this.$nextPrevArrowBool || nectarDOMInfo.usingFrontEndEditor ) {
+					this.$el[0].addEventListener('mouseenter', function(){
+						this.tickerPaused = true;
+					}.bind(this));
+				}
+			}
+
+			// Shared events.
+			this.sharedEvents();
+		}
+
+
+		NectarFlickity.prototype.sharedEvents = function() {
+
+			var $removeHiddenTimeout;
+			var $removeMovingTimeout;
+			var $that = this.$el;
+
+			this.instance.on('dragStart', function () {
+
+				clearTimeout($removeHiddenTimeout);
+				clearTimeout($removeMovingTimeout);
+				$that.addClass('is-dragging');
+				$that.addClass('is-moving');
+
+				$that.find('.flickity-prev-next-button').addClass('hidden');
+			});
+
+			this.instance.on('dragEnd', function () {
+
+				$that.removeClass('is-dragging');
+
+				$removeHiddenTimeout = setTimeout(function () {
+
+					$that.removeClass('is-moving');
+					$that.find('.flickity-prev-next-button').removeClass('hidden');
+
+				}, 600);
+
+				$removeMovingTimeout = setTimeout(function () {
+					$that.removeClass('is-moving');
+				}, 300);
+
+			});
+
+			$('.flickity-prev-next-button').on('click', function () {
+
+				clearTimeout($removeHiddenTimeout);
+
+				$(this).parents('.nectar-flickity')
+					.find('.flickity-prev-next-button')
+					.addClass('hidden');
+
+				$removeHiddenTimeout = setTimeout(function () {
+					$that
+						.find('.flickity-prev-next-button')
+						.removeClass('hidden');
+				}, 600);
+
+			});
+
+
+			// Images loaded.
+			if ($that.hasClass('nectar-carousel') && !$that.is('[data-adaptive-height="true"]') ) {
+				imagesLoaded($that, function () {
+					nectarCarouselFlkEH($that);
+				});
+			}
+	};
+
+	NectarFlickity.prototype.tickerRotate = function() { 
+		if (!this.tickerPaused && this.inView == true) {
+			if (this.instance.slides) {
+				this.instance.x = (this.instance.x - this.tickerSpeed) % this.instance.slideableWidth;
+				this.instance.selectedIndex = this.instance.dragEndRestingSelect();
+				//this.instance.updateSelectedSlide();
+				this.instance.settle(this.instance.x);
+			}
+		}
+		window.requestAnimationFrame(this.tickerRotate.bind(this));
+	};
+
+	NectarFlickity.prototype.imageCaptionWidth = function() {
+
+		this.$el.find('.item-meta').each(function() {
+			$(this).css({
+				'width': $(this).parent().find('img').width()
+			});
+		});
+
+	};
+
+	NectarFlickity.prototype.simpleSlideBGConnection = function() {
+
+		var $activeCell = ($('body.vc_editor').length > 0) ? $that.find('.is-selected > .cell') : $that.find('.is-selected');
+			
+		if( this.$rowBG && $activeCell ) {
+			this.$rowBG.css({
+				'transition': 'background-color 0.5s ease-out',
+				'background-color': ( $activeCell.is('.has-bg-color') ) ? $activeCell.find('.bg-layer-wrap').css('background-color') : this.$rowBGStored
+			});
+		}
+
+		};
+
+
+		NectarFlickity.prototype.simpleSliderStyle = function() {
+
+			var $that = this.$el;
+			var that = this;
+
+			//// Simple Slider Arrows
+			if( this.$el.attr('data-arrows') == 'true' ) {
+
+				if( this.$el.find('.flickity-prev-next-button').length == 0 ) {
+
+					this.$el.append('<button class="flickity-button flickity-prev-next-button previous" aria-label="'+ nectar_front_i18n.previous +'" type="button"><svg class="flickity-button-icon" viewBox="0 0 100 100"><path d="M 10,50 L 60,100 L 70,90 L 30,50  L 70,10 L 60,0 Z" class="arrow"></path></svg></button>');
+					this.$el.append('<button class="flickity-button flickity-prev-next-button next" aria-label="'+ nectar_front_i18n.next +'" type="button"><svg class="flickity-button-icon" viewBox="0 0 100 100"><path d="M 10,50 L 60,100 L 70,90 L 30,50  L 70,10 L 60,0 Z" class="arrow" transform="translate(100, 100) rotate(180) "></path></svg></button>');
+
+					// Previous.
+					this.$el.find('.flickity-prev-next-button.previous').on( 'click', function() {
+
+						if( that.$wrapAround === false &&
+							that.instance.selectedIndex == 0 &&
+							  ( that.instance.isAnimating == false || typeof that.instance.isAnimating === 'undefined') ) {
+
+							// Nudge.
+							var currentX = that.instance.x;
+							anime({
+								targets: that.instance,
+								x: currentX + 100,
+								duration: 350,
+								easing: 'easeOutCubic'
+							});
+							that.instance.startAnimation();
+
+						}
+
+						that.instance.previous();
+					});
+
+					// Next.
+					this.$el.find('.flickity-prev-next-button.next').on( 'click', function() {
+
+						// Nudge.
+						if( that.$wrapAround === false &&
+							that.instance.selectedIndex == that.instance.slides.length - 1 &&
+							that.instance.isAnimating == false) {
+
+							// Nudge.
+							var currentX = that.instance.x;
+							anime({
+								targets: that.instance,
+								x: currentX - 100,
+								duration: 350,
+								easing: 'easeOutCubic'
+							});
+							that.instance.startAnimation();
+
+						}
+
+						that.instance.next();
+					});
+
+				}
+
+			} // End Simple Slider Arrows.
+
+			//// Simple Slider BG Color emit.
+			this.$rowBG = '';
+			this.$rowBGStored = '';
+
+			if( $(this).is('.nectar-simple-slider[data-row-bg-connection="true"]') ) {
+
+				this.$rowBG = this.$el.parents('.wpb_row');
+				this.$rowBG = this.$rowBG.find('> .row-bg-wrap .row-bg');
+				this.$rowBGStored = ( this.$rowBG.length > 0 ) ? this.$rowBG.css('background-color') : '';
+
+				this.instance.on('change', simpleSlideBGConnection.bind(this));
+				this.simpleSlideBGConnection();
+
+			}
+
+
+			//// Simple Slider Lazy Load.
+			if( this.$el.find('.bg-layer[data-nectar-img-src]').length > 0 ) {
+
+				var waypoint = new Waypoint({
+					element: this.$el[0],
+					handler: function () {
+
+						$that.find('.bg-layer[data-nectar-img-src]').each(function() {
+							var entry = $(this)[0];
+							var imgSrc = entry.getAttribute('data-nectar-img-src');
+							entry.style.backgroundImage = "url('" + imgSrc + "')";
+							entry.classList.add('loaded');
+						});
+
+						waypoint.destroy();
+					},
+					offset: '95%'
+
+				});
+
+			}
+
+			//// Simple Slider Parallax
+			if( this.$el.is('[data-parallax="true"]') ) {
+
+				var slides = this.$el.find('.cell');
+
+				// limit time between slide changes when wrapping.
+				if( this.$wrapAround === true ) {
+					this.$el.find('.flickity-prev-next-button').on('click', function () {
+						$that.addClass('disabled-nav');
+						setTimeout(function(){
+							$that.removeClass('disabled-nav');
+						},500);
+					});
+				}
+
+
+				// Parallax effect.
+				var rtlChangeDir = ( this.$flickity_rtl ) ? 1 : -1;
+
+				this.instance.on('scroll', function () {
+
+				  $.each( that.instance.slides, function(i,slide) {
+
+					var imageBG = slides[i].querySelector('.bg-layer');
+					var content = slides[i].querySelector('.inner');
+
+					var flkty = that.instance;
+					var x = 0;
+
+					if( 0 === i && flkty.slides.length > 2 ) {
+						x = Math.abs( flkty.x ) > flkty.slidesWidth ? ( flkty.slidesWidth + flkty.x + flkty.slides[flkty.slides.length - 1 ].outerWidth + slide.target ) : ( slide.target + flkty.x );
+					} else if( i === flkty.slides.length - 1 ) {
+						x = Math.abs( flkty.x ) + flkty.slides[i].outerWidth < flkty.slidesWidth ? ( slide.target - flkty.slidesWidth + flkty.x - flkty.slides[i].outerWidth ) : ( slide.target + flkty.x );
+					} else {
+						x = slide.target + flkty.x;
+					}
+
+					  imageBG.style.transform = 'translate3d(' + x * ( rtlChangeDir / 2 ) + 'px,0,0)';
+					  content.style.transform = 'translate3d(' + x * ( rtlChangeDir / 4 ) + 'px,0,0)';
+
+				  });
+				});
+			}
+
+			// Simple Slider Pagination
+			if( this.$el.hasClass('nectar-simple-slider') && true == this.$paginationBool ) {
+
+				this.$el.find('.flickity-page-dots li').append('<svg width="65px" height="65px" viewBox="0 0 72 72" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><circle class="time" stroke-width="5" fill="none" stroke-linecap="round" cx="33" cy="33" r="28"></circle></svg>');
+
+				if( this.$flickity_stored_autoplay ) {
+					this.$el.find('.flickity-page-dots li circle.time').css('transition', 'stroke-dashoffset '+ (parseInt(this.$flickity_stored_autoplay) + 100) +'ms linear, stroke 0.2s ease');
+
+					this.$el.find('.flickity-page-dots li:first').addClass('no-trans');
+					setTimeout(function() {
+						$that.find('.flickity-page-dots li:first').removeClass('no-trans');
+					},60);
+
+					this.instance.on('select', function (event) {
+						that.instance.playPlayer();
+					});
+
+					this.instance.on('dragEnd', function (event) {
+						that.instance.playPlayer();
+						$that.find('.flickity-page-dots .is-selected').removeClass('no-trans');
+					});
+
+					this.instance.on('dragStart', function (event) {
+						$that.find('.flickity-page-dots .is-selected').addClass('no-trans');
+					});
+
+				}
+
+			}
+
+		};
+
+		NectarFlickity.prototype.galleryParallax = function() {
+	
+			var slides = this.$el.find('.cell');
+			var that = this;
+			
+			var selector = ( this.$el.find('.nectar-fancy-box').length > 0 ) ? '.parallax-layer .box-bg' : '.nectar-el-parallax-scroll .img-wrap';
+			var looped = ( this.$el.is('[data-wrap="wrap"]') ) ? true : false;
+	
+			// parallax effect.
+			var rtlChangeDir = ( this.$flickity_rtl ) ? 1 : -1;
+		
+			this.instance.on('scroll', function () {
+
+				$.each( that.instance.slides, function(i,slide) {
+
+					var imageBG = slides[i].querySelector(selector);
+					var flkty = that.instance;
+					var x = 0;
+					
+					if( 0 === i && looped ) {
+						x = Math.abs( flkty.x ) > flkty.slidesWidth ? ( flkty.slidesWidth + flkty.x + flkty.slides[flkty.slides.length - 1 ].outerWidth + slide.target ) : ( slide.target + flkty.x );
+					} 
+					else if( 1 === i && looped ) {
+						x = Math.abs( flkty.x ) > flkty.slidesWidth ? ( flkty.slidesWidth + flkty.x + flkty.slides[flkty.slides.length - 2 ].outerWidth + slide.target ) : ( slide.target + flkty.x );
+					} 
+					else if( i === flkty.slides.length - 1 && looped ) {
+						x = Math.abs( flkty.x ) + flkty.slides[i].outerWidth < flkty.slidesWidth ? ( slide.target - flkty.slidesWidth + flkty.x - flkty.slides[i].outerWidth ) : ( slide.target + flkty.x );
+					} 
+					else if( i === flkty.slides.length - 2 && looped ) {
+						x = Math.abs( flkty.x ) + flkty.slides[i].outerWidth + flkty.slides[i+1].outerWidth < flkty.slidesWidth ? ( slide.target - flkty.slidesWidth + flkty.x - flkty.slides[i].outerWidth ) : ( slide.target + flkty.x );
+					} 
+					else {
+						x = slide.target + flkty.x;
+					}
+
+					if(imageBG) {
+						imageBG.style.transform = 'translate3d(' + x * ( rtlChangeDir / 11 ) + 'px,0,0)';
+						imageBG.style.willChange = 'transform';
+					}
+
+				});
+
+			});
+	
+			this.instance.reposition();
+			
+		};
+
+
+		NectarFlickity.prototype.visualizedTotalControls = function() {
+
+			var $that = this.$el;
+			var dragIndicatorOnly = (this.$el.hasClass('drag-indicator-only') || this.$el.is('[data-r-bottom-total="true"]') || this.ticker ) ? true : false;
+
+			// Create markup.
+			if( this.$el.find('.visualized-total').length == 0 && !dragIndicatorOnly ) {
+				if( this.$el.parents('.full-width-content').length > 0 && this.$el.parents('.vc_col-sm-12').length > 0 ) {
+					this.$el.append('<div class="container normal-container"><div class="visualized-total"><span></span></div></div>');
+				} else {
+					this.$el.append('<div class="visualized-total"><span></span></div>');
+				}
+			}
+
+
+			// Init drag indicator.
+			if( !nectarDOMInfo.usingMobileBrowser ) {
+
+				flickityDragArr[this.index] = new NectarIconMouseFollow(this.$el,'horizontal-movement');
+
+				this.instance.on('dragMove', function (event, pointer) {
+					nectarDOMInfo.clientY = pointer.clientY;
+					nectarDOMInfo.clientX = pointer.clientX;
+				});
+
+				this.instance.on('pointerDown', function (event, pointer) {
+					$('.nectar-drag-indicator').addClass('pointer-down');
+				});
+				this.instance.on('pointerUp', function (event, pointer) {
+					$('.nectar-drag-indicator').removeClass('pointer-down');
+				});
+
+			}
+
+			var $totalImgs      = this.$el.find('.flickity-page-dots li').length;
+			var $totalIndicator = this.$el.find('.visualized-total span');
+			var $totalPosition  = 1;
+			var $totalWidth     = this.$el.find('.visualized-total').width();
+
+			if( !dragIndicatorOnly ) {
+
+				$window.on('smartresize',function() {
+
+					setTimeout(function() {
+
+						$totalImgs  = $that.find('.flickity-page-dots li').length;
+						$totalWidth = $that.find('.visualized-total').width();
+
+						$totalPosition = ($totalWidth / $totalImgs) * $that.find('.flickity-page-dots .is-selected').index();
+
+						// Update pos on interaction.
+						$totalIndicator.css('width', 100/$totalImgs + '%');
+						$totalIndicator.css({
+							'x' : $totalPosition + 'px'
+						});
+
+					},200);
+
+				});
+		
+
+				// Set initial total tracker width.
+				setTimeout(function(){
+					
+					$totalImgs  = $that.find('.flickity-page-dots li').length;
+					$totalWidth = $that.find('.visualized-total').width();
+
+					$totalIndicator.css('width', 100/$totalImgs + '%');
+
+				},200);
+
+				this.instance.on('change', function (event, progress) {
+
+					$totalPosition = ($totalWidth / $totalImgs) * $that.find('.flickity-page-dots .is-selected').index();
+
+					// Update pos on interaction.
+					$totalIndicator.css({
+						'x' : $totalPosition + 'px'
+					});
+
+				});
+	
+			}
+
+
+		};
+		
+
+		NectarFlickity.prototype.fixedContentStyle = function() {
+
+			var $onMobileBrowser = nectarDOMInfo.usingMobileBrowser;
+			var $that = this.$el;
+			var that = this;
+
+			if( this.$flickity_stored_autoplay ) {
+				$(window).on('nectar-material-ocm-open', function(){
+					that.instance.stopPlayer();
+				});
+				$(window).on('nectar-material-ocm-close', function(){
+					that.instance.playPlayer();
+				});
+			}
+
+
+			this.instance.on('scroll', function () {
+
+				if ($onMobileBrowser ) {
+					return;
+				}
+
+				if( nectarState.materialOffCanvasOpen == true ) {
+					that.instance.slides.forEach(function (slide, j) {
+
+						var flkInstanceSlide = $that.find('.cell:nth-child(' + (j + 1) + ')');
+
+						flkInstanceSlide.find('.inner-wrap-outer').css({
+							'transform': 'perspective(800px) translateX(0) rotateY(0) translateZ(0)',
+							'opacity': '1'
+						});
+		
+						flkInstanceSlide.find('.inner-wrap').css({
+							'transform': 'scale(1) translateZ(0)'
+						});
+
+					});
+
+					return;
+				}
+
+				var $flkSlideWidth 	= $that.find('.cell').outerWidth() + 25,
+				$leftHeaderSize 	= ($('body[data-header-format="left-header"]').length > 0 && $window.width() > 1000) ? 275 : 0,
+				$extraWindowSpace 	= (($window.width() + $leftHeaderSize) - $that.parents('.main-content').width()) / 2;
+
+				$extraWindowSpace += parseInt($that.css('margin-left')) + 2;
+
+				that.instance.slides.forEach(function (slide, j) {
+
+					var $scaleAmt     = 1,
+					$translateXAmt    = 0,
+					$rotateAmt        = 0,
+					$slideZIndex      = 10,
+					$opacityAmt       = 1,
+					$slideOffset      = $(slide.cells[0].element).offset().left,
+					flkInstanceSlide  = $('.nectar-flickity.instance-' + that.index + ' .cell:nth-child(' + (j + 1) + ')');
+
+					if ($slideOffset - $extraWindowSpace < 0 &&
+						$slideOffset - $extraWindowSpace > $flkSlideWidth * -1) {
+
+						$scaleAmt       = 1 + (($slideOffset - $extraWindowSpace) / 1500);
+						$opacityAmt     = 1 + (($slideOffset - $extraWindowSpace + 70) / 550);
+						$translateXAmt  = (($slideOffset - $extraWindowSpace)) * -1;
+						$rotateAmt      = (($slideOffset - $extraWindowSpace) / 25) * -1;
+
+					} else {
+						$scaleAmt       = 1;
+						$opacityAmt     = 1;
+						$translateXAmt  = 0;
+						$rotateAmt      = 0;
+					}
+
+					if ($slideOffset + 5 - $extraWindowSpace < 0 &&
+						$slideOffset - $extraWindowSpace > $flkSlideWidth * -1) {
+
+						$slideZIndex = 5;
+					} else {
+						$slideZIndex = 10;
+					}
+					
+					flkInstanceSlide.css({
+						'z-index': $slideZIndex
+					});
+
+					flkInstanceSlide.find('.inner-wrap-outer').css({
+						'transform': 'perspective(800px) translateX(' + $translateXAmt + 'px) rotateY(' + $rotateAmt + 'deg) translateZ(0)',
+						'opacity': $opacityAmt
+					});
+
+					flkInstanceSlide.find('.inner-wrap').css({
+						'transform': 'scale(' + $scaleAmt + ') translateZ(0)'
+					});
+
+				});
+
+			});
+
+
+		};
+
+		
 
 
 
@@ -1431,22 +1628,7 @@
 			});
 		}
 
-		/**
-		* Flickity captions calculcations
-		*
-		* @since 12.2
-		*/
-		function setNectarFlickityCaptions() {
-			$('.wpb_gallery_slidesflickity_static_height_style .item-meta').each(function() {
-
-				$(this).css({
-					'width': $(this).parent().find('img').width()
-				});
-
-
-			});
-
-		}
+	
 
 		/**
 		* Flickity equal height calculations.
@@ -1550,8 +1732,24 @@
 						$('#header-outer').removeClass('transparent');
 
 					}
-
 				});
+
+				$('#header-outer .sf-menu.buttons > li.menu-item.menu-item-has-children:not(.megamenu):not(.nectar-megamenu-menu-item)').on('mouseenter',function(){
+				
+					var docW = $("#top .container").width();
+					var elm = $(this).children('ul');
+					var off = elm.offset();
+					var l = off.left - ($(window).width() - docW)/2;
+					var w = elm.width();
+					var isEntirelyVisible = (l+w <= $(window).width()-100);
+
+					if ( ! isEntirelyVisible ) {
+						$(this).addClass('edge');
+					} else {
+						$(this).removeClass('edge');
+					}
+				});
+
 				$('#header-outer .sf-menu.buttons li.menu-item').on('mouseleave',function(){
 					var $that = $(this);
 
@@ -2246,18 +2444,67 @@
 		*
 		* @since 4.0
 		*/
-		function productCarouselInit() {
+		function NectarProductCarousel(el, type, index) {
 
-			if ($('.products-carousel').length === 0 && $('.nectar-woo-flickity').length === 0) {
-				return;
+			this.$el = el;
+			this.index = index;
+			this.type = type;
+
+			this.instance = {};
+
+			this.setup();
+		}
+
+		NectarProductCarousel.prototype.setup = function() {
+
+			if( !nectarDOMInfo.usingFrontEndEditor ) {
+				this.lazyInit();
+			}
+			else {
+				this.init();
 			}
 
-			$('.products-carousel').each(function () {
+		};
 
-				var $that     = $(this).find('ul.products'),
+
+		NectarProductCarousel.prototype.init = function() {
+			
+			if( this.type === 'legacy' ) { 
+				this.legacyCarousel(); 
+			}
+			else { 
+				this.flickityCarousel(); 
+			}
+		}
+
+		NectarProductCarousel.prototype.lazyInit = function() {
+
+			var that = this;
+			this.observer = new IntersectionObserver(function(entries) {
+
+				entries.forEach(function(entry){
+				  if (entry.isIntersecting) {
+					that.init();
+					that.observer.unobserve(entry.target);
+				  } 
+				});
+		  
+			  }, {
+				rootMargin: '400px 0px 400px 0px',
+				threshold: 0
+			});
+
+			this.observer.observe(this.$el[0]);
+
+		}
+		
+
+		NectarProductCarousel.prototype.legacyCarousel = function() {
+
+			var $that         = this.$el.find('ul.products'),
 				maxCols       = 'auto',
 				scrollNum     = 'auto',
-				colWidth      = ($(this).parents('.full-width-content ').length > 0) ? 400 : 353,
+				colWidth      = (this.$el.parents('.full-width-content ').length > 0) ? 400 : 353,
 				scrollSpeed   = 800,
 				easing        = 'easeInOutQuart';
 
@@ -2267,7 +2514,7 @@
 				}
 
 				// Controls on hover.
-				$(this).append('<a class="carousel-prev" href="#"><i class="icon-salient-left-arrow"></i></a> <a class="carousel-next" href="#"><i class="icon-salient-right-arrow"></i></a>');
+				this.$el.append('<a class="carousel-prev" href="#"><i class="icon-salient-left-arrow"></i></a> <a class="carousel-next" href="#"><i class="icon-salient-right-arrow"></i></a>');
 
 				imagesLoaded($element, function () {
 
@@ -2336,162 +2583,173 @@
 					$that.parents('.carousel-wrap').wrap('<div class="carousel-outer">');
 
 					$that.addClass('finished-loading');
-					fullWidthContentColumns();
 					$window.trigger('resize');
+			});
 
+		};
+
+		NectarProductCarousel.prototype.flickityCarousel = function() {
+
+			var $that = this.$el;
+			this.$el.find('.products > li').each(function () {
+				$(this).wrap('<div class="flickity-cell"></div>');
+			});
+
+			var pageDotsBool = ($that.is('[data-controls="bottom-pagination"]')) ? true : false,
+			arrowsBool       = ($that.is('[data-controls="bottom-pagination"]')) ? false : true,
+			carouselWrap     = (!$that.is('[data-wrap="no-wrap"]')) ? true : false,
+			groupCellsBool   = (carouselWrap == true) ? pageDotsBool : true,
+			$autoplay        = ($that.is('[data-autorotate-speed]') && parseInt($that.attr('data-autorotate-speed')) > 800) ? parseInt($that.attr('data-autorotate-speed')) : 5000;
+
+			if (!$that.is('[data-autorotate="true"]')) {
+				$autoplay = false;
+			}
+
+			this.$el.find('ul.products').addClass('generate-markup');
+
+			this.instance = this.$el.find('ul.products');
+
+			// Overlaid Arrows.
+			if($that.is('[data-controls="arrows-overlaid"]')) {
+				arrowsBool = true;
+			}
+
+			if (arrowsBool == true) {
+				this.instance.on('ready.flickity', function () {
+					var flickityPrv = $that.find('.flickity-prev-next-button.previous').detach();
+					var flickityNxt = $that.find('.flickity-prev-next-button.next').detach();
+
+					$that.find('.nectar-woo-carousel-top').append(flickityPrv).append(flickityNxt);
 				});
+			}
 
+			// RTL.
+			var $flickity_rtl = false;
+			var $flickity_rtl_cell_align = 'center';
 
+			if( $body.hasClass('rtl') ) {
+				$flickity_rtl = true;
+				$flickity_rtl_cell_align = 'right';
+			}
+
+			// Group columns.
+			if( $that.is('[data-group-columns="no-overflow"]') ) {
+				groupCellsBool = true;
+				$flickity_rtl_cell_align = 'left';
+			} else if( $that.is('[data-group-columns="overflow"]') ) {
+				groupCellsBool = false;
+				$flickity_rtl_cell_align = 'center';
+			}
+
+			// Related/Upsell
+			var relatedUpsell = false;
+			var adaptiveHeight = false;
+
+			if( window.nectarOptions && window.nectarOptions.woo_related_upsell_carousel && window.nectarOptions.woo_related_upsell_carousel == 'true' && this.$el.hasClass('related-upsell-carousel') ) {
+				relatedUpsell = true;
+				carouselWrap  = false;
+				groupCellsBool = true;
+
+				if( $flickity_rtl_cell_align == 'center' && this.$el.find('.products > div').length < 4 ) {
+					$flickity_rtl_cell_align = 'left';
+				}
+
+				if( this.$el.find('.products > div').length < 5 ) {
+					this.$el.addClass('desktop-controls-hidden');
+				}
+
+			}
+
+			this.instance.flickity({
+				draggable: true,
+				contain: true,
+				lazyLoad: false,
+				imagesLoaded: true,
+				cellAlign: $flickity_rtl_cell_align,
+				groupCells: groupCellsBool,
+				prevNextButtons: arrowsBool,
+				pageDots: pageDotsBool,
+				resize: true,
+				adaptiveHeight: adaptiveHeight,
+				percentPosition: true,
+				setGallerySize: true,
+				rightToLeft: $flickity_rtl,
+				wrapAround: carouselWrap,
+				autoPlay: $autoplay,
+				accessibility: false
 			});
 
 
 
-			$wooFlickityCarousels = [];
-			$('.nectar-woo-flickity').each(function (i) {
+			// Visualized total controls
+			if( this.$el.is('[data-controls="touch_indicator"]') ) {
 
-				var $that = $(this);
+				// Init drag indicator.
+				if( !nectarDOMInfo.usingMobileBrowser ) {
 
-				$(this).find('.products > li').each(function () {
-					$(this).wrap('<div class="flickity-cell"></div>');
-				});
+					flickityDragArr.push( new NectarIconMouseFollow(this.$el,'horizontal-movement') );
 
-				var pageDotsBool 	= ($that.is('[data-controls="bottom-pagination"]')) ? true : false,
-				arrowsBool				= ($that.is('[data-controls="bottom-pagination"]')) ? false : true,
-				carouselWrap      = (!$that.is('[data-wrap="no-wrap"]')) ? true : false,
-				groupCellsBool    = (carouselWrap == true) ? pageDotsBool : true,
-				$autoplay 				= ($that.is('[data-autorotate-speed]') && parseInt($that.attr('data-autorotate-speed')) > 800) ? parseInt($that.attr('data-autorotate-speed')) : 5000;
-
-				if (!$that.is('[data-autorotate="true"]')) {
-					$autoplay = false;
-				}
-
-				$(this).find('ul.products').addClass('generate-markup');
-
-				$wooFlickityCarousels[i] = $(this).find('ul.products');
-
-				// Overlaid Arrows.
-				if($that.is('[data-controls="arrows-overlaid"]')) {
-					arrowsBool = true;
-				}
-
-				if (arrowsBool == true) {
-					$wooFlickityCarousels[i].on('ready.flickity', function () {
-						var flickityPrv = $that.find('.flickity-prev-next-button.previous').detach();
-						var flickityNxt = $that.find('.flickity-prev-next-button.next').detach();
-
-						$that.find('.nectar-woo-carousel-top').append(flickityPrv).append(flickityNxt);
+					this.instance.on('dragMove.flickity', function (event, pointer) {
+						nectarDOMInfo.clientY = pointer.clientY;
+						nectarDOMInfo.clientX = pointer.clientX;
 					});
+
+					this.instance.on('pointerDown.flickity', function (event, pointer) {
+						$('.nectar-drag-indicator').addClass('pointer-down');
+					});
+
+					this.instance.on('pointerUp.flickity', function (event, pointer) {
+						$('.nectar-drag-indicator').removeClass('pointer-down');
+					});
+
 				}
 
-				// RTL.
-				var $flickity_rtl = false;
-				var $flickity_rtl_cell_align = 'center';
+			}
+			// Mobile pagination numbers.
+			else if (arrowsBool == true) {
 
-				if( $body.hasClass('rtl') ) {
-					$flickity_rtl = true;
-					$flickity_rtl_cell_align = 'right';
+				$that.find('.flickity-prev-next-button').append('<svg width="65px" height="65px" viewBox="0 0 72 72" xmlns="http://www.w3.org/2000/svg"><circle stroke-width="3" fill="none" stroke-linecap="round" cx="33" cy="33" r="28"></circle> <circle class="time" stroke-width="3" fill="none" stroke-linecap="round" cx="33" cy="33" r="28"></circle></svg>');
+
+				var $wooFlickityCount = $('<div class="woo-flickity-count" />');
+
+				if( relatedUpsell == true ) {
+					$that.find('section > h2').append($wooFlickityCount);
+				} else {
+					$that.append($wooFlickityCount);
 				}
 
-				// Group columns.
-				if( $that.is('[data-group-columns="no-overflow"]') ) {
-					groupCellsBool = true;
-					$flickity_rtl_cell_align = 'left';
-				} else if( $that.is('[data-group-columns="overflow"]') ) {
-					groupCellsBool = false;
-					$flickity_rtl_cell_align = 'center';
-				}
+				var $wooFlickityData = this.instance.data('flickity');
 
-				// Related/Upsell
-				var relatedUpsell = false;
-				var adaptiveHeight = false;
-
-				if( window.nectarOptions && window.nectarOptions.woo_related_upsell_carousel && window.nectarOptions.woo_related_upsell_carousel == 'true' && $(this).hasClass('related-upsell-carousel') ) {
-					relatedUpsell = true;
-					carouselWrap  = false;
-					groupCellsBool = true;
-
-					if( $flickity_rtl_cell_align == 'center' && $(this).find('.products > div').length < 4 ) {
-						$flickity_rtl_cell_align = 'left';
+				var $eventData = {
+					data: {
+						wooFlickity: $wooFlickityData,
+						wooFlickityCount: $wooFlickityCount
 					}
+				};
 
-					if( $(this).find('.products > div').length < 5 ) {
-						$(this).addClass('desktop-controls-hidden');
-					}
+				updateWooFlickityCount($eventData);
 
-				}
+				this.instance.on('select.flickity', { wooFlickity: $wooFlickityData, wooFlickityCount: $wooFlickityCount }, updateWooFlickityCount );
+			}
 
-				$wooFlickityCarousels[i].flickity({
-					draggable: true,
-					contain: true,
-					lazyLoad: false,
-					imagesLoaded: true,
-					cellAlign: $flickity_rtl_cell_align,
-					groupCells: groupCellsBool,
-					prevNextButtons: arrowsBool,
-					pageDots: pageDotsBool,
-					resize: true,
-					adaptiveHeight: adaptiveHeight,
-					percentPosition: true,
-					setGallerySize: true,
-					rightToLeft: $flickity_rtl,
-					wrapAround: carouselWrap,
-					autoPlay: $autoplay,
-					accessibility: false
-				});
+			this.$el.removeClass('animated-in');
+			wooProductCarouselAnimations();
+		};
 
 
+		function productCarouselInit() {
 
-				// Visualized total controls
-				if( $(this).is('[data-controls="touch_indicator"]') ) {
+			if ($('.products-carousel').length === 0 && $('.nectar-woo-flickity').length === 0) {
+				return;
+			}
 
-					// Init drag indicator.
-					if( !nectarDOMInfo.usingMobileBrowser ) {
+			$('.products-carousel').each(function (index) {
+				new NectarProductCarousel($(this), 'legacy', index);
+			});
 
-						flickityDragArr.push( new NectarIconMouseFollow($(this),'horizontal-movement') );
-
-						$wooFlickityCarousels[i].on('dragMove.flickity', function (event, pointer) {
-							nectarDOMInfo.clientY = pointer.clientY;
-							nectarDOMInfo.clientX = pointer.clientX;
-						});
-
-						$wooFlickityCarousels[i].on('pointerDown.flickity', function (event, pointer) {
-							$('.nectar-drag-indicator').addClass('pointer-down');
-						});
-						$wooFlickityCarousels[i].on('pointerUp.flickity', function (event, pointer) {
-							$('.nectar-drag-indicator').removeClass('pointer-down');
-						});
-
-					}
-
-				}
-				// Mobile pagination numbers.
-				else if (arrowsBool == true) {
-
-					$that.find('.flickity-prev-next-button').append('<svg width="65px" height="65px" viewBox="0 0 72 72" xmlns="http://www.w3.org/2000/svg"><circle stroke-width="3" fill="none" stroke-linecap="round" cx="33" cy="33" r="28"></circle> <circle class="time" stroke-width="3" fill="none" stroke-linecap="round" cx="33" cy="33" r="28"></circle></svg>');
-
-					var $wooFlickityCount = $('<div class="woo-flickity-count" />');
-
-					if( relatedUpsell == true ) {
-						$that.find('section > h2').append($wooFlickityCount);
-					} else {
-						$that.append($wooFlickityCount);
-					}
-
-					var $wooFlickityData = $wooFlickityCarousels[i].data('flickity');
-
-					var $eventData = {
-						data: {
-							wooFlickity: $wooFlickityData,
-							wooFlickityCount: $wooFlickityCount
-						}
-					};
-
-					updateWooFlickityCount($eventData);
-
-					$wooFlickityCarousels[i].on('select.flickity', { wooFlickity: $wooFlickityData, wooFlickityCount: $wooFlickityCount }, updateWooFlickityCount );
-				}
-
-
+			$wooFlickityCarousels = [];
+			$('.nectar-woo-flickity').each(function (index) {
+				$wooFlickityCarousels.push(new NectarProductCarousel($(this), 'flickity', index));
 			});
 
 		}
@@ -2890,18 +3148,67 @@
 
 		}
 
+		function nectarScriptLoadedCallback( id, timeout, callback ) {
+			var nectarDeferredScript = document.querySelector(id);
+			if( nectarDeferredScript ) {
+				nectarDeferredScript.onload = function(){
+
+					if( timeout > 0 ) {
+						setTimeout(callback,timeout);
+					} else {
+						callback();
+					}
+					
+				};
+			}
+		}
 
 		/**
-		* Removes CSS outlines in an accessible manner.
+		* Accessibility.
 		*
 		* @since 10.5
 		*/
-		(function(d) {
+		function NectarAccessibility() {
 
-      if( nectarDOMInfo.usingMobileBrowser ) {
-        return;
-      }
+			if( nectarDOMInfo.usingMobileBrowser ) {
+				return;
+			}
 
+			this.state = {
+				ocmFocus: false
+			};
+
+			this.init();
+			this.events();
+	
+		}
+
+		NectarAccessibility.prototype.init = function(){
+
+			// Handle focus outlines.
+			focusOutlines(document);
+		};
+
+		NectarAccessibility.prototype.events = function(){
+			
+			$(window).on('nectar-ocm-open',this.setFocus.bind(this));
+			$(window).on('nectar-ocm-close',this.releaseFocus.bind(this));
+		};
+	
+		NectarAccessibility.prototype.setFocus = function(){
+			this.state.ocmFocus = true;
+			$('#slide-out-widget-area').attr( "tabindex", "-1" ).focus()
+		}
+		NectarAccessibility.prototype.releaseFocus = function(){
+			$('#slide-out-widget-area').attr( "tabindex", '');
+		}
+
+	
+
+		function focusOutlines(d) {
+
+
+			// Remove CSS outlines in an accessible manner.
 			var outlineState = {
 					hidden: false
 			};
@@ -2933,7 +3240,10 @@
 				outlineState.hidden = false;
 			});
 
-		})(document);
+			// Off canvas menu focus trap.
+
+
+		}
 
 
 
@@ -3158,8 +3468,12 @@
 				var i = this;
 				this.$body.find(this.selector).map(function () {
 					var i = $(this),
-					r = i.data("target") || i.attr("href"),
-					o = /^#./.test(r) && $(r);
+					r = i.data("target") || i.attr("href");
+					if( r === '#%20' ) {
+						r = '';
+					}
+					var o = /^#./.test(r) && $(r);
+					
 					return o && o.length && o.is(":visible") && [
 						[o[s]().top + e, r]
 					] || null
@@ -3937,7 +4251,7 @@
 				} else if ($('body[data-ls="fancybox"]').length > 0) {
 					fancyBoxInit();
 				}
-			},100);
+			},60);
 
 		}
 
@@ -4455,14 +4769,24 @@
 			var $id = clickedTab.parents('li').index() + 1;
 			var $frontEndEditorTabDiv = ($('body.vc_editor').length > 0) ? '> .wpb_tab ' : '';
 
+			// handle toggle button style index
+			if( clickedTab.parents('.tabbed[data-style="toggle_button"]').length > 0 && $id === 3) {
+				$id = 2;
+			}
+
+			// Change tab
 			if (!clickedTab.hasClass('active-tab') && !clickedTab.hasClass('loading')) {
 
 				clickedTab.parents('ul')
 					.find('a')
 					.removeClass('active-tab');
+				clickedTab.parents('ul')
+					.find('li')
+					.removeClass('active-tab');
 
 				clickedTab
 					.addClass('active-tab');
+				clickedTab.parent().addClass('active-tab');
 
 				clickedTab.parents('.tabbed').find('> div:not(.clear)' + $frontEndEditorTabDiv).css({
 						'visibility': 'hidden',
@@ -4471,11 +4795,20 @@
 						'left': '-9999px',
 						'display': 'none'
 					}).removeClass('visible-tab');
+				
+				var transitionDur = (clickedTab.parents('.tabbed[data-animation="none"]').length > 0 ) ? 0 : 400;
 
 				if ($('body.vc_editor').length > 0) {
 
 					var $data_m_id = (clickedTab.parent().is('[data-m-id]')) ? clickedTab.parent().attr('data-m-id') : '';
-
+					// handle toggle button style index
+					if( clickedTab.parents('.tabbed[data-style="toggle_button"]').length > 0 && clickedTab.parents('li').index() + 1 === 3) {
+						if(clickedTab.parents('.wpb_tabs_nav').find('.toggle-button[data-m-id]').length > 0) {
+							$data_m_id = clickedTab.parents('.wpb_tabs_nav').find('.toggle-button').attr('data-m-id');
+						}
+						
+					}
+					
 					clickedTab.parents('.tabbed').find('> div[data-model-id="' + $data_m_id + '"]' + $frontEndEditorTabDiv).css({
 						'visibility': 'visible',
 						'position': 'relative',
@@ -4483,7 +4816,7 @@
 						'display': 'block'
 					}).stop().transition({
 						'opacity': 1
-					}, 400).addClass('visible-tab');
+					}, transitionDur).addClass('visible-tab');
 
 					if( !$body.is('[data-flex-cols="true"]') ) {
 						convertFrontEndPadding();
@@ -4497,11 +4830,14 @@
 						'display': 'block'
 					}).stop().transition({
 						'opacity': 1
-					}, 400).addClass('visible-tab');
+					}, transitionDur).addClass('visible-tab');
 				}
 
-				if (clickedTab.parents('.tabbed').find('> div:nth-of-type(' + $id + ') .iframe-embed').length > 0 ||
-				clickedTab.parents('.tabbed').find('> div:nth-of-type(' + $id + ') .portfolio-items').length > 0) {
+				var $curTab = clickedTab.parents('.tabbed').find('> div:nth-of-type(' + $id + ')');
+
+				if ( $curTab.find('.iframe-embed').length > 0 ||
+					$curTab.find('.portfolio-items').length > 0 ||
+					$curTab.find('.nectar-video-bg').length > 0) {
 					setTimeout(function () {
 						$window.trigger('resize');
 					}, 10);
@@ -4509,134 +4845,137 @@
 			}
 
 			// Waypoint checking
-			if ($tabbedClickCount != 0) {
+	
 
-				var $currentVisTab = clickedTab.parents('.tabbed').find('> div:nth-of-type(' + $id + ')' + $frontEndEditorTabDiv);
+			var $currentVisTab = clickedTab.parents('.tabbed').find('> div:nth-of-type(' + $id + ')' + $frontEndEditorTabDiv);
 
-				if ($currentVisTab.find('.nectar-progress-bar').length > 0) {
-					progressBars();
-				}
-        
-				if ($currentVisTab.find('.divider-small-border [data-animate="yes"]').length > 0 ||
-				$currentVisTab.find('.divider-border [data-animate="yes"]').length > 0) {
-					dividers();
-				}
+			if ($currentVisTab.find('.nectar-progress-bar').length > 0) {
+				progressBars();
+			}
+	
+			if ($currentVisTab.find('.divider-small-border [data-animate="yes"]').length > 0 ||
+			$currentVisTab.find('.divider-border [data-animate="yes"]').length > 0) {
+				dividers();
+			}
 
-				if ($currentVisTab.find('img.img-with-animation').length > 0 ||
-				$currentVisTab.find('.col.has-animation').length > 0 ||
-				$currentVisTab.find('.nectar_cascading_images').length > 0 ||
-				$currentVisTab.find('.wpb_column.has-animation').length > 0) {
-					colAndImgAnimations();
-					cascadingImageBGSizing();
-				}
+			if ($currentVisTab.find('img.img-with-animation').length > 0 ||
+			$currentVisTab.find('.col.has-animation').length > 0 ||
+			$currentVisTab.find('.nectar_cascading_images').length > 0 ||
+			$currentVisTab.find('.wpb_column.has-animation').length > 0) {
+				colAndImgAnimations();
+				cascadingImageBGSizing();
+			}
 
-				if ($currentVisTab.find('.parallax-layer').length > 0 || 
-           $currentVisTab.parents('.nectar-parallax-enabled').length > 0) {
-					parallaxRowsBGCals();	
-				}
-        nectarParallaxElRefresh();
+			if ($currentVisTab.find('.parallax-layer').length > 0 || 
+				$currentVisTab.parents('.nectar-parallax-enabled').length > 0) {
+				parallaxRowsBGCals();	
+			}
+			nectarParallaxElRefresh();
 
-				if ($currentVisTab.find('.nectar-milestone').length > 0) {
-					milestoneWaypoint();
-				}
+			if ($currentVisTab.find('.nectar-milestone').length > 0) {
+				milestoneWaypoint();
+			}
 
-				if ($currentVisTab.find('.nectar_image_with_hotspots[data-animation="true"]').length > 0) {
-					imageWithHotspots();
-					setTimeout(function(){
-						$window.trigger('resize');
-					},100);
-				}
+			if ($currentVisTab.find('.nectar_image_with_hotspots[data-animation="true"]').length > 0) {
+				imageWithHotspots();
+				setTimeout(function(){
+					$window.trigger('resize');
+				},100);
+			}
 
-				if ($currentVisTab.find('.nectar-fancy-ul').length > 0) {
-					nectarFancyUlInit();
-				}
+			if ($currentVisTab.find('.nectar-fancy-ul').length > 0) {
+				nectarFancyUlInit();
+			}
 
-				if ($currentVisTab.find('.nectar-split-heading').length > 0) {
-					splitLineHeadings();
-				}
-				if ($currentVisTab.find('.wpb_column[data-border-animation="true"]').length > 0) {
-					animatedColBorders();
-				}
-				if ($currentVisTab.find('.wpb_animate_when_almost_visible').length > 0) {
-					vcWaypoints();
-				}
-				if ($currentVisTab.find('.nectar-animated-title').length > 0) {
-					animatedTitles();
-				}
-				if ($currentVisTab.find('.nectar-highlighted-text').length > 0) {
-					highlightedText();
-				}
-				if ($currentVisTab.find('.nectar_food_menu_item').length > 0) {
-					foodMenuItems();
-				}
-				if ($currentVisTab.find('.nectar-post-grid:not([data-animation="none"])').length > 0) {
-					NectarPostGridWaypoint();
-				}
-				if ($currentVisTab.find('.nectar-waypoint-el').length > 0) {
-					generalWaypoints();
-				}
+			if ($currentVisTab.find('.nectar-split-heading').length > 0) {
+				splitLineHeadings();
+			}
+			if ($currentVisTab.find('.wpb_column[data-border-animation="true"]').length > 0) {
+				animatedColBorders();
+			}
+			if ($currentVisTab.find('.wpb_animate_when_almost_visible').length > 0) {
+				vcWaypoints();
+			}
+			if ($currentVisTab.find('.nectar-animated-title').length > 0) {
+				animatedTitles();
+			}
+			if ($currentVisTab.find('.nectar-highlighted-text').length > 0) {
+				highlightedText();
+			}
+			if ($currentVisTab.find('.nectar_food_menu_item').length > 0) {
+				foodMenuItems();
+			}
+			if ($currentVisTab.find('.nectar-post-grid:not([data-animation="none"])').length > 0) {
+				NectarPostGridWaypoint();
+			}
+			if ($currentVisTab.find('.nectar-waypoint-el').length > 0) {
+				generalWaypoints();
+			}
 
-				if (clickedTab.parents('.wpb_row').length > 0) {
+			if (clickedTab.parents('.wpb_row').length > 0) {
 
-					if ($currentVisTab.find('.vc_pie_chart').length > 0 ||
-					$currentVisTab.find('.wp-video-shortcode').length > 0 ||
-					$currentVisTab.find('.post-area.masonry .posts-container').length > 0 ||
-					$currentVisTab.find('.twentytwenty-container').length > 0 ||
-					clickedTab.parents('#nectar_fullscreen_rows[data-content-overflow="scrollbar"]').length > 0 ||
-					clickedTab.parents('.tabbed').find('> div:nth-of-type(' + $id + ')').find('.wpb_gallery').length > 0 ||
-					clickedTab.parents('.tabbed').find('> div:nth-of-type(' + $id + ')').find('.swiper-container').length > 0 ||
-					clickedTab.parents('.wpb_row').next().hasClass('parallax_section')) {
-						$window.trigger('resize');
-					}
-
-					if ($currentVisTab.find('.nectar-flickity').length > 0 && typeof Flickity != 'undefined') {
-						clickedTab.parents('.tabbed').find('> div:nth-of-type(' + $id + ')').find('.nectar-flickity').each(function(){
-							var tabbedFlkty = Flickity.data($(this)[0]);
-							tabbedFlkty.resize();
-						});
-						
-					}
-
-					if ($currentVisTab.find('.nectar-woo-flickity').length > 0 && typeof Flickity != 'undefined') {
-						var wootabbedFlkty = Flickity.data(clickedTab.parents('.tabbed').find('> div:nth-of-type(' + $id + ')').find('.nectar-woo-flickity > ul')[0]);
-						wootabbedFlkty.resize();
-						$(window).trigger('nectar-product-filters-layout');
-					}
-
+				if ($currentVisTab.find('.vc_pie_chart').length > 0 ||
+				$currentVisTab.find('.wp-video-shortcode').length > 0 ||
+				$currentVisTab.find('.post-area.masonry .posts-container').length > 0 ||
+				$currentVisTab.find('.twentytwenty-container').length > 0 ||
+				clickedTab.parents('#nectar_fullscreen_rows[data-content-overflow="scrollbar"]').length > 0 ||
+				clickedTab.parents('.tabbed').find('> div:nth-of-type(' + $id + ')').find('.wpb_gallery').length > 0 ||
+				clickedTab.parents('.tabbed').find('> div:nth-of-type(' + $id + ')').find('.swiper-container').length > 0 ||
+				clickedTab.parents('.wpb_row').next().hasClass('parallax_section')) {
+					$window.trigger('resize');
 				}
 
-				//SVG icons
-				$currentVisTab.find('.svg-icon-holder').each(function (i) {
+				if ($currentVisTab.find('.nectar-flickity').length > 0 && typeof Flickity != 'undefined') {
+					clickedTab.parents('.tabbed').find('> div:nth-of-type(' + $id + ')').find('.nectar-flickity').each(function(){
+						var tabbedFlkty = Flickity.data($(this)[0]);
+						tabbedFlkty.resize();
+					});
+					
+				}
 
-					var $that = $(this);
-
-					setTimeout(function () {
-
-						var $animationDelay = 0;
-
-						if($that.is('[data-animation-delay]') &&
-						$that.attr('data-animation-delay').length > 0 &&
-						$that.attr('data-animation') != 'false') {
-							$animationDelay = $that.attr('data-animation-delay');
-						}
-
-						clearTimeout($animatedSVGIconTimeout[i]);
-
-						if ($that.attr('data-animation') == 'false') {
-							$that.css('opacity', '1');
-							$svgIcons[$that.find('svg').attr('id').slice(-1)].finish();
-						} else {
-
-							$svgIcons[$that.find('svg').attr('id').slice(-1)].reset();
-							$animatedSVGIconTimeout[i] = setTimeout(function () {
-								$svgIcons[$that.find('svg').attr('id').slice(-1)].play();
-							}, $animationDelay);
-
-						}
-					}, 150);
-				});
+				if ($currentVisTab.find('.nectar-woo-flickity').length > 0 && typeof Flickity != 'undefined') {
+					var wootabbedFlkty = Flickity.data(clickedTab.parents('.tabbed').find('> div:nth-of-type(' + $id + ')').find('.nectar-woo-flickity > ul')[0]);
+					wootabbedFlkty.resize();
+					$(window).trigger('nectar-product-filters-layout');
+				}
 
 			}
+
+			//SVG icons
+			$currentVisTab.find('.svg-icon-holder').each(function (i) {
+
+				var $that = $(this);
+
+				setTimeout(function () {
+
+					var $animationDelay = 0;
+
+					if($that.is('[data-animation-delay]') &&
+					$that.attr('data-animation-delay').length > 0 &&
+					$that.attr('data-animation') != 'false') {
+						$animationDelay = $that.attr('data-animation-delay');
+					}
+
+					clearTimeout($animatedSVGIconTimeout[i]);
+
+					if ($that.attr('data-animation') == 'false') {
+						$that.css('opacity', '1');
+						$svgIcons[$that.find('svg').attr('id').slice(-1)].finish();
+					} else {
+
+						$svgIcons[$that.find('svg').attr('id').slice(-1)].reset();
+						$animatedSVGIconTimeout[i] = setTimeout(function () {
+							$svgIcons[$that.find('svg').attr('id').slice(-1)].play();
+						}, $animationDelay);
+
+					}
+				}, 150);
+			});
+
+			
+
+			// CTA class fix
+			$('.nectar-cta .link_wrap, .nectar-cta .link_text').removeClass('hover');
 
 			// Fix columns inside tabs
 			clickedTab.parents('.tabbed').find('.wpb_row').each(function () {
@@ -4690,6 +5029,19 @@
 				.find('.magic-line')
 				.css('transform', 'translateX(' + leftPos + 'px) scaleX(' + ratio + ')');
 		}
+
+
+		/**
+		* Tabbed element toggle button style
+		*
+		* @since 14.1
+		*/
+		function tabbedToggleButton() {
+			$('body').on('click', '.wpb_tabs_nav > .toggle-button', function(){
+				$(this).parents('.wpb_tabs_nav').find('> li:not(.active-tab):not(.toggle-button) a').trigger('click');
+			});
+		}
+
 
 
 		/**
@@ -4773,6 +5125,8 @@
 				return false;
 			});
 
+			// Toggle Button Style.
+			tabbedToggleButton();
 
 			// Custom user def anchor click event helper.
 			$('a[class*="nectar-tab-trigger"]').on('click', function(e) {
@@ -4823,8 +5177,8 @@
 				$(this).find('.wpb_tab').each(function (i) {
 
 					if ($(this).is('[data-tab-icon]') &&
-              $(this).attr('data-tab-icon').length > 0 && 
-              $(this).find('.im-icon-wrap.tab-icon').length == 0) {
+					$(this).attr('data-tab-icon').length > 0 && 
+					$(this).find('.im-icon-wrap.tab-icon').length == 0) {
 
 						$(this)
 							.parents('.tabbed')
@@ -4848,8 +5202,6 @@
 
 				});
 
-
-				$(this).find('> ul li:first-child a').trigger('click');
 
 				$that = $(this);
 
@@ -4896,22 +5248,22 @@
 			$body.on('click', '.scrolling-tab-nav-current-item', function() {
 				$(this).toggleClass('open');
 				$(this).siblings('.wpb_tabs_nav').toggle();
-        nectarParallaxElRefresh();
+				nectarParallaxElRefresh();
 			});
 
-      $body.on('click', '.nectar-sticky-tabs .wpb_tabs_nav li', function (e) {
-        var $parentUl = $(this).parents('.wpb_tabs_nav');
-        var $titleEl = $(this).parents('.scrolling-tab-nav').find('.scrolling-tab-nav-current-item');
-        var $selectedText = $(this).find('.tab-nav-heading').clone();
+			$body.on('click', '.nectar-sticky-tabs .wpb_tabs_nav li', function (e) {
+				var $parentUl = $(this).parents('.wpb_tabs_nav');
+				var $titleEl = $(this).parents('.scrolling-tab-nav').find('.scrolling-tab-nav-current-item');
+				var $selectedText = $(this).find('.tab-nav-heading').clone();
 
-        $titleEl.html($selectedText);
+				$titleEl.html($selectedText);
 
-        if (e.originalEvent !== undefined) {
-          $(this).parents('.scrolling-tab-nav').find('.scrolling-tab-nav-current-item').toggleClass('open');
-          $parentUl.toggle();
-        }
+				if (e.originalEvent !== undefined) {
+				$(this).parents('.scrolling-tab-nav').find('.scrolling-tab-nav-current-item').toggleClass('open');
+				$parentUl.toggle();
+				}
 
-      });
+			});
 
 			$body.on('click', '.nectar-sticky-tabs .wpb_tabs_nav a', function (e) {
 
@@ -4947,6 +5299,9 @@
 				e.preventDefault();
 
 			});
+
+			// Add starting visible class.
+			$('.tabbed .wpb_tab').first().addClass('visible-tab');
 
 			// Hover/Active effect.
 			$('.nectar-sticky-tabs .wpb_tabs_nav > li:first-child').each(function(){
@@ -5370,12 +5725,15 @@
 				$window.on('smartresize', accordionSizing);
 			}
 
+			// Handle legacy markup for users who haven't updated core plugin.
+			$('.toggle > h3:not(.toggle-title)').addClass('toggle-title');
+
 		}
 
 		function accordionClickEvents() {
 
 
-			$body.on('click', '.toggle h3 a', function () {
+			$body.on('click', '.toggle > h3 a, .toggle > .toggle-title a', function () {
 
 				// Regular toggle click event
 				if (!$(this).parents('.toggles').hasClass('accordion')) {
@@ -5444,7 +5802,7 @@
 			});
 
 			// Accordion click event
-			$body.on('click', '.toggles.accordion .toggle h3 a', function (e) {
+			$body.on('click', '.toggles.accordion .toggle > h3 a, .toggles.accordion .toggle > .toggle-title a', function (e) {
 
 				if ($(this).parents('.toggle').hasClass('open')) {
 					return false;
@@ -5680,34 +6038,42 @@
 			function buttonInit() {
 
 				/* CTA animations */
-				$('.nectar-cta[data-style="text-reveal-wave"], .menu-item-hover-text-reveal-wave').each(function () {
-					$(this).find('.char').each(function (i) {
-						$(this).css('animation-delay', (i * 0.015) + 's');
-					});
+				if(!nectarDOMInfo.usingMobileBrowser) {
+					$('.nectar-cta[data-style="text-reveal-wave"], .menu-item-hover-text-reveal-wave').each(function () {
+						$(this).find('.char').each(function (i) {
+							$(this).css('animation-delay', (i * 0.015) + 's');
+						});
 
-					var bindingClass = ($(this).is('[data-using-bg="true"]')) ? '.link_wrap' : '.link_text';
+						var bindingClass = ($(this).is('[data-using-bg="true"]') ) ? '.link_wrap' : '.link_text';
+						var childTarget = false;
 
-					if( $(this).is('.menu-item-hover-text-reveal-wave') ) {
-						bindingClass = 'a';
-					}
-
-					$(this).find(bindingClass).on('mouseenter', function () {
-						if (nectarDOMInfo.winW > 999) {
-							$(this).removeClass('hover');
-							var that = $(this);
-							setTimeout(function () {
-								that.addClass('hover');
-							}, 20);
-
+						if( $(this).is('[class*="border_thickness_"]') && !$(this).is('[class*="border_thickness_0px"]') ) {
+							bindingClass = '.link_wrap';
+							childTarget = true;
 						}
+
+						if( $(this).is('.menu-item-hover-text-reveal-wave') ) {
+							bindingClass = 'a';
+						}
+
+						$(this).find(bindingClass).on('mouseenter', function () {
+							if (nectarDOMInfo.winW > 999) {
+								var target = ( childTarget ) ? $(this).find('.link_text') : $(this);
+								target.removeClass('hover');
+								setTimeout(function () {
+									target.addClass('hover');
+								}, 20);
+							}
+						});
 					});
+				}
+
+
+				/* General animated underline */
+				$('.nectar-link-underline-effect a').on('mouseenter',function(){
+					$(this).addClass('accessed');
 				});
-
-
-        /* General animated underline */
-        $('.nectar-link-underline-effect a').on('mouseenter',function(){
-          $(this).addClass('accessed');
-        });
+				
 
 				/* Custom coloring */
 				$('.nectar-button.see-through[data-color-override], .nectar-button.see-through-2[data-color-override], .nectar-button.see-through-3[data-color-override]').each(function () {
@@ -5937,22 +6303,22 @@
 					$('.nectar-3d-transparent-button').each(function (i) {
         
             
-            // Webkit rendering fix.
-            $(this).on('mouseover',function(){
-              $(this).find('*').css('display','');
-              var that = $(this);
-              setTimeout(function(){
-                that.find('*').css('display','block');
-              },60);
-            
-            });
-            $(this).on('mouseleave',function(){
-              $(this).find('*').css('display','block');
-              var that = $(this);
-              setTimeout(function(){
-                that.find('*').css('display','');
-              },60);
-            });
+						// Webkit rendering fix.
+						$(this).on('mouseover',function(){
+						$(this).find('*').css('display','');
+						var that = $(this);
+						setTimeout(function(){
+							that.find('*').css('display','block');
+						},60);
+						
+						});
+						$(this).on('mouseleave',function(){
+						$(this).find('*').css('display','block');
+						var that = $(this);
+						setTimeout(function(){
+							that.find('*').css('display','');
+						},60);
+						});
 
 						var $that = $(this),
 						$size 		= $that.attr('data-size'),
@@ -6081,18 +6447,19 @@
 						if ($('.nectar_team_member_overlay').length > 0) {
 							return;
 						}
+						
 
 						var $usingBoxedClass  = ($('body > #boxed').length > 0) ? 'in-boxed' : '',
 						$teamMemberMeta       = $(this).find('.nectar_team_bio').html(),
-						$teamMemberTitle      = ($(this).is('[data-style="bio_fullscreen_alt"]')) ? $(this).find('.team-meta h5').text() : $(this).find('.team-meta p').text(),
+						$teamMemberTitle      = ($(this).is('[data-style="bio_fullscreen_alt"]')) ? $(this).find('.team-meta h5').html() : $(this).find('.team-meta p').html(),
 						$teamMemberImg        = ($(this).find('.nectar_team_bio_img[data-img-src]').length > 0) ? $(this).find('.nectar_team_bio_img').attr('data-img-src') : '',
 						$teamMemberStyle      = ($(this).is('[data-style="bio_fullscreen_alt"]')) ? 'bio-fullscreen-alt' : 'bio-fullscreen',
 						$teamName             = '';
 
 						if($(this).is('[data-style="bio_fullscreen_alt"]')) {
-							$teamName = '<div class="title">' + $teamMemberTitle + '</div><h2>' + $(this).find('.team-meta h3').text() + '</h2>';
+							$teamName = '<div class="title">' + wlEls($teamMemberTitle) + '</div><h2>' + $(this).find('.team-meta h3').text() + '</h2>';
 						} else {
-							$teamName = '<h2>' + $(this).find('.team-meta h3').text() + '</h2><div class="title">' + $teamMemberTitle + '</div>';
+							$teamName = '<h2>' + $(this).find('.team-meta h3').text() + '</h2><div class="title">' + wlEls($teamMemberTitle) + '</div>';
 						}
 
 						$body.append('<div class="nectar_team_member_overlay ' + $usingBoxedClass + '" data-style="' + $teamMemberStyle + '"><div class="inner-wrap"><div class="team_member_details"><div class="bio-inner"><span class="mobile-close"></span>'+ $teamName +'<div class="team-desc">' + wlEls($teamMemberMeta) + '</div></div></div><div class="team_member_picture"><div class="team_member_image_bg_cover"></div><div class="team_member_picture_wrap"><div class="team_member_image"></div></div></div></div></div>');
@@ -6136,17 +6503,19 @@
 							$('.nectar_team_member_overlay').addClass('on-mobile');
 						}
 
-            responsiveVideoIframes();
+            			responsiveVideoIframes();
+
+						$(window).trigger('nectar-team-member-opened');
 
 					});
 
 					// Close click event
 					$body.on('click', '.nectar_team_member_overlay', function (e) {
 
-            if( $(e.target).is('a') || $(e.target).parents('a').length > 0 ||
-                $(e.target).is('.skip-team-member-close') || $(e.target).parents('.skip-team-member-close').length > 0 ) {
-              return true;
-            }
+						if( $(e.target).is('a') || $(e.target).parents('a').length > 0 ||
+							$(e.target).is('.skip-team-member-close') || $(e.target).parents('.skip-team-member-close').length > 0 ) {
+						return true;
+						}
 
 						if (!$(this).hasClass('animating')) {
 
@@ -6200,18 +6569,6 @@
 					var $columnColorCSS = '';
 
 					$('.wpb_column').each(function (i) {
-
-						// backdrop filter needs alternative flebox arrangement to allow for animations to work
-						if( $(this).hasClass('backdrop_filter_blur') ) {
-							var $parentRow = $(this).parents('.wpb_row');
-							$parentRow.addClass('row-col-gap');
-							var customColumnGap = ($(this).parents('.wpb_row[data-column-margin]').length > 0 ) ? $(this).parents('.wpb_row[data-column-margin]').attr('data-column-margin') : 'default';
-							if( customColumnGap != 'default' ) {
-								$parentRow.find('.span_12').css({
-									'column-gap' : customColumnGap
-								});
-							}
-						}
 
 						$(this).removeClass(function (index, className) {
 							return (className.match(/(^|\s)instance-\S+/g) || []).join(' ');
@@ -6364,7 +6721,7 @@
 
 					var $svgOffsetPos = ($fullscreenMarkupBool == true) ? '500%' : 'bottom-in-view';
 
-					if ($svgIcons.length == 0) {
+					if ($svgIcons.length == 0 || nectarDOMInfo.usingFrontEndEditor && $('#nectar_fullscreen_rows').length > 0) {
 
 						$('.svg-icon-holder:not(.animated-in)').has('svg').each(function (i) {
 
@@ -6494,6 +6851,7 @@
 					// Full vc row support
 					$('#nectar_fullscreen_rows .svg-icon-holder.animated-in').has('svg').each(function (i) {
 
+
 						var $animationDelay = 0;
 
 						if($(this).is('[data-animation-delay]') &&
@@ -6503,7 +6861,7 @@
 						}
 
 						var $that = $(this);
-
+						
 						var $iconID = $that.find('svg').attr('id').replace(/[^0-9]/g, '');
 
 						clearTimeout($animatedSVGIconTimeout[i]);
@@ -6701,9 +7059,9 @@
 				*/
 				function fullWidthSections() {
 
-          if( $('.carousel-wrap[data-full-width="true"], .portfolio-items[data-col-num="elastic"]:not(.fullwidth-constrained), #boxed .full-width-content').length == 0 ) {
-            return;
-          }
+					if( $('.carousel-wrap[data-full-width="true"], .portfolio-items[data-col-num="elastic"]:not(.fullwidth-constrained), #boxed .full-width-content').length == 0 ) {
+						return;
+					}
 
 					var $windowInnerWidth = nectarDOMInfo.winW,
 					$bodyBorderWidth      = ($('.body-border-right').length > 0 && $windowInnerWidth > 1000) ? parseInt($('.body-border-right').width()) * 2 : 0,
@@ -6935,9 +7293,10 @@
 
 					$('.full-width-section.wpb_row, .full-width-content.wpb_row').each(function () {
 
-						if (!$(this).parent().hasClass('span_9') &&
-								!$(this).parent().hasClass('span_3') &&
-								$(this).parent().attr('id') != 'sidebar-inner') {
+						var $parent = $(this).parent();
+						if (!$parent.hasClass('span_9') &&
+							!$parent.hasClass('span_3') &&
+							$parent.attr('id') != 'sidebar-inner') {
 
 							if ($(this).parents('#portfolio-extra').length > 0 && $('#full_width_portfolio').length == 0) {
 								return false;
@@ -6947,15 +7306,11 @@
 									$pageHeaderBG.length == 0 &&
 									$('.page-header-no-bg').length == 0 &&
 									$('.project-title').length == 0 &&
-									$('body.single').length == 0 &&
-									$('.project-title').length == 0) {
+									$('body.single').length == 0 ) {
 
 									$(this).addClass('first-section');
 
-									var $that = $(this);
-									setTimeout(function () {
-										$that.addClass('loaded');
-									}, 50);
+									$(this).addClass('loaded');
 
 							}
 
@@ -6968,7 +7323,7 @@
 
 
 
-        /**
+			  /**
 				* Scroll Position Based Animations
 				*
 				* @since 14.0
@@ -6976,19 +7331,27 @@
 				function NectarScrollPosAnimations(el) {
 
 					this.$element      = el;
-         	this.$elementInner = el.find('> .vc_column-inner');
+					this.$elementInner = el.find('> .vc_column-inner');
 					this.inView        = false;
 					this.topLevel      = false;
 					this.lastY         = 0;
-          this.lerp          = ( el.data('scroll-animation-lerp') ) ? parseFloat(el.data('scroll-animation-lerp')) : 0.28;
-					this.intensity     = ( el.data('scroll-animation-intensity') ) ? Math.max(Math.min(parseFloat(el.data('scroll-animation-intensity')), 5), -5) : 3;
-   
+					this.lerp          = ( el.data('scroll-animation-lerp') ) ? parseFloat(el.data('scroll-animation-lerp')) : 0.28;
+					this.intensity     = ( el.data('scroll-animation-intensity') ) ? Math.max(Math.min(parseFloat(el.data('scroll-animation-intensity')), 8), -8) : 3;
+
 					this.intensity = this.intensity/10;
-					this.storedWinH   = nectarDOMInfo.winH;
+					this.storedWinH = nectarDOMInfo.winH;
+
+					if( this.intensity < -0.29 ) {
+						this.lerp = 1;
+					}
 
 					this.type = 'translateY';
 					this.persistOnMobile = ( el.is('[data-scroll-animation-mobile]') && 'true' == el.attr('data-scroll-animation-mobile') ) ? true : false;
 					
+					if( !this.$element.hasClass('wpb_column') && this.$element.parents('.cell').length == 0 ) {
+						this.$elementInner = el;
+					}
+
 					if( nectarDOMInfo.usingMobileBrowser && false == this.persistOnMobile ) {
 						return;
 					}
@@ -7004,12 +7367,12 @@
 					
 					$window.on('resize', this.calculatePos.bind(this));
 
-          var that = this;
-          window.addEventListener("orientationchange", function() {
-            this.setTimeout(function(){
-              that.orientationChange();
-            }, 80); 
-          });
+					var that = this;
+					window.addEventListener("orientationchange", function() {
+						this.setTimeout(function(){
+							that.orientationChange();
+						}, 80); 
+					});
 
 				}
 
@@ -7055,9 +7418,9 @@
 					if( this.$element.parents('.top-level').length > 0 ) {
 						this.topLevel = true;
 
-            if( this.offsetTop > nectarDOMInfo.winH ) {
-              this.topLevel = false;
-            }
+						if( this.offsetTop > nectarDOMInfo.winH ) {
+							this.topLevel = false;
+						}
             
 					}
 
@@ -7093,33 +7456,38 @@
 						return;
 					}
 
-					this.lastY = parseInt(linearInterpolate(this.lastY, nectarDOMInfo.scrollTop, this.lerp));
+					if( this.lerp == 1 ) {
+						this.lastY = nectarDOMInfo.scrollTop;
+					} else {
+						this.lastY = parseInt(linearInterpolate(this.lastY, nectarDOMInfo.scrollTop, this.lerp));
+					}
+					
 
-          if( nectarState.animatedScrolling == true ) {
-            this.inView = true;
-          }
+					if( nectarState.animatedScrolling == true ) {
+						this.inView = true;
+					}
 
 					if( this.inView ) {
 
 						var that = this;
-            var intensity = this.intensity;
+						var intensity = this.intensity;
 
-            if( nectarDOMInfo.winW < 1025 ) {
-              intensity = intensity/1.2;
-            }
-            if( nectarDOMInfo.winW < 690 ) {
-              intensity = intensity/1.35;
-            }
+						if( nectarDOMInfo.winW < 1025 ) {
+							intensity = intensity/1.2;
+						}
+						if( nectarDOMInfo.winW < 690 ) {
+							intensity = intensity/1.35;
+						}
 
-            if( that.topLevel === true && nectarDOMInfo.winW > 1000 || that.topLevel === true && this.persistOnMobile ) {
-              this.$elementInner[0].style.transform = this.type+'(' + -(that.lastY * intensity ) + 'px) translateZ(0)';
-            } 
-            else if( nectarDOMInfo.winW > 1000 || this.persistOnMobile ) {
-              this.$elementInner[0].style.transform = this.type+'(' + -((that.lastY - that.offsetTop + that.vertCenter ) * intensity  ) + 'px) translateZ(0)';
-            } 
-            else {
-              this.$elementInner[0].style.transform = this.type+'(0px) translateZ(0)';
-            }
+						if( that.topLevel === true && nectarDOMInfo.winW > 1000 || that.topLevel === true && this.persistOnMobile ) {
+							this.$elementInner[0].style.transform = this.type+'(' + -(that.lastY * intensity ) + 'px) translateZ(0)';
+						} 
+						else if( nectarDOMInfo.winW > 1000 || this.persistOnMobile ) {
+							this.$elementInner[0].style.transform = this.type+'(' + -((that.lastY - that.offsetTop + that.vertCenter ) * intensity  ) + 'px) translateZ(0)';
+						} 
+						else {
+							this.$elementInner[0].style.transform = this.type+'(0px) translateZ(0)';
+						}
 
 					}
 
@@ -7127,7 +7495,7 @@
 				};
 
 
-        
+				
 
 				/**
 				* Parallax BG Scrolling
@@ -7139,15 +7507,15 @@
 					this.$el            = el;
 					this.$parallaxEl    = this.$el.find(parallaxElClass);
 					this.firstSection   = false;
-          this.nestedParallax = false;
+					this.nestedParallax = false;
 					this.type           = type;
 					this.speed          = speed;
 					this.storedWinH     = nectarDOMInfo.winH;
 
-          if( el.parents('.nectar-sticky-tabs').length > 0 || 
-              el.parents('.nectar-sticky-column-css').length > 0 ) {
-            return;
-          }
+					if( el.parents('.nectar-sticky-tabs').length > 0 || 
+						el.parents('.nectar-sticky-column-css').length > 0 ) {
+						return;
+					}
 
 					this.setup();
 					this.update();
@@ -7160,7 +7528,7 @@
 
 					// Page Header.
 					if( this.$el.parents('#page-header-bg').length > 0 || 
-              this.$el.parents('.featured-media-under-header').length > 0 ) {
+	 					this.$el.parents('.featured-media-under-header').length > 0 ) {
 						this.type = 'page-header';
 					}
 
@@ -7171,7 +7539,7 @@
 						 this.$el.parents('.top-level').length > 0 && this.$el.hasClass('column-image-bg-wrap') && this.$el.parent().parent().is('.vc_col-sm-12:not(.child_column)') ||
 						 this.$el.is('.wpb_row.top-level') ||
 						 this.type == 'page-header' ||
-						 $('.wpb_row').length == 0) {
+						 $('.wpb_row').length == 0 && !this.$el.is('.blog_next_prev_buttons')) {
 						this.firstSection = true;
 					}
 
@@ -7184,6 +7552,7 @@
 						this.$el.parents('.wpb_row').length > 0 &&
 						this.$el.parents('.wpb_row').index() == '0')) {
 						this.firstSection = true;
+						
 					}
 					//// Disable first section calcs when using FE editor.
 					if (nectarDOMInfo.usingFrontEndEditor && this.type != 'page-header') {
@@ -7195,31 +7564,31 @@
 					this.$parallaxEl.addClass('translate');
 
 					// Need to periodically check height/offset.
-          this.nestedParallax = ( this.$parallaxEl.parents('[data-scroll-animation="true"]').length > 0 ) ? true : false;
-          if( !this.nestedParallax ) {
-            setInterval(function() {
+					this.nestedParallax = ( this.$parallaxEl.parents('[data-scroll-animation="true"]').length > 0 ) ? true : false;
+					if( !this.nestedParallax ) {
+						setInterval(function() {
 
-              if( nectarState.materialOffCanvasOpen != true && 
-                  nectarState.ocmAnimating != true ) {
-                that.offsetTop = that.$el.offset().top;
-                that.height    = that.$el.outerHeight(true);
-              }
+						if( nectarState.materialOffCanvasOpen != true && 
+							nectarState.ocmAnimating != true ) {
+							that.offsetTop = that.$el.offset().top;
+							that.height    = that.$el.outerHeight(true);
+						}
 
-            }, 800);
-          }
+						}, 800);
+					}
 
-          // Bind events.
+					// Bind events.
 					$(window).on('nectar-column-animation-start',this.checkColumnAnimation.bind(this));
 					$(window).on('resize load', this.resize.bind(this));
 					window.addEventListener("orientationchange", function() {
-            this.setTimeout(function(){
-              that.orientationChange();
-            }, 110); 
-          });
+						this.setTimeout(function(){
+						that.orientationChange();
+						}, 110); 
+					});
 
-          // Initial calc.
-          this.offsetTop = this.$el.offset().top;
-          this.height = this.$el.outerHeight(true);
+					// Initial calc.
+					this.offsetTop = this.$el.offset().top;
+					this.height = this.$el.outerHeight(true);
 
 				};
 
@@ -7248,19 +7617,19 @@
 
 				NectarParallaxScroll.prototype.resize = function() {
 
-          // not on mobile.
+					// not on mobile.
 					if( !nectarDOMInfo.usingMobileBrowser ) {
 						this.storedWinH = nectarDOMInfo.winH;
-            this.offsetTop = this.$el.offset().top;
-					  this.height = this.$el.outerHeight(true);
+						this.offsetTop = this.$el.offset().top;
+						this.height = this.$el.outerHeight(true);
 					}
-           else {
-             // on mobile, only recalc when item is not in a nested parallax setup.
-            if( !this.nestedParallax ) {
-              this.offsetTop = this.$el.offset().top;
-					    this.height = this.$el.outerHeight(true);
-            }
-          }
+					else {
+						// on mobile, only recalc when item is not in a nested parallax setup.
+						if( !this.nestedParallax ) {
+						this.offsetTop = this.$el.offset().top;
+						this.height = this.$el.outerHeight(true);
+						}
+					}
 
 				};
 
@@ -7299,6 +7668,7 @@
 							this.$parallaxEl[i].style.transform = 'translate3d(0, ' + parseInt(nectarDOMInfo.scrollTop * this.speed) + 'px, 0)';
 						}
 						else {
+							
 							this.$parallaxEl[i].style.transform = 'translate3d(0, ' + parseInt(((this.storedWinH + nectarDOMInfo.scrollTop - this.offsetTop) * this.speed)) + 'px, 0) scale(1.005)';
 						}
 						this.$parallaxEl[i].style.willChange = 'transform';
@@ -7308,27 +7678,295 @@
 				};
 
 
-        /**
+			/**
 				* Refreshes the pos of all parallax based elements.
 				*
 				* @since 14.0
 				*/
-        function nectarParallaxElRefresh() {
+				$(window).on('salient-parallax-el-recalculate', nectarParallaxElRefresh);
+				function nectarParallaxElRefresh() {
 
-          for( var i = 0; i < parallaxItemsArr.length; i++) {
-            parallaxItemsArr[i].resize();
-          }
-          for( var i = 0; i < elParallaxArr.length; i++) {
-            elParallaxArr[i].calculatePos();
-          }
+					for( var i = 0; i < parallaxItemsArr.length; i++) {
+						parallaxItemsArr[i].resize();
+					}
 
-		  for( var i = 0; i < cascadingParallaxArr.length; i++) {
-			cascadingParallaxArr[i].calculatePos();
-		  }
+					for( var i = 0; i < animateElArr.length; i++) {
+						animateElArr[i].resize();
+					}
 
-        }
+					for( var i = 0; i < elParallaxArr.length; i++) {
+						elParallaxArr[i].calculatePos();
+					}
+
+					for( var i = 0; i < cascadingParallaxArr.length; i++) {
+						cascadingParallaxArr[i].calculatePos();
+					}
+
+				}
+
+				
+				/**
+				* Animate css props based on scroll position.
+				*
+				* @since 14.1
+				*/
+				function NectarAnimate(el) {
+					this.$el = el;
+
+					this.animations = {};
+					this.offsets = {};
+					this.topLevel = false;
+
+					this.timelines = {};
+
+					this.devices = {
+						desktop: { min: 1000, max: 10000000 },
+						tablet: { min: 691, max: 999 },
+						phone: { min: 0, max: 690 },
+					}
+
+					this.needsReset = true;
+					this.activeDevice = 'desktop';
+					this.storedWinH = nectarDOMInfo.winH;
+
+					this.setupProps();
+					this.lazyInit();
+					
+				}
+				
+				NectarAnimate.prototype.setupProps = function() {
+
+					var attrs = JSON.parse(this.$el[0].getAttribute("data-nectar-animate-settings"));
+				
+					// animations.
+					Object.assign(
+						this.animations,
+						attrs['animations']
+					);
+					
+					// offsets
+					Object.assign(
+						this.offsets,
+						attrs['offsets']
+					);
+
+					// config.
+					Object.assign(
+						this,
+						attrs['config']
+					);
+					
+					if(this.$el.is('.top-level') || this.$el.parents('.top-level').length > 0 ) {
+						this.topLevel = true;
+					}
+
+				};
+
+				NectarAnimate.prototype.lazyInit = function() {
+
+					var that = this;
+
+					if( !nectarDOMInfo.usingFrontEndEditor ) {
+						var that = this;
+						var observer = new IntersectionObserver(function(entries) {
+
+							entries.forEach(function(entry){
+								if (entry.isIntersecting) {
+									that.init();
+									observer.unobserve(entry.target);
+								} 
+							});
+					
+						}, {
+							rootMargin: '400px 0px 400px 0px',
+							threshold: 0
+						});
+
+						observer.observe(this.$el[0]);
+					} else {
+						this.init();
+					}
+
+					
+				};
+
+				NectarAnimate.prototype.init = function() {
+					this.createTimeline();
+					this.events();
+					this.update();
+				};
+
+				NectarAnimate.prototype.events = function() {
+
+					var that = this;
+					
+					$(window).on('resize load', this.resize.bind(this));
+
+					window.addEventListener("orientationchange", function() {
+						this.setTimeout(function(){
+							that.orientationChange();
+						}, 110); 
+					});
+
+					this.resize();
+				};
+				
+				NectarAnimate.prototype.resize = function() {
+
+					if ( !nectarDOMInfo.usingMobileBrowser ) {
+						this.storedWinH = nectarDOMInfo.winH;
+					}
+
+					var rect = this.$el[0].getBoundingClientRect();
+
+					this.offsetTop = rect.top + nectarDOMInfo.scrollTop;
+					this.elHeight = this.$el[0].offsetHeight;
+
+					this.setActiveDevice();
+				};
+
+				NectarAnimate.prototype.orientationChange = function() {
+
+					if ( nectarDOMInfo.usingMobileBrowser ) {
+						var rect = this.$el[0].getBoundingClientRect();
+
+						this.offsetTop = rect.top + nectarDOMInfo.scrollTop;
+						this.elHeight = this.$el[0].offsetHeight;
+						this.storedWinH = nectarDOMInfo.winH;
+					}
+
+				};
+
+				NectarAnimate.prototype.setActiveDevice = function() {
+					
+					for ( var device of Object.keys(this.devices) ) {
+						if ( nectarDOMInfo.winW >= this.devices[device].min &&
+							nectarDOMInfo.winW <= this.devices[device].max ) {
+							
+							// Store device.
+							this.activeDevice = device;
+
+							if (typeof this.timelines[device] !== 'undefined') {
+								this.timelines[device].reset();
+							}
+							
+						}
+					}
+					
+				};
+				
+
+				NectarAnimate.prototype.createTimeline = function() {
+
+					// Device loop
+					for (var device of Object.keys(this.devices)) {
+						
+						// Skip device if no animations set
+						if (typeof this.animations[device] === 'undefined') {
+							continue;
+						}
+
+						// Create timeline
+						this.timelines[device] = anime.timeline({ autoplay: false });
+
+						// Gather all animation for timeline and starting state.
+						var timelineAnimations = {};
+						var initialAnimationState = {};
+
+						for (var animationKey of Object.keys(this.animations[device])) {
+
+							// Starting.
+							initialAnimationState[animationKey] = this.animations[device][animationKey]['start'];
+
+							// Ending.
+							timelineAnimations[animationKey] = [this.animations[device][animationKey]['start'], this.animations[device][animationKey]['end']];
+							
+						}
+
+						// Set initial position
+						this.setActiveDevice();
+
+						// Set Tineline.
+						var elToAnimate = (typeof this.inner_selector !== 'undefined') ? this.$el[0].querySelectorAll(this.inner_selector) : this.$el[0];
+					
+						var timelineProps = {
+							targets: elToAnimate,
+							duration: 1000, 
+							easing: 'linear',
+						};
+
+						Object.assign(timelineProps, timelineAnimations);
+						this.timelines[device].add(timelineProps, 0);
+
+					} // end device loop.
+					
+					
+				};
 
 
+				NectarAnimate.prototype.progressValues = function() {
+		
+					if ( typeof this.timelines[this.activeDevice] === 'undefined' ) {
+						return;
+					}
+
+					var scrollTop = nectarDOMInfo.scrollTop;
+					var winH = this.storedWinH;
+
+					var triggerStart = parseInt(this.offsets.start)/100;
+					var triggerStartPx = winH - (triggerStart * winH);
+					if( this.offsets.origin === 'bottom') {
+						triggerStartPx -= this.elHeight;
+					}
+				
+					var viewportCalc = (scrollTop - (this.offsetTop - triggerStartPx)) / winH;
+
+					if ( this.topLevel ) {
+						triggerStartPx = 0;
+						viewportCalc = (scrollTop - this.offsetTop) / winH;
+					}
+
+					var progress = Math.max(Math.min(viewportCalc, 1), 0);
+
+					var triggerEnd = parseInt(this.offsets.end)/100;
+					var progressMod = 2 + (-1 * triggerEnd);
+
+					var triggerCloseness = triggerEnd - triggerStart - 0.01; // 0.01 cushion to never allow for 0
+		
+					if ( progressMod > 1) {
+						progressMod = progressMod * (1/Math.min(triggerCloseness*2, 0.9));
+					}
+	
+					// Scrub through timeline.
+					if ( progress > 0 ) {
+						this.needsReset = true;
+						this.timelines[this.activeDevice].seek( this.timelines[this.activeDevice].duration * progress * progressMod);
+					} else if (this.needsReset) {
+						this.timelines[this.activeDevice].reset();
+						this.needsReset = false;
+					}
+					
+				};
+
+				NectarAnimate.prototype.update = function() {
+					
+					if(nectarState.materialOffCanvasOpen != true && 
+					   nectarState.ocmAnimating != true) {
+						this.progressValues();
+					}
+					requestAnimationFrame(this.update.bind(this));
+
+				}
+
+
+				function nectarAnimateInit() {
+
+					animateElArr = [];
+
+					$('[data-nectar-animate-settings]').each(function() {
+						animateElArr.push( new NectarAnimate($(this)) );
+					});
+				}
 
 				/**
 				* Parallax scroll speed helper.
@@ -7351,12 +7989,12 @@
 						case 'fast':
 							speed = 0.20;
 							break;
-            case 'mid_subtle':
-              speed = 0.15;
-              break;
-            case 'subtle':
-              speed = 0.13;
-              break;
+						case 'mid_subtle':
+							speed = 0.15;
+							break;
+						case 'subtle':
+							speed = 0.13;
+							break;
 						case 'very_subtle':
 							speed = 0.12;
 							break;
@@ -7380,23 +8018,23 @@
 						return;
 					}
 
-          // El parallax.
-          elParallaxArr = [];
+					// El parallax.
+					elParallaxArr = [];
 
-          $('.wpb_column[data-scroll-animation="true"], .nectar-el-parallax-scroll[data-scroll-animation="true"]').each(function(i){
+					$('.wpb_column[data-scroll-animation="true"], .nectar-el-parallax-scroll[data-scroll-animation="true"]').each(function(i){
 
-            imagesLoaded($(this), function (instance) {
+						imagesLoaded($(this), function (instance) {
 
-              // Parallax scrolling.
-              if( $(instance.elements[0]).is('[data-scroll-animation="true"]') && $('#nectar_fullscreen_rows').length == 0 ) {
-                elParallaxArr[i] = new NectarScrollPosAnimations($(instance.elements[0]));
-              }
+							// Parallax scrolling.
+							if( $(instance.elements[0]).is('[data-scroll-animation="true"]') && $('#nectar_fullscreen_rows').length == 0 ) {
+								elParallaxArr[i] = new NectarScrollPosAnimations($(instance.elements[0]));
+							}
 
-            });
+						});
 
-          });
+					});
 
-          // BG parallax.
+					// BG parallax.
 					parallaxRowsBGCals();
 
 					var parallaxItemCount = 0;
@@ -7453,7 +8091,7 @@
 				*
 				* @since 6.0
 				*/
-        $(window).on('salient-parallax-bg-recalculate', parallaxRowsBGCals );
+				$(window).on('salient-parallax-bg-recalculate', parallaxRowsBGCals );
 				function parallaxRowsBGCals() {
 
 					if (nectarDOMInfo.usingMobileBrowser && $('body[data-remove-m-parallax="1"]').length > 0) {
@@ -7464,7 +8102,8 @@
 
 						var $non_page_builder_slider;
 
-						if( $(this).parents('.wpb_tab:not(.visible-tab)').length > 0 && $(this).parents('.nectar-scrolling-tabs').length == 0 || $(this).parents('.wc-tab').length > 0 && $(this).parents('.wc-tab').css('display') !== 'block' ) {
+						if( $(this).parents('.wpb_tab:not(.visible-tab)').length > 0 && $(this).parents('.nectar-scrolling-tabs').length == 0 || 
+							$(this).parents('.wc-tab').length > 0 && $(this).parents('.wc-tab').css('display') !== 'block' ) {
 								return true;
 						}
 
@@ -7636,18 +8275,21 @@
 
 							if ($(this).parents('.wpb_row').length > 0) {
 
+								var $parent = $(this).parent();
+								var $parentRowIndex = $(this).parents('.wpb_row').index();
+
 								if ($(this).parents('#portfolio-extra').length > 0 &&
 									$('#full_width_portfolio').length == 0) {
 									return false;
 								}
 
 								////first
-								if ($(this).parents('.wpb_row').index() == '0' && $pageHeaderBG.length != 0) {
+								if ($parentRowIndex == '0' && $pageHeaderBG.length != 0) {
 									//skip processing.
 								}
-								else if ($(this).parents('.wpb_row').index() == '0' &&
+								else if ($parentRowIndex == '0' &&
 								$pageHeaderBG.length == 0 && $('.page-header-no-bg').length == 0 &&
-								$('.project-title').length == 0 && $(this).parents('.wpb_row').index() == '0' &&
+								$('.project-title').length == 0 && $parentRowIndex == '0' &&
 								$('.project-title').length == 0 && $('body[data-bg-header="true"]').length == 0) {
 
 									if ($('.single').length == 0) {
@@ -7659,7 +8301,7 @@
 								}
 
 								// Check if it's also last (i.e. the only fws)
-								if ($(this).parents('.wpb_row').index() == $contentElementsNum - 1 && $('#respond').length == 0) {
+								if ($parentRowIndex == $contentElementsNum - 1 && $('#respond').length == 0) {
 									if ($(this).attr('id') != 'portfolio-filters-inline') {
 										$('.container-wrap').css('padding-bottom', '0px');
 										$('#call-to-action .triangle').remove();
@@ -7759,34 +8401,6 @@
 
 
 
-				/**
-				* Full width row padding adjust calculations.
-				*
-				* @since 3.0
-				*/
-				function fullWidthRowPaddingAdjustCalc() {
-
-					if ($('#boxed').length == 0) {
-
-						$('.full-width-section[data-top-percent], .full-width-section[data-bottom-percent], .full-width-content[data-top-percent], .full-width-content[data-bottom-percent]').each(function () {
-
-							var $windowHeight = $window.width(),
-							$topPadding       = ($(this).attr('data-top-percent')) ? $(this).attr('data-top-percent') : 'skip',
-							$bottomPadding    = ($(this).attr('data-bottom-percent')) ? $(this).attr('data-bottom-percent') : 'skip';
-
-							//top
-							if ($topPadding != 'skip') {
-								$(this).css('padding-top', $windowHeight * (parseInt($topPadding) / 100));
-							}
-
-							//bottom
-							if ($bottomPadding != 'skip') {
-								$(this).css('padding-bottom', $windowHeight * (parseInt($bottomPadding) / 100));
-							}
-
-						});
-					}
-				}
 
 				/**
 				* Full width row padding adjust calculations for boxed theme option.
@@ -7818,23 +8432,7 @@
 				}
 
 
-				/**
-				* Full width row padding adjust initialization
-				*
-				* @since 10.5
-				*/
-				function fullWidthRowPaddingAdjust() {
-
-					if (nectarDOMInfo.usingMobileBrowser) {
-						fullWidthRowPaddingAdjustCalc();
-					}
-
-					$window.on('resize', fullWidthRowPaddingAdjustCalc);
-
-				}
-
-
-
+			
 
 				/**
 				* Full width content row auto equal height cols.
@@ -7844,6 +8442,7 @@
 				function fullWidthContentColumns() {
 
 					var $frontEndEditorElDiv = ($('body.vc_editor').length > 0) ? '.vc_element > ' : '';
+					var usingFlexCols = $body.is('[data-flex-cols="true"]');
 
 					$('.main-content > .row > ' + $frontEndEditorElDiv + ' .full-width-content, #portfolio-extra > ' + $frontEndEditorElDiv + ' .full-width-content, .woocommerce-tabs #tab-description > .full-width-content, .post-area.span_12 article .content-inner > .full-width-content').each(function () {
 
@@ -7854,19 +8453,22 @@
 							var $columnInnerHeight  = 0;
 							var $column_inner_selector;
 
+							// Gather tallest height.
 							$(this).find('> .span_12 > ' + $frontEndEditorElDiv + '  .col').each(function () {
 
 								$column_inner_selector = ($(this).find('> .vc_column-inner > .wpb_wrapper').length > 0) ? '.vc_column-inner' : '.column-inner-wrap > .column-inner';
 
-								var $padding = ( $body.is('[data-flex-cols="true"]') ) ? parseInt($(this).find('> .vc_column-inner').css('padding-top')) : parseInt($(this).css('padding-top'));
+								var $padding = ( usingFlexCols ) ? parseInt($(this).find('> .vc_column-inner').css('padding-top')) : parseInt($(this).css('padding-top'));
 								var $frontEndEditorElPadding = ($frontEndEditorElDiv.length > 2 && $(this).find('> .vc_column-inner').length > 0) ? parseInt($(this).find('> .vc_column-inner').css('padding-top')) : 0;
 
-								if( $(this).find('> ' + $column_inner_selector + ' > .wpb_wrapper').height() + ($padding * 2) + $frontEndEditorElPadding > tallestColumn ) {
-									tallestColumn = $(this).find('> ' + $column_inner_selector + ' > .wpb_wrapper').height() + ($padding * 2) + $frontEndEditorElPadding;
+								var colContentHeight = $(this).find('> ' + $column_inner_selector + ' > .wpb_wrapper').height();
+								if( colContentHeight + ($padding * 2) + $frontEndEditorElPadding > tallestColumn ) {
+									tallestColumn = colContentHeight + ($padding * 2) + $frontEndEditorElPadding;
 								}
 
 							});
 
+							// Apply height to all columns within row.
 							$(this).find('> .span_12 > ' + $frontEndEditorElDiv + ' .col').each(function () {
 
 								$column_inner_selector = ($(this).find('> .vc_column-inner > .wpb_wrapper').length > 0) ? '.vc_column-inner' : '.column-inner-wrap > .column-inner';
@@ -7878,14 +8480,15 @@
 									if ($frontEndEditorElDiv.length < 2 && !$(this).parent().parent().hasClass('vc_row-o-equal-height')) {
 										$(this).css('height', tallestColumn);
 
-										if( $body.is('[data-flex-cols="true"]') ) {
+										if( usingFlexCols ) {
 											$(this).find('> .vc_column-inner').css('height', tallestColumn);
 										}
 
 									} else if ($frontEndEditorElDiv.length > 2 && !$(this).parent().parent().parent().hasClass('vc_row-o-equal-height')) {
+
 										$(this).css('height', tallestColumn);
 
-										if( $body.is('[data-flex-cols="true"]') ) {
+										if( usingFlexCols ) {
 											$(this).find('> .vc_column-inner').css('height', tallestColumn);
 										}
 
@@ -7894,7 +8497,7 @@
 
 								// Empty columns
 								else {
-									if ($(this).is('[data-using-bg="true"]')) {
+									if ($(this).is('[data-using-bg="true"]') && $(this).parents('.vc_row-o-content-top').length == 0 ) {
 
 										$(this).css('min-height', tallestColumn);
 
@@ -7918,9 +8521,7 @@
 							}
 
 							// Vertically center
-							if ($(this).hasClass('vertically-align-columns') &&
-							nectarDOMInfo.winW > 1000 &&
-							!$(this).hasClass('vc_row-o-equal-height')) {
+							if ($(this).hasClass('vertically-align-columns') && nectarDOMInfo.winW > 1000 && !$(this).hasClass('vc_row-o-equal-height')) {
 
 								// Parent columns
 								$(this).find('> .span_12 > ' + $frontEndEditorElDiv + ' .col').each(function () {
@@ -8060,9 +8661,15 @@
 				*/
 				function ctaLinkBG() {
 
-					$body.on('click','.nectar-cta[data-using-bg="true"]:not([data-style="material"]) .link_wrap', function(e) {
-						if( !$(e.target).is('a') ) {
-							$(this).find('a.link_text')[0].click();
+					$body.on('click','.nectar-cta:not([data-style="material"]) .link_wrap', function(e) {
+						
+						if( $(this).parents('[data-using-bg="true"]').length > 0 || 
+							$(this).parents('[class*="border_thickness"]').length > 0 ) {
+								
+							if( !$(e.target).is('a') && $(e.target).parents('a').length == 0 ) {
+								$(this).find('a.link_text')[0].click();
+							}
+
 						}
 					});
 
@@ -8099,6 +8706,7 @@
 
 					$($fullscreenSelector + '.row-bg-wrap[data-bg-animation]:not([data-bg-animation="none"]) .row-bg').each(function () {
 
+		
 						var $animation = $(this).parents('.row-bg-wrap').attr('data-bg-animation');
 						var $animation_delay = ($(this).parents('.row-bg-wrap[data-bg-animation-delay]').length > 0) ? $(this).parents('.row-bg-wrap').attr('data-bg-animation-delay') : 0;
 
@@ -8157,7 +8765,7 @@
 					var $colBGAnimationsRevealOffsetPos = ($fullscreenMarkupBool == true) ? '500%' : '80%';
 					var $colBGOffset;
 
-					$($fullscreenSelector + '.column-image-bg-wrap[data-bg-animation]:not([data-bg-animation="none"]):not([data-bg-animation*="displace-filter"]) .column-image-bg').each(function () {
+					$($fullscreenSelector + '.column-image-bg-wrap[data-bg-animation]:not([data-bg-animation="none"]) .column-image-bg').each(function () {
 
 						var $animation = $(this).parents('.column-image-bg-wrap').attr('data-bg-animation');
 
@@ -8191,6 +8799,10 @@
 									$that.parents('.column-image-bg-wrap').siblings('.column-bg-overlay-wrap').addClass('animated-in');
 									$that.parents('.vc_column-inner').addClass('revealed-bg');
 								}
+
+								if( $animation == 'mask-reveal') {
+									$that.parents('.vc_column-inner').find('.column-bg-layer').addClass('animated-in');
+								}
 								waypoint.destroy();
 							},
 							offset: $colBGOffset
@@ -8206,7 +8818,7 @@
 						var $that = $(this);
 						var $animation = $(this).attr('data-bg-animation');
 
-						if( $animation == 'zoom-out-reveal' || $animation.indexOf('reveal-from-') > 0 ) {
+						if( $animation == 'zoom-out-reveal' || $animation == 'mask-reveal' || $animation.indexOf('reveal-from-') > 0 ) {
 
 							if( $that.parent().find('.column-image-bg-wrap').length == 0 ) {
 
@@ -8249,7 +8861,7 @@
 					var $cascadingOffsetPos       = ($fullscreenMarkupBool == true) ? '500%' : '70%';
 					var $colAndImgRevealOffsetPos = ($fullscreenMarkupBool == true) ? '500%' : '70%';
 
-					$($fullscreenSelector + '.img-with-animation').each(function () {
+					$($fullscreenSelector + '.img-with-animation').each(function (i) {
 
 						var $that = $(this);
 
@@ -8261,6 +8873,23 @@
 							$colAndImgOffsetPos = '75%';
 						}
 
+						// Slide up alters offset
+						if( $animationType == 'slide-up' && $colAndImgOffsetPos == '88%' ) {
+							$colAndImgOffsetPos = '99%';
+						}
+
+						// Custom easing.
+						var imgAnimationEasing = $animationEasing;
+						if( $(this)[0].hasAttribute('data-animation-easing') ) {
+							imgAnimationEasing = $(this).attr('data-animation-easing');
+						}
+
+						var opacityDuration = parseInt($animationDuration);
+						if($that.parents('.row_position_absolute').length > 0 || $that.hasClass('position_desktop_absolute')) {
+							opacityDuration = 500;
+						}
+
+
 						// initiate waypoint.
 						var waypoint = new Waypoint({
 							element: $that[0],
@@ -8271,31 +8900,61 @@
 									return;
 								}
 
+
 								if (!bypassAnimations || $('body[data-responsive="0"]').length > 0) {
 
 									var $delay       = ($that.is('[data-delay]')) ? $that.attr('data-delay') : 0;
 									var $elToAnimate = ($that.parents('.hover-wrap').length > 0) ? $that.parents('.hover-wrap') : $that;
 
-
+									// Image animation disabled on mobile.
+									// Prevent timeline from running for time until interactive
+									var imgAnimationDur = $animationDuration;
+									if($that.parents('.nectar-disable-mobile-animation').length > 0 && nectarDOMInfo.winW < 1000) {
+										imgAnimationDur = 0;
+										opacityDuration = 0;
+										$delay = 0;
+									}
+									
 									if ($animationType == 'fade-in-from-left' || $animationType == 'fade-in-from-right') {
 
 										$elToAnimate.delay($delay).transition({
 											'opacity': 1,
 											'x': '0px'
-										}, $animationDuration, $animationEasing);
+										}, imgAnimationDur, imgAnimationEasing);
 
 									} else if ($animationType == 'fade-in-from-bottom') {
 
-										$elToAnimate.delay($delay).transition({
-											'opacity': 1,
-											'y': '0px'
-										}, $animationDuration, $animationEasing);
+										animeAnimations.push(anime({
+											targets: $elToAnimate[0],
+											translateY: [100, 0],
+											translateZ: 0,
+											opacity: {
+												value: [0,1],
+												duration: opacityDuration,
+											},
+											delay: $delay,
+											easing: imgAnimationEasing,
+											duration: imgAnimationDur
+										}));
+										
 
-									} else if ($animationType == 'fade-in') {
+									} else if ($animationType == 'slide-up') {
+
+										animeAnimations.push(anime({
+											targets: $elToAnimate[0],
+											translateY: [150, 0],
+											translateZ: 0,
+											delay: $delay,
+											easing: imgAnimationEasing,
+											duration: imgAnimationDur
+										}));
+										
+									}
+									else if ($animationType == 'fade-in') {
 
 										$elToAnimate.delay($delay).transition({
 											'opacity': 1
-										}, $animationDuration, $animationEasing);
+										}, imgAnimationDur, imgAnimationEasing);
 
 									} else if ($animationType == 'grow-in') {
 
@@ -8303,7 +8962,7 @@
 											$elToAnimate.transition({
 												scale: 1,
 												'opacity': 1
-											}, $animationDuration, $animationEasing);
+											}, imgAnimationDur, imgAnimationEasing);
 										}, $delay);
 
 									} else if ($animationType == 'flip-in') {
@@ -8312,7 +8971,7 @@
 											$elToAnimate.transition({
 												rotateY: 0,
 												'opacity': 1
-											}, $animationDuration, $animationEasing);
+											}, imgAnimationDur, imgAnimationEasing);
 										}, $delay);
 
 									} else if ($animationType == 'flip-in-vertical') {
@@ -8321,7 +8980,7 @@
 											$elToAnimate.transition({
 												rotateX: 0,
 												'opacity': 1
-											}, $animationDuration, $animationEasing);
+											}, imgAnimationDur, imgAnimationEasing);
 										}, $delay);
 
 									}
@@ -8332,7 +8991,10 @@
 										$that.parents('.img-with-aniamtion-wrap').addClass('animated-in');
 									}
 
-									$that.addClass('animated-in');
+									if($animationType != 'none') {
+										$that.addClass('animated-in');
+									}
+									
 
 								}
 
@@ -8421,6 +9083,19 @@
 						if( $(this)[0].hasAttribute('data-animation-offset') ) {
 							colAnimationOffset = parseInt($(this).attr('data-animation-offset')) + '%';
 						}
+
+						// Custom easing.
+						var colAnimationEasing = $animationEasing;
+						if( $(this)[0].hasAttribute('data-animation-easing') ) {
+							colAnimationEasing = $(this).attr('data-animation-easing');
+						}
+						
+
+						var opacityDuration = parseInt($animationDuration);
+						if($that.parents('.row_position_absolute').length > 0) {
+							opacityDuration = 500;
+						}
+
 					
 						var waypoint = new Waypoint({
 							element: $that[0],
@@ -8438,30 +9113,49 @@
 
 									var $delay = $that.attr('data-delay');
 
+									// Image animation disabled on mobile.
+									// Prevent timeline from running for time until interactive
+									var colAnimationDur = $animationDuration;
+									if($that.hasClass('mobile-disable-entrance-animation') && nectarDOMInfo.winW < 1000) {
+										colAnimationDur = 0;
+										opacityDuration = 0;
+										$delay = 0;
+									}
+
 									if ($that.attr('data-animation') == 'fade-in-from-left' || $that.attr('data-animation') == 'fade-in-from-right') {
 
 										$standAnimatedColTimeout[i] = setTimeout(function () {
 											$that.transition({
 												'opacity': 1,
 												'x': '0px'
-											}, $animationDuration, $animationEasing);
+											}, colAnimationDur, colAnimationEasing);
 										}, $delay);
 
-									} else if ($that.attr('data-animation') == 'fade-in-from-bottom') {
+									} else if ($that.attr('data-animation') == 'fade-in-from-bottom' || 
+											  $that.attr('data-animation') == 'slight-fade-in-from-bottom') {
+										
+										var transY = ( $that.attr('data-animation') == 'fade-in-from-bottom' ) ? 100 : 50;
 
-										$standAnimatedColTimeout[i] = setTimeout(function () {
-											$that.transition({
-												'opacity': 1,
-												'y': '0px'
-											}, $animationDuration, $animationEasing);
-										}, $delay);
+										animeAnimations.push(anime({
+											targets: $that[0],
+											translateY: [transY, 0],
+											translateZ: 0,
+											opacity: {
+												value: [0,1],
+												duration: opacityDuration,
+											},
+											delay: $delay,
+											easing: colAnimationEasing,
+											duration: colAnimationDur
+										}));
+										
 
 									} else if ($that.attr('data-animation') == 'fade-in') {
-
+									
 										$standAnimatedColTimeout[i] = setTimeout(function () {
 											$that.transition({
 												'opacity': 1
-											}, $animationDuration, $animationEasing);
+											}, colAnimationDur, colAnimationEasing);
 										}, $delay);
 
 									} else if ($that.attr('data-animation') == 'grow-in' || $that.attr('data-animation') == 'zoom-out') {
@@ -8470,7 +9164,7 @@
 											$that.transition({
 												scale: 1,
 												'opacity': 1
-											}, $animationDuration, $animationEasing);
+											}, colAnimationDur, colAnimationEasing);
 										}, $delay);
 
 									} else if ($that.attr('data-animation') == 'flip-in') {
@@ -8479,7 +9173,7 @@
 											$that.transition({
 												rotateY: '0',
 												'opacity': 1
-											}, $animationDuration, $animationEasing);
+											}, colAnimationDur, colAnimationEasing);
 										}, $delay);
 
 									} else if ($that.attr('data-animation') == 'flip-in-vertical') {
@@ -8489,20 +9183,20 @@
 												rotateX: '0',
 												y: '0',
 												'opacity': 1
-											}, $animationDuration, $animationEasing);
+											}, colAnimationDur, colAnimationEasing);
 										}, $delay);
 
 									} else if ($that.attr('data-animation') == 'slight-twist') {
 
 										$standAnimatedColTimeout[i] = setTimeout(function () {
-											anime({
+											animeAnimations.push(anime({
 												targets: $that[0],
 												rotateY: [20, 0],
 												rotateZ: [-4, 0],
 												opacity: 1,
-												easing: $animationEasing,
-												duration: $animationDuration
-											});
+												easing: colAnimationEasing,
+												duration: colAnimationDur
+											}));
 										}, $delay);
 
 									}
@@ -8521,6 +9215,7 @@
 										}, parseInt($animationDuration) + parseInt($delay) + 30 );
 									}
 
+									
 									$that.addClass('animated-in');
 
 								}
@@ -8535,6 +9230,19 @@
 
 					$($fullscreenSelector + '.wpb_column.has-animation[data-animation*="reveal"]').each(function () {
 
+						// Custom easing.
+						var colAnimationEasing = $animationEasing;
+						if( $(this)[0].hasAttribute('data-animation-easing') ) {
+							colAnimationEasing = $(this).attr('data-animation-easing');
+						}
+
+						var revealOffsetAmt = ($(this).is('[data-animation="mask-reveal"]')) ? '88%' : $colAndImgRevealOffsetPos;
+
+						// Custom offset.
+						if( $(this)[0].hasAttribute('data-animation-offset') ) {
+							revealOffsetAmt = parseInt($(this).attr('data-animation-offset')) + '%';
+						}
+		
 						var $that = $(this),
 						waypoint 	= new Waypoint({
 							element: $that[0],
@@ -8555,63 +9263,62 @@
 
 										setTimeout(function () {
 
-											if ($that.hasClass('animated-in')) {
+											if( $columnInnerSelector == true ) {
 
-												if( $columnInnerSelector == true ) {
+												// Modern.
+												$that.find('> .vc_column-inner').transition({
+													'y': 0
+												}, $animationDuration, colAnimationEasing );
 
-													// Modern.
-													$that.find('> .vc_column-inner').transition({
-														'y': 0
-													}, $animationDuration, $animationEasing );
+											} else {
 
-												} else {
-
-													// Legacy.
-													$that.find('.column-inner-wrap, .column-inner').transition({
-														'y': 0
-													}, $animationDuration, $animationEasing, function () {
-														$that.find('.column-inner-wrap, .column-inner').addClass('no-transform');
-													});
-												}
-
+												// Legacy.
+												$that.find('.column-inner-wrap, .column-inner').transition({
+													'y': 0
+												}, $animationDuration, colAnimationEasing, function () {
+													$that.find('.column-inner-wrap, .column-inner').addClass('no-transform');
+												});
 											}
+
+											$that.addClass('animated-in');
 
 										}, $delay);
 
 									} else if ($that.attr('data-animation') == 'reveal-from-right' || $that.attr('data-animation') == 'reveal-from-left') {
 										setTimeout(function () {
-											if ($that.hasClass('animated-in')) {
+					
+											if( $columnInnerSelector == true ) {
 
-												if( $columnInnerSelector == true ) {
-
-													// Modern.
-													$that.find('> .vc_column-inner').transition({
-														'x': 0
-													}, $animationDuration, $animationEasing);
+												// Modern.
+												$that.find('> .vc_column-inner').transition({
+													'x': 0
+												}, $animationDuration, colAnimationEasing);
 
 
-												} else {
-													// Legacy.
-													$that.find('.column-inner-wrap, .column-inner').transition({
-														'x': 0
-													}, $animationDuration, $animationEasing, function () {
-														$that.find('.column-inner-wrap, .column-inner').addClass('no-transform');
-													});
-
-												}
-
+											} else {
+												// Legacy.
+												$that.find('.column-inner-wrap, .column-inner').transition({
+													'x': 0
+												}, $animationDuration, colAnimationEasing, function () {
+													$that.find('.column-inner-wrap, .column-inner').addClass('no-transform');
+												});
 
 											}
+
+											$that.addClass('animated-in');
+											
 										}, $delay);
 									}
 
-									$that.addClass('animated-in');
+									setTimeout(function () {
+										$that.addClass('animated-in');
+									}, $delay);
 
 								}
 
 								waypoint.destroy();
 							},
-							offset: $colAndImgRevealOffsetPos
+							offset: revealOffsetAmt
 						});
 
 					});
@@ -8834,22 +9541,24 @@
 				function splitLineHeadings() {
 
 					// Create waypoint.
-					var $splitLineOffsetPos = ($fullscreenMarkupBool == true) ? '500%' : 'bottom-in-view';
-					$($fullscreenSelector + '.nectar-split-heading').each(function () {
+					$($fullscreenSelector + '.nectar-split-heading').each(function (i) {
+						
+						var $splitLineOffsetPos = ($fullscreenMarkupBool == true) ? '500%' : 'bottom-in-view';
 
-            if( $(this)[0].hasAttribute('data-animation-offset') && $fullscreenMarkupBool != true ) {
-              if( $(this).attr('data-animation-offset').length > 0 ) {
-                $splitLineOffsetPos = parseInt($(this).attr('data-animation-offset')) + '%';
-              }
+						if( $(this)[0].hasAttribute('data-animation-offset') && $fullscreenMarkupBool != true ) {
+							if( $(this).attr('data-animation-offset').length > 0 ) {
+								$splitLineOffsetPos = parseInt($(this).attr('data-animation-offset')) + '%';
+							}
 						}
-           
+
+
 						var $that  = $(this);
 						var $delay = ( $that.is('[data-animation-delay]') ) ? parseInt($that.attr('data-animation-delay')) : 0;
 
 						var waypoint = new Waypoint({
 							element: $that[0],
 							handler: function () {
-
+								
 								if ($that.parents('.wpb_tab').length > 0 && $that.parents('.wpb_tab').css('visibility') == 'hidden' || $that.hasClass('animated-in')) {
 									waypoint.destroy();
 									return;
@@ -8914,15 +9623,15 @@
 											stagger = 400 / spans.length;
 											stagger = Math.min(Math.max(stagger, 20), 50); // Clamp val
                       
-                      if( spans.length > 0 ) {
-                        anime({
-                          targets: $that.find('> * > span span').toArray(),
-                          translateY: animationArr,
-                          delay: anime.stagger(stagger),
-                          duration: 1200,
-                          easing: 'cubicBezier(0.25,1,0.5,1)'
-                        });
-                      }
+											if( spans.length > 0 ) {
+												animeAnimations.push(anime({
+													targets: $that.find('> * > span span').toArray(),
+													translateY: animationArr,
+													delay: anime.stagger(stagger),
+													duration: 1200,
+													easing: 'cubicBezier(0.25,1,0.5,1)'
+												}));
+											}
                       
 
 										} 
@@ -8973,7 +9682,7 @@
 
 						var $that = $(this);
 
-					  var	waypoint 	= new Waypoint({
+						var waypoint = new Waypoint({
 							element: $that[0],
 							handler: function () {
 
@@ -9068,12 +9777,17 @@
 				* @see waypoints
 				*/
 				function generalWaypoints() {
-					var offsetPos = ($fullscreenMarkupBool == true) ? '500%' : '90%';
+					
 					$($fullscreenSelector + '.nectar-waypoint-el').each(function () {
 
 						var staggerEl = $(this).is('[data-nectar-waypoint-el-stagger]') ? $(this).attr('data-nectar-waypoint-el-stagger') : false;
 						var delay = $(this).is('[data-nectar-waypoint-el-delay]') ? parseInt($(this).attr('data-nectar-waypoint-el-delay')) : 0;
+						var offset = $(this).is('[data-nectar-waypoint-el-offset]') ? parseInt($(this).attr('data-nectar-waypoint-el-offset')) + '%' : '90%';
 
+						if( $fullscreenMarkupBool == true ) {
+							offset = '500%';
+						}
+						
 						var $that = $(this),
 						waypoint  = new Waypoint({
 							element: $that[0],
@@ -9094,7 +9808,7 @@
 										});
 									} 
 									else {
-										$(this).addClass('animated-in');
+										$that.addClass('animated-in');
 									}
 
 								}, delay);
@@ -9103,7 +9817,7 @@
 								waypoint.destroy();
 
 							},
-							offset: offsetPos
+							offset: offset
 						});
 					});
 				}
@@ -9477,13 +10191,89 @@
 				}
 
 
-				/**
-				* Nectar Lazy Loading
-				*
-				* @since 11.0
-				*/
-				$(window).on('salient-lazyloading-image-reinit', nectarLazyImageLoading );
+				
 
+				/**
+					*  Triggers the loading of all lazy images.
+					*
+					* @since 15.0
+					*/
+				function nectarLoadAllImages() {
+					
+					var lazyItems = [].slice.call(document.querySelectorAll('[data-nectar-img-src]'));
+
+					lazyItems.forEach(function (lazyItem) {
+
+						var imgSrc = lazyItem.getAttribute('data-nectar-img-src');
+
+						if( imgSrc ) {
+							nectarLazyImageLoad(lazyItem, imgSrc, lazyItemObserver);
+						}
+						
+					});
+				}
+
+
+				/**
+					*  Lazy loading callback to load single image src
+					*
+					* @since 15.0
+					*/
+				function nectarLazyImageLoad(lazyItem, imgSrc, lazyItemObserver) {
+
+					// img tags.
+					if (lazyItem.classList.contains('nectar-lazy')) {
+						lazyItem.addEventListener('load', function () {
+
+
+							if (!lazyItem.classList.contains('keep-calculated-size')) {
+								lazyItem.style.height = "";
+								lazyItem.style.width = "";
+							}
+
+							lazyItem.classList.add('loaded');
+							lazyItem.removeAttribute('data-nectar-img-src');
+
+							// Recalculate layout for image gallery portfolio grid as images progress.
+							if (typeof SalientPortfolio !== 'undefined' && lazyItem.classList.contains('image-gallery-portfolio-item')) {
+								$(window).trigger('salient-portfolio-recalculate');
+							}
+
+							// Fix waypoints.
+							if( !nectarDOMInfo.usingMobileBrowser ) {
+								Waypoint.refreshAll();
+							}
+
+							lazyItemObserver.unobserve(lazyItem);
+						});
+						lazyItem.src = imgSrc;
+						var srcset = lazyItem.getAttribute('data-nectar-img-srcset');
+						if (srcset) {
+							lazyItem.setAttribute('srcset', srcset);
+							lazyItem.removeAttribute('data-nectar-img-srcset');
+						}
+
+						lazyItem.parentNode.classList.add('img-loaded');
+
+					}
+					// BGs.
+					else {
+						lazyItem.style.backgroundImage = "url('" + imgSrc + "')";
+						lazyItem.classList.add('loaded');
+						lazyItem.removeAttribute('data-nectar-img-src');
+						lazyItemObserver.unobserve(lazyItem);
+					}
+
+					
+				}
+
+				$(window).on('salient-lazyloading-image-reinit', nectarLazyImageLoading );
+				$(window).on('salient-lazyloading-image-reinit', nectarLazyImageSizing );
+				/**
+					* Nectar Lazy Loading
+					*
+					* @since 11.0
+					*/
 				function nectarLazyImageLoading() {
 
 					var lazyItems = [].slice.call(document.querySelectorAll('[data-nectar-img-src]'));
@@ -9492,15 +10282,14 @@
 					if ('IntersectionObserver' in window) {
 
 						var options = {
-							rootMargin: '300px',
+							rootMargin: '450px',
 						}
 
-						nectarLazyImageSizing();
 						$window.off('resize.nectarLazySizing', nectarLazyImageSizing);
 						$window.on('resize.nectarLazySizing', nectarLazyImageSizing);
 
 						// Images.
-						var lazyItemObserver = new IntersectionObserver(function (entries) {
+						lazyItemObserver = new IntersectionObserver(function (entries) {
 
 							entries.forEach(function (entry) {
 								if (entry.isIntersecting) {
@@ -9509,45 +10298,7 @@
 									var imgSrc = lazyItem.getAttribute('data-nectar-img-src');
 
 									if (imgSrc) {
-
-										// img tags.
-										if (lazyItem.classList.contains('nectar-lazy')) {
-											lazyItem.addEventListener('load', function () {
-
-
-												if (!lazyItem.classList.contains('keep-calculated-size')) {
-													lazyItem.style.height = "";
-													lazyItem.style.width = "";
-												}
-
-												lazyItem.classList.add('loaded');
-												lazyItem.removeAttribute('data-nectar-img-src');
-
-												// Recalculate layout for image gallery portfolio grid as images progress.
-												if (typeof SalientPortfolio !== 'undefined' && lazyItem.classList.contains('image-gallery-portfolio-item')) {
-													$(window).trigger('salient-portfolio-recalculate');
-												}
-
-												lazyItemObserver.unobserve(lazyItem);
-											});
-											lazyItem.src = imgSrc;
-											var srcset = lazyItem.getAttribute('data-nectar-img-srcset');
-											if (srcset) {
-												lazyItem.setAttribute('srcset', srcset);
-												lazyItem.removeAttribute('data-nectar-img-srcset');
-											}
-
-											lazyItem.parentNode.classList.add('img-loaded');
-
-										}
-										// BGs.
-										else {
-											lazyItem.style.backgroundImage = "url('" + imgSrc + "')";
-											lazyItem.classList.add('loaded');
-											lazyItem.removeAttribute('data-nectar-img-src');
-											lazyItemObserver.unobserve(lazyItem);
-										}
-
+										nectarLazyImageLoad(lazyItem, imgSrc, lazyItemObserver)
 									}
 
 								}
@@ -9572,11 +10323,14 @@
 									}
 
 									video.target.load();
-									video.target.classList.remove("lazy");
+									video.target.classList.remove("lazy")
+									video.target.classList.add('loaded');
 									lazyVideoObserver.unobserve(video.target);
 								}
 							});
-						}, options);
+						}, {
+							rootMargin: '125px'
+						});
 
 						lazyVideoItems.forEach(function (lazyVideo) {
 							lazyVideoObserver.observe(lazyVideo);
@@ -9766,10 +10520,10 @@
 
 						// Start hidden?
 						if( this.el.find('.nectar-post-grid-item').length >= this.activeCatTotal ) {
-              this.el.addClass('all-loaded');
+							this.el.addClass('all-loaded');
 							this.el.append('<div class="load-more-wrap inactive"><a href="#" class="load-more">'+ this.el.attr('data-load-more-text') + '</a></div>');
 						} else {
-              this.el.removeClass('all-loaded');
+							this.el.removeClass('all-loaded');
 							this.el.append('<div class="load-more-wrap"><a href="#" class="load-more">'+ this.el.attr('data-load-more-text') + '</a></div>');
 						}
 
@@ -9822,8 +10576,12 @@
 					// Content under featured image linkbox.
 					if( this.gridStyle == 'content_under_image' && this.el.find('.nectar-post-grid-link.pretty_photo').length > 0 ) {
 						this.el.on('click','.bg-wrap-link', function(){
-							$(this).parents('.nectar-post-grid-item').find('.nectar-post-grid-link').trigger('click');
-							return false;
+
+							if( $(this).parents('.nectar-post-grid-item').find('.nectar-post-grid-link').length > 0 ) {
+								$(this).parents('.nectar-post-grid-item').find('.nectar-post-grid-link')[0].click();
+								return false;
+							}
+							
 						});
 					}
 
@@ -9832,7 +10590,7 @@
 					var queryData    = this.queryData;
 					var instance     = this;
 
-					this.el.find('.nectar-post-grid-filters a, .load-more-wrap .load-more').on('click', function() {
+					this.el.find('.nectar-post-grid-filters a, .load-more-wrap .load-more').on('click', function(e) {
 
 						var $that = $(this);
 
@@ -9877,7 +10635,6 @@
 
 						}
 
-
 						var $dataToPass = {
 							action: 'nectar_get_post_grid_segment',
 							post_type: queryData.post_type,
@@ -9890,7 +10647,7 @@
 							order: queryData.order,
 							orderby: queryData.orderby,
 							load_action: $action,
-              ignore_sticky_posts: queryData.ignore_sticky_posts,
+							ignore_sticky_posts: queryData.ignore_sticky_posts,
 							settings: {
 								pagination: $pagination,
 								post_type: settingsData.post_type,
@@ -9908,11 +10665,20 @@
 								heading_tag: settingsData.heading_tag,
 								post_title_overlay: settingsData.post_title_overlay,
 								enable_gallery_lightbox: settingsData.enable_gallery_lightbox,
-                overlay_secondary_project_image: settingsData.overlay_secondary_project_image,
-                vertical_list_hover_effect: settingsData.vertical_list_hover_effect,
-                vertical_list_read_more: settingsData.vertical_list_read_more
+								overlay_secondary_project_image: settingsData.overlay_secondary_project_image,
+								vertical_list_hover_effect: settingsData.vertical_list_hover_effect,
+								vertical_list_read_more: settingsData.vertical_list_read_more
 							}
 						};
+
+						// for random ordering, pass the posts already displayed to prevent duplicates.
+						if( queryData.orderby == 'rand' && $action == 'load-more' ) {
+							$dataToPass.posts_shown = '';
+							$gridEl.find('.nectar-post-grid-item[data-post-id]').each(function() {
+								$dataToPass.posts_shown += $(this).attr('data-post-id') + ', ';
+							});
+							$dataToPass.posts_shown = $dataToPass.posts_shown.substring(0, $dataToPass.posts_shown.length - 2);
+						}
 
 						$that.parents('.nectar-post-grid-wrap').addClass('loading');
 
@@ -9928,18 +10694,18 @@
 								if( $gridEl.parent().hasClass('nectar-post-grid-wrap--fl-sidebar_left') ||
 								    $gridEl.parent().hasClass('nectar-post-grid-wrap--fl-sidebar_right') ) {
                     
-                    var postGridTop = $gridEl.parent().offset().top;
-                    var headerHeight = 0;
+									var postGridTop = $gridEl.parent().offset().top;
+									var headerHeight = 0;
 
-                    if( $('.page-template-template-no-header-footer').length == 0 &&
-                        $('.page-template-template-no-header').length == 0 && 
-                        $('body[data-header-format="left-header"]').length == 0) {
-                        headerHeight = $('#header-outer').height();
-                    }
+									if( $('.page-template-template-no-header-footer').length == 0 &&
+										$('.page-template-template-no-header').length == 0 && 
+										$('body[data-header-format="left-header"]').length == 0) {
+											headerHeight = $('#header-outer').height();
+									}
 
-                    if( nectarDOMInfo.winW > 999 && nectarDOMInfo.scrollTop > postGridTop + 200) {
-                      window.scrollTo(0, postGridTop - headerHeight);
-                    }
+									if( nectarDOMInfo.winW > 999 && nectarDOMInfo.scrollTop > postGridTop + 200) {
+										window.scrollTo(0, postGridTop - headerHeight);
+									}
                    
 									
 								}
@@ -9969,10 +10735,10 @@
 
 								if( $gridEl.find('.nectar-post-grid-item').length >= instance.activeCatTotal ) {
 									instance.el.find('.load-more-wrap').addClass('inactive');
-                  instance.el.addClass('all-loaded');
+									instance.el.addClass('all-loaded');
 								} else {
 									instance.el.find('.load-more-wrap').removeClass('inactive');
-                  instance.el.removeClass('all-loaded');
+									instance.el.removeClass('all-loaded');
 								}
 
 							}
@@ -9993,7 +10759,7 @@
 
 						}); // end POST
 
-						return false;
+						e.preventDefault();
 
 					});
 
@@ -10119,7 +10885,7 @@
 				* @see waypoints
 				*/
 				function highlightedText() {
-
+					
 					var $highlightedTextOffsetPos = ($fullscreenMarkupBool == true) ? '500%' : 'bottom-in-view';
 
 					if( nectarDOMInfo.usingMobileBrowser && $highlightedTextOffsetPos == 'bottom-in-view' ) {
@@ -10129,13 +10895,25 @@
 					$($fullscreenSelector + '.nectar-highlighted-text').each(function (i) {
 
 						var $animationDelay = 0;
-
+						
 						// convert italics to em.
 						$(this).find('i').each(function(){
 							$(this).replaceWith(function(){
 								return $('<em />').append($(this).html());
 							});
 						});
+
+						// add ids
+						if($(this).is('[data-id]')) {
+							var $that = $(this);
+							$(this).find('em').each(function(i){
+								if(i > 0) {
+									$(this).attr('id', $that.attr('data-id') + '-' + i);
+								} else {
+									$(this).attr('id', $that.attr('data-id'));
+								}
+							});
+						}
 
 						if($(this).is('[data-animation-delay]') &&
 						$(this).attr('data-animation-delay').length > 0 &&
@@ -10150,6 +10928,10 @@
 						}
 
 						// Waypoint
+						if( $(this).is('[data-style="none"]') ) {
+							return true;
+						}
+
 						var $that = $(this);
 						var waypoint = new Waypoint({
 							element: $that[0],
@@ -10207,17 +10989,19 @@
 								}
 
 								$that.addClass('animated-in');
-
+								
+							
 								$that.find('.flickity-cell').each(function (i) {
 									var $el = $(this);
 
 									setTimeout(function(){
-										$el.css({
+										$el.find('> .product').css({
 											'transform': 'translate3d(0,0,0)',
 											'opacity': '1'
 										});
 									}, i * 100);
 								});
+						
 
 								waypoint.destroy();
 
@@ -10271,33 +11055,36 @@
 				function nectarTestimonialSliders() {
 
 					$testimonialSliders = [];
+				
+					if (typeof NectarTestimonialSlider !== 'undefined') {
+						
+						$('.testimonial_slider').each(function (i) {
 
-					if (typeof NectarTestimonialSlider == 'undefined') {
-						return;
-					}
+							var $that_el  = $(this),
+							$type         = ($(this).is('[data-style]')) ? $(this).attr('data-style') : 'none';
 
-					$('.testimonial_slider').each(function (i) {
-
-						var $that_el  = $(this),
-						$type         = ($(this).is('[data-style]')) ? $(this).attr('data-style') : 'none';
-
-						$testimonialSliders[i] = new NectarTestimonialSlider($that_el, $type, resizeVideoToCover, fullWidthContentColumns);
+							$testimonialSliders[i] = new NectarTestimonialSlider($that_el, $type, resizeVideoToCover, fullWidthContentColumns);
 
 
-						if ($(this).is('.disable-height-animation:not([data-style*="multiple_visible"])')) {
-							$testimonialSliders[i].testimonialSliderHeight();
-							setTimeout($testimonialSliders[i].testimonialSliderHeight.bind($testimonialSliders[i]), 700);
-						}
+							if ($(this).is('.disable-height-animation:not([data-style*="multiple_visible"])')) {
+								$testimonialSliders[i].testimonialSliderHeight();
+								setTimeout($testimonialSliders[i].testimonialSliderHeight.bind($testimonialSliders[i]), 700);
+							}
 
-						if ($(this).is('.testimonial_slider[data-style="multiple_visible_minimal"]')) {
-							$testimonialSliders[i].testimonialSliderHeightMinimalMult();
-							setTimeout(function(){
+							if ($(this).is('.testimonial_slider[data-style="multiple_visible_minimal"]')) {
 								$testimonialSliders[i].testimonialSliderHeightMinimalMult();
-								$testimonialSliders[i].flickityEl.flickity('resize');
-							},700);
-						}
+								setTimeout(function(){
+									$testimonialSliders[i].testimonialSliderHeightMinimalMult();
+									$testimonialSliders[i].flickityEl.flickity('resize');
+								},700);
+							}
 
-					});
+						});
+					} 
+
+					else {
+						nectarScriptLoadedCallback('#nectar-testimonial-sliders-js', 0, nectarTestimonialSliders);
+					}
 
 
 				}
@@ -10744,11 +11531,11 @@
 
 						// Resize
 						$window.on('resize',resizeVideoToCover);
-            window.addEventListener("orientationchange", function() {
-              this.setTimeout(function(){
-                resizeVideoToCover();
-              }, 100); 
-            });
+						window.addEventListener("orientationchange", function() {
+						this.setTimeout(function(){
+							resizeVideoToCover();
+						}, 100); 
+						});
 
 						$('.video-color-overlay').each(function () {
 							$(this).css('background-color', $(this).attr('data-color'));
@@ -10756,42 +11543,45 @@
 
 						$('.nectar-video-wrap').each(function () {
 
-							if ($(this).find('video').length == 0) {
+							if ($(this).find('video').length == 0 ) {
 								return;
 							}
 
 							var $headerVideo  = ($(this).parents('#page-header-bg').length > 0) ? true : false;
 							var $that         = $(this);
-							var videoReady    = setInterval(function () {
 
-								if ($that.find('video').get(0).readyState > 3) {
+							if( $(this).find('video.nectar-lazy-video').length === 0 ) {
+								var videoReady = setInterval(function () {
 
-									if (!nectarDOMInfo.usingMobileBrowser) {
-										$that.transition({
-											'opacity': '1'
-										}, 400);
-										$that.find('video').transition({
-											'opacity': '1'
-										}, 400);
-										$that.parent().find('.video-color-overlay').transition({
-											'opacity': '0.7'
-										}, 400);
-										if ($headerVideo == true) {
-											pageHeaderTextEffect();
+									if ($that.find('video').get(0).readyState > 3) {
+
+										if (!nectarDOMInfo.usingMobileBrowser) {
+											$that.transition({
+												'opacity': '1'
+											}, 400);
+											$that.find('video').transition({
+												'opacity': '1'
+											}, 400);
+											$that.parent().find('.video-color-overlay').transition({
+												'opacity': '0.7'
+											}, 400);
+											if ($headerVideo == true) {
+												pageHeaderTextEffect();
+											}
 										}
+
+										// Remove page loading screen
+										$loadingScreenEl.addClass('loaded');
+										setTimeout(function () {
+											$loadingScreenEl.addClass('hidden');
+										}, 1000);
+
+
+										clearInterval(videoReady);
 									}
 
-									// Remove page loading screen
-									$loadingScreenEl.addClass('loaded');
-									setTimeout(function () {
-										$loadingScreenEl.addClass('hidden');
-									}, 1000);
-
-
-									clearInterval(videoReady);
-								}
-
-							}, 60);
+								}, 60);
+							}
 
 							if (nectarDOMInfo.usingMobileBrowser) {
 
@@ -10977,7 +11767,7 @@
 					// Social sharing waypoint
 					if( $body.hasClass('single-post') && $('.nectar-social.vertical').length > 0 ) {
 
-            var $el = $('.nectar-social.vertical');
+						var $el = $('.nectar-social.vertical');
 						var waypoint  = new Waypoint({
 							element: $('.post-area')[0],
 							handler: function (direction) {
@@ -11966,6 +12756,7 @@
 
 							setTimeout(function () {
 								$('body > .slide_out_area_close').addClass('material-ocm-open');
+								$('body > .slide_out_area_close').removeClass('hide_until_rendered');
 							}, 350);
 
 
@@ -12897,8 +13688,9 @@
 					});
 
 					// Click event.
-					$('#header-outer #mobile-menu .sf-sub-indicator').on('click', function(){
+					$('#header-outer #mobile-menu').on('click', '.sf-sub-indicator', function(){
 
+						console.log('effe');
 						var $parentLI = $(this).parent().parent();
 
 						$parentLI.toggleClass('current-open-item');
@@ -13048,6 +13840,8 @@
 							.attr('aria-expanded','true');
 
 						$('.slide-out-widget-area-toggle:not(.simple-mobile-menu) > div > a').addClass('animating');
+						
+						$(window).trigger('nectar-ocm-open');
 
 						return false;
 
@@ -13148,6 +13942,8 @@
 
 						} // Not using simple OCM.
 
+						$(window).trigger('nectar-ocm-close');
+
 						return false;
 
 					});
@@ -13195,10 +13991,10 @@
 						OCM_simpleStyleInit();
 					}
 
-          if( $('#slide-out-widget-area').hasClass('fullscreen-inline-images') ) {
-            if( $('.off-canvas-menu-container .menu > li > a span.wrap').length == 0 ) {
-              $('.off-canvas-menu-container .menu > li a').wrapInner('<span class="wrap"></span>');
-            }
+					if( $('#slide-out-widget-area').hasClass('fullscreen-inline-images') ) {
+						if( $('.off-canvas-menu-container .menu > li > a span.wrap').length == 0 ) {
+							$('.off-canvas-menu-container .menu > li a').wrapInner('<span class="wrap"></span>');
+						}
 					}
 
 					if ($('#slide-out-widget-area.fullscreen-split').length == 0 &&
@@ -13214,7 +14010,6 @@
 							if ($(this).attr('href') != '#') {
 								OCM_close($(this).parent());
 							}
-
 						});
 
 					}
@@ -13257,37 +14052,8 @@
 					});
 
 
-					// Bind mousewheel.
-          if( !$offCanvasEl.hasClass('fullscreen-inline-images') ) {
-					  setTimeout(OCM_scrolling, 500);
-          }
-
-					// Handle mobile scrolling.
-					if (nectarDOMInfo.usingMobileBrowser) {
-						$offCanvasEl.addClass('mobile');
-					}
-
-
 				}
 
-
-
-
-				/**
-				* Off canvas menu scrolling.
-				*
-				* @since 10.5
-				*/
-				function OCM_scrolling() {
-
-					$offCanvasEl.mousewheel(function (event, delta) {
-
-						this.scrollTop -= (event.deltaY * event.deltaFactor)/1.5;
-
-						event.preventDefault();
-					});
-
-				}
 
 
 
@@ -13307,7 +14073,10 @@
 							if (item.parents('.slide-out-from-right-hover').length > 0) {
 								$('.slide-out-widget-area-toggle.slide-out-hover-icon-effect a').trigger('click');
 							} else {
-								$('.slide-out-widget-area-toggle a').trigger('click');
+								$('.slide-out-widget-area-toggle a').addClass('non-human-allowed').trigger('click');
+								setTimeout(function () {
+									$('.slide-out-widget-area-toggle a').removeClass('non-human-allowed');
+								}, 100);
 							}
 
 						}
@@ -13431,40 +14200,35 @@
 					});
 
 					// Start open for current page items.
-          var $topLevelAncestor = $('#header-outer[data-format="left-header"] nav .sf-menu > .current-menu-ancestor.menu-item-has-children');
+					var $topLevelAncestor = $('#header-outer[data-format="left-header"] nav .sf-menu > .current-menu-ancestor.menu-item-has-children');
 
-          if( $topLevelAncestor.length > 0 && $topLevelAncestor.find('.current-menu-item').length > 0 ) { 
+					if( $topLevelAncestor.length > 0 && $topLevelAncestor.find('.current-menu-item').length > 0 ) { 
 
-            $topLevelAncestor.find('ul').css('transition','none');
+						$topLevelAncestor.find('ul').css('transition','none');
 
-            var $activeAncestors = $topLevelAncestor.find('.current-menu-item').parents('.current-menu-ancestor.menu-item-has-children');
-            $activeAncestors = Array.from($activeAncestors);
+						var $activeAncestors = $topLevelAncestor.find('.current-menu-item').parents('.current-menu-ancestor.menu-item-has-children');
+						$activeAncestors = Array.from($activeAncestors);
 
-            
-              if( lh_dropdown_func === 'separate-dropdown-parent-link' ) {
-                $activeAncestors.reverse().forEach(function(el){
-                  $(el).find('> a .sf-sub-indicator').trigger('click');
-                });
-              } else {
-                $activeAncestors.reverse().forEach(function(el){
-                  $(el).find('> a').trigger('click');
-                });
-              }
+						
+						if( lh_dropdown_func === 'separate-dropdown-parent-link' ) {
+							$activeAncestors.reverse().forEach(function(el){
+								$(el).find('> a .sf-sub-indicator').trigger('click');
+							});
+						} else {
+							$activeAncestors.reverse().forEach(function(el){
+								$(el).find('> a').trigger('click');
+							});
+						}
 
-              setTimeout(function(){
-                $topLevelAncestor.find('ul').css('transition','');
-              },100);
+						setTimeout(function(){
+							$topLevelAncestor.find('ul').css('transition','');
+						},100);
 
-          }
+					}
 
-          
-
+        
 
 				}
-
-
-
-
 
 
 
@@ -14185,6 +14949,7 @@
 				* @since 6.0
 				*/
 				function waypoints() {
+					
 					rowBGAnimations();
 					columnBGAnimations();
 					colAndImgAnimations();
@@ -14203,7 +14968,6 @@
 					headerRowColorInheritInit();
 					morphingOutlines();
 					animatedColBorders();
-					wooProductCarouselAnimations();
 					foodMenuItems();
 					vcWaypoints();
 					NectarPostGridWaypoint();
@@ -14227,7 +14991,6 @@
 					productCarouselInit();
 					clientsCarouselInit();
 					carouselfGrabbingClass();
-					setTimeout(tabbedInit, 60);
 					accordionInit();
 					accordionClickEvents();
 					largeIconHover();
@@ -14244,7 +15007,7 @@
 					nectarVideoLightbox();
 					nectarKeyframeAssist();
 					morphingOutlinesInit();
-          nectarLinkIndicators();
+					nectarLinkIndicators();
 					nectarPostGridInit();
 					cascadingImageInit();
 					imageWithHotspotEvents();
@@ -14252,7 +15015,6 @@
 					pageSubmenuInit();
 					nectarLiquidBGs();
 					nectarTestimonialSliders();
-					nectarTestimonialSlidersEvents();
 					recentPostsTitleOnlyEqualHeight();
 					recentPostsInit();
 					parallaxItemHoverEffect();
@@ -14262,9 +15024,9 @@
 					masonryBlogInit();
 					portfolioCustomColoring();
 					searchResultMasonryInit();
-					stickySidebarInit();
 					portfolioSidebarFollow();
 					splitLineHeadingInit();
+					tabbedInit();
 				}
 
 
@@ -14428,7 +15190,7 @@
 						'display':'block'
 					});
 
-          this.$sidebar.find('.widget.woocommerce.widget_product_tag_cloud')
+					this.$sidebar.find('.widget.woocommerce.widget_product_tag_cloud')
 					.find('div.tagcloud').css({
 						'display':'block'
 					});
@@ -14489,7 +15251,7 @@
 
 					if( true === this.checkMiniCart(this.$qty) ) {
 						var matches = this.$qty.attr('name').match(/cart\[(\w+)\]/);
-	          key = matches[1];
+						key = matches[1];
 					}
 
 					// Store current.
@@ -14526,17 +15288,23 @@
 					var that = this;
 
 					$('body').on('click', '.quantity .plus', function() {
-						  that.$qty = $(this).closest('.quantity').find('.qty');
+						if( $(this).parents('.auction_form').length == 0 ) {
+
+							that.$qty = $(this).closest('.quantity').find('.qty');
 							that.setStep();
-						  that.updateState();
+							that.updateState();
 							that.increment($(this));
+						}
 					});
 
 					$('body').on('click', '.quantity .minus', function() {
-						  that.$qty = $(this).closest('.quantity').find('.qty');
+
+						if( $(this).parents('.auction_form').length == 0 ) {
+							that.$qty = $(this).closest('.quantity').find('.qty');
 							that.setStep();
-						  that.updateState();
+							that.updateState();
 							that.decrement($(this));
+						}
 					});
 
 					$('body').on('keyup', '.woocommerce-mini-cart .quantity .qty', function(e) {
@@ -14682,7 +15450,8 @@
 				}
 
 				NectarWooCommerceCartAJAX.prototype.events = function() {
-					$('body:not(.woocommerce-account)').on('submit', 'form.cart', this.addToCartAJAX.bind(this));
+					//$('body:not(.woocommerce-account)').on('submit', 'form.cart', this.addToCartAJAX.bind(this));
+					$('body').on('click', 'form.cart .single_add_to_cart_button', this.addToCartAJAX.bind(this));
 				};
 
 				NectarWooCommerceCartAJAX.prototype.addNotices = function(notices) {
@@ -14708,7 +15477,7 @@
 
 					var that = this;
 
-					var $wooForm = $(e.currentTarget);
+					var $wooForm = $(e.currentTarget).parents('form.cart');
 
 					// External or redirect active.
 					if( $wooForm.closest('.product').hasClass('product-type-external') || (wc_add_to_cart_params && wc_add_to_cart_params.cart_redirect_after_add === 'yes') ) {
@@ -14716,7 +15485,7 @@
 					}
 
 					e.preventDefault();
-
+					
 					// If already submitted
 					if( that.state.processing == true ) {
 						return;
@@ -14736,7 +15505,7 @@
 					var $addToCartBtn  = $wooForm.find('button.single_add_to_cart_button');
 					var $formData      = $wooForm.serializeArray();
 					var regID          = 0;
-
+					
 					// Try and get ID from parent.
 					if( $parentProduct.is('[id*="product-"]') ) {
 						regID = $parentProduct.attr('id').match(/\d+/);
@@ -15006,8 +15775,20 @@
 
 						});
 
-						// Starting.
-						$('.woocommerce-account .woocommerce > #customer_login .nectar-form-controls .control:nth-child(1)').trigger('click');
+						//Starting.
+						var tabChild = '1';
+						if (typeof nectarGetQueryParam['tab'] != 'undefined' && nectarGetQueryParam['tab'] === '2' ) {
+							tabChild = '2';
+							if(window.history && window.history.replaceState && typeof URL === "function") { 
+								var url = new URL(location);
+								url.searchParams.delete('tab');
+								history.replaceState(null, null, url)
+							}
+						}
+				
+						$('.woocommerce-account .woocommerce > #customer_login .nectar-form-controls .control:nth-child('+tabChild+')').trigger('click');
+						
+					
 
 					}
 
@@ -15469,10 +16250,10 @@
 
 
 				/**
-		     * Search in navigation functionality.
-		     *
-		     * @since 10.5
-		     */
+				 * Search in navigation functionality.
+				 *
+				 * @since 10.5
+				 */
 
 				function navigationSearchInit() {
 
@@ -16015,9 +16796,6 @@
 
 
 
-
-
-
 				/**
 				* Handle basic items before initializing effects.
 				*
@@ -16025,7 +16803,6 @@
 				*/
 				function headerNavPreInit() {
 
-		
 					// Page fullscreen rows does not need permanent transparent.
 					if ($('#nectar_fullscreen_rows').length > 0 && $fullscreenMarkupBool == true) {
 						($headerOuterEl.attr('data-permanent-transparent', 'false'));
@@ -16037,18 +16814,25 @@
 						$('#header-space').css('height', $headerOuterEl.outerHeight());
 					}
 
-          // Header nav entrance animation.
-          if( window.nectarOptions && window.nectarOptions.header_entrance && window.nectarOptions.header_entrance == 'true' ) {
-            if( nectarDOMInfo.scrollTop == 0 ) {
-              $('#header-outer').addClass('entrance-animation');
-            } else {
-              $('#header-outer').css('opacity','1');
-            }
-          }
+					// Header nav entrance animation.
+					if( window.nectarOptions && window.nectarOptions.header_entrance && window.nectarOptions.header_entrance == 'true' ) {
+						if( nectarDOMInfo.scrollTop == 0 ) {
+						$('#header-outer').addClass('entrance-animation');
+						} else {
+						$('#header-outer').css('opacity','1');
+						}
+					}
+
+				
+
+					// Permanent transparent header.
+					if ($('#nectar_fullscreen_rows').length == 0 && $('.nectar-box-roll').length == 0) {
+						midnightInit();
+					} else if( $('#nectar_fullscreen_rows').length > 0 && $fullscreenMarkupBool == false ) {
+						midnightInit();
+					}
 
 				}
-
-
 
 
 
@@ -16065,7 +16849,7 @@
 					visible: true,
 					init: false,
 					raf: '',
-          bodyOffsetHeight: 10000
+					bodyOffsetHeight: 10000
 				}
 
 				function hhunHeaderEffect() {
@@ -16455,10 +17239,10 @@
 						$window.on('scroll.headerResizeEffect', bigNav);
 
 						// Dark slider coloring border
-						$('#header-outer[data-transparent-header="true"]').css('transition', 'transform 0.3s ease, background-color 0.30s ease, opacity 0.3s ease, box-shadow 0.30s ease, margin 0.25s ease-out');
+						$('#header-outer[data-transparent-header="true"]').css('transition', 'transform 0.3s ease, background-color 0.30s ease, opacity 0.3s ease, box-shadow 0.30s ease, margin 0.25s ease-out, backdrop-filter 0.25s ease');
 						$('#header-outer[data-transparent-header="true"] .cart-menu').css('transition', 'none');
 						setTimeout(function () {
-							$('#header-outer[data-transparent-header="true"]').css('transition', 'transform 0.3s ease, background-color 0.30s ease, opacity 0.3s ease, box-shadow 0.30s ease, border-color 0.30s ease, margin 0.25s ease-out');
+							$('#header-outer[data-transparent-header="true"]').css('transition', 'transform 0.3s ease, background-color 0.30s ease, opacity 0.3s ease, box-shadow 0.30s ease, border-color 0.30s ease, margin 0.25s ease-out, backdrop-filter 0.25s ease');
 							$('#header-outer[data-transparent-header="true"] .cart-menu').css('transition', 'border-color 0.30s ease');
 						}, 300);
 
@@ -16562,10 +17346,10 @@
 						$window.on('scroll.headerResizeEffect', smallNav);
 
 						// Dark slider coloring border
-						$('#header-outer[data-transparent-header="true"]').css('transition', 'transform 0.3s ease, background-color 0.30s ease, opacity 0.3s ease, box-shadow 0.30s ease, margin 0.25s ease-out');
+						$('#header-outer[data-transparent-header="true"]').css('transition', 'transform 0.3s ease, background-color 0.30s ease, opacity 0.3s ease, box-shadow 0.30s ease, margin 0.25s ease-out, backdrop-filter 0.25s ease');
 						$('#header-outer[data-transparent-header="true"] .cart-menu').css('transition', 'none');
 						setTimeout(function () {
-							$('#header-outer[data-transparent-header="true"]').css('transition', 'transform 0.3s ease, background-color 0.30s ease, opacity 0.3s ease, box-shadow 0.30s ease, border-color 0.30s ease, margin 0.25s ease-out');
+							$('#header-outer[data-transparent-header="true"]').css('transition', 'transform 0.3s ease, background-color 0.30s ease, opacity 0.3s ease, box-shadow 0.30s ease, border-color 0.30s ease, margin 0.25s ease-out, backdrop-filter 0.25s ease');
 							$('#header-outer[data-transparent-header="true"] .cart-menu').css('transition', 'border-color 0.30s ease');
 						}, 300);
 					}
@@ -16757,34 +17541,34 @@
 
 
 					// Handle mobile transparent class.
-          if (headerHideUntilNeeded == '1' && $('#header-outer[data-remove-fixed="1"]').length == 0) {
+					if (headerHideUntilNeeded == '1' && $('#header-outer[data-remove-fixed="1"]').length == 0) {
 
-            if( $('#header-outer[data-mobile-fixed="1"]').length > 0 ) {
+						if( $('#header-outer[data-mobile-fixed="1"]').length > 0 ) {
 
-              if ($('.nectar-box-roll').length > 0) {
-                $headerOuterEl.addClass('at-top-before-box');
-              }
+						if ($('.nectar-box-roll').length > 0) {
+							$headerOuterEl.addClass('at-top-before-box');
+						}
 
-              cancelAnimationFrame( hhunState.raf );
-              hhunHeaderEffect();
+						cancelAnimationFrame( hhunState.raf );
+						hhunHeaderEffect();
 
-            } else {
-              // Remove HHUN classes.
-              cancelAnimationFrame( hhunState.raf );
+						} else {
+						// Remove HHUN classes.
+						cancelAnimationFrame( hhunState.raf );
 
-              $headerOuterEl
-              .removeClass('scrolled-down')
-              .removeClass('detached')
-              .removeClass('invisible')
-              .removeClass('at-top')
-              .css('transform', 'none');
-            }
+						$headerOuterEl
+						.removeClass('scrolled-down')
+						.removeClass('detached')
+						.removeClass('invisible')
+						.removeClass('at-top')
+						.css('transform', 'none');
+						}
 
 					}
 					else if ($('#header-outer[data-mobile-fixed="1"]').length > 0) {
 						requestAnimationFrame(mobileHeaderRAF);
 					} 
-          else if ($headerOuterEl.attr('data-transparent-header') == 'true') {
+					else if ($headerOuterEl.attr('data-transparent-header') == 'true') {
 						$headerOuterEl.addClass('transparent');
 					}
 
@@ -16829,7 +17613,7 @@
 
 						// Don't trigger for header remove stickiness.
 						if ($('#header-outer[data-remove-fixed="1"]').length == 0) {
-              cancelAnimationFrame( hhunState.raf );
+							cancelAnimationFrame( hhunState.raf );
 							hhunHeaderEffect();
 						}
 
@@ -16863,6 +17647,7 @@
 				*
 				* @since 10.5
 				*/
+				
 				function headerNavScrollInit() {
 
 					// Remove transparent class if page loaded further down.
@@ -16872,12 +17657,6 @@
 						}
 					}
 
-					// Permanent transparent header.
-					if ($('#nectar_fullscreen_rows').length == 0 && $('.nectar-box-roll').length == 0) {
-						midnightInit();
-					} else if( $('#nectar_fullscreen_rows').length > 0 && $fullscreenMarkupBool == false ) {
-						midnightInit();
-					}
 
 					// Determine which events to bind at start.
 					if (nectarDOMInfo.winW < 1000 && $('.nectar-box-roll').length == 0) {
@@ -17533,71 +18312,71 @@
 
 				function nectarFullHeightRow(el) {
           
-          this.$el = el;
+					this.$el = el;
 
-          this.offsetTop = 0;
-          this.fullHeight = 100;
-          this.storedWinH = nectarDOMInfo.winH;
+					this.offsetTop = 0;
+					this.fullHeight = 100;
+					this.storedWinH = nectarDOMInfo.winH;
 
-          this.events();
-          this.calculate();
+					this.events();
+					this.calculate();
 
 				}
 
-        nectarFullHeightRow.prototype.events = function() {
+				nectarFullHeightRow.prototype.events = function() {
 
-          var that = this;
+					var that = this;
 
-          $(window).on('smartresize', this.resize.bind(this));
+					$(window).on('smartresize', this.resize.bind(this));
 
-          window.addEventListener("orientationchange", function() {
-            this.setTimeout(function(){
-              that.orientationChange();
-            }, 100); 
-          });
+					window.addEventListener("orientationchange", function() {
+						this.setTimeout(function(){
+						that.orientationChange();
+						}, 100); 
+					});
 
-        };
+				};
 
-        nectarFullHeightRow.prototype.resize = function() {
+				nectarFullHeightRow.prototype.resize = function() {
 
-          if( !nectarDOMInfo.usingMobileBrowser ) {
-						this.storedWinH = nectarDOMInfo.winH;
-            this.calculate();
+					if( !nectarDOMInfo.usingMobileBrowser ) {
+							this.storedWinH = nectarDOMInfo.winH;
+							this.calculate();
 					}
-   
-        };
+		
+				};
 
-        nectarFullHeightRow.prototype.calculate = function() {
+				nectarFullHeightRow.prototype.calculate = function() {
 
-          if( nectarState.materialOffCanvasOpen == true ) {
-            return true;
-          }
-
-          this.offsetTop = this.$el.offset().top;
-
-          if (this.offsetTop < this.storedWinH &&
-            this.$el.hasClass('top-level') &&
-            !nectarDOMInfo.usingFrontEndEditor) {
-
-            // Removed to allow CSS to take full control over top level sizing.
-
-          } else {
-
-            this.$el.css("min-height", this.storedWinH);
-            this.$el.find('> .col.span_12').css("min-height", this.storedWinH);
-
-          }
-
-        };
-
-        nectarFullHeightRow.prototype.orientationChange = function() {
-          
-          if( nectarDOMInfo.usingMobileBrowser ) {
-						this.storedWinH = nectarDOMInfo.winH;
-            this.calculate();
+					if( nectarState.materialOffCanvasOpen == true ) {
+						return true;
 					}
 
-        };
+					this.offsetTop = this.$el.offset().top;
+
+					if (this.offsetTop < this.storedWinH &&
+						this.$el.hasClass('top-level') &&
+						!nectarDOMInfo.usingFrontEndEditor) {
+
+						// Removed to allow CSS to take full control over top level sizing.
+
+					} else {
+
+						this.$el.css("min-height", this.storedWinH);
+						this.$el.find('> .col.span_12').css("min-height", this.storedWinH);
+
+					}
+
+				};
+
+				nectarFullHeightRow.prototype.orientationChange = function() {
+				
+					if( nectarDOMInfo.usingMobileBrowser ) {
+						this.storedWinH = nectarDOMInfo.winH;
+						this.calculate();
+					}
+
+				};
 
         
         
@@ -17611,11 +18390,11 @@
 
 				function nectarFullHeightRowInit() {
           
-          fullHeightRows = [];
+					fullHeightRows = [];
 
-          $('.vc_row-o-full-height').each(function(i){
-            fullHeightRows[i] = new nectarFullHeightRow($(this));
-          });
+					$('.vc_row-o-full-height').each(function(i){
+						fullHeightRows[i] = new nectarFullHeightRow($(this));
+					});
 
 				}
 
@@ -17906,10 +18685,10 @@
 
 					$('.nectar-split-heading[data-animation-type="line-reveal-by-space"][data-text-effect*="letter-reveal"]').each(function () {
 
-            /* Skip markup generation when effect is removed on mobile */
-            if( $(this).is('[data-m-rm-animation="true"]') && nectarDOMInfo.winW < 1000 ) {
-              return true;
-            }
+						/* Skip markup generation when effect is removed on mobile */
+						if( $(this).is('[data-m-rm-animation="true"]') && nectarDOMInfo.winW < 1000 ) {
+						return true;
+						}
 
 						var animatedStyle = ( $(this).hasClass('animated-in') ) ? ' style="transform: none;"' : '';
 
@@ -17949,7 +18728,8 @@
 
 				function splitLineHeadingInit() {
 
-					if( $('.nectar-split-heading[data-animation-type="line-reveal-by-space"]').length > 0 || $('.nectar-split-heading[data-animation-type="letter-fade-reveal"]').length > 0 ) {
+					if( $('.nectar-split-heading[data-animation-type="line-reveal-by-space"]').length > 0 || 
+						$('.nectar-split-heading[data-animation-type="letter-fade-reveal"]').length > 0 ) {
 						// Generate markup.
 						splitLineHeadingMarkup();
 					}
@@ -18589,7 +19369,7 @@
 
 					this.$el = el;
 					this.$iconEl = this.$el.find(iconSelector);
-          this.$innerIconEl = this.$el.find('.inner');
+					this.$innerIconEl = this.$el.find('.inner');
 
 					this.initialX = this.$el.width() / 2;
 					this.initialY = this.$el.height() / 2;
@@ -18602,19 +19382,21 @@
 
 					this.lastX = this.initialX;
 					this.lastY = this.initialY;
-          this.lastY2 = this.initialY;
+					this.lastY2 = this.initialY;
 
-          this.innerLastX = 0;
+					this.innerLastX = 0;
 					this.innerLastY = 0;
 					this.activeFollow = false;
+					this.hoverOnly = false;
 
 					this.percentage = 0.03;
-          this.percentageInterval;
+					this.percentageInterval;
+					this.exitTimeout;
 
-          this.$iconEl.css({
-            'top': '0',
-            'left': '0'
-          });
+					this.$iconEl.css({
+						'top': '0',
+						'left': '0'
+					});
 
 					$window.on('resize', this.resizeEvent.bind(this));
 					this.mouseEvents();
@@ -18632,6 +19414,11 @@
 
 					var that = this;
 
+					// hover only style 
+					if(that.$el.hasClass('play_button_hover')) {
+						that.hoverOnly = true;
+					}
+
 					that.$el.on('mouseenter', function(e) {
 
 						that.activeFollow = true;
@@ -18641,29 +19428,45 @@
 
 						that.lastScroll = 0;
 
-						clearInterval(that.percentageInterval);
+						if(that.hoverOnly) {
+							that.percentage = 1;
+							clearTimeout(that.exitTimeout);
+							setTimeout(function(){
+								that.percentage = 0.16;
+							},60);
+						}
+						else {
+							clearInterval(that.percentageInterval);
 
-            that.percentageInterval = setInterval(function(){
-              if( that.percentage < 0.16 ) {
-                that.percentage += 0.008;
-              } else {
-                clearInterval(that.percentageInterval);
-              }
+							that.percentageInterval = setInterval(function(){
+							if( that.percentage < 0.16 ) {
+								that.percentage += 0.008;
+							} else {
+								clearInterval(that.percentageInterval);
+							}
 
-            },30);
+							},30);
+						}
 		
            
 					});
 
 					that.$el.on('mouseleave', function() {
 
-						that.activeFollow = false;
-						that.lastScroll = 0;
-
-		
-            clearInterval(that.percentageInterval);
-						that.percentage = 0.03;
-
+						if(that.hoverOnly) {
+							that.exitTimeout = setTimeout(function(){
+								that.activeFollow = false;
+								that.lastScroll = 0;
+								clearInterval(that.percentageInterval);
+								that.percentage = 0.03;
+							}, 400);
+						}
+						else {
+							that.activeFollow = false;
+							that.lastScroll = 0;
+							clearInterval(that.percentageInterval);
+							that.percentage = 0.03;
+						}
 
 					});
 
@@ -18686,30 +19489,35 @@
 
 					if( this.activeFollow == true ) {
 
-						this.scrollAdjust = ( this.lastScroll > 0 ) ? nectarDOMInfo.scrollTop - this.lastScroll : 0;
+						this.scrollAdjust = 0;
+						this.alteredY = this.elY;
+						if( this.lastScroll > 0 ) {
+							this.scrollAdjust = nectarDOMInfo.scrollTop - this.lastScroll;
+							this.alteredY += this.scrollAdjust;
+						}
 
-						this.lastY = linearInterpolate(this.lastY, this.elY + this.scrollAdjust, this.percentage);
+						this.lastY = linearInterpolate(this.lastY, this.alteredY, this.percentage);
 						this.lastX = linearInterpolate(this.lastX, this.elX, this.percentage);
 
-            // Need to track y without scroll adjust for inner parallax
-            this.lastY2 = linearInterpolate(this.lastY2, this.elY, this.percentage);
+						// Need to track y without scroll adjust for inner parallax
+						this.lastY2 = linearInterpolate(this.lastY2, this.alteredY, this.percentage);
 
-            this.innerLastX = linearInterpolate(this.innerLastX, parseInt(this.elX) - parseInt(this.lastX), this.percentage)/1.7;
-            this.innerLastY = linearInterpolate(this.innerLastY, parseInt(this.elY) - parseInt(this.lastY2), this.percentage)/1.7;
+						this.innerLastX = linearInterpolate(this.innerLastX, parseInt(this.elX) - parseInt(this.lastX), this.percentage)/1.7;
+						this.innerLastY = linearInterpolate(this.innerLastY, parseInt(this.alteredY) - parseInt(this.lastY2), this.percentage)/1.7;
 
 					} else {
 						this.lastY = linearInterpolate(this.lastY, this.initialY, 0.055);
 						this.lastX = linearInterpolate(this.lastX, this.initialX, 0.055);
 
-            this.innerLastX = 0;
-            this.innerLastY = 0;
+						this.innerLastX = 0;
+						this.innerLastY = 0;
 					}
 
 					this.$iconEl[0].style.transform = 'translateX(' + this.lastX + 'px) translateY(' + this.lastY + 'px)';
           
-          if( this.$innerIconEl.length > 0 ) {
-            this.$innerIconEl[0].style.transform = 'translateX(' + clamp(this.innerLastX,14,-14) + 'px) translateY(' + clamp(this.innerLastY,14,-14) + 'px)';
-          }
+					if( this.$innerIconEl.length > 0 ) {
+						this.$innerIconEl[0].style.transform = 'translateX(' + clamp(this.innerLastX,14,-14) + 'px) translateY(' + clamp(this.innerLastY,14,-14) + 'px)';
+					}
           
 					requestAnimationFrame(this.rafLoop.bind(this));
 
@@ -18718,7 +19526,7 @@
 
 
 
-				/**
+			/**
 				* Video Lightbox
 				*
 				* @since 11.0
@@ -19511,9 +20319,16 @@
 
 						var $timeoutVar = 100;
 
+						// Box roll.
 						if ($('.nectar-box-roll').length > 0 && $('.container-wrap.bottomBoxOut').length > 0) {
 							nectarBoxRoll.boxRoll(null, -1);
 							$timeoutVar = 2050;
+						}
+
+						// Lazy images.
+						if($('img[data-nectar-img-src]').length > 0) {
+							nectarLoadAllImages();
+							$timeoutVar = 200;
 						}
 
 						setTimeout(function () {
@@ -19576,10 +20391,10 @@
 
 							nectar_scrollToY($scrollTopDistance - $pageSubMenu + $headerSecondary, 700, 'easeInOutQuint');
 
-              nectarState.animatedScrolling = true;
-              setTimeout(function () {
-                nectarState.animatedScrolling = false;
-              }, 1100);
+							nectarState.animatedScrolling = true;
+							setTimeout(function () {
+								nectarState.animatedScrolling = false;
+							}, 1100);
             
 						}, $timeoutVar);
 					}
@@ -19626,6 +20441,15 @@
 				*/
 				function animatedAnchorLinks() {
 
+					if( $animatedAnchorLinks ) {
+
+						$body.on('click', '#header-outer nav .sf-menu li:not(.slide-out-widget-area-toggle) a[href*="#"]', function() {
+							if ( nectarState.ocmOpen && $(this).attr('href') != '#') {
+								OCM_close($(this).parent());
+							}
+						});
+					}
+
 					if ($('body[data-animated-anchors="true"]').length > 0 ||
 					$('.single-product [data-gallery-style="left_thumb_sticky"]').length > 0) {
 
@@ -19641,7 +20465,7 @@
 							var $hash = $(this).prop("hash");
              
 							if( $hash &&
-                  !$(this).hasClass('nectar-next-section') && 
+								!$(this).hasClass('nectar-next-section') && 
 							    $(this).parents('.slide-out-widget-area-toggle').length == 0 ) {
 								$body.addClass('animated-scrolling');
 								nectarState.animatedScrolling = true;
@@ -19680,7 +20504,7 @@
 										}
 
 										setTimeout(function() {
-												$(window).trigger('hashchange');
+											$(window).trigger('hashchange');
 										},800);
 
 							}
@@ -19688,6 +20512,7 @@
 
 							if ($hash && $body.find($hash).length > 0 && $hash != '#top' && $hash != '' && $(this).attr('href').indexOf(window.location.href.split("#")[0]) !== -1 ||
 							$(this).is('[href^="#"]') && $hash != '' && $body.find($hash).length > 0 && $hash != '#top') {
+
 
 								//update hash
 								if (!$(this).hasClass('skip-hash')) {
@@ -19755,11 +20580,18 @@
 								var $timeoutVar       = 1;
 								var $that             = $(this);
 
+								// Box roll.
 								if ($('.nectar-box-roll').length > 0 && $('.container-wrap.bottomBoxOut').length > 0) {
 									nectarBoxRoll.boxRoll(null, -1);
 									$timeoutVar = 2050;
 								}
 
+								// Load all images to calc offset correctly.
+								if($('img[data-nectar-img-src]').length > 0) {
+									nectarLoadAllImages();
+									$timeoutVar = 200;
+								}
+								
 
 								setTimeout(function () {
 
@@ -19935,6 +20767,10 @@
 				*/
 				function portfolioCustomColoring() {
 
+					if( $('.portfolio-items .col').length == 0 ) {
+						return;
+					}
+
 					//portfolio colors
 					if ($('.portfolio-items .col .style-3-alt').length > 0 ||
 					$('.portfolio-items .col .style-3').length > 0 ||
@@ -20017,6 +20853,12 @@
 						if (typeof SalientPortfolio !== 'undefined') {
 							$portfolio_containers[portfolioElCount] = new SalientPortfolio($(this), fullWidthContentColumns, $fullscreenSelector, fullWidthSections);
 							portfolioElCount++;
+						} else {
+							var $that = $(this);
+							nectarScriptLoadedCallback('#salient-portfolio-js-js', 100, function(){
+								$portfolio_containers[portfolioElCount] = new SalientPortfolio($that, fullWidthContentColumns, $fullscreenSelector, fullWidthSections);
+								portfolioElCount++;
+							});
 						}
 
 					});
@@ -20121,8 +20963,14 @@
 					$('.posts-container').each(function (i) {
 
 						if ($(this).parent().hasClass('masonry') && !$(this).parent().hasClass('auto_meta_overlaid_spaced')) {
-
+							
 							if (typeof NectarMasonryBlog == 'undefined') {
+
+								var $that = $(this);
+								nectarScriptLoadedCallback('#nectar-masonry-blog-js', 0, function(){
+									$nectarMasonryBlogs[i] = new NectarMasonryBlog($that, fullWidthSections, blogLoadIn);
+								});
+
 								return;
 							}
 
@@ -20184,37 +21032,36 @@
 				*/
 				function stickySidebarInit() {
 
-          // CSS powered.
-          var stickyOffset = stickyElPositionOffset();
+					// CSS powered.
+					var stickyOffset = stickyElPositionOffset();
 
-          if( !(nectarDOMInfo.winW < 690 && nectarDOMInfo.usingMobileBrowser) ) {
-            document.documentElement.style.setProperty('--nectar-sticky-top-distance', stickyOffset + "px");
-          }
-					
+					if( !(nectarDOMInfo.winW < 690 && nectarDOMInfo.usingMobileBrowser) ) {
+						document.documentElement.style.setProperty('--nectar-sticky-top-distance', stickyOffset + "px");
+					}
 					
 					$('.nectar-sticky-column-css').each(function() {
 
-            // Handle markup / vert center
+						// Handle markup / vert center
 						if($(this).find('.n-sticky').length == 0 ) {
 
 							$(this).wrapInner('<div class="n-sticky" />');
 
-              if( $(this).hasClass('nectar-sticky-column-css--middle') ) {
-                new NectarStickyEl($(this));
-              }
-              
+							if( $(this).hasClass('nectar-sticky-column-css--middle') ) {
+								new NectarStickyEl($(this));
+							}
+
 						}		
 
 					});
 
-          // Javascript powered.
+					// Javascript powered.
 					if (!$().theiaStickySidebar || nectarDOMInfo.usingMobileBrowser && nectarDOMInfo.winW < 1000 ) {
 						return;
 					}
 
-          if( $nectarFullPage.$usingFullScreenRows != false && nectarDOMInfo.winW > 1000 ) {
-            return;
-          }
+					if( $nectarFullPage.$usingFullScreenRows != false && nectarDOMInfo.winW > 1000 ) {
+						return;
+					}
 
 					var stickySelectors = '#sidebar[data-nectar-ss="true"], #sidebar[data-nectar-ss="1"], .nectar-scrolling-tabs:not(.navigation_func_active_link_only) .scrolling-tab-nav, .nectar-sticky-column';
 					if( window.nectarOptions && window.nectarOptions.woo_sticky_sidebar && window.nectarOptions.woo_sticky_sidebar === '1' ) {
@@ -20384,9 +21231,15 @@
 						} else {
 							$fullscreenSelector = '';
 						}
+						
+						if( typeof NectarFullScreenRows !== 'undefined' ) {
+							$nectarFullPage = new NectarFullScreenRows(waypoints, $mouseParallaxScenes, nectarLiquidBGFP, nectarDOMInfo, responsiveTooltips, $standAnimatedColTimeout, $svgIcons, animeAnimations);
+						}
 
-						$nectarFullPage = new NectarFullScreenRows(waypoints, $mouseParallaxScenes, nectarLiquidBGFP, nectarDOMInfo, responsiveTooltips, $standAnimatedColTimeout, $svgIcons);
+					}
 
+					else {
+						nectarScriptLoadedCallback('#nectar-fullpage-js', 100, nectarFullPageInit);
 					}
 
 				}
@@ -20400,6 +21253,20 @@
 				* @since 1.0
 				*/
 				function crossBrowserAdjust() {
+
+					// backdrop filter needs alternative flexbox arrangement to allow for animations to work
+					$('.wpb_column').each(function () {		
+						if( $(this).hasClass('backdrop_filter_blur') ) {
+							var $parentRow = $(this).closest('.wpb_row');
+							$parentRow.addClass('row-col-gap');
+							var customColumnGap = ($(this).closest('.wpb_row[data-column-margin]').length > 0 ) ? $(this).closest('.wpb_row[data-column-margin]').attr('data-column-margin') : 'default';
+							if( customColumnGap != 'default' ) {
+								$parentRow.find('.span_12').first().css({
+									'column-gap' : customColumnGap
+								});
+							}
+						}
+					});
 
 					// Add specific class if on device for better tablet tracking.
 					if (nectarDOMInfo.usingMobileBrowser) {
@@ -20442,9 +21309,9 @@
 
 					// Popup Maker.
 					$('.pum.pum-theme-salient-page-builder-optimized button.pum-close').wrapInner('<span />');
-          $(window).on('pumBeforeOpen', function(){
-            window.dispatchEvent(new Event('resize'));
-          });
+					$(window).on('pumBeforeOpen', function(){
+						window.dispatchEvent(new Event('resize'));
+					});
 
 					// pum inside fspr
 					if ($('#nectar_fullscreen_rows').length > 0 &&
@@ -20788,7 +21655,7 @@
 						
 					});
 
-					$('.img-with-aniamtion-wrap, .nectar_icon_wrap').each(function(){
+					$('.img-with-aniamtion-wrap, .nectar_icon_wrap, .nectar-lottie-wrap, .nectar-cta').each(function(){
 						if($(this).hasClass('position_desktop_absolute') ||
 						   $(this).hasClass('position_tablet_absolute') || 
 						   $(this).hasClass('position_phone_absolute')) {
@@ -20903,7 +21770,7 @@
 
 					// Bind reload event
 					$window.on('vc_reload', function() {
-
+						
 						addRowCtrls();
 						columnBGColors();
 						buttonInit();
@@ -20949,16 +21816,16 @@
 						fullWidthSections();
 						fwsClasses();
 						recentPostsInit();
-						fullWidthRowPaddingAdjust();
+					
 
 						/*flickity carousels*/
 						if ($flickitySliders.length > 0) {
 							for (var i = 0; i < $flickitySliders.length; i++) {
 
-								$flickitySliders[i].reloadCells();
-								$flickitySliders[i].off('scroll.flickity');
-								$flickitySliders[i].off('dragStart.flickity');
-								$flickitySliders[i].off('dragEnd.flickity');
+								$flickitySliders[i].instance.reloadCells();
+								$flickitySliders[i].instance.off('scroll.flickity');
+								$flickitySliders[i].instance.off('dragStart.flickity');
+								$flickitySliders[i].instance.off('dragEnd.flickity');
 
 							}
 						}
@@ -20970,8 +21837,8 @@
 							flickityInit();
 							if ($flickitySliders.length > 0) {
 								for (var i = 0; i < $flickitySliders.length; i++) {
-									$flickitySliders[i].reloadCells();
-									$flickitySliders[i].resize();
+									$flickitySliders[i].instance.reloadCells();
+									$flickitySliders[i].instance.resize();
 								}
 							}
 
@@ -20981,10 +21848,10 @@
 						if ($wooFlickityCarousels.length > 0) {
 							for (var i = 0; i < $wooFlickityCarousels.length; i++) {
 
-								$wooFlickityCarousels[i].flickity('reloadCells');
-								$wooFlickityCarousels[i].off('scroll.flickity');
-								$wooFlickityCarousels[i].off('dragStart.flickity');
-								$wooFlickityCarousels[i].off('dragEnd.flickity');
+								$wooFlickityCarousels[i].instance.flickity('reloadCells');
+								$wooFlickityCarousels[i].instance.off('scroll.flickity');
+								$wooFlickityCarousels[i].instance.off('dragStart.flickity');
+								$wooFlickityCarousels[i].instance.off('dragEnd.flickity');
 
 							}
 						}
@@ -20996,8 +21863,8 @@
 							}
 							if ($wooFlickityCarousels.length > 0) {
 								for (var i = 0; i < $wooFlickityCarousels.length; i++) {
-									$wooFlickityCarousels[i].flickity('reloadCells');
-									$wooFlickityCarousels[i].flickity('resize');
+									$wooFlickityCarousels[i].instance.flickity('reloadCells');
+									$wooFlickityCarousels[i].instance.flickity('resize');
 								}
 							}
 
@@ -21034,6 +21901,7 @@
 						nectarFullHeightRowInit();
 						$window.off('scroll.parallaxSections').off('resize.parallaxSections');
 						parallaxScrollInit();
+						nectarAnimateInit();
 						masonryBlogInit();
 						masonryPortfolioInit();
 
@@ -21091,6 +21959,8 @@
 							}
 
 
+							var prevActiveIndex = $('#nectar_fullscreen_rows > div.vc_element.active').index();
+
 							$.fn.fullpage.destroy('all');
 							nectarFullPageInit();
 
@@ -21099,6 +21969,7 @@
 								el: '',
 								offset: 0
 							}];
+							
 
 							////create list of offsets
 							$('#nectar_fullscreen_rows > div.vc_element').each(function(i) {
@@ -21108,8 +21979,15 @@
 								};
 							});
 
-
+				
+							
 							////start active on that index
+							if( prevActiveIndex > -1) {
+								$.fn.fullpage.silentMoveTo((prevActiveIndex + 1),0);
+							}
+							
+
+							
 
 							//move back to first section when all have been deleted but one
 							if ($('#nectar_fullscreen_rows > div.vc_element').length === 1) {
@@ -21165,7 +22043,7 @@
 
 						stickySidebarInit();
 
-
+						
 						if (typeof window.Waypoint != 'undefined') {
 							Waypoint.destroyAll();
 							waypoints();
@@ -21188,7 +22066,7 @@
 				* @since 10.5
 				*/
 				function pageTransitionInit() {
-
+					
 					var mobileDisabledCondition = false;
 
 					if( $('body[data-ajax-transitions="true"]').length > 0 &&
@@ -21200,8 +22078,8 @@
 					}
 
 					if ($('body[data-ajax-transitions="true"]').length > 0 && 
-             $('#ajax-loading-screen[data-method="standard"]').length > 0 && 
-             mobileDisabledCondition == false) {
+					$('#ajax-loading-screen[data-method="standard"]').length > 0 && 
+					mobileDisabledCondition == false) {
 
 						$('html').addClass('page-trans-loaded');
 
@@ -21264,24 +22142,24 @@
 
 
 						// BF Cache assist
-            window.onpageshow = function (event) {
+						window.onpageshow = function (event) {
 
-              if (event.persisted) {
+							if (event.persisted) {
 
-                $('#ajax-loading-screen').stop().transition({
-                  'opacity': 0
-                }, 200, function () {
-                  $(this).css({
-                    'display': 'none'
-                  });
-                });
-                $('#ajax-loading-screen .loading-icon').transition({
-                  'opacity': 0
-                }, 100);
+								$('#ajax-loading-screen').stop().transition({
+									'opacity': 0
+								}, 200, function () {
+									$(this).css({
+										'display': 'none'
+									});
+								});
+								$('#ajax-loading-screen .loading-icon').transition({
+									'opacity': 0
+								}, 100);
 
-              }
+							}
 
-            };
+						};
 
 			
 
@@ -21360,65 +22238,129 @@
 
 				}
 
+			
+			function salientNonCritical(e) {
 
+				//var linksToPrevent = 'a.nectar_video_lightbox, a.pp, a[data-fancybox], a.pretty_photo, .wpb_gallery_slidesflickity_style .cell > a:not(.ext-url-link), .wpb_gallery_slidesflickity_static_height_style .cell > a:not(.ext-url-link), .slide-out-widget-area-toggle a, #mobile-cart-link, .mobile-search';
+
+				// Temporarily prevent default behavior.
+				// if(nectarDOMInfo.usingMobileBrowser && e) {
+				// 	$('a').on('click.salientPreventClick', function() { 
+				// 		if( $(this).is(linksToPrevent) ) {
+				// 			return false;
+				// 		}
+				// 	});
+				// }
+
+				// Track scroll position
+				if(nectarDOMInfo.usingMobileBrowser) {
+					nectarDOMInfo.scrollPosRAF();
+				}
+				
+				nectarLazyImageSizing();
+				
+				// Header navigation.
+				initSF();
+				navigationSearchInit();
+				headerNavScrollInit();
+				
+				// Page builder elements.
+				stickySidebarInit();
+				nectarTestimonialSlidersEvents();
+
+				// Column related.
+				columnBGColors();
+
+				// Off canvas menu
+				OCM_init();
+				mobileNavMegamenuCorrect();
+				materialSkinOCM_Init();
+				OCM_dropdownMarkup();
+				clickToggleSubmenus();
+
+				// Row related.
+				fwCarouselLinkFix();
+				nectarAnimateInit();
+
+				// Media.
+				lightBoxInit();
+
+	
+				// Scrolling
+				infiniteScrollInit();
+				scrollToTopInit();
+				sectionDownArrowEvent();
+				animatedAnchorLinks();
+
+		
+				// Unbind mobile watch
+				// if(nectarDOMInfo.usingMobileBrowser && e) {
+				
+				// 	$('body').off('click touchstart mousemove', salientNonCritical);
+				// 	$window.off('scroll', salientNonCritical);
+					
+
+				// 	// retrigger event if it was a click.
+				// 	if( e.target && $(e.target).is('a') || $(e.target).parents('a').length > 0 ) {
+				// 		setTimeout(function() { 
+
+				// 			$('a').off('click.salientPreventClick');
+
+				// 			//retigger link that was prevented.
+				// 			if( $(e.target).is(linksToPrevent) ||
+				// 				$(e.target).parents('a').length > 0 && $(e.target).closest('a').is(linksToPrevent) ) {
+				// 				$(e.target).trigger('click'); 
+				// 			}
+							
+				// 		},100);	
+				// 	} else {
+				// 		$('a').off('click.salientPreventClick');
+				// 	}
+				// }
+
+			}
 
 			// Document ready event - starting everything up.
 			jQuery(document).ready(function ($) {
-
-				// Initialize Nectar DOM helper.
-				nectarDOMInfo.init();
+				
+				nectarDOMInfo.usingFrontEndEditor = (typeof window.vc_iframe === 'undefined') ? false : true;
 
 				// Priority calls
 				nectarBoxRollInit();
 				nectarFullPageInit();
 				nectarLazyImageLoading();
 
-				// Header navigation.
-				initSF();
-				navigationSearchInit();
 				centeredNavBottomBarInit();
 				centeredLogoHeaderInit();
 				headerNavPreInit();
-				headerNavScrollInit();
 				headerNavOffsetInit();
 
 				// Page builder elements.
 				salientPageBuilderElInit();
 
 				// Column related.
-				columnBGColors();
 				vcMobileColumnsInit();
 
 				// Row related.
 				fullWidthSections();
 				fwsClasses();
-				fwCarouselLinkFix();
 				fullWidthSectionsPreInit();
 				firstFWSection();
-				parallaxScrollInit();
-				parallaxRowsBGCals();
-				fullWidthRowPaddingAdjust();
+				
 				fullWidthContentColumns();
 				oneFourthClasses();
 				fixIeFlexbox();
 				nectarFullHeightRowInit();
+				
+				parallaxScrollInit();
+				parallaxRowsBGCals();
 
 				// Media.
-				lightBoxInit();
 				audioVideoVis();
 				responsiveVideoIframesInit();
 				responsiveVideoIframes();
 				videoBGInit();
 				blogSingle();
-
-
-				// Off canvas navigation.
-				mobileNavMegamenuCorrect();
-				materialSkinOCM_Init();
-				OCM_dropdownMarkup();
-				clickToggleSubmenus();
-				OCM_init();
-
 
 				// Page header
 				pageHeaderInit();
@@ -21431,13 +22373,20 @@
 				fancySelectStyling();
 
 				// Scrolling
-				infiniteScrollInit();
-				scrollToTopInit();
-				animatedAnchorLinks();
 				updatePerspectiveOriginInit();
-				sectionDownArrowEvent();
+				
+
+				// Non critical
+				var delayJS = window.nectarOptions && window.nectarOptions.delay_js && window.nectarOptions.delay_js === '1' ? true : false;
+				//if( !nectarDOMInfo.usingMobileBrowser || nectarDOMInfo.scrollTop != 0 || delayJS) {
+					salientNonCritical();
+				//} else {
+				//	$('body').on('click scroll touchstart mousemove',salientNonCritical);
+				//	$window.on('scroll',salientNonCritical);
+				//}
 
 				// Cross browser assist.
+				new NectarAccessibility();
 				crossBrowserAdjust();
 				bfCacheAssist();
 
@@ -21447,6 +22396,7 @@
 				// Page transitions and waypoint activation.
 				pageTransitionInit();
 
+				
 
 
 				// Main Debounced Resize Event.
@@ -21461,8 +22411,10 @@
 				window.addEventListener("orientationchange", orientationChangeInit);
 
 				// If window load has already triggered prior to the below bind.
-				if( document.readyState === 'complete' ) {
-          
+				var reactCompat = window.nectarOptions && window.nectarOptions.react_compat && window.nectarOptions.react_compat === 'enabled' ? true : false;
+				
+				if( document.readyState === 'complete' && reactCompat != true ) {
+					
 					setTimeout(function(){
 						$window.trigger('load');
 					},30);
@@ -21478,12 +22430,14 @@
 					$('video').css('visibility', 'visible');
 
 					// Scroll to anchor
-
 					pageLoadHashInit();
 
 					// Row/Column related.
 					fullWidthContentColumns();
-					parallaxRowsBGCals();
+
+					if(!nectarDOMInfo.usingMobileBrowser) {
+						parallaxRowsBGCals();
+					}
 
 					// Video BG
 					resizeVideoToCover();

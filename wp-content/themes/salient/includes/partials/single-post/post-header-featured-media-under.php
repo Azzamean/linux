@@ -4,7 +4,7 @@
  *
  * @package Salient WordPress Theme
  * @subpackage Partials
- * @version 13.1
+ * @version 14.1
  */
 
 // Exit if accessed directly
@@ -62,13 +62,20 @@ $hide_featrued  = (isset($nectar_options['blog_hide_featured_image'] ) ) ? $nect
       
         if( !empty($custom_bg) ) {
           echo nectar_responsive_page_header_css($custom_bg, $selector);
-          echo '<span class="'.esc_attr(implode(' ', $bg_classname)).'" style="background-image: url('.esc_attr($custom_bg).')"></span>';
+
+          $custom_bg_id = attachment_url_to_postid($custom_bg);
+          $img_meta     = wp_get_attachment_metadata($custom_bg_id);
+          $width        = ( !empty($img_meta['width']) ) ? $img_meta['width'] : '1000';
+          $height       = ( !empty($img_meta['height']) ) ? $img_meta['height'] : '600';
+          $custom_bg_image_markup = '<img src="'.esc_attr($custom_bg).'" alt="'.get_the_title().'" width="'.esc_attr($width).'" height="'.esc_attr($height).'" />';
+          
+          echo '<span class="'.esc_attr(implode(' ', $bg_classname)).'">'.$custom_bg_image_markup.'</span>';
         }
         else {
           $image_id = get_post_thumbnail_id($post->ID);
           if( $image_id ) {
             echo nectar_responsive_page_header_css($image_id, $selector);
-            echo '<span class="'.esc_attr(implode(' ', $bg_classname)).'" style="background-image: url('.get_the_post_thumbnail_url( $post->ID, 'full' ).')"></span>';
+            echo '<span class="'.esc_attr(implode(' ', $bg_classname)).'">'.get_the_post_thumbnail($post->ID, 'full').'</span>';
           }
         }
 

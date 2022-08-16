@@ -11,7 +11,7 @@ extract(shortcode_atts(array(
   'display_tag' => 'body',
   'display' => 'block',
   'bg_color_custom' => '',
-  'bg_color_type' => 'global',
+  'bg_color_type' => '',
   'text_color' => '',
   'padding' => '',
   'border_radius' => '',
@@ -63,4 +63,4 @@ if(!empty($margins)) {
     $el_style = ' style="'.$margins.'"';
 }
 
-echo '<div class="'.implode(' ',$classes).'"'.$el_style . $el_atts.'><div class="'.implode(' ',$inner_classes).'">' . $text . '</div></div>';
+echo '<div class="'.nectar_clean_classnames(implode(' ',$classes)).'"'.$el_style . $el_atts.'><div class="'.nectar_clean_classnames(implode(' ',$inner_classes)).'">' . $text . '</div></div>';

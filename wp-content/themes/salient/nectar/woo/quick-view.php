@@ -181,11 +181,15 @@ if( !class_exists('Nectar_Woo_Quickview') ) {
 	                            
 	                            echo '</div> <!--nectar-product-slider--> </div>';
 	                            
-	                         } else {
-	                           $html  = '<div class="woocommerce-product-gallery__image--placeholder">';
-	                           $html .= sprintf( '<img src="%s" alt="%s" class="wp-post-image" />', esc_url( wc_placeholder_img_src() ), esc_html__( 'Awaiting product image', 'woocommerce' ) );
-	                           $html .= '</div>';
-	                         }
+	                         } else { ?>
+	                           <div class="images">
+							   		<div class="nectar-product-slider generate-markup">
+									   <div class="carousel-cell woocommerce-product-gallery__image">
+	                           			<?php printf( '<img src="%s" alt="%s" class="wp-post-image" />', esc_url( wc_placeholder_img_src() ), esc_html__( 'Awaiting product image', 'woocommerce' ) ); ?>
+										</div>
+									</div>
+							   </div>
+	                         <?php }
 
 	 
 	                         ?>

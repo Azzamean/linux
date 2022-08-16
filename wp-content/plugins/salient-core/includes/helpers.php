@@ -36,6 +36,241 @@
     }
   }
 
+
+  /**
+  * Generates lazy loading markup
+  *
+  * @since 1.9
+  */
+  if(!function_exists('nectar_lazy_loaded_image_markup')) {
+    function nectar_lazy_loaded_image_markup($id, $image_size) {
+      
+      // src.
+      $img_src = wp_get_attachment_image_src($id, $image_size);
+      if( isset($img_src[0]) ) {
+        $img_src = $img_src[0];
+      }
+
+      // srcset.
+      $img_srcset = '';
+      $sizes = '';
+      if (function_exists('wp_get_attachment_image_srcset')) {
+        $img_srcset = wp_get_attachment_image_srcset($id, $image_size);
+        $sizes = wp_get_attachment_image_sizes( $id, $image_size );
+      }
+      
+      // alt.
+      $alt_tag = get_post_meta( $id, '_wp_attachment_image_alt', true );
+      
+      // dimensions.
+      $img_meta = wp_get_attachment_metadata($id);
+
+      $width  = ( !empty($img_meta['width']) ) ? $img_meta['width'] : '100';
+      $height = ( !empty($img_meta['height']) ) ? $img_meta['height'] : '100';
+      
+      $placeholder_img_src = "data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D'http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg'%20viewBox%3D'0%200%20".esc_attr($width).'%20'.esc_attr($height)."'%2F%3E";
+
+      return '<img class="nectar-lazy skip-lazy" src="'.$placeholder_img_src.'" alt="'.esc_attr($alt_tag).'" height="'.esc_attr($height).'" width="'.esc_attr($width).'" data-nectar-img-src="'.esc_attr($img_src).'" data-nectar-img-srcset="'.esc_attr($img_srcset).'" sizes="'.esc_attr($sizes).'" />';
+
+    }
+  }
+
+
+
+
+  /**
+  * Map Legacy FA Icons
+  *
+  * Maps old icon class names to new versions.
+  *
+  * @since 1.9.4
+  */
+  if( !function_exists('nectar_generate_shadow_css') ) {
+    function nectar_generate_shadow_css($atts) {
+
+      $style = '';
+
+      if( isset($atts['custom_box_shadow']) && 
+         !empty($atts['custom_box_shadow']) ) {
+    
+          $shadow_method = isset($atts['box_shadow_method']) ? $atts['box_shadow_method'] : 'default';
+
+          // Detemerine shadow type.
+         if( 'default' === $shadow_method ) {
+          $shadow_base = 'box-shadow: $;';
+         } else {
+          $shadow_base = 'filter: drop-shadow($);';
+         }
+
+        // Parse values.  
+        $parsed_values = array();
+        $kaboom = explode(',', $atts['custom_box_shadow']);
+        foreach($kaboom as $item) {
+
+          $data = explode(':', $item);
+
+          // filter doesn't support spread.
+          if( 'filter' === $shadow_method && $data[0] == 'spread') {
+            continue;
+          }
+
+          $parsed_values[$data[0]] = $data[1];
+        }
+
+        // Build shadow.
+        foreach($parsed_values as $key => $value) {
+          if( 'opacity' !== $key ) {
+            $style .= $value . 'px ';
+          }
+          else {
+            $style .= 'rgba(0,0,0,'.$value.')';
+          }
+        }
+
+        // Combine base and props.
+        $style = str_replace('$', $style, $shadow_base);
+				
+      }
+
+      return $style;
+    }
+  }
+
+
+/**
+  * Outputs icon HTML
+  *
+  *
+  * @since 1.9.1
+  */
+  if( !function_exists('nectar_icon_el_output') ) {
+    function nectar_icon_el_output($atts) {
+
+      if( !isset($atts['icon_family']) ) {
+        return '';
+      }
+
+      switch($atts['icon_family']) {
+        case 'fontawesome':
+          $icon = $atts['icon_fontawesome'];
+          wp_enqueue_style( 'font-awesome' );
+          break;
+        case 'steadysets':
+          $icon = $atts['icon_steadysets'];
+          break;
+        case 'linecons':
+          $icon = $atts['icon_linecons'];
+          wp_enqueue_style( 'vc_linecons' );
+          break;
+        case 'iconsmind':
+          $icon = $atts['icon_iconsmind'];
+          break;
+        default:
+          $icon = '';
+          break;
+      }
+
+      if( $atts['icon_family'] !== 'none' ) {
+		
+        if( $atts['icon_family'] === 'iconsmind' ) {
+          
+          // SVG iconsmind.
+          $icon_escaped = '<i><span class="im-icon-wrap"><span>';
+          
+          $converted_icon = str_replace('iconsmind-', '', $icon);
+          $converted_icon = str_replace(".", "", $converted_icon);
+          
+          require_once( SALIENT_CORE_ROOT_DIR_PATH.'includes/icons/class-nectar-icon.php' );
+    
+          $nectar_icon_class = new Nectar_Icon(array(
+            'icon_name' => $converted_icon,
+            'icon_library' => 'iconsmind',
+          ));
+        
+          $icon_escaped .= $nectar_icon_class->render_icon();
+          $icon_escaped .= '</span></span></i>';
+      
+          
+        } else {
+          
+          $icon_escaped = '<i class="' . esc_attr($icon) .'"></i>'; 
+    
+        }
+
+        return $icon_escaped;
+        
+      } 
+
+      return '';
+      
+    }
+  }
+
+
+  /**
+  * CSS Animation Attributes
+  *
+  * @param array $atts - The attributes array.
+  * @param string $stagger_element - class name of element to stagger
+  *
+  * @return array [class names, animation attributes]
+  * @since 1.9.1
+  */
+  if( !function_exists('nectar_css_animation_atts') ) {
+    function nectar_css_animation_atts( $atts, $stagger_element = false ) {
+        
+        $animation = isset($atts['css_animation']) ? $atts['css_animation'] : '';
+        $delay = isset($atts['css_animation_delay']) ? $atts['css_animation_delay'] : false;
+        $offset = isset($atts['css_animation_offset']) ? $atts['css_animation_offset'] : false;
+        $mobile_disable = isset($atts['mobile_disable_css_animation']) ? $atts['mobile_disable_css_animation'] : false;
+
+        $el_attrs = array();
+        $el_classes = array();
+
+        if( !empty($animation) && $animation !== 'none' ) {
+
+          $el_classes[] = 'nectar-waypoint-el';
+
+          // Animation name.
+          $el_classes[] = 'nectar-' . $animation;
+
+          // Stagger element selector.
+          if( $stagger_element ) {
+            $el_attrs[] = 'data-nectar-waypoint-el-stagger="'.esc_attr($stagger_element).'"';
+          }
+          
+          // Animation delay.
+          if( !empty($delay) ) {
+              $el_attrs[] = 'data-nectar-waypoint-el-delay="'.esc_attr($delay).'"';
+          }
+
+          // Animation offset.
+          if( !empty($offset) ) {
+            $el_attrs[] = 'data-nectar-waypoint-el-offset="'.esc_attr($offset).'"';
+          }
+
+          // Mobile disable.
+          if( !empty($mobile_disable) ) {
+            $el_attrs[] = 'data-nectar-waypoint-el-mobile-disable="true"';
+          }
+
+        }
+        
+        $combined_props = array(
+          'classes' => implode(' ', $el_classes),
+          'atts' => implode(' ', $el_attrs),
+        );
+
+        // extra white space for atts.
+        if( !empty($combined_props['atts']) ) {
+          $combined_props['atts'] = ' ' . $combined_props['atts'];
+        }
+
+        return $combined_props;
+  
+    }
+  }
+
 /**
   * Map Legacy FA Icons
   *

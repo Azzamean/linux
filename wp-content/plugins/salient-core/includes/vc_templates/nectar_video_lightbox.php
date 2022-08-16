@@ -9,7 +9,7 @@ wp_enqueue_style( 'nectar-element-video-lightbox' );
 
 extract(shortcode_atts(array(
 	"link_style" => "play_button", 
-  'hover_effect' => 'default', 
+	'hover_effect' => 'default', 
 	"font_style" => "p", 
 	"video_url" => '#', 
 	"link_text" => "", 
@@ -25,7 +25,7 @@ extract(shortcode_atts(array(
 	'parent_hover_relationship' => '',
 	'mouse_indicator_style' => 'default',
 	'mouse_indicator_color' => '',
-  'nofollow_link' => '',
+	'nofollow_link' => '',
 	'box_shadow' => ''), $atts));
 
 $wp_image_size  = ( !empty($image_size) ) ? $image_size : 'full';
@@ -61,19 +61,24 @@ if( $link_style === 'play_button_2' || $link_style === 'play_button_mouse_follow
 					
 					if( property_exists('NectarLazyImages', 'global_option_active') && true === NectarLazyImages::$global_option_active ) {
 						$image_arr = wp_get_attachment_image_src($image_url, $wp_image_size);
-						$image_src    = $image_arr[0];
-						$img_dimens_w = $image_arr[1];
-						$img_dimens_h = $image_arr[2];
-						$placeholder_img_src = "data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D'http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg'%20viewBox%3D'0%200%20".esc_attr($img_dimens_w).'%20'.esc_attr($img_dimens_h)."'%2F%3E";
-						
-						$alt_tag = esc_html__('video preview','salient-core');
-						$wp_img_alt_tag = get_post_meta( $image_url, '_wp_attachment_image_alt', true );
-						if (!empty($wp_img_alt_tag)) { 
-							$alt_tag = $wp_img_alt_tag;
+
+						if( isset($image_arr[0]) ) {
+
+							
+							$image_src    = $image_arr[0];
+							$img_dimens_w = $image_arr[1];
+							$img_dimens_h = $image_arr[2];
+							$placeholder_img_src = "data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D'http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg'%20viewBox%3D'0%200%20".esc_attr($img_dimens_w).'%20'.esc_attr($img_dimens_h)."'%2F%3E";
+							
+							$alt_tag = esc_html__('video preview','salient-core');
+							$wp_img_alt_tag = get_post_meta( $image_url, '_wp_attachment_image_alt', true );
+							if (!empty($wp_img_alt_tag)) { 
+								$alt_tag = $wp_img_alt_tag;
+							}
+							$image_srcset = wp_get_attachment_image_srcset($image_url, $wp_image_size);
+							
+							$image = '<img class="nectar-lazy" src="'.esc_attr($placeholder_img_src).'" data-nectar-img-src="'.esc_attr($image_src).'" data-nectar-img-srcset="'.esc_attr($image_srcset).'" sizes="(max-width: 1000px) 100vw, 1000px" alt="'.esc_attr($alt_tag).'" width="'.esc_attr($img_dimens_w).'" height="'.esc_attr($img_dimens_h).'" />';
 						}
-						$image_srcset = wp_get_attachment_image_srcset($image_url, $wp_image_size);
-						
-						$image = '<img class="nectar-lazy" src="'.esc_attr($placeholder_img_src).'" data-nectar-img-src="'.esc_attr($image_src).'" data-nectar-img-srcset="'.esc_attr($image_srcset).'" sizes="(max-width: 1000px) 100vw, 1000px" alt="'.esc_attr($alt_tag).'" width="'.esc_attr($img_dimens_w).'" height="'.esc_attr($img_dimens_h).'" />';
 					} else {
 						$image = wp_get_attachment_image($image_url, $wp_image_size);
 					}

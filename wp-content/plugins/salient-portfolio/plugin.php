@@ -1,11 +1,11 @@
 <?php
 /**
  * Plugin Name: Salient Portfolio
- * Plugin URI: --
+ * Plugin URI: https://themenectar.com
  * Description: Showcase your projects in a stunning manner with the Nectar Portfolio post type.
  * Author: ThemeNectar
  * Author URI: https://themenectar.com
- * Version: 1.7.1
+ * Version: 1.7.2
  * Text Domain: salient-portfolio
  */
 
@@ -17,7 +17,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 define( 'SALIENT_PORTFOLIO_ROOT_DIR_PATH', plugin_dir_path( __FILE__ ) );
 define( 'SALIENT_PORTFOLIO_PLUGIN_PATH', plugins_url( 'salient-portfolio' ) );
 if ( ! defined( 'SALIENT_PORTFOLIO_PLUGIN_VERSION' ) ) {
-	define( 'SALIENT_PORTFOLIO_PLUGIN_VERSION', '1.7.1' );
+	define( 'SALIENT_PORTFOLIO_PLUGIN_VERSION', '1.7.2' );
 }
 
 register_deactivation_hook( __FILE__, 'flush_rewrite_rules' );
@@ -106,8 +106,8 @@ class Salient_Portfolio {
 
 	public function salient_portfolio_enqueue_css(){
 		
-			$using_portfolio_el 				= $this->using_portfolio_el();
-			$using_recent_projects_el 	= $this->using_recent_projects_el();
+			$using_portfolio_el       = $this->using_portfolio_el();
+			$using_recent_projects_el = $this->using_recent_projects_el();
 		
 			wp_register_style('nectar-portfolio', plugins_url('/css/portfolio.css', __FILE__),'', $this->plugin_version );
 			wp_register_style('nectar-portfolio-grid', plugins_url('/css/portfolio-grid.css', __FILE__),'', $this->plugin_version );
@@ -134,8 +134,8 @@ class Salient_Portfolio {
 	
 	public function salient_portfolio_enqueue_scripts() {
 			
-			$using_portfolio_el 				= $this->using_portfolio_el();
-			$using_recent_projects_el 	= $this->using_recent_projects_el();
+			$using_portfolio_el       = $this->using_portfolio_el();
+			$using_recent_projects_el = $this->using_recent_projects_el();
 			
 			wp_register_script( 'imagesLoaded', plugins_url('/js/third-party/imagesLoaded.min.js', __FILE__), array( 'jquery' ), '4.1.4', true );
 			wp_register_script( 'isotope', plugins_url('/js/third-party/isotope.min.js', __FILE__), array( 'jquery' ), '7.6', true );
@@ -144,13 +144,21 @@ class Salient_Portfolio {
 			wp_register_script( 'salient-portfolio-waypoints', plugins_url('/js/third-party/waypoints.js', __FILE__), array( 'jquery' ), '4.0.1', true );
 			wp_register_script( 'salient-portfolio-js', plugins_url('/js/salient-portfolio.js', __FILE__), array( 'jquery' ), $this->plugin_version, true );
 			
-			if( $using_portfolio_el || $using_recent_projects_el || is_page_template( 'template-portfolio.php' ) || is_post_type_archive( 'portfolio' ) || is_singular( 'portfolio' ) || is_tax( 'project-attributes' ) || is_page_template( 'template-home-1.php' ) || is_page_template( 'template-home-3.php' ) || is_tax( 'project-type' )) {
-				wp_enqueue_script( 'imagesLoaded' );
-				if( ! defined( 'NECTAR_THEME_NAME' ) ) {
-					wp_enqueue_script( 'salient-portfolio-waypoints' );
-				}
-				wp_enqueue_script( 'isotope' );
-				wp_enqueue_script( 'salient-portfolio-js' );
+			if( $using_portfolio_el || 
+				$using_recent_projects_el || 
+				is_page_template( 'template-portfolio.php' ) || 
+				is_post_type_archive( 'portfolio' ) || 
+				is_tax( 'project-attributes' ) || 
+				is_page_template( 'template-home-1.php' ) || 
+				is_page_template( 'template-home-3.php' ) || 
+				is_tax( 'project-type' )) {
+
+					wp_enqueue_script( 'imagesLoaded' );
+					if( ! defined( 'NECTAR_THEME_NAME' ) ) {
+						wp_enqueue_script( 'salient-portfolio-waypoints' );
+					}
+					wp_enqueue_script( 'isotope' );
+					wp_enqueue_script( 'salient-portfolio-js' );
 			}
 			
 			if($using_recent_projects_el || is_page_template( 'template-home-3.php' ) || is_page_template( 'template-home-1.php' ) ) {
@@ -196,21 +204,49 @@ class Salient_Portfolio {
 		);
 		wp_enqueue_media();
 		
-		// Third Party Integration.
-		if( class_exists('WPSEO_Options') && function_exists('get_current_screen') ) {
+		if( $this->verify_portfolio_screen($hook) ) {
+
+			// Third Party Integration.
+			if( class_exists('WPSEO_Options') ) {
+				wp_register_script( 'salient-portfolio-yoast', plugins_url('includes/admin/third-party/js/yoast.js', __FILE__), array( 'jquery' ), $this->plugin_version );
+				wp_enqueue_script( 'salient-portfolio-yoast' );
+			}
+			if( class_exists('RankMath') ) {
+				wp_register_script( 'salient-portfolio-rankmath', plugins_url('includes/admin/third-party/js/rankmath.js', __FILE__), array( 'jquery', 'wp-hooks', 'rank-math-analyzer', 'underscore' ), $this->plugin_version, true );
+				wp_enqueue_script( 'salient-portfolio-rankmath' );
+			}
+
+			// Portfolio admin.
+			$activate_unload = apply_filters('salient_portfolio_unsaved_changes_protection', false);
+			wp_enqueue_script('salient-portfolio-admin-util', plugins_url('includes/assets/js/portfolio-admin.js', __FILE__), array( 'jquery' ), $this->plugin_version);
+			wp_localize_script('salient-portfolio-admin-util','salient_portfolio_admin_l10n', array(
+				'save_alert' => esc_html__('Changes you made may not be saved.','salient-portfolio'),
+				'activate_unload' => ($activate_unload === true) ? true : false
+			));
+
+		}
+		
+	}
+
+	public function verify_portfolio_screen($hook) {
+
+		if( function_exists('get_current_screen') ) {
 			
 			$screen = get_current_screen();
 			
 			if( 'post.php' === $hook || 'post-new.php' === $hook ) {
 				
-				if( is_object( $screen ) && isset( $screen->post_type ) && 'portfolio' == $screen->post_type && current_user_can('edit_pages') ) {
-					wp_register_script( 'salient-portfolio-yoast', plugins_url('includes/admin/third-party/js/yoast.js', __FILE__), array( 'jquery' ), $this->plugin_version );
-					wp_enqueue_script( 'salient-portfolio-yoast' );
+				if( is_object( $screen ) && 
+				    isset( $screen->post_type ) && 
+					'portfolio' == $screen->post_type && 
+					current_user_can('edit_pages') ) {
+					return true;
 				}
 				
 			}
 		}
-		
+
+		return false;
 	}
 	
 	

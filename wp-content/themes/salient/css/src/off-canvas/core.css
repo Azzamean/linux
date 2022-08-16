@@ -196,10 +196,16 @@ body #slide-out-widget-area .inner-wrap .inner .nectar-header-text-content {
 body #slide-out-widget-area .secondary-header-text {
 	line-height: 1.4em;
 }
-#slide-out-widget-area.mobile,
-#slide-out-widget-area.slide-out-from-right-hover.mobile {
-  overflow-y:scroll;
+#slide-out-widget-area,
+#slide-out-widget-area.slide-out-from-right-hover {
+  overflow-y:scroll!important;
   overflow-x:hidden;
+  -ms-overflow-style: none;  
+  scrollbar-width: none;  
+}
+
+#slide-out-widget-area::-webkit-scrollbar { 
+  display: none;  
 }
 
 #slide-out-widget-area .bottom-text{

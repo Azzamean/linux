@@ -45,7 +45,6 @@ $single_product_layout = ( ! empty( $nectar_options['single_product_layout'] ) )
 remove_action( 'woocommerce_before_main_content', 'woocommerce_output_content_wrapper', 10 );
 remove_action( 'woocommerce_after_main_content', 'woocommerce_output_content_wrapper_end', 10 );
 
-
 if( !function_exists('nectar_is_woo_archive') ) {
 	function nectar_is_woo_archive() {
 		if( class_exists( 'WooCommerce' ) ) {
@@ -242,6 +241,12 @@ if ( !function_exists( 'nectar_woo_shop_markup' ) ) {
 
 		if ( $woocommerce && ! is_product() ) {
 			remove_action( 'woocommerce_before_main_content', 'woocommerce_breadcrumb', 20 );
+		}
+
+		// Account page markup wrap
+		if( function_exists('is_account_page') && is_account_page() ) {
+			add_action('nectar_hook_before_content','woocommerce_output_content_wrapper');
+			add_action('nectar_hook_after_content','woocommerce_output_content_wrapper_end');
 		}
 
 		// Shop Page Header.
@@ -1157,13 +1162,8 @@ if ( !function_exists( 'nectar_header_cart_output' ) ) {
 
 				<?php
 				if ( $nav_cart_style !== 'slide_in' && $nav_cart_style !== 'slide_in_click' ) {
-					// Check for WooCommerce 2.0 and display the cart widget
-					if ( version_compare( WOOCOMMERCE_VERSION, '2.0.0' ) >= 0 ) {
-						$instance_params = ( defined('ICL_SITEPRESS_VERSION') ) ? array('wpml_language' => 'all') : array();
-						the_widget( 'WC_Widget_Cart', $instance_params );
-					} else {
-						the_widget( 'WooCommerce_Widget_Cart', 'title= ' );
-					}
+					$instance_params = ( defined('ICL_SITEPRESS_VERSION') ) ? array('wpml_language' => 'all', 'title' => '') : array('title' => '');
+					the_widget( 'WC_Widget_Cart', $instance_params );
 				}
 				?>
 

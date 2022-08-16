@@ -318,6 +318,16 @@ body.material .nectar-category-grid[data-grid-spacing="none"] .bg-overlay {
  transform: translateY(0px);
 }
 
+.nectar-category-grid[data-text-color="dark"] .content[data-subtext="custom"][data-subtext-vis="always"] .subtext:after{
+  background-color: #000;
+}
+.nectar-category-grid[data-text-color="dark"] .nectar-category-grid-item .content * {
+  color: #000;
+}
+.nectar-category-grid[data-text-color="light"] .nectar-category-grid-item .content *,
+.full-width-section > .col.span_12.dark .nectar-category-grid[data-text-color="light"] .nectar-category-grid-item .content * {
+  color: #fff;
+}
 
 .nectar-category-grid[data-text-color="dark"] .nectar-category-grid-item:hover .content[data-subtext="custom"][data-subtext-vis="always"] .subtext:after { 
   background-color: #000; 

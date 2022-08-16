@@ -22,6 +22,7 @@ if( !class_exists('NectarThemeManager') ) {
     public static $woo_product_filters    = false;
     public static $colors                 = array();
     public static $header_format          = '';
+    public static $column_gap             = '';
     public static $global_seciton_options = array(
       'global-section-after-header-navigation',
       'global-section-above-footer' 
@@ -91,6 +92,10 @@ if( !class_exists('NectarThemeManager') ) {
       
       self::$woo_product_filters = $product_filter_trigger;
 
+
+      // Column Gap.
+      self::$column_gap = ( isset( self::$options['column-spacing']) ) ? self::$options['column-spacing'] : 'default';
+      
 
       // Theme Colors.
       $available_colors = array(

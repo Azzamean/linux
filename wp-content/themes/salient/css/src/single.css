@@ -1029,6 +1029,10 @@ body[data-button-style^="rounded"].single .heading-title[data-header-style="defa
   width: 992px;
 }
 
+body.single-post .container-wrap[data-remove-post-author="1"][data-remove-post-date="1"] .blog-recent[data-style*="classic_enhanced"].related-posts .inner-wrap {
+  padding-bottom: 0;
+}
+
 /* remove single meta date option */
 body.single-post .container-wrap[data-remove-post-date="1"] #single-below-header .meta-date,
 body.single-post #page-header-bg[data-remove-post-date="1"] .author-section .meta-date,
