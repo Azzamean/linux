@@ -262,6 +262,7 @@ div[data-project-style="material"] .up-sells {
 
 .woocommerce .material.product .product-wrap > a {
 	position: relative;
+	display: block;
 }
 .woocommerce .material.product:hover:before {
 	opacity: 1;

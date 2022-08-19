@@ -1429,6 +1429,7 @@ class NectarElDynamicStyles {
       // Advanced padding;
       if( 'advanced' === $padding_type ) {
         self::$element_css[] = self::spacing_group_styles('padding','wpb_column', ' > .vc_column-inner', $atts);
+        self::$element_css[] = self::spacing_group_styles('padding','wpb_column', ' > .n-sticky > .vc_column-inner', $atts);
       }
 
        // Backdrop filter.
@@ -5345,7 +5346,7 @@ class NectarElDynamicStyles {
           $scribble_shape = ( isset($atts['scribble_shape']) ) ? esc_attr($atts['scribble_shape']) : 'circle';
 
           if( 'circle' === $scribble_shape ) {
-            self::$element_css[] = '.nectar-scribble.circle {
+            self::$element_css[] = 'body .nectar-scribble.circle {
               width: 130%;
               height: 140%;
               top: -20%;
@@ -5353,7 +5354,7 @@ class NectarElDynamicStyles {
             }';
           }
           if( 'sketch-underline' === $scribble_shape ) {
-            self::$element_css[] = '.nectar-scribble.sketch-underline {
+            self::$element_css[] = 'body .nectar-scribble.sketch-underline {
               width: 100%;
               height: 60%;
               top: auto;
@@ -5361,7 +5362,7 @@ class NectarElDynamicStyles {
             }';
           }
           if( 'basic-underline' === $scribble_shape ) {
-            self::$element_css[] = '.nectar-scribble.basic-underline {
+            self::$element_css[] = 'body .nectar-scribble.basic-underline {
               width: 100%;
               height: 30%;
               top: auto;
@@ -5369,7 +5370,7 @@ class NectarElDynamicStyles {
             }';
           }
           if( 'squiggle-underline' === $scribble_shape ) {
-            self::$element_css[] = '.nectar-scribble.squiggle-underline {
+            self::$element_css[] = 'body .nectar-scribble.squiggle-underline {
               width: 100%;
               height: 50%;
               top: auto;
@@ -5377,7 +5378,7 @@ class NectarElDynamicStyles {
             }';
           }
           if( 'squiggle-underline-2' === $scribble_shape ) {
-            self::$element_css[] = '.nectar-scribble.squiggle-underline-2 {
+            self::$element_css[] = 'body .nectar-scribble.squiggle-underline-2 {
               width: 100%;
               height: 50%;
               top: auto;

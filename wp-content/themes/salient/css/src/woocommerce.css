@@ -2693,6 +2693,11 @@ body[data-form-style="minimal"] div.widget.woocommerce.widget_product_search but
 	position: relative;
 }
 
+#ajax-content-wrap #sidebar .wc-block-grid__product .wp-block-button .wp-block-button__link,
+.wc-block-grid__product .wp-block-button .wp-block-button__link {
+	color: #fff;
+}
+
 @media only screen and (max-width: 999px) {
 	.ascend.woocommerce #sidebar div ul.yith-wcan-color li {
 		padding-bottom: 0!important;

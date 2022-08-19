@@ -266,6 +266,14 @@
     
     
     $that.css('opacity','1');
+
+    // Equal heights.
+    if(this.type == 'multiple_visible_minimal') {
+      this.testimonialSliderHeightMinimalMult();
+      setTimeout(function(){
+        objectStore.flickityEl.flickity('resize');
+      },100);
+    }
     
   };
 
@@ -480,7 +488,7 @@
       this.el.find('blockquote > .inner').css('height','auto');
       
       this.el.find('blockquote > .inner').each(function(){
-        ($(this).height() > $tallestQuote) ? $tallestQuote = $(this).outerHeight() : $tallestQuote = $tallestQuote;
+        ($(this).outerHeight() > $tallestQuote) ? $tallestQuote = $(this).outerHeight() : $tallestQuote = $tallestQuote;
       });	
       
       // safety net incase height couldn't be determined

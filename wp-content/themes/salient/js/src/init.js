@@ -11073,10 +11073,7 @@
 
 							if ($(this).is('.testimonial_slider[data-style="multiple_visible_minimal"]')) {
 								$testimonialSliders[i].testimonialSliderHeightMinimalMult();
-								setTimeout(function(){
-									$testimonialSliders[i].testimonialSliderHeightMinimalMult();
-									$testimonialSliders[i].flickityEl.flickity('resize');
-								},700);
+								
 							}
 
 						});
