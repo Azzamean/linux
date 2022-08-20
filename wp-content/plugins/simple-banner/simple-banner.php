@@ -3,16 +3,16 @@
  * Plugin Name: Simple Banner
  * Plugin URI: https://github.com/rpetersen29/simple-banner
  * Description: Display a simple banner at the top of your website.
- * Version: 2.12.0
+ * Version: 2.12.1
  * Author: Ryan Petersen
  * Author URI: http://rpetersen29.github.io/
  * License: GPL2
  *
  * @package Simple Banner
- * @version 2.12.0
+ * @version 2.12.1
  * @author Ryan Petersen <rpetersen.dev@gmail.com>
  */
-define ('SB_VERSION', '2.12.0');
+define ('SB_VERSION', '2.12.1');
 
 register_activation_hook( __FILE__, 'simple_banner_activate' );
 function simple_banner_activate() {
@@ -85,7 +85,7 @@ function simple_banner() {
 	);
 	// Enqueue the script
     wp_register_script('simple-banner-script', plugin_dir_url( __FILE__ ) . 'simple-banner.js', array( 'jquery' ), SB_VERSION);
-    wp_add_inline_script('simple-banner-script', 'const simpleBannerScriptParams = ' . wp_json_encode($script_params));
+    wp_add_inline_script('simple-banner-script', 'const simpleBannerScriptParams = ' . wp_json_encode($script_params), 'before');
     wp_enqueue_script('simple-banner-script');
 }
 

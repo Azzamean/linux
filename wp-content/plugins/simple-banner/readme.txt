@@ -4,7 +4,7 @@ Donate link: https://www.paypal.me/rpetersenDev
 Tags: banner, simple, top, bar, announcement, top bar, topbar, bulletin, notification, notice, cta, free
 Requires at least: 3.0.1
 Tested up to: 6.0.1
-Stable tag: 2.12.0
+Stable tag: 2.12.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -119,6 +119,9 @@ Set your banner position to <code>relative</code> and try this in 'Website Custo
 4. This is the settings page... and the fourth screen shot.
 
 == Changelog ==
+
+= 2.12.1 =
+* Bug fix
 
 = 2.12.0 =
 * Security improvements
@@ -299,6 +302,9 @@ Set your banner position to <code>relative</code> and try this in 'Website Custo
 * First Version.
 
 == Upgrade Notice ==
+
+= 2.12.1 =
+* Bug fix
 
 = 2.12.0 =
 * Security improvements
