@@ -553,4 +553,16 @@ class WP_Optimize_Commands {
 			'success' => update_user_meta(get_current_user_id(), 'wpo-ignores-table-delete-warning', true)
 		);
 	}
+
+	/**
+	 * Exports unused images as a CSV file to the `uploads` folder
+	 *
+	 * @return array
+	 */
+	public function export_csv() {
+		WP_Optimization_images::instance()->output_csv();
+		return array(
+			'success' => true
+		);
+	}
 }

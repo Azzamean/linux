@@ -17,7 +17,7 @@ class WP_Optimize_WebP {
 	 */
 	private function __construct() {
 		$this->maybe_set_converter_status();
-		$this->set_rewrite_status();
+		$this->maybe_set_rewrite_status();
 		if (!is_admin()) {
 			$this->maybe_decide_webp_serve_method();
 		}
@@ -58,6 +58,15 @@ class WP_Optimize_WebP {
 	}
 
 	/**
+	 * May be set server's rewrite status
+	 */
+	private function maybe_set_rewrite_status() {
+		$this->_should_use_webp = WP_Optimize()->get_options()->get_option('webp_conversion');
+		if ($this->_should_use_webp) {
+			$this->set_rewrite_status();
+		}
+	}
+	/**
 	 * Sets server's rewrite status
 	 */
 	private function set_rewrite_status() {
@@ -86,7 +95,6 @@ class WP_Optimize_WebP {
 	 * using rewrite rules or using altered html method
 	 */
 	private function maybe_decide_webp_serve_method() {
-		$this->_should_use_webp = WP_Optimize()->get_options()->get_option('webp_conversion');
 		if ('true' === $this->_rewrite_status) {
 			if (!$this->_should_use_webp) {
 				$this->save_htaccess_rules(false);

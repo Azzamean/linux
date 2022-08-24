@@ -212,8 +212,6 @@ class Updraft_Smush_Manager_Commands extends Updraft_Task_Manager_Commands_1_0 {
 		$options['image_quality'] = filter_var($data['image_quality'], FILTER_SANITIZE_NUMBER_INT);
 		$options['show_smush_metabox'] = filter_var($data['show_smush_metabox'], FILTER_VALIDATE_BOOLEAN) ? 'show' : 'hide';
 		$options['webp_conversion'] = filter_var($data['webp_conversion'], FILTER_VALIDATE_BOOLEAN) ? true : false;
-		$is_webp_conversion_enabled = $options['webp_conversion'] ? 'true' : 'false';
-		WP_Optimize()->log("WebP conversion is enabled? $is_webp_conversion_enabled");
 		$options['webp_converters'] = false;
 
 		$success = $this->task_manager->update_smush_options($options);

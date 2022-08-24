@@ -511,8 +511,11 @@ class WP_Optimize_Database_Information {
 		}
 
 		// add WP-Optimize tables.
-		$plugin_tables['tm_taskmeta'][] = 'wp-optimize';
-		$plugin_tables['tm_tasks'][] = 'wp-optimize';
+		$wpo = 'wp-optimize';
+		if (false === array_search($wpo, $plugin_tables['tm_taskmeta']) && false === array_search($wpo, $plugin_tables['tm_tasks'])) {
+			$plugin_tables['tm_taskmeta'][] = $wpo;
+			$plugin_tables['tm_tasks'][] = $wpo;
+		}
 
 		return $plugin_tables;
 	}

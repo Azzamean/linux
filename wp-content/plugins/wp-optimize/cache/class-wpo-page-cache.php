@@ -340,6 +340,8 @@ class WPO_Page_Cache {
 			$force_enable = true;
 		}
 
+		$this->maybe_regenerate_cache_config_file();
+
 		if (!$force_enable) {
 			$already_ran_enable = true;
 			return true;
@@ -520,18 +522,22 @@ class WPO_Page_Cache {
 		if (!$this->config->get_option('enable_page_caching')) return false;
 
 		if (!defined('WP_CACHE') || !WP_CACHE) {
-			$this->log("WP_CACHE constant is not present in wp-config.php");
-			return false;
+			if ((!(defined('WP_CLI') && WP_CLI)) && (!defined('DOING_AJAX') || !DOING_AJAX)) {
+				$this->log("WP_CACHE constant is not present in wp-config.php");
+				return false;
+			}
 		}
 
 		if (!defined('WPO_ADVANCED_CACHE') || !WPO_ADVANCED_CACHE) {
-			$this->log("WPO_ADVANCED_CACHE constant is not present in advanced-cache.php");
-			return false;
+			if ((!(defined('WP_CLI') && WP_CLI)) && (!defined('DOING_AJAX') || !DOING_AJAX)) {
+				$this->log("WPO_ADVANCED_CACHE constant is not present in advanced-cache.php");
+				return false;
+			}
 		}
 
 		$config_file = WPO_CACHE_CONFIG_DIR . '/'.$this->config->get_cache_config_filename();
 		if (!file_exists($config_file)) {
-			$this->log("$config_file is not present");
+			$this->log("Cache config file $config_file is not present");
 			return false;
 		}
 
@@ -1312,6 +1318,17 @@ EOF;
 			$cache_settings = WPO_Cache_Config::instance()->get();
 			$cache_settings['use_webp_images'] = WP_Optimize()->get_options()->get_option('webp_conversion');
 			WPO_Cache_Config::instance()->update($cache_settings);
+		}
+	}
+
+	/**
+	 * May be regenerate cache config file, in case of migrations
+	 */
+	private function maybe_regenerate_cache_config_file() {
+		$config_file = WPO_CACHE_CONFIG_DIR . '/'.$this->config->get_cache_config_filename();
+		if (!file_exists($config_file)) {
+			$config = $this->config->get();
+			$this->config->write($config);
 		}
 	}
 }
