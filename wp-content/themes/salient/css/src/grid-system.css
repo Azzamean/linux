@@ -235,8 +235,8 @@ body[data-col-gap] .vc_row-fluid .span_12.post-area {
 /* Mobile */
 @media only screen and (max-width: 690px) {
 
-  body .wpb_column.col.no-extra-padding_phone > .vc_column-inner,
-  body .wpb_column.child_column.col.no-extra-padding_phone > .vc_column-inner,
+  html body .wpb_column.col.no-extra-padding_phone > .vc_column-inner,
+  html body .wpb_column.child_column.col.no-extra-padding_phone > .vc_column-inner,
   body .full-width-content .wpb_column.col.no-extra-padding_phone > .vc_column-inner,
   body .wpb_row .wpb_column.col.no-extra-padding_phone > .n-sticky > .vc_column-inner,
   body .wpb_row .wpb_column.child_column.col.no-extra-padding_phone > .n-sticky > .vc_column-inner,

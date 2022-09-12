@@ -5,7 +5,7 @@
  * The styles generated from here will either be contained in salient/css/salient-dynamic-styles.css
  * or output directly in the head, depending on if the server writing permission is set for the css directory.
  *
- * @version 13.1
+ * @version 15.0.3
  */
 
 
@@ -786,11 +786,13 @@ if( ! empty($nectar_options["extra-color-1"]) ) {
 
 
 // Main extra color loop.
-$nectar_extra_accent_colors = array(
-	'extra-color-1' => ( isset($nectar_options["extra-color-1"]) && !empty($nectar_options["extra-color-1"]) ) ? $nectar_options["extra-color-1"] : false,
-	'extra-color-2' => ( isset($nectar_options["extra-color-2"]) && !empty($nectar_options["extra-color-2"]) ) ? $nectar_options["extra-color-2"] : false,
-	'extra-color-3' => ( isset($nectar_options["extra-color-3"]) && !empty($nectar_options["extra-color-3"]) ) ? $nectar_options["extra-color-3"] : false
-);
+$available_colors = NectarThemeManager::$available_theme_colors;
+array_shift($available_colors); // remove accent-color.
+
+$nectar_extra_accent_colors = array();
+foreach( $available_colors as $color_key => $label) {
+	$nectar_extra_accent_colors[$color_key] = ( isset($nectar_options[$color_key]) && !empty($nectar_options[$color_key]) ) ? $nectar_options[$color_key] : false;
+}
 
 foreach( $nectar_extra_accent_colors as $selector => $color ){
 

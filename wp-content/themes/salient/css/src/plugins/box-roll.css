@@ -279,6 +279,12 @@ body #header-space {
     -webkit-transform-origin: 50% 100%;
     transform-origin: 50% 100%;
 }
+
+.nectar-box-roll .overlaid-content[data-text-effect="rotate_in"] .inner-wrap[class*="shape"] h1[style*="opacity: 0"],
+.nectar-box-roll .overlaid-content[data-text-effect="rotate_in"] .inner-wrap[class*="shape"] .subheader[style*="opacity: 0"] {
+    visibility: hidden;
+}
+
 .nectar-box-roll .overlaid-content .row {
     padding-bottom: 0;
 }

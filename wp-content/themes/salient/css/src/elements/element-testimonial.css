@@ -207,6 +207,10 @@ Description: Styles for the "testimonial Slider" page builder element.
      font-size:16px!important
 }
 
+#ajax-content-wrap .testimonial_slider .star-rating {
+     font-size: 16px!important;
+}
+
  .testimonial_slider .star-rating:before{
     font-family:'icomoon';
      font-weight:normal;

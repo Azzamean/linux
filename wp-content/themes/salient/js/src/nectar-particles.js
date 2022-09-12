@@ -922,14 +922,14 @@
         if(seek !== false) {
           jQuery(Nodes.canvasID).parents($selector).find('.inner-wrap:not(.shape-'+index+')').each(function(i){
             $(this).find('> *').each(function(i){
-              $(this).stop(true,true).delay(i*150).transition({'opacity':'0'}, 250, 'ease');
+              $(this).stop(true,true).transition({'opacity':'0'}, 250, 'ease').addClass('hide');
             });
           });
           Nodes.resetShapeTextTimeout = setTimeout(function(){ jQuery(Nodes.canvasID).parents($selector).find('.inner-wrap:not(.shape-'+index+') > *').delay(50).transition({ 'rotateX': $rotate, 'y': '30px'}, 0); }, jQuery(Nodes.canvasID).parents($selector).find('.inner-wrap:not(.shape-'+index+')').length * 200 );
           
         } else {
           jQuery(Nodes.canvasID).parents($selector).find('.shape-'+index+' > *').each(function(i){
-            $(this).stop(true,true).delay(i*150).transition({'opacity':'0'}, 250, 'ease');
+            $(this).stop(true,true).transition({'opacity':'0'}, 250, 'ease').addClass('hide');
           });
           
           Nodes.resetShapeTextTimeout = setTimeout(function(){ jQuery(Nodes.canvasID).parents($selector).find('.shape-'+index+' > *').transition({'rotateX': $rotate, 'y': '30px'}, 0); }, jQuery(Nodes.canvasID).parents($selector).find('.shape-'+index+' > *').length * 200 );
@@ -938,7 +938,7 @@
         
         jQuery(Nodes.canvasID).parents($selector).find('.shape-'+index2).css('z-index',100);
         jQuery(Nodes.canvasID).parents($selector).find('.shape-'+index2+' > *').each(function(i){
-          $(this).stop(true,true).delay(jQuery(Nodes.canvasID).parents($selector).find('.shape-'+index+' > *').length * 150 + (i*175)).transition({'opacity':'1', 'y': 0, 'rotateX': '0'}, 700, 'ease');
+          $(this).stop(true,true).delay((i*175)).transition({'opacity':'1', 'y': 0, 'rotateX': '0'}, 1000, 'ease').removeClass('hide');
         });
         
       },

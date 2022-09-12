@@ -57,7 +57,7 @@ function nectar_register_required_plugins() {
         'slug'               => 'salient-core', 
         'source'             => get_template_directory() . '/plugins/salient-core.zip', 
         'required'           => true, 
-        'version'            => '1.9.5', 
+        'version'            => '1.9.6', 
         'force_activation'   => false, 
         'force_deactivation' => false, 
     ),
@@ -120,7 +120,7 @@ function nectar_register_required_plugins() {
         'slug'               => 'salient-shortcodes', 
         'source'             => get_template_directory() . '/plugins/salient-shortcodes.zip', 
         'required'           => false, 
-        'version'            => '1.5', 
+        'version'            => '1.5.1', 
         'force_activation'   => false,
         'force_deactivation' => false, 
     )

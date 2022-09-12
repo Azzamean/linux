@@ -772,78 +772,98 @@
        )
      ) );
 
+    
+     // Theme coloring.
+    $available_colors = NectarThemeManager::$available_theme_colors;
 
+    $available_colors_option_data = array(
+      'accent-color' => array(
+        'title' => esc_html__('Accent Color', 'salient'),
+        'subtitle' => esc_html__('Change this color to alter the accent color globally for your site.', 'salient'),
+        'default' => '#3452ff'
+      ),
+      'extra-color-1' => array(
+        'title' => esc_html__('Extra Color #1', 'salient'),
+        'subtitle' => esc_html__('Applicable theme elements will have the option to choose this as a color (i.e. buttons, icons etc..)', 'salient'),
+        'default' => '#ff1053'
+      ),
+      'extra-color-2' => array(
+        'title' => esc_html__('Extra Color #2', 'salient'),
+        'subtitle' => esc_html__('Applicable theme elements will have the option to choose this as a color (i.e. buttons, icons etc..)', 'salient'),
+        'default' => '#2AC4EA'
+      ),
+      'extra-color-3' => array(
+        'title' => esc_html__('Extra Color #3', 'salient'),
+        'subtitle' => esc_html__('Applicable theme elements will have the option to choose this as a color (i.e. buttons, icons etc..)', 'salient'),
+        'default' => '#333333'
+      ),
+    );
+
+    // Main theme coloring.
+    $salient_main_theme_colors = array();
+    $color_index = 1;
+    foreach( $available_colors as $color_key => $label) {
+
+      $color_option_arr = array(
+        'id' => $color_key,
+        'type' => 'color',
+        'transparent' => false,
+        'desc' => '',
+      );
+      
+      if( isset($available_colors_option_data[$color_key]) ) {
+        $color_option_arr['title'] = $available_colors_option_data[$color_key]['title'];
+        $color_option_arr['subtitle'] = $available_colors_option_data[$color_key]['subtitle'];
+        $color_option_arr['default'] = $available_colors_option_data[$color_key]['default'];
+      } else {
+        $color_option_arr['title'] = esc_html($label);
+        $color_option_arr['subtitle'] = '';
+        $color_option_arr['default'] = '#000000';
+      }
+
+      $salient_main_theme_colors[] = $color_option_arr;
+
+      $color_index++;
+    }
+
+    // Gradient coloring.
+    $salient_gradient_theme_colors = array(
+      array(
+        'id' => 'extra-color-gradient',
+        'type' => 'color_gradient',
+        'transparent' => false,
+        'title' => esc_html__('Extra Color Gradient', 'salient'),
+        'subtitle' => esc_html__('Applicable theme elements will have the option to choose this as a color (i.e. buttons, icons etc..)', 'salient'),
+        'desc' => '',
+        'default'  => array(
+          'from' => '#3452ff',
+          'to'   => '#ff1053'
+        ),
+      ),
+
+      array(
+        'id' => 'extra-color-gradient-2',
+        'type' => 'color_gradient',
+        'transparent' => false,
+        'title' => esc_html__('Extra Color Gradient #2', 'salient'),
+        'subtitle' => esc_html__('Applicable theme elements will have the option to choose this as a color (i.e. buttons, icons etc..)', 'salient'),
+        'desc' => '',
+        'default'  => array(
+          'from' => '#2AC4EA',
+          'to'   => '#32d6ff'
+        ),
+      )
+    );
+
+    
+    // Register theme colors
      Redux::setSection( $opt_name, array(
        'id'               => 'accent-color',
        'customizer_width' => '450px',
        'icon' => 'el el-brush',
        'title' => esc_html__('Accent Colors', 'salient'),
        'desc' => esc_html__('All accent color related options are listed here.', 'salient'),
-       'fields'           => array(
-         array(
-           'id' => 'accent-color',
-           'type' => 'color',
-           'transparent' => false,
-           'title' => esc_html__('Accent Color', 'salient'),
-           'subtitle' => esc_html__('Change this color to alter the accent color globally for your site.', 'salient'),
-           'desc' => '',
-           'default' => '#3452ff'
-         ),
-         array(
-           'id' => 'extra-color-1',
-           'type' => 'color',
-           'transparent' => false,
-           'title' => esc_html__('Extra Color #1', 'salient'),
-           'subtitle' => esc_html__('Applicable theme elements will have the option to choose this as a color (i.e. buttons, icons etc..)', 'salient'),
-           'desc' => '',
-           'default' => '#ff1053'
-         ),
-         array(
-           'id' => 'extra-color-2',
-           'type' => 'color',
-           'transparent' => false,
-           'title' => esc_html__('Extra Color #2', 'salient'),
-           'subtitle' => esc_html__('Applicable theme elements will have the option to choose this as a color (i.e. buttons, icons etc..)', 'salient'),
-           'desc' => '',
-           'default' => '#2AC4EA'
-         ),
-         array(
-           'id' => 'extra-color-3',
-           'type' => 'color',
-           'transparent' => false,
-           'title' => esc_html__('Extra Color #3', 'salient'),
-           'subtitle' => esc_html__('Applicable theme elements will have the option to choose this as a color (i.e. buttons, icons etc..)', 'salient'),
-           'desc' => '',
-           'default' => '#333333'
-         ),
-
-         array(
-           'id' => 'extra-color-gradient',
-           'type' => 'color_gradient',
-           'transparent' => false,
-           'title' => esc_html__('Extra Color Gradient', 'salient'),
-           'subtitle' => esc_html__('Applicable theme elements will have the option to choose this as a color (i.e. buttons, icons etc..)', 'salient'),
-           'desc' => '',
-           'default'  => array(
-             'from' => '#3452ff',
-             'to'   => '#ff1053'
-           ),
-         ),
-
-         array(
-           'id' => 'extra-color-gradient-2',
-           'type' => 'color_gradient',
-           'transparent' => false,
-           'title' => esc_html__('Extra Color Gradient #2', 'salient'),
-           'subtitle' => esc_html__('Applicable theme elements will have the option to choose this as a color (i.e. buttons, icons etc..)', 'salient'),
-           'desc' => '',
-           'default'  => array(
-             'from' => '#2AC4EA',
-             'to'   => '#32d6ff'
-           ),
-         ),
-
-       )
+       'fields' => array_merge($salient_main_theme_colors, $salient_gradient_theme_colors)
      ) );
 
 

@@ -1388,6 +1388,10 @@ if (!function_exists('nectar_page_specific_dynamic')) {
 			  width:100%
 			}
 
+			.nectar-particles .inner-wrap .hide {
+				visibility: hidden;
+			}
+
 			#page-header-wrap .nectar-particles .fade-out{
 			  content:"";
 			  display:block;
@@ -2185,7 +2189,8 @@ if (!function_exists('nectar_page_specific_dynamic')) {
 					height: calc(100vh - '. (intval($header_space) - 1) .'px);
 				}
 
-				.wpb_row.vc_row-o-full-height.top-level, .wpb_row.vc_row-o-full-height.top-level > .col.span_12 {
+				.wpb_row.vc_row-o-full-height.top-level, 
+				.wpb_row.vc_row-o-full-height.top-level > .col.span_12 {
 					min-height: calc(100vh - '. (intval($header_space) - 1) .'px);
 				}
 
@@ -2200,7 +2205,8 @@ if (!function_exists('nectar_page_specific_dynamic')) {
 					.admin-bar #nectar_fullscreen_rows:not(.afterLoaded) > div {
 						height: calc(100vh - '. (intval($header_space) - 1) .'px - 32px);
 					}
-					.admin-bar .wpb_row.vc_row-o-full-height.top-level, .admin-bar .wpb_row.vc_row-o-full-height.top-level > .col.span_12 {
+					.admin-bar .wpb_row.vc_row-o-full-height.top-level, 
+					.admin-bar .wpb_row.vc_row-o-full-height.top-level > .col.span_12 {
 						min-height: calc(100vh - '. (intval($header_space) - 1) .'px - 32px);
 					}';
 				}
@@ -2214,6 +2220,15 @@ if (!function_exists('nectar_page_specific_dynamic')) {
 				.admin-bar .nectar-slider-wrap[data-fullscreen="true"]:not(.loaded) .swiper-container  {
 					height: calc(100vh - '. (intval($header_space) - 2) .'px - 32px)!important;
 				}
+			}
+			
+			.admin-bar[class*="page-template-template-no-header"] .wpb_row.vc_row-o-full-height.top-level, 
+			.admin-bar[class*="page-template-template-no-header"] .wpb_row.vc_row-o-full-height.top-level > .col.span_12 {
+				min-height: calc(100vh - 32px);
+			}
+			body[class*="page-template-template-no-header"] .wpb_row.vc_row-o-full-height.top-level, 
+			body[class*="page-template-template-no-header"] .wpb_row.vc_row-o-full-height.top-level > .col.span_12 {
+				min-height: 100vh;
 			}';
 
  		}
@@ -2456,6 +2471,7 @@ if (!function_exists('nectar_page_specific_dynamic')) {
 
 		// Page builder element styles.
 		$portfolio_content = ( $post && isset($post->ID) ) ? get_post_meta( $post->ID, '_nectar_portfolio_extra_content', true ) : false;
+		$portfolio_content_preview = ( $post && isset($post->ID) ) ? get_post_meta( $post->ID, '_nectar_portfolio_extra_content_preview', true ) : false;
 
 		// WooCommerce.
 		if( !empty(NectarElAssets::$woo_shop_content) ) {
@@ -2470,6 +2486,11 @@ if (!function_exists('nectar_page_specific_dynamic')) {
 		// Portfolio.
 		if( is_singular( 'portfolio' ) && $portfolio_content ) {
 			echo NectarElDynamicStyles::generate_styles($portfolio_content);
+
+			// Previews.
+			if( is_preview() && $portfolio_content_preview ) { 
+				echo NectarElDynamicStyles::generate_styles($portfolio_content_preview);
+			}
 		}
 		// Everything else.
 		else if( $post && isset($post->post_content) && !is_archive() && !is_home() ) {

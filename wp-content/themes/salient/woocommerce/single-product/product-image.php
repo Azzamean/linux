@@ -40,6 +40,9 @@ if( isset( $nectar_options['product_reviews_style'] ) &&
   wp_enqueue_script('nectar-single-product-reviews');
 }
 
+$gallery_thumbnail = wc_get_image_size( 'gallery_thumbnail' );
+$gallery_thumbnail_size = apply_filters( 'woocommerce_gallery_thumbnail_size', array( $gallery_thumbnail['width'], $gallery_thumbnail['height'] ) );
+
 
 if( in_array($product_gallery_style, array('ios_slider','left_thumb_sticky','left_thumb_slider')) ) {
 
@@ -92,7 +95,7 @@ if( in_array($product_gallery_style, array('ios_slider','left_thumb_sticky','lef
 
 	        <div class="<?php echo esc_attr($slider_slide_class); ?>">
 	        	<?php 
-						$main_image_markup = '<div data-thumb="'. get_the_post_thumbnail_url( $post->ID, 'shop_thumbnail' ) .'" class="woocommerce-product-gallery__image easyzoom">
+						$main_image_markup = '<div data-thumb="'. get_the_post_thumbnail_url( $post->ID, $gallery_thumbnail_size ) .'" class="woocommerce-product-gallery__image easyzoom">
 	          	<a href="' . esc_url( $img_link ). '" class="no-ajaxy">'.get_the_post_thumbnail( $post->ID, 'shop_single', $attributes ) . '</a>
 	          </div>';
 						echo apply_filters( 'woocommerce_single_product_image_thumbnail_html', $main_image_markup, $product->get_image_id() );
@@ -125,7 +128,7 @@ if( in_array($product_gallery_style, array('ios_slider','left_thumb_sticky','lef
 									'data-large_image_height' => $full_size_image[2],
 								);
 
-							echo '<div class="'.esc_attr($slider_slide_class).'"><div class="woocommerce-product-gallery__image easyzoom" data-thumb="'. get_the_post_thumbnail_url( $post->ID, 'shop_thumbnail' ) .'"><a href="'. wp_get_attachment_url($product_attach_id) .'" class="no-ajaxy">';
+							echo '<div class="'.esc_attr($slider_slide_class).'"><div class="woocommerce-product-gallery__image easyzoom" data-thumb="'. get_the_post_thumbnail_url( $post->ID, $gallery_thumbnail_size ) .'"><a href="'. wp_get_attachment_url($product_attach_id) .'" class="no-ajaxy">';
 							echo wp_get_attachment_image($product_attach_id, 'shop_single', false, $attributes);
 							echo '</a></div></div>';
 
@@ -147,7 +150,7 @@ if( in_array($product_gallery_style, array('ios_slider','left_thumb_sticky','lef
 					<div class="<?php echo esc_attr($slider_wrap_class); ?> generate-markup">
 							<?php
 							if ( has_post_thumbnail() ) { ?>
-								<div class="<?php echo esc_attr($slider_slide_class); ?> thumb active"><div class="thumb-inner"><?php echo get_the_post_thumbnail( $post->ID, apply_filters( 'single_product_small_thumbnail_size', 'shop_thumbnail' ) ) ?></div></div>
+								<div class="<?php echo esc_attr($slider_slide_class); ?> thumb active"><div class="thumb-inner"><?php echo get_the_post_thumbnail( $post->ID, apply_filters( 'single_product_small_thumbnail_size', $gallery_thumbnail_size ) ) ?></div></div>
 							<?php }
 	
 							foreach ( $product_attach_ids as $product_attach_id) {
@@ -158,7 +161,7 @@ if( in_array($product_gallery_style, array('ios_slider','left_thumb_sticky','lef
 									continue;
 								}
 	
-								$img_size    = wp_get_attachment_image($product_attach_id, apply_filters('single_product_small_thumbnail_size', 'shop_thumbnail'));
+								$img_size    = wp_get_attachment_image($product_attach_id, apply_filters('single_product_small_thumbnail_size', $gallery_thumbnail_size));
 								$classes     = array();
 								$image_class = esc_attr( implode(' ', $classes));
 	

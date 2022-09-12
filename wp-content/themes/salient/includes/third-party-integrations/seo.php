@@ -38,6 +38,37 @@ if( !function_exists('salient_wpbakery_general_sitemap_images') ) {
   }
 }
 
+/* portfolio single extra content images */
+if( !function_exists('salient_wpbakery_image_gallery_sitemap_images') ) {
+  function salient_wpbakery_image_gallery_sitemap_images( $images, $id ) {
+    
+      $post = get_post( $id );
+
+      if($post) {
+
+        $portfolio_extra_content = get_post_meta( $post->ID, '_nectar_portfolio_extra_content', true );
+
+        if ( $post && strpos( $portfolio_extra_content, '[vc_row' ) !== false ) {
+          preg_match_all( '/(?:images|image_url|image_1_url|image_2_url)\=\"([^\"]+)\"/', $portfolio_extra_content, $matches );
+          foreach ( $matches[1] as $m ) {
+            $ids = explode( ',', $m );
+            foreach ( $ids as $id ) {
+              if ( (int) $id ) {
+                $images[] = array(
+                  'src' => wp_get_attachment_url( $id ),
+                  'title' => get_the_title( $id ),
+                );
+              }
+            }
+          }
+        }
+
+      }
+    
+    return $images;
+  }
+}
+
 // Query loop images.
 if( !function_exists('salient_wpbakery_query_sitemap_images') ) {
   function salient_wpbakery_query_sitemap_images( $images, $id ) {
@@ -184,8 +215,10 @@ if( !function_exists('salient_wpbakery_query_sitemap_images') ) {
 // Math Rannk images.
 add_filter( 'rank_math/sitemap/urlimages', 'salient_wpbakery_general_sitemap_images', 10, 2 );
 add_filter( 'rank_math/sitemap/urlimages', 'salient_wpbakery_query_sitemap_images', 10, 2 );
+add_filter( 'rank_math/sitemap/urlimages', 'salient_wpbakery_image_gallery_sitemap_images', 10, 2 );
 
 
 //Yoast images.
 add_filter( 'wpseo_sitemap_urlimages', 'salient_wpbakery_general_sitemap_images', 10, 2 );
 add_filter( 'wpseo_sitemap_urlimages', 'salient_wpbakery_query_sitemap_images', 10, 2 );
+add_filter( 'wpseo_sitemap_urlimages', 'salient_wpbakery_image_gallery_sitemap_images', 10, 2 );

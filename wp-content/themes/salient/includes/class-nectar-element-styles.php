@@ -328,6 +328,25 @@ class NectarElDynamicStyles {
       )
     );
 
+    // custom user colors.
+    $custom_colors = apply_filters('nectar_additional_theme_colors', array());
+    if( $custom_colors && !empty($custom_colors) ) {
+      $custom_colors = array_flip($custom_colors);
+    }
+    foreach( $custom_colors as $color_key => $label) {
+
+      if( isset($nectar_options[$color_key]) && !empty($nectar_options[$color_key]) ) {
+
+        $colors[] = array(
+          'type' => 'regular',
+          'stored_name' => $color_key,
+          'display_name' => $color_key,
+          'color_code' => ''
+        );
+      }
+      
+    }
+
     $theme_colors_stored = array();
 
     foreach( $colors as $color ) {
@@ -6995,7 +7014,7 @@ class NectarElDynamicStyles {
           margin-bottom:0
         }
         .nectar-progress-bar .bar-wrap{
-          margin-bottom:13px;
+          margin-bottom:20px;
           border-radius:300px;
           background-color:#ebebeb;
           box-shadow:0 1px 2px rgba(0,0,0,0.09) inset;
@@ -7008,7 +7027,8 @@ class NectarElDynamicStyles {
           border-radius:300px;
         }
         .nectar-progress-bar p{
-          padding-bottom:2px
+          padding-bottom: 15px;
+          line-height: 1.4;
         }
         .nectar-progress-bar span{
           overflow:visible;
@@ -7023,6 +7043,7 @@ class NectarElDynamicStyles {
           font-family:"Open Sans";
           font-weight:600;
           border-radius:2px;
+          padding:5px 0;
         }
         .nectar-progress-bar span strong i{
           font-style:normal;
@@ -7048,7 +7069,6 @@ class NectarElDynamicStyles {
         if( class_exists('NectarThemeManager') && 'original' !== NectarThemeManager::$skin ) {
 
           self::$element_css[] = '.nectar-progress-bar span strong {
-              padding:4px 0;
               background-color:transparent;
               color:inherit
           }
@@ -8389,11 +8409,11 @@ class NectarElDynamicStyles {
             pointer-events: none;
             width: 100%;
             height: 100%;
-            box-shadow: 0 90px 70px 0 rgb(0, 0, 0, 0.04), 
-                        0 40px 35px 0 rgb(0, 0, 0, 0.03), 
-                        0 25px 15px 0 rgb(0, 0, 0, 0.03), 
-                        0 11px 7px 0 rgb(0, 0, 0, 0.03), 
-                        0 2px 5px 0 rgb(0, 0, 0, 0.03);
+            box-shadow: 0 90px 70px 0 rgba(0, 0, 0, 0.04), 
+                        0 40px 35px 0 rgba(0, 0, 0, 0.03), 
+                        0 25px 15px 0 rgba(0, 0, 0, 0.03), 
+                        0 11px 7px 0 rgba(0, 0, 0, 0.03), 
+                        0 2px 5px 0 rgba(0, 0, 0, 0.03);
             transition: opacity 0.15s ease;
             opacity: 0;
           }
@@ -10661,7 +10681,22 @@ class NectarElDynamicStyles {
           }
           
           if( isset($atts['script']) && 'flickity' === $atts['script'] ) {
+
+            // pagination color.
+            if( isset($atts['color']) && in_array( $atts['color'], array('accent-color','extra-color-1', 'extra-color-2', 'extra-color-3') ) ) {
+              $pagination_color = self::locate_color(strtolower($atts['color']));
+              if( $pagination_color ) {
+                self::$element_css[] = '
+                .nectar-flickity[data-controls="default"][data-control-color="'.esc_attr($atts['color']).'"] .flickity-page-dots .dot:before {
+                  box-shadow: inset 0 0 0 5px '.$pagination_color['color'].';
+                }
+                .nectar-flickity[data-control-style="material_pagination"][data-control-color="'.esc_attr($atts['color']).'"] .flickity-page-dots .dot.is-selected:before {
+                  box-shadow: inset 0 0 0 1px '.$pagination_color['color'].';
+                }';
+              }
+            }
           
+            // vertical alignment.
           if( isset($atts['flickity_column_vertical_alignment']) ) {
             
             if( 'bottom' === $atts['flickity_column_vertical_alignment'] ) {

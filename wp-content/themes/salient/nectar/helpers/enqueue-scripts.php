@@ -84,7 +84,7 @@ function nectar_register_js() {
 		wp_register_script( 'nectar-leaflet-map', $nectar_get_template_directory_uri . '/js/'.$src_dir.'/elements/nectar-leaflet-map.js', array( 'jquery' ), $nectar_theme_version, true );
 		wp_register_script( 'nectar-masonry-blog', $nectar_get_template_directory_uri . '/js/'.$src_dir.'/elements/nectar-blog.js', array( 'jquery' ), $nectar_theme_version, true );
 		wp_register_script( 'nectar-liquid-bgs', $nectar_get_template_directory_uri . '/js/'.$src_dir.'/elements/nectar-liquid.js', array( 'jquery' ), $nectar_theme_version, true );
-		wp_register_script( 'nectar-testimonial-sliders', $nectar_get_template_directory_uri . '/js/'.$src_dir.'/elements/nectar-testimonial-slider.js', array( 'jquery' ), $nectar_theme_version, true );
+		wp_register_script( 'nectar-testimonial-sliders', $nectar_get_template_directory_uri . '/js/'.$src_dir.'/elements/nectar-testimonial-slider.js', array( 'jquery', 'touchswipe' ), $nectar_theme_version, true );
 		wp_register_script( 'nectar-text-inline-images', $nectar_get_template_directory_uri . '/js/'.$src_dir.'/elements/nectar-text-inline-images.js', array( 'jquery', 'nectar-waypoints' ), $nectar_theme_version, true );
 		wp_register_script( 'nectar-sticky-media-sections', $nectar_get_template_directory_uri . '/js/'.$src_dir.'/elements/nectar-sticky-media-sections.js', array( 'jquery', 'nectar-waypoints', 'nectar-frontend' ), $nectar_theme_version, true );
 		wp_register_script( 'nectar-lottie', $nectar_get_template_directory_uri . '/js/'.$src_dir.'/elements/nectar-lottie.js', array( 'jquery', 'lottie-player', 'nectar-frontend' ), $nectar_theme_version, true );

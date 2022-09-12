@@ -989,7 +989,7 @@ jQuery(document).ready(function($){
       // Padding from top of screen.
       var $ssExtraTopSpace = 50;
       var $secondaryHeaderHeight = ($('#header-secondary-outer').length > 0) ? $('#header-secondary-outer').height() : 0;
-
+      
       if($('#header-outer[data-remove-fixed="0"]').length > 0
           && $('#header-outer[data-format="left-header"]').length == 0) {
         $ssExtraTopSpace += $('#header-outer').outerHeight();
@@ -1012,7 +1012,7 @@ jQuery(document).ready(function($){
 
           var $headerSpan9 = $('#header-outer[data-format="centered-menu-bottom-bar"] header#top .span_9');
           $ssExtraTopSpace = 50;
-          $ssExtraTopSpace += $('#header-outer').height() - (parseInt($headerSpan9.position().top) - parseInt($('#header-outer #logo').css('margin-top')) ) - parseInt($secondaryHeaderHeight)*2;
+          $ssExtraTopSpace += $('#header-outer').height() - (parseInt($headerSpan9.position().top) - parseInt($('#header-outer #logo').css('margin-top')) ) - parseInt($secondaryHeaderHeight);
         }
 
 

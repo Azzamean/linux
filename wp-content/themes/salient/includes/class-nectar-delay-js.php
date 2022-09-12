@@ -66,6 +66,9 @@ if (!class_exists('NectarDelayJS')) {
             $this->activate_logic = wp_is_mobile();
             $this->delay_js = false;
 
+            // Allow filtering of script list.
+            $this->salient_scripts = apply_filters('nectar_delay_js_script_list', $this->salient_scripts);
+
             $nectar_options = get_nectar_theme_options();
             
             // Store delay settings.

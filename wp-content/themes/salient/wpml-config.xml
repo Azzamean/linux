@@ -117,6 +117,12 @@
             </attributes>
       </shortcode>
       <shortcode>
+            <tag>nectar_responsive_text</tag>
+            <attributes>
+                <attribute>link_href</attribute>
+            </attributes>
+      </shortcode>
+      <shortcode>
             <tag>image_with_animation</tag>
       </shortcode>
       <shortcode>
@@ -161,7 +167,9 @@
             <attributes>
                 <attribute>name</attribute>
                 <attribute>job_position</attribute>
+                <attribute type="area">description</attribute>
                 <attribute type="area">team_member_bio</attribute>
+                <attribute>social</attribute>       
             </attributes>
       </shortcode>
       <shortcode>

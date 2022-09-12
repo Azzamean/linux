@@ -535,6 +535,9 @@
     $('.nectar-fancy-ul[data-animation="true"]').removeClass('animated-in');
     $('.nectar-fancy-ul[data-animation="true"] ul li').css({'opacity':'0','left':'-20px'});
     
+    // Fancy box.
+    $('.nectar-fancy-box.has-animation').removeClass('animated-in');
+
     // Progress bars
     $('.nectar-progress-bar').removeClass('completed');
     $('.nectar-progress-bar .bar-wrap > span').css({'width':'0px'});

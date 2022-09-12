@@ -416,7 +416,7 @@ body .row .tabbed >div:first-of-type{
 }
  @media only screen and (min-width : 1px) and (max-width : 999px) {
 
-     .tabbed[data-style="minimal_flexible"] .wpb_tabs_nav {
+     body .tabbed[data-style="minimal_flexible"] .wpb_tabs_nav {
        flex-wrap: wrap;
      }
 

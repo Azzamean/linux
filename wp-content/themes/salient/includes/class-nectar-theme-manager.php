@@ -21,6 +21,7 @@ if( !class_exists('NectarThemeManager') ) {
     public static $ocm_style              = '';
     public static $woo_product_filters    = false;
     public static $colors                 = array();
+    public static $available_theme_colors = array();
     public static $header_format          = '';
     public static $column_gap             = '';
     public static $global_seciton_options = array(
@@ -98,14 +99,22 @@ if( !class_exists('NectarThemeManager') ) {
       
 
       // Theme Colors.
-      $available_colors = array(
+      self::$available_theme_colors = array(
         'accent-color' => 'Salient Accent Color',
         'extra-color-1' => 'Salient Extra Color #1',
         'extra-color-2' => 'Salient Extra Color #2',
         'extra-color-3' => 'Salient Extra Color #3'
       );
 
-      foreach( $available_colors as $color => $display_name ) {
+      $custom_colors = apply_filters('nectar_additional_theme_colors', array());
+      if( $custom_colors && !empty($custom_colors) ) {
+        $custom_colors = array_flip($custom_colors);
+      }
+
+      self::$available_theme_colors = array_merge(self::$available_theme_colors, $custom_colors);
+      
+
+      foreach( self::$available_theme_colors as $color => $display_name ) {
         
           self::$colors[$color] = array(
             'display_name' => $display_name,

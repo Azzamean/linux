@@ -5804,14 +5804,19 @@
 			// Accordion click event
 			$body.on('click', '.toggles.accordion .toggle > h3 a, .toggles.accordion .toggle > .toggle-title a', function (e) {
 
-				if ($(this).parents('.toggle').hasClass('open')) {
-					return false;
-				}
-
 				var $t;
 				var $parentToggles  = $(this).parents('.toggles');
 				var $parentToggle   = $(this).parents('.toggle');
 
+
+				if ($(this).parents('.toggle').hasClass('open')) {
+					$parentToggles.find('.toggle > div').each(function(){
+						$(this)[0].style.maxHeight = null;
+					});
+					$parentToggles.find('.toggle h3 a i').attr('class', 'fa fa-plus-circle');
+					$parentToggles.find('.toggle').removeClass('open');
+					return false;
+				}
 
 				// Legacy.
 				if( $(this).parents('.toggle[data-inner-wrap="true"]').length == 0 ) {
@@ -9700,7 +9705,7 @@
 								$endNum 		= parseInt($that.find('span strong i').text());
 
 								$that.find('span').transition({
-									'width': percent + '%'
+									'width': parseInt(percent) + '%'
 								}, 800, 'easeInOutCubic');
 
 								var countOptions = {
