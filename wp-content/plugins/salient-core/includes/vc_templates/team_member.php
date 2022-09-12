@@ -159,7 +159,7 @@ extract(shortcode_atts(array(
 		if( 'html' === $team_member_bio_full_html ) {
 			$main_bio_markup = do_shortcode(wpb_js_remove_wpautop($content, true));
 		} else {
-			$main_bio_markup = $team_member_bio;
+			$main_bio_markup = wp_kses_post($team_member_bio);
     }
     
     // Parallax attrs
@@ -180,7 +180,7 @@ extract(shortcode_atts(array(
     $html .= '<div class="team-member-overlay"></div>
     <div class="team-meta">'.$team_meta_markup_escaped.'</div>
     <div class="nectar_team_bio_img" data-img-src="'.esc_attr($bio_image_url_src).'"></div>
-    <div class="nectar_team_bio">'.wp_kses_post($main_bio_markup) . $social_markup .'</div>
+    <div class="nectar_team_bio">'.$main_bio_markup . $social_markup .'</div>
     </div>';
     
   }

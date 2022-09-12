@@ -6,6 +6,7 @@ Description: CSS for the frontned editor
   --salient-main-color: #3a67ff;
 }
 
+
 /************** List View **************/
 
 #nectar-list-view-content {
@@ -489,3 +490,13 @@ Description: CSS for the frontned editor
   vertical-align: middle;
   color: #3a67ff;
 }
+
+/* Woocommerce front-end editor */
+.compose-mode #wpcontent > #woocommerce-embedded-root,
+.compose-mode #wpbody-content > div > .woocommerce-layout {
+  display: none;
+}
+.compose-mode #wpwrap {
+  overflow: hidden;
+}
+/* end Woocommerce front-end editor */

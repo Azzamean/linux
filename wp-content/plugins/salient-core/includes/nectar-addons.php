@@ -427,6 +427,62 @@ function nectar_select_color_styles() {
 		.vc_edit-form-tab .vc_shortcode-param[data-param_type="dropdown"] select[name*="color"][class*="Extra-Color-3"] + .chosen-container > a:before,
 		.vc_edit-form-tab .vc_shortcode-param[data-param_type="dropdown"] select[name*="color"][class*="extra-color-3"] + .chosen-container > a:before,
 		.vc_edit-form-tab .vc_shortcode-param[data-param_type="dropdown"] select[name*="cta_button_style"].extra-color-3 + .chosen-container > a:before { background-color: '.$nectar_extra_color_3.'; }';
+	
+	$custom_colors = apply_filters('nectar_additional_theme_colors', array());
+	
+	if( $custom_colors && !empty($custom_colors) && class_exists('NectarThemeManager') ) {
+		foreach($custom_colors as $label => $color) {
+
+			$custom_color = (isset(NectarThemeManager::$colors[$color])) ? NectarThemeManager::$colors[$color]['value'] : '#000000';
+
+			$nectar_color_css .= '
+			.vc_edit-form-tab .chosen-container .chosen-results {
+				max-height: none;
+			}	
+			.vc_edit-form-tab .wpb_el_type_dropdown .chosen-container .chosen-results li[class*="'.esc_html($color).'"] {
+				padding: 0px 8px 0px 52px;
+				position: relative;
+				margin: 30px 0;
+				line-height: 16px;
+				width: 33%;
+				display: inline-block;
+				vertical-align: top;
+				box-sizing: border-box;
+				border-radius: 3px;
+			}
+			.vc_edit-form-tab .chosen-container .chosen-results li[class*="'.esc_html($color).'"]:before,
+			.vc_edit-form-tab .vc_shortcode-param[data-param_type="dropdown"] select[name*="color"][class*="'.esc_html($color).'"] + .chosen-container > a:before,
+			.vc_edit-form-tab .vc_shortcode-param[data-param_type="dropdown"] select[name*="cta_button_style"].'.esc_html($color).' + .chosen-container > a:before {
+				position: absolute;
+				left: 0;
+				top: -9px;
+				height: 36px;
+				border-radius: 50%;
+				width: 36px;
+				display: block;
+				content: " ";
+				border: 1px solid #e1e1e1;
+				transition: all 0.2s ease;
+			    background-color: '.$custom_color.'; 
+			}
+
+			body .vc_edit-form-tab .vc_shortcode-param[data-param_type="dropdown"] select[name*="color"][class*="'.esc_html($color).'"] + .chosen-container > a:before,
+			body .vc_edit-form-tab .vc_shortcode-param[data-param_type="dropdown"] select[name*="cta_button_style"][class*="'.esc_html($color).'"] + .chosen-container > a:before {
+				position: absolute;
+				left: 0;
+				top: 0;
+				height: 100%;
+				border-radius: 3px 0 0 3px;
+				width: 40px;
+				display: block;
+				content: "";
+			}
+			.vc_edit-form-tab .vc_shortcode-param[data-param_type="dropdown"] select[class*="'.esc_html($color).'"] + .chosen-container > a {
+				padding-left: 50px;
+			}
+			';
+		}
+	}
 
 	if( !empty($nectar_options["extra-color-gradient"]) && $nectar_options["extra-color-gradient"]['to'] && $nectar_options["extra-color-gradient"]['from']) {
 		$nectar_gradient_1_from = $nectar_options["extra-color-gradient"]['from'];

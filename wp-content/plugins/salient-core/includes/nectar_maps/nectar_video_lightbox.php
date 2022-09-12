@@ -5,6 +5,15 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+$el_color_list = array(
+    "Accent Color" => "Default-Accent-Color",
+	"Extra Color 1" => "Extra-Color-1",
+	"Extra Color 2" => "Extra-Color-2",	
+	"Extra Color 3" => "Extra-Color-3"
+);
+$custom_colors = apply_filters('nectar_additional_theme_colors', array());
+$el_color_list = array_merge($el_color_list, $custom_colors);
+
 return array(
 	"name" => esc_html__("Video Lightbox", "salient-core"),
 	"base" => "nectar_video_lightbox",
@@ -39,12 +48,7 @@ return array(
 			"type" => "dropdown",
 			"heading" => esc_html__("Play Button Color", "salient-core"),
 			"param_name" => "nectar_play_button_color",
-			"value" => array(
-				"Accent Color" => "Default-Accent-Color",
-				"Extra Color 1" => "Extra-Color-1",
-				"Extra Color 2" => "Extra-Color-2",	
-				"Extra Color 3" => "Extra-Color-3"
-			),
+			"value" => $el_color_list,
 			'save_always' => true,
 			"dependency" => array('element' => "link_style", 'value' => array("play_button_2","play_button_with_text")),
 			'description' => __( 'Choose a color from your','salient-core') . ' <a target="_blank" href="'. esc_url(NectarThemeInfo::global_colors_tab_url()) .'"> ' . esc_html__('globally defined color scheme','salient-core') . '</a>',

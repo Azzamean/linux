@@ -5,6 +5,16 @@ if (!defined('ABSPATH')) {
 	exit;
 }
 
+$el_color_list = array(
+    esc_html__("Accent Color", "salient-core") => "accent-color",
+	esc_html__("Extra Color 1", "salient-core") => "extra-color-1",
+	esc_html__("Extra Color 2", "salient-core") => "extra-color-2",
+	esc_html__("Extra Color 3", "salient-core") => "extra-color-3",
+	esc_html__("Color Gradient 1", "salient-core") => "extra-color-gradient-1",
+	esc_html__("Color Gradient 2", "salient-core") => "extra-color-gradient-2"
+);
+$custom_colors = apply_filters('nectar_additional_theme_colors', array());
+$el_color_list = array_merge($el_color_list, $custom_colors);
 
 $badge_params = array(
 	array(
@@ -61,14 +71,7 @@ $badge_params = array(
 	array(
 		'type' => 'dropdown',
 		'heading' => __('Badge Background Color', 'salient-core'),
-		'value' => array(
-			esc_html__("Accent Color", "salient-core") => "accent-color",
-			esc_html__("Extra Color 1", "salient-core") => "extra-color-1",
-			esc_html__("Extra Color 2", "salient-core") => "extra-color-2",
-			esc_html__("Extra Color 3", "salient-core") => "extra-color-3",
-			esc_html__("Color Gradient 1", "salient-core") => "extra-color-gradient-1",
-			esc_html__("Color Gradient 2", "salient-core") => "extra-color-gradient-2"
-		),
+		'value' => $el_color_list,
 		'save_always' => true,
 		'dependency' => array(
 			'element' => 'bg_color_type',

@@ -82,7 +82,7 @@ return array(
             "dependency" => Array('element' => "section_type", 'value' => array('video')),
             "value" => array(
               esc_html__( "Cover", "salient-core") => "cover",
-              esc_html__( "Cotain", "salient-core") => "contain",      
+              esc_html__( "Contain", "salient-core") => "contain",      
             ),
             "description" => esc_html__("Cover will crop the video to fit the media area, where as contain will ensure the full video always displays. ", "salient-core")
           ),

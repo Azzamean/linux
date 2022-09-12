@@ -5,6 +5,20 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+$el_color_list = array(
+    esc_html__( "Default (inherit from row Text Color)", "salient-core") => "default",
+	esc_html__( "Accent Color", "salient-core") => "accent-color",
+	esc_html__( "Extra Color 1", "salient-core") => "extra-color-1",
+	esc_html__( "Extra Color 2", "salient-core") => "extra-color-2",	
+	esc_html__( "Extra Color 3", "salient-core") => "extra-color-3",
+	esc_html__( "Color Gradient 1", "salient-core") => "extra-color-gradient-1",
+	esc_html__( "Color Gradient 2", "salient-core") => "extra-color-gradient-2",
+	esc_html__( "Black", "salient-core") => "black",
+	esc_html__( "White", "salient-core") => "white"
+);
+$custom_colors = apply_filters('nectar_additional_theme_colors', array());
+$el_color_list = array_merge($el_color_list, $custom_colors);
+
 return array(
 	"name" => esc_html__("Divider","salient-core"),
 	"base" => "divider",
@@ -103,17 +117,7 @@ return array(
 			"heading" => esc_html__("Divider Color", "salient-core"),
 			"param_name" => "divider_color",
 			"admin_label" => false,
-			"value" => array(
-				esc_html__( "Default (inherit from row Text Color)", "salient-core") => "default",
-				esc_html__( "Accent Color", "salient-core") => "accent-color",
-				esc_html__( "Extra Color 1", "salient-core") => "extra-color-1",
-				esc_html__( "Extra Color 2", "salient-core") => "extra-color-2",	
-				esc_html__( "Extra Color 3", "salient-core") => "extra-color-3",
-				esc_html__( "Color Gradient 1", "salient-core") => "extra-color-gradient-1",
-				esc_html__( "Color Gradient 2", "salient-core") => "extra-color-gradient-2",
-				esc_html__( "Black", "salient-core") => "black",
-				esc_html__( "White", "salient-core") => "white"
-			),
+			"value" => $el_color_list,
 			'save_always' => true,
 			"dependency" => Array('element' => "line_type", 'value' => array('Full Width Line','Small Line','Vertical Line')),
 			'description' => __( 'Choose a color from your','salient-core') . ' <a target="_blank" href="'. esc_url(NectarThemeInfo::global_colors_tab_url()) .'"> ' . esc_html__('globally defined color scheme','salient-core') . '</a>',

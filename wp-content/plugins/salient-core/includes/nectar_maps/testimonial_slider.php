@@ -10,6 +10,20 @@ $tab_id_2 = time().'-2-'.rand(0, 100);
 
 $vc_is_wp_version_3_6_more = version_compare(preg_replace('/^([\d\.]+)(\-.*$)/', '$1', get_bloginfo('version')), '3.6') >= 0;
 
+$el_color_list = array(
+  "Inherit (from row Text Color)" => "default",
+  "Accent Color + Light Text" => "accent-color-light",
+  "Extra Color 1 + Light Text" => "extra-color-1-light",
+  "Extra Color 2 + Light Text" => "extra-color-2-light",
+  "Extra Color 3 + Light Text" => "extra-color-3-light",
+  "Accent Color + Dark Text" => "accent-color-dark",
+  "Extra Color 1 + Dark Text" => "extra-color-1-dark",
+  "Extra Color 2 + Dark Text" => "extra-color-2-dark",
+  "Extra Color 3 + Dark Text" => "extra-color-3-dark"
+);
+$custom_colors = apply_filters('nectar_additional_theme_colors', array());
+$el_color_list = array_merge($el_color_list, $custom_colors);
+
 return array(
   "name"  => esc_html__("Testimonial Slider", "salient-core"),
   "base" => "testimonial_slider",
@@ -38,17 +52,7 @@ return array(
       "heading" => esc_html__("Color", "salient-core"),
       "param_name" => "color",
       "admin_label" => false,
-      "value" => array(
-        "Inherit (from row Text Color)" => "default",
-        "Accent Color + Light Text" => "accent-color-light",
-        "Extra Color 1 + Light Text" => "extra-color-1-light",
-        "Extra Color 2 + Light Text" => "extra-color-2-light",
-        "Extra Color 3 + Light Text" => "extra-color-3-light",
-        "Accent Color + Dark Text" => "accent-color-dark",
-        "Extra Color 1 + Dark Text" => "extra-color-1-dark",
-        "Extra Color 2 + Dark Text" => "extra-color-2-dark",
-        "Extra Color 3 + Dark Text" => "extra-color-3-dark"
-      ),
+      "value" => $el_color_list,
       'save_always' => true,
       "dependency" => Array('element' => "style", 'value' => array('multiple_visible')),
       'description' => esc_html__( 'Choose a color from your','salient-core') . ' <a target="_blank" href="'. esc_url(NectarThemeInfo::global_colors_tab_url()) .'"> ' . esc_html__('globally defined color scheme','salient-core') . '</a>',

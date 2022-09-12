@@ -1,11 +1,11 @@
 <?php
 /**
  * Plugin Name: Salient Shortcodes
- * Plugin URI: --
+ * Plugin URI: https://themenectar.com
  * Description: Adds the Salient collection of shortcodes with a convenient shortcode generator that is available on all instances of Tinymce editors.
  * Author: ThemeNectar
  * Author URI: http://themenectar.com
- * Version: 1.5
+ * Version: 1.5.1
  * Text Domain: salient-shortcodes
  */
 
@@ -28,7 +28,7 @@ class Salient_Shortcodes {
 	
 	static $instance = false;
 	
-	public $plugin_version = '1.5';
+	public $plugin_version = '1.5.1';
 		
 	private function __construct() {
 		

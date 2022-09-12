@@ -5,6 +5,17 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+$el_color_list = array(
+    esc_html__( "Accent Color", "salient-core") => "accent-color",
+	esc_html__( "Extra Color 1", "salient-core") => "extra-color-1",
+	esc_html__( "Extra Color 2", "salient-core") => "extra-color-2",	
+	esc_html__( "Extra Color 3", "salient-core") => "extra-color-3",
+	esc_html__( "Color Gradient 1", "salient-core") => "extra-color-gradient-1",
+	esc_html__( "Color Gradient 2", "salient-core") => "extra-color-gradient-2"
+);
+$custom_colors = apply_filters('nectar_additional_theme_colors', array());
+$el_color_list = array_merge($el_color_list, $custom_colors);
+
 return array(
 	"name" => esc_html__("Flip Box", "salient-core"),
 	"base" => "nectar_flip_box",
@@ -114,14 +125,7 @@ return array(
 			"heading" => esc_html__("Icon Color", "salient-core"),
 			"param_name" => "icon_color",
 			"group" => esc_html__('Front Side', 'salient-core'),
-			"value" => array(
-				esc_html__( "Accent Color", "salient-core") => "accent-color",
-				esc_html__( "Extra Color 1", "salient-core") => "extra-color-1",
-				esc_html__( "Extra Color 2", "salient-core") => "extra-color-2",	
-				esc_html__( "Extra Color 3", "salient-core") => "extra-color-3",
-				esc_html__( "Color Gradient 1", "salient-core") => "extra-color-gradient-1",
-				esc_html__( "Color Gradient 2", "salient-core") => "extra-color-gradient-2"
-			),
+			"value" => $el_color_list,
 			'description' => esc_html__( 'Choose a color from your','salient-core') . ' <a target="_blank" href="'. esc_url(NectarThemeInfo::global_colors_tab_url()) .'"> ' . esc_html__('globally defined color scheme','salient-core') . '</a>',
 		),
 		array(

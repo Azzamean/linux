@@ -115,11 +115,17 @@ $target = ($open_new_tab == 'true') ? 'target="_blank"' : null;
 	
 	$stnd_button = $this->getCSSAnimation( $css_animation );
 	
+	$custom_colors = apply_filters('nectar_additional_theme_colors', array());
+	if( $custom_colors && !empty($custom_colors) ) {
+		$custom_colors = array_flip($custom_colors);
+	}
+
 	if( strtolower($color) === 'accent-color' || 
 		strtolower($color) === 'extra-color-1' || 
 		strtolower($color) === 'extra-color-2' || 
-		strtolower($color) === 'extra-color-3') {
-		
+		strtolower($color) === 'extra-color-3' || 
+		isset($custom_colors[strtolower($color)])) {
+
 		if( $button_style !== 'see-through' )	{
 			$stnd_button = " " . $this->getCSSAnimation( $css_animation ) . " regular-button";
 		}

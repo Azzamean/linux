@@ -19,6 +19,17 @@ if( $is_admin ) {
 	$blog_options['All'] = 'all';
 }
 
+$el_color_list = array(
+    esc_html__( "Accent Color", "salient-core") => "Accent-Color",
+	esc_html__( "Extra Color 1", "salient-core") => "Extra-Color-1",
+	esc_html__( "Extra Color 2", "salient-core") => "Extra-Color-2",	
+	esc_html__( "Extra Color 3", "salient-core") => "Extra-Color-3",
+	esc_html__( "Color Gradient 1", "salient-core") => "extra-color-gradient-1",
+	esc_html__( "Color Gradient 2", "salient-core") => "extra-color-gradient-2"
+);
+$custom_colors = apply_filters('nectar_additional_theme_colors', array());
+$el_color_list = array_merge($el_color_list, $custom_colors);
+
 return array(
 	"name" => esc_html__("Recent Posts", "salient-core"),
 	"base" => "recent_posts",
@@ -136,14 +147,7 @@ return array(
 		array(
 			'type' => 'dropdown',
 			'heading' => __( 'Button Color', 'salient-core' ),
-			'value' => array(
-				esc_html__( "Accent Color", "salient-core") => "Accent-Color",
-				esc_html__( "Extra Color 1", "salient-core") => "Extra-Color-1",
-				esc_html__( "Extra Color 2", "salient-core") => "Extra-Color-2",	
-				esc_html__( "Extra Color 3", "salient-core") => "Extra-Color-3",
-				esc_html__( "Color Gradient 1", "salient-core") => "extra-color-gradient-1",
-				esc_html__( "Color Gradient 2", "salient-core") => "extra-color-gradient-2"
-			),
+			'value' => $el_color_list,
 			'save_always' => true,
 			'param_name' => 'button_color',
 			"dependency" => Array('element' => "style", 'value' => array('single_large_featured','multiple_large_featured', 'slider_multiple_visible')),

@@ -475,8 +475,17 @@ function nectar_fancy_list($atts, $content = null) {
 	} else {
 		$icon_markup = 'data-list-icon="icon-salient-thin-line" data-animation="'.esc_attr($enable_animation).'" data-animation-delay="'.esc_attr($delay).'" data-color="'. esc_attr(strtolower($color)) .'"';
 	}
+
+  $el_classes = array('nectar-fancy-ul');
+
+  // Dyanmic classes.
+  if( function_exists('nectar_el_dynamic_classnames') ) {
+    $el_classes[] = nectar_el_dynamic_classnames('nectar_responsive_text', $atts);
+  } else {
+    $el_classes[] = '';
+  }
 	
-	$output .= '<div class="nectar-fancy-ul" '.$icon_markup.' data-alignment="'.esc_attr($alignment).'"> '.do_shortcode($content).' </div>';
+	$output .= '<div class="'.implode(' ',$el_classes).'" '.$icon_markup.' data-alignment="'.esc_attr($alignment).'"> '.do_shortcode($content).' </div>';
 	
   return $output;
 }

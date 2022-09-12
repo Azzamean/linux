@@ -1,4 +1,9 @@
 /*vc front styles*/
+
+html.js {
+  margin-top: 0!important;
+}
+
 body.vc_editor.compose-mode.vc_sorting .vc_controls,
 body.vc_editor.compose-mode.vc_sorting .wpb_row  > .parent-vc_row,
 body.vc_editor.compose-mode.vc_sorting .wpb_row > .parent-vc_row_inner {

@@ -5,6 +5,15 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+$el_color_list = array(
+	esc_html__( "Accent Color", "salient-core") => "Accent-Color",
+	esc_html__( "Extra Color 1", "salient-core") => "Extra-Color-1",
+	esc_html__( "Extra Color 2", "salient-core") => "Extra-Color-2",	
+	esc_html__( "Extra Color 3", "salient-core") => "Extra-Color-3",
+  );
+  $custom_colors = apply_filters('nectar_additional_theme_colors', array());
+  $el_color_list = array_merge($el_color_list, $custom_colors);
+
  $fa_icons = array(
     'icon-glass' => 'icon-glass',
 	  'icon-music' => 'icon-music',
@@ -877,12 +886,7 @@ $icon_arr = array_merge($fa_icons, $steadysets, $linecons);
 		  "param_name" => "color",
 		  "admin_label" => false,
 		  'save_always' => true,
-		  "value" => array(
-			 esc_html__( "Accent Color", "salient-core") => "Accent-Color",
- 			 esc_html__( "Extra Color 1", "salient-core") => "Extra-Color-1",
- 			 esc_html__( "Extra Color 2", "salient-core") => "Extra-Color-2",	
- 			 esc_html__( "Extra Color 3", "salient-core") => "Extra-Color-3",
-		   ),
+		  "value" => $el_color_list,
 		  'description' => esc_html__( 'Choose a color from your','salient-core') . ' <a target="_blank" href="'. esc_url(NectarThemeInfo::global_colors_tab_url()) .'"> ' . esc_html__('globally defined color scheme','salient-core') . '</a>',
 		  "dependency" => Array('element' => "icon_type", 'value' => array('font_icon'))
 		),

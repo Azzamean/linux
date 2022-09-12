@@ -7,6 +7,20 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 $vc_is_wp_version_3_6_more = version_compare(preg_replace('/^([\d\.]+)(\-.*$)/', '$1', get_bloginfo('version')), '3.6') >= 0;
 
+$el_color_list = array(
+    esc_html__( "Accent Color", "salient-core") => "accent-color",
+	esc_html__( "Extra Color 1", "salient-core") => "extra-color-1",
+	esc_html__( "Extra Color 2", "salient-core") => "extra-color-2",	
+	esc_html__( "Extra Color 3", "salient-core") => "extra-color-3",
+	esc_html__( "Color Gradient 1", "salient-core") => "extra-color-gradient-1",
+	esc_html__( "Color Gradient 2", "salient-core") => "extra-color-gradient-2",
+	esc_html__( "Black", "salient-core") => "black",
+	esc_html__( "Grey", "salient-core") => "grey",
+	esc_html__( "White", "salient-core") => "white",
+);
+$custom_colors = apply_filters('nectar_additional_theme_colors', array());
+$el_color_list = array_merge($el_color_list, $custom_colors);
+
 return array(
 	"name" => esc_html__("Star Rating", "salient-core"),
 	"base" => "star_rating",
@@ -44,17 +58,7 @@ return array(
    array(
     'type' => 'dropdown',
     'heading' => __( 'Icon Color', 'salient-core' ),
-    'value' => array(
-      esc_html__( "Accent Color", "salient-core") => "accent-color",
-      esc_html__( "Extra Color 1", "salient-core") => "extra-color-1",
-      esc_html__( "Extra Color 2", "salient-core") => "extra-color-2",	
-      esc_html__( "Extra Color 3", "salient-core") => "extra-color-3",
-      esc_html__( "Color Gradient 1", "salient-core") => "extra-color-gradient-1",
-      esc_html__( "Color Gradient 2", "salient-core") => "extra-color-gradient-2",
-      esc_html__( "Black", "salient-core") => "black",
-      esc_html__( "Grey", "salient-core") => "grey",
-      esc_html__( "White", "salient-core") => "white",
-    ),
+    'value' => $el_color_list,
     'save_always' => true,
     'param_name' => 'icon_color',
     "dependency" => array('element' => "icon_color_type", 'value' => array('color_scheme')),

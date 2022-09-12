@@ -95,7 +95,7 @@ jQuery(document).ready(function($) {
       $('.shortcode-options[data-name=tabbed_section] .shortcode-dynamic-item-input').each(function() {
         if( $(this).val() != '' ) {
           tabContent = $(this).parent().parent().find('.shortcode-dynamic-item-text').val();
-          code += ' [tab title="'+$(this).val()+'" id="t'+tabID+'"] '+tabContent+' [/tab] '; 
+          code += ' [tab style="default" title="'+$(this).val()+'" id="t'+tabID+'"] '+tabContent+' [/tab] '; 
           tabID++;
         }
       });
