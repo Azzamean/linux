@@ -161,6 +161,7 @@
           });
 
         }, {
+          root: document,
           rootMargin: '-40% 0% -40% 0%',
           threshold: 0
         });
@@ -175,7 +176,6 @@
 
       else {
         // Mobile.
-        
         this.mobileObserver = new IntersectionObserver(function (entries) {
 
           entries.forEach(function (entry) {

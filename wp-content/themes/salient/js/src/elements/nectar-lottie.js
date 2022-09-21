@@ -195,6 +195,7 @@
       });
 
     }, {
+      root: document,
       rootMargin: '-12% 0% -12% 0%',
       threshold: 0
     });
@@ -225,6 +226,7 @@
       });
 
     }, {
+      root: document,
       rootMargin: '300px 0px 300px 0px',
       threshold: 0
     });
@@ -268,6 +270,7 @@
       });
 
     }, {
+      root: document,
       rootMargin: '49%',
       threshold: 0
     });

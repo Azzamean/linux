@@ -71,6 +71,7 @@ ul.products li.minimal.product .product-wrap {
 
 ul.products li.minimal.product .product-wrap > a {
   position: relative;
+  display: block;
 }
 
 .products li.product.minimal .product-meta {

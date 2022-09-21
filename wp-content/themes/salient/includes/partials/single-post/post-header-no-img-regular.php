@@ -77,16 +77,18 @@ if ( get_post_format() !== 'status' && get_post_format() !== 'aside' && 'image_u
 
 				$date_functionality = (isset($nectar_options['post_date_functionality']) && !empty($nectar_options['post_date_functionality'])) ? $nectar_options['post_date_functionality'] : 'published_date';
 
-				if( 'last_editied_date' === $date_functionality ) {
-					echo '<span class="meta-date date updated"><i>'.get_the_modified_time(__( 'F jS, Y' , 'salient' )).'</i></span>';
-				} else {
-					$nectar_u_time 					= get_the_time('U');
-					$nectar_u_modified_time = get_the_modified_time('U');
-					if( $nectar_u_modified_time >= $nectar_u_time + 86400 ) {
-						echo '<span class="meta-date date published">' . get_the_date() . '</span>';
-						echo '<span class="meta-date date updated rich-snippet-hidden">' . get_the_modified_time(__( 'F jS, Y' , 'salient' )) . '</span>';
+				if( '1' !== $remove_single_post_date ) {
+					if( 'last_editied_date' === $date_functionality ) {
+						echo '<span class="meta-date date updated"><i>'.get_the_modified_time(__( 'F jS, Y' , 'salient' )).'</i></span>';
 					} else {
-						echo '<span class="meta-date date updated">' . get_the_date() . '</span>';
+						$nectar_u_time 					= get_the_time('U');
+						$nectar_u_modified_time = get_the_modified_time('U');
+						if( $nectar_u_modified_time >= $nectar_u_time + 86400 ) {
+							echo '<span class="meta-date date published">' . get_the_date() . '</span>';
+							echo '<span class="meta-date date updated rich-snippet-hidden">' . get_the_modified_time(__( 'F jS, Y' , 'salient' )) . '</span>';
+						} else {
+							echo '<span class="meta-date date updated">' . get_the_date() . '</span>';
+						}
 					}
 				}
 

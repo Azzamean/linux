@@ -66,18 +66,21 @@ if ( empty( $bg ) && empty( $bg_color ) && $inherit_and_has_featured_img !== tru
 									<span class="fn"><?php the_author_posts_link(); ?></span>
 									<?php
 									$date_functionality = (isset($nectar_options['post_date_functionality']) && !empty($nectar_options['post_date_functionality'])) ? $nectar_options['post_date_functionality'] : 'published_date';
-									if( 'last_editied_date' === $date_functionality ) {
-										echo '<span class="meta-date date updated"><i>'.get_the_modified_time(__( 'F jS, Y' , 'salient' )).'</i></span>';
-									} else {
-										$nectar_u_time          = get_the_time( 'U' );
-										$nectar_u_modified_time = get_the_modified_time( 'U' );
-										if( $nectar_u_modified_time >= $nectar_u_time + 86400 ) {
-											?>
-											<span class="meta-date date published"><i><?php echo get_the_date(); ?></i></span>
-											<span class="meta-date date updated rich-snippet-hidden"><?php echo get_the_modified_time( __( 'F jS, Y' , 'salient' ) ); ?></span>
-										<?php } else { ?>
-											<span class="meta-date date updated"><i><?php echo get_the_date(); ?></i></span>
-										<?php }
+									
+									if( '1' !== $remove_single_post_date ) {
+										if( 'last_editied_date' === $date_functionality ) {
+											echo '<span class="meta-date date updated"><i>'.get_the_modified_time(__( 'F jS, Y' , 'salient' )).'</i></span>';
+										} else {
+											$nectar_u_time          = get_the_time( 'U' );
+											$nectar_u_modified_time = get_the_modified_time( 'U' );
+											if( $nectar_u_modified_time >= $nectar_u_time + 86400 ) {
+												?>
+												<span class="meta-date date published"><i><?php echo get_the_date(); ?></i></span>
+												<span class="meta-date date updated rich-snippet-hidden"><?php echo get_the_modified_time( __( 'F jS, Y' , 'salient' ) ); ?></span>
+											<?php } else { ?>
+												<span class="meta-date date updated"><i><?php echo get_the_date(); ?></i></span>
+											<?php }
+										} 
 									} ?>
 								</div>
 							</div><!--/author-section-->

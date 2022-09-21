@@ -988,6 +988,7 @@
 				});
 		  
 			  }, {
+				root: document,
 				rootMargin: '400px 0px 400px 0px',
 				threshold: 0
 			});
@@ -1041,6 +1042,7 @@
 				});
 		  
 			  }, {
+				root: document,
 				rootMargin: '200px 0px 200px 0px',
 				threshold: 0
 			});
@@ -1805,7 +1807,11 @@
 				});
 
 				// Megamenu multi section per column title support.
-				$('body:not([data-header-format="left-header"]) header#top nav > ul > li.megamenu > ul > li > ul > li:has("> ul")').addClass('has-ul');
+				$('body:not([data-header-format="left-header"]) header#top nav > ul > li.megamenu > ul > li > ul > li').each(function(){
+					if( $(this).find('> ul').length > 0 ) {
+						$(this).addClass('has-ul');
+					}
+				});
 
 				// Full width megamenu.
 				if ($('body[data-megamenu-width="full-width"]').length > 0 && $('ul.sub-menu').length > 0) {
@@ -2490,6 +2496,7 @@
 				});
 		  
 			  }, {
+				root: document,
 				rootMargin: '400px 0px 400px 0px',
 				threshold: 0
 			});
@@ -5487,6 +5494,7 @@
 				var rMarign = ($headerOuterEl.is('[data-remove-fixed="1"]')) ? '100px 0px 0px 0px' : '5px 0px 0px 0px';
 
 				var options = {
+					root: document,
 					rootMargin: rMarign,
 					threshold: 1
 				}
@@ -5576,8 +5584,9 @@
 					});
 
 				}, {
+					root: document,
 					rootMargin: '-40% 0% -40% 0%',
-  					threshold: 0
+  				threshold: 0
 				});
 
 				// Observe each section.
@@ -7432,6 +7441,7 @@
 					if( 'IntersectionObserver' in window ) {
 
 						var options = {
+							root: document,
 							rootMargin: '250px',
 						}
 						var observer = new IntersectionObserver(function(entries) {
@@ -7783,6 +7793,7 @@
 							});
 					
 						}, {
+							root: document,
 							rootMargin: '400px 0px 400px 0px',
 							threshold: 0
 						});
@@ -9475,6 +9486,7 @@
 					if( 'IntersectionObserver' in window ) {
 
 						var options = {
+							root: document,
 							rootMargin: '250px',
 						}
 						var observer = new IntersectionObserver(function(entries) {
@@ -10334,6 +10346,7 @@
 								}
 							});
 						}, {
+							root: document,
 							rootMargin: '125px'
 						});
 
@@ -19583,6 +19596,7 @@
                 }
               });
             }, {
+							root: document,
               rootMargin: '-10% 0% -10% 0%',
               threshold: 0
             });

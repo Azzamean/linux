@@ -442,7 +442,10 @@ Better rank ordering method by Stefan Gustavson in 2012.
             }
           });
 
-        }, { rootMargin: '250px' });
+        }, { 
+          root: document, 
+          rootMargin: '250px'
+        });
 
         observer.observe(this.container);
     };

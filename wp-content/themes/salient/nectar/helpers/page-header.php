@@ -470,19 +470,20 @@ if ( !function_exists( 'nectar_page_header' ) ) {
 
 											<?php
 											$date_functionality = (isset($nectar_options['post_date_functionality']) && !empty($nectar_options['post_date_functionality'])) ? $nectar_options['post_date_functionality'] : 'published_date';
-
-											if( 'last_editied_date' === $date_functionality ) {
-												echo '<span class="meta-date date updated"><i>'.get_the_modified_date().'</i></span>';
-											} else {
-												$nectar_u_time 					= get_the_time('U');
-												$nectar_u_modified_time = get_the_modified_time('U');
-												if( $nectar_u_modified_time >= $nectar_u_time + 86400 ) { ?>
-													<span class="meta-date date published"><i><?php echo get_the_date(); ?></i></span>
-													<span class="meta-date date updated rich-snippet-hidden"><i><?php echo get_the_modified_time(__( 'F jS, Y' , 'salient' )); ?></i></span>
-												<?php } else { ?>
-													<span class="meta-date date updated"><i><?php echo get_the_date(); ?></i></span>
-												<?php }
-											}	?>
+											if( '1' !== $remove_single_post_date ) {
+												if( 'last_editied_date' === $date_functionality ) {
+													echo '<span class="meta-date date updated"><i>'.get_the_modified_date().'</i></span>';
+												} else {
+													$nectar_u_time 					= get_the_time('U');
+													$nectar_u_modified_time = get_the_modified_time('U');
+													if( $nectar_u_modified_time >= $nectar_u_time + 86400 ) { ?>
+														<span class="meta-date date published"><i><?php echo get_the_date(); ?></i></span>
+														<span class="meta-date date updated rich-snippet-hidden"><i><?php echo get_the_modified_time(__( 'F jS, Y' , 'salient' )); ?></i></span>
+													<?php } else { ?>
+														<span class="meta-date date updated"><i><?php echo get_the_date(); ?></i></span>
+													<?php }
+												} 
+											} ?>
 
 										</div>
 									</div>
@@ -500,17 +501,19 @@ if ( !function_exists( 'nectar_page_header' ) ) {
 									<div id="single-below-header" data-hide-on-mobile="<?php echo esc_attr($using_fixed_salient_social); ?>">
 										<?php echo '<span class="meta-author vcard author"><span class="fn"><span class="author-leading">' . esc_html__('By', 'salient') . '</span> ' . get_the_author_posts_link() . '</span></span>';
 										$date_functionality = (isset($nectar_options['post_date_functionality']) && !empty($nectar_options['post_date_functionality'])) ? $nectar_options['post_date_functionality'] : 'published_date';
-
-										if( 'last_editied_date' === $date_functionality ) {
-											echo '<span class="meta-date date updated"><i>'.get_the_modified_date().'</i></span>';
-										} else {
-											$nectar_u_time 					= get_the_time('U');
-											$nectar_u_modified_time = get_the_modified_time('U');
-											if( $nectar_u_modified_time >= $nectar_u_time + 86400 ) {
-												echo '<span class="meta-date date published">' . get_the_date() . '</span>';
-												echo '<span class="meta-date date updated rich-snippet-hidden">' . get_the_modified_time(__( 'F jS, Y' , 'salient' )) . '</span>';
+										
+										if( '1' !== $remove_single_post_date ) {
+											if( 'last_editied_date' === $date_functionality ) {
+												echo '<span class="meta-date date updated"><i>'.get_the_modified_date().'</i></span>';
 											} else {
-												echo '<span class="meta-date date updated">' . get_the_date() . '</span>';
+												$nectar_u_time 					= get_the_time('U');
+												$nectar_u_modified_time = get_the_modified_time('U');
+												if( $nectar_u_modified_time >= $nectar_u_time + 86400 ) {
+													echo '<span class="meta-date date published">' . get_the_date() . '</span>';
+													echo '<span class="meta-date date updated rich-snippet-hidden">' . get_the_modified_time(__( 'F jS, Y' , 'salient' )) . '</span>';
+												} else {
+													echo '<span class="meta-date date updated">' . get_the_date() . '</span>';
+												}
 											}
 										}
 

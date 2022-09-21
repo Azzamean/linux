@@ -290,6 +290,7 @@
       });
     
       }, {
+      root: document,
       rootMargin: '400px 0px 400px 0px',
       threshold: 0
     });

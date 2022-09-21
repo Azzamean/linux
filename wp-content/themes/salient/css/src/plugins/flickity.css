@@ -1528,6 +1528,12 @@ body:not(.compose-mode) .nectar-flickity.nectar-carousel .flickity-slider {
     body:not(.compose-mode) .nectar-flickity.nectar-carousel .flickity-slider {
       display: block;
     }
+    /* Allow ios to calculate a correct height for slider based on first item
+    to not interfere with anchor links */
+    .wpb_row:not(.top-level) .nectar-flickity.nectar-carousel:not(.flickity-enabled) .flickity-slider > div:not(:first-child) {
+      position: absolute;
+      visibility: hidden;
+    }
 }}
 
 .nectar-recent-posts-slider-inner:not(.flickity-enabled) .nectar-recent-post-slide {
