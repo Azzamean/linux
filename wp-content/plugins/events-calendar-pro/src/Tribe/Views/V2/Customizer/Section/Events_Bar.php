@@ -48,10 +48,12 @@ class Events_Bar {
 			'view_selector_background_color_choice' => [
 				'sanitize_callback'    => 'sanitize_key',
 				'sanitize_js_callback' => 'sanitize_key',
+				'transport'            => 'postMessage',
 			],
 			'view_selector_background_color'        => [
 				'sanitize_callback'    => 'sanitize_hex_color',
 				'sanitize_js_callback' => 'maybe_hash_hex_color',
+				'transport'            => 'postMessage',
 			],
 		];
 
@@ -84,7 +86,7 @@ class Events_Bar {
 					'default' => esc_html_x(
 						'Use Event Bar Color',
 						'Label for the default option.',
-						'the-events-calendar'
+						'tribe-events-calendar-pro'
 					),
 					'custom'  => esc_html_x(
 						'Custom',
