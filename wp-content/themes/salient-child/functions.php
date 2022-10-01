@@ -173,3 +173,17 @@ function salient_redux_custom_fonts()
 }
 add_filter("redux/salient_redux/field/typography/custom_fonts", "salient_redux_custom_fonts");
 
+/* Grabs Site Specific Functions */
+if (is_multisite())
+{
+    $site_id = get_current_blog_id();
+
+    switch ($site_id)
+    {
+        // O3D 
+        case '13':
+            require_once 'sites/o3d/functions.php';
+        break;
+	}
+
+}
