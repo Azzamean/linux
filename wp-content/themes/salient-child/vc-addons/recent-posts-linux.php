@@ -186,17 +186,38 @@ class RecentPostsLinux
                         "type" => "checkbox",
                         "class" => "",
                         "heading" => esc_html__(
-                            "Read More Link",
+                            "Read More Button",
                             "recent_posts"
                         ),
                         "param_name" => "read",
                         "value" => [
                             esc_html__(
-                                "Show Read More Link",
+                                "Show Read More Button",
                                 "recent_posts"
                             ) => "show-read",
                         ],
                         "std" => "hide-read",
+                        "description" => esc_html__(
+                            "Check or uncheck the box if you want to show or hide read more button",
+                            "recent_posts"
+                        ),
+                        "save_always" => true,
+                    ],
+                    [
+                        "type" => "checkbox",
+                        "class" => "",
+                        "heading" => esc_html__(
+                            "Read More Link",
+                            "recent_posts"
+                        ),
+                        "param_name" => "read_link",
+                        "value" => [
+                            esc_html__(
+                                "Show Read More Link",
+                                "recent_posts"
+                            ) => "show_read_link",
+                        ],
+                        "std" => "hide_read_link",
                         "description" => esc_html__(
                             "Check or uncheck the box if you want to show or hide read more link",
                             "recent_posts"
@@ -264,6 +285,7 @@ function recent_posts_linux($atts, $content)
                 "categories" => "",
                 "tags" => "",
                 "read" => "",
+                "read_link" => "",
                 "dop" => "",
                 "suppress_filters" => true,
             ],
@@ -282,6 +304,7 @@ function recent_posts_linux($atts, $content)
     $categories = !empty($categories) ? $categories : "hide-categories";
     $tags = !empty($tags) ? $tags : "hide-tags";
     $read = !empty($read) ? $read : "hide-read";
+    $read_link = !empty($read_link) ? $read_link : "hide_read_link";
     $dop = !empty($dop) ? $dop : "show-dop";
 
     $query_args = [
@@ -395,7 +418,17 @@ function recent_posts_linux($atts, $content)
             $read = true;
             break;
     }
-
+    switch ($read_link) {
+        case "show_read_link":
+            $read_link = true;
+            break;
+        case "hide_read_link":
+            $read_link = false;
+            break;
+        default:
+            $read = true;
+            break;
+    }
     switch ($dop) {
         case "show-dop":
             $dop = true;
@@ -539,30 +572,52 @@ function recent_posts_linux($atts, $content)
                 }
                 $output .=
                     '<div class="' . $column_class . ' grid-design square">';
+                if ($featured_image == true) {
+                    $output .= get_the_post_thumbnail($page->ID, "medium");
+                }
                 $output .=
                     '<div class="grid-design header"><h3 class="grid-design title">' .
                     get_the_title() .
                     "</h3>";
-                $output .= '<span class="grid-design divider"> | </span>';
-                $output .=
-                    '<span class="grid-design date">' .
-                    get_the_date("M j, Y") .
-                    "</span></div>";
+                if ($dop == true) {
+                    $output .= '<span class="grid-design divider"> | </span>';
+                    $output .=
+                        '<span class="grid-design date">' .
+                        get_the_date("M j, Y") .
+                        "</span></div>";
+                } else {
+                    $output .= "</div>";
+                }
                 $nectar_options = get_nectar_theme_options();
                 $excerpt_length = !empty($nectar_options["blog_excerpt_length"])
                     ? intval($nectar_options["blog_excerpt_length"])
                     : 30;
-                $excerpt_markup =
-                    '<div class="grid-design excerpt"><span>' .
-                    nectar_excerpt($excerpt_length) .
-                    "</span></div>";
+
+                if ($read_link == true) {
+                    $excerpt_markup =
+                        '<div class="grid-design excerpt"><span>' .
+                        nectar_excerpt($excerpt_length) .
+                        '</span><a href="' .
+                        get_permalink() .
+                        '"> Read more.</a></div>';
+                } else {
+                    $excerpt_markup =
+                        '<div class="grid-design excerpt"><span>' .
+                        nectar_excerpt($excerpt_length) .
+                        "</span></div>";
+                }
+
                 $output .= $excerpt_markup;
-                $output .=
-                    '<div class="grid-design read"><a href="' .
-                    get_permalink() .
-                    '" target="_blank" style="background-color:' .
-                    $accent_color .
-                    '">Read</a></div>';
+
+                if ($read == true) {
+                    $output .=
+                        '<div class="grid-design read"><a href="' .
+                        get_permalink() .
+                        '" target="_blank" style="background-color:' .
+                        $accent_color .
+                        '">Read</a></div>';
+                }
+
                 $output .= "</div>";
                 $count++;
                 if (

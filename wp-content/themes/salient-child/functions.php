@@ -15,7 +15,7 @@ require_once "vc-addons/projects-linux.php";
 
 //GET CUSTOM POST TYPES
 require_once "custom-post-types/projects.php";
-require_once "custom-post-types/webinars.php";
+//require_once "custom-post-types/webinars.php";
 
 // GET CHILD THEME LIBRARIES
 function salient_child_enqueue_styles()
