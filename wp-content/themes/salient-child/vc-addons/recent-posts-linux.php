@@ -245,6 +245,24 @@ class RecentPostsLinux
                         ),
                         "save_always" => true,
                     ],
+                    [
+                        "type" => "checkbox",
+                        "class" => "",
+                        "heading" => esc_html__("Excerpt", "recent_posts"),
+                        "param_name" => "excerpt",
+                        "value" => [
+                            esc_html__(
+                                "Remove Excerpt",
+                                "recent_posts"
+                            ) => "hide-excerpt",
+                        ],
+                        "std" => "show-excerpt",
+                        "description" => esc_html__(
+                            "Check or uncheck the box if you want to show or hide the excerpt",
+                            "recent_posts"
+                        ),
+                        "save_always" => true,
+                    ],
                 ],
             ]);
         endif;
@@ -287,6 +305,7 @@ function recent_posts_linux($atts, $content)
                 "read" => "",
                 "read_link" => "",
                 "dop" => "",
+                "excerpt" => "",
                 "suppress_filters" => true,
             ],
             $atts
@@ -306,6 +325,7 @@ function recent_posts_linux($atts, $content)
     $read = !empty($read) ? $read : "hide-read";
     $read_link = !empty($read_link) ? $read_link : "hide_read_link";
     $dop = !empty($dop) ? $dop : "show-dop";
+    $excerpt = !empty($excerpt) ? $excerpt : "show-excerpt";
 
     $query_args = [
         "post_type" => "post",
@@ -438,6 +458,17 @@ function recent_posts_linux($atts, $content)
             break;
         default:
             $dop = true;
+            break;
+    }
+    switch ($excerpt) {
+        case "show-excerpt":
+            $excerpt = true;
+            break;
+        case "hide-excerpt":
+            $excerpt = false;
+            break;
+        default:
+            $excerpt = true;
             break;
     }
 
@@ -607,7 +638,9 @@ function recent_posts_linux($atts, $content)
                         "</span></div>";
                 }
 
-                $output .= $excerpt_markup;
+                if ($excerpt != false) {
+                    $output .= $excerpt_markup;
+                }
 
                 if ($read == true) {
                     $output .=
