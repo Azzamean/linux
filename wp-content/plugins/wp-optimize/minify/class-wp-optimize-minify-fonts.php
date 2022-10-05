@@ -216,6 +216,7 @@ class WP_Optimize_Minify_Fonts {
 								$detail = '' === $detail ? 400 : $detail;
 								array_push(self::$fonts[$font_name]['specs']['ital,wght'], '1,' . $detail);
 							} else {
+								$detail = str_replace(array('normal'), '', $detail);
 								$detail = '' === $detail ? 400 : $detail;
 								array_push(self::$fonts[$font_name]['specs']['ital,wght'], '0,' . $detail);
 							}

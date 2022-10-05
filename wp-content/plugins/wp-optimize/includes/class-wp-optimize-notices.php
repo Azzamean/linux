@@ -6,8 +6,6 @@ if (!class_exists('Updraft_Notices_1_2')) require_once(WPO_PLUGIN_MAIN_PATH.'/ve
 
 class WP_Optimize_Notices extends Updraft_Notices_1_2 {
 
-	protected static $_instance = null;
-
 	private $initialized = false;
 
 	protected $self_affiliate_id = 216;
@@ -15,15 +13,16 @@ class WP_Optimize_Notices extends Updraft_Notices_1_2 {
 	protected $notices_content = array();
 
 	/**
-	 * Creates and returns the only notice instance
+	 * Returns singleton instance object
 	 *
-	 * @return object WP_Optimize_Notices instance
+	 * @return WP_Optimize_Notices Returns `WP_Optimize_Notices` object
 	 */
 	public static function instance() {
-		if (empty(self::$_instance)) {
-			self::$_instance = new self();
+		static $_instance = null;
+		if (null === $_instance) {
+			$_instance = new self();
 		}
-		return self::$_instance;
+		return $_instance;
 	}
 
 	/**

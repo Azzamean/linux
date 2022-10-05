@@ -549,7 +549,7 @@ class WPO_Page_Cache {
 	 *
 	 * @return bool - true on success, false otherwise
 	 */
-	private function create_folders() {
+	public function create_folders() {
 
 		if (!is_dir(WPO_CACHE_DIR) && !wp_mkdir_p(WPO_CACHE_DIR)) {
 			return new WP_Error('create_folders', sprintf(__('The request to the filesystem failed: unable to create directory %s. Please check your file permissions.'), str_ireplace(ABSPATH, '', WPO_CACHE_DIR)));
@@ -1307,6 +1307,18 @@ EOF;
 	public function cron_schedules($schedules) {
 		$page_cache_length = $this->config->get_option('page_cache_length');
 		$schedules['wpo_purge_old_cache'] = array('interval' => false === $page_cache_length ? 86400 : $page_cache_length, 'display' => __('Every time after the cache has expired', 'wp-optimize'));
+
+		$interval = WP_Optimize_Page_Cache_Preloader::instance()->get_continue_preload_cron_interval();
+		$schedules['wpo_page_cache_preload_continue_interval'] = array(
+			'interval' => $interval,
+			'display' => sprintf(__('%d minutes', 'wp-optimize'), round($interval / 60, 1))
+		);
+
+		$schedules['wpo_use_cache_lifespan'] = array(
+			'interval' => WPO_Cache_Config::instance()->get_option('page_cache_length'),
+			'display' => sprintf(__('Same as cache lifespan: %s', 'wp-optimize'), WPO_Cache_Config::instance()->get_option('page_cache_length_value').' '.WPO_Cache_Config::instance()->get_option('page_cache_length_unit'))
+		);
+
 		return $schedules;
 	}
 
@@ -1324,7 +1336,7 @@ EOF;
 	/**
 	 * May be regenerate cache config file, in case of migrations
 	 */
-	private function maybe_regenerate_cache_config_file() {
+	public function maybe_regenerate_cache_config_file() {
 		$config_file = WPO_CACHE_CONFIG_DIR . '/'.$this->config->get_cache_config_filename();
 		if (!file_exists($config_file)) {
 			$config = $this->config->get();

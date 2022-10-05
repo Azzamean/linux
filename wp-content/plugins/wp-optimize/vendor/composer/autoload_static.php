@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInitbb10cfa35aa8562d310ce4ed19e8fbae
+class ComposerStaticInit74d6d284e18ca8c808ac9d334dc71776
 {
     public static $prefixLengthsPsr4 = array (
         't' => 
@@ -151,6 +151,7 @@ class ComposerStaticInitbb10cfa35aa8562d310ce4ed19e8fbae
         'Minify_CSSmin' => __DIR__ . '/..' . '/mrclay/minify/lib/Minify/CSSmin.php',
         'Minify_CacheInterface' => __DIR__ . '/..' . '/mrclay/minify/lib/Minify/CacheInterface.php',
         'Minify_Cache_APC' => __DIR__ . '/..' . '/mrclay/minify/lib/Minify/Cache/APC.php',
+        'Minify_Cache_APCu' => __DIR__ . '/..' . '/mrclay/minify/lib/Minify/Cache/APCu.php',
         'Minify_Cache_File' => __DIR__ . '/..' . '/mrclay/minify/lib/Minify/Cache/File.php',
         'Minify_Cache_Memcache' => __DIR__ . '/..' . '/mrclay/minify/lib/Minify/Cache/Memcache.php',
         'Minify_Cache_Null' => __DIR__ . '/..' . '/mrclay/minify/lib/Minify/Cache/Null.php',
@@ -201,10 +202,10 @@ class ComposerStaticInitbb10cfa35aa8562d310ce4ed19e8fbae
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInitbb10cfa35aa8562d310ce4ed19e8fbae::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInitbb10cfa35aa8562d310ce4ed19e8fbae::$prefixDirsPsr4;
-            $loader->prefixesPsr0 = ComposerStaticInitbb10cfa35aa8562d310ce4ed19e8fbae::$prefixesPsr0;
-            $loader->classMap = ComposerStaticInitbb10cfa35aa8562d310ce4ed19e8fbae::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInit74d6d284e18ca8c808ac9d334dc71776::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInit74d6d284e18ca8c808ac9d334dc71776::$prefixDirsPsr4;
+            $loader->prefixesPsr0 = ComposerStaticInit74d6d284e18ca8c808ac9d334dc71776::$prefixesPsr0;
+            $loader->classMap = ComposerStaticInit74d6d284e18ca8c808ac9d334dc71776::$classMap;
 
         }, null, ClassLoader::class);
     }

@@ -20,6 +20,19 @@ class WP_Optimize_Database_Information {
 	const VIEW = 'VIEW';
 
 	/**
+	 * Returns singleton instance object
+	 *
+	 * @return WP_Optimize_Database_Information Returns `WP_Optimize_Database_Information` object
+	 */
+	public static function instance() {
+		static $_instance = null;
+		if (null === $_instance) {
+			$_instance = new self();
+		}
+		return $_instance;
+	}
+
+	/**
 	 * Returns server type MySQL or MariaDB if mysql database or Unknown if not mysql.
 	 *
 	 * @return string
