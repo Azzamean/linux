@@ -419,7 +419,7 @@ class WP_Optimize_Premium {
 	 * @return array An array of available auto optimizations
 	 */
 	public static function get_auto_optimizations() {
-		$optimizer = WP_Optimize::get_optimizer();
+		$optimizer = WP_Optimize()->get_optimizer();
 		$optimizations = $optimizer->sort_optimizations($optimizer->get_optimizations());
 		$auto_optimizations = array();
 
@@ -440,7 +440,7 @@ class WP_Optimize_Premium {
 	 * @return array
 	 */
 	public function get_scheduled_optimizations() {
-		$options = WP_Optimize::get_options();
+		$options = WP_Optimize()->get_options();
 		$auto_options = $options->get_option('auto-updated');
 		if (!is_array($auto_options)) $auto_options = array();
 

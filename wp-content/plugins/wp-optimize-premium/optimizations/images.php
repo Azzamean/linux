@@ -239,34 +239,47 @@ class WP_Optimization_images extends WP_Optimization {
 			$base_dir = $this->get_upload_base_dir();
 			$base_url = $this->get_upload_base_url();
 
-			if (!empty($unused_posts_images)) {
-				foreach ($unused_posts_images as $id) {
-					$attachment = $this->wp_get_attachment_metadata($id);
+			$offset = 0;
+			$limit = 10000;
+			$meta_id = 0;
+			$total_images = count($unused_posts_images);
+			while ($offset < $total_images) {
+				global $wpdb;
+				$sql = $wpdb->prepare("SELECT meta_id, post_id, meta_value FROM {$wpdb->postmeta} WHERE meta_id > %d AND meta_key='_wp_attachment_metadata' AND post_id IN (" . implode(', ', esc_sql($unused_posts_images)) . ") ORDER BY meta_id ASC LIMIT %d", $meta_id, $limit);
+				$images_meta_data = $wpdb->get_results($sql, ARRAY_A);
+				$offset += $limit;
 
-					if (!is_array($attachment)) continue;
-
-					$image_file = $base_dir.'/'.$attachment['file'];
-					$image_url = $base_url.'/'.$attachment['file'];
-
-					$sub_dir = '';
-					if (preg_match('/[0-9]{4}\/[0-9]{1,2}/', $image_file, $match)) {
-						$sub_dir = $match[0];
-					}
-
-					if (is_file($image_file)) {
-						fputcsv($output, array($blog_id, $id, $image_url, filesize($image_file)));
-					}
-
-					if (!empty($attachment['sizes'])) {
-						foreach ($attachment['sizes'] as $resized) {
-							$image_file = $base_dir.'/'.$sub_dir.'/'.$resized['file'];
-							$image_url = $base_url.'/'.$sub_dir.'/'.$resized['file'];
-
-							if (is_file($image_file)) {
-								fputcsv($output, array($blog_id, $id, $image_url, filesize($image_file)));
+				if (!empty($images_meta_data)) {
+					foreach ($images_meta_data as $image_meta_data) {
+						$id = $image_meta_data['post_id'];
+						$attachment = unserialize($image_meta_data['meta_value']);
+	
+						if (empty($attachment) && !is_array($attachment)) continue;
+	
+						$image_file = $base_dir.'/'.$attachment['file'];
+						$image_url = $base_url.'/'.$attachment['file'];
+	
+						$sub_dir = '';
+						if (preg_match('/[0-9]{4}\/[0-9]{1,2}/', $image_file, $match)) {
+							$sub_dir = $match[0];
+						}
+	
+						if (is_file($image_file)) {
+							fputcsv($output, array($blog_id, $id, $image_url, filesize($image_file)));
+						}
+	
+						if (!empty($attachment['sizes'])) {
+							foreach ($attachment['sizes'] as $resized) {
+								$image_file = $base_dir.'/'.$sub_dir.'/'.$resized['file'];
+								$image_url = $base_url.'/'.$sub_dir.'/'.$resized['file'];
+	
+								if (is_file($image_file)) {
+									fputcsv($output, array($blog_id, $id, $image_url, filesize($image_file)));
+								}
 							}
 						}
 					}
+					$meta_id = $image_meta_data['meta_id'];
 				}
 			}
 
@@ -846,6 +859,11 @@ class WP_Optimization_images extends WP_Optimization {
 
 		$found_images = array();
 		$property_images = array();
+		$acf_images = array();
+		$acf_block_field_names = array();
+		if ($this->is_plugin_acf_active()) {
+			$acf_block_field_names = $this->get_acf_block_field_names();
+		}
 
 		// prevent unwanted output by do_shortcode()
 		ob_start();
@@ -886,6 +904,10 @@ class WP_Optimization_images extends WP_Optimization {
 					$property_images = array_merge($property_images, $es_property_gallery);
 				}
 			}
+
+			if ($this->is_plugin_acf_active()) {
+				$acf_images = array_merge($acf_images, $this->get_image_ids_from_acf_blocks($post_content, $acf_block_field_names));
+			}
 		}
 
 		ob_end_clean();
@@ -893,9 +915,9 @@ class WP_Optimization_images extends WP_Optimization {
 		if (!empty($found_images)) {
 			// get images attachment ids.
 			$post_content_images = array_values($this->get_image_attachment_id_bulk(array_keys($found_images)));
-			return array_unique(array_merge($post_content_images, $property_images), SORT_NUMERIC);
+			return array_unique(array_merge($post_content_images, $property_images, $acf_images), SORT_NUMERIC);
 		} else {
-			return $found_images;
+			return array_unique(array_merge($found_images, $property_images, $acf_images), SORT_NUMERIC);
 		}
 	}
 
@@ -1165,6 +1187,7 @@ class WP_Optimization_images extends WP_Optimization {
 		if (!function_exists('acf_get_raw_fields')) return array();
 
 		$acf_fields = acf_get_raw_fields('');
+		$acf_field_names = array();
 		$repeater_fields = array_filter($acf_fields, function($field) {
 			return 'repeater' == $field['type'];
 		});
@@ -1172,9 +1195,9 @@ class WP_Optimization_images extends WP_Optimization {
 		if (count($repeater_fields)) {
 			global $wpdb;
 			$sql = "SELECT DISTINCT meta_key FROM {$wpdb->postmeta} WHERE meta_key LIKE '%image'";
-			return $wpdb->get_col($sql);
+			$acf_field_names = array_merge($acf_field_names, $wpdb->get_col($sql));
 		}
-		return $this->get_acf_field_names();
+		return array_merge($acf_field_names, $this->get_acf_field_names());
 	}
 
 	/**
@@ -1207,6 +1230,58 @@ class WP_Optimization_images extends WP_Optimization {
 		}
 
 		return $found_images_ids;
+	}
+
+
+	/**
+	 * Get list of ACF `block` field type
+	 *
+	 * @return array
+	 */
+	private function get_acf_block_field_names() {
+		$field_names = $this->get_acf_image_field_names();
+		return array_filter($field_names, function($field_name) {
+			return 'block_' === substr($field_name, 0, 6);
+		});
+	}
+
+	/**
+	 * Get image ids from acf blocks
+	 *
+	 * @param array $post_content
+	 * @param array $acf_block_field_names
+	 * @return array $acf_image_ids
+	 */
+	private function get_image_ids_from_acf_blocks($post_content, $acf_block_field_names) {
+		$acf_image_ids = array();
+		$acf_blocks = $this->get_acf_blocks_from_post_content($post_content);
+
+		foreach ($acf_blocks as $acf_block) {
+			$acf_block_data = $acf_block['attrs']['data'];
+			foreach ($acf_block_data as $key => $value) {
+				if (array_search($key, $acf_block_field_names)) {
+					$acf_image_ids[] = $value;
+					break;
+				}
+			}
+		}
+		return $acf_image_ids;
+	}
+
+	/**
+	 * Get list of ACF blocks in post content
+	 *
+	 * @param string $post_content
+	 * @return array
+	 */
+	private function get_acf_blocks_from_post_content($post_content) {
+		// Only available from WP 5.0
+		if (!function_exists('parse_blocks')) return array();
+
+		$blocks = parse_blocks($post_content);
+		return array_filter($blocks, function($block) {
+			return substr($block['blockName'], 0, 4) === 'acf/';
+		});
 	}
 
 	/**
@@ -2787,5 +2862,14 @@ class WP_Optimization_images extends WP_Optimization {
 	 */
 	private function is_plugin_estatik_active() {
 		return is_plugin_active('estatik/estatik.php');
+	}
+
+	/**
+	 * Determines whether site is using ACF plugin or not
+	 *
+	 * @return bool
+	 */
+	private function is_plugin_acf_active() {
+		return is_plugin_active('advanced-custom-fields/acf.php') || is_plugin_active('advanced-custom-fields-pro/acf.php');
 	}
 }

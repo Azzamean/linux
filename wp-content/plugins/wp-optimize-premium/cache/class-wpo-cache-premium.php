@@ -48,7 +48,8 @@ class WPO_Cache_Premium {
 		
 		// Add user specific cache option
 		add_action('wpo_after_cache_settings', array($this, 'output_user_specific_cache_option'), 10);
-		
+
+		WPO_Cache_Rules_Premium::get_instance();
 	}
 	
 	/**
@@ -285,7 +286,13 @@ class WPO_Cache_Premium {
 
 		// Aelia currency switcher
 		if (class_exists('WC_Aelia_CurrencySwitcher')) {
-			$cookies[] = 'aelia_cs_selected_currency';
+			$aelia_cookies = array(
+				'aelia_cs_selected_currency',
+				'aelia_customer_country',
+				'aelia_customer_state',
+				'aelia_tax_exempt',
+			);
+			$cookies = array_merge($cookies, $aelia_cookies);
 		}
 
 		if (isset($config['enable_cache_per_country']) && $config['enable_cache_per_country']) {

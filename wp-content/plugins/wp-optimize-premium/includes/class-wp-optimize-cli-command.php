@@ -54,7 +54,8 @@ class WP_Optimize_CLI_Command extends WP_CLI_Command {
 			'minify disable' => __('Disable minification.', 'wp-optimize'). ' ' .sprintf(__('%s can be used to disable a specific minification feature.', 'wp-optimize'), '--feature=xxx'),
 			'minify status' => __('Get the current minification status.', 'wp-optimize'),
 			'minify regenerate' => __('Regenerate the minified files, and purge any supported page cache.', 'wp-optimize'),
-			'minify delete' => __('Removed all created minified files created, and purge any supported page caches.', 'wp-optimize')
+			'minify delete' => __('Removed all created minified files created, and purge any supported page caches.', 'wp-optimize'),
+			'unused_images export_csv' => __('Exports the unused images list as a CSV file.', 'wp-optimize')
 		);
 
 		foreach ($commands as $command => $description) {
@@ -299,6 +300,31 @@ class WP_Optimize_CLI_Command extends WP_CLI_Command {
 				WP_CLI::success($result['message']);
 			}
 		}
+	}
+
+	/**
+	 * Handle images commands.
+	 */
+	public function unused_images() {
+		$available_commands = array(
+			'export_csv' => 'export_csv',
+		);
+
+		$command = isset($this->args[1]) ? $this->args[1] : '';
+
+		if (!array_key_exists($command, $available_commands)) {
+			WP_CLI::error(__('Undefined command', 'wp-optimize'));
+		}
+
+		$commands = $this->get_commands();
+
+		$result = call_user_func(array($commands, $available_commands[$command]));
+
+		if (isset($result['error'])) {
+			WP_CLI::error($result['error']);
+		}
+
+		WP_CLI::success($result['message']);
 	}
 
 	private function colorize($string, $color) {
