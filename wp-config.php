@@ -110,3 +110,6 @@ if ( !defined('ABSPATH') )
 require_once(ABSPATH . 'wp-settings.php');
 /* ALLOW ALL FILE TYPES; EXAMPLE: SVG's */
 define('ALLOW_UNFILTERED_UPLOADS', true);
+
+/* ShortPixel API Key for all sites */
+define('SHORTPIXEL_API_KEY', '9ZXJJsineYr76JNEt2JZ');
