@@ -74,16 +74,6 @@ function lf_meta_header()
 {
     $site_id = get_current_blog_id();
 	
-    if ($site_id == "8") {
-        echo '
-  	<div class="lfprojects color">
-		<div class="container">
-			<a href="https://www.linuxfoundation.org/projects" target="_blank" rel="noopener noreferrer">
-			<img src="/wp-content/uploads/banners/aswf_banner.svg">
-			</a>
-		</div>
-	</div>';
-    }
     if ($site_id == "14") {
         echo '
   	<div class="lfprojects color">
