@@ -69,9 +69,9 @@ if ( ! defined( 'WP_DEBUG' ) ) {
 /**** MULTISITE INFORMATION ****/
 define( 'WP_ALLOW_MULTISITE', true );
 define( 'MULTISITE', true );
-define( 'SUBDOMAIN_INSTALL', false );
+define( 'SUBDOMAIN_INSTALL', true );
 $base = '/';
-define( 'DOMAIN_CURRENT_SITE', 'localhost' );
+#define( 'DOMAIN_CURRENT_SITE', 'example.com' );
 define( 'PATH_CURRENT_SITE', '/' );
 define( 'SITE_ID_CURRENT_SITE', 1 );
 define( 'BLOG_ID_CURRENT_SITE', 1 );
@@ -86,16 +86,16 @@ if ( ! empty( $_ENV['PANTHEON_ENVIRONMENT'] ) ) {
   switch( $_ENV['PANTHEON_ENVIRONMENT'] ) {
     case 'live':
       // Value should be the primary domain for the Site Network.
-      define( 'DOMAIN_CURRENT_SITE', 'localhost' );
+      define( 'DOMAIN_CURRENT_SITE', 'live-lfprojects3.linuxfoundation.org' );
       // Once you map a domain to Live, you can change DOMAIN_CURRENT_SITE
       // define( 'DOMAIN_CURRENT_SITE', 'example-network.com' );
       break;
     case 'test':
-      define( 'DOMAIN_CURRENT_SITE', 'localhost' );
+      define( 'DOMAIN_CURRENT_SITE', 'test-lfprojects3.pantheonsite.io' );
       break;
     case 'dev':
       //define( 'DOMAIN_CURRENT_SITE', 'dev-lfprojects3.pantheonsite.io' );
-	  define( 'DOMAIN_CURRENT_SITE', 'localhost' );
+	  define( 'DOMAIN_CURRENT_SITE', 'dev-lfprojects3.linuxfoundation.org' );
       break;
     default:
       # Catch-all to accommodate default naming for multi-dev environments.
@@ -112,4 +112,4 @@ require_once(ABSPATH . 'wp-settings.php');
 define('ALLOW_UNFILTERED_UPLOADS', true);
 
 /* ShortPixel API Key for all sites */
-define('SHORTPIXEL_API_KEY', 'qDiceIqgp4KBOHzdKJKY');
+define('SHORTPIXEL_API_KEY', '9ZXJJsineYr76JNEt2JZ');
