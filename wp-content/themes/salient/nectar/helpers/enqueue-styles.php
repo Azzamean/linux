@@ -1409,7 +1409,7 @@ if( !function_exists('nectar_deferred_mod_style_attrs') ) {
 
 		if ( in_array($handle, $deferred_styles) ) {
 			
-			$modded_stylesheet = str_replace( '<link', '<link data-pagespeed-no-defer data-nowprocket data-wpacu-skip nitro-exclude data-no-optimize data-noptimize data-no-optimize="1"', $tag );
+			$modded_stylesheet = str_replace( '<link', '<link data-pagespeed-no-defer data-nowprocket data-wpacu-skip nitro-exclude data-no-optimize data-noptimize', $tag );
 		   
 			return $modded_stylesheet; 
 		}

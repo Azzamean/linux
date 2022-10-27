@@ -125,7 +125,6 @@
                 });
         
             }, {
-                root: document,
                 rootMargin: '300px 0px 300px 0px',
                 threshold: 0
             });

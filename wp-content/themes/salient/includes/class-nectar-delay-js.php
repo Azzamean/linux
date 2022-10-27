@@ -44,7 +44,6 @@ if (!class_exists('NectarDelayJS')) {
             'owl-carousel',
             'twentytwenty',
             'infinite-scroll',
-            'stickykit',
             'nectar-waypoints',
             'nectar-single-product-reviews',
             'nectar-single-product',

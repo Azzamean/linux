@@ -117,6 +117,9 @@
             </attributes>
       </shortcode>
       <shortcode>
+            <tag>nectar_highlighted_text</tag>
+      </shortcode>
+      <shortcode>
             <tag>nectar_responsive_text</tag>
             <attributes>
                 <attribute>link_href</attribute>

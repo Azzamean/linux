@@ -988,7 +988,7 @@
 				});
 		  
 			  }, {
-				root: document,
+					root: (isSafari()) ? null : document,
 				rootMargin: '400px 0px 400px 0px',
 				threshold: 0
 			});
@@ -1042,7 +1042,7 @@
 				});
 		  
 			  }, {
-				root: document,
+					root: (isSafari()) ? null : document,
 				rootMargin: '200px 0px 200px 0px',
 				threshold: 0
 			});
@@ -2496,7 +2496,7 @@
 				});
 		  
 			  }, {
-				root: document,
+					root: (isSafari()) ? null : document,
 				rootMargin: '400px 0px 400px 0px',
 				threshold: 0
 			});
@@ -3002,6 +3002,15 @@
 			setTimeout(f, 1000 / 60);
 		}
 
+
+		function isSafari() {
+			if (navigator.userAgent.indexOf('Safari') != -1 && 
+					navigator.userAgent.indexOf('Chrome') == -1) {
+					return true;
+			} 
+
+			return false;
+		}
 
 		/**
 		* Smart resize.
@@ -4795,7 +4804,7 @@
 					.addClass('active-tab');
 				clickedTab.parent().addClass('active-tab');
 
-				clickedTab.parents('.tabbed').find('> div:not(.clear)' + $frontEndEditorTabDiv).css({
+				clickedTab.closest('.tabbed').find('> div:not(.clear)' + $frontEndEditorTabDiv).css({
 						'visibility': 'hidden',
 						'position': 'absolute',
 						'opacity': '0',
@@ -4830,7 +4839,9 @@
 					}
 
 				} else {
-					clickedTab.parents('.tabbed').find('> div:nth-of-type(' + $id + ')' + $frontEndEditorTabDiv).css({
+
+
+					clickedTab.closest('.tabbed').find('> div:nth-of-type(' + $id + ')' + $frontEndEditorTabDiv).css({
 						'visibility': 'visible',
 						'position': 'relative',
 						'left': '0',
@@ -4840,7 +4851,7 @@
 					}, transitionDur).addClass('visible-tab');
 				}
 
-				var $curTab = clickedTab.parents('.tabbed').find('> div:nth-of-type(' + $id + ')');
+				var $curTab = clickedTab.closest('.tabbed').find('> div:nth-of-type(' + $id + ')');
 
 				if ( $curTab.find('.iframe-embed').length > 0 ||
 					$curTab.find('.portfolio-items').length > 0 ||
@@ -5188,11 +5199,11 @@
 					$(this).find('.im-icon-wrap.tab-icon').length == 0) {
 
 						$(this)
-							.parents('.tabbed')
+							.closest('.tabbed')
 							.addClass('using-icons');
 
 						$(this)
-							.parents('.tabbed')
+							.closest('.tabbed')
 							.find('.wpb_tabs_nav li:nth-child(' + (i + 1) + ') > a')
 							.prepend('<i class="' + $(this).attr("data-tab-icon") + '"></i>');
 
@@ -5202,7 +5213,7 @@
 					if ($(this).find('.im-icon-wrap.tab-icon').length > 0) {
 
 						var $svg_icon_markup = $(this).find('.im-icon-wrap.tab-icon').detach();
-						$(this).parents('.tabbed')
+						$(this).closest('.tabbed')
 							.find('.wpb_tabs_nav li:nth-child(' + (i + 1) + ') > a')
 							.prepend($svg_icon_markup);
 					}
@@ -5494,7 +5505,7 @@
 				var rMarign = ($headerOuterEl.is('[data-remove-fixed="1"]')) ? '100px 0px 0px 0px' : '5px 0px 0px 0px';
 
 				var options = {
-					root: document,
+					root: (isSafari()) ? null : document,
 					rootMargin: rMarign,
 					threshold: 1
 				}
@@ -5584,7 +5595,7 @@
 					});
 
 				}, {
-					root: document,
+					root: (isSafari()) ? null : document,
 					rootMargin: '-40% 0% -40% 0%',
   				threshold: 0
 				});
@@ -7441,7 +7452,7 @@
 					if( 'IntersectionObserver' in window ) {
 
 						var options = {
-							root: document,
+							root: (isSafari()) ? null : document,
 							rootMargin: '250px',
 						}
 						var observer = new IntersectionObserver(function(entries) {
@@ -7793,7 +7804,7 @@
 							});
 					
 						}, {
-							root: document,
+							root: (isSafari()) ? null : document,
 							rootMargin: '400px 0px 400px 0px',
 							threshold: 0
 						});
@@ -9486,7 +9497,7 @@
 					if( 'IntersectionObserver' in window ) {
 
 						var options = {
-							root: document,
+							root: (isSafari()) ? null : document,
 							rootMargin: '250px',
 						}
 						var observer = new IntersectionObserver(function(entries) {
@@ -10346,7 +10357,7 @@
 								}
 							});
 						}, {
-							root: document,
+							root: (isSafari()) ? null : document,
 							rootMargin: '125px'
 						});
 
@@ -11316,6 +11327,7 @@
 							if (typeof $(this).attr('src') != 'undefined' &&
 							!$(this).hasClass('skip-nectar-video-size') &&
 							!$(this).hasClass('iframe-embed') &&
+							!$(this).hasClass('elementor-video-iframe') &&
 							$(this).parents('.ult_modal').length == 0 &&
 							$(this).parents('.ls-slide').length == 0 &&
 							$(this).parents('.woo-variation-product-gallery').length == 0 &&
@@ -13965,19 +13977,24 @@
 
           /** ocm inline images */
           if( $offCanvasEl.hasClass('fullscreen-inline-images') ) {
-
+						
             // Current page item.
-            var currentID = $('#slide-out-widget-area .off-canvas-menu-container .menu > li[class*="current"][id]').attr('id');
+            var currentItemClasses = '';
+						if( $('#slide-out-widget-area .off-canvas-menu-container .menu > li[class*="current"]').length > 0 ) {
+							currentItemClasses = $('#slide-out-widget-area .off-canvas-menu-container .menu > li[class*="current"]').attr('class');
+						}
+
+						var currentID = extractMenuIdClassname(currentItemClasses);
 
             if( $('.nectar-ocm-image.'+currentID).length > 0 ) {
               $('.nectar-ocm-image.default').remove();
               $('.nectar-ocm-image.'+currentID).addClass('current');
             }
             
-
             // Mouse event.
-            $('#slide-out-widget-area .off-canvas-menu-container li[id]').on('mouseenter',function(){
-              var id = $(this).attr('id');
+            $('#slide-out-widget-area .off-canvas-menu-container li[class]').on('mouseenter',function(){
+              var classes = $(this).attr('class');
+							var id = extractMenuIdClassname(classes);
               $('.nectar-ocm-image.'+id).addClass('active');
               if( $('.nectar-ocm-image.'+id).length > 0 ) {
                 $('.nectar-ocm-image.current:not(.active)').addClass('hidden');
@@ -13989,6 +14006,25 @@
             });
           }
 
+				}
+
+				function extractMenuIdClassname(classAttr) {
+
+					var currentItemClassesArr = classAttr.split(' ');
+					var currentID = currentItemClassesArr.filter(function(classname) {
+
+						if(/[0-9]+$/.test(classname) && classname.indexOf('menu-item') !== -1 ) {
+							return true;
+						}
+
+						return false;
+					});
+					
+					if(currentID.length !== 1 ) {
+						return 'not-found';
+					}
+
+					return currentID.join('');
 				}
 
 
@@ -19596,7 +19632,7 @@
                 }
               });
             }, {
-							root: document,
+							root: (isSafari()) ? null : document,
               rootMargin: '-10% 0% -10% 0%',
               threshold: 0
             });

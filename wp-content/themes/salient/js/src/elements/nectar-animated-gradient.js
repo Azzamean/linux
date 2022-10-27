@@ -429,6 +429,15 @@ Better rank ordering method by Stefan Gustavson in 2012.
     };
     
 
+    proto.isSafari = function() {
+      if (navigator.userAgent.indexOf('Safari') != -1 && 
+        navigator.userAgent.indexOf('Chrome') == -1) {
+          return true;
+      } 
+  
+      return false;
+    };
+
     proto.trackInView = function() {
 
         let that = this;
@@ -443,7 +452,7 @@ Better rank ordering method by Stefan Gustavson in 2012.
           });
 
         }, { 
-          root: document, 
+          root: (this.isSafari()) ? null : document,
           rootMargin: '250px'
         });
 

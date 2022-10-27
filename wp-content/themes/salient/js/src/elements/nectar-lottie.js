@@ -195,7 +195,7 @@
       });
 
     }, {
-      root: document,
+      root: (this.isSafari()) ? null : document,
       rootMargin: '-12% 0% -12% 0%',
       threshold: 0
     });
@@ -226,7 +226,7 @@
       });
 
     }, {
-      root: document,
+      root: (this.isSafari()) ? null : document,
       rootMargin: '300px 0px 300px 0px',
       threshold: 0
     });
@@ -252,6 +252,16 @@
   };
 
 
+  proto.isSafari = function() {
+    if (navigator.userAgent.indexOf('Safari') != -1 && 
+      navigator.userAgent.indexOf('Chrome') == -1) {
+        return true;
+    } 
+
+    return false;
+  };
+
+
   proto.inViewLoad = function() {
     
     let that = this;
@@ -270,7 +280,7 @@
       });
 
     }, {
-      root: document,
+      root: (this.isSafari()) ? null : document,
       rootMargin: '49%',
       threshold: 0
     });

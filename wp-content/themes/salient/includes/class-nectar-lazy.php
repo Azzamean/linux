@@ -56,6 +56,7 @@ if( !class_exists('NectarLazyImages') ) {
 			self::verify_use_case() ) {
 				
 				self::$global_option_active = true;
+				add_filter( 'wp_lazy_loading_enabled', '__return_false' );
 				
 			}
 			

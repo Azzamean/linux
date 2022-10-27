@@ -276,6 +276,15 @@
     }
     
   };
+  
+  NectarTestimonialSlider.prototype.isSafari = function() {
+    if (navigator.userAgent.indexOf('Safari') != -1 && 
+      navigator.userAgent.indexOf('Chrome') == -1) {
+        return true;
+    } 
+
+    return false;
+  };
 
   NectarTestimonialSlider.prototype.lazyFlickityInit = function() {
 
@@ -284,13 +293,13 @@
 
       entries.forEach(function(entry){
         if (entry.isIntersecting) {
-        that.flickityInit();
-        that.observer.unobserve(entry.target);
+          that.flickityInit();
+          that.observer.unobserve(entry.target);
         } 
       });
     
       }, {
-      root: document,
+      root: (this.isSafari()) ? null : document,
       rootMargin: '400px 0px 400px 0px',
       threshold: 0
     });

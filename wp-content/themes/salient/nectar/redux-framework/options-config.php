@@ -2759,6 +2759,7 @@
            'options' => array(
              'small' => esc_html__('Small', 'salient'),
              'large' => esc_html__('Large', 'salient'),
+             'large-alt' => esc_html__('Large Alt', 'salient'),
              'none' => esc_html__('None', 'salient')
            ),
            'default' => 'large'

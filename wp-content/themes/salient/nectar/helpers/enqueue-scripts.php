@@ -104,6 +104,8 @@ function nectar_register_js() {
 			wp_enqueue_script( 'nectar_slider_priority' );
 		}
 
+		wp_enqueue_script( 'intersection-observer' );
+
 		wp_enqueue_script( 'nectar-transit' );
 		wp_enqueue_script( 'nectar-waypoints' );
 
@@ -198,10 +200,7 @@ function nectar_register_js() {
         }
 		
 
-		// Elements that rely on Intersection Observer.
-		if( NectarElAssets::locate(array('parallax_scrolling="yes')) ) {
-			wp_enqueue_script( 'intersection-observer' );
-		}
+		
 
 		// Flickity.
 		$nectar_flickity_els = array(

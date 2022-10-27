@@ -547,7 +547,20 @@
          body[data-fancy-form-rcs="1"] .variations_form .select2-dropdown {
            box-shadow: rgba(0, 0, 0, 0.04) 0px 1px 0px, rgba(0, 0, 0, 0.05) 0px 2px 7px, rgba(0, 0, 0, 0.06) 0px 12px 22px;
          }';
-       } else if( 'none' === $nectar_options['header-dropdown-box-shadow'] ) {
+       } else if( 'large-alt' === $nectar_options['header-dropdown-box-shadow']  ) {
+         echo '#header-outer #top .sf-menu > li > ul,
+         #header-outer #header-secondary-outer .sf-menu > li > ul,
+         #header-outer #top .sf-menu > li:not(.megamenu) ul:not(.woocommerce-mini-cart),
+         #header-outer .widget_shopping_cart,
+         #header-outer .cart-notification,
+         body[data-fancy-form-rcs="1"] .nectar-shop-header .woocommerce-ordering .select2-dropdown,
+         body[data-fancy-form-rcs="1"] .variations_form .select2-dropdown {
+           box-shadow: 
+                rgba(0, 0, 0, 0.02) 0px 1px 0px, 
+                rgba(0, 0, 0, 0.06) 0px 38px 38px;
+         }';
+       }
+       else if( 'none' === $nectar_options['header-dropdown-box-shadow'] ) {
          echo '#header-outer #top .sf-menu > li ul {
            box-shadow: none;
          }';
@@ -4831,6 +4844,7 @@
 
     @media only screen and (max-width: 999px) {
       body #header-outer #logo {
+       position: relative;
        margin: '.esc_attr($mobile_padding_mod).'px 0;
       }
 
@@ -6355,7 +6369,8 @@
       body[data-fancy-form-rcs="1"] .nectar-shop-header-bottom .woocommerce-ordering .select2-selection--single,
       body[data-fancy-form-rcs="1"] .nectar-shop-header-bottom .woocommerce-ordering select,
       body[data-button-style*="slightly_rounded"] .widget_layered_nav_filters ul li a,
-      .nectar-menu-label:before {
+      .nectar-menu-label:before,
+     .nectar-ext-menu-item__button {
         border-radius: '.intval($button_roundness).'px;
       }';
 
@@ -6430,7 +6445,8 @@
       body[data-fancy-form-rcs="1"] .nectar-shop-header-bottom .woocommerce-ordering .select2-selection--single,
       body[data-fancy-form-rcs="1"] .nectar-shop-header-bottom .woocommerce-ordering select,
       .nectar-menu-label:before,
-      #slide-out-widget-area.fullscreen-inline-images .menuwrapper li.back >a {
+      #slide-out-widget-area.fullscreen-inline-images .menuwrapper li.back >a,
+      .nectar-ext-menu-item__button {
         border-radius: 200px;
       }';
 
@@ -7315,8 +7331,9 @@
           background-repeat: no-repeat;
           background-size: 0% 2px;
           background-position: left bottom;
+          opacity: 1;
           background-image: linear-gradient(to right, #000000 0%, #000000 100%);
-          transition: background-size 0.55s cubic-bezier(.2,.75,.5,1), color 0.5s ease;
+          transition: background-size 0.55s cubic-bezier(.2,.75,.5,1), color 0.5s ease!important;
           text-decoration: none;
         }
         #footer-outer[data-link-hover="underline"] #footer-widgets .textwidget a:not(.nectar-button) {
@@ -7326,6 +7343,7 @@
         #ajax-content-wrap #footer-outer[data-link-hover="underline"] #footer-widgets ul:not([class*="nectar_blog_posts"]) li > a:not(.tag-cloud-link):not(.nectar-button),
         #footer-outer[data-link-hover="underline"] #footer-widgets .textwidget a:not(.nectar-button) {
           display: inline;
+          opacity: 1;
         }
         
         [data-link-hover="underline"] #footer-widgets ul:not([class*="nectar_blog_posts"]) li > a:not(.tag-cloud-link):not(.nectar-button):hover {

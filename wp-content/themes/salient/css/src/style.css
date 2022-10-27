@@ -1839,7 +1839,7 @@ body[data-hhun="0"] #header-outer[data-header-resize="0"]:not([data-transparent-
 	display: inline-block;
 	vertical-align: middle;
 	margin-right: 15px;
-	line-height: 1em;
+	line-height: 1!important;
   font-size: 14px;
 }
 #top .span_9 > .slide-out-widget-area-toggle a.using-label .label {

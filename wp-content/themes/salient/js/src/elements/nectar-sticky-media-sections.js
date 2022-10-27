@@ -75,6 +75,15 @@
     this.$el[0].style.setProperty('--nectar-sticky-media-sections-vert-y', vertCenter + "px");
   };
 
+  proto.isSafari = function() {
+    if (navigator.userAgent.indexOf('Safari') != -1 && 
+      navigator.userAgent.indexOf('Chrome') == -1) {
+        return true;
+    } 
+
+    return false;
+  };
+
 
   proto.trackDirection = function() {
 
@@ -161,10 +170,11 @@
           });
 
         }, {
-          root: document,
+          root: (this.isSafari()) ? null : document,
           rootMargin: '-40% 0% -40% 0%',
           threshold: 0
         });
+
 
         // Observe each section.
         this.$contentSections.find('> div').each(function () {
