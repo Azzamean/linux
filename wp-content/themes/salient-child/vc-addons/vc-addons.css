@@ -162,6 +162,15 @@
 }
 
 
+/* SIMPLE GRID DESIGN */
+.simple-grid-design.outer {
+	min-height: 100px;
+}
+
+.simple-grid-design.title {
+	display: block;
+}
+
 /*
 .grid-design .projects-btn {
 	color: #ffffff;
