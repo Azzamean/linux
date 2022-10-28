@@ -1,16 +1,10 @@
 <?php
 
+//remove_role( 'Super_Admin' );
+//remove_role( 'Super Admin' );
+//grant_super_admin(1);
+//grant_super_admin(5);
 
-function get_user_role() {
-    global $current_user;
-
-    $user_roles = $current_user->roles;
-    $user_role = array_shift($user_roles);
-
-    return $user_role;
-}
-
-echo get_user_role();
 /* Osano code for tracking */
 add_action("wp_head", "osano_script");
 function osano_script()
