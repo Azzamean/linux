@@ -34,7 +34,7 @@ function salient_child_enqueue_styles()
     );
     wp_enqueue_style(
         "vc-addons-style",
-        get_stylesheet_directory_uri() . "/vc-addons/vc-addons.css",
+        get_stylesheet_directory_uri() . "/vc-addons/css/vc-addons.css",
         "",
         $nectar_theme_version
     );
@@ -80,7 +80,7 @@ function lf_meta_header()
     $site_id = get_current_blog_id();
     switch ($site_id) {
         //DPEL AWSF
-        case '8':
+        case "8":
             echo '
   	<div class="lfprojects awsf-background">
 		<div class="container">
@@ -91,7 +91,7 @@ function lf_meta_header()
 	</div>';
             break;
         //OMPF
-        case '14':
+        case "14":
             echo '
   	<div class="lfprojects white-background">
 		<div class="container">

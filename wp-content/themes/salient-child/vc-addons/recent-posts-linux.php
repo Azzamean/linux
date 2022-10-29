@@ -152,22 +152,21 @@ class RecentPostsLinux
                         "save_always" => true
                     ],
                     [
-                        "type" => "checkbox",
-                        "class" => "",
-                        "heading" => esc_html__("Categories", "recent_posts"),
+                        "type" => "dropdown",
+                        "heading" => esc_html__("Categories", "salient-core"),
                         "param_name" => "categories",
+                        "admin_label" => true,
                         "value" => [
-                            esc_html__(
-                                "Show Categories",
-                                "recent_posts"
-                            ) => "show-categories"
+                            esc_html__("0", "salient-core") => "No Categories",
+                            esc_html__("1", "salient-core") => "1",
+                            esc_html__("2", "salient-core") => "2",
+                            esc_html__("3", "salient-core") => "3"
                         ],
-                        "std" => "hide-categories",
+                        "save_always" => true,
                         "description" => esc_html__(
-                            "Check or uncheck the box if you want to show or hide categories",
-                            "recent_posts"
-                        ),
-                        "save_always" => true
+                            "Please select the number of categories you wish to display",
+                            "salient-core"
+                        )
                     ],
                     [
                         "type" => "checkbox",
@@ -313,6 +312,28 @@ class RecentPostsLinux
                     [
                         "type" => "checkbox",
                         "class" => "",
+                        "heading" => esc_html__("Show Date", "recent_posts"),
+                        "param_name" => "date",
+                        "value" => [
+                            esc_html__(
+                                "Show Date",
+                                "recent_posts"
+                            ) => "show-date"
+                        ],
+                        "std" => "hide-date",
+                        "dependency" => [
+                            "element" => "design",
+                            "value" => ["simple-grid-design"]
+                        ],
+                        "description" => esc_html__(
+                            "Check the box if you want to show the date",
+                            "recent_posts"
+                        ),
+                        "save_always" => true
+                    ],
+                    [
+                        "type" => "checkbox",
+                        "class" => "",
                         "heading" => esc_html__(
                             "Date Under Title",
                             "recent_posts"
@@ -404,6 +425,7 @@ function recent_posts_linux($atts, $content)
                 "dop" => "",
                 "excerpt" => "",
                 "author" => "",
+                "date" => "",
                 "dut" => "",
                 "right_arrow" => "",
                 "suppress_filters" => true
@@ -420,13 +442,14 @@ function recent_posts_linux($atts, $content)
     $featured_image = !empty($featured_image)
         ? $featured_image
         : "show-featured-image";
-    $categories = !empty($categories) ? $categories : "hide-categories";
+    $categories = !empty($categories) ? $categories : "0";
     $tags = !empty($tags) ? $tags : "hide-tags";
     $read = !empty($read) ? $read : "hide-read";
     $read_link = !empty($read_link) ? $read_link : "hide_read_link";
     $dop = !empty($dop) ? $dop : "show-dop";
     $excerpt = !empty($excerpt) ? $excerpt : "show-excerpt";
     $author = !empty($author) ? $author : "hide-author";
+    $date = !empty($date) ? $date : "hide-date";
     $dut = !empty($dut) ? $dut : "hide-dut";
     $right_arrow = !empty($right_arrow) ? $right_arrow : "hide-right-arrow";
 
@@ -507,14 +530,20 @@ function recent_posts_linux($atts, $content)
     }
 
     switch ($categories) {
-        case "show-categories":
-            $categories = true;
+        case "0":
+            $categories = "0";
             break;
-        case "hide-categories":
-            $categories = false;
+        case "1":
+            $categories = "1";
+            break;
+        case "2":
+            $categories = "2";
+            break;
+        case "3":
+            $categories = "3";
             break;
         default:
-            $categories = true;
+            $categories = "0";
             break;
     }
 
@@ -583,6 +612,17 @@ function recent_posts_linux($atts, $content)
             break;
         default:
             $author = true;
+            break;
+    }
+    switch ($date) {
+        case "show-date":
+            $date = true;
+            break;
+        case "hide-date":
+            $date = false;
+            break;
+        default:
+            $date = true;
             break;
     }
     switch ($dut) {
@@ -688,19 +728,44 @@ function recent_posts_linux($atts, $content)
                     $output .= "<span>" . get_the_date("M j, Y") . "</span>";
                 }
 
-                if ($categories != false && $tags != true) {
-                    $output .= " In " . get_the_category_list(", ");
+                if ($categories > 0 && $tags != true) {
+                    $i = 0;
+                    $output .= " In ";
+                    foreach (get_the_category() as $cat) {
+                        $output .=
+                            '<a href="' .
+                            get_category_link($cat->cat_ID) .
+                            '">' .
+                            $cat->cat_name .
+                            "</a>" .
+                            ($i < $categories - 1 ? ", " : "");
+
+                        if (++$i == $categories) {
+                            break;
+                        }
+                    }
                 }
 
-                if ($tags != false && $categories != true) {
+                if ($categories > 0 && $tags != false) {
+                    $i = 0;
+                    $output .= " In ";
+                    foreach (get_the_category() as $cat) {
+                        $output .=
+                            '<a href="' .
+                            get_category_link($cat->cat_ID) .
+                            '">' .
+                            $cat->cat_name .
+                            "</a>" .
+                            ", " .
+                            get_the_tag_list(", ", ", ");
+                        if (++$i == $categories) {
+                            break;
+                        }
+                    }
+                }
+
+                if ($categories == 0 && $tags != false) {
                     $output .= get_the_tag_list(" In ", ", ");
-                }
-
-                if ($tags != false && $categories != false) {
-                    $output .=
-                        " In " .
-                        get_the_category_list(", ") .
-                        get_the_tag_list(", ", ", ");
                 }
 
                 $output .= "</p>";
@@ -815,25 +880,32 @@ function recent_posts_linux($atts, $content)
                             get_category_link($cat->cat_ID) .
                             '">' .
                             $cat->cat_name .
-                            '</a>' .
+                            "</a>" .
                             " ";
-                        if (++$i == 2) {
+                        if (++$i == $categories) {
                             break;
                         }
                     }
                 }
 
                 if ($dut == false) {
-                    if ($author == false) {
+                    if ($author == false && $date == true) {
                         $output .=
                             '<p class="simple-grid-design date">' .
                             get_the_date("M j, Y") .
                             "</p>";
-                    } else {
+                    }
+                    if ($author == true && $date == false) {
                         $output .=
                             '<p class="simple-grid-design date">' .
-                            get_the_author_meta('display_name', $author_id) .
-                            ' | ' .
+                            get_the_author_meta("display_name", $author_id) .
+                            "</p>";
+                    }
+                    if ($author == true && $date == true) {
+                        $output .=
+                            '<p class="simple-grid-design date">' .
+                            get_the_author_meta("display_name", $author_id) .
+                            " | " .
                             get_the_date("M j, Y") .
                             "</p>";
                     }
@@ -846,16 +918,23 @@ function recent_posts_linux($atts, $content)
                     get_the_title() .
                     "</a>";
                 if ($dut == true) {
-                    if ($author == false) {
+                    if ($author == false && $date == true) {
                         $output .=
                             '<p class="simple-grid-design date">' .
                             get_the_date("M j, Y") .
                             "</p>";
-                    } else {
+                    }
+                    if ($author == true && $date == false) {
                         $output .=
                             '<p class="simple-grid-design date">' .
-                            get_the_author_meta('display_name', $author_id) .
-                            ' | ' .
+                            get_the_author_meta("display_name", $author_id) .
+                            "</p>";
+                    }
+                    if ($author == true && $date == true) {
+                        $output .=
+                            '<p class="simple-grid-design date">' .
+                            get_the_author_meta("display_name", $author_id) .
+                            " | " .
                             get_the_date("M j, Y") .
                             "</p>";
                     }
