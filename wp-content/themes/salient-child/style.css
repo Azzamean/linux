@@ -20,10 +20,6 @@ span.osano-cm-toggle__label.osano-cm-label {
 /* HEADER */
 
 @media (min-width: 768px) {
-  #header-outer {
-    margin-top: 32.4px;
-  }
-
   .lfprojects {
     background: #252525;
     position: fixed;
@@ -33,7 +29,7 @@ span.osano-cm-toggle__label.osano-cm-label {
     height: 33px;
   }
 
-  .lfprojects.color {
+  .lfprojects.white-background {
     background: #ffffff;
   }
 
@@ -42,8 +38,25 @@ span.osano-cm-toggle__label.osano-cm-label {
     vertical-align: middle;
   }
 
+  #header-outer {
+    margin-top: 32.4px;
+  }
+
   div#ajax-content-wrap {
     margin-top: 32px;
+  }
+
+  /* DPEL AWSF */
+  .lfprojects.awsf-background {
+    height: 55px;
+  }
+
+  .lfprojects.awsf-background ~ #header-outer {
+    margin-top: 54.4px;
+  }
+
+  .lfprojects.awsf-background ~ div#ajax-content-wrap {
+    margin-top: 50px;
   }
 }
 

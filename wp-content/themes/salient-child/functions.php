@@ -78,28 +78,31 @@ if (is_multisite()) {
 function lf_meta_header()
 {
     $site_id = get_current_blog_id();
-	
-    if ($site_id == "1") {
-        echo '
-  	<div class="lfprojects color">
+    switch ($site_id) {
+        //DPEL AWSF
+        case '8':
+            echo '
+  	<div class="lfprojects awsf-background">
 		<div class="container">
 			<a href="https://www.linuxfoundation.org/projects" target="_blank" rel="noopener noreferrer">
 			<img src="/wp-content/uploads/banners/aswf_banner.svg">
 			</a>
 		</div>
 	</div>';
-    }
-    if ($site_id == "14") {
-        echo '
-  	<div class="lfprojects color">
+            break;
+        //OMPF
+        case '14':
+            echo '
+  	<div class="lfprojects white-background">
 		<div class="container">
 			<a href="https://www.linuxfoundation.org/projects" target="_blank" rel="noopener noreferrer">
 			<img src="/wp-content/uploads/banners/lfprojects_banner_color.png">
 			</a>
 		</div>
 	</div>';
-    } else {
-        echo '
+            break;
+        default:
+            echo '
   	<div class="lfprojects">
 		<div class="container">
 			<a href="https://www.linuxfoundation.org/projects" target="_blank" rel="noopener noreferrer">
@@ -248,8 +251,8 @@ function salient_redux_custom_fonts()
             "BwModelica-Regular" => "BwModelica-Regular",
             "BwModelica-RegularItalic" => "BwModelica-RegularItalic",
             "BwModelicaSS02-Regular" => "BwModelicaSS02-Regular",
-            "BwModelicaSS02-RegularItalic" => "BwModelicaSS02-RegularItalic",
-        ],
+            "BwModelicaSS02-RegularItalic" => "BwModelicaSS02-RegularItalic"
+        ]
     ];
 }
 add_filter(
