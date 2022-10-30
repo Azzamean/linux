@@ -171,6 +171,11 @@
 	display: block;
 }
 
+.simple-grid-design.outer .col {
+	margin-bottom: 2%;
+}
+
+
 /*
 .grid-design .projects-btn {
 	color: #ffffff;

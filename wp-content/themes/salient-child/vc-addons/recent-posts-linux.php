@@ -72,7 +72,7 @@ class RecentPostsLinux
                         ],
                         "dependency" => [
                             "element" => "design",
-                            "value" => ["grid-design"]
+                            "value" => ["grid-design", "simple-grid-design"]
                         ],
                         "description" => esc_html__(
                             "Please select the number of columns you want displayed",
@@ -878,7 +878,7 @@ function recent_posts_linux($atts, $content)
                         $output .=
                             '<a href="' .
                             get_category_link($cat->cat_ID) .
-                            '">' .
+                            '" class="simple-grid-categories">' .
                             $cat->cat_name .
                             "</a>" .
                             " ";
@@ -942,7 +942,7 @@ function recent_posts_linux($atts, $content)
 
                 if ($right_arrow == true) {
                     $output .=
-                        '<img src="\wp-content\themes\salient-child\vc-addons\images\right-arrow.svg" />';
+                        '<img class="simple-grid-arrow" src="\wp-content\themes\salient-child\vc-addons\images\right-arrow.svg" />';
                 }
 
                 $output .= "</div>";
