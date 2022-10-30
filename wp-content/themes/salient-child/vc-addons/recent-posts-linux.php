@@ -26,7 +26,7 @@ class RecentPostsLinux
                     "Recent Posts - Linux Foundation Designed",
                     "recent_posts"
                 ),
-                "base" => "recent_posts_basic",
+                "base" => "recent_posts_linux_foundation",
                 "icon" => "vc_element-icon icon-wpb-recent-posts",
                 "class" => "",
                 "category" => esc_html__("Linux Foundation", "recent_posts"),
@@ -42,15 +42,15 @@ class RecentPostsLinux
                         "admin_label" => true,
                         "value" => [
                             esc_html__(
-                                "Basic Design", //lfenergy
+                                "List View Design", 
                                 "salient-core"
-                            ) => "basic-design",
+                            ) => "list-view-design",
                             esc_html__(
-                                "Grid Design", //interuss
+                                "Grid Design", 
                                 "salient-core"
                             ) => "grid-design",
                             esc_html__(
-                                "Simple Grid Design", //lfaidata
+                                "Simple Grid Design",
                                 "salient-core"
                             ) => "simple-grid-design"
                         ],
@@ -143,7 +143,7 @@ class RecentPostsLinux
                         "std" => "show-featured-image",
                         "dependency" => [
                             "element" => "design",
-                            "value" => ["basic-design", "grid-design"]
+                            "value" => ["list-view-design", "grid-design"]
                         ],
                         "description" => esc_html__(
                             "Check or uncheck the box if you want to show or hide the featured image",
@@ -182,7 +182,7 @@ class RecentPostsLinux
                         "std" => "hide-tags",
                         "dependency" => [
                             "element" => "design",
-                            "value" => ["basic-design", "grid-design"]
+                            "value" => ["list-view-design", "grid-design"]
                         ],
                         "description" => esc_html__(
                             "Check or uncheck the box if you want to show or hide tags",
@@ -207,7 +207,7 @@ class RecentPostsLinux
                         "std" => "hide-read",
                         "dependency" => [
                             "element" => "design",
-                            "value" => ["basic-design", "grid-design"]
+                            "value" => ["list-view-design", "grid-design"]
                         ],
                         "description" => esc_html__(
                             "Check or uncheck the box if you want to show or hide read more button",
@@ -232,7 +232,7 @@ class RecentPostsLinux
                         "std" => "hide_read_link",
                         "dependency" => [
                             "element" => "design",
-                            "value" => ["basic-design", "grid-design"]
+                            "value" => ["list-view-design", "grid-design"]
                         ],
                         "description" => esc_html__(
                             "Check or uncheck the box if you want to show or hide read more link",
@@ -257,7 +257,7 @@ class RecentPostsLinux
                         "std" => "show-dop",
                         "dependency" => [
                             "element" => "design",
-                            "value" => ["basic-design", "grid-design"]
+                            "value" => ["list-view-design", "grid-design"]
                         ],
                         "description" => esc_html__(
                             "Check or uncheck the box if you want to show or hide date of publication",
@@ -279,7 +279,7 @@ class RecentPostsLinux
                         "std" => "show-excerpt",
                         "dependency" => [
                             "element" => "design",
-                            "value" => ["basic-design", "grid-design"]
+                            "value" => ["list-view-design", "grid-design"]
                         ],
                         "description" => esc_html__(
                             "Check or uncheck the box if you want to show or hide the excerpt",
@@ -436,7 +436,7 @@ function recent_posts_linux($atts, $content)
 
     $limit = !empty($limit) ? $limit : "4";
     $columns = !empty($columns) ? $columns : "4";
-    $design = !empty($design) ? $design : "basic-design";
+    $design = !empty($design) ? $design : "list-view-design";
     $paged = get_query_var("paged") ? get_query_var("paged") : 1;
     $pagination = !empty($pagination) ? $pagination : "show-pagination";
     $featured_image = !empty($featured_image)
@@ -491,8 +491,8 @@ function recent_posts_linux($atts, $content)
     }
 
     switch ($design) {
-        case "basic-design":
-            $design = "Basic Design";
+        case "list-view-design":
+            $design = "List View Design";
             break;
         case "grid-design":
             $design = "Grid Design";
@@ -501,7 +501,7 @@ function recent_posts_linux($atts, $content)
             $design = "Simple Grid Design";
             break;
         default:
-            $design = "Basic Design";
+            $design = "List View Design";
             break;
     }
 
@@ -655,15 +655,15 @@ function recent_posts_linux($atts, $content)
         while ($recent_posts_query->have_posts()):
             $recent_posts_query->the_post();
 
-            //Basic DESIGN
-            if ($design == "Basic Design") {
+            //List View Design
+            if ($design == "List View Design") {
                 if ($count == 0) {
-                    $output .= '<div class="basic-design outer">';
+                    $output .= '<div class="list-view-design outer">';
                 }
-                $output .= '<div class="basic-design flex">';
+                $output .= '<div class="list-view-design flex">';
                 // Left Side
                 if (get_the_post_thumbnail($post->ID) != null) {
-                    $output .= '<div class="basic-design left">';
+                    $output .= '<div class="list-view-design left">';
                     if (has_post_format("link")) {
                         global $post;
                         global $nectar_options;
@@ -694,9 +694,9 @@ function recent_posts_linux($atts, $content)
                 }
                 // Right Side
                 if ($featured_image != false) {
-                    $output .= '<div class="basic-design right">';
+                    $output .= '<div class="list-view-design right">';
                 } else {
-                    $output .= '<div class="basic-design full-width">';
+                    $output .= '<div class="list-view-design full-width">';
                 }
 
                 if (has_post_format("link")) {
@@ -704,7 +704,7 @@ function recent_posts_linux($atts, $content)
                     global $nectar_options;
                     $link = get_post_meta($post->ID, "_nectar_link", true);
                     $output .=
-                        '<h3 class="basic-design title"><a class="external-site" href="' .
+                        '<h3 class="list-view-design title"><a class="external-site" href="' .
                         $link .
                         '" style="color:' .
                         $accent_color .
@@ -713,7 +713,7 @@ function recent_posts_linux($atts, $content)
                         "</a></h3>";
                 } else {
                     $output .=
-                        '<h3 class="basic-design title"><a href="' .
+                        '<h3 class="list-view-design title"><a href="' .
                         get_permalink() .
                         '" style="color:' .
                         $accent_color .
@@ -722,7 +722,7 @@ function recent_posts_linux($atts, $content)
                         "</a></h3>";
                 }
 
-                $output .= '<p class="basic-design date">';
+                $output .= '<p class="list-view-design date">';
 
                 if ($dop != false) {
                     $output .= "<span>" . get_the_date("M j, Y") . "</span>";
@@ -774,13 +774,13 @@ function recent_posts_linux($atts, $content)
                     ? intval($nectar_options[""])
                     : 50;
                 $excerpt_markup =
-                    '<p class="basic-design excerpt">' .
+                    '<p class="list-view-design excerpt">' .
                     nectar_excerpt($excerpt_length) .
                     "</p>";
                 $output .= $excerpt_markup;
                 if ($read != false) {
                     $output .=
-                        '<a class="basic-design read" href=' .
+                        '<a class="list-view-design read" href=' .
                         get_permalink() .
                         "><span>Read More</span></a>";
                 }
@@ -996,4 +996,4 @@ function recent_posts_linux($atts, $content)
     return $output;
 }
 
-add_shortcode("recent_posts_basic", "recent_posts_linux");
+add_shortcode("recent_posts_linux_foundation", "recent_posts_linux");
