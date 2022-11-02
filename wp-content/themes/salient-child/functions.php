@@ -80,7 +80,7 @@ function lf_meta_header()
     $site_id = get_current_blog_id();
     switch ($site_id) {
         //DPEL AWSF
-        case "1":
+        case "8":
             echo '
   	<div class="lfprojects awsf-background">
 		<div class="container">
