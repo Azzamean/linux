@@ -42,11 +42,11 @@ class RecentPostsLinux
                         "admin_label" => true,
                         "value" => [
                             esc_html__(
-                                "List View Design", 
+                                "List View Design",
                                 "salient-core"
                             ) => "list-view-design",
                             esc_html__(
-                                "Grid Design", 
+                                "Grid Design",
                                 "salient-core"
                             ) => "grid-design",
                             esc_html__(
@@ -232,7 +232,7 @@ class RecentPostsLinux
                         "std" => "hide_read_link",
                         "dependency" => [
                             "element" => "design",
-                            "value" => ["list-view-design", "grid-design"]
+                            "value" => ["grid-design"]
                         ],
                         "description" => esc_html__(
                             "Check or uncheck the box if you want to show or hide read more link",
@@ -279,7 +279,7 @@ class RecentPostsLinux
                         "std" => "show-excerpt",
                         "dependency" => [
                             "element" => "design",
-                            "value" => ["list-view-design", "grid-design"]
+                            "value" => ["grid-design"]
                         ],
                         "description" => esc_html__(
                             "Check or uncheck the box if you want to show or hide the excerpt",
@@ -660,38 +660,52 @@ function recent_posts_linux($atts, $content)
                 if ($count == 0) {
                     $output .= '<div class="list-view-design outer">';
                 }
+
                 $output .= '<div class="list-view-design flex">';
                 // Left Side
-                if (get_the_post_thumbnail($post->ID) != null) {
+
+                if ($featured_image == true) {
                     $output .= '<div class="list-view-design left">';
-                    if (has_post_format("link")) {
-                        global $post;
-                        global $nectar_options;
-                        $link = get_post_meta($post->ID, "_nectar_link", true);
-                        $output .=
-                            '<a href="' .
-                            $link .
-                            '">' .
-                            get_the_post_thumbnail(
+                    if (get_the_post_thumbnail($post->ID) != null) {
+                        if (has_post_format("link")) {
+                            global $post;
+                            global $nectar_options;
+                            $link = get_post_meta(
                                 $post->ID,
-                                "full",
-                                $image_attrs
-                            ) .
-                            "</a>";
+                                "_nectar_link",
+                                true
+                            );
+                            $output .=
+                                '<a href="' .
+                                $link .
+                                '">' .
+                                get_the_post_thumbnail(
+                                    $post->ID,
+                                    "full",
+                                    $image_attrs
+                                ) .
+                                "</a>";
+                        } else {
+                            $output .=
+                                '<a href="' .
+                                get_permalink() .
+                                '">' .
+                                get_the_post_thumbnail(
+                                    $post->ID,
+                                    "full",
+                                    $image_attrs
+                                ) .
+                                "</a>";
+                        }
                     } else {
                         $output .=
-                            '<a href="' .
-                            get_permalink() .
-                            '">' .
-                            get_the_post_thumbnail(
-                                $post->ID,
-                                "full",
-                                $image_attrs
-                            ) .
-                            "</a>";
+                            '<img class="list-view-default" src="' .
+                            nectar_options_img($nectar_options['logo']) .
+                            '" />';
                     }
                     $output .= "</div>";
                 }
+
                 // Right Side
                 if ($featured_image != false) {
                     $output .= '<div class="list-view-design right">';
@@ -722,49 +736,56 @@ function recent_posts_linux($atts, $content)
                         "</a></h3>";
                 }
 
-                $output .= '<p class="list-view-design date">';
+                if ($dop == true) {
+                    $output .= '<p class="list-view-design date">';
+                } else {
+                    $output .= '<p class="list-view-design">';
+                }
 
                 if ($dop != false) {
                     $output .= "<span>" . get_the_date("M j, Y") . "</span>";
                 }
 
-                if ($categories > 0 && $tags != true) {
+                if ($categories > 0 && $tags == false) {
                     $i = 0;
+                    $comma = "";
                     $output .= " In ";
                     foreach (get_the_category() as $cat) {
                         $output .=
+                            $comma .
                             '<a href="' .
                             get_category_link($cat->cat_ID) .
                             '">' .
                             $cat->cat_name .
-                            "</a>" .
-                            ($i < $categories - 1 ? ", " : "");
-
+                            "</a>";
+                        $comma = ", ";
                         if (++$i == $categories) {
                             break;
                         }
                     }
                 }
 
-                if ($categories > 0 && $tags != false) {
+                if ($categories > 0 && $tags == true) {
                     $i = 0;
+                    $comma = "";
                     $output .= " In ";
                     foreach (get_the_category() as $cat) {
                         $output .=
+                            $comma .
                             '<a href="' .
                             get_category_link($cat->cat_ID) .
                             '">' .
                             $cat->cat_name .
-                            "</a>" .
-                            ", " .
-                            get_the_tag_list(", ", ", ");
+                            "</a>";
+                        $comma = ", ";
                         if (++$i == $categories) {
                             break;
                         }
                     }
+                    $output .= get_the_tag_list(", ", ", ");
                 }
 
-                if ($categories == 0 && $tags != false) {
+                if ($categories == 0 && $tags == true) {
                     $output .= get_the_tag_list(" In ", ", ");
                 }
 
@@ -780,9 +801,9 @@ function recent_posts_linux($atts, $content)
                 $output .= $excerpt_markup;
                 if ($read != false) {
                     $output .=
-                        '<a class="list-view-design read" href=' .
+                        '<div><a class="list-view-design read" href=' .
                         get_permalink() .
-                        "><span>Read More</span></a>";
+                        "><span>Read More</span></a></div>";
                 }
                 $output .= "</div>";
                 $output .= "</div>";

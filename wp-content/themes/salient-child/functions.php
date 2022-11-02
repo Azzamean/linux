@@ -80,12 +80,12 @@ function lf_meta_header()
     $site_id = get_current_blog_id();
     switch ($site_id) {
         //DPEL AWSF
-        case "8":
+        case "1":
             echo '
   	<div class="lfprojects awsf-background">
 		<div class="container">
 			<a href="https://www.linuxfoundation.org/projects" target="_blank" rel="noopener noreferrer">
-			<img src="/wp-content/uploads/banners/aswf_banner.svg">
+			<img src="/wp-content/uploads/banners/aswf_banner_dark.svg">
 			</a>
 		</div>
 	</div>';

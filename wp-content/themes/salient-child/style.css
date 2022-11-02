@@ -47,6 +47,7 @@ span.osano-cm-toggle__label.osano-cm-label {
   }
 
   /* DPEL AWSF */
+  /*
   .lfprojects.awsf-background {
     height: 55px;
   }
@@ -58,6 +59,7 @@ span.osano-cm-toggle__label.osano-cm-label {
   .lfprojects.awsf-background ~ div#ajax-content-wrap {
     margin-top: 50px;
   }
+  */
 }
 
 @media (max-width: 767px) {
