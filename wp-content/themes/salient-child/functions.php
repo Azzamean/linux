@@ -71,6 +71,10 @@ if (is_multisite()) {
         case "13":
             require_once "sites/o3d/functions.php";
             break;
+	    // NextArch
+        case "15":
+            require_once "sites/nextarch/functions.php";
+            break;
     }
 }
 

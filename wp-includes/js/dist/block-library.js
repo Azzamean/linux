@@ -2493,7 +2493,7 @@ const commentAuthorAvatar = (0,external_wp_element_namespaceObject.createElement
 
 ;// CONCATENATED MODULE: ./node_modules/@babel/runtime/helpers/esm/extends.js
 function _extends() {
-  _extends = Object.assign || function (target) {
+  _extends = Object.assign ? Object.assign.bind() : function (target) {
     for (var i = 1; i < arguments.length; i++) {
       var source = arguments[i];
       for (var key in source) {
@@ -2504,7 +2504,6 @@ function _extends() {
     }
     return target;
   };
-
   return _extends.apply(this, arguments);
 }
 // EXTERNAL MODULE: ./node_modules/classnames/index.js
@@ -9273,10 +9272,6 @@ const comment_author_name_metadata = {
     },
     textAlign: {
       type: "string"
-    },
-    fontSize: {
-      type: "string",
-      "default": "small"
     }
   },
   usesContext: ["commentId"],
@@ -24489,6 +24484,8 @@ const MAX_POSTS_COLUMNS = 6;
 
 
 
+
+
 /**
  * Internal dependencies
  */
@@ -24525,6 +24522,7 @@ function LatestPostsEdit(_ref) {
     attributes,
     setAttributes
   } = _ref;
+  const instanceId = (0,external_wp_compose_namespaceObject.useInstanceId)(LatestPostsEdit);
   const {
     postsToShow,
     order,
@@ -24575,7 +24573,25 @@ function LatestPostsEdit(_ref) {
       categoriesList: getEntityRecords('taxonomy', 'category', CATEGORIES_LIST_QUERY),
       authorList: getUsers(USERS_LIST_QUERY)
     };
-  }, [featuredImageSizeSlug, postsToShow, order, orderBy, categories, selectedAuthor]);
+  }, [featuredImageSizeSlug, postsToShow, order, orderBy, categories, selectedAuthor]); // If a user clicks to a link prevent redirection and show a warning.
+
+  const {
+    createWarningNotice,
+    removeNotice
+  } = (0,external_wp_data_namespaceObject.useDispatch)(external_wp_notices_namespaceObject.store);
+  let noticeId;
+
+  const showRedirectionPreventedNotice = event => {
+    event.preventDefault(); // Remove previous warning if any, to show one at a time per block.
+
+    removeNotice(noticeId);
+    noticeId = `block-library/core/latest-posts/redirection-prevented/${instanceId}`;
+    createWarningNotice((0,external_wp_i18n_namespaceObject.__)('Links are disabled in the editor.'), {
+      id: noticeId,
+      type: 'snackbar'
+    });
+  };
+
   const imageSizeOptions = imageSizes.filter(_ref2 => {
     let {
       slug
@@ -24807,7 +24823,8 @@ function LatestPostsEdit(_ref) {
     const needsReadMore = excerptLength < excerpt.trim().split(' ').length && post.excerpt.raw === '';
     const postExcerpt = needsReadMore ? (0,external_wp_element_namespaceObject.createElement)(external_wp_element_namespaceObject.Fragment, null, excerpt.trim().split(' ', excerptLength).join(' '), (0,external_wp_i18n_namespaceObject.__)(' … '), (0,external_wp_element_namespaceObject.createElement)("a", {
       href: post.link,
-      rel: "noopener noreferrer"
+      rel: "noopener noreferrer",
+      onClick: showRedirectionPreventedNotice
     }, (0,external_wp_i18n_namespaceObject.__)('Read more'))) : excerpt;
     return (0,external_wp_element_namespaceObject.createElement)("li", {
       key: i
@@ -24816,13 +24833,15 @@ function LatestPostsEdit(_ref) {
     }, addLinkToFeaturedImage ? (0,external_wp_element_namespaceObject.createElement)("a", {
       className: "wp-block-latest-posts__post-title",
       href: post.link,
-      rel: "noreferrer noopener"
+      rel: "noreferrer noopener",
+      onClick: showRedirectionPreventedNotice
     }, featuredImage) : featuredImage), (0,external_wp_element_namespaceObject.createElement)("a", {
       href: post.link,
       rel: "noreferrer noopener",
       dangerouslySetInnerHTML: !!titleTrimmed ? {
         __html: titleTrimmed
-      } : undefined
+      } : undefined,
+      onClick: showRedirectionPreventedNotice
     }, !titleTrimmed ? (0,external_wp_i18n_namespaceObject.__)('(no title)') : null), displayAuthor && currentAuthor && (0,external_wp_element_namespaceObject.createElement)("div", {
       className: "wp-block-latest-posts__post-author"
     }, (0,external_wp_i18n_namespaceObject.sprintf)(
@@ -27712,7 +27731,6 @@ function MediaContainer(props, ref) {
  */
 
 const media_text_edit_TEMPLATE = [['core/paragraph', {
-  fontSize: 'large',
   placeholder: (0,external_wp_i18n_namespaceObject._x)('Content…', 'content placeholder')
 }]]; // this limits the resize to a safe zone to avoid making broken layouts
 

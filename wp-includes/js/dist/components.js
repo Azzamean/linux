@@ -13827,713 +13827,656 @@ function createProjectionNode(_a) {
                 this.nodes.forEach(clearMeasurements);
                 return;
             }
-            else {
-                element.addValue(key, motionValue((_a = element.getStaticValue(key)) !== null && _a !== void 0 ? _a : nextValue));
-            }
-        }
-    }
-    // Handle removed values
-    for (var key in prev) {
-        if (next[key] === undefined)
-            element.removeValue(key);
-    }
-    return next;
-}
-
-
-
-;// CONCATENATED MODULE: ./node_modules/framer-motion/dist/es/render/index.mjs
-
-
-
-
-
-
-
-
-
-var visualElement = function (_a) {
-    var _b = _a.treeType, treeType = _b === void 0 ? "" : _b, build = _a.build, getBaseTarget = _a.getBaseTarget, makeTargetAnimatable = _a.makeTargetAnimatable, measureViewportBox = _a.measureViewportBox, renderInstance = _a.render, readValueFromInstance = _a.readValueFromInstance, removeValueFromRenderState = _a.removeValueFromRenderState, sortNodePosition = _a.sortNodePosition, scrapeMotionValuesFromProps = _a.scrapeMotionValuesFromProps;
-    return function (_a, options) {
-        var parent = _a.parent, props = _a.props, presenceId = _a.presenceId, blockInitialAnimation = _a.blockInitialAnimation, visualState = _a.visualState, shouldReduceMotion = _a.shouldReduceMotion;
-        if (options === void 0) { options = {}; }
-        var isMounted = false;
-        var latestValues = visualState.latestValues, renderState = visualState.renderState;
-        /**
-         * The instance of the render-specific node that will be hydrated by the
-         * exposed React ref. So for example, this visual element can host a
-         * HTMLElement, plain object, or Three.js object. The functions provided
-         * in VisualElementConfig allow us to interface with this instance.
-         */
-        var instance;
-        /**
-         * Manages the subscriptions for a visual element's lifecycle, for instance
-         * onRender
-         */
-        var lifecycles = createLifecycles();
-        /**
-         * A map of all motion values attached to this visual element. Motion
-         * values are source of truth for any given animated value. A motion
-         * value might be provided externally by the component via props.
-         */
-        var values = new Map();
-        /**
-         * A map of every subscription that binds the provided or generated
-         * motion values onChange listeners to this visual element.
-         */
-        var valueSubscriptions = new Map();
-        /**
-         * A reference to the previously-provided motion values as returned
-         * from scrapeMotionValuesFromProps. We use the keys in here to determine
-         * if any motion values need to be removed after props are updated.
-         */
-        var prevMotionValues = {};
-        /**
-         * When values are removed from all animation props we need to search
-         * for a fallback value to animate to. These values are tracked in baseTarget.
-         */
-        var baseTarget = __assign({}, latestValues);
-        // Internal methods ========================
-        /**
-         * On mount, this will be hydrated with a callback to disconnect
-         * this visual element from its parent on unmount.
-         */
-        var removeFromVariantTree;
-        /**
-         * Render the element with the latest styles outside of the React
-         * render lifecycle
-         */
-        function render() {
-            if (!instance || !isMounted)
+            if (!this.isUpdating)
                 return;
-            triggerBuild();
-            renderInstance(instance, renderState, props.style, element.projection);
-        }
-        function triggerBuild() {
-            build(element, renderState, latestValues, options, props);
-        }
-        function update() {
-            lifecycles.notifyUpdate(latestValues);
-        }
-        /**
-         *
-         */
-        function bindToMotionValue(key, value) {
-            var removeOnChange = value.onChange(function (latestValue) {
-                latestValues[key] = latestValue;
-                props.onUpdate && es.update(update, false, true);
-            });
-            var removeOnRenderRequest = value.onRenderRequest(element.scheduleRender);
-            valueSubscriptions.set(key, function () {
-                removeOnChange();
-                removeOnRenderRequest();
-            });
-        }
-        /**
-         * Any motion values that are provided to the element when created
-         * aren't yet bound to the element, as this would technically be impure.
-         * However, we iterate through the motion values and set them to the
-         * initial values for this component.
-         *
-         * TODO: This is impure and we should look at changing this to run on mount.
-         * Doing so will break some tests but this isn't neccessarily a breaking change,
-         * more a reflection of the test.
-         */
-        var initialMotionValues = scrapeMotionValuesFromProps(props);
-        for (var key in initialMotionValues) {
-            var value = initialMotionValues[key];
-            if (latestValues[key] !== undefined && isMotionValue(value)) {
-                value.set(latestValues[key], false);
-            }
-        }
-        /**
-         * Determine what role this visual element should take in the variant tree.
-         */
-        var isControllingVariants = checkIfControllingVariants(props);
-        var isVariantNode = checkIfVariantNode(props);
-        var element = __assign(__assign({ treeType: treeType, 
+            this.isUpdating = false;
             /**
-             * This is a mirror of the internal instance prop, which keeps
-             * VisualElement type-compatible with React's RefObject.
-             */
-            current: null, 
-            /**
-             * The depth of this visual element within the visual element tree.
-             */
-            depth: parent ? parent.depth + 1 : 0, parent: parent, children: new Set(), 
-            /**
+             * Search for and mount newly-added projection elements.
              *
+             * TODO: Every time a new component is rendered we could search up the tree for
+             * the closest mounted node and query from there rather than document.
              */
-            presenceId: presenceId, shouldReduceMotion: shouldReduceMotion, 
-            /**
-             * If this component is part of the variant tree, it should track
-             * any children that are also part of the tree. This is essentially
-             * a shadow tree to simplify logic around how to stagger over children.
-             */
-            variantChildren: isVariantNode ? new Set() : undefined, 
-            /**
-             * Whether this instance is visible. This can be changed imperatively
-             * by the projection tree, is analogous to CSS's visibility in that
-             * hidden elements should take up layout, and needs enacting by the configured
-             * render function.
-             */
-            isVisible: undefined, 
-            /**
-             * Normally, if a component is controlled by a parent's variants, it can
-             * rely on that ancestor to trigger animations further down the tree.
-             * However, if a component is created after its parent is mounted, the parent
-             * won't trigger that mount animation so the child needs to.
-             *
-             * TODO: This might be better replaced with a method isParentMounted
-             */
-            manuallyAnimateOnMount: Boolean(parent === null || parent === void 0 ? void 0 : parent.isMounted()), 
-            /**
-             * This can be set by AnimatePresence to force components that mount
-             * at the same time as it to mount as if they have initial={false} set.
-             */
-            blockInitialAnimation: blockInitialAnimation, 
-            /**
-             * Determine whether this component has mounted yet. This is mostly used
-             * by variant children to determine whether they need to trigger their
-             * own animations on mount.
-             */
-            isMounted: function () { return Boolean(instance); }, mount: function (newInstance) {
-                isMounted = true;
-                instance = element.current = newInstance;
-                if (element.projection) {
-                    element.projection.mount(newInstance);
-                }
-                if (isVariantNode && parent && !isControllingVariants) {
-                    removeFromVariantTree = parent === null || parent === void 0 ? void 0 : parent.addVariantChild(element);
-                }
-                values.forEach(function (value, key) { return bindToMotionValue(key, value); });
-                parent === null || parent === void 0 ? void 0 : parent.children.add(element);
-                element.setProps(props);
-            }, 
-            /**
-             *
-             */
-            unmount: function () {
-                var _a;
-                (_a = element.projection) === null || _a === void 0 ? void 0 : _a.unmount();
-                cancelSync.update(update);
-                cancelSync.render(render);
-                valueSubscriptions.forEach(function (remove) { return remove(); });
-                removeFromVariantTree === null || removeFromVariantTree === void 0 ? void 0 : removeFromVariantTree();
-                parent === null || parent === void 0 ? void 0 : parent.children.delete(element);
-                lifecycles.clearAllListeners();
-                instance = undefined;
-                isMounted = false;
-            }, 
-            /**
-             * Add a child visual element to our set of children.
-             */
-            addVariantChild: function (child) {
-                var _a;
-                var closestVariantNode = element.getClosestVariantNode();
-                if (closestVariantNode) {
-                    (_a = closestVariantNode.variantChildren) === null || _a === void 0 ? void 0 : _a.add(child);
-                    return function () {
-                        return closestVariantNode.variantChildren.delete(child);
-                    };
-                }
-            }, sortNodePosition: function (other) {
-                /**
-                 * If these nodes aren't even of the same type we can't compare their depth.
-                 */
-                if (!sortNodePosition || treeType !== other.treeType)
-                    return 0;
-                return sortNodePosition(element.getInstance(), other.getInstance());
-            }, 
-            /**
-             * Returns the closest variant node in the tree starting from
-             * this visual element.
-             */
-            getClosestVariantNode: function () {
-                return isVariantNode ? element : parent === null || parent === void 0 ? void 0 : parent.getClosestVariantNode();
-            }, 
-            /**
-             * Expose the latest layoutId prop.
-             */
-            getLayoutId: function () { return props.layoutId; }, 
-            /**
-             * Returns the current instance.
-             */
-            getInstance: function () { return instance; }, 
-            /**
-             * Get/set the latest static values.
-             */
-            getStaticValue: function (key) { return latestValues[key]; }, setStaticValue: function (key, value) { return (latestValues[key] = value); }, 
-            /**
-             * Returns the latest motion value state. Currently only used to take
-             * a snapshot of the visual element - perhaps this can return the whole
-             * visual state
-             */
-            getLatestValues: function () { return latestValues; }, 
-            /**
-             * Set the visiblity of the visual element. If it's changed, schedule
-             * a render to reflect these changes.
-             */
-            setVisibility: function (visibility) {
-                if (element.isVisible === visibility)
-                    return;
-                element.isVisible = visibility;
-                element.scheduleRender();
-            }, 
-            /**
-             * Make a target animatable by Popmotion. For instance, if we're
-             * trying to animate width from 100px to 100vw we need to measure 100vw
-             * in pixels to determine what we really need to animate to. This is also
-             * pluggable to support Framer's custom value types like Color,
-             * and CSS variables.
-             */
-            makeTargetAnimatable: function (target, canMutate) {
-                if (canMutate === void 0) { canMutate = true; }
-                return makeTargetAnimatable(element, target, props, canMutate);
-            }, 
-            /**
-             * Measure the current viewport box with or without transforms.
-             * Only measures axis-aligned boxes, rotate and skew must be manually
-             * removed with a re-render to work.
-             */
-            measureViewportBox: function () {
-                return measureViewportBox(instance, props);
-            }, 
-            // Motion values ========================
-            /**
-             * Add a motion value and bind it to this visual element.
-             */
-            addValue: function (key, value) {
-                // Remove existing value if it exists
-                if (element.hasValue(key))
-                    element.removeValue(key);
-                values.set(key, value);
-                latestValues[key] = value.get();
-                bindToMotionValue(key, value);
-            }, 
-            /**
-             * Remove a motion value and unbind any active subscriptions.
-             */
-            removeValue: function (key) {
-                var _a;
-                values.delete(key);
-                (_a = valueSubscriptions.get(key)) === null || _a === void 0 ? void 0 : _a();
-                valueSubscriptions.delete(key);
-                delete latestValues[key];
-                removeValueFromRenderState(key, renderState);
-            }, 
-            /**
-             * Check whether we have a motion value for this key
-             */
-            hasValue: function (key) { return values.has(key); }, 
-            /**
-             * Get a motion value for this key. If called with a default
-             * value, we'll create one if none exists.
-             */
-            getValue: function (key, defaultValue) {
-                var value = values.get(key);
-                if (value === undefined && defaultValue !== undefined) {
-                    value = motionValue(defaultValue);
-                    element.addValue(key, value);
-                }
-                return value;
-            }, 
-            /**
-             * Iterate over our motion values.
-             */
-            forEachValue: function (callback) { return values.forEach(callback); }, 
-            /**
-             * If we're trying to animate to a previously unencountered value,
-             * we need to check for it in our state and as a last resort read it
-             * directly from the instance (which might have performance implications).
-             */
-            readValue: function (key) {
-                var _a;
-                return (_a = latestValues[key]) !== null && _a !== void 0 ? _a : readValueFromInstance(instance, key, options);
-            }, 
-            /**
-             * Set the base target to later animate back to. This is currently
-             * only hydrated on creation and when we first read a value.
-             */
-            setBaseTarget: function (key, value) {
-                baseTarget[key] = value;
-            }, 
-            /**
-             * Find the base target for a value thats been removed from all animation
-             * props.
-             */
-            getBaseTarget: function (key) {
-                if (getBaseTarget) {
-                    var target = getBaseTarget(props, key);
-                    if (target !== undefined && !isMotionValue(target))
-                        return target;
-                }
-                return baseTarget[key];
-            } }, lifecycles), { 
-            /**
-             * Build the renderer state based on the latest visual state.
-             */
-            build: function () {
-                triggerBuild();
-                return renderState;
-            }, 
-            /**
-             * Schedule a render on the next animation frame.
-             */
-            scheduleRender: function () {
-                es.render(render, false, true);
-            }, 
-            /**
-             * Synchronously fire render. It's prefered that we batch renders but
-             * in many circumstances, like layout measurement, we need to run this
-             * synchronously. However in those instances other measures should be taken
-             * to batch reads/writes.
-             */
-            syncRender: render, 
-            /**
-             * Update the provided props. Ensure any newly-added motion values are
-             * added to our map, old ones removed, and listeners updated.
-             */
-            setProps: function (newProps) {
-                if (newProps.transformTemplate || props.transformTemplate) {
-                    element.scheduleRender();
-                }
-                props = newProps;
-                lifecycles.updatePropListeners(newProps);
-                prevMotionValues = updateMotionValuesFromProps(element, scrapeMotionValuesFromProps(props), prevMotionValues);
-            }, getProps: function () { return props; }, 
-            // Variants ==============================
-            /**
-             * Returns the variant definition with a given name.
-             */
-            getVariant: function (name) { var _a; return (_a = props.variants) === null || _a === void 0 ? void 0 : _a[name]; }, 
-            /**
-             * Returns the defined default transition on this component.
-             */
-            getDefaultTransition: function () { return props.transition; }, getTransformPagePoint: function () {
-                return props.transformPagePoint;
-            }, 
-            /**
-             * Used by child variant nodes to get the closest ancestor variant props.
-             */
-            getVariantContext: function (startAtParent) {
-                if (startAtParent === void 0) { startAtParent = false; }
-                if (startAtParent)
-                    return parent === null || parent === void 0 ? void 0 : parent.getVariantContext();
-                if (!isControllingVariants) {
-                    var context_1 = (parent === null || parent === void 0 ? void 0 : parent.getVariantContext()) || {};
-                    if (props.initial !== undefined) {
-                        context_1.initial = props.initial;
-                    }
-                    return context_1;
-                }
-                var context = {};
-                for (var i = 0; i < numVariantProps; i++) {
-                    var name_1 = variantProps[i];
-                    var prop = props[name_1];
-                    if (isVariantLabel(prop) || prop === false) {
-                        context[name_1] = prop;
-                    }
-                }
-                return context;
-            } });
-        return element;
-    };
-};
-var variantProps = tslib_es6_spreadArray(["initial"], tslib_es6_read(variantPriorityOrder), false);
-var numVariantProps = variantProps.length;
-
-
-
-;// CONCATENATED MODULE: ./node_modules/framer-motion/dist/es/render/dom/utils/css-variables-conversion.mjs
-
-
-
-function css_variables_conversion_isCSSVariable(value) {
-    return typeof value === "string" && value.startsWith("var(--");
-}
-/**
- * Parse Framer's special CSS variable format into a CSS token and a fallback.
- *
- * ```
- * `var(--foo, #fff)` => [`--foo`, '#fff']
- * ```
- *
- * @param current
- */
-var cssVariableRegex = /var\((--[a-zA-Z0-9-_]+),? ?([a-zA-Z0-9 ()%#.,-]+)?\)/;
-function parseCSSVariable(current) {
-    var match = cssVariableRegex.exec(current);
-    if (!match)
-        return [,];
-    var _a = tslib_es6_read(match, 3), token = _a[1], fallback = _a[2];
-    return [token, fallback];
-}
-var maxDepth = 4;
-function getVariableValue(current, element, depth) {
-    if (depth === void 0) { depth = 1; }
-    invariant(depth <= maxDepth, "Max CSS variable fallback depth detected in property \"".concat(current, "\". This may indicate a circular fallback dependency."));
-    var _a = tslib_es6_read(parseCSSVariable(current), 2), token = _a[0], fallback = _a[1];
-    // No CSS variable detected
-    if (!token)
-        return;
-    // Attempt to read this CSS variable off the element
-    var resolved = window.getComputedStyle(element).getPropertyValue(token);
-    if (resolved) {
-        return resolved.trim();
-    }
-    else if (css_variables_conversion_isCSSVariable(fallback)) {
-        // The fallback might itself be a CSS variable, in which case we attempt to resolve it too.
-        return getVariableValue(fallback, element, depth + 1);
-    }
-    else {
-        return fallback;
-    }
-}
-/**
- * Resolve CSS variables from
- *
- * @internal
- */
-function resolveCSSVariables(visualElement, _a, transitionEnd) {
-    var _b;
-    var target = __rest(_a, []);
-    var element = visualElement.getInstance();
-    if (!(element instanceof Element))
-        return { target: target, transitionEnd: transitionEnd };
-    // If `transitionEnd` isn't `undefined`, clone it. We could clone `target` and `transitionEnd`
-    // only if they change but I think this reads clearer and this isn't a performance-critical path.
-    if (transitionEnd) {
-        transitionEnd = __assign({}, transitionEnd);
-    }
-    // Go through existing `MotionValue`s and ensure any existing CSS variables are resolved
-    visualElement.forEachValue(function (value) {
-        var current = value.get();
-        if (!css_variables_conversion_isCSSVariable(current))
-            return;
-        var resolved = getVariableValue(current, element);
-        if (resolved)
-            value.set(resolved);
-    });
-    // Cycle through every target property and resolve CSS variables. Currently
-    // we only read single-var properties like `var(--foo)`, not `calc(var(--foo) + 20px)`
-    for (var key in target) {
-        var current = target[key];
-        if (!css_variables_conversion_isCSSVariable(current))
-            continue;
-        var resolved = getVariableValue(current, element);
-        if (!resolved)
-            continue;
-        // Clone target if it hasn't already been
-        target[key] = resolved;
-        // If the user hasn't already set this key on `transitionEnd`, set it to the unresolved
-        // CSS variable. This will ensure that after the animation the component will reflect
-        // changes in the value of the CSS variable.
-        if (transitionEnd)
-            (_b = transitionEnd[key]) !== null && _b !== void 0 ? _b : (transitionEnd[key] = current);
-    }
-    return { target: target, transitionEnd: transitionEnd };
-}
-
-
-
-;// CONCATENATED MODULE: ./node_modules/framer-motion/dist/es/render/dom/utils/unit-conversion.mjs
-
-
-
-
-
-
-
-var positionalKeys = new Set([
-    "width",
-    "height",
-    "top",
-    "left",
-    "right",
-    "bottom",
-    "x",
-    "y",
-]);
-var isPositionalKey = function (key) { return positionalKeys.has(key); };
-var hasPositionalKey = function (target) {
-    return Object.keys(target).some(isPositionalKey);
-};
-var setAndResetVelocity = function (value, to) {
-    // Looks odd but setting it twice doesn't render, it'll just
-    // set both prev and current to the latest value
-    value.set(to, false);
-    value.set(to);
-};
-var isNumOrPxType = function (v) {
-    return v === number || v === px;
-};
-var BoundingBoxDimension;
-(function (BoundingBoxDimension) {
-    BoundingBoxDimension["width"] = "width";
-    BoundingBoxDimension["height"] = "height";
-    BoundingBoxDimension["left"] = "left";
-    BoundingBoxDimension["right"] = "right";
-    BoundingBoxDimension["top"] = "top";
-    BoundingBoxDimension["bottom"] = "bottom";
-})(BoundingBoxDimension || (BoundingBoxDimension = {}));
-var getPosFromMatrix = function (matrix, pos) {
-    return parseFloat(matrix.split(", ")[pos]);
-};
-var getTranslateFromMatrix = function (pos2, pos3) {
-    return function (_bbox, _a) {
-        var transform = _a.transform;
-        if (transform === "none" || !transform)
-            return 0;
-        var matrix3d = transform.match(/^matrix3d\((.+)\)$/);
-        if (matrix3d) {
-            return getPosFromMatrix(matrix3d[1], pos3);
-        }
-        else {
-            var matrix = transform.match(/^matrix\((.+)\)$/);
-            if (matrix) {
-                return getPosFromMatrix(matrix[1], pos2);
+            if (this.potentialNodes.size) {
+                this.potentialNodes.forEach(mountNodeEarly);
+                this.potentialNodes.clear();
             }
-            else {
-                return 0;
-            }
-        }
-    };
-};
-var transformKeys = new Set(["x", "y", "z"]);
-var nonTranslationalTransformKeys = transformProps.filter(function (key) { return !transformKeys.has(key); });
-function removeNonTranslationalTransform(visualElement) {
-    var removedTransforms = [];
-    nonTranslationalTransformKeys.forEach(function (key) {
-        var value = visualElement.getValue(key);
-        if (value !== undefined) {
-            removedTransforms.push([key, value.get()]);
-            value.set(key.startsWith("scale") ? 1 : 0);
-        }
-    });
-    // Apply changes to element before measurement
-    if (removedTransforms.length)
-        visualElement.syncRender();
-    return removedTransforms;
-}
-var positionalValues = {
-    // Dimensions
-    width: function (_a, _b) {
-        var x = _a.x;
-        var _c = _b.paddingLeft, paddingLeft = _c === void 0 ? "0" : _c, _d = _b.paddingRight, paddingRight = _d === void 0 ? "0" : _d;
-        return x.max - x.min - parseFloat(paddingLeft) - parseFloat(paddingRight);
-    },
-    height: function (_a, _b) {
-        var y = _a.y;
-        var _c = _b.paddingTop, paddingTop = _c === void 0 ? "0" : _c, _d = _b.paddingBottom, paddingBottom = _d === void 0 ? "0" : _d;
-        return y.max - y.min - parseFloat(paddingTop) - parseFloat(paddingBottom);
-    },
-    top: function (_bbox, _a) {
-        var top = _a.top;
-        return parseFloat(top);
-    },
-    left: function (_bbox, _a) {
-        var left = _a.left;
-        return parseFloat(left);
-    },
-    bottom: function (_a, _b) {
-        var y = _a.y;
-        var top = _b.top;
-        return parseFloat(top) + (y.max - y.min);
-    },
-    right: function (_a, _b) {
-        var x = _a.x;
-        var left = _b.left;
-        return parseFloat(left) + (x.max - x.min);
-    },
-    // Transform
-    x: getTranslateFromMatrix(4, 13),
-    y: getTranslateFromMatrix(5, 14),
-};
-var convertChangedValueTypes = function (target, visualElement, changedKeys) {
-    var originBbox = visualElement.measureViewportBox();
-    var element = visualElement.getInstance();
-    var elementComputedStyle = getComputedStyle(element);
-    var display = elementComputedStyle.display;
-    var origin = {};
-    // If the element is currently set to display: "none", make it visible before
-    // measuring the target bounding box
-    if (display === "none") {
-        visualElement.setStaticValue("display", target.display || "block");
-    }
-    /**
-     * Record origins before we render and update styles
-     */
-    changedKeys.forEach(function (key) {
-        origin[key] = positionalValues[key](originBbox, elementComputedStyle);
-    });
-    // Apply the latest values (as set in checkAndConvertChangedValueTypes)
-    visualElement.syncRender();
-    var targetBbox = visualElement.measureViewportBox();
-    changedKeys.forEach(function (key) {
-        // Restore styles to their **calculated computed style**, not their actual
-        // originally set style. This allows us to animate between equivalent pixel units.
-        var value = visualElement.getValue(key);
-        setAndResetVelocity(value, origin[key]);
-        target[key] = positionalValues[key](targetBbox, elementComputedStyle);
-    });
-    return target;
-};
-var checkAndConvertChangedValueTypes = function (visualElement, target, origin, transitionEnd) {
-    if (origin === void 0) { origin = {}; }
-    if (transitionEnd === void 0) { transitionEnd = {}; }
-    target = __assign({}, target);
-    transitionEnd = __assign({}, transitionEnd);
-    var targetPositionalKeys = Object.keys(target).filter(isPositionalKey);
-    // We want to remove any transform values that could affect the element's bounding box before
-    // it's measured. We'll reapply these later.
-    var removedTransformValues = [];
-    var hasAttemptedToRemoveTransformValues = false;
-    var changedValueTypeKeys = [];
-    targetPositionalKeys.forEach(function (key) {
-        var value = visualElement.getValue(key);
-        if (!visualElement.hasValue(key))
-            return;
-        var from = origin[key];
-        var fromType = findDimensionValueType(from);
-        var to = target[key];
-        var toType;
-        // TODO: The current implementation of this basically throws an error
-        // if you try and do value conversion via keyframes. There's probably
-        // a way of doing this but the performance implications would need greater scrutiny,
-        // as it'd be doing multiple resize-remeasure operations.
-        if (isKeyframesTarget(to)) {
-            var numKeyframes = to.length;
-            var fromIndex = to[0] === null ? 1 : 0;
-            from = to[fromIndex];
-            fromType = findDimensionValueType(from);
-            for (var i = fromIndex; i < numKeyframes; i++) {
-                if (!toType) {
-                    toType = findDimensionValueType(to[i]);
-                    invariant(toType === fromType ||
-                        (isNumOrPxType(fromType) && isNumOrPxType(toType)), "Keyframes must be of the same dimension as the current value");
+            /**
+             * Write
+             */
+            this.nodes.forEach(resetTransformStyle);
+            /**
+             * Read ==================
+             */
+            // Update layout measurements of updated children
+            this.nodes.forEach(updateLayout);
+            /**
+             * Write
+             */
+            // Notify listeners that the layout is updated
+            this.nodes.forEach(notifyLayoutUpdate);
+            this.clearAllSnapshots();
+            // Flush any scheduled updates
+            flushSync.update();
+            flushSync.preRender();
+            flushSync.render();
+        };
+        ProjectionNode.prototype.clearAllSnapshots = function () {
+            this.nodes.forEach(clearSnapshot);
+            this.sharedNodes.forEach(removeLeadSnapshots);
+        };
+        ProjectionNode.prototype.scheduleUpdateProjection = function () {
+            es.preRender(this.updateProjection, false, true);
+        };
+        ProjectionNode.prototype.scheduleCheckAfterUnmount = function () {
+            var _this = this;
+            /**
+             * If the unmounting node is in a layoutGroup and did trigger a willUpdate,
+             * we manually call didUpdate to give a chance to the siblings to animate.
+             * Otherwise, cleanup all snapshots to prevents future nodes from reusing them.
+             */
+            es.postRender(function () {
+                if (_this.isLayoutDirty) {
+                    _this.root.didUpdate();
                 }
                 else {
-                    invariant(findDimensionValueType(to[i]) === toType, "All keyframes must be of the same type");
+                    _this.root.checkUpdateFailed();
+                }
+            });
+        };
+        /**
+         * Update measurements
+         */
+        ProjectionNode.prototype.updateSnapshot = function () {
+            if (this.snapshot || !this.instance)
+                return;
+            var measured = this.measure();
+            var layout = this.removeTransform(this.removeElementScroll(measured));
+            roundBox(layout);
+            this.snapshot = {
+                measured: measured,
+                layout: layout,
+                latestValues: {},
+            };
+        };
+        ProjectionNode.prototype.updateLayout = function () {
+            var _a;
+            if (!this.instance)
+                return;
+            // TODO: Incorporate into a forwarded scroll offset
+            this.updateScroll();
+            if (!(this.options.alwaysMeasureLayout && this.isLead()) &&
+                !this.isLayoutDirty) {
+                return;
+            }
+            /**
+             * When a node is mounted, it simply resumes from the prevLead's
+             * snapshot instead of taking a new one, but the ancestors scroll
+             * might have updated while the prevLead is unmounted. We need to
+             * update the scroll again to make sure the layout we measure is
+             * up to date.
+             */
+            if (this.resumeFrom && !this.resumeFrom.instance) {
+                for (var i = 0; i < this.path.length; i++) {
+                    var node = this.path[i];
+                    node.updateScroll();
                 }
             }
-        }
-        else {
-            toType = findDimensionValueType(to);
-        }
-        if (fromType !== toType) {
-            // If they're both just number or px, convert them both to numbers rather than
-            // relying on resize/remeasure to convert (which is wasteful in this situation)
-            if (isNumOrPxType(fromType) && isNumOrPxType(toType)) {
-                var current = value.get();
-                if (typeof current === "string") {
-                    value.set(parseFloat(current));
+            var measured = this.measure();
+            roundBox(measured);
+            var prevLayout = this.layout;
+            this.layout = {
+                measured: measured,
+                actual: this.removeElementScroll(measured),
+            };
+            this.layoutCorrected = createBox();
+            this.isLayoutDirty = false;
+            this.projectionDelta = undefined;
+            this.notifyListeners("measure", this.layout.actual);
+            (_a = this.options.visualElement) === null || _a === void 0 ? void 0 : _a.notifyLayoutMeasure(this.layout.actual, prevLayout === null || prevLayout === void 0 ? void 0 : prevLayout.actual);
+        };
+        ProjectionNode.prototype.updateScroll = function () {
+            if (this.options.layoutScroll && this.instance) {
+                this.isScrollRoot = checkIsScrollRoot(this.instance);
+                this.scroll = measureScroll(this.instance);
+            }
+        };
+        ProjectionNode.prototype.resetTransform = function () {
+            var _a;
+            if (!resetTransform)
+                return;
+            var isResetRequested = this.isLayoutDirty || this.shouldResetTransform;
+            var hasProjection = this.projectionDelta && !isDeltaZero(this.projectionDelta);
+            var transformTemplate = (_a = this.options.visualElement) === null || _a === void 0 ? void 0 : _a.getProps().transformTemplate;
+            var transformTemplateValue = transformTemplate === null || transformTemplate === void 0 ? void 0 : transformTemplate(this.latestValues, "");
+            var transformTemplateHasChanged = transformTemplateValue !== this.prevTransformTemplateValue;
+            if (isResetRequested &&
+                (hasProjection ||
+                    hasTransform(this.latestValues) ||
+                    transformTemplateHasChanged)) {
+                resetTransform(this.instance, transformTemplateValue);
+                this.shouldResetTransform = false;
+                this.scheduleRender();
+            }
+        };
+        ProjectionNode.prototype.measure = function () {
+            var visualElement = this.options.visualElement;
+            if (!visualElement)
+                return createBox();
+            var box = visualElement.measureViewportBox();
+            // Remove viewport scroll to give page-relative coordinates
+            var scroll = this.root.scroll;
+            if (scroll) {
+                translateAxis(box.x, scroll.x);
+                translateAxis(box.y, scroll.y);
+            }
+            return box;
+        };
+        ProjectionNode.prototype.removeElementScroll = function (box) {
+            var boxWithoutScroll = createBox();
+            copyBoxInto(boxWithoutScroll, box);
+            /**
+             * Performance TODO: Keep a cumulative scroll offset down the tree
+             * rather than loop back up the path.
+             */
+            for (var i = 0; i < this.path.length; i++) {
+                var node = this.path[i];
+                var scroll_1 = node.scroll, options = node.options, isScrollRoot = node.isScrollRoot;
+                if (node !== this.root && scroll_1 && options.layoutScroll) {
+                    /**
+                     * If this is a new scroll root, we want to remove all previous scrolls
+                     * from the viewport box.
+                     */
+                    if (isScrollRoot) {
+                        copyBoxInto(boxWithoutScroll, box);
+                        var rootScroll = this.root.scroll;
+                        /**
+                         * Undo the application of page scroll that was originally added
+                         * to the measured bounding box.
+                         */
+                        if (rootScroll) {
+                            translateAxis(boxWithoutScroll.x, -rootScroll.x);
+                            translateAxis(boxWithoutScroll.y, -rootScroll.y);
+                        }
+                    }
+                    translateAxis(boxWithoutScroll.x, scroll_1.x);
+                    translateAxis(boxWithoutScroll.y, scroll_1.y);
                 }
-                if (typeof to === "string") {
-                    target[key] = parseFloat(to);
+            }
+            return boxWithoutScroll;
+        };
+        ProjectionNode.prototype.applyTransform = function (box, transformOnly) {
+            if (transformOnly === void 0) { transformOnly = false; }
+            var withTransforms = createBox();
+            copyBoxInto(withTransforms, box);
+            for (var i = 0; i < this.path.length; i++) {
+                var node = this.path[i];
+                if (!transformOnly &&
+                    node.options.layoutScroll &&
+                    node.scroll &&
+                    node !== node.root) {
+                    transformBox(withTransforms, {
+                        x: -node.scroll.x,
+                        y: -node.scroll.y,
+                    });
                 }
-                else if (Array.isArray(to) && toType === px) {
-                    target[key] = to.map(parseFloat);
+                if (!hasTransform(node.latestValues))
+                    continue;
+                transformBox(withTransforms, node.latestValues);
+            }
+            if (hasTransform(this.latestValues)) {
+                transformBox(withTransforms, this.latestValues);
+            }
+            return withTransforms;
+        };
+        ProjectionNode.prototype.removeTransform = function (box) {
+            var _a;
+            var boxWithoutTransform = createBox();
+            copyBoxInto(boxWithoutTransform, box);
+            for (var i = 0; i < this.path.length; i++) {
+                var node = this.path[i];
+                if (!node.instance)
+                    continue;
+                if (!hasTransform(node.latestValues))
+                    continue;
+                hasScale(node.latestValues) && node.updateSnapshot();
+                var sourceBox = createBox();
+                var nodeBox = node.measure();
+                copyBoxInto(sourceBox, nodeBox);
+                removeBoxTransforms(boxWithoutTransform, node.latestValues, (_a = node.snapshot) === null || _a === void 0 ? void 0 : _a.layout, sourceBox);
+            }
+            if (hasTransform(this.latestValues)) {
+                removeBoxTransforms(boxWithoutTransform, this.latestValues);
+            }
+            return boxWithoutTransform;
+        };
+        /**
+         *
+         */
+        ProjectionNode.prototype.setTargetDelta = function (delta) {
+            this.targetDelta = delta;
+            this.root.scheduleUpdateProjection();
+        };
+        ProjectionNode.prototype.setOptions = function (options) {
+            var _a;
+            this.options = __assign(__assign(__assign({}, this.options), options), { crossfade: (_a = options.crossfade) !== null && _a !== void 0 ? _a : true });
+        };
+        ProjectionNode.prototype.clearMeasurements = function () {
+            this.scroll = undefined;
+            this.layout = undefined;
+            this.snapshot = undefined;
+            this.prevTransformTemplateValue = undefined;
+            this.targetDelta = undefined;
+            this.target = undefined;
+            this.isLayoutDirty = false;
+        };
+        /**
+         * Frame calculations
+         */
+        ProjectionNode.prototype.resolveTargetDelta = function () {
+            var _a;
+            var _b = this.options, layout = _b.layout, layoutId = _b.layoutId;
+            /**
+             * If we have no layout, we can't perform projection, so early return
+             */
+            if (!this.layout || !(layout || layoutId))
+                return;
+            /**
+             * If we don't have a targetDelta but do have a layout, we can attempt to resolve
+             * a relativeParent. This will allow a component to perform scale correction
+             * even if no animation has started.
+             */
+            // TODO If this is unsuccessful this currently happens every frame
+            if (!this.targetDelta && !this.relativeTarget) {
+                // TODO: This is a semi-repetition of further down this function, make DRY
+                this.relativeParent = this.getClosestProjectingParent();
+                if (this.relativeParent && this.relativeParent.layout) {
+                    this.relativeTarget = createBox();
+                    this.relativeTargetOrigin = createBox();
+                    calcRelativePosition(this.relativeTargetOrigin, this.layout.actual, this.relativeParent.layout.actual);
+                    copyBoxInto(this.relativeTarget, this.relativeTargetOrigin);
+                }
+            }
+            /**
+             * If we have no relative target or no target delta our target isn't valid
+             * for this frame.
+             */
+            if (!this.relativeTarget && !this.targetDelta)
+                return;
+            /**
+             * Lazy-init target data structure
+             */
+            if (!this.target) {
+                this.target = createBox();
+                this.targetWithTransforms = createBox();
+            }
+            /**
+             * If we've got a relative box for this component, resolve it into a target relative to the parent.
+             */
+            if (this.relativeTarget &&
+                this.relativeTargetOrigin &&
+                ((_a = this.relativeParent) === null || _a === void 0 ? void 0 : _a.target)) {
+                calcRelativeBox(this.target, this.relativeTarget, this.relativeParent.target);
+                /**
+                 * If we've only got a targetDelta, resolve it into a target
+                 */
+            }
+            else if (this.targetDelta) {
+                if (Boolean(this.resumingFrom)) {
+                    // TODO: This is creating a new object every frame
+                    this.target = this.applyTransform(this.layout.actual);
+                }
+                else {
+                    copyBoxInto(this.target, this.layout.actual);
+                }
+                applyBoxDelta(this.target, this.targetDelta);
+            }
+            else {
+                /**
+                 * If no target, use own layout as target
+                 */
+                copyBoxInto(this.target, this.layout.actual);
+            }
+            /**
+             * If we've been told to attempt to resolve a relative target, do so.
+             */
+            if (this.attemptToResolveRelativeTarget) {
+                this.attemptToResolveRelativeTarget = false;
+                this.relativeParent = this.getClosestProjectingParent();
+                if (this.relativeParent &&
+                    Boolean(this.relativeParent.resumingFrom) ===
+                        Boolean(this.resumingFrom) &&
+                    !this.relativeParent.options.layoutScroll &&
+                    this.relativeParent.target) {
+                    this.relativeTarget = createBox();
+                    this.relativeTargetOrigin = createBox();
+                    calcRelativePosition(this.relativeTargetOrigin, this.target, this.relativeParent.target);
+                    copyBoxInto(this.relativeTarget, this.relativeTargetOrigin);
+                }
+            }
+        };
+        ProjectionNode.prototype.getClosestProjectingParent = function () {
+            if (!this.parent || hasTransform(this.parent.latestValues))
+                return undefined;
+            if ((this.parent.relativeTarget || this.parent.targetDelta) &&
+                this.parent.layout) {
+                return this.parent;
+            }
+            else {
+                return this.parent.getClosestProjectingParent();
+            }
+        };
+        ProjectionNode.prototype.calcProjection = function () {
+            var _a;
+            var _b = this.options, layout = _b.layout, layoutId = _b.layoutId;
+            /**
+             * If this section of the tree isn't animating we can
+             * delete our target sources for the following frame.
+             */
+            this.isTreeAnimating = Boolean(((_a = this.parent) === null || _a === void 0 ? void 0 : _a.isTreeAnimating) ||
+                this.currentAnimation ||
+                this.pendingAnimation);
+            if (!this.isTreeAnimating) {
+                this.targetDelta = this.relativeTarget = undefined;
+            }
+            if (!this.layout || !(layout || layoutId))
+                return;
+            var lead = this.getLead();
+            /**
+             * Reset the corrected box with the latest values from box, as we're then going
+             * to perform mutative operations on it.
+             */
+            copyBoxInto(this.layoutCorrected, this.layout.actual);
+            /**
+             * Apply all the parent deltas to this box to produce the corrected box. This
+             * is the layout box, as it will appear on screen as a result of the transforms of its parents.
+             */
+            applyTreeDeltas(this.layoutCorrected, this.treeScale, this.path, Boolean(this.resumingFrom) || this !== lead);
+            var target = lead.target;
+            if (!target)
+                return;
+            if (!this.projectionDelta) {
+                this.projectionDelta = createDelta();
+                this.projectionDeltaWithTransform = createDelta();
+            }
+            var prevTreeScaleX = this.treeScale.x;
+            var prevTreeScaleY = this.treeScale.y;
+            var prevProjectionTransform = this.projectionTransform;
+            /**
+             * Update the delta between the corrected box and the target box before user-set transforms were applied.
+             * This will allow us to calculate the corrected borderRadius and boxShadow to compensate
+             * for our layout reprojection, but still allow them to be scaled correctly by the user.
+             * It might be that to simplify this we may want to accept that user-set scale is also corrected
+             * and we wouldn't have to keep and calc both deltas, OR we could support a user setting
+             * to allow people to choose whether these styles are corrected based on just the
+             * layout reprojection or the final bounding box.
+             */
+            calcBoxDelta(this.projectionDelta, this.layoutCorrected, target, this.latestValues);
+            this.projectionTransform = buildProjectionTransform(this.projectionDelta, this.treeScale);
+            if (this.projectionTransform !== prevProjectionTransform ||
+                this.treeScale.x !== prevTreeScaleX ||
+                this.treeScale.y !== prevTreeScaleY) {
+                this.hasProjected = true;
+                this.scheduleRender();
+                this.notifyListeners("projectionUpdate", target);
+            }
+        };
+        ProjectionNode.prototype.hide = function () {
+            this.isVisible = false;
+            // TODO: Schedule render
+        };
+        ProjectionNode.prototype.show = function () {
+            this.isVisible = true;
+            // TODO: Schedule render
+        };
+        ProjectionNode.prototype.scheduleRender = function (notifyAll) {
+            var _a, _b, _c;
+            if (notifyAll === void 0) { notifyAll = true; }
+            (_b = (_a = this.options).scheduleRender) === null || _b === void 0 ? void 0 : _b.call(_a);
+            notifyAll && ((_c = this.getStack()) === null || _c === void 0 ? void 0 : _c.scheduleRender());
+            if (this.resumingFrom && !this.resumingFrom.instance) {
+                this.resumingFrom = undefined;
+            }
+        };
+        ProjectionNode.prototype.setAnimationOrigin = function (delta, hasOnlyRelativeTargetChanged) {
+            var _this = this;
+            var _a;
+            if (hasOnlyRelativeTargetChanged === void 0) { hasOnlyRelativeTargetChanged = false; }
+            var snapshot = this.snapshot;
+            var snapshotLatestValues = (snapshot === null || snapshot === void 0 ? void 0 : snapshot.latestValues) || {};
+            var mixedValues = __assign({}, this.latestValues);
+            var targetDelta = createDelta();
+            this.relativeTarget = this.relativeTargetOrigin = undefined;
+            this.attemptToResolveRelativeTarget = !hasOnlyRelativeTargetChanged;
+            var relativeLayout = createBox();
+            var isSharedLayoutAnimation = snapshot === null || snapshot === void 0 ? void 0 : snapshot.isShared;
+            var isOnlyMember = (((_a = this.getStack()) === null || _a === void 0 ? void 0 : _a.members.length) || 0) <= 1;
+            var shouldCrossfadeOpacity = Boolean(isSharedLayoutAnimation &&
+                !isOnlyMember &&
+                this.options.crossfade === true &&
+                !this.path.some(hasOpacityCrossfade));
+            this.animationProgress = 0;
+            this.mixTargetDelta = function (latest) {
+                var _a;
+                var progress = latest / 1000;
+                mixAxisDelta(targetDelta.x, delta.x, progress);
+                mixAxisDelta(targetDelta.y, delta.y, progress);
+                _this.setTargetDelta(targetDelta);
+                if (_this.relativeTarget &&
+                    _this.relativeTargetOrigin &&
+                    _this.layout &&
+                    ((_a = _this.relativeParent) === null || _a === void 0 ? void 0 : _a.layout)) {
+                    calcRelativePosition(relativeLayout, _this.layout.actual, _this.relativeParent.layout.actual);
+                    mixBox(_this.relativeTarget, _this.relativeTargetOrigin, relativeLayout, progress);
+                }
+                if (isSharedLayoutAnimation) {
+                    _this.animationValues = mixedValues;
+                    mixValues(mixedValues, snapshotLatestValues, _this.latestValues, progress, shouldCrossfadeOpacity, isOnlyMember);
+                }
+                _this.root.scheduleUpdateProjection();
+                _this.scheduleRender();
+                _this.animationProgress = progress;
+            };
+            this.mixTargetDelta(0);
+        };
+        ProjectionNode.prototype.startAnimation = function (options) {
+            var _this = this;
+            var _a, _b;
+            this.notifyListeners("animationStart");
+            (_a = this.currentAnimation) === null || _a === void 0 ? void 0 : _a.stop();
+            if (this.resumingFrom) {
+                (_b = this.resumingFrom.currentAnimation) === null || _b === void 0 ? void 0 : _b.stop();
+            }
+            if (this.pendingAnimation) {
+                cancelSync.update(this.pendingAnimation);
+                this.pendingAnimation = undefined;
+            }
+            /**
+             * Start the animation in the next frame to have a frame with progress 0,
+             * where the target is the same as when the animation started, so we can
+             * calculate the relative positions correctly for instant transitions.
+             */
+            this.pendingAnimation = es.update(function () {
+                globalProjectionState.hasAnimatedSinceResize = true;
+                _this.currentAnimation = animate_animate(0, animationTarget, __assign(__assign({}, options), { onUpdate: function (latest) {
+                        var _a;
+                        _this.mixTargetDelta(latest);
+                        (_a = options.onUpdate) === null || _a === void 0 ? void 0 : _a.call(options, latest);
+                    }, onComplete: function () {
+                        var _a;
+                        (_a = options.onComplete) === null || _a === void 0 ? void 0 : _a.call(options);
+                        _this.completeAnimation();
+                    } }));
+                if (_this.resumingFrom) {
+                    _this.resumingFrom.currentAnimation = _this.currentAnimation;
+                }
+                _this.pendingAnimation = undefined;
+            });
+        };
+        ProjectionNode.prototype.completeAnimation = function () {
+            var _a;
+            if (this.resumingFrom) {
+                this.resumingFrom.currentAnimation = undefined;
+                this.resumingFrom.preserveOpacity = undefined;
+            }
+            (_a = this.getStack()) === null || _a === void 0 ? void 0 : _a.exitAnimationComplete();
+            this.resumingFrom =
+                this.currentAnimation =
+                    this.animationValues =
+                        undefined;
+            this.notifyListeners("animationComplete");
+        };
+        ProjectionNode.prototype.finishAnimation = function () {
+            var _a;
+            if (this.currentAnimation) {
+                (_a = this.mixTargetDelta) === null || _a === void 0 ? void 0 : _a.call(this, animationTarget);
+                this.currentAnimation.stop();
+            }
+            this.completeAnimation();
+        };
+        ProjectionNode.prototype.applyTransformsToTarget = function () {
+            var _a = this.getLead(), targetWithTransforms = _a.targetWithTransforms, target = _a.target, layout = _a.layout, latestValues = _a.latestValues;
+            if (!targetWithTransforms || !target || !layout)
+                return;
+            copyBoxInto(targetWithTransforms, target);
+            /**
+             * Apply the latest user-set transforms to the targetBox to produce the targetBoxFinal.
+             * This is the final box that we will then project into by calculating a transform delta and
+             * applying it to the corrected box.
+             */
+            transformBox(targetWithTransforms, latestValues);
+            /**
+             * Update the delta between the corrected box and the final target box, after
+             * user-set transforms are applied to it. This will be used by the renderer to
+             * create a transform style that will reproject the element from its actual layout
+             * into the desired bounding box.
+             */
+            calcBoxDelta(this.projectionDeltaWithTransform, this.layoutCorrected, targetWithTransforms, latestValues);
+        };
+        ProjectionNode.prototype.registerSharedNode = function (layoutId, node) {
+            var _a, _b, _c;
+            if (!this.sharedNodes.has(layoutId)) {
+                this.sharedNodes.set(layoutId, new NodeStack());
+            }
+            var stack = this.sharedNodes.get(layoutId);
+            stack.add(node);
+            node.promote({
+                transition: (_a = node.options.initialPromotionConfig) === null || _a === void 0 ? void 0 : _a.transition,
+                preserveFollowOpacity: (_c = (_b = node.options.initialPromotionConfig) === null || _b === void 0 ? void 0 : _b.shouldPreserveFollowOpacity) === null || _c === void 0 ? void 0 : _c.call(_b, node),
+            });
+        };
+        ProjectionNode.prototype.isLead = function () {
+            var stack = this.getStack();
+            return stack ? stack.lead === this : true;
+        };
+        ProjectionNode.prototype.getLead = function () {
+            var _a;
+            var layoutId = this.options.layoutId;
+            return layoutId ? ((_a = this.getStack()) === null || _a === void 0 ? void 0 : _a.lead) || this : this;
+        };
+        ProjectionNode.prototype.getPrevLead = function () {
+            var _a;
+            var layoutId = this.options.layoutId;
+            return layoutId ? (_a = this.getStack()) === null || _a === void 0 ? void 0 : _a.prevLead : undefined;
+        };
+        ProjectionNode.prototype.getStack = function () {
+            var layoutId = this.options.layoutId;
+            if (layoutId)
+                return this.root.sharedNodes.get(layoutId);
+        };
+        ProjectionNode.prototype.promote = function (_a) {
+            var _b = _a === void 0 ? {} : _a, needsReset = _b.needsReset, transition = _b.transition, preserveFollowOpacity = _b.preserveFollowOpacity;
+            var stack = this.getStack();
+            if (stack)
+                stack.promote(this, preserveFollowOpacity);
+            if (needsReset) {
+                this.projectionDelta = undefined;
+                this.needsReset = true;
+            }
+            if (transition)
+                this.setOptions({ transition: transition });
+        };
+        ProjectionNode.prototype.relegate = function () {
+            var stack = this.getStack();
+            if (stack) {
+                return stack.relegate(this);
+            }
+            else {
+                return false;
+            }
+        };
+        ProjectionNode.prototype.resetRotation = function () {
+            var visualElement = this.options.visualElement;
+            if (!visualElement)
+                return;
+            // If there's no detected rotation values, we can early return without a forced render.
+            var hasRotate = false;
+            // Keep a record of all the values we've reset
+            var resetValues = {};
+            // Check the rotate value of all axes and reset to 0
+            for (var i = 0; i < transformAxes.length; i++) {
+                var axis = transformAxes[i];
+                var key = "rotate" + axis;
+                // If this rotation doesn't exist as a motion value, then we don't
+                // need to reset it
+                if (!visualElement.getStaticValue(key)) {
+                    continue;
+                }
+                hasRotate = true;
+                // Record the rotation and then temporarily set it to 0
+                resetValues[key] = visualElement.getStaticValue(key);
+                visualElement.setStaticValue(key, 0);
+            }
+            // If there's no rotation values, we don't need to do any more.
+            if (!hasRotate)
+                return;
+            // Force a render of this element to apply the transform with all rotations
+            // set to 0.
+            visualElement === null || visualElement === void 0 ? void 0 : visualElement.syncRender();
+            // Put back all the values we reset
+            for (var key in resetValues) {
+                visualElement.setStaticValue(key, resetValues[key]);
+            }
+            // Schedule a render for the next frame. This ensures we won't visually
+            // see the element with the reset rotate value applied.
+            visualElement.scheduleRender();
+        };
+        ProjectionNode.prototype.getProjectionStyles = function (styleProp) {
+            var _a, _b, _c, _d, _e, _f;
+            if (styleProp === void 0) { styleProp = {}; }
+            // TODO: Return lifecycle-persistent object
+            var styles = {};
+            if (!this.instance || this.isSVG)
+                return styles;
+            if (!this.isVisible) {
+                return { visibility: "hidden" };
+            }
+            else {
+                styles.visibility = "";
+            }
+            var transformTemplate = (_a = this.options.visualElement) === null || _a === void 0 ? void 0 : _a.getProps().transformTemplate;
+            if (this.needsReset) {
+                this.needsReset = false;
+                styles.opacity = "";
+                styles.pointerEvents =
+                    resolveMotionValue(styleProp.pointerEvents) || "";
+                styles.transform = transformTemplate
+                    ? transformTemplate(this.latestValues, "")
+                    : "none";
+                return styles;
+            }
+            var lead = this.getLead();
+            if (!this.projectionDelta || !this.layout || !lead.target) {
+                var emptyStyles = {};
+                if (this.options.layoutId) {
+                    emptyStyles.opacity = (_b = this.latestValues.opacity) !== null && _b !== void 0 ? _b : 1;
+                    emptyStyles.pointerEvents =
+                        resolveMotionValue(styleProp.pointerEvents) || "";
+                }
+                if (this.hasProjected && !hasTransform(this.latestValues)) {
+                    emptyStyles.transform = transformTemplate
+                        ? transformTemplate({}, "")
+                        : "none";
+                    this.hasProjected = false;
                 }
                 return emptyStyles;
             }
@@ -22307,8 +22250,6 @@ var Composite = createComponent({
 
 ;// CONCATENATED MODULE: ./node_modules/reakit/es/Group/Group.js
 
-;// CONCATENATED MODULE: ./node_modules/framer-motion/dist/es/projection/node/DocumentProjectionNode.mjs
-
 
 
 
@@ -24592,10 +24533,10 @@ function computeRubberband(bounds, [Vx, Vy], [Rx, Ry]) {
 
 
 
-;// CONCATENATED MODULE: ./node_modules/@use-gesture/core/dist/actions-e2a59bb9.esm.js
+;// CONCATENATED MODULE: ./node_modules/@use-gesture/core/dist/actions-aeda4790.esm.js
 
 
-function actions_e2a59bb9_esm_defineProperty(obj, key, value) {
+function actions_aeda4790_esm_defineProperty(obj, key, value) {
   if (key in obj) {
     Object.defineProperty(obj, key, {
       value: value,
@@ -24610,7 +24551,7 @@ function actions_e2a59bb9_esm_defineProperty(obj, key, value) {
   return obj;
 }
 
-function actions_e2a59bb9_esm_ownKeys(object, enumerableOnly) {
+function actions_aeda4790_esm_ownKeys(object, enumerableOnly) {
   var keys = Object.keys(object);
 
   if (Object.getOwnPropertySymbols) {
@@ -24623,12 +24564,12 @@ function actions_e2a59bb9_esm_ownKeys(object, enumerableOnly) {
   return keys;
 }
 
-function actions_e2a59bb9_esm_objectSpread2(target) {
+function actions_aeda4790_esm_objectSpread2(target) {
   for (var i = 1; i < arguments.length; i++) {
     var source = null != arguments[i] ? arguments[i] : {};
-    i % 2 ? actions_e2a59bb9_esm_ownKeys(Object(source), !0).forEach(function (key) {
-      actions_e2a59bb9_esm_defineProperty(target, key, source[key]);
-    }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : actions_e2a59bb9_esm_ownKeys(Object(source)).forEach(function (key) {
+    i % 2 ? actions_aeda4790_esm_ownKeys(Object(source), !0).forEach(function (key) {
+      actions_aeda4790_esm_defineProperty(target, key, source[key]);
+    }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : actions_aeda4790_esm_ownKeys(Object(source)).forEach(function (key) {
       Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key));
     });
   }
@@ -25037,7 +24978,7 @@ class Engine {
     const config = this.config;
     if (!state._active) this.clean();
     if ((state._blocked || !state.intentional) && !state._force && !config.triggerAllEvents) return;
-    const memo = this.handler(actions_e2a59bb9_esm_objectSpread2(actions_e2a59bb9_esm_objectSpread2(actions_e2a59bb9_esm_objectSpread2({}, shared), state), {}, {
+    const memo = this.handler(actions_aeda4790_esm_objectSpread2(actions_aeda4790_esm_objectSpread2(actions_aeda4790_esm_objectSpread2({}, shared), state), {}, {
       [this.aliasKey]: state.values
     }));
     if (memo !== undefined) state.memo = memo;
@@ -25069,7 +25010,7 @@ class CoordinatesEngine extends Engine {
   constructor(...args) {
     super(...args);
 
-    actions_e2a59bb9_esm_defineProperty(this, "aliasKey", 'xy');
+    actions_aeda4790_esm_defineProperty(this, "aliasKey", 'xy');
   }
 
   reset() {
@@ -25126,7 +25067,7 @@ const commonConfigResolver = {
   },
 
   eventOptions(value, _k, config) {
-    return actions_e2a59bb9_esm_objectSpread2(actions_e2a59bb9_esm_objectSpread2({}, config.shared.eventOptions), value);
+    return actions_aeda4790_esm_objectSpread2(actions_aeda4790_esm_objectSpread2({}, config.shared.eventOptions), value);
   },
 
   preventDefault(value = false) {
@@ -25173,7 +25114,7 @@ const commonConfigResolver = {
 if (false) {}
 
 const DEFAULT_AXIS_THRESHOLD = 0;
-const coordinatesConfigResolver = actions_e2a59bb9_esm_objectSpread2(actions_e2a59bb9_esm_objectSpread2({}, commonConfigResolver), {}, {
+const coordinatesConfigResolver = actions_aeda4790_esm_objectSpread2(actions_aeda4790_esm_objectSpread2({}, commonConfigResolver), {}, {
   axis(_v, _k, {
     axis
   }) {
@@ -25220,7 +25161,7 @@ class DragEngine extends CoordinatesEngine {
   constructor(...args) {
     super(...args);
 
-    actions_e2a59bb9_esm_defineProperty(this, "ingKey", 'dragging');
+    actions_aeda4790_esm_defineProperty(this, "ingKey", 'dragging');
   }
 
   reset() {
@@ -25407,7 +25348,7 @@ class DragEngine extends CoordinatesEngine {
   }
 
   pointerClick(event) {
-    if (!this.state.tap) {
+    if (!this.state.tap && event.detail > 0) {
       event.preventDefault();
       event.stopPropagation();
     }
@@ -25443,6 +25384,7 @@ class DragEngine extends CoordinatesEngine {
   }
 
   setupScrollPrevention(event) {
+    this.state._preventScroll = false;
     persistEvent(event);
     const remove = this.eventStore.add(this.sharedConfig.window, 'touch', 'change', this.preventScroll.bind(this), {
       passive: false
@@ -25494,8 +25436,10 @@ class DragEngine extends CoordinatesEngine {
       bindFunction('lostPointerCapture', '', this.pointerUp.bind(this));
     }
 
-    bindFunction('key', 'down', this.keyDown.bind(this));
-    bindFunction('key', 'up', this.keyUp.bind(this));
+    if (this.config.keys) {
+      bindFunction('key', 'down', this.keyDown.bind(this));
+      bindFunction('key', 'up', this.keyUp.bind(this));
+    }
 
     if (this.config.filterTaps) {
       bindFunction('click', '', this.pointerClick.bind(this), {
@@ -25511,22 +25455,22 @@ function persistEvent(event) {
   'persist' in event && typeof event.persist === 'function' && event.persist();
 }
 
-const actions_e2a59bb9_esm_isBrowser = typeof window !== 'undefined' && window.document && window.document.createElement;
+const actions_aeda4790_esm_isBrowser = typeof window !== 'undefined' && window.document && window.document.createElement;
 
-function actions_e2a59bb9_esm_supportsTouchEvents() {
-  return actions_e2a59bb9_esm_isBrowser && 'ontouchstart' in window;
+function actions_aeda4790_esm_supportsTouchEvents() {
+  return actions_aeda4790_esm_isBrowser && 'ontouchstart' in window;
 }
 
 function isTouchScreen() {
-  return actions_e2a59bb9_esm_supportsTouchEvents() || actions_e2a59bb9_esm_isBrowser && window.navigator.maxTouchPoints > 1;
+  return actions_aeda4790_esm_supportsTouchEvents() || actions_aeda4790_esm_isBrowser && window.navigator.maxTouchPoints > 1;
 }
 
-function actions_e2a59bb9_esm_supportsPointerEvents() {
-  return actions_e2a59bb9_esm_isBrowser && 'onpointerdown' in window;
+function actions_aeda4790_esm_supportsPointerEvents() {
+  return actions_aeda4790_esm_isBrowser && 'onpointerdown' in window;
 }
 
 function supportsPointerLock() {
-  return actions_e2a59bb9_esm_isBrowser && 'exitPointerLock' in window.document;
+  return actions_aeda4790_esm_isBrowser && 'exitPointerLock' in window.document;
 }
 
 function supportsGestureEvents() {
@@ -25538,11 +25482,11 @@ function supportsGestureEvents() {
 }
 
 const SUPPORT = {
-  isBrowser: actions_e2a59bb9_esm_isBrowser,
+  isBrowser: actions_aeda4790_esm_isBrowser,
   gesture: supportsGestureEvents(),
   touch: isTouchScreen(),
   touchscreen: isTouchScreen(),
-  pointer: actions_e2a59bb9_esm_supportsPointerEvents(),
+  pointer: actions_aeda4790_esm_supportsPointerEvents(),
   pointerLock: supportsPointerLock()
 };
 
@@ -25556,7 +25500,7 @@ const DEFAULT_DRAG_AXIS_THRESHOLD = {
   touch: 0,
   pen: 8
 };
-const dragConfigResolver = actions_e2a59bb9_esm_objectSpread2(actions_e2a59bb9_esm_objectSpread2({}, coordinatesConfigResolver), {}, {
+const dragConfigResolver = actions_aeda4790_esm_objectSpread2(actions_aeda4790_esm_objectSpread2({}, coordinatesConfigResolver), {}, {
   device(_v, _k, {
     pointer: {
       touch = false,
@@ -25588,6 +25532,10 @@ const dragConfigResolver = actions_e2a59bb9_esm_objectSpread2(actions_e2a59bb9_e
   }) {
     this.pointerButtons = buttons;
     return !this.pointerLock && this.device === 'pointer' && capture;
+  },
+
+  keys(value = true) {
+    return value;
   },
 
   threshold(value, _k, {
@@ -25628,7 +25576,7 @@ const dragConfigResolver = actions_e2a59bb9_esm_objectSpread2(actions_e2a59bb9_e
 
   axisThreshold(value) {
     if (!value) return DEFAULT_DRAG_AXIS_THRESHOLD;
-    return actions_e2a59bb9_esm_objectSpread2(actions_e2a59bb9_esm_objectSpread2({}, DEFAULT_DRAG_AXIS_THRESHOLD), value);
+    return actions_aeda4790_esm_objectSpread2(actions_aeda4790_esm_objectSpread2({}, DEFAULT_DRAG_AXIS_THRESHOLD), value);
   }
 
 });
@@ -25641,9 +25589,9 @@ class PinchEngine extends Engine {
   constructor(...args) {
     super(...args);
 
-    actions_e2a59bb9_esm_defineProperty(this, "ingKey", 'pinching');
+    actions_aeda4790_esm_defineProperty(this, "ingKey", 'pinching');
 
-    actions_e2a59bb9_esm_defineProperty(this, "aliasKey", 'da');
+    actions_aeda4790_esm_defineProperty(this, "aliasKey", 'da');
   }
 
   init() {
@@ -25898,16 +25846,16 @@ class PinchEngine extends Engine {
       bindFunction(device, 'change', this[device + 'Move'].bind(this));
       bindFunction(device, 'end', this[device + 'End'].bind(this));
       bindFunction(device, 'cancel', this[device + 'End'].bind(this));
-    } else {
-      bindFunction('wheel', '', this.wheel.bind(this), {
-        passive: false
-      });
     }
+
+    bindFunction('wheel', '', this.wheel.bind(this), {
+      passive: false
+    });
   }
 
 }
 
-const pinchConfigResolver = actions_e2a59bb9_esm_objectSpread2(actions_e2a59bb9_esm_objectSpread2({}, commonConfigResolver), {}, {
+const pinchConfigResolver = actions_aeda4790_esm_objectSpread2(actions_aeda4790_esm_objectSpread2({}, commonConfigResolver), {}, {
   device(_v, _k, {
     shared,
     pointer: {
@@ -25965,7 +25913,7 @@ class MoveEngine extends CoordinatesEngine {
   constructor(...args) {
     super(...args);
 
-    actions_e2a59bb9_esm_defineProperty(this, "ingKey", 'moving');
+    actions_aeda4790_esm_defineProperty(this, "ingKey", 'moving');
   }
 
   move(event) {
@@ -26007,7 +25955,7 @@ class MoveEngine extends CoordinatesEngine {
 
 }
 
-const moveConfigResolver = actions_e2a59bb9_esm_objectSpread2(actions_e2a59bb9_esm_objectSpread2({}, coordinatesConfigResolver), {}, {
+const moveConfigResolver = actions_aeda4790_esm_objectSpread2(actions_aeda4790_esm_objectSpread2({}, coordinatesConfigResolver), {}, {
   mouseOnly: (value = true) => value
 });
 
@@ -26015,7 +25963,7 @@ class ScrollEngine extends CoordinatesEngine {
   constructor(...args) {
     super(...args);
 
-    actions_e2a59bb9_esm_defineProperty(this, "ingKey", 'scrolling');
+    actions_aeda4790_esm_defineProperty(this, "ingKey", 'scrolling');
   }
 
   scroll(event) {
@@ -26054,7 +26002,7 @@ class WheelEngine extends CoordinatesEngine {
   constructor(...args) {
     super(...args);
 
-    actions_e2a59bb9_esm_defineProperty(this, "ingKey", 'wheeling');
+    actions_aeda4790_esm_defineProperty(this, "ingKey", 'wheeling');
   }
 
   wheel(event) {
@@ -26102,7 +26050,7 @@ class HoverEngine extends CoordinatesEngine {
   constructor(...args) {
     super(...args);
 
-    actions_e2a59bb9_esm_defineProperty(this, "ingKey", 'hovering');
+    actions_aeda4790_esm_defineProperty(this, "ingKey", 'hovering');
   }
 
   enter(event) {
@@ -26133,42 +26081,42 @@ class HoverEngine extends CoordinatesEngine {
 
 }
 
-const hoverConfigResolver = actions_e2a59bb9_esm_objectSpread2(actions_e2a59bb9_esm_objectSpread2({}, coordinatesConfigResolver), {}, {
+const hoverConfigResolver = actions_aeda4790_esm_objectSpread2(actions_aeda4790_esm_objectSpread2({}, coordinatesConfigResolver), {}, {
   mouseOnly: (value = true) => value
 });
 
-const actions_e2a59bb9_esm_EngineMap = new Map();
+const actions_aeda4790_esm_EngineMap = new Map();
 const ConfigResolverMap = new Map();
-function actions_e2a59bb9_esm_registerAction(action) {
-  actions_e2a59bb9_esm_EngineMap.set(action.key, action.engine);
+function actions_aeda4790_esm_registerAction(action) {
+  actions_aeda4790_esm_EngineMap.set(action.key, action.engine);
   ConfigResolverMap.set(action.key, action.resolver);
 }
-const actions_e2a59bb9_esm_dragAction = {
+const actions_aeda4790_esm_dragAction = {
   key: 'drag',
   engine: DragEngine,
   resolver: dragConfigResolver
 };
-const actions_e2a59bb9_esm_hoverAction = {
+const actions_aeda4790_esm_hoverAction = {
   key: 'hover',
   engine: HoverEngine,
   resolver: hoverConfigResolver
 };
-const actions_e2a59bb9_esm_moveAction = {
+const actions_aeda4790_esm_moveAction = {
   key: 'move',
   engine: MoveEngine,
   resolver: moveConfigResolver
 };
-const actions_e2a59bb9_esm_pinchAction = {
+const actions_aeda4790_esm_pinchAction = {
   key: 'pinch',
   engine: PinchEngine,
   resolver: pinchConfigResolver
 };
-const actions_e2a59bb9_esm_scrollAction = {
+const actions_aeda4790_esm_scrollAction = {
   key: 'scroll',
   engine: ScrollEngine,
   resolver: scrollConfigResolver
 };
-const actions_e2a59bb9_esm_wheelAction = {
+const actions_aeda4790_esm_wheelAction = {
   key: 'wheel',
   engine: WheelEngine,
   resolver: wheelConfigResolver
@@ -26293,7 +26241,7 @@ function use_gesture_core_esm_parse(newConfig, gestureKey, _config = {}) {
 
   if (gestureKey) {
     const resolver = ConfigResolverMap.get(gestureKey);
-    _config[gestureKey] = resolveWith(actions_e2a59bb9_esm_objectSpread2({
+    _config[gestureKey] = resolveWith(actions_aeda4790_esm_objectSpread2({
       shared: _config.shared
     }, rest), resolver);
   } else {
@@ -26301,7 +26249,7 @@ function use_gesture_core_esm_parse(newConfig, gestureKey, _config = {}) {
       const resolver = ConfigResolverMap.get(key);
 
       if (resolver) {
-        _config[key] = resolveWith(actions_e2a59bb9_esm_objectSpread2({
+        _config[key] = resolveWith(actions_aeda4790_esm_objectSpread2({
           shared: _config.shared
         }, rest[key]), resolver);
       } else if (false) {}
@@ -26313,7 +26261,7 @@ function use_gesture_core_esm_parse(newConfig, gestureKey, _config = {}) {
 
 class EventStore {
   constructor(ctrl, gestureKey) {
-    actions_e2a59bb9_esm_defineProperty(this, "_listeners", new Set());
+    actions_aeda4790_esm_defineProperty(this, "_listeners", new Set());
 
     this._ctrl = ctrl;
     this._gestureKey = gestureKey;
@@ -26325,7 +26273,7 @@ class EventStore {
 
     const _options = this._gestureKey ? this._ctrl.config[this._gestureKey].eventOptions : {};
 
-    const eventOptions = actions_e2a59bb9_esm_objectSpread2(actions_e2a59bb9_esm_objectSpread2({}, _options), options);
+    const eventOptions = actions_aeda4790_esm_objectSpread2(actions_aeda4790_esm_objectSpread2({}, _options), options);
 
     element.addEventListener(type, handler, eventOptions);
 
@@ -26348,7 +26296,7 @@ class EventStore {
 
 class TimeoutStore {
   constructor() {
-    actions_e2a59bb9_esm_defineProperty(this, "_timeouts", new Map());
+    actions_aeda4790_esm_defineProperty(this, "_timeouts", new Map());
   }
 
   add(key, callback, ms = 140, ...args) {
@@ -26373,23 +26321,23 @@ class TimeoutStore {
 
 class Controller {
   constructor(handlers) {
-    actions_e2a59bb9_esm_defineProperty(this, "gestures", new Set());
+    actions_aeda4790_esm_defineProperty(this, "gestures", new Set());
 
-    actions_e2a59bb9_esm_defineProperty(this, "_targetEventStore", new EventStore(this));
+    actions_aeda4790_esm_defineProperty(this, "_targetEventStore", new EventStore(this));
 
-    actions_e2a59bb9_esm_defineProperty(this, "gestureEventStores", {});
+    actions_aeda4790_esm_defineProperty(this, "gestureEventStores", {});
 
-    actions_e2a59bb9_esm_defineProperty(this, "gestureTimeoutStores", {});
+    actions_aeda4790_esm_defineProperty(this, "gestureTimeoutStores", {});
 
-    actions_e2a59bb9_esm_defineProperty(this, "handlers", {});
+    actions_aeda4790_esm_defineProperty(this, "handlers", {});
 
-    actions_e2a59bb9_esm_defineProperty(this, "config", {});
+    actions_aeda4790_esm_defineProperty(this, "config", {});
 
-    actions_e2a59bb9_esm_defineProperty(this, "pointerIds", new Set());
+    actions_aeda4790_esm_defineProperty(this, "pointerIds", new Set());
 
-    actions_e2a59bb9_esm_defineProperty(this, "touchIds", new Set());
+    actions_aeda4790_esm_defineProperty(this, "touchIds", new Set());
 
-    actions_e2a59bb9_esm_defineProperty(this, "state", {
+    actions_aeda4790_esm_defineProperty(this, "state", {
       shared: {
         shiftKey: false,
         metaKey: false,
@@ -26450,7 +26398,7 @@ class Controller {
         const bindFunction = bindToProps(props, gestureConfig.eventOptions, !!target);
 
         if (gestureConfig.enabled) {
-          const Engine = actions_e2a59bb9_esm_EngineMap.get(gestureKey);
+          const Engine = actions_aeda4790_esm_EngineMap.get(gestureKey);
           new Engine(this, args, gestureKey).bind(bindFunction);
         }
       }
@@ -26458,7 +26406,7 @@ class Controller {
       const nativeBindFunction = bindToProps(props, sharedConfig.eventOptions, !!target);
 
       for (const eventKey in this.nativeHandlers) {
-        nativeBindFunction(eventKey, '', event => this.nativeHandlers[eventKey](actions_e2a59bb9_esm_objectSpread2(actions_e2a59bb9_esm_objectSpread2({}, this.state.shared), {}, {
+        nativeBindFunction(eventKey, '', event => this.nativeHandlers[eventKey](actions_aeda4790_esm_objectSpread2(actions_aeda4790_esm_objectSpread2({}, this.state.shared), {}, {
           event,
           args
         })), undefined, true);
@@ -26599,7 +26547,7 @@ function useRecognizers(handlers, config = {}, gestureKey, nativeHandlers) {
 }
 
 function use_gesture_react_esm_useDrag(handler, config) {
-  actions_e2a59bb9_esm_registerAction(actions_e2a59bb9_esm_dragAction);
+  actions_aeda4790_esm_registerAction(actions_aeda4790_esm_dragAction);
   return useRecognizers({
     drag: handler
   }, config || {}, 'drag');
@@ -26634,7 +26582,7 @@ function useMove(handler, config) {
 }
 
 function useHover(handler, config) {
-  actions_e2a59bb9_esm_registerAction(actions_e2a59bb9_esm_hoverAction);
+  actions_aeda4790_esm_registerAction(actions_aeda4790_esm_hoverAction);
   return useRecognizers({
     hover: handler
   }, config || {}, 'hover');
@@ -31326,41 +31274,63 @@ function isShadowRoot(node) {
 var math_max = Math.max;
 var math_min = Math.min;
 var round = Math.round;
+;// CONCATENATED MODULE: ./node_modules/@popperjs/core/lib/utils/userAgent.js
+function getUAString() {
+  var uaData = navigator.userAgentData;
+
+  if (uaData != null && uaData.brands) {
+    return uaData.brands.map(function (item) {
+      return item.brand + "/" + item.version;
+    }).join(' ');
+  }
+
+  return navigator.userAgent;
+}
+;// CONCATENATED MODULE: ./node_modules/@popperjs/core/lib/dom-utils/isLayoutViewport.js
+
+function isLayoutViewport() {
+  return !/^((?!chrome|android).)*safari/i.test(getUAString());
+}
 ;// CONCATENATED MODULE: ./node_modules/@popperjs/core/lib/dom-utils/getBoundingClientRect.js
 
 
-function getBoundingClientRect(element, includeScale) {
+
+
+function getBoundingClientRect(element, includeScale, isFixedStrategy) {
   if (includeScale === void 0) {
     includeScale = false;
   }
 
-  var rect = element.getBoundingClientRect();
+  if (isFixedStrategy === void 0) {
+    isFixedStrategy = false;
+  }
+
+  var clientRect = element.getBoundingClientRect();
   var scaleX = 1;
   var scaleY = 1;
 
-  if (isHTMLElement(element) && includeScale) {
-    var offsetHeight = element.offsetHeight;
-    var offsetWidth = element.offsetWidth; // Do not attempt to divide by 0, otherwise we get `Infinity` as scale
-    // Fallback to 1 in case both values are `0`
-
-    if (offsetWidth > 0) {
-      scaleX = round(rect.width) / offsetWidth || 1;
-    }
-
-    if (offsetHeight > 0) {
-      scaleY = round(rect.height) / offsetHeight || 1;
-    }
+  if (includeScale && isHTMLElement(element)) {
+    scaleX = element.offsetWidth > 0 ? round(clientRect.width) / element.offsetWidth || 1 : 1;
+    scaleY = element.offsetHeight > 0 ? round(clientRect.height) / element.offsetHeight || 1 : 1;
   }
 
+  var _ref = isElement(element) ? getWindow_getWindow(element) : window,
+      visualViewport = _ref.visualViewport;
+
+  var addVisualOffsets = !isLayoutViewport() && isFixedStrategy;
+  var x = (clientRect.left + (addVisualOffsets && visualViewport ? visualViewport.offsetLeft : 0)) / scaleX;
+  var y = (clientRect.top + (addVisualOffsets && visualViewport ? visualViewport.offsetTop : 0)) / scaleY;
+  var width = clientRect.width / scaleX;
+  var height = clientRect.height / scaleY;
   return {
-    width: rect.width / scaleX,
-    height: rect.height / scaleY,
-    top: rect.top / scaleY,
-    right: rect.right / scaleX,
-    bottom: rect.bottom / scaleY,
-    left: rect.left / scaleX,
-    x: rect.left / scaleX,
-    y: rect.top / scaleY
+    width: width,
+    height: height,
+    top: y,
+    right: x + width,
+    bottom: y + height,
+    left: x,
+    x: x,
+    y: y
   };
 }
 ;// CONCATENATED MODULE: ./node_modules/@popperjs/core/lib/dom-utils/getWindowScroll.js
@@ -31461,7 +31431,7 @@ function getCompositeRect(elementOrVirtualElement, offsetParent, isFixed) {
   var isOffsetParentAnElement = isHTMLElement(offsetParent);
   var offsetParentIsScaled = isHTMLElement(offsetParent) && isElementScaled(offsetParent);
   var documentElement = getDocumentElement(offsetParent);
-  var rect = getBoundingClientRect(elementOrVirtualElement, offsetParentIsScaled);
+  var rect = getBoundingClientRect(elementOrVirtualElement, offsetParentIsScaled, isFixed);
   var scroll = {
     scrollLeft: 0,
     scrollTop: 0
@@ -31596,6 +31566,7 @@ function isTableElement(element) {
 
 
 
+
 function getTrueOffsetParent(element) {
   if (!isHTMLElement(element) || // https://github.com/popperjs/popper-core/issues/837
   getComputedStyle_getComputedStyle(element).position === 'fixed') {
@@ -31608,8 +31579,8 @@ function getTrueOffsetParent(element) {
 
 
 function getContainingBlock(element) {
-  var isFirefox = navigator.userAgent.toLowerCase().indexOf('firefox') !== -1;
-  var isIE = navigator.userAgent.indexOf('Trident') !== -1;
+  var isFirefox = /firefox/i.test(getUAString());
+  var isIE = /Trident/i.test(getUAString());
 
   if (isIE && isHTMLElement(element)) {
     // In IE 9, 10 and 11 fixed elements containing block is always established by the viewport
@@ -32483,31 +32454,22 @@ function getOppositeVariationPlacement(placement) {
 
 
 
-function getViewportRect(element) {
+
+function getViewportRect(element, strategy) {
   var win = getWindow_getWindow(element);
   var html = getDocumentElement(element);
   var visualViewport = win.visualViewport;
   var width = html.clientWidth;
   var height = html.clientHeight;
   var x = 0;
-  var y = 0; // NB: This isn't supported on iOS <= 12. If the keyboard is open, the popper
-  // can be obscured underneath it.
-  // Also, `html.clientHeight` adds the bottom bar height in Safari iOS, even
-  // if it isn't open, so if this isn't available, the popper will be detected
-  // to overflow the bottom of the screen too early.
+  var y = 0;
 
   if (visualViewport) {
     width = visualViewport.width;
-    height = visualViewport.height; // Uses Layout Viewport (like Chrome; Safari does not currently)
-    // In Chrome, it returns a value very close to 0 (+/-) but contains rounding
-    // errors due to floating point numbers, so we need to check precision.
-    // Safari returns a number <= 0, usually < -1 when pinch-zoomed
-    // Feature detection fails in mobile emulation mode in Chrome.
-    // Math.abs(win.innerWidth / visualViewport.scale - visualViewport.width) <
-    // 0.001
-    // Fallback here: "Not Safari" userAgent
+    height = visualViewport.height;
+    var layoutViewport = isLayoutViewport();
 
-    if (!/^((?!chrome|android).)*safari/i.test(navigator.userAgent)) {
+    if (layoutViewport || !layoutViewport && strategy === 'fixed') {
       x = visualViewport.offsetLeft;
       y = visualViewport.offsetTop;
     }
@@ -32599,8 +32561,8 @@ function rectToClientRect(rect) {
 
 
 
-function getInnerBoundingClientRect(element) {
-  var rect = getBoundingClientRect(element);
+function getInnerBoundingClientRect(element, strategy) {
+  var rect = getBoundingClientRect(element, false, strategy === 'fixed');
   rect.top = rect.top + element.clientTop;
   rect.left = rect.left + element.clientLeft;
   rect.bottom = rect.top + element.clientHeight;
@@ -32612,8 +32574,8 @@ function getInnerBoundingClientRect(element) {
   return rect;
 }
 
-function getClientRectFromMixedType(element, clippingParent) {
-  return clippingParent === viewport ? rectToClientRect(getViewportRect(element)) : isElement(clippingParent) ? getInnerBoundingClientRect(clippingParent) : rectToClientRect(getDocumentRect(getDocumentElement(element)));
+function getClientRectFromMixedType(element, clippingParent, strategy) {
+  return clippingParent === viewport ? rectToClientRect(getViewportRect(element, strategy)) : isElement(clippingParent) ? getInnerBoundingClientRect(clippingParent, strategy) : rectToClientRect(getDocumentRect(getDocumentElement(element)));
 } // A "clipping parent" is an overflowable container with the characteristic of
 // clipping (or hiding) overflowing elements with a position different from
 // `initial`
@@ -32636,18 +32598,18 @@ function getClippingParents(element) {
 // clipping parents
 
 
-function getClippingRect(element, boundary, rootBoundary) {
+function getClippingRect(element, boundary, rootBoundary, strategy) {
   var mainClippingParents = boundary === 'clippingParents' ? getClippingParents(element) : [].concat(boundary);
   var clippingParents = [].concat(mainClippingParents, [rootBoundary]);
   var firstClippingParent = clippingParents[0];
   var clippingRect = clippingParents.reduce(function (accRect, clippingParent) {
-    var rect = getClientRectFromMixedType(element, clippingParent);
+    var rect = getClientRectFromMixedType(element, clippingParent, strategy);
     accRect.top = math_max(rect.top, accRect.top);
     accRect.right = math_min(rect.right, accRect.right);
     accRect.bottom = math_min(rect.bottom, accRect.bottom);
     accRect.left = math_max(rect.left, accRect.left);
     return accRect;
-  }, getClientRectFromMixedType(element, firstClippingParent));
+  }, getClientRectFromMixedType(element, firstClippingParent, strategy));
   clippingRect.width = clippingRect.right - clippingRect.left;
   clippingRect.height = clippingRect.bottom - clippingRect.top;
   clippingRect.x = clippingRect.left;
@@ -32694,6 +32656,8 @@ function detectOverflow(state, options) {
   var _options = options,
       _options$placement = _options.placement,
       placement = _options$placement === void 0 ? state.placement : _options$placement,
+      _options$strategy = _options.strategy,
+      strategy = _options$strategy === void 0 ? state.strategy : _options$strategy,
       _options$boundary = _options.boundary,
       boundary = _options$boundary === void 0 ? clippingParents : _options$boundary,
       _options$rootBoundary = _options.rootBoundary,
@@ -32708,7 +32672,7 @@ function detectOverflow(state, options) {
   var altContext = elementContext === popper ? reference : popper;
   var popperRect = state.rects.popper;
   var element = state.elements[altBoundary ? altContext : elementContext];
-  var clippingClientRect = getClippingRect(isElement(element) ? element : element.contextElement || getDocumentElement(state.elements.popper), boundary, rootBoundary);
+  var clippingClientRect = getClippingRect(isElement(element) ? element : element.contextElement || getDocumentElement(state.elements.popper), boundary, rootBoundary, strategy);
   var referenceClientRect = getBoundingClientRect(state.elements.reference);
   var popperOffsets = computeOffsets({
     reference: referenceClientRect,
@@ -33295,7 +33259,7 @@ function useDisclosureState(initialState) {
       initialVisible = _useSealedState$visib === void 0 ? false : _useSealedState$visib,
       _useSealedState$anima = _useSealedState.animated,
       initialAnimated = _useSealedState$anima === void 0 ? false : _useSealedState$anima,
-      sealed = _rollupPluginBabelHelpers_1f0bf8c2_objectWithoutPropertiesLoose(_useSealedState, ["visible", "animated"]);
+      sealed = _objectWithoutPropertiesLoose(_useSealedState, ["visible", "animated"]);
 
   var id = unstable_useIdState(sealed);
 
@@ -33380,7 +33344,7 @@ function useDialogState(initialState) {
   var _useSealedState = useSealedState(initialState),
       _useSealedState$modal = _useSealedState.modal,
       initialModal = _useSealedState$modal === void 0 ? true : _useSealedState$modal,
-      sealed = _rollupPluginBabelHelpers_1f0bf8c2_objectWithoutPropertiesLoose(_useSealedState, ["modal"]);
+      sealed = _objectWithoutPropertiesLoose(_useSealedState, ["modal"]);
 
   var disclosure = useDisclosureState(sealed);
 
@@ -33443,7 +33407,7 @@ function usePopoverState(initialState) {
       fixed = _useSealedState$unsta3 === void 0 ? false : _useSealedState$unsta3,
       _useSealedState$modal = _useSealedState.modal,
       modal = _useSealedState$modal === void 0 ? false : _useSealedState$modal,
-      sealed = _rollupPluginBabelHelpers_1f0bf8c2_objectWithoutPropertiesLoose(_useSealedState, ["gutter", "placement", "unstable_flip", "unstable_offset", "unstable_preventOverflow", "unstable_fixed", "modal"]);
+      sealed = _objectWithoutPropertiesLoose(_useSealedState, ["gutter", "placement", "unstable_flip", "unstable_offset", "unstable_preventOverflow", "unstable_fixed", "modal"]);
 
   var popper = (0,external_React_namespaceObject.useRef)(null);
   var referenceRef = (0,external_React_namespaceObject.useRef)(null);
@@ -33651,7 +33615,7 @@ function useTooltipState(initialState) {
       placement = _useSealedState$place === void 0 ? "top" : _useSealedState$place,
       _useSealedState$unsta = _useSealedState.unstable_timeout,
       initialTimeout = _useSealedState$unsta === void 0 ? 0 : _useSealedState$unsta,
-      sealed = _rollupPluginBabelHelpers_1f0bf8c2_objectWithoutPropertiesLoose(_useSealedState, ["placement", "unstable_timeout"]);
+      sealed = _objectWithoutPropertiesLoose(_useSealedState, ["placement", "unstable_timeout"]);
 
   var _React$useState = (0,external_React_namespaceObject.useState)(initialTimeout),
       timeout = _React$useState[0],
@@ -33665,7 +33629,7 @@ function useTooltipState(initialState) {
   })),
       modal = _usePopoverState.modal,
       setModal = _usePopoverState.setModal,
-      popover = _rollupPluginBabelHelpers_1f0bf8c2_objectWithoutPropertiesLoose(_usePopoverState, ["modal", "setModal"]);
+      popover = _objectWithoutPropertiesLoose(_usePopoverState, ["modal", "setModal"]);
 
   var clearTimeouts = (0,external_React_namespaceObject.useCallback)(function () {
     if (showTimeout.current !== null) {
@@ -33762,7 +33726,7 @@ var useTooltipReference = createHook({
         htmlOnBlur = _ref.onBlur,
         htmlOnMouseEnter = _ref.onMouseEnter,
         htmlOnMouseLeave = _ref.onMouseLeave,
-        htmlProps = _rollupPluginBabelHelpers_1f0bf8c2_objectWithoutPropertiesLoose(_ref, ["ref", "onFocus", "onBlur", "onMouseEnter", "onMouseLeave"]);
+        htmlProps = _objectWithoutPropertiesLoose(_ref, ["ref", "onFocus", "onBlur", "onMouseEnter", "onMouseLeave"]);
 
     var onFocusRef = useLiveRef(htmlOnFocus);
     var onBlurRef = useLiveRef(htmlOnBlur);
@@ -33853,7 +33817,7 @@ var useDisclosureContent = createHook({
     var htmlOnTransitionEnd = _ref.onTransitionEnd,
         htmlOnAnimationEnd = _ref.onAnimationEnd,
         htmlStyle = _ref.style,
-        htmlProps = _rollupPluginBabelHelpers_1f0bf8c2_objectWithoutPropertiesLoose(_ref, ["onTransitionEnd", "onAnimationEnd", "style"]);
+        htmlProps = _objectWithoutPropertiesLoose(_ref, ["onTransitionEnd", "onAnimationEnd", "style"]);
 
     var animating = options.animated && options.animating;
 
@@ -34016,7 +33980,7 @@ var useTooltip = createHook({
   useOptions: function useOptions(_ref) {
     var _ref$unstable_portal = _ref.unstable_portal,
         unstable_portal = _ref$unstable_portal === void 0 ? true : _ref$unstable_portal,
-        options = _rollupPluginBabelHelpers_1f0bf8c2_objectWithoutPropertiesLoose(_ref, ["unstable_portal"]);
+        options = _objectWithoutPropertiesLoose(_ref, ["unstable_portal"]);
 
     return _objectSpread2({
       unstable_portal: unstable_portal
@@ -34026,7 +33990,7 @@ var useTooltip = createHook({
     var htmlRef = _ref2.ref,
         htmlStyle = _ref2.style,
         htmlWrapElement = _ref2.wrapElement,
-        htmlProps = _rollupPluginBabelHelpers_1f0bf8c2_objectWithoutPropertiesLoose(_ref2, ["ref", "style", "wrapElement"]);
+        htmlProps = _objectWithoutPropertiesLoose(_ref2, ["ref", "style", "wrapElement"]);
 
     (0,external_React_namespaceObject.useEffect)(function () {
       var _options$unstable_pop;
@@ -34699,7 +34663,7 @@ const Picker = _ref => {
     enableAlpha,
     onChange
   } = _ref;
-  const Component = enableAlpha ? pe : Ce;
+  const Component = enableAlpha ? He : ye;
   const rgbColor = (0,external_wp_element_namespaceObject.useMemo)(() => color.toRgbString(), [color]);
   return (0,external_wp_element_namespaceObject.createElement)(Component, {
     color: rgbColor,
@@ -39131,7 +39095,7 @@ var useSeparator = createHook({
   useOptions: function useOptions(_ref) {
     var _ref$orientation = _ref.orientation,
         orientation = _ref$orientation === void 0 ? "horizontal" : _ref$orientation,
-        options = _rollupPluginBabelHelpers_1f0bf8c2_objectWithoutPropertiesLoose(_ref, ["orientation"]);
+        options = _objectWithoutPropertiesLoose(_ref, ["orientation"]);
 
     return _objectSpread2({
       orientation: orientation
@@ -42722,21 +42686,6 @@ function ConfirmDialog(props, forwardedRef) {
 
 /* harmony default export */ var confirm_dialog_component = (contextConnect(ConfirmDialog, 'ConfirmDialog'));
 
-;// CONCATENATED MODULE: ./node_modules/@babel/runtime/helpers/esm/objectWithoutPropertiesLoose.js
-function objectWithoutPropertiesLoose_objectWithoutPropertiesLoose(source, excluded) {
-  if (source == null) return {};
-  var target = {};
-  var sourceKeys = Object.keys(source);
-  var key, i;
-
-  for (i = 0; i < sourceKeys.length; i++) {
-    key = sourceKeys[i];
-    if (excluded.indexOf(key) >= 0) continue;
-    target[key] = source[key];
-  }
-
-  return target;
-}
 // EXTERNAL MODULE: ./node_modules/prop-types/index.js
 var prop_types = __webpack_require__(2652);
 var prop_types_default = /*#__PURE__*/__webpack_require__.n(prop_types);
@@ -42752,11 +42701,7 @@ function index_module_t(t){return"object"==typeof t&&null!=t&&1===t.nodeType}fun
 
 
 
-
-
-
-
-var idCounter = 0;
+let idCounter = 0;
 /**
  * Accepts a parameter and returns it if it's a function
  * or a noop function if it's not. This allows us to
@@ -42783,15 +42728,17 @@ function scrollIntoView(node, menuNode) {
     return;
   }
 
-  var actions = index_module(node, {
+  const actions = index_module(node, {
     boundary: menuNode,
     block: 'nearest',
     scrollMode: 'if-needed'
   });
-  actions.forEach(function (_ref) {
-    var el = _ref.el,
-        top = _ref.top,
-        left = _ref.left;
+  actions.forEach(_ref => {
+    let {
+      el,
+      top,
+      left
+    } = _ref;
     el.scrollTop = top;
     el.scrollLeft = left;
   });
@@ -42805,7 +42752,7 @@ function scrollIntoView(node, menuNode) {
 
 
 function isOrContainsNode(parent, child, environment) {
-  var result = parent === child || child instanceof environment.Node && parent.contains && parent.contains(child);
+  const result = parent === child || child instanceof environment.Node && parent.contains && parent.contains(child);
   return result;
 }
 /**
@@ -42819,7 +42766,7 @@ function isOrContainsNode(parent, child, environment) {
 
 
 function downshift_esm_debounce(fn, time) {
-  var timeoutId;
+  let timeoutId;
 
   function cancel() {
     if (timeoutId) {
@@ -42833,9 +42780,9 @@ function downshift_esm_debounce(fn, time) {
     }
 
     cancel();
-    timeoutId = setTimeout(function () {
+    timeoutId = setTimeout(() => {
       timeoutId = null;
-      fn.apply(void 0, args);
+      fn(...args);
     }, time);
   }
 
@@ -42861,9 +42808,9 @@ function callAllEventHandlers() {
       args[_key3 - 1] = arguments[_key3];
     }
 
-    return fns.some(function (fn) {
+    return fns.some(fn => {
       if (fn) {
-        fn.apply(void 0, [event].concat(args));
+        fn(event, ...args);
       }
 
       return event.preventDownshiftDefault || event.hasOwnProperty('nativeEvent') && event.nativeEvent.preventDownshiftDefault;
@@ -42876,8 +42823,8 @@ function handleRefs() {
     refs[_key4] = arguments[_key4];
   }
 
-  return function (node) {
-    refs.forEach(function (ref) {
+  return node => {
+    refs.forEach(ref => {
       if (typeof ref === 'function') {
         ref(node);
       } else if (ref) {
@@ -42914,9 +42861,11 @@ function resetIdCounter() {
 
 
 function getA11yStatusMessage$1(_ref2) {
-  var isOpen = _ref2.isOpen,
-      resultCount = _ref2.resultCount,
-      previousResultCount = _ref2.previousResultCount;
+  let {
+    isOpen,
+    resultCount,
+    previousResultCount
+  } = _ref2;
 
   if (!isOpen) {
     return '';
@@ -42986,7 +42935,7 @@ function requiredProp(fnName, propName) {
   console.error(`The property "${propName}" is required in "${fnName}"`);
 }
 
-var stateKeys = (/* unused pure expression or super */ null && (['highlightedIndex', 'inputValue', 'isOpen', 'selectedItem', 'type']));
+const stateKeys = ['highlightedIndex', 'inputValue', 'isOpen', 'selectedItem', 'type'];
 /**
  * @param {Object} state the state object
  * @return {Object} state that is relevant to downshift
@@ -42997,8 +42946,8 @@ function pickState(state) {
     state = {};
   }
 
-  var result = {};
-  stateKeys.forEach(function (k) {
+  const result = {};
+  stateKeys.forEach(k => {
     if (state.hasOwnProperty(k)) {
       result[k] = state[k];
     }
@@ -43019,7 +42968,7 @@ function pickState(state) {
 
 
 function getState(state, props) {
-  return Object.keys(state).reduce(function (prevState, key) {
+  return Object.keys(state).reduce((prevState, key) => {
     prevState[key] = isControlledProp(props, key) ? props[key] : state[key];
     return prevState;
   }, {});
@@ -43046,8 +42995,10 @@ function isControlledProp(props, key) {
 
 
 function normalizeArrowKey(event) {
-  var key = event.key,
-      keyCode = event.keyCode;
+  const {
+    key,
+    keyCode
+  } = event;
   /* istanbul ignore next (ie) */
 
   if (keyCode >= 37 && keyCode <= 40 && key.indexOf('Arrow') !== 0) {
@@ -43088,13 +43039,13 @@ function getNextWrappingIndex(moveAmount, baseIndex, itemCount, getItemNodeFromI
     return -1;
   }
 
-  var itemsLastIndex = itemCount - 1;
+  const itemsLastIndex = itemCount - 1;
 
   if (typeof baseIndex !== 'number' || baseIndex < 0 || baseIndex >= itemCount) {
     baseIndex = moveAmount > 0 ? -1 : itemsLastIndex + 1;
   }
 
-  var newIndex = baseIndex + moveAmount;
+  let newIndex = baseIndex + moveAmount;
 
   if (newIndex < 0) {
     newIndex = circular ? itemsLastIndex : 0;
@@ -43102,7 +43053,7 @@ function getNextWrappingIndex(moveAmount, baseIndex, itemCount, getItemNodeFromI
     newIndex = circular ? 0 : itemsLastIndex;
   }
 
-  var nonDisabledNewIndex = getNextNonDisabledIndex(moveAmount, newIndex, itemCount, getItemNodeFromIndex, circular);
+  const nonDisabledNewIndex = getNextNonDisabledIndex(moveAmount, newIndex, itemCount, getItemNodeFromIndex, circular);
 
   if (nonDisabledNewIndex === -1) {
     return baseIndex >= itemCount ? -1 : baseIndex;
@@ -43123,22 +43074,22 @@ function getNextWrappingIndex(moveAmount, baseIndex, itemCount, getItemNodeFromI
 
 
 function getNextNonDisabledIndex(moveAmount, baseIndex, itemCount, getItemNodeFromIndex, circular) {
-  var currentElementNode = getItemNodeFromIndex(baseIndex);
+  const currentElementNode = getItemNodeFromIndex(baseIndex);
 
   if (!currentElementNode || !currentElementNode.hasAttribute('disabled')) {
     return baseIndex;
   }
 
   if (moveAmount > 0) {
-    for (var index = baseIndex + 1; index < itemCount; index++) {
+    for (let index = baseIndex + 1; index < itemCount; index++) {
       if (!getItemNodeFromIndex(index).hasAttribute('disabled')) {
         return index;
       }
     }
   } else {
-    for (var _index = baseIndex - 1; _index >= 0; _index--) {
-      if (!getItemNodeFromIndex(_index).hasAttribute('disabled')) {
-        return _index;
+    for (let index = baseIndex - 1; index >= 0; index--) {
+      if (!getItemNodeFromIndex(index).hasAttribute('disabled')) {
+        return index;
       }
     }
   }
@@ -43166,18 +43117,16 @@ function targetWithinDownshift(target, downshiftElements, environment, checkActi
     checkActiveElement = true;
   }
 
-  return downshiftElements.some(function (contextNode) {
-    return contextNode && (isOrContainsNode(contextNode, target, environment) || checkActiveElement && isOrContainsNode(contextNode, environment.document.activeElement, environment));
-  });
+  return downshiftElements.some(contextNode => contextNode && (isOrContainsNode(contextNode, target, environment) || checkActiveElement && isOrContainsNode(contextNode, environment.document.activeElement, environment)));
 } // eslint-disable-next-line import/no-mutable-exports
 
 
-var validateControlledUnchanged = (/* unused pure expression or super */ null && (downshift_esm_noop));
+let validateControlledUnchanged = (/* unused pure expression or super */ null && (downshift_esm_noop));
 /* istanbul ignore next */
 
 if (false) {}
 
-var cleanupStatus = downshift_esm_debounce(function (documentProp) {
+const cleanupStatus = downshift_esm_debounce(documentProp => {
   getStatusDiv(documentProp).textContent = '';
 }, 500);
 /**
@@ -43186,7 +43135,7 @@ var cleanupStatus = downshift_esm_debounce(function (documentProp) {
  */
 
 function setStatus(status, documentProp) {
-  var div = getStatusDiv(documentProp);
+  const div = getStatusDiv(documentProp);
 
   if (!status) {
     return;
@@ -43207,7 +43156,7 @@ function getStatusDiv(documentProp) {
     documentProp = document;
   }
 
-  var statusDiv = documentProp.getElementById('a11y-status-message');
+  let statusDiv = documentProp.getElementById('a11y-status-message');
 
   if (statusDiv) {
     return statusDiv;
@@ -43232,23 +43181,23 @@ function getStatusDiv(documentProp) {
   return statusDiv;
 }
 
-var unknown =  false ? 0 : 0;
-var mouseUp =  false ? 0 : 1;
-var itemMouseEnter =  false ? 0 : 2;
-var keyDownArrowUp =  false ? 0 : 3;
-var keyDownArrowDown =  false ? 0 : 4;
-var keyDownEscape =  false ? 0 : 5;
-var keyDownEnter =  false ? 0 : 6;
-var keyDownHome =  false ? 0 : 7;
-var keyDownEnd =  false ? 0 : 8;
-var clickItem =  false ? 0 : 9;
-var blurInput =  false ? 0 : 10;
-var changeInput =  false ? 0 : 11;
-var keyDownSpaceButton =  false ? 0 : 12;
-var clickButton =  false ? 0 : 13;
-var blurButton =  false ? 0 : 14;
-var controlledPropUpdatedSelectedItem =  false ? 0 : 15;
-var touchEnd =  false ? 0 : 16;
+const unknown =  false ? 0 : 0;
+const mouseUp =  false ? 0 : 1;
+const itemMouseEnter =  false ? 0 : 2;
+const keyDownArrowUp =  false ? 0 : 3;
+const keyDownArrowDown =  false ? 0 : 4;
+const keyDownEscape =  false ? 0 : 5;
+const keyDownEnter =  false ? 0 : 6;
+const keyDownHome =  false ? 0 : 7;
+const keyDownEnd =  false ? 0 : 8;
+const clickItem =  false ? 0 : 9;
+const blurInput =  false ? 0 : 10;
+const changeInput =  false ? 0 : 11;
+const keyDownSpaceButton =  false ? 0 : 12;
+const clickButton =  false ? 0 : 13;
+const blurButton =  false ? 0 : 14;
+const controlledPropUpdatedSelectedItem =  false ? 0 : 15;
+const touchEnd =  false ? 0 : 16;
 
 var stateChangeTypes$3 = /*#__PURE__*/Object.freeze({
   __proto__: null,
@@ -43271,15 +43220,7 @@ var stateChangeTypes$3 = /*#__PURE__*/Object.freeze({
   touchEnd: touchEnd
 });
 
-var _excluded$4 = (/* unused pure expression or super */ null && (["refKey", "ref"])),
-    _excluded2$3 = (/* unused pure expression or super */ null && (["onClick", "onPress", "onKeyDown", "onKeyUp", "onBlur"])),
-    _excluded3$2 = (/* unused pure expression or super */ null && (["onKeyDown", "onBlur", "onChange", "onInput", "onChangeText"])),
-    _excluded4$1 = (/* unused pure expression or super */ null && (["refKey", "ref"])),
-    _excluded5$1 = (/* unused pure expression or super */ null && (["onMouseMove", "onMouseDown", "onClick", "onPress", "index", "item"]));
-
-var Downshift = /*#__PURE__*/(/* unused pure expression or super */ null && (function () {
-  var Downshift = /*#__PURE__*/function (_Component) {
-    _inheritsLoose(Downshift, _Component);
+/* eslint camelcase:0 */
 
 const Downshift = /*#__PURE__*/(() => {
   class Downshift extends external_React_namespaceObject.Component {
@@ -43295,32 +43236,29 @@ const Downshift = /*#__PURE__*/(() => {
 
       this.getItemId = this.props.getItemId || (index => `${this.id}-item-${index}`);
 
-      _this.input = null;
-      _this.items = [];
-      _this.itemCount = null;
-      _this.previousResultCount = 0;
-      _this.timeoutIds = [];
+      this.input = null;
+      this.items = [];
+      this.itemCount = null;
+      this.previousResultCount = 0;
+      this.timeoutIds = [];
 
-      _this.internalSetTimeout = function (fn, time) {
-        var id = setTimeout(function () {
-          _this.timeoutIds = _this.timeoutIds.filter(function (i) {
-            return i !== id;
-          });
+      this.internalSetTimeout = (fn, time) => {
+        const id = setTimeout(() => {
+          this.timeoutIds = this.timeoutIds.filter(i => i !== id);
           fn();
         }, time);
-
-        _this.timeoutIds.push(id);
+        this.timeoutIds.push(id);
       };
 
-      _this.setItemCount = function (count) {
-        _this.itemCount = count;
+      this.setItemCount = count => {
+        this.itemCount = count;
       };
 
-      _this.unsetItemCount = function () {
-        _this.itemCount = null;
+      this.unsetItemCount = () => {
+        this.itemCount = null;
       };
 
-      _this.setHighlightedIndex = function (highlightedIndex, otherStateToSet) {
+      this.setHighlightedIndex = function (highlightedIndex, otherStateToSet) {
         if (highlightedIndex === void 0) {
           highlightedIndex = _this.props.defaultHighlightedIndex;
         }
@@ -43331,71 +43269,72 @@ const Downshift = /*#__PURE__*/(() => {
 
         otherStateToSet = pickState(otherStateToSet);
 
-        _this.internalSetState(_extends({
-          highlightedIndex: highlightedIndex
-        }, otherStateToSet));
+        _this.internalSetState({
+          highlightedIndex,
+          ...otherStateToSet
+        });
       };
 
-      _this.clearSelection = function (cb) {
-        _this.internalSetState({
+      this.clearSelection = cb => {
+        this.internalSetState({
           selectedItem: null,
           inputValue: '',
-          highlightedIndex: _this.props.defaultHighlightedIndex,
-          isOpen: _this.props.defaultIsOpen
+          highlightedIndex: this.props.defaultHighlightedIndex,
+          isOpen: this.props.defaultIsOpen
         }, cb);
       };
 
-      _this.selectItem = function (item, otherStateToSet, cb) {
+      this.selectItem = (item, otherStateToSet, cb) => {
         otherStateToSet = pickState(otherStateToSet);
-
-        _this.internalSetState(_extends({
-          isOpen: _this.props.defaultIsOpen,
-          highlightedIndex: _this.props.defaultHighlightedIndex,
+        this.internalSetState({
+          isOpen: this.props.defaultIsOpen,
+          highlightedIndex: this.props.defaultHighlightedIndex,
           selectedItem: item,
-          inputValue: _this.props.itemToString(item)
-        }, otherStateToSet), cb);
+          inputValue: this.props.itemToString(item),
+          ...otherStateToSet
+        }, cb);
       };
 
-      _this.selectItemAtIndex = function (itemIndex, otherStateToSet, cb) {
-        var item = _this.items[itemIndex];
+      this.selectItemAtIndex = (itemIndex, otherStateToSet, cb) => {
+        const item = this.items[itemIndex];
 
         if (item == null) {
           return;
         }
 
-        _this.selectItem(item, otherStateToSet, cb);
+        this.selectItem(item, otherStateToSet, cb);
       };
 
-      _this.selectHighlightedItem = function (otherStateToSet, cb) {
-        return _this.selectItemAtIndex(_this.getState().highlightedIndex, otherStateToSet, cb);
+      this.selectHighlightedItem = (otherStateToSet, cb) => {
+        return this.selectItemAtIndex(this.getState().highlightedIndex, otherStateToSet, cb);
       };
 
-      _this.internalSetState = function (stateToSet, cb) {
-        var isItemSelected, onChangeArg;
-        var onStateChangeArg = {};
-        var isStateToSetFunction = typeof stateToSet === 'function'; // we want to call `onInputValueChange` before the `setState` call
+      this.internalSetState = (stateToSet, cb) => {
+        let isItemSelected, onChangeArg;
+        const onStateChangeArg = {};
+        const isStateToSetFunction = typeof stateToSet === 'function'; // we want to call `onInputValueChange` before the `setState` call
         // so someone controlling the `inputValue` state gets notified of
         // the input change as soon as possible. This avoids issues with
         // preserving the cursor position.
         // See https://github.com/downshift-js/downshift/issues/217 for more info.
 
         if (!isStateToSetFunction && stateToSet.hasOwnProperty('inputValue')) {
-          _this.props.onInputValueChange(stateToSet.inputValue, _extends({}, _this.getStateAndHelpers(), stateToSet));
+          this.props.onInputValueChange(stateToSet.inputValue, { ...this.getStateAndHelpers(),
+            ...stateToSet
+          });
         }
 
-        return _this.setState(function (state) {
-          state = _this.getState(state);
-          var newStateToSet = isStateToSetFunction ? stateToSet(state) : stateToSet; // Your own function that could modify the state that will be set.
+        return this.setState(state => {
+          state = this.getState(state);
+          let newStateToSet = isStateToSetFunction ? stateToSet(state) : stateToSet; // Your own function that could modify the state that will be set.
 
-          newStateToSet = _this.props.stateReducer(state, newStateToSet); // checks if an item is selected, regardless of if it's different from
+          newStateToSet = this.props.stateReducer(state, newStateToSet); // checks if an item is selected, regardless of if it's different from
           // what was selected before
           // used to determine if onSelect and onChange callbacks should be called
 
           isItemSelected = newStateToSet.hasOwnProperty('selectedItem'); // this keeps track of the object we want to call with setState
 
-          var nextState = {}; // this is just used to tell whether the state changed
-
-          var nextFullState = {}; // we need to call on change if the outside world is controlling any of our state
+          const nextState = {}; // this is just used to tell whether the state changed
           // and we're trying to update that state. OR if the selection has changed and we're
           // trying to update the selection
 
@@ -43404,7 +43343,7 @@ const Downshift = /*#__PURE__*/(() => {
           }
 
           newStateToSet.type = newStateToSet.type || unknown;
-          Object.keys(newStateToSet).forEach(function (key) {
+          Object.keys(newStateToSet).forEach(key => {
             // onStateChangeArg should only have the state that is
             // actually changing
             if (state[key] !== newStateToSet[key]) {
@@ -43421,81 +43360,84 @@ const Downshift = /*#__PURE__*/(() => {
               return;
             }
 
-            nextFullState[key] = newStateToSet[key]; // if it's coming from props, then we don't care to set it internally
+            newStateToSet[key]; // if it's coming from props, then we don't care to set it internally
 
-            if (!isControlledProp(_this.props, key)) {
+            if (!isControlledProp(this.props, key)) {
               nextState[key] = newStateToSet[key];
             }
           }); // if stateToSet is a function, then we weren't able to call onInputValueChange
           // earlier, so we'll call it now that we know what the inputValue state will be.
 
           if (isStateToSetFunction && newStateToSet.hasOwnProperty('inputValue')) {
-            _this.props.onInputValueChange(newStateToSet.inputValue, _extends({}, _this.getStateAndHelpers(), newStateToSet));
+            this.props.onInputValueChange(newStateToSet.inputValue, { ...this.getStateAndHelpers(),
+              ...newStateToSet
+            });
           }
 
           return nextState;
-        }, function () {
+        }, () => {
           // call the provided callback if it's a function
           cbToCb(cb)(); // only call the onStateChange and onChange callbacks if
           // we have relevant information to pass them.
 
-          var hasMoreStateThanType = Object.keys(onStateChangeArg).length > 1;
+          const hasMoreStateThanType = Object.keys(onStateChangeArg).length > 1;
 
           if (hasMoreStateThanType) {
-            _this.props.onStateChange(onStateChangeArg, _this.getStateAndHelpers());
+            this.props.onStateChange(onStateChangeArg, this.getStateAndHelpers());
           }
 
           if (isItemSelected) {
-            _this.props.onSelect(stateToSet.selectedItem, _this.getStateAndHelpers());
+            this.props.onSelect(stateToSet.selectedItem, this.getStateAndHelpers());
           }
 
           if (onChangeArg !== undefined) {
-            _this.props.onChange(onChangeArg, _this.getStateAndHelpers());
+            this.props.onChange(onChangeArg, this.getStateAndHelpers());
           } // this is currently undocumented and therefore subject to change
           // We'll try to not break it, but just be warned.
 
 
-          _this.props.onUserAction(onStateChangeArg, _this.getStateAndHelpers());
+          this.props.onUserAction(onStateChangeArg, this.getStateAndHelpers());
         });
       };
 
-      _this.rootRef = function (node) {
-        return _this._rootNode = node;
-      };
+      this.rootRef = node => this._rootNode = node;
 
-      _this.getRootProps = function (_temp, _temp2) {
-        var _extends2;
-
-        var _ref = _temp === void 0 ? {} : _temp,
-            _ref$refKey = _ref.refKey,
-            refKey = _ref$refKey === void 0 ? 'ref' : _ref$refKey,
-            ref = _ref.ref,
-            rest = _objectWithoutPropertiesLoose(_ref, _excluded$4);
-
-        var _ref2 = _temp2 === void 0 ? {} : _temp2,
-            _ref2$suppressRefErro = _ref2.suppressRefError,
-            suppressRefError = _ref2$suppressRefErro === void 0 ? false : _ref2$suppressRefErro;
-
+      this.getRootProps = function (_temp, _temp2) {
+        let {
+          refKey = 'ref',
+          ref,
+          ...rest
+        } = _temp === void 0 ? {} : _temp;
+        let {
+          suppressRefError = false
+        } = _temp2 === void 0 ? {} : _temp2;
         // this is used in the render to know whether the user has called getRootProps.
         // It uses that to know whether to apply the props automatically
         _this.getRootProps.called = true;
         _this.getRootProps.refKey = refKey;
         _this.getRootProps.suppressRefError = suppressRefError;
 
-        var _this$getState = _this.getState(),
-            isOpen = _this$getState.isOpen;
+        const {
+          isOpen
+        } = _this.getState();
 
-        return _extends((_extends2 = {}, _extends2[refKey] = handleRefs(ref, _this.rootRef), _extends2.role = 'combobox', _extends2['aria-expanded'] = isOpen, _extends2['aria-haspopup'] = 'listbox', _extends2['aria-owns'] = isOpen ? _this.menuId : null, _extends2['aria-labelledby'] = _this.labelId, _extends2), rest);
+        return {
+          [refKey]: handleRefs(ref, _this.rootRef),
+          role: 'combobox',
+          'aria-expanded': isOpen,
+          'aria-haspopup': 'listbox',
+          'aria-owns': isOpen ? _this.menuId : null,
+          'aria-labelledby': _this.labelId,
+          ...rest
+        };
       };
 
-      _this.keyDownHandlers = {
-        ArrowDown: function ArrowDown(event) {
-          var _this2 = this;
-
+      this.keyDownHandlers = {
+        ArrowDown(event) {
           event.preventDefault();
 
           if (this.getState().isOpen) {
-            var amount = event.shiftKey ? 5 : 1;
+            const amount = event.shiftKey ? 5 : 1;
             this.moveHighlightedIndex(amount, {
               type: keyDownArrowDown
             });
@@ -43503,31 +43445,27 @@ const Downshift = /*#__PURE__*/(() => {
             this.internalSetState({
               isOpen: true,
               type: keyDownArrowDown
-            }, function () {
-              var itemCount = _this2.getItemCount();
+            }, () => {
+              const itemCount = this.getItemCount();
 
               if (itemCount > 0) {
-                var _this2$getState = _this2.getState(),
-                    highlightedIndex = _this2$getState.highlightedIndex;
-
-                var nextHighlightedIndex = getNextWrappingIndex(1, highlightedIndex, itemCount, function (index) {
-                  return _this2.getItemNodeFromIndex(index);
-                });
-
-                _this2.setHighlightedIndex(nextHighlightedIndex, {
+                const {
+                  highlightedIndex
+                } = this.getState();
+                const nextHighlightedIndex = getNextWrappingIndex(1, highlightedIndex, itemCount, index => this.getItemNodeFromIndex(index));
+                this.setHighlightedIndex(nextHighlightedIndex, {
                   type: keyDownArrowDown
                 });
               }
             });
           }
         },
-        ArrowUp: function ArrowUp(event) {
-          var _this3 = this;
 
+        ArrowUp(event) {
           event.preventDefault();
 
           if (this.getState().isOpen) {
-            var amount = event.shiftKey ? -5 : -1;
+            const amount = event.shiftKey ? -5 : -1;
             this.moveHighlightedIndex(amount, {
               type: keyDownArrowUp
             });
@@ -43535,37 +43473,36 @@ const Downshift = /*#__PURE__*/(() => {
             this.internalSetState({
               isOpen: true,
               type: keyDownArrowUp
-            }, function () {
-              var itemCount = _this3.getItemCount();
+            }, () => {
+              const itemCount = this.getItemCount();
 
               if (itemCount > 0) {
-                var _this3$getState = _this3.getState(),
-                    highlightedIndex = _this3$getState.highlightedIndex;
-
-                var nextHighlightedIndex = getNextWrappingIndex(-1, highlightedIndex, itemCount, function (index) {
-                  return _this3.getItemNodeFromIndex(index);
-                });
-
-                _this3.setHighlightedIndex(nextHighlightedIndex, {
+                const {
+                  highlightedIndex
+                } = this.getState();
+                const nextHighlightedIndex = getNextWrappingIndex(-1, highlightedIndex, itemCount, index => this.getItemNodeFromIndex(index));
+                this.setHighlightedIndex(nextHighlightedIndex, {
                   type: keyDownArrowUp
                 });
               }
             });
           }
         },
-        Enter: function Enter(event) {
+
+        Enter(event) {
           if (event.which === 229) {
             return;
           }
 
-          var _this$getState2 = this.getState(),
-              isOpen = _this$getState2.isOpen,
-              highlightedIndex = _this$getState2.highlightedIndex;
+          const {
+            isOpen,
+            highlightedIndex
+          } = this.getState();
 
           if (isOpen && highlightedIndex != null) {
             event.preventDefault();
-            var item = this.items[highlightedIndex];
-            var itemNode = this.getItemNodeFromIndex(highlightedIndex);
+            const item = this.items[highlightedIndex];
+            const itemNode = this.getItemNodeFromIndex(highlightedIndex);
 
             if (item == null || itemNode && itemNode.hasAttribute('disabled')) {
               return;
@@ -43576,125 +43513,131 @@ const Downshift = /*#__PURE__*/(() => {
             });
           }
         },
-        Escape: function Escape(event) {
+
+        Escape(event) {
           event.preventDefault();
-          this.reset(_extends({
-            type: keyDownEscape
-          }, !this.state.isOpen && {
-            selectedItem: null,
-            inputValue: ''
-          }));
+          this.reset({
+            type: keyDownEscape,
+            ...(!this.state.isOpen && {
+              selectedItem: null,
+              inputValue: ''
+            })
+          });
         }
+
       };
-      _this.buttonKeyDownHandlers = _extends({}, _this.keyDownHandlers, {
-        ' ': function _(event) {
+      this.buttonKeyDownHandlers = { ...this.keyDownHandlers,
+
+        ' '(event) {
           event.preventDefault();
           this.toggleMenu({
             type: keyDownSpaceButton
           });
         }
-      });
-      _this.inputKeyDownHandlers = _extends({}, _this.keyDownHandlers, {
-        Home: function Home(event) {
-          var _this4 = this;
 
-          var _this$getState3 = this.getState(),
-              isOpen = _this$getState3.isOpen;
+      };
+      this.inputKeyDownHandlers = { ...this.keyDownHandlers,
+
+        Home(event) {
+          const {
+            isOpen
+          } = this.getState();
 
           if (!isOpen) {
             return;
           }
 
           event.preventDefault();
-          var itemCount = this.getItemCount();
+          const itemCount = this.getItemCount();
 
           if (itemCount <= 0 || !isOpen) {
             return;
           } // get next non-disabled starting downwards from 0 if that's disabled.
 
 
-          var newHighlightedIndex = getNextNonDisabledIndex(1, 0, itemCount, function (index) {
-            return _this4.getItemNodeFromIndex(index);
-          }, false);
+          const newHighlightedIndex = getNextNonDisabledIndex(1, 0, itemCount, index => this.getItemNodeFromIndex(index), false);
           this.setHighlightedIndex(newHighlightedIndex, {
             type: keyDownHome
           });
         },
-        End: function End(event) {
-          var _this5 = this;
 
-          var _this$getState4 = this.getState(),
-              isOpen = _this$getState4.isOpen;
+        End(event) {
+          const {
+            isOpen
+          } = this.getState();
 
           if (!isOpen) {
             return;
           }
 
           event.preventDefault();
-          var itemCount = this.getItemCount();
+          const itemCount = this.getItemCount();
 
           if (itemCount <= 0 || !isOpen) {
             return;
           } // get next non-disabled starting upwards from last index if that's disabled.
 
 
-          var newHighlightedIndex = getNextNonDisabledIndex(-1, itemCount - 1, itemCount, function (index) {
-            return _this5.getItemNodeFromIndex(index);
-          }, false);
+          const newHighlightedIndex = getNextNonDisabledIndex(-1, itemCount - 1, itemCount, index => this.getItemNodeFromIndex(index), false);
           this.setHighlightedIndex(newHighlightedIndex, {
             type: keyDownEnd
           });
         }
-      });
 
-      _this.getToggleButtonProps = function (_temp3) {
-        var _ref3 = _temp3 === void 0 ? {} : _temp3,
-            onClick = _ref3.onClick;
-            _ref3.onPress;
-            var onKeyDown = _ref3.onKeyDown,
-            onKeyUp = _ref3.onKeyUp,
-            onBlur = _ref3.onBlur,
-            rest = _objectWithoutPropertiesLoose(_ref3, _excluded2$3);
+      };
 
-        var _this$getState5 = _this.getState(),
-            isOpen = _this$getState5.isOpen;
+      this.getToggleButtonProps = function (_temp3) {
+        let {
+          onClick,
+          onPress,
+          onKeyDown,
+          onKeyUp,
+          onBlur,
+          ...rest
+        } = _temp3 === void 0 ? {} : _temp3;
 
-        var enabledEventHandlers = {
+        const {
+          isOpen
+        } = _this.getState();
+
+        const enabledEventHandlers = {
           onClick: callAllEventHandlers(onClick, _this.buttonHandleClick),
           onKeyDown: callAllEventHandlers(onKeyDown, _this.buttonHandleKeyDown),
           onKeyUp: callAllEventHandlers(onKeyUp, _this.buttonHandleKeyUp),
           onBlur: callAllEventHandlers(onBlur, _this.buttonHandleBlur)
         };
-        var eventHandlers = rest.disabled ? {} : enabledEventHandlers;
-        return _extends({
+        const eventHandlers = rest.disabled ? {} : enabledEventHandlers;
+        return {
           type: 'button',
           role: 'button',
           'aria-label': isOpen ? 'close menu' : 'open menu',
           'aria-haspopup': true,
-          'data-toggle': true
-        }, eventHandlers, rest);
+          'data-toggle': true,
+          ...eventHandlers,
+          ...rest
+        };
       };
 
-      _this.buttonHandleKeyUp = function (event) {
+      this.buttonHandleKeyUp = event => {
         // Prevent click event from emitting in Firefox
         event.preventDefault();
       };
 
-      _this.buttonHandleKeyDown = function (event) {
-        var key = normalizeArrowKey(event);
+      this.buttonHandleKeyDown = event => {
+        const key = normalizeArrowKey(event);
 
-        if (_this.buttonKeyDownHandlers[key]) {
-          _this.buttonKeyDownHandlers[key].call(_assertThisInitialized(_this), event);
+        if (this.buttonKeyDownHandlers[key]) {
+          this.buttonKeyDownHandlers[key].call(this, event);
         }
       };
 
-      _this.buttonHandleClick = function (event) {
+      this.buttonHandleClick = event => {
         event.preventDefault(); // handle odd case for Safari and Firefox which
         // don't give the button the focus properly.
 
         /* istanbul ignore if (can't reasonably test this) */
 
-        if (_this.props.environment.document.activeElement === _this.props.environment.document.body) {
+        if (this.props.environment.document.activeElement === this.props.environment.document.body) {
           event.target.focus();
         } // to simplify testing components that use downshift, we'll not wrap this in a setTimeout
         // if the NODE_ENV is test. With the proper build system, this should be dead code eliminated
@@ -43703,64 +43646,66 @@ const Downshift = /*#__PURE__*/(() => {
 
         if (false) {} else {
           // Ensure that toggle of menu occurs after the potential blur event in iOS
-          _this.internalSetTimeout(function () {
-            return _this.toggleMenu({
-              type: clickButton
-            });
-          });
+          this.internalSetTimeout(() => this.toggleMenu({
+            type: clickButton
+          }));
         }
       };
 
-      _this.buttonHandleBlur = function (event) {
-        var blurTarget = event.target; // Save blur target for comparison with activeElement later
+      this.buttonHandleBlur = event => {
+        const blurTarget = event.target; // Save blur target for comparison with activeElement later
         // Need setTimeout, so that when the user presses Tab, the activeElement is the next focused element, not body element
 
-        _this.internalSetTimeout(function () {
-          if (!_this.isMouseDown && (_this.props.environment.document.activeElement == null || _this.props.environment.document.activeElement.id !== _this.inputId) && _this.props.environment.document.activeElement !== blurTarget // Do nothing if we refocus the same element again (to solve issue in Safari on iOS)
+        this.internalSetTimeout(() => {
+          if (!this.isMouseDown && (this.props.environment.document.activeElement == null || this.props.environment.document.activeElement.id !== this.inputId) && this.props.environment.document.activeElement !== blurTarget // Do nothing if we refocus the same element again (to solve issue in Safari on iOS)
           ) {
-            _this.reset({
+            this.reset({
               type: blurButton
             });
           }
         });
       };
 
-      _this.getLabelProps = function (props) {
-        return _extends({
-          htmlFor: _this.inputId,
-          id: _this.labelId
-        }, props);
+      this.getLabelProps = props => {
+        return {
+          htmlFor: this.inputId,
+          id: this.labelId,
+          ...props
+        };
       };
 
-      _this.getInputProps = function (_temp4) {
-        var _ref4 = _temp4 === void 0 ? {} : _temp4,
-            onKeyDown = _ref4.onKeyDown,
-            onBlur = _ref4.onBlur,
-            onChange = _ref4.onChange,
-            onInput = _ref4.onInput;
-            _ref4.onChangeText;
-            var rest = _objectWithoutPropertiesLoose(_ref4, _excluded3$2);
-
-        var onChangeKey;
-        var eventHandlers = {};
+      this.getInputProps = function (_temp4) {
+        let {
+          onKeyDown,
+          onBlur,
+          onChange,
+          onInput,
+          onChangeText,
+          ...rest
+        } = _temp4 === void 0 ? {} : _temp4;
+        let onChangeKey;
+        let eventHandlers = {};
         /* istanbul ignore next (preact) */
 
         {
           onChangeKey = 'onChange';
         }
 
-        var _this$getState6 = _this.getState(),
-            inputValue = _this$getState6.inputValue,
-            isOpen = _this$getState6.isOpen,
-            highlightedIndex = _this$getState6.highlightedIndex;
+        const {
+          inputValue,
+          isOpen,
+          highlightedIndex
+        } = _this.getState();
 
         if (!rest.disabled) {
-          var _eventHandlers;
-
-          eventHandlers = (_eventHandlers = {}, _eventHandlers[onChangeKey] = callAllEventHandlers(onChange, onInput, _this.inputHandleChange), _eventHandlers.onKeyDown = callAllEventHandlers(onKeyDown, _this.inputHandleKeyDown), _eventHandlers.onBlur = callAllEventHandlers(onBlur, _this.inputHandleBlur), _eventHandlers);
+          eventHandlers = {
+            [onChangeKey]: callAllEventHandlers(onChange, onInput, _this.inputHandleChange),
+            onKeyDown: callAllEventHandlers(onKeyDown, _this.inputHandleKeyDown),
+            onBlur: callAllEventHandlers(onBlur, _this.inputHandleBlur)
+          };
         }
 
-        return _extends({
+        return {
           'aria-autocomplete': 'list',
           'aria-activedescendant': isOpen && typeof highlightedIndex === 'number' && highlightedIndex >= 0 ? _this.getItemId(highlightedIndex) : null,
           'aria-controls': isOpen ? _this.menuId : null,
@@ -43769,77 +43714,79 @@ const Downshift = /*#__PURE__*/(() => {
           // revert back since autocomplete="nope" is ignored on latest Chrome and Opera
           autoComplete: 'off',
           value: inputValue,
-          id: _this.inputId
-        }, eventHandlers, rest);
+          id: _this.inputId,
+          ...eventHandlers,
+          ...rest
+        };
       };
 
-      _this.inputHandleKeyDown = function (event) {
-        var key = normalizeArrowKey(event);
+      this.inputHandleKeyDown = event => {
+        const key = normalizeArrowKey(event);
 
-        if (key && _this.inputKeyDownHandlers[key]) {
-          _this.inputKeyDownHandlers[key].call(_assertThisInitialized(_this), event);
+        if (key && this.inputKeyDownHandlers[key]) {
+          this.inputKeyDownHandlers[key].call(this, event);
         }
       };
 
-      _this.inputHandleChange = function (event) {
-        _this.internalSetState({
+      this.inputHandleChange = event => {
+        this.internalSetState({
           type: changeInput,
           isOpen: true,
           inputValue: event.target.value,
-          highlightedIndex: _this.props.defaultHighlightedIndex
+          highlightedIndex: this.props.defaultHighlightedIndex
         });
       };
 
-      _this.inputHandleBlur = function () {
+      this.inputHandleBlur = () => {
         // Need setTimeout, so that when the user presses Tab, the activeElement is the next focused element, not the body element
-        _this.internalSetTimeout(function () {
-          var downshiftButtonIsActive = _this.props.environment.document && !!_this.props.environment.document.activeElement && !!_this.props.environment.document.activeElement.dataset && _this.props.environment.document.activeElement.dataset.toggle && _this._rootNode && _this._rootNode.contains(_this.props.environment.document.activeElement);
+        this.internalSetTimeout(() => {
+          const downshiftButtonIsActive = this.props.environment.document && !!this.props.environment.document.activeElement && !!this.props.environment.document.activeElement.dataset && this.props.environment.document.activeElement.dataset.toggle && this._rootNode && this._rootNode.contains(this.props.environment.document.activeElement);
 
-          if (!_this.isMouseDown && !downshiftButtonIsActive) {
-            _this.reset({
+          if (!this.isMouseDown && !downshiftButtonIsActive) {
+            this.reset({
               type: blurInput
             });
           }
         });
       };
 
-      _this.menuRef = function (node) {
-        _this._menuNode = node;
+      this.menuRef = node => {
+        this._menuNode = node;
       };
 
-      _this.getMenuProps = function (_temp5, _temp6) {
-        var _extends3;
-
-        var _ref5 = _temp5 === void 0 ? {} : _temp5,
-            _ref5$refKey = _ref5.refKey,
-            refKey = _ref5$refKey === void 0 ? 'ref' : _ref5$refKey,
-            ref = _ref5.ref,
-            props = _objectWithoutPropertiesLoose(_ref5, _excluded4$1);
-
-        var _ref6 = _temp6 === void 0 ? {} : _temp6,
-            _ref6$suppressRefErro = _ref6.suppressRefError,
-            suppressRefError = _ref6$suppressRefErro === void 0 ? false : _ref6$suppressRefErro;
-
+      this.getMenuProps = function (_temp5, _temp6) {
+        let {
+          refKey = 'ref',
+          ref,
+          ...props
+        } = _temp5 === void 0 ? {} : _temp5;
+        let {
+          suppressRefError = false
+        } = _temp6 === void 0 ? {} : _temp6;
         _this.getMenuProps.called = true;
         _this.getMenuProps.refKey = refKey;
         _this.getMenuProps.suppressRefError = suppressRefError;
-        return _extends((_extends3 = {}, _extends3[refKey] = handleRefs(ref, _this.menuRef), _extends3.role = 'listbox', _extends3['aria-labelledby'] = props && props['aria-label'] ? null : _this.labelId, _extends3.id = _this.menuId, _extends3), props);
+        return {
+          [refKey]: handleRefs(ref, _this.menuRef),
+          role: 'listbox',
+          'aria-labelledby': props && props['aria-label'] ? null : _this.labelId,
+          id: _this.menuId,
+          ...props
+        };
       };
 
-      _this.getItemProps = function (_temp7) {
-        var _enabledEventHandlers;
-
-        var _ref7 = _temp7 === void 0 ? {} : _temp7,
-            onMouseMove = _ref7.onMouseMove,
-            onMouseDown = _ref7.onMouseDown,
-            onClick = _ref7.onClick;
-            _ref7.onPress;
-            var index = _ref7.index,
-            _ref7$item = _ref7.item,
-            item = _ref7$item === void 0 ?  true ?
-        /* istanbul ignore next */
-        undefined : 0 : _ref7$item,
-            rest = _objectWithoutPropertiesLoose(_ref7, _excluded5$1);
+      this.getItemProps = function (_temp7) {
+        let {
+          onMouseMove,
+          onMouseDown,
+          onClick,
+          onPress,
+          index,
+          item =  true ?
+          /* istanbul ignore next */
+          undefined : 0,
+          ...rest
+        } = _temp7 === void 0 ? {} : _temp7;
 
         if (index === undefined) {
           _this.items.push(item);
@@ -43849,13 +43796,13 @@ const Downshift = /*#__PURE__*/(() => {
           _this.items[index] = item;
         }
 
-        var onSelectKey = 'onClick';
-        var customClickHandler = onClick;
-        var enabledEventHandlers = (_enabledEventHandlers = {
+        const onSelectKey = 'onClick';
+        const customClickHandler = onClick;
+        const enabledEventHandlers = {
           // onMouseMove is used over onMouseEnter here. onMouseMove
           // is only triggered on actual mouse movement while onMouseEnter
           // can fire on DOM changes, interrupting keyboard navigation
-          onMouseMove: callAllEventHandlers(onMouseMove, function () {
+          onMouseMove: callAllEventHandlers(onMouseMove, () => {
             if (index === _this.getState().highlightedIndex) {
               return;
             }
@@ -43870,72 +43817,81 @@ const Downshift = /*#__PURE__*/(() => {
 
             _this.avoidScrolling = true;
 
-            _this.internalSetTimeout(function () {
-              return _this.avoidScrolling = false;
-            }, 250);
+            _this.internalSetTimeout(() => _this.avoidScrolling = false, 250);
           }),
-          onMouseDown: callAllEventHandlers(onMouseDown, function (event) {
+          onMouseDown: callAllEventHandlers(onMouseDown, event => {
             // This prevents the activeElement from being changed
             // to the item so it can remain with the current activeElement
             // which is a more common use case.
             event.preventDefault();
+          }),
+          [onSelectKey]: callAllEventHandlers(customClickHandler, () => {
+            _this.selectItemAtIndex(index, {
+              type: clickItem
+            });
           })
-        }, _enabledEventHandlers[onSelectKey] = callAllEventHandlers(customClickHandler, function () {
-          _this.selectItemAtIndex(index, {
-            type: clickItem
-          });
-        }), _enabledEventHandlers); // Passing down the onMouseDown handler to prevent redirect
+        }; // Passing down the onMouseDown handler to prevent redirect
         // of the activeElement if clicking on disabled items
 
-        var eventHandlers = rest.disabled ? {
+        const eventHandlers = rest.disabled ? {
           onMouseDown: enabledEventHandlers.onMouseDown
         } : enabledEventHandlers;
-        return _extends({
+        return {
           id: _this.getItemId(index),
           role: 'option',
-          'aria-selected': _this.getState().highlightedIndex === index
-        }, eventHandlers, rest);
+          'aria-selected': _this.getState().highlightedIndex === index,
+          ...eventHandlers,
+          ...rest
+        };
       };
 
-      _this.clearItems = function () {
-        _this.items = [];
+      this.clearItems = () => {
+        this.items = [];
       };
 
-      _this.reset = function (otherStateToSet, cb) {
+      this.reset = function (otherStateToSet, cb) {
         if (otherStateToSet === void 0) {
           otherStateToSet = {};
         }
 
         otherStateToSet = pickState(otherStateToSet);
 
-        _this.internalSetState(function (_ref8) {
-          var selectedItem = _ref8.selectedItem;
-          return _extends({
+        _this.internalSetState(_ref => {
+          let {
+            selectedItem
+          } = _ref;
+          return {
             isOpen: _this.props.defaultIsOpen,
             highlightedIndex: _this.props.defaultHighlightedIndex,
-            inputValue: _this.props.itemToString(selectedItem)
-          }, otherStateToSet);
+            inputValue: _this.props.itemToString(selectedItem),
+            ...otherStateToSet
+          };
         }, cb);
       };
 
-      _this.toggleMenu = function (otherStateToSet, cb) {
+      this.toggleMenu = function (otherStateToSet, cb) {
         if (otherStateToSet === void 0) {
           otherStateToSet = {};
         }
 
         otherStateToSet = pickState(otherStateToSet);
 
-        _this.internalSetState(function (_ref9) {
-          var isOpen = _ref9.isOpen;
-          return _extends({
-            isOpen: !isOpen
-          }, isOpen && {
-            highlightedIndex: _this.props.defaultHighlightedIndex
-          }, otherStateToSet);
-        }, function () {
-          var _this$getState7 = _this.getState(),
-              isOpen = _this$getState7.isOpen,
-              highlightedIndex = _this$getState7.highlightedIndex;
+        _this.internalSetState(_ref2 => {
+          let {
+            isOpen
+          } = _ref2;
+          return {
+            isOpen: !isOpen,
+            ...(isOpen && {
+              highlightedIndex: _this.props.defaultHighlightedIndex
+            }),
+            ...otherStateToSet
+          };
+        }, () => {
+          const {
+            isOpen,
+            highlightedIndex
+          } = _this.getState();
 
           if (isOpen) {
             if (_this.getItemCount() > 0 && typeof highlightedIndex === 'number') {
@@ -43947,70 +43903,63 @@ const Downshift = /*#__PURE__*/(() => {
         });
       };
 
-      _this.openMenu = function (cb) {
-        _this.internalSetState({
+      this.openMenu = cb => {
+        this.internalSetState({
           isOpen: true
         }, cb);
       };
 
-      _this.closeMenu = function (cb) {
-        _this.internalSetState({
+      this.closeMenu = cb => {
+        this.internalSetState({
           isOpen: false
         }, cb);
       };
 
-      _this.updateStatus = downshift_esm_debounce(function () {
-        var state = _this.getState();
-
-        var item = _this.items[state.highlightedIndex];
-
-        var resultCount = _this.getItemCount();
-
-        var status = _this.props.getA11yStatusMessage(_extends({
-          itemToString: _this.props.itemToString,
-          previousResultCount: _this.previousResultCount,
-          resultCount: resultCount,
-          highlightedItem: item
-        }, state));
-
-        _this.previousResultCount = resultCount;
-        setStatus(status, _this.props.environment.document);
+      this.updateStatus = downshift_esm_debounce(() => {
+        const state = this.getState();
+        const item = this.items[state.highlightedIndex];
+        const resultCount = this.getItemCount();
+        const status = this.props.getA11yStatusMessage({
+          itemToString: this.props.itemToString,
+          previousResultCount: this.previousResultCount,
+          resultCount,
+          highlightedItem: item,
+          ...state
+        });
+        this.previousResultCount = resultCount;
+        setStatus(status, this.props.environment.document);
       }, 200);
+      // fancy destructuring + defaults + aliases
+      // this basically says each value of state should either be set to
+      // the initial value or the default value if the initial value is not provided
+      const {
+        defaultHighlightedIndex,
+        initialHighlightedIndex: _highlightedIndex = defaultHighlightedIndex,
+        defaultIsOpen,
+        initialIsOpen: _isOpen = defaultIsOpen,
+        initialInputValue: _inputValue = '',
+        initialSelectedItem: _selectedItem = null
+      } = this.props;
 
-      var _this$props = _this.props,
-          defaultHighlightedIndex = _this$props.defaultHighlightedIndex,
-          _this$props$initialHi = _this$props.initialHighlightedIndex,
-          _highlightedIndex = _this$props$initialHi === void 0 ? defaultHighlightedIndex : _this$props$initialHi,
-          defaultIsOpen = _this$props.defaultIsOpen,
-          _this$props$initialIs = _this$props.initialIsOpen,
-          _isOpen = _this$props$initialIs === void 0 ? defaultIsOpen : _this$props$initialIs,
-          _this$props$initialIn = _this$props.initialInputValue,
-          _inputValue = _this$props$initialIn === void 0 ? '' : _this$props$initialIn,
-          _this$props$initialSe = _this$props.initialSelectedItem,
-          _selectedItem = _this$props$initialSe === void 0 ? null : _this$props$initialSe;
-
-      var _state = _this.getState({
+      const _state = this.getState({
         highlightedIndex: _highlightedIndex,
         isOpen: _isOpen,
         inputValue: _inputValue,
         selectedItem: _selectedItem
       });
 
-      if (_state.selectedItem != null && _this.props.initialInputValue === undefined) {
-        _state.inputValue = _this.props.itemToString(_state.selectedItem);
+      if (_state.selectedItem != null && this.props.initialInputValue === undefined) {
+        _state.inputValue = this.props.itemToString(_state.selectedItem);
       }
 
-      _this.state = _state;
-      return _this;
+      this.state = _state;
     }
-
-    var _proto = Downshift.prototype;
 
     /**
      * Clear all running timeouts
      */
-    _proto.internalClearTimeouts = function internalClearTimeouts() {
-      this.timeoutIds.forEach(function (id) {
+    internalClearTimeouts() {
+      this.timeoutIds.forEach(id => {
         clearTimeout(id);
       });
       this.timeoutIds = [];
@@ -44024,22 +43973,22 @@ const Downshift = /*#__PURE__*/(() => {
      * @param {Object} stateToMerge defaults to this.state
      * @return {Object} the state
      */
-    ;
 
-    _proto.getState = function getState$1(stateToMerge) {
+
+    getState(stateToMerge) {
       if (stateToMerge === void 0) {
         stateToMerge = this.state;
       }
 
       return getState(stateToMerge, this.props);
-    };
+    }
 
-    _proto.getItemCount = function getItemCount() {
+    getItemCount() {
       // things read better this way. They're in priority order:
       // 1. `this.itemCount`
       // 2. `this.props.itemCount`
       // 3. `this.items.length`
-      var itemCount = this.items.length;
+      let itemCount = this.items.length;
 
       if (this.itemCount != null) {
         itemCount = this.itemCount;
@@ -44048,102 +43997,102 @@ const Downshift = /*#__PURE__*/(() => {
       }
 
       return itemCount;
-    };
+    }
 
-    _proto.getItemNodeFromIndex = function getItemNodeFromIndex(index) {
+    getItemNodeFromIndex(index) {
       return this.props.environment.document.getElementById(this.getItemId(index));
-    };
+    }
 
-    _proto.scrollHighlightedItemIntoView = function scrollHighlightedItemIntoView() {
+    scrollHighlightedItemIntoView() {
       /* istanbul ignore else (react-native) */
       {
-        var node = this.getItemNodeFromIndex(this.getState().highlightedIndex);
+        const node = this.getItemNodeFromIndex(this.getState().highlightedIndex);
         this.props.scrollIntoView(node, this._menuNode);
       }
-    };
+    }
 
-    _proto.moveHighlightedIndex = function moveHighlightedIndex(amount, otherStateToSet) {
-      var _this6 = this;
-
-      var itemCount = this.getItemCount();
-
-      var _this$getState8 = this.getState(),
-          highlightedIndex = _this$getState8.highlightedIndex;
+    moveHighlightedIndex(amount, otherStateToSet) {
+      const itemCount = this.getItemCount();
+      const {
+        highlightedIndex
+      } = this.getState();
 
       if (itemCount > 0) {
-        var nextHighlightedIndex = getNextWrappingIndex(amount, highlightedIndex, itemCount, function (index) {
-          return _this6.getItemNodeFromIndex(index);
-        });
+        const nextHighlightedIndex = getNextWrappingIndex(amount, highlightedIndex, itemCount, index => this.getItemNodeFromIndex(index));
         this.setHighlightedIndex(nextHighlightedIndex, otherStateToSet);
       }
-    };
+    }
 
-    _proto.getStateAndHelpers = function getStateAndHelpers() {
-      var _this$getState9 = this.getState(),
-          highlightedIndex = _this$getState9.highlightedIndex,
-          inputValue = _this$getState9.inputValue,
-          selectedItem = _this$getState9.selectedItem,
-          isOpen = _this$getState9.isOpen;
-
-      var itemToString = this.props.itemToString;
-      var id = this.id;
-      var getRootProps = this.getRootProps,
-          getToggleButtonProps = this.getToggleButtonProps,
-          getLabelProps = this.getLabelProps,
-          getMenuProps = this.getMenuProps,
-          getInputProps = this.getInputProps,
-          getItemProps = this.getItemProps,
-          openMenu = this.openMenu,
-          closeMenu = this.closeMenu,
-          toggleMenu = this.toggleMenu,
-          selectItem = this.selectItem,
-          selectItemAtIndex = this.selectItemAtIndex,
-          selectHighlightedItem = this.selectHighlightedItem,
-          setHighlightedIndex = this.setHighlightedIndex,
-          clearSelection = this.clearSelection,
-          clearItems = this.clearItems,
-          reset = this.reset,
-          setItemCount = this.setItemCount,
-          unsetItemCount = this.unsetItemCount,
-          setState = this.internalSetState;
+    getStateAndHelpers() {
+      const {
+        highlightedIndex,
+        inputValue,
+        selectedItem,
+        isOpen
+      } = this.getState();
+      const {
+        itemToString
+      } = this.props;
+      const {
+        id
+      } = this;
+      const {
+        getRootProps,
+        getToggleButtonProps,
+        getLabelProps,
+        getMenuProps,
+        getInputProps,
+        getItemProps,
+        openMenu,
+        closeMenu,
+        toggleMenu,
+        selectItem,
+        selectItemAtIndex,
+        selectHighlightedItem,
+        setHighlightedIndex,
+        clearSelection,
+        clearItems,
+        reset,
+        setItemCount,
+        unsetItemCount,
+        internalSetState: setState
+      } = this;
       return {
         // prop getters
-        getRootProps: getRootProps,
-        getToggleButtonProps: getToggleButtonProps,
-        getLabelProps: getLabelProps,
-        getMenuProps: getMenuProps,
-        getInputProps: getInputProps,
-        getItemProps: getItemProps,
+        getRootProps,
+        getToggleButtonProps,
+        getLabelProps,
+        getMenuProps,
+        getInputProps,
+        getItemProps,
         // actions
-        reset: reset,
-        openMenu: openMenu,
-        closeMenu: closeMenu,
-        toggleMenu: toggleMenu,
-        selectItem: selectItem,
-        selectItemAtIndex: selectItemAtIndex,
-        selectHighlightedItem: selectHighlightedItem,
-        setHighlightedIndex: setHighlightedIndex,
-        clearSelection: clearSelection,
-        clearItems: clearItems,
-        setItemCount: setItemCount,
-        unsetItemCount: unsetItemCount,
-        setState: setState,
+        reset,
+        openMenu,
+        closeMenu,
+        toggleMenu,
+        selectItem,
+        selectItemAtIndex,
+        selectHighlightedItem,
+        setHighlightedIndex,
+        clearSelection,
+        clearItems,
+        setItemCount,
+        unsetItemCount,
+        setState,
         // props
-        itemToString: itemToString,
+        itemToString,
         // derived
-        id: id,
+        id,
         // state
-        highlightedIndex: highlightedIndex,
-        inputValue: inputValue,
-        isOpen: isOpen,
-        selectedItem: selectedItem
+        highlightedIndex,
+        inputValue,
+        isOpen,
+        selectedItem
       };
     } //////////////////////////// ROOT
-    ;
 
-    _proto.componentDidMount = function componentDidMount() {
-      var _this7 = this;
 
+    componentDidMount() {
       /* istanbul ignore if (react-native) */
       if (false) {}
       /* istanbul ignore if (react-native) */
@@ -44155,22 +44104,20 @@ const Downshift = /*#__PURE__*/(() => {
         // down long enough for the list to disappear (because the blur event fires on the input)
         // this.isMouseDown is used in the blur handler on the input to determine whether the blur event should
         // trigger hiding the menu.
-        var onMouseDown = function onMouseDown() {
-          _this7.isMouseDown = true;
+        const onMouseDown = () => {
+          this.isMouseDown = true;
         };
 
-        var onMouseUp = function onMouseUp(event) {
-          _this7.isMouseDown = false; // if the target element or the activeElement is within a downshift node
+        const onMouseUp = event => {
+          this.isMouseDown = false; // if the target element or the activeElement is within a downshift node
           // then we don't want to reset downshift
 
-          var contextWithinDownshift = targetWithinDownshift(event.target, [_this7._rootNode, _this7._menuNode], _this7.props.environment);
+          const contextWithinDownshift = targetWithinDownshift(event.target, [this._rootNode, this._menuNode], this.props.environment);
 
-          if (!contextWithinDownshift && _this7.getState().isOpen) {
-            _this7.reset({
+          if (!contextWithinDownshift && this.getState().isOpen) {
+            this.reset({
               type: mouseUp
-            }, function () {
-              return _this7.props.onOuterClick(_this7.getStateAndHelpers());
-            });
+            }, () => this.props.onOuterClick(this.getStateAndHelpers()));
           }
         }; // Touching an element in iOS gives focus and hover states, but touching out of
         // the element will remove hover, and persist the focus state, resulting in the
@@ -44180,38 +44127,36 @@ const Downshift = /*#__PURE__*/(() => {
         // but not if the user is swiping
 
 
-        var onTouchStart = function onTouchStart() {
-          _this7.isTouchMove = false;
+        const onTouchStart = () => {
+          this.isTouchMove = false;
         };
 
-        var onTouchMove = function onTouchMove() {
-          _this7.isTouchMove = true;
+        const onTouchMove = () => {
+          this.isTouchMove = true;
         };
 
-        var onTouchEnd = function onTouchEnd(event) {
-          var contextWithinDownshift = targetWithinDownshift(event.target, [_this7._rootNode, _this7._menuNode], _this7.props.environment, false);
+        const onTouchEnd = event => {
+          const contextWithinDownshift = targetWithinDownshift(event.target, [this._rootNode, this._menuNode], this.props.environment, false);
 
-          if (!_this7.isTouchMove && !contextWithinDownshift && _this7.getState().isOpen) {
-            _this7.reset({
+          if (!this.isTouchMove && !contextWithinDownshift && this.getState().isOpen) {
+            this.reset({
               type: touchEnd
-            }, function () {
-              return _this7.props.onOuterClick(_this7.getStateAndHelpers());
-            });
+            }, () => this.props.onOuterClick(this.getStateAndHelpers()));
           }
         };
 
-        var environment = this.props.environment;
+        const {
+          environment
+        } = this.props;
         environment.addEventListener('mousedown', onMouseDown);
         environment.addEventListener('mouseup', onMouseUp);
         environment.addEventListener('touchstart', onTouchStart);
         environment.addEventListener('touchmove', onTouchMove);
         environment.addEventListener('touchend', onTouchEnd);
 
-        this.cleanup = function () {
-          _this7.internalClearTimeouts();
-
-          _this7.updateStatus.cancel();
-
+        this.cleanup = () => {
+          this.internalClearTimeouts();
+          this.updateStatus.cancel();
           environment.removeEventListener('mousedown', onMouseDown);
           environment.removeEventListener('mouseup', onMouseUp);
           environment.removeEventListener('touchstart', onTouchStart);
@@ -44219,21 +44164,21 @@ const Downshift = /*#__PURE__*/(() => {
           environment.removeEventListener('touchend', onTouchEnd);
         };
       }
-    };
+    }
 
-    _proto.shouldScroll = function shouldScroll(prevState, prevProps) {
-      var _ref10 = this.props.highlightedIndex === undefined ? this.getState() : this.props,
-          currentHighlightedIndex = _ref10.highlightedIndex;
-
-      var _ref11 = prevProps.highlightedIndex === undefined ? prevState : prevProps,
-          prevHighlightedIndex = _ref11.highlightedIndex;
-
-      var scrollWhenOpen = currentHighlightedIndex && this.getState().isOpen && !prevState.isOpen;
-      var scrollWhenNavigating = currentHighlightedIndex !== prevHighlightedIndex;
+    shouldScroll(prevState, prevProps) {
+      const {
+        highlightedIndex: currentHighlightedIndex
+      } = this.props.highlightedIndex === undefined ? this.getState() : this.props;
+      const {
+        highlightedIndex: prevHighlightedIndex
+      } = prevProps.highlightedIndex === undefined ? prevState : prevProps;
+      const scrollWhenOpen = currentHighlightedIndex && this.getState().isOpen && !prevState.isOpen;
+      const scrollWhenNavigating = currentHighlightedIndex !== prevHighlightedIndex;
       return scrollWhenOpen || scrollWhenNavigating;
-    };
+    }
 
-    _proto.componentDidUpdate = function componentDidUpdate(prevProps, prevState) {
+    componentDidUpdate(prevProps, prevState) {
       if (false) {}
 
       if (isControlledProp(this.props, 'selectedItem') && this.props.selectedItemChanged(prevProps.selectedItem, this.props.selectedItem)) {
@@ -44252,14 +44197,14 @@ const Downshift = /*#__PURE__*/(() => {
       {
         this.updateStatus();
       }
-    };
+    }
 
-    _proto.componentWillUnmount = function componentWillUnmount() {
+    componentWillUnmount() {
       this.cleanup(); // avoids memory leak
-    };
+    }
 
-    _proto.render = function render() {
-      var children = unwrapArray(this.props.children, downshift_esm_noop); // because the items are rerendered every time we call the children
+    render() {
+      const children = unwrapArray(this.props.children, downshift_esm_noop); // because the items are rerendered every time we call the children
       // we clear this out each render and it will be populated again as
       // getItemProps is called.
 
@@ -44279,7 +44224,7 @@ const Downshift = /*#__PURE__*/(() => {
       this.getLabelProps.called = false; // and something similar for getInputProps
 
       this.getInputProps.called = false;
-      var element = unwrapArray(children(this.getStateAndHelpers()));
+      const element = unwrapArray(children(this.getStateAndHelpers()));
 
       if (!element) {
         return null;
@@ -44302,16 +44247,15 @@ const Downshift = /*#__PURE__*/(() => {
 
 
       return undefined;
-    };
+    }
 
-    return Downshift;
-  }(Component);
+  }
 
   Downshift.defaultProps = {
     defaultHighlightedIndex: null,
     defaultIsOpen: false,
     getA11yStatusMessage: getA11yStatusMessage$1,
-    itemToString: function itemToString(i) {
+    itemToString: i => {
       if (i == null) {
         return '';
       }
@@ -44326,27 +44270,25 @@ const Downshift = /*#__PURE__*/(() => {
     onChange: downshift_esm_noop,
     onSelect: downshift_esm_noop,
     onOuterClick: downshift_esm_noop,
-    selectedItemChanged: function selectedItemChanged(prevItem, item) {
-      return prevItem !== item;
-    },
+    selectedItemChanged: (prevItem, item) => prevItem !== item,
     environment:
     /* istanbul ignore next (ssr) */
     typeof window === 'undefined' ? {} : window,
-    stateReducer: function stateReducer(state, stateToSet) {
-      return stateToSet;
-    },
+    stateReducer: (state, stateToSet) => stateToSet,
     suppressRefError: false,
-    scrollIntoView: scrollIntoView
+    scrollIntoView
   };
   Downshift.stateChangeTypes = stateChangeTypes$3;
   return Downshift;
-}()));
+})();
 
  false ? 0 : void 0;
-var Downshift$1 = (/* unused pure expression or super */ null && (Downshift));
+var Downshift$1 = Downshift;
 
-function validateGetMenuPropsCalledCorrectly(node, _ref12) {
-  var refKey = _ref12.refKey;
+function validateGetMenuPropsCalledCorrectly(node, _ref3) {
+  let {
+    refKey
+  } = _ref3;
 
   if (!node) {
     // eslint-disable-next-line no-console
@@ -44354,10 +44296,12 @@ function validateGetMenuPropsCalledCorrectly(node, _ref12) {
   }
 }
 
-function validateGetRootPropsCalledCorrectly(element, _ref13) {
-  var refKey = _ref13.refKey;
-  var refKeySpecified = refKey !== 'ref';
-  var isComposite = !isDOMElement(element);
+function validateGetRootPropsCalledCorrectly(element, _ref4) {
+  let {
+    refKey
+  } = _ref4;
+  const refKeySpecified = refKey !== 'ref';
+  const isComposite = !isDOMElement(element);
 
   if (isComposite && !refKeySpecified && !isForwardRef(element)) {
     // eslint-disable-next-line no-console
@@ -44373,8 +44317,7 @@ function validateGetRootPropsCalledCorrectly(element, _ref13) {
   }
 }
 
-var _excluded$3 = ["isInitialMount", "highlightedIndex", "items", "environment"];
-var dropdownDefaultStateValues = {
+const dropdownDefaultStateValues = {
   highlightedIndex: -1,
   isOpen: false,
   selectedItem: null,
@@ -44382,10 +44325,12 @@ var dropdownDefaultStateValues = {
 };
 
 function callOnChangeProps(action, state, newState) {
-  var props = action.props,
-      type = action.type;
-  var changes = {};
-  Object.keys(state).forEach(function (key) {
+  const {
+    props,
+    type
+  } = action;
+  const changes = {};
+  Object.keys(state).forEach(key => {
     invokeOnChangeHandler(key, action, state, newState);
 
     if (newState[key] !== state[key]) {
@@ -44394,9 +44339,10 @@ function callOnChangeProps(action, state, newState) {
   });
 
   if (props.onStateChange && Object.keys(changes).length) {
-    props.onStateChange(extends_extends({
-      type: type
-    }, changes));
+    props.onStateChange({
+      type,
+      ...changes
+    });
   }
 }
 
@@ -44408,9 +44354,10 @@ function invokeOnChangeHandler(key, action, state, newState) {
   const handler = `on${capitalizeString(key)}Change`;
 
   if (props[handler] && newState[key] !== undefined && newState[key] !== state[key]) {
-    props[handler](extends_extends({
-      type: type
-    }, newState));
+    props[handler]({
+      type,
+      ...newState
+    });
   }
 }
 /**
@@ -44445,7 +44392,7 @@ function getA11ySelectionMessage(selectionParameters) {
  */
 
 
-var updateA11yStatus = downshift_esm_debounce(function (getA11yMessage, document) {
+const updateA11yStatus = downshift_esm_debounce((getA11yMessage, document) => {
   setStatus(getA11yMessage(), document);
 }, 200); // istanbul ignore next
 
@@ -44522,10 +44469,10 @@ function useEnhancedReducer(reducer, initialState, props) {
   const enhancedReducer = (0,external_React_namespaceObject.useCallback)((state, action) => {
     actionRef.current = action;
     state = getState(state, action.props);
-    var changes = reducer(state, action);
-    var newState = action.props.stateReducer(state, extends_extends({}, action, {
-      changes: changes
-    }));
+    const changes = reducer(state, action);
+    const newState = action.props.stateReducer(state, { ...action,
+      changes
+    });
     return newState;
   }, [reducer]);
   const [state, dispatch] = (0,external_React_namespaceObject.useReducer)(enhancedReducer, initialState);
@@ -44556,18 +44503,15 @@ function useEnhancedReducer(reducer, initialState, props) {
 
 
 function useControlledReducer$1(reducer, initialState, props) {
-  var _useEnhancedReducer = useEnhancedReducer(reducer, initialState, props),
-      state = _useEnhancedReducer[0],
-      dispatch = _useEnhancedReducer[1];
-
+  const [state, dispatch] = useEnhancedReducer(reducer, initialState, props);
   return [getState(state, props), dispatch];
 }
 
-var defaultProps$3 = {
-  itemToString: itemToString,
-  stateReducer: stateReducer,
-  getA11ySelectionMessage: getA11ySelectionMessage,
-  scrollIntoView: scrollIntoView,
+const defaultProps$3 = {
+  itemToString,
+  stateReducer,
+  getA11ySelectionMessage,
+  scrollIntoView,
   circularNavigation: false,
   environment:
   /* istanbul ignore next (ssr) */
@@ -44581,8 +44525,8 @@ function getDefaultValue$1(props, propKey, defaultStateValues) {
 
   const defaultValue = props[`default${capitalizeString(propKey)}`];
 
-  if (defaultPropKey in props) {
-    return props[defaultPropKey];
+  if (defaultValue !== undefined) {
+    return defaultValue;
   }
 
   return defaultStateValues[propKey];
@@ -44593,38 +44537,44 @@ function getInitialValue$1(props, propKey, defaultStateValues) {
     defaultStateValues = dropdownDefaultStateValues;
   }
 
-  if (propKey in props) {
-    return props[propKey];
+  const value = props[propKey];
+
+  if (value !== undefined) {
+    return value;
   }
 
   const initialValue = props[`initial${capitalizeString(propKey)}`];
 
-  if (initialPropKey in props) {
-    return props[initialPropKey];
+  if (initialValue !== undefined) {
+    return initialValue;
   }
 
   return getDefaultValue$1(props, propKey, defaultStateValues);
 }
 
 function getInitialState$2(props) {
-  var selectedItem = getInitialValue$1(props, 'selectedItem');
-  var isOpen = getInitialValue$1(props, 'isOpen');
-  var highlightedIndex = getInitialValue$1(props, 'highlightedIndex');
-  var inputValue = getInitialValue$1(props, 'inputValue');
+  const selectedItem = getInitialValue$1(props, 'selectedItem');
+  const isOpen = getInitialValue$1(props, 'isOpen');
+  const highlightedIndex = getInitialValue$1(props, 'highlightedIndex');
+  const inputValue = getInitialValue$1(props, 'inputValue');
   return {
     highlightedIndex: highlightedIndex < 0 && selectedItem && isOpen ? props.items.indexOf(selectedItem) : highlightedIndex,
-    isOpen: isOpen,
-    selectedItem: selectedItem,
-    inputValue: inputValue
+    isOpen,
+    selectedItem,
+    inputValue
   };
 }
 
 function getHighlightedIndexOnOpen(props, state, offset, getItemNodeFromIndex) {
-  var items = props.items,
-      initialHighlightedIndex = props.initialHighlightedIndex,
-      defaultHighlightedIndex = props.defaultHighlightedIndex;
-  var selectedItem = state.selectedItem,
-      highlightedIndex = state.highlightedIndex;
+  const {
+    items,
+    initialHighlightedIndex,
+    defaultHighlightedIndex
+  } = props;
+  const {
+    selectedItem,
+    highlightedIndex
+  } = state;
 
   if (items.length === 0) {
     return -1;
@@ -44672,32 +44622,28 @@ function useMouseAndTouchTracker(isOpen, downshiftElementRefs, environment, hand
   (0,external_React_namespaceObject.useEffect)(() => {
     // The same strategy for checking if a click occurred inside or outside downsift
     // as in downshift.js.
-    var onMouseDown = function onMouseDown() {
+    const onMouseDown = () => {
       mouseAndTouchTrackersRef.current.isMouseDown = true;
     };
 
-    var onMouseUp = function onMouseUp(event) {
+    const onMouseUp = event => {
       mouseAndTouchTrackersRef.current.isMouseDown = false;
 
-      if (isOpen && !targetWithinDownshift(event.target, downshiftElementRefs.map(function (ref) {
-        return ref.current;
-      }), environment)) {
+      if (isOpen && !targetWithinDownshift(event.target, downshiftElementRefs.map(ref => ref.current), environment)) {
         handleBlur();
       }
     };
 
-    var onTouchStart = function onTouchStart() {
+    const onTouchStart = () => {
       mouseAndTouchTrackersRef.current.isTouchMove = false;
     };
 
-    var onTouchMove = function onTouchMove() {
+    const onTouchMove = () => {
       mouseAndTouchTrackersRef.current.isTouchMove = true;
     };
 
-    var onTouchEnd = function onTouchEnd(event) {
-      if (isOpen && !mouseAndTouchTrackersRef.current.isTouchMove && !targetWithinDownshift(event.target, downshiftElementRefs.map(function (ref) {
-        return ref.current;
-      }), environment, false)) {
+    const onTouchEnd = event => {
+      if (isOpen && !mouseAndTouchTrackersRef.current.isTouchMove && !targetWithinDownshift(event.target, downshiftElementRefs.map(ref => ref.current), environment, false)) {
         handleBlur();
       }
     };
@@ -44721,9 +44667,7 @@ function useMouseAndTouchTracker(isOpen, downshiftElementRefs, environment, hand
 // eslint-disable-next-line import/no-mutable-exports
 
 
-var useGetterPropsCalledChecker = function useGetterPropsCalledChecker() {
-  return downshift_esm_noop;
-};
+let useGetterPropsCalledChecker = () => downshift_esm_noop;
 /**
  * Custom hook that checks if getter props are called correctly.
  *
@@ -44737,39 +44681,41 @@ var useGetterPropsCalledChecker = function useGetterPropsCalledChecker() {
 if (false) {}
 
 function useA11yMessageSetter(getA11yMessage, dependencyArray, _ref2) {
-  var isInitialMount = _ref2.isInitialMount,
-      highlightedIndex = _ref2.highlightedIndex,
-      items = _ref2.items,
-      environment = _ref2.environment,
-      rest = objectWithoutPropertiesLoose_objectWithoutPropertiesLoose(_ref2, _excluded$3);
-
+  let {
+    isInitialMount,
+    highlightedIndex,
+    items,
+    environment,
+    ...rest
+  } = _ref2;
   // Sets a11y status message on changes in state.
   (0,external_React_namespaceObject.useEffect)(() => {
     if (isInitialMount || false) {
       return;
     }
 
-    updateA11yStatus(function () {
-      return getA11yMessage(extends_extends({
-        highlightedIndex: highlightedIndex,
-        highlightedItem: items[highlightedIndex],
-        resultCount: items.length
-      }, rest));
-    }, environment.document); // eslint-disable-next-line react-hooks/exhaustive-deps
+    updateA11yStatus(() => getA11yMessage({
+      highlightedIndex,
+      highlightedItem: items[highlightedIndex],
+      resultCount: items.length,
+      ...rest
+    }), environment.document); // eslint-disable-next-line react-hooks/exhaustive-deps
   }, dependencyArray);
 }
 
 function useScrollIntoView(_ref3) {
-  var highlightedIndex = _ref3.highlightedIndex,
-      isOpen = _ref3.isOpen,
-      itemRefs = _ref3.itemRefs,
-      getItemNodeFromIndex = _ref3.getItemNodeFromIndex,
-      menuElement = _ref3.menuElement,
-      scrollIntoViewProp = _ref3.scrollIntoView;
+  let {
+    highlightedIndex,
+    isOpen,
+    itemRefs,
+    getItemNodeFromIndex,
+    menuElement,
+    scrollIntoView: scrollIntoViewProp
+  } = _ref3;
   // used not to scroll on highlight by mouse.
   const shouldScrollRef = (0,external_React_namespaceObject.useRef)(true); // Scroll on highlighted item if change comes from keyboard.
 
-  downshift_esm_useIsomorphicLayoutEffect(function () {
+  downshift_esm_useIsomorphicLayoutEffect(() => {
     if (highlightedIndex < 0 || !isOpen || !Object.keys(itemRefs.current).length) {
       return;
     }
@@ -44785,7 +44731,7 @@ function useScrollIntoView(_ref3) {
 } // eslint-disable-next-line import/no-mutable-exports
 
 
-var useControlPropsValidator = downshift_esm_noop;
+let useControlPropsValidator = downshift_esm_noop;
 /* istanbul ignore next */
 
 if (false) {}
@@ -44793,9 +44739,11 @@ if (false) {}
 /* eslint-disable complexity */
 
 function downshiftCommonReducer(state, action, stateChangeTypes) {
-  var type = action.type,
-      props = action.props;
-  var changes;
+  const {
+    type,
+    props
+  } = action;
+  let changes;
 
   switch (type) {
     case stateChangeTypes.ItemMouseMove:
@@ -44856,7 +44804,9 @@ function downshiftCommonReducer(state, action, stateChangeTypes) {
       throw new Error('Reducer called without proper action type.');
   }
 
-  return extends_extends({}, state, changes);
+  return { ...state,
+    ...changes
+  };
 }
 /* eslint-enable complexity */
 
@@ -44930,7 +44880,7 @@ function getA11yStatusMessage(_a) {
         return 'No results are available.';
     }
     if (resultCount !== previousResultCount) {
-        return resultCount + " result" + (resultCount === 1 ? ' is' : 's are') + " available, use up and down arrow keys to navigate. Press Enter or Space Bar keys to select.";
+        return "".concat(resultCount, " result").concat(resultCount === 1 ? ' is' : 's are', " available, use up and down arrow keys to navigate. Press Enter or Space Bar keys to select.");
     }
     return '';
 }
@@ -44940,29 +44890,29 @@ var validatePropTypes$2 = downshift_esm_noop;
 /* istanbul ignore next */
 if (false) {}
 
-var MenuKeyDownArrowDown =  false ? 0 : 0;
-var MenuKeyDownArrowUp =  false ? 0 : 1;
-var MenuKeyDownEscape =  false ? 0 : 2;
-var MenuKeyDownHome =  false ? 0 : 3;
-var MenuKeyDownEnd =  false ? 0 : 4;
-var MenuKeyDownEnter =  false ? 0 : 5;
-var MenuKeyDownSpaceButton =  false ? 0 : 6;
-var MenuKeyDownCharacter =  false ? 0 : 7;
-var MenuBlur =  false ? 0 : 8;
-var MenuMouseLeave$1 =  false ? 0 : 9;
-var ItemMouseMove$1 =  false ? 0 : 10;
-var ItemClick$1 =  false ? 0 : 11;
-var ToggleButtonClick$1 =  false ? 0 : 12;
-var ToggleButtonKeyDownArrowDown =  false ? 0 : 13;
-var ToggleButtonKeyDownArrowUp =  false ? 0 : 14;
-var ToggleButtonKeyDownCharacter =  false ? 0 : 15;
-var FunctionToggleMenu$1 =  false ? 0 : 16;
-var FunctionOpenMenu$1 =  false ? 0 : 17;
-var FunctionCloseMenu$1 =  false ? 0 : 18;
-var FunctionSetHighlightedIndex$1 =  false ? 0 : 19;
-var FunctionSelectItem$1 =  false ? 0 : 20;
-var FunctionSetInputValue$1 =  false ? 0 : 21;
-var FunctionReset$2 =  false ? 0 : 22;
+const MenuKeyDownArrowDown =  false ? 0 : 0;
+const MenuKeyDownArrowUp =  false ? 0 : 1;
+const MenuKeyDownEscape =  false ? 0 : 2;
+const MenuKeyDownHome =  false ? 0 : 3;
+const MenuKeyDownEnd =  false ? 0 : 4;
+const MenuKeyDownEnter =  false ? 0 : 5;
+const MenuKeyDownSpaceButton =  false ? 0 : 6;
+const MenuKeyDownCharacter =  false ? 0 : 7;
+const MenuBlur =  false ? 0 : 8;
+const MenuMouseLeave$1 =  false ? 0 : 9;
+const ItemMouseMove$1 =  false ? 0 : 10;
+const ItemClick$1 =  false ? 0 : 11;
+const ToggleButtonClick$1 =  false ? 0 : 12;
+const ToggleButtonKeyDownArrowDown =  false ? 0 : 13;
+const ToggleButtonKeyDownArrowUp =  false ? 0 : 14;
+const ToggleButtonKeyDownCharacter =  false ? 0 : 15;
+const FunctionToggleMenu$1 =  false ? 0 : 16;
+const FunctionOpenMenu$1 =  false ? 0 : 17;
+const FunctionCloseMenu$1 =  false ? 0 : 18;
+const FunctionSetHighlightedIndex$1 =  false ? 0 : 19;
+const FunctionSelectItem$1 =  false ? 0 : 20;
+const FunctionSetInputValue$1 =  false ? 0 : 21;
+const FunctionReset$2 =  false ? 0 : 22;
 
 var stateChangeTypes$2 = /*#__PURE__*/Object.freeze({
   __proto__: null,
@@ -44994,10 +44944,12 @@ var stateChangeTypes$2 = /*#__PURE__*/Object.freeze({
 /* eslint-disable complexity */
 
 function downshiftSelectReducer(state, action) {
-  var type = action.type,
-      props = action.props,
-      shiftKey = action.shiftKey;
-  var changes;
+  const {
+    type,
+    props,
+    shiftKey
+  } = action;
+  let changes;
 
   switch (type) {
     case ItemClick$1:
@@ -45019,11 +44971,12 @@ function downshiftSelectReducer(state, action) {
           itemToString: props.itemToString,
           getItemNodeFromIndex: action.getItemNodeFromIndex
         });
-        changes = extends_extends({
-          inputValue: inputValue
-        }, itemIndex >= 0 && {
-          selectedItem: props.items[itemIndex]
-        });
+        changes = {
+          inputValue,
+          ...(itemIndex >= 0 && {
+            selectedItem: props.items[itemIndex]
+          })
+        };
       }
       break;
 
@@ -45043,12 +44996,13 @@ function downshiftSelectReducer(state, action) {
 
     case MenuKeyDownEnter:
     case MenuKeyDownSpaceButton:
-      changes = extends_extends({
+      changes = {
         isOpen: getDefaultValue$1(props, 'isOpen'),
-        highlightedIndex: getDefaultValue$1(props, 'highlightedIndex')
-      }, state.highlightedIndex >= 0 && {
-        selectedItem: props.items[state.highlightedIndex]
-      });
+        highlightedIndex: getDefaultValue$1(props, 'highlightedIndex'),
+        ...(state.highlightedIndex >= 0 && {
+          selectedItem: props.items[state.highlightedIndex]
+        })
+      };
       break;
 
     case MenuKeyDownHome:
@@ -45088,11 +45042,12 @@ function downshiftSelectReducer(state, action) {
           itemToString: props.itemToString,
           getItemNodeFromIndex: action.getItemNodeFromIndex
         });
-        changes = extends_extends({
-          inputValue: _inputValue
-        }, highlightedIndex >= 0 && {
-          highlightedIndex: highlightedIndex
-        });
+        changes = {
+          inputValue,
+          ...(highlightedIndex >= 0 && {
+            highlightedIndex
+          })
+        };
       }
       break;
 
@@ -45118,13 +45073,13 @@ function downshiftSelectReducer(state, action) {
       return downshiftCommonReducer(state, action, stateChangeTypes$2);
   }
 
-  return extends_extends({}, state, changes);
+  return { ...state,
+    ...changes
+  };
 }
 /* eslint-enable complexity */
 
-var _excluded$2 = ["onMouseLeave", "refKey", "onKeyDown", "onBlur", "ref"],
-    _excluded2$2 = ["onClick", "onKeyDown", "refKey", "ref"],
-    _excluded3$1 = ["item", "index", "onMouseMove", "onClick", "refKey", "ref"];
+/* eslint-disable max-statements */
 useSelect.stateChangeTypes = stateChangeTypes$2;
 
 function useSelect(userProps) {
@@ -45134,7 +45089,28 @@ function useSelect(userProps) {
 
   validatePropTypes$2(userProps, useSelect); // Props defaults and destructuring.
 
-  var props = extends_extends({}, defaultProps$2, userProps);
+  const props = { ...defaultProps$2,
+    ...userProps
+  };
+  const {
+    items,
+    scrollIntoView,
+    environment,
+    initialIsOpen,
+    defaultIsOpen,
+    itemToString,
+    getA11ySelectionMessage,
+    getA11yStatusMessage
+  } = props; // Initial state depending on controlled props.
+
+  const initialState = getInitialState$2(props);
+  const [state, dispatch] = useControlledReducer$1(downshiftSelectReducer, initialState, props);
+  const {
+    isOpen,
+    highlightedIndex,
+    selectedItem,
+    inputValue
+  } = state; // Element efs.
 
   const toggleButtonRef = (0,external_React_namespaceObject.useRef)(null);
   const menuRef = (0,external_React_namespaceObject.useRef)(null);
@@ -45144,10 +45120,7 @@ function useSelect(userProps) {
 
   const clearTimeoutRef = (0,external_React_namespaceObject.useRef)(null); // prevent id re-generation between renders.
 
-  var isOpen = state.isOpen,
-      highlightedIndex = state.highlightedIndex,
-      selectedItem = state.selectedItem,
-      inputValue = state.inputValue; // Element efs.
+  const elementIds = useElementIds(props); // used to keep track of how many items we had on previous cycle.
 
   const previousResultCountRef = (0,external_React_namespaceObject.useRef)();
   const isInitialMountRef = (0,external_React_namespaceObject.useRef)(true); // utility callback to get item element.
@@ -45160,41 +45133,43 @@ function useSelect(userProps) {
   const getItemNodeFromIndex = (0,external_React_namespaceObject.useCallback)(index => itemRefs.current[elementIds.getItemId(index)], [elementIds]); // Effects.
   // Sets a11y status message on changes in state.
 
-  useA11yMessageSetter(getA11yStatusMessage, [isOpen, highlightedIndex, inputValue, items], extends_extends({
+  useA11yMessageSetter(getA11yStatusMessage, [isOpen, highlightedIndex, inputValue, items], {
     isInitialMount: isInitialMountRef.current,
     previousResultCount: previousResultCountRef.current,
-    items: items,
-    environment: environment,
-    itemToString: itemToString
-  }, state)); // Sets a11y status message on changes in selectedItem.
+    items,
+    environment,
+    itemToString,
+    ...state
+  }); // Sets a11y status message on changes in selectedItem.
 
-  useA11yMessageSetter(getA11ySelectionMessage, [selectedItem], extends_extends({
+  useA11yMessageSetter(getA11ySelectionMessage, [selectedItem], {
     isInitialMount: isInitialMountRef.current,
     previousResultCount: previousResultCountRef.current,
-    items: items,
-    environment: environment,
-    itemToString: itemToString
-  }, state)); // Scroll on highlighted item if change comes from keyboard.
+    items,
+    environment,
+    itemToString,
+    ...state
+  }); // Scroll on highlighted item if change comes from keyboard.
 
-  var shouldScrollRef = useScrollIntoView({
+  const shouldScrollRef = useScrollIntoView({
     menuElement: menuRef.current,
-    highlightedIndex: highlightedIndex,
-    isOpen: isOpen,
-    itemRefs: itemRefs,
-    scrollIntoView: scrollIntoView,
-    getItemNodeFromIndex: getItemNodeFromIndex
+    highlightedIndex,
+    isOpen,
+    itemRefs,
+    scrollIntoView,
+    getItemNodeFromIndex
   }); // Sets cleanup for the keysSoFar callback, debounded after 500ms.
 
   (0,external_React_namespaceObject.useEffect)(() => {
     // init the clean function here as we need access to dispatch.
-    clearTimeoutRef.current = downshift_esm_debounce(function (outerDispatch) {
+    clearTimeoutRef.current = downshift_esm_debounce(outerDispatch => {
       outerDispatch({
         type: FunctionSetInputValue$1,
         inputValue: ''
       });
     }, 500); // Cancel any pending debounced calls on mount
 
-    return function () {
+    return () => {
       clearTimeoutRef.current.cancel();
     };
   }, []); // Invokes the keysSoFar callback set up above.
@@ -45208,8 +45183,8 @@ function useSelect(userProps) {
   }, [dispatch, inputValue]);
   useControlPropsValidator({
     isInitialMount: isInitialMountRef.current,
-    props: props,
-    state: state
+    props,
+    state
   });
   /* Controls the focus on the menu or the toggle button. */
 
@@ -45252,12 +45227,12 @@ function useSelect(userProps) {
     previousResultCountRef.current = items.length;
   }); // Add mouse/touch events to document.
 
-  var mouseAndTouchTrackersRef = useMouseAndTouchTracker(isOpen, [menuRef, toggleButtonRef], environment, function () {
+  const mouseAndTouchTrackersRef = useMouseAndTouchTracker(isOpen, [menuRef, toggleButtonRef], environment, () => {
     dispatch({
       type: MenuBlur
     });
   });
-  var setGetterPropCallInfo = useGetterPropsCalledChecker('getMenuProps', 'getToggleButtonProps'); // Make initial ref false.
+  const setGetterPropCallInfo = useGetterPropsCalledChecker('getMenuProps', 'getToggleButtonProps'); // Make initial ref false.
 
   (0,external_React_namespaceObject.useEffect)(() => {
     isInitialMountRef.current = false;
@@ -45412,20 +45387,20 @@ function useSelect(userProps) {
       } else if (isAcceptedCharacterKey(key)) {
         dispatch({
           type: MenuKeyDownCharacter,
-          key: key,
-          getItemNodeFromIndex: getItemNodeFromIndex
+          key,
+          getItemNodeFromIndex
         });
       }
     };
 
-    var menuHandleBlur = function menuHandleBlur() {
+    const menuHandleBlur = () => {
       // if the blur was a result of selection, we don't trigger this action.
       if (shouldBlurRef.current === false) {
         shouldBlurRef.current = true;
         return;
       }
 
-      var shouldBlur = !mouseAndTouchTrackersRef.current.isMouseDown;
+      const shouldBlur = !mouseAndTouchTrackersRef.current.isMouseDown;
       /* istanbul ignore else */
 
       if (shouldBlur) {
@@ -45435,22 +45410,29 @@ function useSelect(userProps) {
       }
     };
 
-    var menuHandleMouseLeave = function menuHandleMouseLeave() {
+    const menuHandleMouseLeave = () => {
       dispatch({
         type: MenuMouseLeave$1
       });
     };
 
     setGetterPropCallInfo('getMenuProps', suppressRefError, refKey, menuRef);
-    return extends_extends((_extends2 = {}, _extends2[refKey] = handleRefs(ref, function (menuNode) {
-      menuRef.current = menuNode;
-    }), _extends2.id = elementIds.menuId, _extends2.role = 'listbox', _extends2['aria-labelledby'] = elementIds.labelId, _extends2.tabIndex = -1, _extends2), latestState.isOpen && latestState.highlightedIndex > -1 && {
-      'aria-activedescendant': elementIds.getItemId(latestState.highlightedIndex)
-    }, {
+    return {
+      [refKey]: handleRefs(ref, menuNode => {
+        menuRef.current = menuNode;
+      }),
+      id: elementIds.menuId,
+      role: 'listbox',
+      'aria-labelledby': elementIds.labelId,
+      tabIndex: -1,
+      ...(latestState.isOpen && latestState.highlightedIndex > -1 && {
+        'aria-activedescendant': elementIds.getItemId(latestState.highlightedIndex)
+      }),
       onMouseLeave: callAllEventHandlers(onMouseLeave, menuHandleMouseLeave),
       onKeyDown: callAllEventHandlers(onKeyDown, menuHandleKeyDown),
-      onBlur: callAllEventHandlers(onBlur, menuHandleBlur)
-    }, rest);
+      onBlur: callAllEventHandlers(onBlur, menuHandleBlur),
+      ...rest
+    };
   }, [dispatch, latest, menuKeyDownHandlers, mouseAndTouchTrackersRef, setGetterPropCallInfo, elementIds, getItemNodeFromIndex]);
   const getToggleButtonProps = (0,external_React_namespaceObject.useCallback)(function (_temp3, _temp4) {
     let {
@@ -45470,16 +45452,16 @@ function useSelect(userProps) {
       });
     };
 
-    var toggleButtonHandleKeyDown = function toggleButtonHandleKeyDown(event) {
-      var key = normalizeArrowKey(event);
+    const toggleButtonHandleKeyDown = event => {
+      const key = normalizeArrowKey(event);
 
       if (key && toggleButtonKeyDownHandlers[key]) {
         toggleButtonKeyDownHandlers[key](event);
       } else if (isAcceptedCharacterKey(key)) {
         dispatch({
           type: ToggleButtonKeyDownCharacter,
-          key: key,
-          getItemNodeFromIndex: getItemNodeFromIndex
+          key,
+          getItemNodeFromIndex
         });
       }
     };
@@ -45532,14 +45514,14 @@ function useSelect(userProps) {
       });
     };
 
-    var itemHandleClick = function itemHandleClick() {
+    const itemHandleClick = () => {
       dispatch({
         type: ItemClick$1,
-        index: index
+        index
       });
     };
 
-    var itemIndex = getItemIndex(index, item, latestProps.items);
+    const itemIndex = getItemIndex(index, item, latestProps.items);
 
     if (itemIndex < 0) {
       throw new Error('Pass either item or item index in getItemProps!');
@@ -45567,46 +45549,46 @@ function useSelect(userProps) {
   }, [dispatch, latest, shouldScrollRef, elementIds]);
   return {
     // prop getters.
-    getToggleButtonProps: getToggleButtonProps,
-    getLabelProps: getLabelProps,
-    getMenuProps: getMenuProps,
-    getItemProps: getItemProps,
+    getToggleButtonProps,
+    getLabelProps,
+    getMenuProps,
+    getItemProps,
     // actions.
-    toggleMenu: toggleMenu,
-    openMenu: openMenu,
-    closeMenu: closeMenu,
-    setHighlightedIndex: setHighlightedIndex,
-    selectItem: selectItem,
-    reset: reset,
-    setInputValue: setInputValue,
+    toggleMenu,
+    openMenu,
+    closeMenu,
+    setHighlightedIndex,
+    selectItem,
+    reset,
+    setInputValue,
     // state.
-    highlightedIndex: highlightedIndex,
-    isOpen: isOpen,
-    selectedItem: selectedItem,
-    inputValue: inputValue
+    highlightedIndex,
+    isOpen,
+    selectedItem,
+    inputValue
   };
 }
 
-var InputKeyDownArrowDown =  false ? 0 : 0;
-var InputKeyDownArrowUp =  false ? 0 : 1;
-var InputKeyDownEscape =  false ? 0 : 2;
-var InputKeyDownHome =  false ? 0 : 3;
-var InputKeyDownEnd =  false ? 0 : 4;
-var InputKeyDownEnter =  false ? 0 : 5;
-var InputChange =  false ? 0 : 6;
-var InputBlur =  false ? 0 : 7;
-var MenuMouseLeave =  false ? 0 : 8;
-var ItemMouseMove =  false ? 0 : 9;
-var ItemClick =  false ? 0 : 10;
-var ToggleButtonClick =  false ? 0 : 11;
-var FunctionToggleMenu =  false ? 0 : 12;
-var FunctionOpenMenu =  false ? 0 : 13;
-var FunctionCloseMenu =  false ? 0 : 14;
-var FunctionSetHighlightedIndex =  false ? 0 : 15;
-var FunctionSelectItem =  false ? 0 : 16;
-var FunctionSetInputValue =  false ? 0 : 17;
-var FunctionReset$1 =  false ? 0 : 18;
-var ControlledPropUpdatedSelectedItem =  false ? 0 : 19;
+const InputKeyDownArrowDown =  false ? 0 : 0;
+const InputKeyDownArrowUp =  false ? 0 : 1;
+const InputKeyDownEscape =  false ? 0 : 2;
+const InputKeyDownHome =  false ? 0 : 3;
+const InputKeyDownEnd =  false ? 0 : 4;
+const InputKeyDownEnter =  false ? 0 : 5;
+const InputChange =  false ? 0 : 6;
+const InputBlur =  false ? 0 : 7;
+const MenuMouseLeave =  false ? 0 : 8;
+const ItemMouseMove =  false ? 0 : 9;
+const ItemClick =  false ? 0 : 10;
+const ToggleButtonClick =  false ? 0 : 11;
+const FunctionToggleMenu =  false ? 0 : 12;
+const FunctionOpenMenu =  false ? 0 : 13;
+const FunctionCloseMenu =  false ? 0 : 14;
+const FunctionSetHighlightedIndex =  false ? 0 : 15;
+const FunctionSelectItem =  false ? 0 : 16;
+const FunctionSetInputValue =  false ? 0 : 17;
+const FunctionReset$1 =  false ? 0 : 18;
+const ControlledPropUpdatedSelectedItem =  false ? 0 : 19;
 
 var stateChangeTypes$1 = /*#__PURE__*/Object.freeze({
   __proto__: null,
@@ -45633,20 +45615,24 @@ var stateChangeTypes$1 = /*#__PURE__*/Object.freeze({
 });
 
 function getInitialState$1(props) {
-  var initialState = getInitialState$2(props);
-  var selectedItem = initialState.selectedItem;
-  var inputValue = initialState.inputValue;
+  const initialState = getInitialState$2(props);
+  const {
+    selectedItem
+  } = initialState;
+  let {
+    inputValue
+  } = initialState;
 
   if (inputValue === '' && selectedItem && props.defaultInputValue === undefined && props.initialInputValue === undefined && props.inputValue === undefined) {
     inputValue = props.itemToString(selectedItem);
   }
 
-  return extends_extends({}, initialState, {
-    inputValue: inputValue
-  });
+  return { ...initialState,
+    inputValue
+  };
 }
 
-var propTypes$1 = {
+const propTypes$1 = {
   items: (prop_types_default()).array.isRequired,
   itemToString: (prop_types_default()).func,
   getA11yStatusMessage: (prop_types_default()).func,
@@ -45719,23 +45705,25 @@ function useControlledReducer(reducer, initialState, props) {
 } // eslint-disable-next-line import/no-mutable-exports
 
 
-var validatePropTypes$1 = downshift_esm_noop;
+let validatePropTypes$1 = downshift_esm_noop;
 /* istanbul ignore next */
 
 if (false) {}
 
-var defaultProps$1 = extends_extends({}, defaultProps$3, {
+const defaultProps$1 = { ...defaultProps$3,
   getA11yStatusMessage: getA11yStatusMessage$1,
   circularNavigation: true
-});
+};
 
 /* eslint-disable complexity */
 
 function downshiftUseComboboxReducer(state, action) {
-  var type = action.type,
-      props = action.props,
-      shiftKey = action.shiftKey;
-  var changes;
+  const {
+    type,
+    props,
+    shiftKey
+  } = action;
+  let changes;
 
   switch (type) {
     case ItemClick:
@@ -45776,22 +45764,24 @@ function downshiftUseComboboxReducer(state, action) {
       break;
 
     case InputKeyDownEnter:
-      changes = extends_extends({}, state.isOpen && state.highlightedIndex >= 0 && {
-        selectedItem: props.items[state.highlightedIndex],
-        isOpen: getDefaultValue$1(props, 'isOpen'),
-        highlightedIndex: getDefaultValue$1(props, 'highlightedIndex'),
-        inputValue: props.itemToString(props.items[state.highlightedIndex])
-      });
+      changes = { ...(state.isOpen && state.highlightedIndex >= 0 && {
+          selectedItem: props.items[state.highlightedIndex],
+          isOpen: getDefaultValue$1(props, 'isOpen'),
+          highlightedIndex: getDefaultValue$1(props, 'highlightedIndex'),
+          inputValue: props.itemToString(props.items[state.highlightedIndex])
+        })
+      };
       break;
 
     case InputKeyDownEscape:
-      changes = extends_extends({
+      changes = {
         isOpen: false,
-        highlightedIndex: -1
-      }, !state.isOpen && {
-        selectedItem: null,
-        inputValue: ''
-      });
+        highlightedIndex: -1,
+        ...(!state.isOpen && {
+          selectedItem: null,
+          inputValue: ''
+        })
+      };
       break;
 
     case InputKeyDownHome:
@@ -45807,13 +45797,14 @@ function downshiftUseComboboxReducer(state, action) {
       break;
 
     case InputBlur:
-      changes = extends_extends({
+      changes = {
         isOpen: false,
-        highlightedIndex: -1
-      }, state.highlightedIndex >= 0 && action.selectItem && {
-        selectedItem: props.items[state.highlightedIndex],
-        inputValue: props.itemToString(props.items[state.highlightedIndex])
-      });
+        highlightedIndex: -1,
+        ...(state.highlightedIndex >= 0 && action.selectItem && {
+          selectedItem: props.items[state.highlightedIndex],
+          inputValue: props.itemToString(props.items[state.highlightedIndex])
+        })
+      };
       break;
 
     case InputChange:
@@ -45841,15 +45832,13 @@ function downshiftUseComboboxReducer(state, action) {
       return downshiftCommonReducer(state, action, stateChangeTypes$1);
   }
 
-  return extends_extends({}, state, changes);
+  return { ...state,
+    ...changes
+  };
 }
 /* eslint-enable complexity */
 
-var _excluded$1 = ["onMouseLeave", "refKey", "ref"],
-    _excluded2$1 = ["item", "index", "refKey", "ref", "onMouseMove", "onClick", "onPress"],
-    _excluded3 = ["onClick", "onPress", "refKey", "ref"],
-    _excluded4 = ["onKeyDown", "onChange", "onInput", "onBlur", "onChangeText", "refKey", "ref"],
-    _excluded5 = ["refKey", "ref"];
+/* eslint-disable max-statements */
 useCombobox.stateChangeTypes = stateChangeTypes$1;
 
 function useCombobox(userProps) {
@@ -45859,7 +45848,28 @@ function useCombobox(userProps) {
 
   validatePropTypes$1(userProps, useCombobox); // Props defaults and destructuring.
 
-  var props = extends_extends({}, defaultProps$1, userProps);
+  const props = { ...defaultProps$1,
+    ...userProps
+  };
+  const {
+    initialIsOpen,
+    defaultIsOpen,
+    items,
+    scrollIntoView,
+    environment,
+    getA11yStatusMessage,
+    getA11ySelectionMessage,
+    itemToString
+  } = props; // Initial state depending on controlled props.
+
+  const initialState = getInitialState$1(props);
+  const [state, dispatch] = useControlledReducer(downshiftUseComboboxReducer, initialState, props);
+  const {
+    isOpen,
+    highlightedIndex,
+    selectedItem,
+    inputValue
+  } = state; // Element refs.
 
   const menuRef = (0,external_React_namespaceObject.useRef)(null);
   const itemRefs = (0,external_React_namespaceObject.useRef)({});
@@ -45868,7 +45878,7 @@ function useCombobox(userProps) {
   const comboboxRef = (0,external_React_namespaceObject.useRef)(null);
   const isInitialMountRef = (0,external_React_namespaceObject.useRef)(true); // prevent id re-generation between renders.
 
-  var initialState = getInitialState$1(props);
+  const elementIds = useElementIds(props); // used to keep track of how many items we had on previous cycle.
 
   const previousResultCountRef = (0,external_React_namespaceObject.useRef)(); // utility callback to get item element.
 
@@ -45879,34 +45889,36 @@ function useCombobox(userProps) {
   const getItemNodeFromIndex = (0,external_React_namespaceObject.useCallback)(index => itemRefs.current[elementIds.getItemId(index)], [elementIds]); // Effects.
   // Sets a11y status message on changes in state.
 
-  useA11yMessageSetter(getA11yStatusMessage, [isOpen, highlightedIndex, inputValue, items], extends_extends({
+  useA11yMessageSetter(getA11yStatusMessage, [isOpen, highlightedIndex, inputValue, items], {
     isInitialMount: isInitialMountRef.current,
     previousResultCount: previousResultCountRef.current,
-    items: items,
-    environment: environment,
-    itemToString: itemToString
-  }, state)); // Sets a11y status message on changes in selectedItem.
+    items,
+    environment,
+    itemToString,
+    ...state
+  }); // Sets a11y status message on changes in selectedItem.
 
-  useA11yMessageSetter(getA11ySelectionMessage, [selectedItem], extends_extends({
+  useA11yMessageSetter(getA11ySelectionMessage, [selectedItem], {
     isInitialMount: isInitialMountRef.current,
     previousResultCount: previousResultCountRef.current,
-    items: items,
-    environment: environment,
-    itemToString: itemToString
-  }, state)); // Scroll on highlighted item if change comes from keyboard.
+    items,
+    environment,
+    itemToString,
+    ...state
+  }); // Scroll on highlighted item if change comes from keyboard.
 
-  var shouldScrollRef = useScrollIntoView({
+  const shouldScrollRef = useScrollIntoView({
     menuElement: menuRef.current,
-    highlightedIndex: highlightedIndex,
-    isOpen: isOpen,
-    itemRefs: itemRefs,
-    scrollIntoView: scrollIntoView,
-    getItemNodeFromIndex: getItemNodeFromIndex
+    highlightedIndex,
+    isOpen,
+    itemRefs,
+    scrollIntoView,
+    getItemNodeFromIndex
   });
   useControlPropsValidator({
     isInitialMount: isInitialMountRef.current,
-    props: props,
-    state: state
+    props,
+    state
   }); // Focus the input on first render if required.
 
   (0,external_React_namespaceObject.useEffect)(() => {
@@ -45925,13 +45937,13 @@ function useCombobox(userProps) {
     previousResultCountRef.current = items.length;
   }); // Add mouse/touch events to document.
 
-  var mouseAndTouchTrackersRef = useMouseAndTouchTracker(isOpen, [comboboxRef, menuRef, toggleButtonRef], environment, function () {
+  const mouseAndTouchTrackersRef = useMouseAndTouchTracker(isOpen, [comboboxRef, menuRef, toggleButtonRef], environment, () => {
     dispatch({
       type: InputBlur,
       selectItem: false
     });
   });
-  var setGetterPropCallInfo = useGetterPropsCalledChecker('getInputProps', 'getComboboxProps', 'getMenuProps'); // Make initial ref false.
+  const setGetterPropCallInfo = useGetterPropsCalledChecker('getInputProps', 'getComboboxProps', 'getMenuProps'); // Make initial ref false.
 
   (0,external_React_namespaceObject.useEffect)(() => {
     isInitialMountRef.current = false;
@@ -45968,34 +45980,24 @@ function useCombobox(userProps) {
         return;
       }
 
-        event.preventDefault();
-        dispatch({
-          type: InputKeyDownHome,
-          getItemNodeFromIndex: getItemNodeFromIndex
-        });
-      },
-      End: function End(event) {
-        if (!latest.current.state.isOpen) {
-          return;
-        }
+      event.preventDefault();
+      dispatch({
+        type: InputKeyDownHome,
+        getItemNodeFromIndex
+      });
+    },
 
-        event.preventDefault();
-        dispatch({
-          type: InputKeyDownEnd,
-          getItemNodeFromIndex: getItemNodeFromIndex
-        });
-      },
-      Escape: function Escape() {
-        var latestState = latest.current.state;
+    End(event) {
+      if (!latest.current.state.isOpen) {
+        return;
+      }
 
-        if (latestState.isOpen || latestState.inputValue || latestState.selectedItem || latestState.highlightedIndex > -1) {
-          dispatch({
-            type: InputKeyDownEscape
-          });
-        }
-      },
-      Enter: function Enter(event) {
-        var latestState = latest.current.state; // if closed or no highlighted index, do nothing.
+      event.preventDefault();
+      dispatch({
+        type: InputKeyDownEnd,
+        getItemNodeFromIndex
+      });
+    },
 
     Escape(event) {
       const latestState = latest.current.state;
@@ -46003,39 +46005,23 @@ function useCombobox(userProps) {
       if (latestState.isOpen || latestState.inputValue || latestState.selectedItem || latestState.highlightedIndex > -1) {
         event.preventDefault();
         dispatch({
-          type: InputKeyDownEnter,
-          getItemNodeFromIndex: getItemNodeFromIndex
+          type: InputKeyDownEscape
         });
       }
-    };
-  }, [dispatch, latest, getItemNodeFromIndex]); // Getter props.
+    },
 
-  var getLabelProps = (0,external_React_.useCallback)(function (labelProps) {
-    return extends_extends({
-      id: elementIds.labelId,
-      htmlFor: elementIds.inputId
-    }, labelProps);
-  }, [elementIds]);
-  var getMenuProps = (0,external_React_.useCallback)(function (_temp, _temp2) {
-    var _extends2;
+    Enter(event) {
+      const latestState = latest.current.state; // if closed or no highlighted index, do nothing.
 
-    var _ref = _temp === void 0 ? {} : _temp,
-        onMouseLeave = _ref.onMouseLeave,
-        _ref$refKey = _ref.refKey,
-        refKey = _ref$refKey === void 0 ? 'ref' : _ref$refKey,
-        ref = _ref.ref,
-        rest = objectWithoutPropertiesLoose_objectWithoutPropertiesLoose(_ref, _excluded$1);
+      if (!latestState.isOpen || latestState.highlightedIndex < 0 || event.which === 229 // if IME composing, wait for next Enter keydown event.
+      ) {
+        return;
+      }
 
-    var _ref2 = _temp2 === void 0 ? {} : _temp2,
-        _ref2$suppressRefErro = _ref2.suppressRefError,
-        suppressRefError = _ref2$suppressRefErro === void 0 ? false : _ref2$suppressRefErro;
-
-    setGetterPropCallInfo('getMenuProps', suppressRefError, refKey, menuRef);
-    return extends_extends((_extends2 = {}, _extends2[refKey] = handleRefs(ref, function (menuNode) {
-      menuRef.current = menuNode;
-    }), _extends2.id = elementIds.menuId, _extends2.role = 'listbox', _extends2['aria-labelledby'] = elementIds.labelId, _extends2.onMouseLeave = callAllEventHandlers(onMouseLeave, function () {
+      event.preventDefault();
       dispatch({
-        type: MenuMouseLeave
+        type: InputKeyDownEnter,
+        getItemNodeFromIndex
       });
     }
 
@@ -46095,10 +46081,10 @@ function useCombobox(userProps) {
       throw new Error('Pass either item or item index in getItemProps!');
     }
 
-    var onSelectKey = 'onClick';
-    var customClickHandler = onClick;
+    const onSelectKey = 'onClick';
+    const customClickHandler = onClick;
 
-    var itemHandleMouseMove = function itemHandleMouseMove() {
+    const itemHandleMouseMove = () => {
       if (index === latestState.highlightedIndex) {
         return;
       }
@@ -46111,10 +46097,10 @@ function useCombobox(userProps) {
       });
     };
 
-    var itemHandleClick = function itemHandleClick() {
+    const itemHandleClick = () => {
       dispatch({
         type: ItemClick,
-        index: index
+        index
       });
     };
 
@@ -46157,11 +46143,18 @@ function useCombobox(userProps) {
       }
     };
 
-    return extends_extends((_extends4 = {}, _extends4[refKey] = handleRefs(ref, function (toggleButtonNode) {
-      toggleButtonRef.current = toggleButtonNode;
-    }), _extends4.id = elementIds.toggleButtonId, _extends4.tabIndex = -1, _extends4), !rest.disabled && extends_extends({}, {
-      onClick: callAllEventHandlers(onClick, toggleButtonHandleClick)
-    }), rest);
+    return {
+      [refKey]: handleRefs(ref, toggleButtonNode => {
+        toggleButtonRef.current = toggleButtonNode;
+      }),
+      id: elementIds.toggleButtonId,
+      tabIndex: -1,
+      ...(!rest.disabled && { ...({
+          onClick: callAllEventHandlers(onClick, toggleButtonHandleClick)
+        })
+      }),
+      ...rest
+    };
   }, [dispatch, latest, elementIds]);
   const getInputProps = (0,external_React_namespaceObject.useCallback)(function (_temp5, _temp6) {
     let {
@@ -46178,24 +46171,24 @@ function useCombobox(userProps) {
       suppressRefError = false
     } = _temp6 === void 0 ? {} : _temp6;
     setGetterPropCallInfo('getInputProps', suppressRefError, refKey, inputRef);
-    var latestState = latest.current.state;
+    const latestState = latest.current.state;
 
-    var inputHandleKeyDown = function inputHandleKeyDown(event) {
-      var key = normalizeArrowKey(event);
+    const inputHandleKeyDown = event => {
+      const key = normalizeArrowKey(event);
 
       if (key && inputKeyDownHandlers[key]) {
         inputKeyDownHandlers[key](event);
       }
     };
 
-    var inputHandleChange = function inputHandleChange(event) {
+    const inputHandleChange = event => {
       dispatch({
         type: InputChange,
         inputValue: event.target.value
       });
     };
 
-    var inputHandleBlur = function inputHandleBlur() {
+    const inputHandleBlur = () => {
       /* istanbul ignore else */
       if (latestState.isOpen && !mouseAndTouchTrackersRef.current.isMouseDown) {
         dispatch({
@@ -46207,26 +46200,35 @@ function useCombobox(userProps) {
     /* istanbul ignore next (preact) */
 
 
-    var onChangeKey = 'onChange';
-    var eventHandlers = {};
+    const onChangeKey = 'onChange';
+    let eventHandlers = {};
 
     if (!rest.disabled) {
-      var _eventHandlers;
-
-      eventHandlers = (_eventHandlers = {}, _eventHandlers[onChangeKey] = callAllEventHandlers(onChange, onInput, inputHandleChange), _eventHandlers.onKeyDown = callAllEventHandlers(onKeyDown, inputHandleKeyDown), _eventHandlers.onBlur = callAllEventHandlers(onBlur, inputHandleBlur), _eventHandlers);
+      eventHandlers = {
+        [onChangeKey]: callAllEventHandlers(onChange, onInput, inputHandleChange),
+        onKeyDown: callAllEventHandlers(onKeyDown, inputHandleKeyDown),
+        onBlur: callAllEventHandlers(onBlur, inputHandleBlur)
+      };
     }
 
-    return extends_extends((_extends5 = {}, _extends5[refKey] = handleRefs(ref, function (inputNode) {
-      inputRef.current = inputNode;
-    }), _extends5.id = elementIds.inputId, _extends5['aria-autocomplete'] = 'list', _extends5['aria-controls'] = elementIds.menuId, _extends5), latestState.isOpen && latestState.highlightedIndex > -1 && {
-      'aria-activedescendant': elementIds.getItemId(latestState.highlightedIndex)
-    }, {
+    return {
+      [refKey]: handleRefs(ref, inputNode => {
+        inputRef.current = inputNode;
+      }),
+      id: elementIds.inputId,
+      'aria-autocomplete': 'list',
+      'aria-controls': elementIds.menuId,
+      ...(latestState.isOpen && latestState.highlightedIndex > -1 && {
+        'aria-activedescendant': elementIds.getItemId(latestState.highlightedIndex)
+      }),
       'aria-labelledby': elementIds.labelId,
       // https://developer.mozilla.org/en-US/docs/Web/Security/Securing_your_site/Turning_off_form_autocompletion
       // revert back since autocomplete="nope" is ignored on latest Chrome and Opera
       autoComplete: 'off',
-      value: latestState.inputValue
-    }, eventHandlers, rest);
+      value: latestState.inputValue,
+      ...eventHandlers,
+      ...rest
+    };
   }, [dispatch, inputKeyDownHandlers, latest, mouseAndTouchTrackersRef, setGetterPropCallInfo, elementIds]);
   const getComboboxProps = (0,external_React_namespaceObject.useCallback)(function (_temp7, _temp8) {
     let {
@@ -46238,9 +46240,16 @@ function useCombobox(userProps) {
       suppressRefError = false
     } = _temp8 === void 0 ? {} : _temp8;
     setGetterPropCallInfo('getComboboxProps', suppressRefError, refKey, comboboxRef);
-    return extends_extends((_extends6 = {}, _extends6[refKey] = handleRefs(ref, function (comboboxNode) {
-      comboboxRef.current = comboboxNode;
-    }), _extends6.role = 'combobox', _extends6['aria-haspopup'] = 'listbox', _extends6['aria-owns'] = elementIds.menuId, _extends6['aria-expanded'] = latest.current.state.isOpen, _extends6), rest);
+    return {
+      [refKey]: handleRefs(ref, comboboxNode => {
+        comboboxRef.current = comboboxNode;
+      }),
+      role: 'combobox',
+      'aria-haspopup': 'listbox',
+      'aria-owns': elementIds.menuId,
+      'aria-expanded': latest.current.state.isOpen,
+      ...rest
+    };
   }, [latest, setGetterPropCallInfo, elementIds]); // returns
 
   const toggleMenu = (0,external_React_namespaceObject.useCallback)(() => {
@@ -46283,29 +46292,29 @@ function useCombobox(userProps) {
   }, [dispatch]);
   return {
     // prop getters.
-    getItemProps: getItemProps,
-    getLabelProps: getLabelProps,
-    getMenuProps: getMenuProps,
-    getInputProps: getInputProps,
-    getComboboxProps: getComboboxProps,
-    getToggleButtonProps: getToggleButtonProps,
+    getItemProps,
+    getLabelProps,
+    getMenuProps,
+    getInputProps,
+    getComboboxProps,
+    getToggleButtonProps,
     // actions.
-    toggleMenu: toggleMenu,
-    openMenu: openMenu,
-    closeMenu: closeMenu,
-    setHighlightedIndex: setHighlightedIndex,
-    setInputValue: setInputValue,
-    selectItem: selectItem,
-    reset: reset,
+    toggleMenu,
+    openMenu,
+    closeMenu,
+    setHighlightedIndex,
+    setInputValue,
+    selectItem,
+    reset,
     // state.
-    highlightedIndex: highlightedIndex,
-    isOpen: isOpen,
-    selectedItem: selectedItem,
-    inputValue: inputValue
+    highlightedIndex,
+    isOpen,
+    selectedItem,
+    inputValue
   };
 }
 
-var defaultStateValues = {
+const defaultStateValues = {
   activeIndex: -1,
   selectedItems: []
 };
@@ -46345,11 +46354,11 @@ function getDefaultValue(props, propKey) {
 
 
 function getInitialState(props) {
-  var activeIndex = getInitialValue(props, 'activeIndex');
-  var selectedItems = getInitialValue(props, 'selectedItems');
+  const activeIndex = getInitialValue(props, 'activeIndex');
+  const selectedItems = getInitialValue(props, 'selectedItems');
   return {
-    activeIndex: activeIndex,
-    selectedItems: selectedItems
+    activeIndex,
+    selectedItems
   };
 }
 /**
@@ -46368,10 +46377,12 @@ function isKeyDownOperationPermitted(event) {
     return false;
   }
 
-  var element = event.target;
+  const element = event.target;
 
   if (element instanceof HTMLInputElement && // if element is a text input
-  element.value !== '' && (element.selectionStart !== 0 || element.selectionEnd !== 0)) {
+  element.value !== '' && ( // and we have text in it
+  // and cursor is either not at the start or is currently highlighting text.
+  element.selectionStart !== 0 || element.selectionEnd !== 0)) {
     return false;
   }
 
@@ -46393,7 +46404,7 @@ function getA11yRemovalMessage(selectionParameters) {
   return `${itemToStringLocal(removedSelectedItem)} has been removed.`;
 }
 
-var propTypes = {
+const propTypes = {
   selectedItems: (prop_types_default()).array,
   initialSelectedItems: (prop_types_default()).array,
   defaultSelectedItems: (prop_types_default()).array,
@@ -46417,33 +46428,33 @@ var propTypes = {
     })
   })
 };
-var defaultProps = {
+const defaultProps = {
   itemToString: defaultProps$3.itemToString,
   stateReducer: defaultProps$3.stateReducer,
   environment: defaultProps$3.environment,
-  getA11yRemovalMessage: getA11yRemovalMessage,
+  getA11yRemovalMessage,
   keyNavigationNext: 'ArrowRight',
   keyNavigationPrevious: 'ArrowLeft'
 }; // eslint-disable-next-line import/no-mutable-exports
 
-var validatePropTypes = downshift_esm_noop;
+let validatePropTypes = downshift_esm_noop;
 /* istanbul ignore next */
 
 if (false) {}
 
-var SelectedItemClick =  false ? 0 : 0;
-var SelectedItemKeyDownDelete =  false ? 0 : 1;
-var SelectedItemKeyDownBackspace =  false ? 0 : 2;
-var SelectedItemKeyDownNavigationNext =  false ? 0 : 3;
-var SelectedItemKeyDownNavigationPrevious =  false ? 0 : 4;
-var DropdownKeyDownNavigationPrevious =  false ? 0 : 5;
-var DropdownKeyDownBackspace =  false ? 0 : 6;
-var DropdownClick =  false ? 0 : 7;
-var FunctionAddSelectedItem =  false ? 0 : 8;
-var FunctionRemoveSelectedItem =  false ? 0 : 9;
-var FunctionSetSelectedItems =  false ? 0 : 10;
-var FunctionSetActiveIndex =  false ? 0 : 11;
-var FunctionReset =  false ? 0 : 12;
+const SelectedItemClick =  false ? 0 : 0;
+const SelectedItemKeyDownDelete =  false ? 0 : 1;
+const SelectedItemKeyDownBackspace =  false ? 0 : 2;
+const SelectedItemKeyDownNavigationNext =  false ? 0 : 3;
+const SelectedItemKeyDownNavigationPrevious =  false ? 0 : 4;
+const DropdownKeyDownNavigationPrevious =  false ? 0 : 5;
+const DropdownKeyDownBackspace =  false ? 0 : 6;
+const DropdownClick =  false ? 0 : 7;
+const FunctionAddSelectedItem =  false ? 0 : 8;
+const FunctionRemoveSelectedItem =  false ? 0 : 9;
+const FunctionSetSelectedItems =  false ? 0 : 10;
+const FunctionSetActiveIndex =  false ? 0 : 11;
+const FunctionReset =  false ? 0 : 12;
 
 var stateChangeTypes = /*#__PURE__*/Object.freeze({
   __proto__: null,
@@ -46465,13 +46476,17 @@ var stateChangeTypes = /*#__PURE__*/Object.freeze({
 /* eslint-disable complexity */
 
 function downshiftMultipleSelectionReducer(state, action) {
-  var type = action.type,
-      index = action.index,
-      props = action.props,
-      selectedItem = action.selectedItem;
-  var activeIndex = state.activeIndex,
-      selectedItems = state.selectedItems;
-  var changes;
+  const {
+    type,
+    index,
+    props,
+    selectedItem
+  } = action;
+  const {
+    activeIndex,
+    selectedItems
+  } = state;
+  let changes;
 
   switch (type) {
     case SelectedItemClick:
@@ -46495,7 +46510,7 @@ function downshiftMultipleSelectionReducer(state, action) {
     case SelectedItemKeyDownBackspace:
     case SelectedItemKeyDownDelete:
       {
-        var newActiveIndex = activeIndex;
+        let newActiveIndex = activeIndex;
 
         if (selectedItems.length === 1) {
           newActiveIndex = -1;
@@ -46503,11 +46518,12 @@ function downshiftMultipleSelectionReducer(state, action) {
           newActiveIndex = selectedItems.length - 2;
         }
 
-        changes = extends_extends({
-          selectedItems: [].concat(selectedItems.slice(0, activeIndex), selectedItems.slice(activeIndex + 1))
-        }, {
-          activeIndex: newActiveIndex
-        });
+        changes = {
+          selectedItems: [...selectedItems.slice(0, activeIndex), ...selectedItems.slice(activeIndex + 1)],
+          ...{
+            activeIndex: newActiveIndex
+          }
+        };
         break;
       }
 
@@ -46525,7 +46541,7 @@ function downshiftMultipleSelectionReducer(state, action) {
 
     case FunctionAddSelectedItem:
       changes = {
-        selectedItems: [].concat(selectedItems, [selectedItem])
+        selectedItems: [...selectedItems, selectedItem]
       };
       break;
 
@@ -46537,26 +46553,30 @@ function downshiftMultipleSelectionReducer(state, action) {
 
     case FunctionRemoveSelectedItem:
       {
-        var _newActiveIndex = activeIndex;
-        var selectedItemIndex = selectedItems.indexOf(selectedItem);
+        let newActiveIndex = activeIndex;
+        const selectedItemIndex = selectedItems.indexOf(selectedItem);
 
-        if (selectedItems.length === 1) {
-          _newActiveIndex = -1;
-        } else if (selectedItemIndex === selectedItems.length - 1) {
-          _newActiveIndex = selectedItems.length - 2;
+        if (selectedItemIndex >= 0) {
+          if (selectedItems.length === 1) {
+            newActiveIndex = -1;
+          } else if (selectedItemIndex === selectedItems.length - 1) {
+            newActiveIndex = selectedItems.length - 2;
+          }
+
+          changes = {
+            selectedItems: [...selectedItems.slice(0, selectedItemIndex), ...selectedItems.slice(selectedItemIndex + 1)],
+            activeIndex: newActiveIndex
+          };
         }
 
-        changes = extends_extends({
-          selectedItems: [].concat(selectedItems.slice(0, selectedItemIndex), selectedItems.slice(selectedItemIndex + 1))
-        }, {
-          activeIndex: _newActiveIndex
-        });
         break;
       }
 
     case FunctionSetSelectedItems:
       {
-        var newSelectedItems = action.selectedItems;
+        const {
+          selectedItems: newSelectedItems
+        } = action;
         changes = {
           selectedItems: newSelectedItems
         };
@@ -46565,9 +46585,11 @@ function downshiftMultipleSelectionReducer(state, action) {
 
     case FunctionSetActiveIndex:
       {
-        var _newActiveIndex2 = action.activeIndex;
+        const {
+          activeIndex: newActiveIndex
+        } = action;
         changes = {
-          activeIndex: _newActiveIndex2
+          activeIndex: newActiveIndex
         };
         break;
       }
@@ -46583,11 +46605,11 @@ function downshiftMultipleSelectionReducer(state, action) {
       throw new Error('Reducer called without proper action type.');
   }
 
-  return extends_extends({}, state, changes);
+  return { ...state,
+    ...changes
+  };
 }
 
-var downshift_esm_excluded = ["refKey", "ref", "onClick", "onKeyDown", "selectedItem", "index"],
-    _excluded2 = ["refKey", "ref", "onKeyDown", "onClick", "preventKeyAction"];
 useMultipleSelection.stateChangeTypes = stateChangeTypes;
 
 function useMultipleSelection(userProps) {
@@ -46632,14 +46654,12 @@ function useMultipleSelection(userProps) {
     }
 
     if (selectedItems.length < previousSelectedItemsRef.current.length) {
-      var removedSelectedItem = previousSelectedItemsRef.current.find(function (item) {
-        return selectedItems.indexOf(item) < 0;
-      });
+      const removedSelectedItem = previousSelectedItemsRef.current.find(item => selectedItems.indexOf(item) < 0);
       setStatus(getA11yRemovalMessage({
-        itemToString: itemToString,
+        itemToString,
         resultCount: selectedItems.length,
-        removedSelectedItem: removedSelectedItem,
-        activeIndex: activeIndex,
+        removedSelectedItem,
+        activeIndex,
         activeSelectedItem: selectedItems[activeIndex]
       }), environment.document);
     }
@@ -46660,10 +46680,10 @@ function useMultipleSelection(userProps) {
   }, [activeIndex]);
   useControlPropsValidator({
     isInitialMount: isInitialMountRef.current,
-    props: props,
-    state: state
+    props,
+    state
   });
-  var setGetterPropCallInfo = useGetterPropsCalledChecker('getDropdownProps'); // Make initial ref false.
+  const setGetterPropCallInfo = useGetterPropsCalledChecker('getDropdownProps'); // Make initial ref false.
 
   (0,external_React_namespaceObject.useEffect)(() => {
     isInitialMountRef.current = false;
@@ -46674,22 +46694,25 @@ function useMultipleSelection(userProps) {
       dispatch({
         type: SelectedItemKeyDownNavigationPrevious
       });
-    }, _ref[keyNavigationNext] = function () {
+    },
+
+    [keyNavigationNext]() {
       dispatch({
         type: SelectedItemKeyDownNavigationNext
       });
-    }, _ref.Delete = function Delete() {
+    },
+
+    Delete() {
       dispatch({
         type: SelectedItemKeyDownDelete
       });
-    }, _ref.Backspace = function Backspace() {
+    },
+
+    Backspace() {
       dispatch({
         type: SelectedItemKeyDownBackspace
       });
-    }, _ref;
-  }, [dispatch, keyNavigationNext, keyNavigationPrevious]);
-  var dropdownKeyDownHandlers = (0,external_React_.useMemo)(function () {
-    var _ref2;
+    }
 
   }), [dispatch, keyNavigationNext, keyNavigationPrevious]);
   const dropdownKeyDownHandlers = (0,external_React_namespaceObject.useMemo)(() => ({
@@ -46699,17 +46722,17 @@ function useMultipleSelection(userProps) {
           type: DropdownKeyDownNavigationPrevious
         });
       }
-    }, _ref2.Backspace = function Backspace(event) {
+    },
+
+    Backspace(event) {
       if (isKeyDownOperationPermitted(event)) {
         dispatch({
           type: DropdownKeyDownBackspace
         });
       }
-    }, _ref2;
-  }, [dispatch, keyNavigationPrevious]); // Getter props.
+    }
 
-  var getSelectedItemProps = (0,external_React_.useCallback)(function (_temp) {
-    var _extends2;
+  }), [dispatch, keyNavigationPrevious]); // Getter props.
 
   const getSelectedItemProps = (0,external_React_namespaceObject.useCallback)(function (_temp) {
     let {
@@ -46730,26 +46753,32 @@ function useMultipleSelection(userProps) {
       throw new Error('Pass either selectedItem or index in getSelectedItemProps!');
     }
 
-    var selectedItemHandleClick = function selectedItemHandleClick() {
+    const selectedItemHandleClick = () => {
       dispatch({
         type: SelectedItemClick,
-        index: index
+        index
       });
     };
 
-    var selectedItemHandleKeyDown = function selectedItemHandleKeyDown(event) {
-      var key = normalizeArrowKey(event);
+    const selectedItemHandleKeyDown = event => {
+      const key = normalizeArrowKey(event);
 
       if (key && selectedItemKeyDownHandlers[key]) {
         selectedItemKeyDownHandlers[key](event);
       }
     };
 
-    return extends_extends((_extends2 = {}, _extends2[refKey] = handleRefs(ref, function (selectedItemNode) {
-      if (selectedItemNode) {
-        selectedItemRefs.current.push(selectedItemNode);
-      }
-    }), _extends2.tabIndex = index === latestState.activeIndex ? 0 : -1, _extends2.onClick = callAllEventHandlers(onClick, selectedItemHandleClick), _extends2.onKeyDown = callAllEventHandlers(onKeyDown, selectedItemHandleKeyDown), _extends2), rest);
+    return {
+      [refKey]: handleRefs(ref, selectedItemNode => {
+        if (selectedItemNode) {
+          selectedItemRefs.current.push(selectedItemNode);
+        }
+      }),
+      tabIndex: index === latestState.activeIndex ? 0 : -1,
+      onClick: callAllEventHandlers(onClick, selectedItemHandleClick),
+      onKeyDown: callAllEventHandlers(onKeyDown, selectedItemHandleKeyDown),
+      ...rest
+    };
   }, [dispatch, latest, selectedItemKeyDownHandlers]);
   const getDropdownProps = (0,external_React_namespaceObject.useCallback)(function (_temp2, _temp3) {
     let {
@@ -46765,40 +46794,44 @@ function useMultipleSelection(userProps) {
     } = _temp3 === void 0 ? {} : _temp3;
     setGetterPropCallInfo('getDropdownProps', suppressRefError, refKey, dropdownRef);
 
-    var dropdownHandleKeyDown = function dropdownHandleKeyDown(event) {
-      var key = normalizeArrowKey(event);
+    const dropdownHandleKeyDown = event => {
+      const key = normalizeArrowKey(event);
 
       if (key && dropdownKeyDownHandlers[key]) {
         dropdownKeyDownHandlers[key](event);
       }
     };
 
-    var dropdownHandleClick = function dropdownHandleClick() {
+    const dropdownHandleClick = () => {
       dispatch({
         type: DropdownClick
       });
     };
 
-    return extends_extends((_extends3 = {}, _extends3[refKey] = handleRefs(ref, function (dropdownNode) {
-      if (dropdownNode) {
-        dropdownRef.current = dropdownNode;
-      }
-    }), _extends3), !preventKeyAction && {
-      onKeyDown: callAllEventHandlers(onKeyDown, dropdownHandleKeyDown),
-      onClick: callAllEventHandlers(onClick, dropdownHandleClick)
-    }, rest);
+    return {
+      [refKey]: handleRefs(ref, dropdownNode => {
+        if (dropdownNode) {
+          dropdownRef.current = dropdownNode;
+        }
+      }),
+      ...(!preventKeyAction && {
+        onKeyDown: callAllEventHandlers(onKeyDown, dropdownHandleKeyDown),
+        onClick: callAllEventHandlers(onClick, dropdownHandleClick)
+      }),
+      ...rest
+    };
   }, [dispatch, dropdownKeyDownHandlers, setGetterPropCallInfo]); // returns
 
   const addSelectedItem = (0,external_React_namespaceObject.useCallback)(selectedItem => {
     dispatch({
       type: FunctionAddSelectedItem,
-      selectedItem: selectedItem
+      selectedItem
     });
   }, [dispatch]);
   const removeSelectedItem = (0,external_React_namespaceObject.useCallback)(selectedItem => {
     dispatch({
       type: FunctionRemoveSelectedItem,
-      selectedItem: selectedItem
+      selectedItem
     });
   }, [dispatch]);
   const setSelectedItems = (0,external_React_namespaceObject.useCallback)(newSelectedItems => {
@@ -46819,15 +46852,15 @@ function useMultipleSelection(userProps) {
     });
   }, [dispatch]);
   return {
-    getSelectedItemProps: getSelectedItemProps,
-    getDropdownProps: getDropdownProps,
-    addSelectedItem: addSelectedItem,
-    removeSelectedItem: removeSelectedItem,
-    setSelectedItems: setSelectedItems,
-    setActiveIndex: setActiveIndex,
-    reset: reset,
-    selectedItems: selectedItems,
-    activeIndex: activeIndex
+    getSelectedItemProps,
+    getDropdownProps,
+    addSelectedItem,
+    removeSelectedItem,
+    setSelectedItems,
+    setActiveIndex,
+    reset,
+    selectedItems,
+    activeIndex
   };
 }
 
@@ -54250,7 +54283,7 @@ function useRadioState(initialState) {
       initialValue = _useSealedState.state,
       _useSealedState$loop = _useSealedState.loop,
       loop = _useSealedState$loop === void 0 ? true : _useSealedState$loop,
-      sealed = _rollupPluginBabelHelpers_1f0bf8c2_objectWithoutPropertiesLoose(_useSealedState, ["state", "loop"]);
+      sealed = _objectWithoutPropertiesLoose(_useSealedState, ["state", "loop"]);
 
   var _React$useState = (0,external_React_namespaceObject.useState)(initialValue),
       state = _React$useState[0],
@@ -54686,7 +54719,7 @@ var useRadio = createHook({
         unstable_clickOnEnter = _ref$unstable_clickOn === void 0 ? false : _ref$unstable_clickOn,
         _ref$unstable_checkOn = _ref.unstable_checkOnFocus,
         unstable_checkOnFocus = _ref$unstable_checkOn === void 0 ? true : _ref$unstable_checkOn,
-        options = _rollupPluginBabelHelpers_1f0bf8c2_objectWithoutPropertiesLoose(_ref, ["unstable_clickOnEnter", "unstable_checkOnFocus"]);
+        options = _objectWithoutPropertiesLoose(_ref, ["unstable_clickOnEnter", "unstable_checkOnFocus"]);
 
     return _objectSpread2(_objectSpread2({
       checked: checked,
@@ -54700,7 +54733,7 @@ var useRadio = createHook({
     var htmlRef = _ref3.ref,
         htmlOnChange = _ref3.onChange,
         htmlOnClick = _ref3.onClick,
-        htmlProps = _rollupPluginBabelHelpers_1f0bf8c2_objectWithoutPropertiesLoose(_ref3, ["ref", "onChange", "onClick"]);
+        htmlProps = _objectWithoutPropertiesLoose(_ref3, ["ref", "onChange", "onClick"]);
 
     var ref = (0,external_React_namespaceObject.useRef)(null);
 
@@ -62486,7 +62519,7 @@ function useToolbarState(initialState) {
   var _useSealedState = useSealedState(initialState),
       _useSealedState$orien = _useSealedState.orientation,
       orientation = _useSealedState$orien === void 0 ? "horizontal" : _useSealedState$orien,
-      sealed = _rollupPluginBabelHelpers_1f0bf8c2_objectWithoutPropertiesLoose(_useSealedState, ["orientation"]);
+      sealed = _objectWithoutPropertiesLoose(_useSealedState, ["orientation"]);
 
   return useCompositeState(_objectSpread2({
     orientation: orientation
