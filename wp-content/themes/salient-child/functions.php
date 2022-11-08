@@ -88,7 +88,7 @@ function lf_meta_header()
             echo '
   	<div class="lfprojects awsf-background">
 		<div class="container">
-			<a href="https://www.linuxfoundation.org/projects" target="_blank" rel="noopener noreferrer">
+			<a href="https://www.aswf.io/projects/" target="_blank" rel="noopener noreferrer">
 			<img src="/wp-content/uploads/banners/aswf_banner_dark.svg">
 			</a>
 		</div>
