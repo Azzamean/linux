@@ -240,6 +240,7 @@ return $name;
 
 */
 
+/*
 function salient_redux_custom_fonts()
 {
     return [
@@ -263,3 +264,4 @@ add_filter(
     "redux/salient_redux/field/typography/custom_fonts",
     "salient_redux_custom_fonts"
 );
+*/
