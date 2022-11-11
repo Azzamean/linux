@@ -393,15 +393,7 @@ function recent_posts_linux($atts, $content)
     $design = !empty($design) ? $design : "list-design";
     $columns = !empty($columns) ? $columns : "4";
     $limit = !empty($limit) ? $limit : "4";
-    if (!empty($category_id)) {
-        $query_args["tax_query"] = [
-            [
-                "taxonomy" => "category",
-                "field" => "term_id",
-                "terms" => [$category_id]
-            ]
-        ];
-    }
+
     $categories = !empty($categories) ? $categories : "0";
     $tags = !empty($tags) ? $tags : "hide-tags";
     $featured_image = !empty($featured_image)
@@ -424,7 +416,17 @@ function recent_posts_linux($atts, $content)
         "nopaging" => false,
         "paged" => $paged
     ];
-
+	// KEEP UNDER FIRST QUERY ARGS
+    if (!empty($category_id)) {
+        $query_args["tax_query"] = [
+            [
+                "taxonomy" => "category",
+                "field" => "term_id",
+                "terms" => [$category_id]
+            ]
+        ];
+    }
+	
     switch ($design) {
         case "list-design":
             $design = "List Design";
@@ -823,7 +825,7 @@ function recent_posts_linux($atts, $content)
                 }
                 if ($navigation == "show_navigation_arrow") {
                     $output .=
-                        '<a href="' .
+                        '<a class="svg-link" href="' .
                         get_permalink() .
                         '">' .
                         '<svg class="grid-svg" fill="' .
@@ -858,9 +860,9 @@ function recent_posts_linux($atts, $content)
                     $i = 0;
                     foreach (get_the_category() as $cat) {
                         $output .=
-                            '<a href="' .
+                            '<a class="grid-categories" href="' .
                             get_category_link($cat->cat_ID) .
-                            '" class="simple-grid-categories">' .
+                            '">' .
                             $cat->cat_name .
                             "</a>" .
                             " ";
@@ -989,7 +991,7 @@ function recent_posts_linux($atts, $content)
                 }
                 if ($navigation == "show_navigation_arrow") {
                     $output .=
-                        '<a href="' .
+                        '<a class="svg-link" href="' .
                         get_permalink() .
                         '">' .
                         '<svg class="grid-svg" fill="' .
