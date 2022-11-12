@@ -44,8 +44,8 @@ if ( get_post_format() !== 'status' && get_post_format() !== 'aside' && 'image_u
 
 			if ( ( empty( $bg ) && empty( $bg_color ) ) && $fullscreen_header != true && $inherit_and_has_featured_img !== true ) { ?>
 
-	  <div class="row heading-title hentry" data-header-style="<?php echo esc_attr( $blog_header_type ); ?>">
-		<div class="col span_12 section-title blog-title">
+	  <div class="row heading-title-omp hentry" data-header-style="<?php echo esc_attr( $blog_header_type ); ?>">
+		<div class="col span_12 section-title-omp blog-title">
 				<?php if ( $blog_header_type === 'default_minimal' && 'post' === get_post_type() ) { ?>
 		  <span class="meta-category">
 
@@ -72,8 +72,10 @@ if ( get_post_format() !== 'status' && get_post_format() !== 'aside' && 'image_u
 				$using_fixed_salient_social = 'true';
 			}
 			?>
-			<div id="single-below-header" data-hide-on-mobile="<?php echo esc_attr($using_fixed_salient_social); ?>">
+			<div id="single-below-header-omp" data-hide-on-mobile="<?php echo esc_attr($using_fixed_salient_social); ?>">
 				<?php echo '<span class="meta-author vcard author"><span class="fn"><span class="author-leading">' . esc_html__('By', 'salient') . '</span> ' . get_the_author_posts_link() . '</span></span>';
+				
+				echo '<span> | </span>';
 
 				$date_functionality = (isset($nectar_options['post_date_functionality']) && !empty($nectar_options['post_date_functionality'])) ? $nectar_options['post_date_functionality'] : 'published_date';
 
@@ -93,9 +95,9 @@ if ( get_post_format() !== 'status' && get_post_format() !== 'aside' && 'image_u
 				}
 
 				if( $blog_header_type != 'default_minimal') {
-					echo '<span class="meta-category">'.apply_filters('nectar_blog_page_header_categories',get_the_category_list(', ')).'</span>';
+					//echo '<span class="meta-category">'.apply_filters('nectar_blog_page_header_categories',get_the_category_list(', ')).'</span>';
 				} else {
-					echo '<span class="meta-comment-count"><a href="'.get_comments_link().'">'. get_comments_number_text( esc_html__('No Comments', 'salient'), esc_html__('One Comment', 'salient'), esc_html__('% Comments', 'salient') ) . '</a></span>';
+					//echo '<span class="meta-comment-count"><a href="'.get_comments_link().'">'. get_comments_number_text( esc_html__('No Comments', 'salient'), esc_html__('One Comment', 'salient'), esc_html__('% Comments', 'salient') ) . '</a></span>';
 				}
         $remove_reading_dur = ( isset( $nectar_options['blog_remove_single_reading_dur'] ) ) ? $nectar_options['blog_remove_single_reading_dur'] : '0';
         if( '1' !== $remove_reading_dur ) {

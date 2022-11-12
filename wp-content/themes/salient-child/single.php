@@ -13,15 +13,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 get_header();
 
-
 // GRABS SPECIFIC SUBSITES
 $site_id;
 if (is_multisite()) {
     $site_id = get_current_blog_id();
 }
-
-
-
 
 $nectar_options    = get_nectar_theme_options();
 $fullscreen_header = ( ! empty( $nectar_options['blog_header_type'] ) && 'fullscreen' === $nectar_options['blog_header_type'] && is_singular( 'post' ) ) ? true : false;
@@ -112,7 +108,12 @@ if ( true === $fullscreen_header ) {
 				while ( have_posts() ) :
 
 					the_post();
-					get_template_part( 'includes/partials/single-post/post-content' );
+					if ( $site_id == '14' ) {
+						get_template_part( 'includes/partials/single-post/post-content-omp' );
+					}
+					else {
+						get_template_part( 'includes/partials/single-post/post-content' );
+					}
 
 				 endwhile;
 			 endif;
@@ -196,4 +197,14 @@ if ( true === $fullscreen_header ) {
 		}
 }
 
+
+if ( $site_id == '14' ) {
+	?>
+	<div class="row newsletter">
+	<?php
+echo do_shortcode('[vc_row type="in_container" full_screen_row_position="middle" column_margin="default" column_direction="default" column_direction_tablet="default" column_direction_phone="default" scene_position="center" text_color="dark" text_align="left" row_border_radius="none" row_border_radius_applies="bg" overflow="visible" overlay_strength="0.3" gradient_direction="left_to_right" shape_divider_position="bottom" bg_image_animation="none"][vc_column column_padding="no-extra-padding" column_padding_tablet="inherit" column_padding_phone="inherit" column_padding_position="all" column_element_direction_desktop="default" column_element_spacing="default" desktop_text_alignment="default" tablet_text_alignment="default" phone_text_alignment="default" background_color_opacity="1" background_hover_color_opacity="1" column_backdrop_filter="none" column_shadow="none" column_border_radius="none" column_link_target="_self" column_position="default" gradient_direction="left_to_right" overlay_strength="0.3" width="1/1" tablet_width_inherit="default" animation_type="default" bg_image_animation="none" border_type="simple" column_border_width="none" column_border_style="solid"][nectar_global_section id="7879"][/vc_column][/vc_row]');
+	?>
+	</div>
+	<?php
+}
 get_footer(); ?>
