@@ -1,22 +1,26 @@
 <?php
 /**
-* Single Post Content
-*
-* @version 13.1
-*/
+ * Single Post Content
+ *
+ * @version 13.1
+ */
 
 // Exit if accessed directly
-if ( ! defined( 'ABSPATH' ) ) {
-  exit;
+if (!defined('ABSPATH'))
+{
+    exit;
 }
 
 global $nectar_options;
 
-$nectar_post_format            = get_post_format();
-$hide_featrued_image           = ( ! empty( $nectar_options['blog_hide_featured_image'] ) ) ? $nectar_options['blog_hide_featured_image'] : '0';
-$single_post_header_inherit_fi = ( ! empty( $nectar_options['blog_post_header_inherit_featured_image'] ) ) ? $nectar_options['blog_post_header_inherit_featured_image'] : '0';
-$blog_header_type              = ( ! empty( $nectar_options['blog_header_type'] ) ) ? $nectar_options['blog_header_type'] : 'default';
-$blog_social_style             = ( get_option( 'salient_social_button_style' ) ) ? get_option( 'salient_social_button_style' ) : 'fixed';
+$nectar_post_format = get_post_format();
+$hide_featrued_image = (!empty($nectar_options['blog_hide_featured_image'])) ? $nectar_options['blog_hide_featured_image'] : '0';
+$single_post_header_inherit_fi = (!empty($nectar_options['blog_post_header_inherit_featured_image'])) ? $nectar_options['blog_post_header_inherit_featured_image'] : '0';
+$blog_header_type = (!empty($nectar_options['blog_header_type'])) ? $nectar_options['blog_header_type'] : 'default';
+$blog_social_style = (get_option('salient_social_button_style')) ? get_option('salient_social_button_style') : 'fixed';
+
+$protocol = ((!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off') || $_SERVER['SERVER_PORT'] == 443) ? "https://" : "http://";
+$url = $protocol . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
 
 ?>
 
@@ -24,31 +28,45 @@ $blog_social_style             = ( get_option( 'salient_social_button_style' ) )
   
   <div class="inner-wrap">
 
-		<div class="post-content" data-hide-featured-media="<?php echo esc_attr( $hide_featrued_image ); ?>">
-      
-        <?php
-  
-        if( function_exists('nectar_social_sharing_output') && 'default' == $blog_social_style && 'image_under' === $blog_header_type) {
-          nectar_social_sharing_output('vertical');
-        }
-  
-        ?>
-        
-		<div class="post-area col span_9">
-		<?php
-			the_content();
-		?>
+		<div class="post-content" data-hide-featured-media="<?php echo esc_attr($hide_featrued_image); ?>">
+          
+			<div class="post-area col span_9">
 				
-		</div><!--/span_9-->
+				<div class="fixed-social">
+				<a class="fixed-sharing" href="mailto:?" title="Share with Email" target="_blank"><i class="fa fa-envelope"></i></a>
+				<a class="fixed-sharing" href="https://twitter.com/intent/tweet?text=<?php echo $url ?>" title="Share with Twitter" target="_blank"> <i class="fa fa-twitter"></i></a>
+				<a class="fixed-sharing" href="https://www.facebook.com/sharer/sharer.php?u=<?php echo $url ?>" title="Share with Facebook" target="_blank"> <i class="fa fa-facebook"></i></a>
+				<a class="fixed-sharing" href="https://www.linkedin.com/shareArticle?mini=true&url=<?php echo $url ?>" title="Share with LinkedIn" target="_blank"> <i class="fa fa-linkedin"></i></a>
+				</div>
+			
+			<?php
+the_content();
+?>
+		
+			</div><!--/span_9-->
 			
 		<div id="sidebar" class="col span_3 col_last">
-			<h3>SIMILAR VIDEOS</h3>
+			<h3 class="simlar-videos">SIMILAR VIDEOS</h3>
+			<?php
+$args = array(
+    'posts_per_page' => 5,
+    'category_name' => 'techstrongtv'
+);
+$last_5_posts_query = new WP_Query($args);
+while ($last_5_posts_query->have_posts()):
+    $last_5_posts_query->the_post();
+    $link = get_permalink();
+    $title = get_the_title();
+    $content .= '<div class="latest-posts">';
+    $content .= '<a href=' . $link . '>' . $title . '</a>';
+    $content .= '</div>';
+endwhile;
+echo $content;
+?>
 		</div><!--/span_9-->
 		
       </div><!--/post-content-->
-
-	  
-	  
+  
     </div><!--/inner-wrap-->
   
-</article> 		
+</article>
