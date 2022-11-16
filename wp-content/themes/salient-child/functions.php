@@ -71,7 +71,7 @@ if (is_multisite()) {
         case "13":
             require_once "sites/o3d/functions.php";
             break;
-	    // NextArch
+        // NextArch
         case "15":
             require_once "sites/nextarch/functions.php";
             break;
@@ -266,37 +266,41 @@ add_filter(
 );
 */
 
-
-
-
 // FIRST REMOVE ALL POST FORMATS
-function remove_posts_formats() {
-	remove_theme_support('post-formats');
+function remove_posts_formats()
+{
+    remove_theme_support("post-formats");
 }
-add_action( 'after_setup_theme', 'remove_posts_formats', 11 );
+add_action("after_setup_theme", "remove_posts_formats", 11);
 
 // SECOND ADD IN WANTED POST FORMATS
-function add_posts_formats() {
-	add_theme_support( 'post-formats', array( 'standard', 'link' ) );
+function add_posts_formats()
+{
+    add_theme_support("post-formats", ["standard", "link"]);
 }
-add_action( 'after_setup_theme', 'add_posts_formats', 11 );
+add_action("after_setup_theme", "add_posts_formats", 11);
 
-
-function rename_post_formats($translation, $text, $context, $domain) {
-    $names = array(
-        'Standard'  => 'Normal',
-        'Link' => 'External Link'
-    );
-    if ($context == 'Post format') {
-        $translation = str_replace(array_keys($names), array_values($names), $text);
+function rename_post_formats($translation, $text, $context, $domain)
+{
+    $names = [
+        "Standard" => "Normal",
+        "Link" => "External Link",
+    ];
+    if ($context == "Post format") {
+        $translation = str_replace(
+            array_keys($names),
+            array_values($names),
+            $text
+        );
     }
     return $translation;
 }
-add_filter('gettext_with_context', 'rename_post_formats', 10, 4);
+add_filter("gettext_with_context", "rename_post_formats", 10, 4);
 
 // STYLE ACF BACKEND
-function acf_admin_head() {
-	?>
+function acf_admin_head()
+{
+    ?>
 	<style type="text/css">
 	.acf-postbox h2.hndle.ui-sortable-handle {
 		color: #ffffff;
@@ -334,4 +338,4 @@ function acf_admin_head() {
 	<?php
 }
 
-add_action('acf/input/admin_head', 'acf_admin_head');
+add_action("acf/input/admin_head", "acf_admin_head");

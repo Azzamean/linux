@@ -54,8 +54,6 @@ $url = $protocol . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
 				</div>
 			
 			<?php
-			$format = get_post_format();
-			echo $format;
    the_content();
 
    if (
