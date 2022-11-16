@@ -265,3 +265,73 @@ add_filter(
     "salient_redux_custom_fonts"
 );
 */
+
+
+
+
+// FIRST REMOVE ALL POST FORMATS
+function remove_posts_formats() {
+	remove_theme_support('post-formats');
+}
+add_action( 'after_setup_theme', 'remove_posts_formats', 11 );
+
+// SECOND ADD IN WANTED POST FORMATS
+function add_posts_formats() {
+	add_theme_support( 'post-formats', array( 'standard', 'link' ) );
+}
+add_action( 'after_setup_theme', 'add_posts_formats', 11 );
+
+
+function rename_post_formats($translation, $text, $context, $domain) {
+    $names = array(
+        'Standard'  => 'Normal',
+        'Link' => 'External Link'
+    );
+    if ($context == 'Post format') {
+        $translation = str_replace(array_keys($names), array_values($names), $text);
+    }
+    return $translation;
+}
+add_filter('gettext_with_context', 'rename_post_formats', 10, 4);
+
+// STYLE ACF BACKEND
+function acf_admin_head() {
+	?>
+	<style type="text/css">
+	.acf-postbox h2.hndle.ui-sortable-handle {
+		color: #ffffff;
+		background: #3a67ff;
+	}
+	.acf-field .acf-label label {
+		font-size: 14px;
+		font-weight: 600;
+		color: #000000;
+	}
+	.acf-field p.description {
+		color: #999999;
+		font-size: 12px;
+		display: block;
+		line-height: 20px;
+		margin: 0px 0 0;
+		font-weight: normal;
+		max-width: 200px;
+	}
+	.video-settings {
+		display: flex;
+	}
+	.video-settings.acf-field .acf-label {
+		width: 33%;
+		padding: 20px 10px 20px 0;
+	}
+	.video-settings.acf-field .acf-input {
+		width: 100%;
+		padding: 15px 10px;
+	}
+	.acf-postbox .acf-hndle-cog {
+		display: none !important;
+	}
+	</style>
+	<?php
+}
+
+add_action('acf/input/admin_head', 'acf_admin_head');

@@ -112,6 +112,11 @@ a.list-design.navigation-btn {
 	margin-bottom: 2%;
 }
 
+.grid-design.outer img {
+    width: 100%;
+    object-fit: contain;
+}
+
 .grid-design.navigation-btn a {
 	color: #ffffff;
 	padding: 0 35px;
