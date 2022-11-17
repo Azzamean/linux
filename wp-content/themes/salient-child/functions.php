@@ -1,15 +1,13 @@
 <?php
-
 //remove_role( 'Super_Admin' );
 //remove_role( 'Super Admin' );
 //grant_super_admin(1);
 //grant_super_admin(5);
-
 /* Osano code for tracking */
 add_action("wp_head", "osano_script");
 function osano_script()
 {
-    ?>
+?>
 <script src="https://cmp.osano.com/16A0DbT9yDNIaQkvZ/3b49aaa9-15ab-4d47-a8fb-96cc25b5543c/osano.js"></script>
 <?php
 }
@@ -18,63 +16,44 @@ function osano_script()
 require_once "vc-addons/recent-posts-linux.php";
 require_once "vc-addons/projects-linux.php";
 
+// GET WP BAKERY CUSTOM FIELDS
+require_once "vc-addons/custom-fields/custom-fields.php";
+
 //GET CUSTOM POST TYPES
 require_once "custom-post-types/projects.php";
 //require_once "custom-post-types/webinars.php";
-
 // GET CHILD THEME LIBRARIES
 function salient_child_enqueue_styles()
 {
     $nectar_theme_version = nectar_get_theme_version();
-    wp_enqueue_style(
-        "salient-child-style",
-        get_stylesheet_directory_uri() . "/style.css",
-        "",
-        $nectar_theme_version
-    );
-    wp_enqueue_style(
-        "vc-addons-style",
-        get_stylesheet_directory_uri() . "/vc-addons/css/vc-addons.css",
-        "",
-        $nectar_theme_version
-    );
-    wp_enqueue_style(
-        "templates-style",
-        get_stylesheet_directory_uri() . "/templates/css/templates.css",
-        "",
-        $nectar_theme_version
-    );
-    wp_enqueue_style(
-        "fonts-style",
-        get_stylesheet_directory_uri() . "/fonts/fonts.css",
-        "",
-        $nectar_theme_version
-    );
+    wp_enqueue_style("salient-child-style", get_stylesheet_directory_uri() . "/style.css", "", $nectar_theme_version);
+    wp_enqueue_style("vc-addons-style", get_stylesheet_directory_uri() . "/vc-addons/css/vc-addons.css", "", $nectar_theme_version);
+    wp_enqueue_style("templates-style", get_stylesheet_directory_uri() . "/templates/css/templates.css", "", $nectar_theme_version);
+    wp_enqueue_style("fonts-style", get_stylesheet_directory_uri() . "/fonts/fonts.css", "", $nectar_theme_version);
     //wp_enqueue_script('bringaze-font-awesome', 'https://kit.fontawesome.com/8511f9d0cf.js', false);
-    if (is_rtl()) {
-        wp_enqueue_style(
-            "salient-rtl",
-            get_template_directory_uri() . "/rtl.css",
-            [],
-            "1",
-            "screen"
-        );
+    if (is_rtl())
+    {
+        wp_enqueue_style("salient-rtl", get_template_directory_uri() . "/rtl.css", [], "1", "screen");
     }
 }
 add_action("wp_enqueue_scripts", "salient_child_enqueue_styles", 100);
 
 // GRABS SPECIFIC SUBSITES
-if (is_multisite()) {
+if (is_multisite())
+{
     $site_id = get_current_blog_id();
-    switch ($site_id) {
-        // O3D
+    switch ($site_id)
+    {
+            // O3D
+            
         case "13":
             require_once "sites/o3d/functions.php";
-            break;
-        // NextArch
+        break;
+            // NextArch
+            
         case "15":
             require_once "sites/nextarch/functions.php";
-            break;
+        break;
     }
 }
 
@@ -82,8 +61,10 @@ if (is_multisite()) {
 function lf_meta_header()
 {
     $site_id = get_current_blog_id();
-    switch ($site_id) {
-        //DPEL AWSF
+    switch ($site_id)
+    {
+            //DPEL AWSF
+            
         case "8":
             echo '
   	<div class="lfprojects awsf-background">
@@ -93,8 +74,9 @@ function lf_meta_header()
 			</a>
 		</div>
 	</div>';
-            break;
-        //OMPF
+        break;
+            //OMPF
+            
         case "14":
             echo '
   	<div class="lfprojects white-background">
@@ -104,7 +86,7 @@ function lf_meta_header()
 			</a>
 		</div>
 	</div>';
-            break;
+        break;
         default:
             echo '
   	<div class="lfprojects">
@@ -126,21 +108,15 @@ function custom_post_types_templates($template)
     $defaultWebinarsTemplate = locate_template("templates/single-webinars.php");
     $templateSlug = get_page_template_slug(get_queried_object_id()); // this is null if no template name is given; hence default
     // PROJECTS
-    if (
-        is_singular("projects") &&
-        $defaultProjectsTemplate != "" &&
-        $templateSlug == null
-    ) {
+    if (is_singular("projects") && $defaultProjectsTemplate != "" && $templateSlug == null)
+    {
         //if (is_singular($post_types) && !file_exists(get_stylesheet_directory() . "/single-projects.php") && get_page_template_slug(get_queried_object_id()) == null)
         $template = $defaultProjectsTemplate;
     }
     //if (is_post_type_archive($post_types) && !file_exists(get_stylesheet_directory() . "/archive-projects.php")){}
     // WEBINARS
-    if (
-        is_singular("webinars") &&
-        $defaultWebinarsTemplate != "" &&
-        $templateSlug == null
-    ) {
+    if (is_singular("webinars") && $defaultWebinarsTemplate != "" && $templateSlug == null)
+    {
         $template = $defaultWebinarsTemplate;
     }
     return $template;
@@ -150,7 +126,8 @@ add_filter("template_include", "custom_post_types_templates");
 // REDIRECT PANTHEON LOGIN TO WORK CORRECTLY
 function redirect_pantheon_login()
 {
-    if (strpos($_SERVER["REQUEST_URI"], "/wp-signup.php?") !== false) {
+    if (strpos($_SERVER["REQUEST_URI"], "/wp-signup.php?") !== false)
+    {
         wp_redirect("/wp-admin/");
         exit();
     }
@@ -167,14 +144,13 @@ function cc_mime_types($mimes)
 add_filter("upload_mimes", "cc_mime_types");
 
 // REMOVE COMMENTS FUNCTION; CAN BE PLACED IN A MU PLUGIN IF WANTED
-add_action("admin_init", function () {
+add_action("admin_init", function ()
+{
     // REDIRECT USERS TRYING TO ACCESS COMMENTS PAGE
     global $pagenow;
 
-    if (
-        $pagenow === "edit-comments.php" ||
-        $pagenow === "options-discussion.php"
-    ) {
+    if ($pagenow === "edit-comments.php" || $pagenow === "options-discussion.php")
+    {
         wp_redirect(admin_url());
         exit();
     }
@@ -183,8 +159,10 @@ add_action("admin_init", function () {
     remove_meta_box("dashboard_recent_comments", "dashboard", "normal");
 
     // DISABLE SUPPORT FOR COMMENTS AND TRACKBACKS IN POST TYPES
-    foreach (get_post_types() as $post_type) {
-        if (post_type_supports($post_type, "comments")) {
+    foreach (get_post_types() as $post_type)
+    {
+        if (post_type_supports($post_type, "comments"))
+        {
             remove_post_type_support($post_type, "comments");
             remove_post_type_support($post_type, "trackbacks");
         }
@@ -199,13 +177,15 @@ add_filter("pings_open", "__return_false", 20, 2);
 add_filter("comments_array", "__return_empty_array", 10, 2);
 
 // REMOVE COMMENTS PAGE AND OPTION PAGE IN MENU
-add_action("admin_menu", function () {
+add_action("admin_menu", function ()
+{
     remove_menu_page("edit-comments.php");
     remove_submenu_page("options-general.php", "options-discussion.php");
 });
 
 // REMOVE COMMENTS LINK FROM ADMIN BAR
-add_action("add_admin_bar_menus", function () {
+add_action("add_admin_bar_menus", function ()
+{
     remove_action("admin_bar_menu", "wp_admin_bar_comments_menu", 60);
 });
 
@@ -216,10 +196,96 @@ function remove_toolbar_items($bar)
     // global $wp_admin_bar;
     // $wp_admin_bar->remove_node( 'blog-1-c' );
     $sites = get_blogs_of_user(get_current_user_id());
-    foreach ($sites as $site) {
+    foreach ($sites as $site)
+    {
         $bar->remove_node("blog-{$site->userblog_id}-c");
     }
 }
+
+/******* ADVANCED CUSTOM FIELDS *******/
+
+// FIRST. REMOVE ALL POST FORMATS
+function remove_posts_formats()
+{
+    remove_theme_support("post-formats");
+}
+add_action("after_setup_theme", "remove_posts_formats", 11);
+
+// SECOND. ADD IN WANTED POST FORMATS
+function add_posts_formats()
+{
+    add_theme_support("post-formats", ["standard", "link"]);
+}
+add_action("after_setup_theme", "add_posts_formats", 11);
+
+// RENAME FORMATS APPROPRIATE
+function rename_post_formats($translation, $text, $context, $domain)
+{
+    $names = ["Standard" => "Normal", "Link" => "External Link", ];
+    if ($context == "Post format")
+    {
+        $translation = str_replace(array_keys($names) , array_values($names) , $text);
+    }
+    return $translation;
+}
+add_filter("gettext_with_context", "rename_post_formats", 10, 4);
+
+// STYLE ACF BACKEND
+function acf_admin_head()
+{
+?>
+	<style type="text/css">
+	.acf-postbox h2.hndle.ui-sortable-handle {
+		color: #ffffff;
+		background: #3a67ff;
+	}
+
+	.acf-field .acf-label label {
+		font-size: 14px;
+		font-weight: 600;
+		color: #000000;
+	}
+
+	.acf-field p.description {
+		color: #999999;
+		font-size: 12px;
+		display: block;
+		line-height: 20px;
+		margin: 0px 0 0;
+		font-weight: normal;
+		max-width: 200px;
+	}
+
+	.video-settings {
+		display: flex;
+	}
+
+	.video-settings.acf-field .acf-label {
+		width: 33%;
+		padding: 20px 10px 20px 0;
+	}
+
+	.video-settings.acf-field .acf-input {
+		width: 100%;
+		padding: 15px 10px;
+	}
+
+	.acf-postbox .acf-hndle-cog {
+		display: none !important;
+	}	
+	</style>
+	<?php
+}
+
+add_action("acf/input/admin_head", "acf_admin_head");
+
+// HIDE ACF ADMIN MENU FROM BEING VIEWED IN DASHBOARD
+function my_acf_settings_show_admin($show_admin)
+{
+    return false;
+}
+add_filter("acf/settings/show_admin", "my_acf_settings_show_admin");
+/******* END OF ADVANCED CUSTOM FIELDS *******/
 
 /*
 add_filter( 'the_author', 'guest_author_name' );
@@ -266,76 +332,3 @@ add_filter(
 );
 */
 
-// FIRST REMOVE ALL POST FORMATS
-function remove_posts_formats()
-{
-    remove_theme_support("post-formats");
-}
-add_action("after_setup_theme", "remove_posts_formats", 11);
-
-// SECOND ADD IN WANTED POST FORMATS
-function add_posts_formats()
-{
-    add_theme_support("post-formats", ["standard", "link"]);
-}
-add_action("after_setup_theme", "add_posts_formats", 11);
-
-function rename_post_formats($translation, $text, $context, $domain)
-{
-    $names = [
-        "Standard" => "Normal",
-        "Link" => "External Link",
-    ];
-    if ($context == "Post format") {
-        $translation = str_replace(
-            array_keys($names),
-            array_values($names),
-            $text
-        );
-    }
-    return $translation;
-}
-add_filter("gettext_with_context", "rename_post_formats", 10, 4);
-
-// STYLE ACF BACKEND
-function acf_admin_head()
-{
-    ?>
-	<style type="text/css">
-	.acf-postbox h2.hndle.ui-sortable-handle {
-		color: #ffffff;
-		background: #3a67ff;
-	}
-	.acf-field .acf-label label {
-		font-size: 14px;
-		font-weight: 600;
-		color: #000000;
-	}
-	.acf-field p.description {
-		color: #999999;
-		font-size: 12px;
-		display: block;
-		line-height: 20px;
-		margin: 0px 0 0;
-		font-weight: normal;
-		max-width: 200px;
-	}
-	.video-settings {
-		display: flex;
-	}
-	.video-settings.acf-field .acf-label {
-		width: 33%;
-		padding: 20px 10px 20px 0;
-	}
-	.video-settings.acf-field .acf-input {
-		width: 100%;
-		padding: 15px 10px;
-	}
-	.acf-postbox .acf-hndle-cog {
-		display: none !important;
-	}
-	</style>
-	<?php
-}
-
-add_action("acf/input/admin_head", "acf_admin_head");
