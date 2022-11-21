@@ -19,9 +19,11 @@ require_once "vc-addons/projects-linux.php";
 // GET WP BAKERY CUSTOM FIELDS
 require_once "vc-addons/custom-fields/custom-fields.php";
 
-//GET CUSTOM POST TYPES
-require_once "custom-post-types/projects.php";
+// GET CUSTOM POST TYPES
+// MOVED TO LINUXFOUNDATION PLUGIN
+//require_once "custom-post-types/projects.php";
 //require_once "custom-post-types/webinars.php";
+
 // GET CHILD THEME LIBRARIES
 function salient_child_enqueue_styles()
 {
