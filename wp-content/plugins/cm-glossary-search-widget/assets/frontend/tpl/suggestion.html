@@ -1,0 +1,22 @@
+<% if(data !=0 && data.length > 0){ %>
+<ul class="cmsw-sw-search-suggestion">
+    <% _.each(data, function(item){ %>
+    <li>
+        <a href="<%- item.url %>">
+            <div class="cmsw-sw-search-suggestion-post">
+                <span class="cmsw-sw-search-suggestion-title"><%= item.post_title %></span>
+                <% if(self.config.options.show_content){ %>
+                <span class="cmsw-sw-search-suggestion-content">
+                    <%= item.post_content %>
+                </span>
+                <% } %>
+            </div>
+        </a>
+    </li>
+    <% }); %>
+</ul>
+<% } else { %>
+<div class="cmsw-sw-search-no-results">
+    <%= self.config.labels.search_no_results %>
+</div>
+<% } %>

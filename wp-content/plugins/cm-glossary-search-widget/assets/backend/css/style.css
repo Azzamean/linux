@@ -1,0 +1,9 @@
+.cmtt_Media_Image.cmtt_hasThumb {
+    width: 70px;
+    height: 70px;
+    background-size: cover;
+    background-position: center;
+    margin-bottom: 5px;
+    position: relative;
+    cursor: pointer;
+}

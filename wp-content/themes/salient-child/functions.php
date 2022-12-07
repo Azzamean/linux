@@ -70,12 +70,10 @@ if (is_multisite()) {
     $site_id = get_current_blog_id();
     switch ($site_id) {
         // O3D
-
         case "13":
             require_once "sites/o3d/functions.php";
             break;
         // NextArch
-
         case "15":
             require_once "sites/nextarch/functions.php";
             break;
@@ -86,40 +84,27 @@ if (is_multisite()) {
 function lf_meta_header()
 {
     $site_id = get_current_blog_id();
+    $academy_software_foundation =
+        '<div class="lfprojects awsf-background"><div class="container"><a href="https://www.aswf.io/projects/" target="_blank" rel="noopener noreferrer"><img src="/wp-content/uploads/banners/aswf_banner_dark.svg"></a></div></div>';
+    $linux_foundation_white =
+        '<div class="lfprojects white-background"><div class="container"><a href="https://www.linuxfoundation.org/projects" target="_blank" rel="noopener noreferrer"><img src="/wp-content/uploads/banners/lfprojects_banner_color.png"></a></div></div>';
+    $linux_foundation_dark =
+        '<div class="lfprojects"><div class="container"><a href="https://www.linuxfoundation.org/projects" target="_blank" rel="noopener noreferrer"><img src="/wp-content/uploads/banners/lfprojects_banner.png"></a></div></div>';
     switch ($site_id) {
-        //DPEL AWSF
-
+        // DPEL AWSF
         case "8":
-            echo '
-  	<div class="lfprojects awsf-background">
-		<div class="container">
-			<a href="https://www.aswf.io/projects/" target="_blank" rel="noopener noreferrer">
-			<img src="/wp-content/uploads/banners/aswf_banner_dark.svg">
-			</a>
-		</div>
-	</div>';
+            echo $academy_software_foundation;
             break;
-        //OMPF
-
+        // OMPF
         case "14":
-            echo '
-  	<div class="lfprojects white-background">
-		<div class="container">
-			<a href="https://www.linuxfoundation.org/projects" target="_blank" rel="noopener noreferrer">
-			<img src="/wp-content/uploads/banners/lfprojects_banner_color.png">
-			</a>
-		</div>
-	</div>';
+            echo $linux_foundation_white;
+            break;
+        // OVERTURE MAPS FOUNDATION
+        case "16":
+            echo $linux_foundation_white;
             break;
         default:
-            echo '
-  	<div class="lfprojects">
-		<div class="container">
-			<a href="https://www.linuxfoundation.org/projects" target="_blank" rel="noopener noreferrer">
-			<img src="/wp-content/uploads/banners/lfprojects_banner.png">
-			</a>
-		</div>
-	</div>';
+            echo $linux_foundation_dark;
     }
 }
 add_action("nectar_hook_after_body_open", "lf_meta_header", 10, 0);
@@ -369,8 +354,74 @@ function custom_hidden_meta_boxes($hidden)
         "nectar-metabox-header-nav-transparency",
         "nectar-metabox-fullscreen-rows",
         "nectar-metabox-page-header",
+        "postcustom",
+        "revisionsdiv",
         "slugdiv",
         "authordiv",
     ];
     return $hidden;
+}
+
+// DISABLE PLUGIN NOTIFICATIONS
+add_action("admin_enqueue_scripts", "turn_off_notifications");
+add_action("login_enqueue_scripts", "turn_off_notifications");
+function turn_off_notifications()
+{
+    echo "<style>.update-nag, .updated, .error, .is-dismissible, .setting-error-tgmpa { display: none !important; }</style>";
+}
+
+// SHORTCODE FOR UBER MENU LOGO
+if (
+    in_array(
+        "ubermenu/ubermenu.php",
+        apply_filters("active_plugins", get_option("active_plugins"))
+    )
+) {
+    function uber_salient_logo($atts = [])
+    {
+        // ubermenu\pro\search.php
+        // salient\nectar\helpers\header.php
+        global $nectar_options;
+        $nectar_logo_url = apply_filters(
+            "nectar_logo_url",
+            esc_url(home_url())
+        );
+        return '<a id="logo" href="' .
+            esc_url($nectar_logo_url) .
+            '" data-supplied-ml-starting-dark="' .
+            esc_attr(
+                $nectar_header_options["using_mobile_logo_starting_dark"]
+            ) .
+            '" data-supplied-ml-starting="' .
+            esc_attr($nectar_header_options["using_mobile_logo_starting"]) .
+            '" data-supplied-ml="' .
+            esc_attr($nectar_header_options["using_mobile_logo"]) .
+            '" ' .
+            wp_kses_post($nectar_header_options["logo_class"]) .
+            ">" .
+            '<img class="stnd skip-lazy' .
+            $default_logo_class .
+            $dark_default_class .
+            '" width="' .
+            nectar_logo_dimensions("width", $nectar_options["logo"]) .
+            '" height="' .
+            nectar_logo_dimensions("height", $nectar_options["logo"]) .
+            '" alt="' .
+            esc_html($salient_logo_text) .
+            '" src="' .
+            nectar_options_img($nectar_options["logo"]) .
+            '" ' .
+            $std_retina_srcset .
+            " />" .
+            "</a>";
+    }
+    add_shortcode("uber_logo", "uber_salient_logo");
+
+    function uber_search_icon()
+    {
+        return '<a class="mobile-search" href="#searchbox"><span class="nectar-icon icon-salient-search" aria-hidden="true"></span><span class="screen-reader-text">' .
+            esc_html__("search", "salient") .
+            "</span></a>";
+    }
+    add_shortcode("uber_search", "uber_search_icon");
 }

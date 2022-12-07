@@ -1,0 +1,18 @@
+<div class="cmsw-sw-widget cmsw-sw-closed <%= self.config.options.show_icon != 1 ? '' :
+'cmsw-sw-widget-hidden cmsw-sw-widget-icon-opened' %>" id="cmsw-sw-widget">
+    <div class="cmsw-sw-widget-content <%= self.config.labels.powered_by ? '' : 'cmsw-sw-no-footer' %>">
+        <div class="cmsw-sw-btn-close cmsw-sw-closed-hide cmsw-sw-extended-hide">&nbsp;</div>
+        <div class="cmsw-sw-title">
+            <span class="cmsw-sw-closed-hide"><%- self.config.labels.title_open %></span>
+            <span class="cmsw-sw-extended-hide cmsw-sw-open-hide"><%- self.config.labels.title_closed %></span>
+        </div>
+        <div class="cmsw-sw-search">
+            <input type="text" name="cmsw-sw-search" class="cmsw-sw-search-input cmsw-clearable" placeholder="<%- self.config.labels.search_placeholder %>" />
+        </div>
+        <div class="cmsw-sw-content cmsw-sw-closed-hide cmsw-sw-extended-hide">
+        </div>
+        <div class="cmsw-sw-footer cmsw-sw-closed-hide cmsw-sw-extended-hide">
+            <%= self.config.labels.powered_by %>
+        </div>
+    </div>
+</div>

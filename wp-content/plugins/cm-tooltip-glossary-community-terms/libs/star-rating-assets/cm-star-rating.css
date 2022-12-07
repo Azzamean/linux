@@ -1,0 +1,6 @@
+.cm_star_rating_container { display: block; margin: auto; padding:0; margin-bottom: 1.5em; }
+.cm_star_rating_average { font-size: 2em; font-weight: bold; padding-bottom: 0.15em; line-height: 1em; }
+.cm_star_rating_count { font-size: 1em; font-weight: normal; }
+.cm_star_rating_stars { margin: 0; padding: 0 !important; }
+.cm_star_rating_stars li { display: inline-block; list-style-type: none; margin:0; padding: 0; }
+.cm_star_rating_stars li a:hover { color: #f1c40f; }

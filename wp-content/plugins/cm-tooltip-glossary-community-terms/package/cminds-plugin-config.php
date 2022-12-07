@@ -1,0 +1,28 @@
+<?php
+
+$cminds_plugin_config = array(
+    'plugin-is-pro' => TRUE,
+    'plugin-is-addon' => TRUE,
+    'plugin-version' => '1.2.22',
+    'plugin-abbrev' => 'cmtct',
+    'plugin-parent-abbrev' => 'cmtt',
+    'plugin-settings-url' => admin_url('admin.php?page=cmtt_settings#tabs_10'),
+    'plugin-file' => CMTCT_PLUGIN_FILE,
+    'plugin-dir-path' => plugin_dir_path(CMTCT_PLUGIN_FILE),
+    'plugin-dir-url' => plugin_dir_url(CMTCT_PLUGIN_FILE),
+    'plugin-basename' => plugin_basename(CMTCT_PLUGIN_FILE),
+    'plugin-icon' => '',
+    'plugin-name' => CMTCT_NAME,
+    'plugin-license-name' => CMTCT_CANONICAL_NAME,
+    'plugin-slug' => '',
+    'plugin-short-slug' => 'tooltip-community',
+    'plugin-parent-short-slug' => 'cmtooltip',
+    'plugin-menu-item' => 'cmtt_menu_options',
+    'plugin-textdomain' => CMTCT_SLUG_NAME,
+    'plugin-userguide-key' => '6-cm-tooltip',
+    'plugin-store-url' => 'https://www.cminds.com/store/cm-tooltip-glossary-remote-import-cm-plugins-store/',
+    'plugin-support-url' => 'https://wordpress.org/support/plugin/enhanced-tooltipglossary/',
+    'plugin-review-url' => 'https://wordpress.org/support/view/plugin-reviews/enhanced-tooltipglossary/',
+    'plugin-changelog-url' => CMTCT_RELEASE_NOTES,
+    'plugin-licensing-aliases' => array(),
+);

@@ -1,0 +1,11 @@
+<% if(self.config.options.show_icon == 1) { %>
+<button id="cmsw-sw-toggle-form" >
+    <% if(self.config.options.icon_open == 0 || self.config.options.icon_close == 0) { %>
+        <span id="cmsw-sw-open-icon" class="dashicons dashicons-search"></span>
+        <span id="cmsw-sw-close-icon" class="dashicons dashicons-no-alt" style="display:none;"></span>
+    <% } else { %>
+        <span id="cmsw-sw-open-icon" class="has-background-image" style="background-image:url('<%= self.config.options.icon_open %>');" ></span>
+        <span id="cmsw-sw-close-icon" class="has-background-image" style="display:none;background-image:url('<%= self.config.options.icon_close %>');"></span>
+    <% } %>
+</button>
+<% } %>
