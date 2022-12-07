@@ -16,6 +16,6 @@ if (!defined('LINUX_FOUNDATION_PLUGIN_URL')) {
     define('LINUX_FOUNDATION_PLUGIN_URL', plugin_dir_url(__FILE__));
 }
 
-if (is_admin()) {
+//if (is_admin()) {
     include_once('custom-post-types.php');
-}
+//}
