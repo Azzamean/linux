@@ -458,7 +458,7 @@ function recent_posts_linux($atts, $content)
                 {
                     $output .= '<div class="grid-design outer">';
                 }
-                $output .= '<div class="' . $c . '">';
+                $output .= '<div class="inner">';
                 if ($featured_image == true)
                 {
                     if ($embedded_code == true)
