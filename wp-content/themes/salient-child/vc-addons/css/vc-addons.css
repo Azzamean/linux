@@ -102,8 +102,8 @@ a.list-design.navigation-btn {
 
 .grid-design.outer {
 	min-height: 100px;
-	align-items: center;
-	justify-content: center;
+	/* align-items: center; */
+	/* justify-content: center; */
 }
 
 .grid-design .inner {
