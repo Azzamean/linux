@@ -113,3 +113,16 @@ define('ALLOW_UNFILTERED_UPLOADS', true);
 
 /* ShortPixel API Key for all sites */
 define('SHORTPIXEL_API_KEY', '9ZXJJsineYr76JNEt2JZ');
+
+
+
+// REQUIRE WWW FOR OPENMV.ORG
+if (isset($_SERVER['PANTHEON_ENVIRONMENT']) &&
+  $_SERVER['PANTHEON_ENVIRONMENT'] === 'live') {
+  if ($_SERVER['HTTP_HOST'] == 'openmv.org' ||
+      $_SERVER['HTTP_HOST'] == 'metaverse.live-lfprojects3.linuxfoundation.org') {
+    header('HTTP/1.0 301 Moved Permanently');
+    header('Location: https://www.openmv.org'. $_SERVER['REQUEST_URI']);
+    exit();
+  }
+}
