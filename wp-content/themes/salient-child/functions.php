@@ -292,12 +292,16 @@ function acf_admin_head()
 
 add_action("acf/input/admin_head", "acf_admin_head");
 
-// HIDE ACF ADMIN MENU FROM BEING VIEWED IN DASHBOARD
+// HIDE ACF ADMIN MENU FROM BEING VIEWED IN DASHBOARD UNLESS SUPER ADMIN
+if ( !is_super_admin() ) {
+	add_filter("acf/settings/show_admin", "my_acf_settings_show_admin");
+}
+
 function my_acf_settings_show_admin($show_admin)
 {
     return false;
 }
-add_filter("acf/settings/show_admin", "my_acf_settings_show_admin");
+
 /******* END OF ADVANCED CUSTOM FIELDS *******/
 
 /*
