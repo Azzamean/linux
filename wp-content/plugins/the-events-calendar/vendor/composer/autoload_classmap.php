@@ -193,6 +193,7 @@ return array(
     'Tribe\\Events\\Views\\V2\\Manager' => $baseDir . '/src/Tribe/Views/V2/Manager.php',
     'Tribe\\Events\\Views\\V2\\Messages' => $baseDir . '/src/Tribe/Views/V2/Messages.php',
     'Tribe\\Events\\Views\\V2\\Query\\Event_Query_Controller' => $baseDir . '/src/Tribe/Views/V2/Query/Event_Query_Controller.php',
+    'Tribe\\Events\\Views\\V2\\Query\\Hide_From_Upcoming_Controller' => $baseDir . '/src/Tribe/Views/V2/Query/Hide_From_Upcoming_Controller.php',
     'Tribe\\Events\\Views\\V2\\Repository\\Event_Period' => $baseDir . '/src/Tribe/Views/V2/Repository/Event_Period.php',
     'Tribe\\Events\\Views\\V2\\Repository\\Event_Result' => $baseDir . '/src/Tribe/Views/V2/Repository/Event_Result.php',
     'Tribe\\Events\\Views\\V2\\Repository\\Events_Result_Set' => $baseDir . '/src/Tribe/Views/V2/Repository/Events_Result_Set.php',
@@ -251,4 +252,5 @@ return array(
     'Tribe\\Events\\Views\\V2\\iCalendar\\Traits\\Outlook_Methods' => $baseDir . '/src/Tribe/Views/V2/iCalendar/Traits/Outlook_Methods.php',
     'Tribe\\Events\\Views\\V2\\iCalendar\\iCalendar_Handler' => $baseDir . '/src/Tribe/Views/V2/iCalendar/iCalendar_Handler.php',
     'Tribe__Events__Main_Deprecated' => $baseDir . '/src/deprecated/Traits/Tribe__Events__Main_Deprecated.php',
+    'Tribe__Events__Query_Deprecated' => $baseDir . '/src/deprecated/Traits/Tribe__Events__Query_Deprecated.php',
 );
