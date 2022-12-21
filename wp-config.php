@@ -10,6 +10,20 @@
 /**
  * Pantheon platform settings. Everything you need should already be set.
  */
+ 
+// REQUIRE WWW FOR OPENMV.ORG
+if (isset($_SERVER['PANTHEON_ENVIRONMENT']) &&
+  $_SERVER['PANTHEON_ENVIRONMENT'] === 'live') {
+  if ($_SERVER['HTTP_HOST'] == 'openmv.org' ||
+	  $_SERVER['HTTP_HOST'] == 'http://openmv.org/' ||
+	  $_SERVER['HTTP_HOST'] == 'https://openmv.org/' ||
+      $_SERVER['HTTP_HOST'] == 'http://metaverse.live-lfprojects3.linuxfoundation.org/') {
+    header('HTTP/1.0 301 Moved Permanently');
+    header('Location: https://www.openmv.org'. $_SERVER['REQUEST_URI']);
+    exit();
+  }
+}
+
 if (file_exists(dirname(__FILE__) . '/wp-config-pantheon.php') && isset($_ENV['PANTHEON_ENVIRONMENT'])) {
 	require_once(dirname(__FILE__) . '/wp-config-pantheon.php');
 /**
@@ -113,18 +127,3 @@ define('ALLOW_UNFILTERED_UPLOADS', true);
 
 /* ShortPixel API Key for all sites */
 define('SHORTPIXEL_API_KEY', '9ZXJJsineYr76JNEt2JZ');
-
-
-
-// REQUIRE WWW FOR OPENMV.ORG
-if (isset($_SERVER['PANTHEON_ENVIRONMENT']) &&
-  $_SERVER['PANTHEON_ENVIRONMENT'] === 'live') {
-  if ($_SERVER['HTTP_HOST'] == 'openmv.org' ||
-	  $_SERVER['HTTP_HOST'] == 'http://openmv.org/' ||
-	  $_SERVER['HTTP_HOST'] == 'https://openmv.org/' ||
-      $_SERVER['HTTP_HOST'] == 'http://metaverse.live-lfprojects3.linuxfoundation.org/') {
-    header('HTTP/1.0 301 Moved Permanently');
-    header('Location: https://www.openmv.org'. $_SERVER['REQUEST_URI']);
-    exit();
-  }
-}
