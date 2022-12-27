@@ -22,6 +22,7 @@ use TEC\Events_Pro\Custom_Tables\V1\Duplicate\Duplicate as Duplicator;
 use TEC\Events_Pro\Custom_Tables\V1\Events\Converter\Event_Rule_Converter\From_Event_Rule_Converter;
 use TEC\Events_Pro\Custom_Tables\V1\Events\Provisional\ID_Generator;
 use TEC\Events_Pro\Custom_Tables\V1\Events\Rules\Date_Rule;
+use TEC\Events_Pro\Custom_Tables\V1\Migration\Patchers\Event_Recurrence_Meta_Patcher;
 use TEC\Events_Pro\Custom_Tables\V1\Models\Occurrence as ECP_Occurrence;
 use TEC\Events_Pro\Custom_Tables\V1\Models\Provisional_Post;
 use TEC\Events_Pro\Custom_Tables\V1\Models\Series_Relationship;
@@ -40,6 +41,7 @@ use Tribe__Utils__Array as Arr;
 use WP_Post;
 use WP_REST_Request;
 use TEC\Events_Pro\Custom_Tables\V1\Updates\Transient_Occurrence_Redirector as Redirector;
+use Tribe__View_Helpers as View_Helpers;
 
 /**
  * Class Events
@@ -347,7 +349,7 @@ class Events {
 		}
 
 		try {
-			$recurrence_meta = ( new Recurrence_Meta_Builder( $post_id, $data ) )->build_meta();
+			$recurrence_meta = ( new Event_Recurrence_Meta_Patcher( $data['recurrence'], $post_id ) )->patch();
 		} catch ( Exception $e ) {
 			return false;
 		}
@@ -1298,7 +1300,7 @@ class Events {
 		if ( ! defined( 'REST_REQUEST' ) || ! REST_REQUEST ) {
 			// Classic Editor request: the format used in the data will change depending on the user's settings.
 			$date_format = Dates::datepicker_formats( Dates::get_datepicker_format_index() );
-			$time_format = get_option( 'time_format', 'g:i a' );
+			$time_format = View_Helpers::is_24hr_format() ? 'H:i' : 'h:i';
 			$datepicker_format = $date_format . ' ' . $time_format;
 			try {
 				$request_start = DateTime::createFromFormat( $datepicker_format, $start, $request_timezone );

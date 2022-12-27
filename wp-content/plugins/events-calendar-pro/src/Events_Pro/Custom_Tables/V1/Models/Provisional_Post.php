@@ -151,16 +151,24 @@ class Provisional_Post {
 	 * @return Model|null Either the Occurrence row or `null` if not found.
 	 */
 	private function get_occurrence_row( int $occurrence_id, bool $refresh = false ): ?Occurrence {
-		$uid_column = Occurrences::uid_column();
+		$uid_column               = Occurrences::uid_column();
 		$normalized_occurrence_id = $this->normalize_provisional_post_id( $occurrence_id );
 
 		$cache_key = 'occurrence_row_' . $normalized_occurrence_id;
+		$cached    = $this->cache[ $cache_key ];
 
-		if ( $refresh || $this->cache[ $cache_key ] === false ) {
-			$this->cache[ $cache_key ] = Occurrence::find( $normalized_occurrence_id, $uid_column );
+		if (
+			$refresh // Explicit refresh.
+			|| ! ( $cached instanceof Occurrence || $cached === null ) // Compromised cache.
+		) {
+			$fetched = Occurrence::find( $normalized_occurrence_id, $uid_column );
+			// Do not store an invalid value.
+			$this->cache[ $cache_key ] = $fetched instanceof Occurrence ? $fetched : null;
 		}
 
-		return $this->cache[ $cache_key ] ?? null;
+		return ( $this->cache[ $cache_key ] instanceof Occurrence )
+			? $this->cache[ $cache_key ]
+			: null;
 	}
 
 	/**
@@ -183,9 +191,9 @@ class Provisional_Post {
 			return null;
 		}
 
-		$this->queries->unregister();
+		$this->queries->noop( true );
 		$this->post_cache->hydrate_caches( $occurrences_ids );
-		$this->queries->register();
+		$this->queries->noop( false );
 
 		return true;
 	}
@@ -307,11 +315,26 @@ class Provisional_Post {
 		// Avoid using a method that will either hit the database or cause another `get_post_meta` call.
 		$occurrence_id = get_object_vars( $post )['_tec_occurrence_id'] ?? null;
 
-		if (
-			! empty( $occurrence_id )
-			&& ( $occurrence = Occurrence::find( $occurrence_id, 'occurrence_id' ) ) instanceof Occurrence
-		) {
-			return $occurrence;
+		if ( empty( $occurrence_id ) ) {
+			return $meta_value;
+		}
+
+		// Attempt to fetch from memoized cache.
+		$cache_key = 'tec_occurrence_meta_' . $occurrence_id;
+		$cache = tribe_cache();
+
+		// Check if we already memoized this.
+		if ( $cache[ $cache_key ] instanceof Occurrence ) {
+			return $cache[ $cache_key ];
+		}
+
+		// Could not be found in memory, fetch again.
+		$fetched = $occurrence = Occurrence::find( $occurrence_id, 'occurrence_id' );
+
+		if ( $fetched instanceof Occurrence ) {
+			$cache[ $cache_key ] = $occurrence;
+
+			return $fetched;
 		}
 
 		return $meta_value;
@@ -329,10 +352,10 @@ class Provisional_Post {
 	public function get_occurrence_post_id( int $occurrence_id ): int {
 		$occurrence_row = $this->get_occurrence_row( $occurrence_id );
 
-		if ( $occurrence_row === null ) {
-			return $occurrence_id;
+		if ( $occurrence_row instanceof Occurrence ) {
+			return $occurrence_row->post_id;
 		}
 
-		return $occurrence_row->post_id;
+		return $occurrence_id;
 	}
 }

@@ -39,6 +39,24 @@ class Summary_View extends List_View {
 	}
 
 	/**
+	 * Default untranslated value for the label of this view.
+	 *
+	 * @since 6.0.3
+	 *
+	 * @var string
+	 */
+	protected static $label = 'Summary';
+
+	/**
+	 * @inheritDoc
+	 */
+	public static function get_view_label(): string {
+		static::$label = _x( 'Summary', 'The text label for the Summary View.', 'tribe-events-calendar-pro' );
+
+		return static::filter_view_label( static::$label );
+	}
+
+	/**
 	 * Add hooks that are specific to the execution of this view.
 	 *
 	 * @since 5.7.0
@@ -242,6 +260,7 @@ class Summary_View extends List_View {
 		$last_date_end_of_day        = tribe_end_of_day( $last_date->format( Dates::DBDATEFORMAT ) );
 
 		return tribe_events()
+			->by_args( $this->get_global_repository_args() )
 			->where( 'starts_before', $first_date_beginning_of_day )
 			->where( 'ends_between', $first_date_beginning_of_day, $last_date_end_of_day )
 			->all();
@@ -262,6 +281,7 @@ class Summary_View extends List_View {
 		$last_date_beginning_of_day  = tribe_beginning_of_day( $last_date->format( Dates::DBDATEFORMAT ) );
 
 		return tribe_events()
+			->by_args( $this->get_global_repository_args() )
 			->where( 'starts_before', $first_date_beginning_of_day )
 			->where( 'ends_after', $last_date_beginning_of_day )
 			->all();
@@ -279,6 +299,7 @@ class Summary_View extends List_View {
 	 */
 	protected function get_previous_event( \WP_Post $earliest_event, array $exclude_ids = [] ) {
 		return tribe_events()
+			->by_args( $this->get_global_repository_args() )
 			->where( 'starts_before', $earliest_event->dates->start )
 			->not_in( $exclude_ids )
 			->per_page( 1 )

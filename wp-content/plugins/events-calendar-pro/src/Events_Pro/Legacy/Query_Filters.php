@@ -2,7 +2,7 @@
 /**
  * Filters the Event queries to support legacy The Events Calendar PRO functionalities.
  *
- * @since   TBD
+ * @since   6.0.2.1
  *
  * @package TEC\Events_Pro\Legacy;
  */
@@ -16,7 +16,7 @@ use Tribe__Events__Main as TEC;
 /**
  * Class Query_Filters.
  *
- * @since   TBD
+ * @since   6.0.2.1
  *
  * @package TEC\Events_Pro\Legacy;
  */
@@ -27,7 +27,7 @@ class Query_Filters {
 	 * with the correct post's ID
 	 *
 	 * @since 4.1
-	 * @since TBD Move the method here from the `Tribe__Events__Pro__Main` class.
+	 * @since 6.0.2.1 Move the method here from the `Tribe__Events__Pro__Main` class.
 	 *
 	 * @param WP_Query $query
 	 *

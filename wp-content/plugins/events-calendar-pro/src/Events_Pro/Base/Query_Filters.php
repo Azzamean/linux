@@ -2,7 +2,7 @@
 /**
  * Filters Event queries to support The Events Calendar PRO functionalities.
  *
- * @since   TBD
+ * @since   6.0.2.1
  *
  * @package TEC\Events_Pro\Base;
  */
@@ -14,7 +14,7 @@ use WP_Query;
 /**
  * Class Query_Filters.
  *
- * @since   TBD
+ * @since   6.0.2.1
  *
  * @package TEC\Events_Pro\Base;
  */
@@ -23,7 +23,7 @@ class Query_Filters {
 	 * Set PRO query flags.
 	 *
 	 * @since 6.0.0 Uses the values from Views V2 to determine old V1 variables that should still be around.
-	 * @since TBD  Moved here from the `Tribe__Events__Pro__Main` class.
+	 * @since 6.0.2.1  Moved here from the `Tribe__Events__Pro__Main` class.
 	 *
 	 * @param WP_Query $query The current query object.
 	 *
