@@ -14,14 +14,9 @@
 }
 
 .projects-title {
+	text-align: center;
 	margin: 0;
 	float: none;
-}
-
-.projects-title-text.white {
-	font-size: 34px;
-	color: #ffffff;
-	margin-top: 35px;
 }
 
 .projects-post-area {
@@ -29,11 +24,7 @@
 }
 
 .projects-post-area section {
-	margin: 35px 0;
-}
-
-.projects-post-area.col {
-	margin: 0;
+	margin-bottom: 35px;
 }
 
 .projects-links {
@@ -51,7 +42,7 @@
 }
 
 .projects-links a i {
-	font-size: 50px !important;
+	font-size: 50px!important;
 	border: 5px solid #fff;
 	padding: 30px;
 	border-radius: 50%;
@@ -75,17 +66,14 @@
 }
 
 .projects-link-wrap p {
-	color: #ffffff;
-	position: relative;
-	font-size: 1rem;
-	line-height: 0;
-	margin-top: 0;
+    color: #ffffff;
+    position: relative;
+    font-size: 1rem;
+    line-height: 0;
+    margin-top: 0;
 }
 
 .projects-title img {
-	max-height: 200px;
-}
-
-.projects-description {
-	padding: 38px 0 35px 0;
+    max-height: 200px;
+    margin: 0 auto;
 }
