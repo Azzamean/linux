@@ -71,8 +71,13 @@ if ("image_under" === $blog_header_type)
 {
     get_template_part("includes/partials/single-post/post-header-featured-media-under");
 }
+// LF Networking
+if ($site_id == "7")
+{
+    get_template_part("includes/partials/single-post/post-header-lfn");
+}
 // OMP
-if ($site_id == "14")
+else if ($site_id == "14")
 {
     get_template_part("includes/partials/single-post/post-header-omp");
 }
