@@ -44,7 +44,15 @@ if (have_posts()):
 
         if ("image_under" !== $blog_header_type)
         {
-            nectar_page_header($post->ID);
+            // LF Networking
+            if ($site_id == "7")
+            {
+                get_template_part("includes/partials/single-post/post-header-lfn");
+            }
+            else
+            {
+                nectar_page_header($post->ID);
+            }
         }
     endwhile;
 endif;
@@ -74,7 +82,7 @@ if ("image_under" === $blog_header_type)
 // LF Networking
 if ($site_id == "7")
 {
-    get_template_part("includes/partials/single-post/post-header-lfn");
+    // DO NOTHING 
 }
 // OMP
 else if ($site_id == "14")
@@ -125,8 +133,13 @@ if ("std-blog-fullwidth" === $blog_type || "1" === $hide_sidebar)
 if (have_posts()):
     while (have_posts()):
         the_post();
+        // LF Networking
+        if ($site_id == "7")
+        {
+            get_template_part("includes/partials/single-post/post-content-lfn");
+        }
         // OMP
-        if ($site_id == "14")
+        else if ($site_id == "14")
         {
             get_template_part("includes/partials/single-post/post-content-omp");
         }
