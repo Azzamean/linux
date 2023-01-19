@@ -14,9 +14,14 @@
 }
 
 .projects-title {
-	text-align: center;
 	margin: 0;
 	float: none;
+}
+
+.projects-title-text.white {
+	font-size: 34px;
+	color: #ffffff;
+	margin-top: 35px;
 }
 
 .projects-post-area {
@@ -24,7 +29,7 @@
 }
 
 .projects-post-area section {
-	margin-bottom: 35px;
+	margin: 35px 0;
 }
 
 .projects-links {
@@ -32,7 +37,7 @@
 	display: flex;
 	justify-content: center;
 	align-items: center;
-	padding: 75px 0;
+	padding: 35px 0;
 	position: relative;
 }
 
@@ -42,9 +47,9 @@
 }
 
 .projects-links a i {
-	font-size: 50px!important;
+	font-size: 5rem !important;
 	border: 5px solid #fff;
-	padding: 30px;
+	padding: 70px;
 	border-radius: 50%;
 	display: flex;
 	justify-content: center;
@@ -52,6 +57,20 @@
 	margin: 0 auto;
 	width: 100px;
 	height: 100px;
+}
+
+.projects-icons {
+	margin: 0 15px;
+}
+
+.projects-links p {
+	font-weight: 700;
+	font-size: 14px;
+	line-height: 18px;
+	letter-spacing: 1.5px;
+	text-transform: uppercase;
+	color: #FFFFFF;
+	margin-top: -10px;
 }
 
 .projects-link-item {
@@ -66,14 +85,19 @@
 }
 
 .projects-link-wrap p {
-    color: #ffffff;
-    position: relative;
-    font-size: 1rem;
-    line-height: 0;
-    margin-top: 0;
+	color: #ffffff;
+	position: relative;
+	font-size: 1rem;
+	line-height: 0;
+	margin-top: 0;
 }
 
 .projects-title img {
-    max-height: 200px;
-    margin: 0 auto;
+	max-height: 200px;
+}
+
+.projects-description-title {
+	font-size: 34px !important;
+	line-height: 40px !important;
+	margin-bottom: 15px;
 }

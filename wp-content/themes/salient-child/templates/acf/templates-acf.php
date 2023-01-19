@@ -1,6 +1,22 @@
 <?php
 
 // PROJECTS ACF'S
+
+$projects_logo = get_field("projects_logo");
+$projects_secondary_logo = get_field("projects_secondary_logo");
+$projects_banner = get_field("projects_banner");
+$projects_banner_color = get_field("projects_banner_color", false, false);
+//$projects_secondary_banner_color = get_field("projects_secondary_banner_color", false, false);
+$projects_banner_type = get_field("projects_banner_type");
+$projects_header = get_field("projects_header");
+$projects_excerpt = get_field("projects_excerpt");
+$projects_video = get_field("projects_video");
+$projects_post_category = get_field("projects_post_category");
+$projects_icon_urls = get_field("projects_icon_urls");
+$projects_description_title = get_field("projects_description_title");
+$projects_description = get_field("projects_description");
+
+/*
 $banner = get_field("projects_banner");
 $excerpt = get_field("projects_excerpt");
 $description = get_field("projects_description");
@@ -21,6 +37,7 @@ $calendar = get_field("projects_calendar");
 $documentation = get_field("projects_documentation");
 
 // STORE IN MULTIDIMESIONAL ARRAY
+
 $projects_links = [
     "website_icon" => [
         "url" => $website,
@@ -73,7 +90,7 @@ $projects_links = [
         "icon" => "fa fa-file-text-o",
     ],
 ];
-
+*/
 
 // WEBINARS ACF'S
 $webinarDescription = get_field("webinars_description");

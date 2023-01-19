@@ -58,27 +58,27 @@ class CustomPostTypes {
 			'custom_post_types_setting_section' // section
 		);
 
-		add_settings_field(
-			'working_groups_1', // id
-			'Working Groups', // title
-			array( $this, 'working_groups_1_callback' ), // callback
-			'custom-post-types-admin', // page
-			'custom_post_types_setting_section' // section
-		);
+		//add_settings_field(
+		//	'working_groups_1', // id
+		//	'Working Groups', // title
+		//	array( $this, 'working_groups_1_callback' ), // callback
+		//	'custom-post-types-admin', // page
+		//	'custom_post_types_setting_section' // section
+		//);
 	}
 
-	public function custom_post_types_sanitize($input) {
-		$sanitary_values = array();
-		if ( isset( $input['projects_0'] ) ) {
-			$sanitary_values['projects_0'] = $input['projects_0'];
-		}
-
-		if ( isset( $input['working_groups_1'] ) ) {
-			$sanitary_values['working_groups_1'] = $input['working_groups_1'];
-		}
-
-		return $sanitary_values;
-	}
+	//public function custom_post_types_sanitize($input) {
+	//	$sanitary_values = array();
+	//	if ( isset( $input['projects_0'] ) ) {
+	//		$sanitary_values['projects_0'] = $input['projects_0'];
+	//	}
+	//
+	//	if ( isset( $input['working_groups_1'] ) ) {
+	//		$sanitary_values['working_groups_1'] = $input['working_groups_1'];
+	//	}
+	//
+	//	return $sanitary_values;
+	//}
 
 	public function custom_post_types_section_info() {
 		
@@ -91,12 +91,12 @@ class CustomPostTypes {
 		);
 	}
 
-	public function working_groups_1_callback() {
-		printf(
-			'<input type="checkbox" name="custom_post_types_option_name[working_groups_1]" id="working_groups_1" value="working_groups_1" %s> <label for="working_groups_1">Working Groups Custom Post Type</label>',
-			( isset( $this->custom_post_types_options['working_groups_1'] ) && $this->custom_post_types_options['working_groups_1'] === 'working_groups_1' ) ? 'checked' : ''
-		);
-	}
+	//public function working_groups_1_callback() {
+	//	printf(
+	//		'<input type="checkbox" name="custom_post_types_option_name[working_groups_1]" id="working_groups_1" value="working_groups_1" %s> <label for="working_groups_1">Working Groups Custom Post Type</label>',
+	//		( isset( $this->custom_post_types_options['working_groups_1'] ) && $this->custom_post_types_options['working_groups_1'] === 'working_groups_1' ) ? 'checked' : ''
+	//	);
+	//}
 
 }
 if ( is_admin() )
@@ -112,12 +112,12 @@ if ( is_admin() )
 
 $custom_post_types_options = get_option('custom_post_types_option_name');
 $projects_0 = $custom_post_types_options['projects_0'];
-$working_groups_1 = $custom_post_types_options['working_groups_1'];
+//$working_groups_1 = $custom_post_types_options['working_groups_1'];
 
 if ($projects_0) {
     require_once(plugin_dir_path(__DIR__).'../themes/salient-child/custom-post-types/projects.php');
 }
 
-if ($working_groups_1) {
-    require_once(plugin_dir_path(__DIR__).'../themes/salient-child/custom-post-types/working-groups.php');
-}
+//if ($working_groups_1) {
+//    require_once(plugin_dir_path(__DIR__).'../themes/salient-child/custom-post-types/working-groups.php');
+//}

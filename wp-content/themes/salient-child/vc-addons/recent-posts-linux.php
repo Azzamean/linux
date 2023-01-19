@@ -921,6 +921,7 @@ function recent_posts_linux($atts, $content)
                 }
                 if ($categories == true) {
                     $i = 0;
+					$output .= '<div class="grid-categories-wrapper">';
                     foreach (get_the_category() as $cat) {
                         $output .=
                             '<a class="grid-categories" href="' .
@@ -933,6 +934,7 @@ function recent_posts_linux($atts, $content)
                             break;
                         }
                     }
+					$output .= '</div>';
                 }
 
                 if ($dut == false) {
