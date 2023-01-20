@@ -9,7 +9,7 @@ class Projects
     function projects_grid_vc()
     {
         $types = get_terms([
-            "taxonomy" => "projects_category",
+            "taxonomy" => "projects_stage",
             "hide_empty" => false,
             "orderby" => "name",
         ]);
@@ -162,7 +162,7 @@ function projects_grid($atts, $content)
     if (!empty($projects_category_id)) {
         $query_args["tax_query"] = [
             [
-                "taxonomy" => "projects_category",
+                "taxonomy" => "projects_stage",
                 "field" => "term_id",
                 "terms" => $projects_category_id,
             ],
@@ -182,6 +182,7 @@ function projects_grid($atts, $content)
             }
             $output .=
                 '<div class="' . $column_class . ' grid-design projects">';
+			$output .= '<div>';
             $output .= '<img src="' . get_field("projects_logo") . '"/>';
             $output .= "<h3>" . get_the_title() . "</h3>";
             $output .=
@@ -192,6 +193,7 @@ function projects_grid($atts, $content)
                 '<a class="grid-design projects-btn" href="' .
                 get_permalink() .
                 '" target="_blank"">Learn More</a>';
+			$output .= '</div>';
             $output .= "</div>";
             $count++;
             if (

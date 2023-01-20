@@ -15,6 +15,7 @@ function osano_script()
 // GET WP BAKERY CUSTOM MODULES
 require_once "vc-addons/recent-posts-linux.php";
 require_once "vc-addons/projects-linux.php";
+require_once "vc-addons/members-api.php";
 
 // GET WP BAKERY CUSTOM FIELDS
 require_once "vc-addons/custom-fields/custom-fields.php";
@@ -293,8 +294,8 @@ function acf_admin_head()
 add_action("acf/input/admin_head", "acf_admin_head");
 
 // HIDE ACF ADMIN MENU FROM BEING VIEWED IN DASHBOARD UNLESS SUPER ADMIN
-if ( !is_super_admin() ) {
-	add_filter("acf/settings/show_admin", "my_acf_settings_show_admin");
+if (!is_super_admin()) {
+    add_filter("acf/settings/show_admin", "my_acf_settings_show_admin");
 }
 
 function my_acf_settings_show_admin($show_admin)
