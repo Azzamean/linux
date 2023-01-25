@@ -215,7 +215,6 @@ a.list-design.navigation-btn {
 }
 
 .tabbed ul li a:hover {
-	color: #0088ff !important;
 }
 
 .tabbed ul li:first-child a {
@@ -225,7 +224,17 @@ a.list-design.navigation-btn {
 .tabbed ul li:last-child a {
 	border-radius: 0px 10px 10px 0px;
 }
+.grid-design.image-wrapper {
+	margin: 0 auto;
+	text-align: center;
+	height: 100px;
+	margin-bottom: 15px;
+}
 
+.grid-design.image-wrapper img {
+	max-height: 100px;
+	margin-bottom: 0;
+}
 .grid-design .projects {
 	box-shadow: 0px 0px 15px rgb(0 0 0 / 15%);
 	border-radius: 10px;
@@ -238,7 +247,6 @@ a.list-design.navigation-btn {
 	font-size: 18px;
 	line-height: 28px;
 	font-weight: 600;
-	color: #3d14a3;
 }
 
 .grid-design.projects-btn:after {
@@ -246,7 +254,6 @@ a.list-design.navigation-btn {
 }
 
 .grid-design.projects-btn {
-	color: #0088ff;
 	text-decoration: underline;
 }
 
