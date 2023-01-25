@@ -61,7 +61,7 @@ class RecentPostsLinux
                         "heading" => esc_html__("Columns", "recent_posts"),
                         "param_name" => "columns",
                         "value" => [
-							esc_html__("1 Column", "recent_posts") => "1",
+                            esc_html__("1 Column", "recent_posts") => "1",
                             esc_html__("2 Columns", "recent_posts") => "2",
                             esc_html__("3 Columns", "recent_posts") => "3",
                             esc_html__("4 Columns", "recent_posts") => "4",
@@ -91,13 +91,10 @@ class RecentPostsLinux
                         ),
                         "save_always" => true,
                     ],
-					[
+                    [
                         "type" => "textfield",
                         "class" => "",
-                        "heading" => esc_html__(
-                            "Post Offset",
-                            "recent_posts"
-                        ),
+                        "heading" => esc_html__("Post Offset", "recent_posts"),
                         "param_name" => "offset",
                         "value" => "",
                         "description" => esc_html__(
@@ -410,7 +407,7 @@ function recent_posts_linux($atts, $content)
                 "design" => "",
                 "columns" => "",
                 "limit" => "",
-				"offset" => "",
+                "offset" => "",
                 "category_id" => "",
                 "categories" => "",
                 "tags" => "",
@@ -455,7 +452,7 @@ function recent_posts_linux($atts, $content)
         "post_type" => "post",
         "post_status" => ["publish"],
         "posts_per_page" => $limit,
-		"offset" => $offset,
+        "offset" => $offset,
         "ignore_sticky_posts" => true,
         "nopaging" => false,
         "paged" => $paged,
@@ -483,8 +480,8 @@ function recent_posts_linux($atts, $content)
             break;
     }
     switch ($columns) {
-		case "1":
-			$column_class = "col span_12";
+        case "1":
+            $column_class = "col span_12";
         case "2":
             $column_class = "col span_6";
             break;
@@ -921,20 +918,24 @@ function recent_posts_linux($atts, $content)
                 }
                 if ($categories == true) {
                     $i = 0;
-					$output .= '<div class="grid-categories-wrapper">';
+                    $comma = "";
+                    $output .= '<div class="grid-categories-wrapper">';
                     foreach (get_the_category() as $cat) {
                         $output .=
+                            $comma .
                             '<a class="grid-categories" href="' .
                             get_category_link($cat->cat_ID) .
                             '">' .
                             $cat->cat_name .
                             "</a>" .
                             " ";
+                        $comma =
+                            '<span class="grid-categories-comma"> | </span>';
                         if (++$i == $categories) {
                             break;
                         }
                     }
-					$output .= '</div>';
+                    $output .= "</div>";
                 }
 
                 if ($dut == false) {

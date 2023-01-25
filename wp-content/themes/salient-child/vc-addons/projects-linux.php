@@ -182,8 +182,10 @@ function projects_grid($atts, $content)
             }
             $output .=
                 '<div class="' . $column_class . ' grid-design projects">';
-			$output .= '<div>';
+			$output .= '<div class="grid-design image-wrapper">';
             $output .= '<img src="' . get_field("projects_logo") . '"/>';
+			$output .= '</div>';
+			$output .= '<div class="grid-design body-wrapper">';
             $output .= "<h3>" . get_the_title() . "</h3>";
             $output .=
                 "<p>" .
