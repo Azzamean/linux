@@ -10,44 +10,44 @@ Version: 1.0
 
 /* OSANO */
 .osano-cm-list__list-item {
-  list-style: none !important;
+	list-style: none !important;
 }
 
 span.osano-cm-toggle__label.osano-cm-label {
-  color: #444 !important;
+	color: #444 !important;
 }
 
 /* HEADER */
 
 @media (min-width: 768px) {
-  .lfprojects {
-    background: #252525;
-    position: fixed;
-    width: 100%;
-    z-index: 99999;
-    line-height: 33px;
-    height: 33px;
-  }
+	.lfprojects {
+		background: #252525;
+		position: fixed;
+		width: 100%;
+		z-index: 99999;
+		line-height: 33px;
+		height: 33px;
+	}
 
-  .lfprojects.white-background {
-    background: #ffffff;
-  }
+	.lfprojects.white-background {
+		background: #ffffff;
+	}
 
-  .lfprojects img {
-    max-width: 270px;
-    vertical-align: middle;
-  }
+	.lfprojects img {
+		max-width: 270px;
+		vertical-align: middle;
+	}
 
-  #header-outer {
-    margin-top: 32.4px;
-  }
+	#header-outer {
+		margin-top: 32.4px;
+	}
 
-  div#ajax-content-wrap {
-    margin-top: 32px;
-  }
+	div#ajax-content-wrap {
+		margin-top: 32px;
+	}
 
-  /* DPEL AWSF */
-  /*
+	/* DPEL AWSF */
+	/*
   .lfprojects.awsf-background {
     height: 55px;
   }
@@ -63,25 +63,25 @@ span.osano-cm-toggle__label.osano-cm-label {
 }
 
 @media (max-width: 767px) {
-  .lfprojects {
-    display: none;
-  }
+	.lfprojects {
+		display: none;
+	}
 }
 
 /* Icons for CSS Classes */
 
 .external-site:after {
-  content: "\f08e";
-  font-family: FontAwesome;
-  margin-left: 5px;
+	content: "\f08e";
+	font-family: FontAwesome;
+	margin-left: 5px;
 }
 
 .sub-menu .external-site a {
-  display: inline-block;
+	display: inline-block;
 }
 
 .sf-menu li ul {
-  width: 21em;
+	width: 21em;
 }
 
 /* CSS FOR EXTERNAL ICON */
@@ -100,10 +100,6 @@ span.osano-cm-toggle__label.osano-cm-label {
 	display: none;
 }
 
-
-
-/* ICON FIXES */
-
 i.fa-solid.fa-file-pdf:before {
-    content: "\f1c1" !important;
+	content: "\f1c1" !important;
 }

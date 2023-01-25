@@ -1,4 +1,4 @@
-/* PROJECTS TEMPLATE */
+/* PROJECTS */
 
 .projects-wrap {
 	padding: 0;
@@ -43,7 +43,6 @@
 
 .projects-links a {
 	color: #ffffff !important;
-	margin: 0 20px;
 }
 
 .projects-links a i {
@@ -56,7 +55,7 @@
 	align-items: center;
 	margin: 0 auto;
 	width: 100px;
-	height: 100px;
+	height: 100px
 }
 
 .projects-icons {
@@ -71,6 +70,7 @@
 	text-transform: uppercase;
 	color: #FFFFFF;
 	margin-top: -10px;
+	max-width: 200px;
 }
 
 .projects-link-item {
@@ -102,6 +102,74 @@
 	margin-bottom: 15px;
 }
 
+.ui-tabs-nav {
+	text-align: center;
+	margin-bottom: 70px !important;
+}
+
+.tabbed ul li {
+	display: inline-block;
+	float: none;
+}
+
+.tabbed ul li a {
+	padding: 20px 40px;
+	font-size: 19px;
+	/* font-family: Bitter; */
+	font-weight: 700;
+	color: #000000;
+	background-color: #d0cfcf;
+	border: 1px solid #ffffff !important;
+	color: #ffffff !important;
+}
+
+.tabbed ul li a:hover {}
+
+.tabbed ul li:first-child a {
+	border-radius: 10px 0px 0px 10px;
+}
+
+.tabbed ul li:last-child a {
+	border-radius: 0px 10px 10px 0px;
+}
+
+.grid-design.image-wrapper {
+	margin: 0 auto;
+	text-align: center;
+	height: 100px;
+	margin-bottom: 15px;
+}
+
+.grid-design.image-wrapper img {
+	max-height: 100px;
+	margin-bottom: 0;
+}
+
+.grid-design .projects {
+	box-shadow: 0px 0px 15px rgb(0 0 0 / 15%);
+	border-radius: 10px;
+	padding: 30px;
+	margin: 15px;
+}
+
+.grid-design .projects p {
+	padding: 0 0 10px 0;
+	font-size: 18px;
+	line-height: 28px;
+	font-weight: 600;
+}
+
+.grid-design.projects-btn:after {
+	content: " >>";
+}
+
+.grid-design.projects-btn {
+	text-decoration: underline;
+}
+
+.projects-background.background-image {
+	/* FORCE A BACKGROUND IMAGE FOR ALL PROJECT BANNERS */
+}
 
 /* MEMBERS API STYLES */
 .slider.container {
