@@ -83,3 +83,19 @@ span.osano-cm-toggle__label.osano-cm-label {
 .sf-menu li ul {
   width: 21em;
 }
+
+/* CSS FOR EXTERNAL ICON */
+.external span:before {
+	display: none;
+}
+
+.external span:after {
+	font-family: 'FontAwesome';
+	content: "\f08e" !important;
+	font-weight: 600;
+	margin-left: 5px;
+}
+
+.external span.sf-sub-indicator:after {
+	display: none;
+}
