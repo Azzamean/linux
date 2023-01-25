@@ -108,7 +108,7 @@ a.list-design.navigation-btn {
 
 .grid-design .inner {
 	flex-grow: 1;
-    flex-basis: 0;
+	flex-basis: 0;
 	margin: 0 10px;
 }
 
@@ -188,9 +188,6 @@ a.list-design.navigation-btn {
 }
 
 
-
-
-
 /* PROJECTS */
 
 .ui-tabs-nav {
@@ -214,8 +211,7 @@ a.list-design.navigation-btn {
 	color: #ffffff !important;
 }
 
-.tabbed ul li a:hover {
-}
+.tabbed ul li a:hover {}
 
 .tabbed ul li:first-child a {
 	border-radius: 10px 0px 0px 10px;
@@ -224,6 +220,7 @@ a.list-design.navigation-btn {
 .tabbed ul li:last-child a {
 	border-radius: 0px 10px 10px 0px;
 }
+
 .grid-design.image-wrapper {
 	margin: 0 auto;
 	text-align: center;
@@ -235,6 +232,7 @@ a.list-design.navigation-btn {
 	max-height: 100px;
 	margin-bottom: 0;
 }
+
 .grid-design .projects {
 	box-shadow: 0px 0px 15px rgb(0 0 0 / 15%);
 	border-radius: 10px;
