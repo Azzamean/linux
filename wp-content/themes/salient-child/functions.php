@@ -41,7 +41,7 @@ function salient_child_enqueue_styles()
     wp_register_script('salient-child-javascript', get_stylesheet_directory_uri() . '/javascript.js', array(
         'jquery'
     ) , '3.6.1', true);
-    wp_enqueue_script('salient-child-javascript');
+    //wp_enqueue_script('salient-child-javascript');
 
     //wp_enqueue_script('bringaze-font-awesome', 'https://kit.fontawesome.com/8511f9d0cf.js', false);
     
