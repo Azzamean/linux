@@ -20,6 +20,7 @@
 
 .projects-title-text.white {
 	font-size: 34px;
+	line-height: 42px;
 	color: #ffffff;
 	margin-top: 35px;
 }
@@ -93,7 +94,8 @@
 }
 
 .projects-title img {
-	max-height: 200px;
+	max-height: 250px;
+	max-width: 500px;
 }
 
 .projects-description-title {

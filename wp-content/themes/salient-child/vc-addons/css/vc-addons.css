@@ -133,6 +133,10 @@ a.list-design.navigation-btn {
 	display: inline-block;
 }
 
+.grid-design.outer .vc_col-sm-3 {
+	max-width: 305px;
+}
+
 .grid-design.navigation-btn a:after {
 	/* content: "\f35d";
   content: "\f08e";
