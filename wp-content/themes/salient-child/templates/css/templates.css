@@ -25,10 +25,49 @@
 	margin-top: 35px;
 }
 
+.projects-middle {
+	padding: 40px 0 35px 0;
+}
+
+.projects-middle svg.grid-svg {
+	width: 200px !important;
+	margin: 35px 0 0 -55px;
+}
+
+.projects-middle .grid-design.title {
+	display: block;
+	font-weight: 400;
+	font-size: 21px;
+	line-height: 28px;
+}
+
+.projects-middle p.grid-design.date {
+	margin: 35px 0 0 0;
+}
+
+
+.projects-middle .projects-small-title {
+	font-size: 14px;
+	line-height: 18px;
+	color: #0033A1;
+	padding-bottom: 15px;
+	display: inline-block;
+}
+
+.projects-middle .projects-small-title.absolute {
+	position: absolute;
+	top: 5px;
+	margin-left: 12px;
+	padding-left: 35px;
+}
+
 .projects-post-area {
 	margin: 30px 0;
 }
 
+.projects-post-area.col {
+	margin-bottom: 0;
+}
 .projects-post-area section {
 	margin: 35px 0;
 }
@@ -40,6 +79,7 @@
 	align-items: center;
 	padding: 35px 0;
 	position: relative;
+	margin-bottom: 0 !important;
 }
 
 .projects-links a {
@@ -102,6 +142,10 @@
 	font-size: 34px !important;
 	line-height: 40px !important;
 	margin-bottom: 15px;
+}
+
+.row.no-padding {
+	padding-bottom: 0;
 }
 
 .ui-tabs-nav {

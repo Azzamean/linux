@@ -59,12 +59,12 @@ function cptui_register_my_taxes_projects_category()
         "public" => true,
         "publicly_queryable" => true,
         "hierarchical" => true,
-        "show_ui" => true,
-        "show_in_menu" => true,
-        "show_in_nav_menus" => true,
+        "show_ui" => false, // This hides it on the left admin dashboard and on singles
+        "show_in_menu" => true, // This hides it on the left admin dashboard
+        "show_in_nav_menus" => false,
         "query_var" => true,
         "rewrite" => ["slug" => "projects_category", "with_front" => true],
-        "show_admin_column" => false,
+        "show_admin_column" => false, // This hides in on the main projects page's list view
         "show_in_rest" => true,
         "show_tagcloud" => false,
         "rest_base" => "projects_category",
