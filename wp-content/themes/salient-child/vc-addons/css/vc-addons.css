@@ -108,6 +108,8 @@ a.list-design.navigation-btn {
 }
 
 .grid-design .inner {
+	display: flex;
+	flex-direction: column;
 	flex-grow: 1;
 	flex-basis: 0;
 	margin: 0 10px;
@@ -124,6 +126,13 @@ a.list-design.navigation-btn {
 .grid-design.outer img {
 	width: 100%;
 	object-fit: contain;
+}
+
+.grid-design.navigation-btn {
+	display: flex;
+	flex: 1;
+	align-items: flex-end;
+	justify-content: center;
 }
 
 .grid-design.navigation-btn a {
