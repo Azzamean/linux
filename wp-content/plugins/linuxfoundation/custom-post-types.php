@@ -67,18 +67,18 @@ class CustomPostTypes {
 		//);
 	}
 
-	//public function custom_post_types_sanitize($input) {
-	//	$sanitary_values = array();
-	//	if ( isset( $input['projects_0'] ) ) {
-	//		$sanitary_values['projects_0'] = $input['projects_0'];
-	//	}
-	//
-	//	if ( isset( $input['working_groups_1'] ) ) {
-	//		$sanitary_values['working_groups_1'] = $input['working_groups_1'];
-	//	}
-	//
-	//	return $sanitary_values;
-	//}
+	public function custom_post_types_sanitize($input) {
+		$sanitary_values = array();
+		if ( isset( $input['projects_0'] ) ) {
+			$sanitary_values['projects_0'] = $input['projects_0'];
+		}
+	
+		//if ( isset( $input['working_groups_1'] ) ) {
+		//	$sanitary_values['working_groups_1'] = $input['working_groups_1'];
+		//}
+	
+		return $sanitary_values;
+	}
 
 	public function custom_post_types_section_info() {
 		
@@ -112,6 +112,8 @@ if ( is_admin() )
 
 $custom_post_types_options = get_option('custom_post_types_option_name');
 $projects_0 = $custom_post_types_options['projects_0'];
+
+
 //$working_groups_1 = $custom_post_types_options['working_groups_1'];
 
 if ($projects_0) {
