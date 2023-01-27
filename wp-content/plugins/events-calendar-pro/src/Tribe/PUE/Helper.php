@@ -5,6 +5,6 @@ class Tribe__Events__Pro__PUE__Helper {
 	/**
 	 * @var string Helper data
 	 */
-	const DATA = '6b8f7598716d339f56418f347643c457cd0f212d';
+	const DATA = '8c88d39b5e1111d8d9bbca7e4e1f0f9d733056a7';
 
 }

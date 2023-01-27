@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInitb88ea8b946e2994f5f83fe17a7d5b144
+class ComposerStaticInit9c49b0e01b9583b778e9b2e04e445e51
 {
     public static $prefixLengthsPsr4 = array (
         'T' => 
@@ -201,6 +201,7 @@ class ComposerStaticInitb88ea8b946e2994f5f83fe17a7d5b144
         'Tribe\\Events\\Pro\\Models\\Service_Provider' => __DIR__ . '/../..' . '/src/Tribe/Models/Service_Provider.php',
         'Tribe\\Events\\Pro\\Rewrite\\Provider' => __DIR__ . '/../..' . '/src/Tribe/Rewrite/Provider.php',
         'Tribe\\Events\\Pro\\Rewrite\\Rewrite' => __DIR__ . '/../..' . '/src/Tribe/Rewrite/Rewrite.php',
+        'Tribe\\Events\\Pro\\Service_Providers\\Context' => __DIR__ . '/../..' . '/src/Tribe/Service_Providers/Context.php',
         'Tribe\\Events\\Pro\\Service_Providers\\Customizer' => __DIR__ . '/../..' . '/src/Tribe/Service_Providers/Customizer.php',
         'Tribe\\Events\\Pro\\Views\\V2\\Assets' => __DIR__ . '/../..' . '/src/Tribe/Views/V2/Assets.php',
         'Tribe\\Events\\Pro\\Views\\V2\\Customizer' => __DIR__ . '/../..' . '/src/Tribe/Views/V2/Customizer.php',
@@ -235,6 +236,7 @@ class ComposerStaticInitb88ea8b946e2994f5f83fe17a7d5b144
         'Tribe\\Events\\Pro\\Views\\V2\\View_Filters' => __DIR__ . '/../..' . '/src/Tribe/Views/V2/View_Filters.php',
         'Tribe\\Events\\Pro\\Views\\V2\\Views\\All_View' => __DIR__ . '/../..' . '/src/Tribe/Views/V2/Views/All_View.php',
         'Tribe\\Events\\Pro\\Views\\V2\\Views\\Map_View' => __DIR__ . '/../..' . '/src/Tribe/Views/V2/Views/Map_View.php',
+        'Tribe\\Events\\Pro\\Views\\V2\\Views\\Organizer_View' => __DIR__ . '/../..' . '/src/Tribe/Views/V2/Views/Organizer_View.php',
         'Tribe\\Events\\Pro\\Views\\V2\\Views\\Partials\\Day_Event_Recurring_Icon' => __DIR__ . '/../..' . '/src/Tribe/Views/V2/Views/Partials/Day_Event_Recurring_Icon.php',
         'Tribe\\Events\\Pro\\Views\\V2\\Views\\Partials\\Hide_Recurring_Events_Toggle' => __DIR__ . '/../..' . '/src/Tribe/Views/V2/Views/Partials/Hide_Recurring_Events_Toggle.php',
         'Tribe\\Events\\Pro\\Views\\V2\\Views\\Partials\\List_Event_Recurring_Icon' => __DIR__ . '/../..' . '/src/Tribe/Views/V2/Views/Partials/List_Event_Recurring_Icon.php',
@@ -268,9 +270,9 @@ class ComposerStaticInitb88ea8b946e2994f5f83fe17a7d5b144
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInitb88ea8b946e2994f5f83fe17a7d5b144::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInitb88ea8b946e2994f5f83fe17a7d5b144::$prefixDirsPsr4;
-            $loader->classMap = ComposerStaticInitb88ea8b946e2994f5f83fe17a7d5b144::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInit9c49b0e01b9583b778e9b2e04e445e51::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInit9c49b0e01b9583b778e9b2e04e445e51::$prefixDirsPsr4;
+            $loader->classMap = ComposerStaticInit9c49b0e01b9583b778e9b2e04e445e51::$classMap;
 
         }, null, ClassLoader::class);
     }
