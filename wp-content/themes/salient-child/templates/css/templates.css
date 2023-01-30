@@ -62,7 +62,7 @@
 }
 
 .projects-post-area {
-	margin: 30px 0;
+	margin: 30px 0 30px 0;
 }
 
 .projects-post-area.col {
@@ -218,6 +218,78 @@
 	/* FORCE A BACKGROUND IMAGE FOR ALL PROJECT BANNERS */
 }
 
+.top-information-wrapper {
+	height: 65px;
+	z-index: 9999;
+}
+
+.top-information {
+	display: flex;
+
+	padding: 15px 35px;
+}
+
+.top-information a {
+	font-weight: 700;
+	font-size: 19px;
+	line-height: 28px;
+	letter-spacing: 1px;
+	text-transform: uppercase;
+	color: #C9C9C9;
+}
+
+.top-information-middle {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.top-information-middle .projects-icon {
+	font-size: 24px;
+}
+
+.top-information-middle .projects-icons {
+	margin: 0 25px;
+}
+
+.top-information-right {
+	text-align: right;
+}
+
+.projects-logo.wrapper {
+	padding-top: 70px;
+	margin: 0 auto;
+	text-align: center;
+}
+
+.projects-logo.wrapper img {
+	max-width: 75%;
+}
+
+.projects-bottom-navigation .navigation.post-navigation {
+	display: inline-block;
+}
+
+.projects-bottom-navigation a {
+	margin-right: 15px;
+}
+
+.projects-bottom-navigation .navigation.post-navigation a,
+.projects-bottom-navigation a {
+	border-radius: 30px;
+	padding: 8px 44px;
+	font-size: 17px;
+	line-height: 28px;
+	text-transform: uppercase;
+	margin-top: auto;
+}
+
+.projects-bottom-navigation {
+	text-align: center;
+	margin-bottom: 70px;
+}
+
+
 /* MEMBERS API STYLES */
 .slider.container {
 	background-color: inherit;
@@ -274,4 +346,26 @@ i.fa-solid.fa-calendar-days:before {
 
 i.fa-solid.fa-file-pdf:before {
 	content: "\f1c1" !important;
+}
+
+
+/* MOBILE */
+
+@media screen and (max-width: 600px) {
+	.top-information {
+		flex-direction: column;
+		text-align: center;
+	}
+
+	.top-information-right {
+		text-align: center;
+	}
+
+	.projects-logo.wrapper img {
+		max-width: 100%;
+	}
+
+	.projects-bottom-navigation .navigation.post-navigation {
+		margin-top: 35px;
+	}
 }

@@ -1,4 +1,3 @@
-ss
 /* LIST VIEW DESIGN */
 
 .list-design.outer {
@@ -107,6 +106,11 @@ a.list-design.navigation-btn {
 	/* justify-content: center; */
 }
 
+.grid-design .projects {
+	padding: 30px;
+	margin: 15px;
+}
+
 .grid-design .inner {
 	display: flex;
 	flex-direction: column;
@@ -171,6 +175,79 @@ a.list-design.navigation-btn {
 	opacity: .85;
 }
 */
+/* FLIPBOX DESIGN */
+.flipbox-design.outer {
+	display: flex;
+}
+
+.flipbox-design .projects {
+	margin: 15px;
+}
+
+.flipbox-design.outer .col {
+	margin-bottom: 2%;
+}
+
+.flipbox-design .flipbox {
+	background-color: transparent;
+	width: 100%;
+	height: 450px;
+}
+
+.flipbox-design .flipbox-inner {
+	position: relative;
+	width: 100%;
+	height: 100%;
+	text-align: center;
+	transition: transform 0.6s;
+	transform-style: preserve-3d;
+}
+
+.flipbox-design .flipbox:hover .flipbox-inner {
+	transform: rotateY(180deg);
+}
+
+.flipbox-design .flipbox-front,
+.flipbox-design .flipbox-back {
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	-webkit-backface-visibility: hidden;
+	backface-visibility: hidden;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+
+.flipbox-design .flipbox-front {
+	padding: 35px;
+	justify-content: center;
+}
+
+.flipbox-design .flipbox-front img {
+	width: 100%;
+	object-fit: contain;
+}
+
+.flipbox-design .flipbox-back {
+	transform: rotateY(180deg);
+	justify-content: start;
+	padding: 35px 15px;
+}
+
+.flipbox-back h3,
+.flipbox-back p {
+	color: #ffffff;
+}
+
+.flipbox-design .projects-btn {
+	background-color: #ffffff;
+	padding: 8px 44px;
+	border-radius: 30px;
+	font-weight: 700;
+	text-transform: uppercase;
+	margin-top: auto;
+}
 
 /* PAGINATION */
 
@@ -189,14 +266,35 @@ a.list-design.navigation-btn {
 	padding: 10px;
 }
 
-@media only screen and (max-width: 600px) {
-	.list-design.right {
-		flex-basis: 100%;
-	}
-}
-
-
 .embedded-code iframe {
 	width: 100% !important;
 	height: 200px !important;
+}
+
+@media only screen and (max-width: 600px) {
+	.grid-design.outer {
+		display: grid;
+		margin-bottom: 0;
+	}
+
+	.grid-design.outer .grid-design.projects {
+
+		margin: 0;
+		margin-bottom: 35px;
+		padding: 15px;
+	}
+
+	.flipbox-design.outer {
+		display: grid;
+		margin-bottom: 0;
+	}
+
+	.flipbox-design .projects {
+		margin: 0;
+		margin-bottom: 35px;
+	}
+
+	.list-design.right {
+		flex-basis: 100%;
+	}
 }

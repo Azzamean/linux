@@ -31,6 +31,24 @@ class Projects
             ),
             "params" => [
                 [
+                    "type" => "dropdown",
+                    "heading" => esc_html__("Design", "projects"),
+                    "param_name" => "design",
+                    "admin_label" => true,
+                    "value" => [
+                        esc_html__("Grid Design", "projects") => "grid-design",
+                        esc_html__(
+                            "Flipbox Design",
+                            "projects"
+                        ) => "flipbox-design",
+                    ],
+                    "save_always" => true,
+                    "description" => esc_html__(
+                        "Select the design you desire for your projects.",
+                        "projects"
+                    ),
+                ],
+                [
                     "type" => "textfield",
                     "class" => "",
                     "heading" => __("Limit", "projects"),
@@ -40,6 +58,10 @@ class Projects
                         "Enter number of people to be displayed. Enter -1 to display all.",
                         "projects"
                     ),
+                    "dependency" => [
+                        "element" => "design",
+                        "value" => ["flipbox-design", "grid-design"],
+                    ],
                 ],
                 [
                     "type" => "dropdown",
@@ -53,6 +75,10 @@ class Projects
                         __("Random", "projects") => "rand",
                     ],
                     "description" => __("Select order type.", "projects"),
+                    "dependency" => [
+                        "element" => "design",
+                        "value" => ["flipbox-design", "grid-design"],
+                    ],
                 ],
                 [
                     "type" => "dropdown",
@@ -64,6 +90,10 @@ class Projects
                         __("Ascending", "projects") => "ASC",
                     ],
                     "description" => __("Select sorting order.", "projects"),
+                    "dependency" => [
+                        "element" => "design",
+                        "value" => ["flipbox-design", "grid-design"],
+                    ],
                 ],
                 [
                     "type" => "dropdown",
@@ -88,6 +118,10 @@ class Projects
                     "param_name" => "projects_category_id",
                     "value" => $all_projects_category,
                     "description" => __("", "projects"),
+                    "dependency" => [
+                        "element" => "design",
+                        "value" => ["flipbox-design", "grid-design"],
+                    ],
                 ],
             ],
         ]);
@@ -120,6 +154,7 @@ function projects_grid($atts, $content)
     extract(
         shortcode_atts(
             [
+                "design" => "",
                 "limit" => "-1",
                 "order" => "ASC",
                 "orderby" => "title",
@@ -139,10 +174,23 @@ function projects_grid($atts, $content)
         "ignore_sticky_posts" => true,
     ];
 
+    $design = !empty($design) ? $design : "grid-design";
     $limit = !empty($limit) ? $limit : "15";
     $order = strtolower($order) == "asc" ? "ASC" : "DESC";
     $orderby = !empty($orderby) ? $orderby : "title";
     $columns = !empty($columns) ? $columns : "2";
+
+    switch ($design) {
+        case "grid-design":
+            $design = "Grid Design";
+            break;
+        case "flipbox-design":
+            $design = "Flipbox Design";
+            break;
+        default:
+            $design = "Grid Design";
+            break;
+    }
 
     switch ($columns) {
         case "2":
@@ -176,34 +224,83 @@ function projects_grid($atts, $content)
     if ($projects_query->have_posts()) {
         $count = 0;
         while ($projects_query->have_posts()):
-            $projects_query->the_post();
-            if ($count == 0) {
-                $output .= '<div class="grid-design outer">';
-            }
-            $output .=
-                '<div class="' . $column_class . ' grid-design projects">';
-			$output .= '<div class="grid-design image-wrapper">';
-            $output .= '<img src="' . get_field("projects_logo") . '"/>';
-			$output .= '</div>';
-			$output .= '<div class="grid-design body-wrapper">';
-            $output .= "<h3>" . get_the_title() . "</h3>";
-            $output .=
-                "<p>" .
-                wp_trim_words(get_field("projects_excerpt"), 50) .
-                "</p>";
-            $output .=
-                '<a class="grid-design projects-btn" href="' .
-                get_permalink() .
-                '" target="_blank"">Learn More</a>';
-			$output .= '</div>';
-            $output .= "</div>";
-            $count++;
-            if (
-                $count == $columns ||
-                $projects_query->current_post + 1 == $projects_query->post_count
-            ) {
+            //Grid Design
+            if ($design == "Grid Design") {
+                $projects_query->the_post();
+                if ($count == 0) {
+                    $output .= '<div class="grid-design outer">';
+                }
+                $output .=
+                    '<div class="' . $column_class . ' grid-design projects">';
+                $output .= '<div class="grid-design image-wrapper">';
+                $output .= '<img src="' . get_field("projects_logo") . '"/>';
                 $output .= "</div>";
-                $count = 0;
+                $output .= '<div class="grid-design body-wrapper">';
+                $output .= "<h3>" . get_the_title() . "</h3>";
+                $output .=
+                    "<p>" .
+                    wp_trim_words(get_field("projects_excerpt"), 50) .
+                    "</p>";
+                $output .=
+                    '<a class="grid-design projects-btn" href="' .
+                    get_permalink() .
+                    '" target="_blank"">Learn More</a>';
+                $output .= "</div>";
+                $output .= "</div>";
+                $count++;
+                if (
+                    $count == $columns ||
+                    $projects_query->current_post + 1 ==
+                        $projects_query->post_count
+                ) {
+                    $output .= "</div>";
+                    $count = 0;
+                }
+            }
+
+            //Flipbox Design
+            if ($design == "Flipbox Design") {
+                $projects_query->the_post();
+                if ($count == 0) {
+                    $output .= '<div class="flipbox-design outer">';
+                }
+                $output .=
+                    '<div class="' .
+                    $column_class .
+                    ' flipbox-design projects">';
+                $output .= '<div class="flipbox">';
+                $output .= '<div class="flipbox-inner">';
+                $output .= '<div class="flipbox-front">';
+                $output .= '<img src="' . get_field("projects_logo") . '">';
+                $output .= "</div>";
+                $output .=
+                    '<div class="flipbox-back" style="background-color: ' .
+                    $accent_color .
+                    '">';
+                $output .= "<h3>" . get_the_title() . "</h3>";
+                $output .=
+                    "<p>" .
+                    wp_trim_words(get_field("projects_excerpt"), 35) .
+                    "</p>";
+                $output .=
+                    '<a class="flipbox-design projects-btn" href="' .
+                    get_permalink() .
+                    '" target="_blank" style="color: ' .
+                    $accent_color .
+                    '" ">Learn More</a>';
+                $output .= "</div>";
+                $output .= "</div>";
+                $output .= "</div>";
+                $output .= "</div>";
+                $count++;
+                if (
+                    $count == $columns ||
+                    $projects_query->current_post + 1 ==
+                        $projects_query->post_count
+                ) {
+                    $output .= "</div>";
+                    $count = 0;
+                }
             }
         endwhile; /* Restore original Post Data */
         wp_reset_postdata();
