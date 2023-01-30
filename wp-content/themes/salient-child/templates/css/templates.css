@@ -266,15 +266,10 @@
 	max-width: 75%;
 }
 
-.projects-bottom-navigation .navigation.post-navigation {
-	display: inline-block;
-}
-
 .projects-bottom-navigation a {
 	margin-right: 15px;
 }
 
-.projects-bottom-navigation .navigation.post-navigation a,
 .projects-bottom-navigation a {
 	border-radius: 30px;
 	padding: 8px 44px;
@@ -365,7 +360,8 @@ i.fa-solid.fa-file-pdf:before {
 		max-width: 100%;
 	}
 
-	.projects-bottom-navigation .navigation.post-navigation {
-		margin-top: 35px;
+	.projects-bottom-navigation a {
+		margin-bottom: 15px !important;
+		display: inline-block;
 	}
 }

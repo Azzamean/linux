@@ -19,6 +19,7 @@ include_once "acf/templates-acf.php";
 $nectar_options = get_nectar_theme_options();
 $accent_color = $nectar_options["accent-color"];
 //$templateFile = get_page_template_slug(get_queried_object_id());if ($templateFile == null){echo "This is the default template";}else{echo "This is the template file: " . $templateFile;}
+$next_post_link_url = get_permalink( get_adjacent_post(false,'',false)->ID );
 get_header();
 ?>
 
@@ -100,7 +101,7 @@ get_header();
      endif; ?>
 					</div>
 					<div class="col span_3 top-information-right">
-					<?php the_post_navigation(["prev_text" => false, "next_text" => __("View Next Project")]); ?>	
+					<a href="<?php echo $next_post_link_url  ?>">View Next Project</a>
 					</div>	
 				</div>
 			</div>
@@ -141,7 +142,7 @@ get_header();
 
 		<div class="projects-bottom-navigation">
 			<a href="/projects/">Back To All Projects</a>
-			<?php the_post_navigation(["prev_text" => false, "next_text" => __("View Next Project")]); ?>
+			<a href="<?php echo $next_post_link_url  ?>">View Next Project</a>
 		</div>
 	
 		<?php echo do_shortcode('[nectar_global_section id="7879"]'); ?>
