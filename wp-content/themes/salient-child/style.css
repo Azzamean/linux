@@ -99,7 +99,3 @@ span.osano-cm-toggle__label.osano-cm-label {
 .external span.sf-sub-indicator:after {
 	display: none;
 }
-
-i.fa-solid.fa-file-pdf:before {
-	content: "\f1c1" !important;
-}

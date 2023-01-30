@@ -68,6 +68,7 @@
 .projects-post-area.col {
 	margin-bottom: 0;
 }
+
 .projects-post-area section {
 	margin: 35px 0;
 }
@@ -261,4 +262,16 @@
 .slick-track {
 	left: -550px !important;
 	position: relative !important;
+}
+
+
+/* FONT AWESOME ICON FIXES FOR PROJECTS */
+
+i.fa-solid.fa-calendar-days:before {
+	content: "\f073";
+}
+
+
+i.fa-solid.fa-file-pdf:before {
+	content: "\f1c1" !important;
 }
