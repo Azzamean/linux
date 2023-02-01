@@ -89,7 +89,7 @@ span.osano-cm-toggle__label.osano-cm-label {
 	display: none;
 }
 
-.external span:after {
+.external .menu-title-text:after {
 	font-family: 'FontAwesome';
 	content: "\f08e" !important;
 	font-weight: 600;
