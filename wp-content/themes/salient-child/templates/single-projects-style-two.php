@@ -15,6 +15,10 @@ if (!defined("ABSPATH")) {
 }
 // GET ACF'S
 include_once "acf/templates-acf.php";
+
+// GET SHORTCODES 
+include_once "global-shortcodes.php";
+
 // GET SALIENT COLORS
 $nectar_options = get_nectar_theme_options();
 $accent_color = $nectar_options["accent-color"];
@@ -145,7 +149,7 @@ get_header();
 			<a href="<?php echo $next_post_link_url  ?>">View Next Project</a>
 		</div>
 	
-		<?php echo do_shortcode('[nectar_global_section id="7879"]'); ?>
+		<?php echo global_shortcode(); ?>
 			
 	</div>
 	<!--/container main-content-->
