@@ -251,12 +251,12 @@ a.list-design.navigation-btn {
 
 /* PAGINATION */
 
-.design-pagination {
+.recent-posts-pagination {
 	text-align: center;
 	font-size: 1rem;
 }
 
-.design-pagination .page-numbers {
+.recent-posts-pagination .page-numbers {
 	margin-right: 5px;
 	color: inherit;
 }

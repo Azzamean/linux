@@ -92,6 +92,21 @@ class RecentPostsLinux
                         "save_always" => true,
                     ],
                     [
+                        "type" => "dropdown",
+                        "class" => "",
+                        "heading" => esc_html__("Sort", "recent_posts"),
+                        "param_name" => "sort",
+                        "value" => [
+                            esc_html__("Descending", "recent_posts") => "DESC",
+                            esc_html__("Ascending", "recent_posts") => "ASC",
+                        ],
+                        "description" => esc_html__(
+                            "Select the sorting direction to be displayed.",
+                            "salient-core"
+                        ),
+                        "save_always" => true,
+                    ],
+                    [
                         "type" => "textfield",
                         "class" => "",
                         "heading" => esc_html__("Post Offset", "recent_posts"),
@@ -407,6 +422,7 @@ function recent_posts_linux($atts, $content)
                 "design" => "",
                 "columns" => "",
                 "limit" => "",
+				"sort" => "",
                 "offset" => "",
                 "category_id" => "",
                 "categories" => "",
@@ -429,6 +445,7 @@ function recent_posts_linux($atts, $content)
     $design = !empty($design) ? $design : "list-design";
     $columns = !empty($columns) ? $columns : "4";
     $limit = !empty($limit) ? $limit : "4";
+    $sort = !empty($sort) ? $sort : "ASC";	
     $offset = !empty($offset) ? $offset : "";
 
     $categories = !empty($categories) ? $categories : "0";
@@ -452,6 +469,7 @@ function recent_posts_linux($atts, $content)
         "post_type" => "post",
         "post_status" => ["publish"],
         "posts_per_page" => $limit,
+		"order" => $sort,
         "offset" => $offset,
         "ignore_sticky_posts" => true,
         "nopaging" => false,
@@ -1023,7 +1041,7 @@ function recent_posts_linux($atts, $content)
                         ? intval($nectar_options[""])
                         : 50;
                     $excerpt_markup =
-                        '<p class="list-design excerpt">' .
+                        '<p class="grid-design excerpt">' .
                         nectar_excerpt($excerpt_length) .
                         "</p>";
                     $output .= $excerpt_markup;
@@ -1086,7 +1104,7 @@ function recent_posts_linux($atts, $content)
         // PAGINATION
         if ($pagination != false) {
             $big = 999999999;
-            $output .= '<div class="design-pagination" style="color:#ffffff">';
+            $output .= '<div class="recent-posts-pagination" style="color:#ffffff">';
             $output .=
                 '<div class="links" style="color:' . $accent_color . '">';
             $output .= paginate_links([

@@ -52,7 +52,7 @@ if (get_post_format() !== "status" && get_post_format() !== "aside" && "image_un
                     foreach ($categories as $cat)
                     {
                         $output .= $comma . '<a class="categories-techstrongtv" href="' . get_category_link($cat->cat_ID) . '">' . $cat->cat_name . "</a>";
-                        $comma = " ";
+                        $comma = " | ";
                         if (++$i == $categories)
                         {
                             break;

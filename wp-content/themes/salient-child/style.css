@@ -60,28 +60,16 @@ span.osano-cm-toggle__label.osano-cm-label {
     margin-top: 50px;
   }
   */
+	.sf-menu li ul {
+		width: 21em;
+	}
 }
+
 
 @media (max-width: 767px) {
 	.lfprojects {
 		display: none;
 	}
-}
-
-/* Icons for CSS Classes */
-
-.external-site:after {
-	content: "\f08e";
-	font-family: FontAwesome;
-	margin-left: 5px;
-}
-
-.sub-menu .external-site a {
-	display: inline-block;
-}
-
-.sf-menu li ul {
-	width: 21em;
 }
 
 /* CSS FOR EXTERNAL ICON */
@@ -98,4 +86,8 @@ span.osano-cm-toggle__label.osano-cm-label {
 
 .external span.sf-sub-indicator:after {
 	display: none;
+}
+
+.join-btn a span:after {
+	/* display: none !important; */
 }
