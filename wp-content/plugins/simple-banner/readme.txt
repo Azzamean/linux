@@ -1,14 +1,14 @@
-=== Simple Banner ===
+=== Simple Banner - An easy to use Banner/Bar/Notification/Announcement for the top or bottom of your website ===
 Contributors: rpetersen29
 Donate link: https://www.paypal.me/rpetersenDev
-Tags: banner, simple, top, bar, announcement, top bar, topbar, bulletin, notification, notice, cta, free
+Tags: banner, bar, top, announcement, notification, simple, bulletin, notice, cta, free
 Requires at least: 3.0.1
-Tested up to: 6.1
-Stable tag: 2.12.2
+Tested up to: 6.1.1
+Stable tag: 2.13.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-Display a simple banner/bar at the top of your website.
+Display a simple banner/bar at the top or bottom of your website.
 
 == Description ==
 
@@ -119,6 +119,15 @@ Set your banner position to <code>relative</code> and try this in 'Website Custo
 4. This is the settings page... and the fourth screen shot.
 
 == Changelog ==
+
+= 2.13.1 =
+* Bug fixes
+
+= 2.13.0 =
+* New pro version payment system
+
+= 2.12.3 =
+* Support for WPML/Polylang
 
 = 2.12.2 =
 * Support for WP 6.1
@@ -305,6 +314,15 @@ Set your banner position to <code>relative</code> and try this in 'Website Custo
 * First Version.
 
 == Upgrade Notice ==
+
+= 2.13.1 =
+* Bug fixes
+
+= 2.13.0 =
+* New pro version payment system
+
+= 2.12.3 =
+* Support for WPML/Polylang
 
 = 2.12.2 =
 * Support for WP 6.1

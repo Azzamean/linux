@@ -2,17 +2,17 @@
 /**
  * Plugin Name: Simple Banner
  * Plugin URI: https://github.com/rpetersen29/simple-banner
- * Description: Display a simple banner at the top of your website.
- * Version: 2.12.2
+ * Description: Display a simple banner at the top or bottom of your website.
+ * Version: 2.13.1
  * Author: Ryan Petersen
  * Author URI: http://rpetersen29.github.io/
  * License: GPL2
  *
  * @package Simple Banner
- * @version 2.12.2
+ * @version 2.13.1
  * @author Ryan Petersen <rpetersen.dev@gmail.com>
  */
-define ('SB_VERSION', '2.12.2');
+define ('SB_VERSION', '2.13.1');
 
 register_activation_hook( __FILE__, 'simple_banner_activate' );
 function simple_banner_activate() {
@@ -109,10 +109,9 @@ function simple_banner_body_open() {
 	}
 }
 
-// Prevent CSS removal from optimizer plugins by putting a dummy item in the
+// Prevent CSS removal from optimizer plugins by putting a dummy item in the DOM
 add_action( 'wp_footer', 'prevent_css_removal');
-function prevent_css_removal()
-{
+function prevent_css_removal(){
 	echo '<div class="simple-banner simple-banner-text" style="display:none !important"></div>';
 }
 
@@ -331,6 +330,11 @@ function simple_banner_settings() {
 	    	'sanitize_callback' => 'wp_filter_nohtml_kses'
 		)
     );
+	register_setting( 'simple-banner-settings-group', 'simple_banner_pro_license_key',
+		array(
+	    	'sanitize_callback' => 'wp_filter_nohtml_kses'
+		)
+    );
 	register_setting( 'simple-banner-settings-group', 'disabled_on_posts',
 		array(
 	    	'sanitize_callback' => 'wp_filter_nohtml_kses'
@@ -384,13 +388,63 @@ function simple_banner_settings() {
     );
 }
 
+function is_license_verified(){
+	$license_key = esc_attr( get_option('simple_banner_pro_license_key') );
+	// null check for license
+	if (!$license_key){
+		return false;
+	}
+
+	$is_pro_currently_enabled = esc_attr( get_option('pro_version_enabled') );
+
+    $url = 'https://api.gumroad.com/v2/licenses/verify';
+
+	$ch = curl_init($url);
+	curl_setopt($ch, CURLOPT_HEADER, false);
+	curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+	curl_setopt($ch, CURLOPT_POST, true);
+	$data = array(
+	    'product_id' => 'vg6aCpxipQHuI5yvYzSVEA==',
+	    'license_key' => $license_key,
+	    'increment_uses_count' => 'false',
+	);
+
+	curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($data));
+	
+	// execute request and get response
+	$result = curl_exec($ch);
+	// Keeping for backwards compatibility
+	// This function has no effect. Prior to PHP 8.0.0, this function was used to close the resource.
+	curl_close($ch);
+
+	// TODO: Figure out what to do with these
+	// also get the error and response code
+	// $errors = curl_error($ch);
+	// $json_errors = json_decode($errors);
+	// gumroad returns a 404 on invalid license code
+	// e.g. {"success":false,"message":"That license does not exist for the provided product."}
+	// $response = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+
+	$json = json_decode($result);
+	$success = $json->{'success'};
+	// check if license is active
+	// if error or unknown response return current value
+	if ($success === true) {
+		return true;
+	} else if ($success === false) {
+		return false;
+	}
+	return $is_pro_currently_enabled;
+}
+
 function simple_banner_settings_page() {
 	?>
 	<?php
 		if (esc_attr( get_option('pro_version_activation_code') ) == "SBPROv1-14315") {
 			update_option('pro_version_enabled', true);
 		} else {
-			update_option('pro_version_enabled', false);
+			$is_verified = is_license_verified();
+			update_option('pro_version_enabled', $is_verified);
 		}
 	?>
 
@@ -684,10 +738,10 @@ function simple_banner_settings_page() {
 			<!-- Pro Features -->
 			<div style="padding: 0 10px;border: 1px solid #24282e;border-radius: 10px;background-color: #fafafa;">
 
-				<h2>Pro Features
+				<h2><span style="padding-right:10px">Pro Features<span>
 					<?php
 						if (!get_option('pro_version_enabled')) {
-							echo '<a class="button-primary" href="https://simple-banner.square.site/" target="_blank">Purchase Pro Version</a>';
+							echo '<a class="button-primary" href="https://rpetersendev.gumroad.com/l/simple-banner" target="_blank">Purchase Pro License</a>';
 						}
 					?>
 				</h2>
@@ -696,10 +750,10 @@ function simple_banner_settings_page() {
 					<!-- Activation Code -->
 					<tr valign="top" style="<?php if (get_option('pro_version_enabled')) { echo 'display: none;'; } ?>">
 						<th scope="row">
-							Activation Code
+							License key
 						</th>
 						<td>
-							<input type="text" style="border: 2px solid gold;border-radius: 5px;" id="pro_version_activation_code" name="pro_version_activation_code" value="<?php echo esc_attr(get_option('pro_version_activation_code')); ?>" />
+							<input type="text" style="border: 2px solid gold;border-radius: 5px;;width:60%;" id="simple_banner_pro_license_key" name="simple_banner_pro_license_key" value="<?php echo esc_attr(get_option('simple_banner_pro_license_key')); ?>" />
 						</td>
 					</tr>
 					<!-- Permissions -->
