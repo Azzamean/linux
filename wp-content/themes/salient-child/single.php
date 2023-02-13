@@ -49,6 +49,11 @@ if (have_posts()):
             {
                 get_template_part("includes/partials/single-post/post-header-lfn");
             }
+			// LF Energy
+            else if ($site_id == "18")
+            {
+                get_template_part("includes/partials/single-post/post-header-lfenergy");
+            }
             else
             {
                 nectar_page_header($post->ID);
@@ -88,6 +93,11 @@ if ($site_id == "7")
 else if ($site_id == "14")
 {
     get_template_part("includes/partials/single-post/post-header-omp");
+}
+// LF Energy
+else if ($site_id == "18")
+{
+    // DO NOTHING 
 }
 else
 {
@@ -142,6 +152,11 @@ if (have_posts()):
         else if ($site_id == "14")
         {
             get_template_part("includes/partials/single-post/post-content-omp");
+        }
+		// OMP
+        else if ($site_id == "18")
+        {
+            get_template_part("includes/partials/single-post/post-content-lfenergy");
         }
         else
         {

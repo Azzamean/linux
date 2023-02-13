@@ -80,6 +80,7 @@
 .list-design.excerpt {
 	font-size: 14px;
 	line-height: 20px;
+	display: inline-block !important;
 }
 
 a.list-design.navigation-btn {
@@ -272,6 +273,10 @@ a.list-design.navigation-btn {
 }
 
 @media only screen and (max-width: 600px) {
+	.list-design.flex {
+		flex-flow: column !important;
+	}
+
 	.grid-design.outer {
 		display: grid;
 		margin-bottom: 0;

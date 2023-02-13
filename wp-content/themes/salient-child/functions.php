@@ -77,17 +77,14 @@ function lf_meta_header()
     switch ($site_id)
     {
             // DPEL AWSF
-            
         case "8":
             echo $academy_software_foundation;
         break;
             // OMPF
-            
         case "14":
             echo $linux_foundation_white;
         break;
-            // OVERTURE MAPS FOUNDATION
-            
+            // OVERTURE MAPS FOUNDATION     
         case "16":
             echo $linux_foundation_white;
         break;

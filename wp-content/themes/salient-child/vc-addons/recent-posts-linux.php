@@ -233,7 +233,7 @@ class RecentPostsLinux
                         "std" => "hide-excerpt",
                         "dependency" => [
                             "element" => "design",
-                            "value" => ["grid-design"],
+                            "value" => ["list-design", "grid-design"],
                         ],
                         "description" => esc_html__(
                             "Check or uncheck the box if you want to show or hide the excerpt.",
@@ -874,14 +874,17 @@ function recent_posts_linux($atts, $content)
                     // END OF DATE, AUTHOR, CATEGORIES, AND TAGS SECTION
                 }
 
-                $excerpt_length = !empty($nectar_options[""])
-                    ? intval($nectar_options[""])
-                    : 50;
-                $excerpt_markup =
-                    '<p class="list-design excerpt">' .
-                    nectar_excerpt($excerpt_length) .
-                    "</p>";
-                $output .= $excerpt_markup;
+                if ($excerpt == true && $read_link == false) {
+                    $excerpt_length = !empty($nectar_options[""]) ? intval($nectar_options[""]) : 50;
+                    $excerpt_markup = '<p class="list-design excerpt">' . nectar_excerpt($excerpt_length) . "</p>";
+                    $output .= $excerpt_markup;
+                }
+
+                if ($excerpt == true && $read_link == true) {
+                    $excerpt_length = !empty($nectar_options[""]) ? intval($nectar_options[""]) : 50;
+                    $excerpt_markup = '<div class="list-design excerpt"><span>' . nectar_excerpt($excerpt_length) . '</span><a href="' . get_permalink() . '"> Read more.</a></div>';
+                    $output .= $excerpt_markup;
+                }
 
                 if (
                     $navigation == "show_navigation_btn" &&
@@ -917,6 +920,58 @@ function recent_posts_linux($atts, $content)
                     $count = 0;
                 }
             }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
             // GRID DESIGN
             if ($design == "Grid Design") {

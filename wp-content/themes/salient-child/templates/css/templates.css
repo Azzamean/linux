@@ -266,11 +266,9 @@
 	max-width: 75%;
 }
 
-.projects-bottom-navigation a {
+.projects-bottom-navigation a,
+.single-blog-bottom-navigation a {
 	margin-right: 15px;
-}
-
-.projects-bottom-navigation a {
 	border-radius: 30px;
 	padding: 8px 44px;
 	font-size: 17px;
@@ -279,7 +277,8 @@
 	margin-top: auto;
 }
 
-.projects-bottom-navigation {
+.projects-bottom-navigation,
+.single-blog-bottom-navigation {
 	text-align: center;
 	margin-bottom: 35px;
 }
@@ -360,7 +359,8 @@ i.fa-solid.fa-file-pdf:before {
 		max-width: 100%;
 	}
 
-	.projects-bottom-navigation a {
+	.projects-bottom-navigation a,
+	.single-blog-bottom-navigation a {
 		margin-bottom: 15px !important;
 		display: inline-block;
 	}

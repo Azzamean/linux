@@ -11,7 +11,7 @@ class MembersAPI
         if (function_exists("vc_map")):
             vc_map([
                 "name" => esc_html__(
-                    "Members API - Linux Foundation Designed",
+                    "Members API Carousel - Linux Foundation Designed",
                     "members_api"
                 ),
                 "base" => "members_api_linux_foundation",
