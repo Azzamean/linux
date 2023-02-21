@@ -137,6 +137,42 @@ function cc_mime_types($mimes)
 }
 add_filter("upload_mimes", "cc_mime_types");
 
+add_filter(
+    "map_meta_cap",
+    function ($caps, $cap, $user_id) {
+        if ("unfiltered_upload" !== $cap) {
+            return $caps;
+        }
+
+        if (user_can($user_id, "edit_others_posts")) {
+            if (false !== ($key = array_search("do_not_allow", $caps))) {
+                unset($caps[$key]);
+            }
+            $caps[] = "unfiltered_upload";
+            $caps = array_values($caps);
+        }
+
+        return $caps;
+    },
+    10,
+    3
+);
+
+add_filter(
+    "user_has_cap",
+    function ($allcaps, $caps) {
+        if (!in_array("unfiltered_upload", $caps)) {
+            return $allcaps;
+        }
+
+        $allcaps["unfiltered_upload"] = true;
+
+        return $allcaps;
+    },
+    10,
+    4
+);
+
 // REMOVE COMMENTS FUNCTION; CAN BE PLACED IN A MU PLUGIN IF WANTED
 add_action("admin_init", function ()
 {
