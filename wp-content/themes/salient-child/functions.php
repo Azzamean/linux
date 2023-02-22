@@ -77,14 +77,17 @@ function lf_meta_header()
     switch ($site_id)
     {
             // DPEL AWSF
+            
         case "8":
             echo $academy_software_foundation;
         break;
             // OMPF
+            
         case "14":
             echo $linux_foundation_white;
         break;
-            // OVERTURE MAPS FOUNDATION     
+            // OVERTURE MAPS FOUNDATION
+            
         case "16":
             echo $linux_foundation_white;
         break;
@@ -137,41 +140,39 @@ function cc_mime_types($mimes)
 }
 add_filter("upload_mimes", "cc_mime_types");
 
-add_filter(
-    "map_meta_cap",
-    function ($caps, $cap, $user_id) {
-        if ("unfiltered_upload" !== $cap) {
-            return $caps;
-        }
-
-        if (user_can($user_id, "edit_others_posts")) {
-            if (false !== ($key = array_search("do_not_allow", $caps))) {
-                unset($caps[$key]);
-            }
-            $caps[] = "unfiltered_upload";
-            $caps = array_values($caps);
-        }
-
+add_filter("map_meta_cap", function ($caps, $cap, $user_id)
+{
+    if ("unfiltered_upload" !== $cap)
+    {
         return $caps;
-    },
-    10,
-    3
-);
+    }
 
-add_filter(
-    "user_has_cap",
-    function ($allcaps, $caps) {
-        if (!in_array("unfiltered_upload", $caps)) {
-            return $allcaps;
+    if (user_can($user_id, "edit_others_posts"))
+    {
+        if (false !== ($key = array_search("do_not_allow", $caps)))
+        {
+            unset($caps[$key]);
         }
+        $caps[] = "unfiltered_upload";
+        $caps = array_values($caps);
+    }
 
-        $allcaps["unfiltered_upload"] = true;
+    return $caps;
+}
+, 10, 3);
 
+add_filter("user_has_cap", function ($allcaps, $caps)
+{
+    if (!in_array("unfiltered_upload", $caps))
+    {
         return $allcaps;
-    },
-    10,
-    4
-);
+    }
+
+    $allcaps["unfiltered_upload"] = true;
+
+    return $allcaps;
+}
+, 10, 4);
 
 // REMOVE COMMENTS FUNCTION; CAN BE PLACED IN A MU PLUGIN IF WANTED
 add_action("admin_init", function ()
