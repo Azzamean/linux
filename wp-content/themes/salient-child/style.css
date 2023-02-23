@@ -37,11 +37,12 @@ span.osano-cm-toggle__label.osano-cm-label {
 		max-width: 270px;
 		vertical-align: middle;
 	}
-	
+
 	.lfprojects.white-background.jdf img {
-		max-height: 33px !important;
-		height: 33px !important;
-		line-height: 33px !important;
+		max-height: 30px !important;
+		height: 30px !important;
+		line-height: 30px !important;
+		margin-bottom: 2px;
 	}
 
 	#header-outer {
