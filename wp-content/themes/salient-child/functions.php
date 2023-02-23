@@ -72,9 +72,9 @@ function lf_meta_header()
 {
     $site_id = get_current_blog_id();
     $academy_software_foundation = '<div class="lfprojects awsf-background"><div class="container"><a href="https://www.aswf.io/projects/" target="_blank" rel="noopener noreferrer"><img src="/wp-content/uploads/banners/aswf_banner_dark.svg"></a></div></div>';
-    $jdf_banner_white = '<div class="lfprojects white-background jdf"><div class="container"><a href="https://jointdevelopment.org/" target="_blank" rel="noopener noreferrer"><img src="/wp-content/uploads/banners/jdf_banner_color.svg"></a></div></div>';
-    $linux_foundation_white = '<div class="lfprojects white-background"><div class="container"><a href="https://www.linuxfoundation.org/projects" target="_blank" rel="noopener noreferrer"><img src="/wp-content/uploads/banners/lfprojects_banner_color.png"></a></div></div>';
-    $linux_foundation_dark = '<div class="lfprojects"><div class="container"><a href="https://www.linuxfoundation.org/projects" target="_blank" rel="noopener noreferrer"><img src="/wp-content/uploads/banners/lfprojects_banner.png"></a></div></div>';
+    $jdf_banner = '<div class="lfprojects white-background jdf"><div class="container"><a href="https://jointdevelopment.org/" target="_blank" rel="noopener noreferrer"><img src="/wp-content/uploads/banners/jdf_banner_color.svg"></a></div></div>';
+    $linux_foundation_white = '<div class="lfprojects white-background"><div class="container"><a href="https://www.linuxfoundation.org/projects" target="_blank" rel="noopener noreferrer"><img src="/wp-content/uploads/banners/lfprojects_banner_color.svg"></a></div></div>';
+    $linux_foundation_dark = '<div class="lfprojects"><div class="container"><a href="https://www.linuxfoundation.org/projects" target="_blank" rel="noopener noreferrer"><img src="/wp-content/uploads/banners/lfprojects_banner_other.svg"></a></div></div>';
 	
 	switch ($site_id)
     {
@@ -88,7 +88,7 @@ function lf_meta_header()
         break;
             // OVERTURE MAPS FOUNDATION 
         case "16":
-            echo $jdf_banner_white;
+            echo $jdf_banner;
         break;
         default:
             echo $linux_foundation_dark;
