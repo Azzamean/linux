@@ -4,7 +4,7 @@ class MembersAPI
     public function __construct()
     {
         add_action("init", [$this, "members_api_vc_linux"], 99999);
-    }
+    } 
 
     public function members_api_vc_linux()
     {

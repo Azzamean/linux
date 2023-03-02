@@ -42,14 +42,14 @@ $url = $protocol . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
 the_content();
 
 if (!has_category(["techstrongtv", "making-our-strong-community-stronger-initiative", "tfir-partnership", ]))
-{ ?>
+{ if ( get_the_author_meta("description") != null ) { ?>
 				
 				<div class="author-meta-box">
 					<h6>About the Author</h6>
 					<p><?php echo get_the_author_meta("description"); ?></p>
 				</div>			
 			<?php
-}
+} }
 ?>
 					
 			</div><!--/span_9-->

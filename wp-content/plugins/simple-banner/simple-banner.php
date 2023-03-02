@@ -3,16 +3,16 @@
  * Plugin Name: Simple Banner
  * Plugin URI: https://github.com/rpetersen29/simple-banner
  * Description: Display a simple banner at the top or bottom of your website.
- * Version: 2.13.1
+ * Version: 2.13.3
  * Author: Ryan Petersen
  * Author URI: http://rpetersen29.github.io/
  * License: GPL2
  *
  * @package Simple Banner
- * @version 2.13.1
+ * @version 2.13.3
  * @author Ryan Petersen <rpetersen.dev@gmail.com>
  */
-define ('SB_VERSION', '2.13.1');
+define ('SB_VERSION', '2.13.3');
 
 register_activation_hook( __FILE__, 'simple_banner_activate' );
 function simple_banner_activate() {
@@ -427,9 +427,21 @@ function is_license_verified(){
 
 	$json = json_decode($result);
 	$success = $json->{'success'};
+
 	// check if license is active
 	// if error or unknown response return current value
 	if ($success === true) {
+		// now check if cancelled
+		$subscription_cancelled_at = $json->{'purchase'}->{'subscription_cancelled_at'};
+		if ($subscription_cancelled_at) {
+			$curr_date = new DateTime('now');
+			$cancelled_date = new DateTime($subscription_cancelled_at);
+
+			// Compare the dates
+			if ($curr_date > $cancelled_date) {
+			    return false;
+			}
+		}
 		return true;
 	} else if ($success === false) {
 		return false;
@@ -851,11 +863,6 @@ function simple_banner_settings_page() {
 									}
 								?>
 							</div>
-							<?php
-								if (get_option('pro_version_enabled')) {
-									echo '<input type="text" hidden id="disabled_pages_array" name="disabled_pages_array" value="'. get_option('disabled_pages_array') . '" />';
-								}
-							?>
 						</td>
 					</tr>
 					<!-- Website Custom CSS -->
@@ -939,6 +946,15 @@ function simple_banner_settings_page() {
 					</tr>
 				</table>
 			</div>
+
+			<?php
+				if (get_option('pro_version_enabled')) {
+					echo '<input type="text" hidden id="disabled_pages_array" name="disabled_pages_array" value="'. get_option('disabled_pages_array') . '" />';
+				}
+				// Need to set these hidden values in the form so they are not set to null on save
+				echo '<input type="text" hidden id="pro_version_enabled" name="pro_version_enabled" value="'. get_option('pro_version_enabled') . '" />';
+				echo '<input type="text" hidden id="pro_version_activation_code" name="pro_version_activation_code" value="'. get_option('pro_version_activation_code') . '" />';
+			?>
 
 			<!-- Save Changes Button -->
 			<?php submit_button(); ?>

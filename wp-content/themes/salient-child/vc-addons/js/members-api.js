@@ -6,7 +6,7 @@ async function getdata() {
    let url = await fetch(members_url);
    let data = await url.json();
    return data
-}
+} 
 
 // USE DATA
 getdata().then(data => {
