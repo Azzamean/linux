@@ -2369,6 +2369,22 @@
           'subtitle' => '',
           'desc' => ''
         ),
+        array(
+          'id' => 'use-mastodon-icon-header',
+          'type' => 'checkbox',
+          'required' => array( 'enable_social_in_header', '=', '1' ),
+          'title' => esc_html__('Use Mastodon Icon', 'salient'),
+          'subtitle' => '',
+          'desc' => ''
+        ),
+        array(
+          'id' => 'use-trustpilot-icon-header',
+          'type' => 'checkbox',
+          'required' => array( 'enable_social_in_header', '=', '1' ),
+          'title' => esc_html__('Use Trustpilot Icon', 'salient'),
+          'subtitle' => '',
+          'desc' => ''
+        ),
          array(
            'id' => 'use-email-icon-header',
            'type' => 'checkbox',
@@ -3964,6 +3980,20 @@
           'id' => 'use-patreon-icon',
           'type' => 'checkbox',
           'title' => esc_html__('Use Patreon Icon', 'salient'),
+          'subtitle' => '',
+          'desc' => ''
+        ),
+        array(
+          'id' => 'use-trustpilot-icon',
+          'type' => 'checkbox',
+          'title' => esc_html__('Use Trustpilot Icon', 'salient'),
+          'subtitle' => '',
+          'desc' => ''
+        ),
+        array(
+          'id' => 'use-mastodon-icon',
+          'type' => 'checkbox',
+          'title' => esc_html__('Use Mastodon Icon', 'salient'),
           'subtitle' => '',
           'desc' => ''
         ),
@@ -6426,6 +6456,20 @@
             'type' => 'text',
             'title' => esc_html__('Xing URL', 'salient'),
             'subtitle' => esc_html__('Please enter in your Xing URL.', 'salient'),
+            'desc' => ''
+          ),
+          array(
+            'id' => 'trustpilot-url',
+            'type' => 'text',
+            'title' => esc_html__('Trustpilot URL', 'salient'),
+            'subtitle' => esc_html__('Please enter in your Trustpilot URL.', 'salient'),
+            'desc' => ''
+          ),
+          array(
+            'id' => 'mastodon-url',
+            'type' => 'text',
+            'title' => esc_html__('Mastodon URL', 'salient'),
+            'subtitle' => esc_html__('Please enter in your Mastodon URL.', 'salient'),
             'desc' => ''
           ),
            array(

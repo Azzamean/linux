@@ -31,6 +31,16 @@ extract(shortcode_atts(array(
 // Divider.
 $divider_spacing = 'false';
 
+// Handle multiple headings.
+$has_multiple_tags = '';
+$tag_pattern = "/<h[1-6]>.*?<\/h[1-6]>/"; 
+$tag_count = preg_match_all($tag_pattern, $content);
+if($tag_count > 1) {
+  $has_multiple_tags = ' has-multiple-items';
+}
+$content = '<div class="nectar-scrolling-text-inner__text-chunk'.$has_multiple_tags.'">'.$content.'</div>';
+
+// Space or element between items.
 if( 'space' === $text_repeat_divider ) {
 	$divider_spacing = 'true';
 } else if( 'custom' === $text_repeat_divider ) {

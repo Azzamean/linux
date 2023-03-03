@@ -57,7 +57,7 @@ function nectar_register_required_plugins() {
         'slug'               => 'salient-core', 
         'source'             => get_template_directory() . '/plugins/salient-core.zip', 
         'required'           => true, 
-        'version'            => '1.9.6', 
+        'version'            => '1.9.8', 
         'force_activation'   => false, 
         'force_deactivation' => false, 
     ),

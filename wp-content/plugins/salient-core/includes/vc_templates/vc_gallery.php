@@ -24,6 +24,7 @@ extract(shortcode_atts(array(
     'img_size' => 'thumbnail',
     'image_loading' => '',
 		'image_grid_loading' => '',
+		'image_grid_lazy_skip' => '',
     'display_title_caption' => '',
     'gallery_style' => '',
     'constrain_max_cols' => '',
@@ -68,7 +69,7 @@ $el_end = '';
 $slides_wrap_start = '';
 $slides_wrap_end = '';
 
-if( property_exists('NectarLazyImages', 'global_option_active') && true === NectarLazyImages::$global_option_active ) {
+if( property_exists('NectarLazyImages', 'global_option_active') && true === NectarLazyImages::$global_option_active && $image_loading !== 'skip-lazy-load' ) {
 	$image_loading = 'lazy-load';
 	//$image_grid_loading = 'lazy-load';
 }
@@ -954,6 +955,8 @@ foreach ( $images as $attach_id ) {
 								case 'media_library':
 									if ($attach_id > 0) {
 
+										$gallery_images_to_skip = (!empty($image_grid_lazy_skip) || $image_grid_lazy_skip === '0' ) ? intval($image_grid_lazy_skip) : 8;
+									
 										if( $masonry_layout == 'true' && $layout != '3' && $layout != '4' && $layout != '2' && $bypass_image_cropping != 'true') {
 
 											$image_width = null;
@@ -990,9 +993,9 @@ foreach ( $images as $attach_id ) {
 												'wide_tall_photography_height' => '1200',
 											);
 
-											$simulated_lazy_fade_class = ( $i < 8 ) ? ' top-level-image' : '';
+											$simulated_lazy_fade_class = ( $i < $gallery_images_to_skip ) ? ' top-level-image' : '';
 
-											if( 'lazy-load' === $image_grid_loading && $i >= 8 ) {
+											if( 'lazy-load' === $image_grid_loading && $i >= $gallery_images_to_skip ) {
 												$post_thumbnail['thumbnail'] = '<img class="size-'.esc_attr($masonry_item_sizing).' skip-lazy nectar-lazy keep-calculated-size image-gallery-portfolio-item" data-nectar-img-src="'.esc_url($image_src).'" alt="'.esc_attr($wp_img_alt_tag).'" height="'.esc_attr($masonry_image_sizes[$masonry_item_sizing.'_height']).'" width="'.esc_attr($masonry_image_sizes[$masonry_item_sizing.'_width']).'" ' .$image_srcset.' '.$image_sizes.' />';
 											} else {
 												$post_thumbnail['thumbnail'] = '<img class="size-'.esc_attr($masonry_item_sizing).$simulated_lazy_fade_class.'" src="'.esc_url($image_src).'" alt="'.esc_attr($wp_img_alt_tag).'" height="'.esc_attr($image_height).'" width="'.esc_attr($image_width).'" ' .$image_srcset.' '.$image_sizes.' />';
@@ -1004,9 +1007,9 @@ foreach ( $images as $attach_id ) {
 
 										else {
 
-											 $simulated_lazy_fade_class = ( $i < 8 ) ? ' top-level-image' : '';
+											 $simulated_lazy_fade_class = ( $i < $gallery_images_to_skip ) ? ' top-level-image' : '';
 
-											$post_thumb_classes = ( 'lazy-load' === $image_grid_loading && $i >= 8 ) ? 'skip-lazy nectar-lazy image-gallery-portfolio-item' : 'skip-lazy' .  $simulated_lazy_fade_class;
+											$post_thumb_classes = ( 'lazy-load' === $image_grid_loading && $i >= $gallery_images_to_skip ) ? 'skip-lazy nectar-lazy image-gallery-portfolio-item' : 'skip-lazy' .  $simulated_lazy_fade_class;
 
 											if( $masonry_layout == 'true' && $bypass_image_cropping == 'true' && 'full' !== $img_size ) {
 												$img_size = 'large';
@@ -1015,7 +1018,7 @@ foreach ( $images as $attach_id ) {
 											$post_thumbnail = wpb_getImageBySize(array( 'attach_id' => (int) $attach_id, 'thumb_size' => $img_size, 'class' => $post_thumb_classes ));
 
 											// lazy.
-											if( 'lazy-load' === $image_grid_loading && isset($post_thumbnail['thumbnail']) && $i >= 8 ) {
+											if( 'lazy-load' === $image_grid_loading && isset($post_thumbnail['thumbnail']) && $i >= $gallery_images_to_skip ) {
 
 										$content = false;
 										 // Srcset.

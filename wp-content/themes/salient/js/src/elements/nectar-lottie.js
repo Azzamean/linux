@@ -19,7 +19,7 @@
     this.setupProps();
     this.domPosition();
 
-    if( $(this.el).parents('.tabbed').length == 0 ) {
+    if( $(this.el).parents('.tabbed').length == 0 && !this.isInstagram() ) {
       this.inViewLoad(); 
     } else {
       this.init();
@@ -260,6 +260,14 @@
 
     return false;
   };
+  
+  proto.isInstagram = function() {
+    if ( navigator.userAgent.indexOf('Instagram') != -1 ) {
+        return true;
+    } 
+
+    return false;
+  }
 
 
   proto.inViewLoad = function() {

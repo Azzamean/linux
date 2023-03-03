@@ -140,7 +140,7 @@ $mini_cart_style = ( isset($nectar_options['ajax-cart-style']) && 'slide_in_clic
 		<p class="woocommerce-mini-cart__empty-message"><?php esc_html_e( 'No products in the cart.', 'woocommerce' ); ?></p>
 	<?php } else { ?>
 		<div class="woocommerce-mini-cart__empty-message">
-			<h3><?php esc_html_e( 'No products in the cart.', 'woocommerce' ); ?></h3>
+			<span data-inherit-heading-family="h3"><?php esc_html_e( 'No products in the cart.', 'woocommerce' ); ?></span>
 			<a class="button" href="<?php echo esc_url( apply_filters( 'woocommerce_return_to_shop_redirect', wc_get_page_permalink( 'shop' ) ) ); ?>">
 				<?php esc_html_e( 'Go to shop', 'salient' ); ?>
 			</a>

@@ -18,7 +18,7 @@ define( 'NECTAR_THEME_NAME', 'salient' );
 
 if ( ! function_exists( 'get_nectar_theme_version' ) ) {
 	function nectar_get_theme_version() {
-		return '15.0.5';
+		return '15.0.8';
 	}
 }
 
@@ -48,18 +48,19 @@ function get_nectar_theme_options() {
 
 	$legacy_options  = get_option( 'salient' );
 	$current_options = get_option( 'salient_redux' );
-
-	if ( ! empty( $current_options ) ) {
+	
+	if ( ! empty( $current_options ) && is_array($current_options) ) {
 		return $current_options;
-	} elseif ( ! empty( $legacy_options ) ) {
+	} elseif ( ! empty( $legacy_options ) && is_array($legacy_options) ) {
 		return $legacy_options;
 	} else {
-		return $current_options;
+		return array();
 	}
 }
 
 $nectar_options                    = get_nectar_theme_options();
 $nectar_get_template_directory_uri = get_template_directory_uri();
+
 
 require_once NECTAR_THEME_DIRECTORY . '/includes/class-nectar-theme-manager.php';
 

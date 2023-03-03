@@ -1289,7 +1289,7 @@ if( !function_exists('nectar_preload_key_requests') ) {
 		if( isset($nectar_options['typography_font_swap']) && '1' === $nectar_options['typography_font_swap'] ) {
 
 			// Icomoon.
-			echo '<link rel="preload" href="'.esc_attr($nectar_get_template_directory_uri) . '/css/fonts/icomoon.woff?v=1.3" as="font" type="font/woff" crossorigin="anonymous">';
+			echo '<link rel="preload" href="'.esc_attr($nectar_get_template_directory_uri) . '/css/fonts/icomoon.woff?v=1.4" as="font" type="font/woff" crossorigin="anonymous">';
 		}
 	}
 
@@ -1409,7 +1409,7 @@ if( !function_exists('nectar_deferred_mod_style_attrs') ) {
 
 		if ( in_array($handle, $deferred_styles) ) {
 			
-			$modded_stylesheet = str_replace( '<link', '<link data-pagespeed-no-defer data-nowprocket data-wpacu-skip nitro-exclude data-no-optimize data-noptimize', $tag );
+			$modded_stylesheet = str_replace( '<link', '<link data-pagespeed-no-defer data-nowprocket data-wpacu-skip data-no-optimize data-noptimize', $tag );
 		   
 			return $modded_stylesheet; 
 		}

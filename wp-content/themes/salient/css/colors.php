@@ -1289,6 +1289,7 @@ if( !empty($nectar_options['header-color']) && $nectar_options['header-color'] =
 		body #header-outer[data-lhe="default"] #top nav .sf-menu > .current-menu-ancestor > a,
 		body #header-outer[data-lhe="default"] #top nav .sf-menu > .current-menu-ancestor > a i,
 		body #header-outer[data-lhe="default"] #top nav .sf-menu > .current_page_item > a,
+		body #header-outer[data-lhe="default"] #top nav .sf-menu > .current_page_parent > a,
 		body #header-outer[data-lhe="default"] #top nav .sf-menu > .current-menu-ancestor > a,
 		#header-outer:not(.transparent) .nectar-mobile-only.mobile-header a:hover,
 		#header-outer:not(.transparent) .nectar-mobile-only.mobile-header li[class*="current"] a {

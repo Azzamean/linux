@@ -175,7 +175,7 @@ if( !empty($icon) ) {
 				$wp_icon_alt_tag = get_post_meta( $custom_icon_image, '_wp_attachment_image_alt', true );
 
 				if( 'lazy-load' === $image_loading ||
-				 (property_exists('NectarLazyImages', 'global_option_active') && true === NectarLazyImages::$global_option_active) ) {
+				 (property_exists('NectarLazyImages', 'global_option_active') && true === NectarLazyImages::$global_option_active && 'skip-lazy-load' !== $image_loading ) ) {
 					$icon_markup = '<img style="max-width: '.intval($icon_size).'px;" class="fancy-box-custom-icon nectar-lazy" alt="'.esc_html($wp_icon_alt_tag).'" data-nectar-img-src="'.esc_url($icon_image_src[0]).'" />';
 				} else {
 					$icon_markup = '<img style="max-width: '.intval($icon_size).'px;" class="fancy-box-custom-icon" alt="'.esc_html($wp_icon_alt_tag).'" src="'. esc_url($icon_image_src[0]).'" />';
@@ -213,7 +213,7 @@ if( !empty($icon) ) {
 
 			$bg_image_src = $image_url;
 			if( 'lazy-load' === $image_loading ||
-				(property_exists('NectarLazyImages', 'global_option_active') && true === NectarLazyImages::$global_option_active) ) {
+				(property_exists('NectarLazyImages', 'global_option_active') && true === NectarLazyImages::$global_option_active && 'skip-lazy-load' !== $image_loading ) ) {
 				$style .= ' data-nectar-img-src="'.esc_url($bg_image_src).'"';
 			} else {
 				$style .= ' style="background-image: url(\''.esc_url($bg_image_src).'\'); "';
@@ -226,7 +226,7 @@ if( !empty($icon) ) {
 
 			if( isset($bg_image_src[0]) ) {
 				if( 'lazy-load' === $image_loading ||
-				 (property_exists('NectarLazyImages', 'global_option_active') && true === NectarLazyImages::$global_option_active) ) {
+				 (property_exists('NectarLazyImages', 'global_option_active') && true === NectarLazyImages::$global_option_active && 'skip-lazy-load' !== $image_loading ) ) {
 					$style .= ' data-nectar-img-src="'.esc_url($bg_image_src[0]).'"';
 				} else {
 					$style .= ' style="background-image: url(\''.esc_url($bg_image_src[0]).'\'); "';
@@ -261,7 +261,7 @@ if( !empty($icon) ) {
 		else {
 
 			if( 'lazy-load' === $image_loading ||
-			( property_exists('NectarLazyImages', 'global_option_active') && true === NectarLazyImages::$global_option_active) ) {
+			( property_exists('NectarLazyImages', 'global_option_active') && true === NectarLazyImages::$global_option_active && 'skip-lazy-load' !== $image_loading ) ) {
 				$style .= ' style="'.$basic_box_coloring.'"';
 			} else {
 				// Remove the ending quotation first since it's already closed.

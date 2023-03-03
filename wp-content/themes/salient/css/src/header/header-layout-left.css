@@ -773,9 +773,9 @@ body[data-header-format="left-header"].material #search-outer #search #close a {
 }
 
 
-body[data-header-format="left-header"][class*="page-template-template-no-header"] .wpb_row.full-width-content,
-body[data-header-format="left-header"][class*="page-template-template-no-header"] .full-width-section .row-bg-wrap,
-body[data-header-format="left-header"][class*="page-template-template-no-header"] .full-width-section.parallax_section .row-bg-wrap {
+body[data-header-format="left-header"][class*="page-template-template-no-header"] #ajax-content-wrap .wpb_row.full-width-content,
+body[data-header-format="left-header"][class*="page-template-template-no-header"] #ajax-content-wrap .full-width-section .row-bg-wrap,
+body[data-header-format="left-header"][class*="page-template-template-no-header"] #ajax-content-wrap .full-width-section.parallax_section .row-bg-wrap {
   margin-left: -50vw;
   margin-left: calc(-50vw + var(--scroll-bar-w)/2);
   left: 50%;

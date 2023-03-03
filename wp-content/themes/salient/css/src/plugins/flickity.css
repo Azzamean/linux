@@ -1504,7 +1504,7 @@ body .testimonial_slider[data-style="multiple_visible"][data-color*="-dark"] .st
 
 .nectar-flickity.nectar-carousel:not(.flickity-enabled) .flickity-slider,
 body:not(.compose-mode) .nectar-recent-posts-slider-inner .flickity-slider,
-.wpb_gallery .nectar-flickity:not(.flickity-enabled) .flickity-slider.arrow,
+.wpb_gallery .nectar-flickity:not(.flickity-enabled) .flickity-slider,
 .wpb_gallery_slidesflickity_static_height_style .nectar-flickity:not(.flickity-enabled) .flickity-slider {
     display: flex;
     flex-wrap: nowrap;

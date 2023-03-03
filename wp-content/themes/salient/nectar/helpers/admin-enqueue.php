@@ -58,6 +58,8 @@ function nectar_metabox_styles() {
  */
 function nectar_metabox_scripts() {
 	
+	global $nectar_options;
+
 	$nectar_theme_version = nectar_get_theme_version();
 	
 	wp_register_script( 'nectar-upload', NECTAR_FRAMEWORK_DIRECTORY . 'assets/js/nectar-meta.js', array( 'jquery' ), $nectar_theme_version );
@@ -80,9 +82,35 @@ function nectar_metabox_scripts() {
 			'nectar-colorpicker-js',
 			NECTAR_FRAMEWORK_DIRECTORY . 'assets/js/colorpicker.js',
 			array( 'jquery','wp-color-picker' ),
-			'10.1',
+			'15.1',
 			true
 		);
+
+		$available_colors = NectarThemeManager::$available_theme_colors;
+		$formatted_available_colors = array();
+		$index = 0;
+		foreach( $available_colors as $color_key => $label) {
+
+			if($index > 4) {
+				return;
+			}
+
+			if( isset($nectar_options[$color_key]) && !empty($nectar_options[$color_key]) ) {
+				$formatted_available_colors[] = array(
+					'key' => $color_key,
+					'value' => $nectar_options[$color_key]
+				);
+				$index++;
+			}
+
+		}
+
+		wp_localize_script(
+			'nectar-colorpicker-js',
+			'nectar_theme_colors', 
+			$formatted_available_colors
+		);	
+
 		 wp_enqueue_media();
 
 

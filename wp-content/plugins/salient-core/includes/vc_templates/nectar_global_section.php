@@ -28,8 +28,18 @@ if (!empty($id)) {
 				']<br>'   => ']',
 			);
 
+			
+			if( function_exists('do_blocks')) {
+				$section_content = do_blocks($section_content);
+			}
+			$section_content = wptexturize( $section_content);
+			$section_content = convert_smilies( $section_content );
+			$section_content = wpautop( $section_content );
+			$section_content = shortcode_unautop( $section_content );
+			$section_content = wp_filter_content_tags( $section_content );
 			$section_content = strtr($section_content, $unneeded_tags);
-			$section_content = apply_filters('the_content', $section_content);
+
+			$section_content = apply_filters('nectar_global_section_content_output', $section_content);
 
 			echo do_shortcode($section_content);
 		}

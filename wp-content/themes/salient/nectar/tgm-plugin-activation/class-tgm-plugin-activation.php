@@ -1110,6 +1110,8 @@ if ( ! class_exists( 'TGM_Plugin_Activation' ) ) {
 			}
 			
 			/* nectar addition */
+			$theme = wp_get_theme();
+			$salient_on_theme_options_page_bool = ( is_admin() && isset($_GET['page']) && $_GET['page'] === sanitize_html_class($theme->get( 'Name' )) ) ? true : false;
 			$nectar_plugins_not_active = false;
 			if( ! class_exists('Salient_Portfolio') ||
 				! class_exists('Salient_Nectar_Slider') ||
@@ -1119,11 +1121,13 @@ if ( ! class_exists( 'TGM_Plugin_Activation' ) ) {
 				! class_exists('Salient_Core') ||
 				! class_exists('Salient_Widgets') ||
 				! class_exists('Salient_Social') ) {
-					$nectar_plugins_not_active = true;
+					if( $salient_on_theme_options_page_bool ) {
+						$nectar_plugins_not_active = true;
+					}
 				}
 			// Do not show on welcome page or if Salient notice is present.
 			if( isset( $_GET['page'] ) && 'salient-welcome-screen' === $_GET['page'] || 
-					get_option( 'nectar_dismiss_plugin_notice' ) !== 'true' && $nectar_plugins_not_active) {
+				get_option( 'nectar_dismiss_plugin_notice' ) !== 'true' && $nectar_plugins_not_active) {
 				return;
 			}
 			

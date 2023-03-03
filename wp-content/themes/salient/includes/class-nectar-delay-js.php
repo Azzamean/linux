@@ -155,7 +155,7 @@ if (!class_exists('NectarDelayJS')) {
 
             if ( in_array($handle, $this->salient_scripts) ) {
                 
-                $modded_js = str_replace( '<script', '<script data-pagespeed-no-defer data-nowprocket data-wpacu-skip nitro-exclude data-no-optimize', $tag );
+                $modded_js = str_replace( '<script', '<script data-pagespeed-no-defer data-nowprocket data-wpacu-skip data-no-optimize', $tag );
 
                 if( $this->activate_logic ) {
 
@@ -169,7 +169,7 @@ if (!class_exists('NectarDelayJS')) {
 
             if( 'salient-delay-js' === $handle ) {
 
-                $modded_js = str_replace( '<script', '<script data-pagespeed-no-defer data-nowprocket data-wpacu-skip nitro-exclude data-no-optimize', $tag );
+                $modded_js = str_replace( '<script', '<script data-pagespeed-no-defer data-nowprocket data-wpacu-skip data-no-optimize', $tag );
                 return $modded_js;
             }
 

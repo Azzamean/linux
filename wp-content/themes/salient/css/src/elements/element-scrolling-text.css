@@ -19,6 +19,14 @@ Description: Styles for the "Scrolling Text" page builder element.
 	overflow: hidden;
 	white-space: nowrap;
 }
+.nectar-scrolling-text .nectar-scrolling-text-inner__text-chunk {
+  display: flex;
+  flex-direction: row;
+}
+
+.nectar-scrolling-text .nectar-scrolling-text-inner__text-chunk.has-multiple-items > * {
+	margin: 0 0.12em;
+}
 
 .nectar-scrolling-text[data-overflow="visible"],
 .nectar-scrolling-text[data-overflow="visible"] .nectar-scrolling-text-inner {
@@ -28,6 +36,9 @@ Description: Styles for the "Scrolling Text" page builder element.
 .nectar-scrolling-text .nectar-scrolling-text-inner > * {
 	color: inherit;
 	margin-bottom: 0;
+}
+.nectar-scrolling-text .nectar-scrolling-text-inner > .nectar-scrolling-text-inner__text-chunk * {
+	color: inherit;
 }
 
 .nectar-scrolling-text .nectar-scrolling-text-inner > * {
@@ -70,11 +81,13 @@ Description: Styles for the "Scrolling Text" page builder element.
 .nectar-scrolling-text[data-spacing="true"] .nectar-scrolling-text-inner > h6,
 .nectar-scrolling-text[data-spacing="true"] .nectar-scrolling-text-inner > p,
 .nectar-scrolling-text[data-spacing="true"] .nectar-scrolling-text-inner > strong,
-.nectar-scrolling-text[data-spacing="true"] .nectar-scrolling-text-inner > b {
+.nectar-scrolling-text[data-spacing="true"] .nectar-scrolling-text-inner > b,
+.nectar-scrolling-text[data-spacing="true"] .nectar-scrolling-text-inner > .nectar-scrolling-text-inner__text-chunk {
 	padding-left: 0.45em;
 }
 
-.row .nectar-scrolling-text .nectar-scrolling-text-inner > * {
+.row .nectar-scrolling-text .nectar-scrolling-text-inner > *,
+.row .nectar-scrolling-text .nectar-scrolling-text-inner > .nectar-scrolling-text-inner__text-chunk > * {
 	margin-bottom: 0;
 }
 

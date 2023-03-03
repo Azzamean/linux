@@ -203,6 +203,17 @@ if(!function_exists('nectar_post_grid_item_markup')) {
 
             // Permalink.
             $post_perma = get_the_permalink();
+
+            // Custom query for portfolio items.
+            if( $atts['post_type'] === 'custom' && 
+                isset($atts['cpt_name']) && 
+                $atts['cpt_name'] === 'portfolio' ) {
+                  
+              $custom_project_link = get_post_meta($post->ID, '_nectar_external_project_url', true);
+              $post_perma = ( !empty($custom_project_link) ) ? $custom_project_link : $post_perma;
+            }
+     
+
             
             // Lightbox item.
             if( 'yes' === $atts['enable_gallery_lightbox'] && has_post_thumbnail() ) {

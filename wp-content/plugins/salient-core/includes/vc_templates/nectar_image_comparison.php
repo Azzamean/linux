@@ -7,7 +7,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 extract(shortcode_atts(array(
   "image_url" => '',
-  "image_2_url" => ''
+  "image_2_url" => '',
+  'el_class' => '',
 ),
 $atts));
 
@@ -67,7 +68,11 @@ if( !empty($image_2_url) ) {
 	$image_2_url = vc_asset_url( 'images/after.jpg' );
 }
 
-echo "<div class='twentytwenty-container'>
+$classes = array('nectar-image-comparison', 'twentytwenty-container');
+if( !empty($el_class) ) {
+	$classes[] = $el_class;
+}
+echo "<div class='".nectar_clean_classnames(implode(' ',$classes))."'>
   <img class='skip-lazy' src='".esc_url($image_url)."' alt='".esc_attr($alt_tag)."'>
   <img class='skip-lazy' src='".esc_url($image_2_url)."' alt='".esc_attr($alt_tag_2)."'>
 </div>";

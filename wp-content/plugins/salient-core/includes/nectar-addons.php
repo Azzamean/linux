@@ -31,6 +31,9 @@ if( !function_exists('nectar_wpbakery_element_list') ) {
 			'milestone',
 			'morphing_outline',
 			'nectar_animated_title',
+			'nectar_animated_shape',
+			'nectar_lottie',
+			'nectar_responsive_text',
 			'nectar_blog',
 			'nectar_btn',
 			'nectar_cascading_images',
@@ -8683,12 +8686,14 @@ function nectar_custom_maps() {
     "param_name" => "image_loading",
     "value" => array(
       "Default" => "default",
-			"Lazy Load" => "lazy-load",
+	  'Skip Lazy Load' => 'skip-lazy-load',
+	  "Lazy Load" => "lazy-load",
     ),
 		"dependency" => Array('element' => "type", 'value' => array('flickity_style', 'flickity_static_height_style', 'nectarslider_style')),
 		"description" => esc_html__("Determine whether to load the image on page load or to use a lazy load method for higher performance.", "salient-core"),
     'std' => 'default',
   ));
+
 
 	vc_add_param("vc_gallery",array(
     "type" => "dropdown",
@@ -8698,12 +8703,21 @@ function nectar_custom_maps() {
     "param_name" => "image_grid_loading",
     "value" => array(
       "Default" => "default",
-			"Lazy Load" => "lazy-load",
+	  'Skip Lazy Load' => 'skip-lazy-load',
+	  "Lazy Load" => "lazy-load",
     ),
 		"dependency" => Array('element' => "type", 'value' => array('image_grid')),
 		"description" => esc_html__('Determine whether to load the image on page load or to use a lazy load method for higher performance. Note: This will disable the "Load In Animation" option.', "salient-core"),
     'std' => 'default',
   ));
+
+  vc_add_param("vc_gallery",array(
+	"type" => "textfield",
+	"heading" => esc_html__("Number of Images to Skip Lazy Loading", "salient-core"),
+	"param_name" => "image_grid_lazy_skip",
+	"description" => esc_html__("Defaults to 8 if left blank.", "salient-core"),
+	"dependency" => Array('element' => "image_grid_loading", 'value' => array('lazy-load'))
+));
 
 	 vc_add_param("vc_gallery",array(
 	      "type" => 'checkbox',

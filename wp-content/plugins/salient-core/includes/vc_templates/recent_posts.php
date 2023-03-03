@@ -1,6 +1,7 @@
 <?php
 
 // Exit if accessed directly
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -723,6 +724,14 @@ else if( $style === 'multiple_large_featured' ) { //multiple_large_featured
           <h2 class="post-ref-<?php echo esc_attr($i); ?>"><a href="<?php echo esc_url(get_permalink()); ?>" class="full-slide-link"> <?php echo the_title(); ?> </a></h2>
 
           <?php
+          
+          if( has_action('nectar_recent_posts_multiple_large_featured_after_title') ) {
+            echo '<div class="custom-content">';
+            do_action('nectar_recent_posts_multiple_large_featured_after_title');
+            echo '</div>';
+          }
+         
+
           //stop regular grad class for material skin
           $regular_btn_class = ' regular-button';
 

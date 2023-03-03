@@ -1882,21 +1882,24 @@ class NectarElDynamicStyles {
         // Text align.
         if( isset($atts[$device.'_text_alignment']) && 'default' !== $atts[$device.'_text_alignment'] ) {
 
+          $body_selector = ($device !== 'desktop') ? 'body ' : '';
+          $html_selector = ($device === 'phone') ? 'html ' : '';
+
           self::$element_css[] = '@media only screen '.$media_query_size.' { 
-            .wpb_column.force-'.$device.'-text-align-left,
-            .wpb_column.force-'.$device.'-text-align-left .col {
+            '. $html_selector . $body_selector.'.wpb_column.force-'.$device.'-text-align-left,
+            '. $html_selector . $body_selector.'.wpb_column.force-'.$device.'-text-align-left .col {
               text-align: left!important;
             }
           
-            .wpb_column.force-'.$device.'-text-align-right,
-            .wpb_column.force-'.$device.'-text-align-right .col {
+            '. $html_selector . $body_selector.'.wpb_column.force-'.$device.'-text-align-right,
+            '. $html_selector . $body_selector.'.wpb_column.force-'.$device.'-text-align-right .col {
               text-align: right!important;
             }
           
-            .wpb_column.force-'.$device.'-text-align-center,
-            .wpb_column.force-'.$device.'-text-align-center .col,
-            .wpb_column.force-'.$device.'-text-align-center .vc_custom_heading,
-            .wpb_column.force-'.$device.'-text-align-center .nectar-cta {
+            '. $html_selector . $body_selector.'.wpb_column.force-'.$device.'-text-align-center,
+            '. $html_selector . $body_selector.'.wpb_column.force-'.$device.'-text-align-center .col,
+            '. $html_selector . $body_selector.'.wpb_column.force-'.$device.'-text-align-center .vc_custom_heading,
+            '. $html_selector . $body_selector.'.wpb_column.force-'.$device.'-text-align-center .nectar-cta {
               text-align: center!important;
             }
           
@@ -3222,14 +3225,16 @@ class NectarElDynamicStyles {
             // Custom Alignment.
             if( isset($atts['alignment_tablet']) && 'default' !== $atts['alignment_tablet'] ) {
                 self::$element_css[] = '@media only screen and (max-width: 999px) {
-                  .nectar-cta.alignment_tablet_'. esc_attr( $atts['alignment_tablet'] ) .' {
+                  body .nectar-cta.alignment_tablet_'. esc_attr( $atts['alignment_tablet'] ) .', 
+                  body .nectar-next-section-wrap.alignment_tablet_'. esc_attr( $atts['alignment_tablet'] ) .' {
                   text-align: '. esc_attr( $atts['alignment_tablet'] ) .';
                 }
               }';
             }
             if( isset($atts['alignment_phone']) && 'default' !== $atts['alignment_phone'] ) {
                 self::$element_css[] = '@media only screen and (max-width: 690px) {
-                  body .nectar-cta.alignment_phone_'. esc_attr( $atts['alignment_phone'] ) .' {
+                  html body .nectar-cta.alignment_phone_'. esc_attr( $atts['alignment_phone'] ) .',
+                  html body .nectar-next-section-wrap.alignment_phone_'. esc_attr( $atts['alignment_phone'] ) .' {
                   text-align: '. esc_attr( $atts['alignment_phone'] ) .';
                 }
               }';
@@ -8363,6 +8368,11 @@ class NectarElDynamicStyles {
           }
 
 
+          .toggles--minimal-shadow .toggle > .toggle-title i:before,
+          .toggles--minimal-shadow .toggle > .toggle-title i:after{
+            background-color:#888;
+          }
+
           .toggles--minimal-shadow .toggle.default.open > .toggle-title i:after,
           .toggles--minimal-shadow .toggle.default.open > .toggle-title i:before,
           .toggles--minimal-shadow .toggle.default:hover > .toggle-title i:after,
@@ -11549,7 +11559,11 @@ class NectarElDynamicStyles {
         }
         .nectar_video_player_self_hosted[data-border-radius*="px"] .wpb_video_wrapper {
           overflow: hidden;
-        }';
+        }
+        .nectar_video_player_self_hosted video.no-video {
+          opacity: 0;
+        }
+        ';
         
         // Mobile aspect ratio overrides.
         $video_aspect_ratio_arr = array(
@@ -11970,6 +11984,12 @@ class NectarElDynamicStyles {
     else if( false !== strpos($str,'vw') ) {
       return intval($str) . 'vw';
     } 
+    else if( false !== strpos($str,'rem') ) {
+      return intval($str) . 'rem';
+    }
+    else if( false !== strpos($str,'em') ) {
+      return intval($str) . 'em';
+    }
     else if( false !== strpos($str,'deg') ) {
       return intval($str) . 'deg';
     }
@@ -11984,7 +12004,7 @@ class NectarElDynamicStyles {
   }
 
   /**
-  * Determines the unit type classname px or percent
+  * Determines the unit type classname 
   */
   public static function percent_unit_type_class($str, $forced_unit = false) {
 
@@ -11998,6 +12018,8 @@ class NectarElDynamicStyles {
       return intval($str) . 'vh';
     } else if( false !== strpos($str,'vw') ) {
       return intval($str) . 'vw';
+    } else if( false !== strpos($str,'rem') ) {
+      return intval($str) . 'rem';
     } else if( false !== strpos($str,'em') ) {
       return intval($str) . 'em';
     } else if( 'auto' === $str ) {
@@ -12776,10 +12798,12 @@ class NectarElDynamicStyles {
           $minmax_classes .= '.font_size_max_'.esc_attr(self::decimal_unit_type_class($max));
         }
         $body_selector = ($using_min_max) ? 'body ' : '';
+        $html_selector = ($device === 'phone') ? 'html ' : '';
+
         $container_selector = ('desktop' !== $device) ? '.container-wrap ' : '';
 
         $css .= '@media only screen '.$media_query_size.' {
-          '.$body_selector.'#ajax-content-wrap '.$container_selector.'.font_size_'.$device.'_'.esc_attr(self::decimal_unit_type_class($atts['font_size_'.$device])).$minmax_classes.'.'.$element_name .' {
+          '.$html_selector.$body_selector.'#ajax-content-wrap '.$container_selector.'.font_size_'.$device.'_'.esc_attr(self::decimal_unit_type_class($atts['font_size_'.$device])).$minmax_classes.'.'.$element_name .' {
             font-size: '.$computed_size.';
           }
         }';
@@ -12854,6 +12878,9 @@ if( !function_exists('nectar_el_padding_unit_type_class') ) {
 		} 
     else if( false !== strpos($str,'vh') ) {
 			return intval($str) . 'vh';
+		} 
+    else if( false !== strpos($str,'rem') ) {
+			return intval($str) . 'rem';
 		} 
     else if( false !== strpos($str,'em') ) {
 			return intval($str) . 'em';

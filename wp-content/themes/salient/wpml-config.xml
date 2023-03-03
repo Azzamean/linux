@@ -11,6 +11,9 @@
   </taxonomies>
   <custom-fields>
     <custom-field action="copy">nectar_menu_options</custom-field>
+    <custom-field action="copy">_force_transparent_header</custom-field>
+    <custom-field action="copy">_disable_transparent_header</custom-field>
+    <custom-field action="copy">_force_transparent_header_color</custom-field>
     <custom-field action="copy">_nectar_header_bg_color</custom-field>
     <custom-field action="copy">_nectar_header_font_color</custom-field>
     <custom-field action="copy">_nectar_header_bg_height</custom-field>
@@ -83,6 +86,9 @@
       <shortcode>
             <tag>text-with-icon</tag>
       </shortcode>
+       <shortcode>
+            <tag>nectar_text_inline_images</tag>
+      </shortcode>
       <shortcode>
             <tag>fancy-ul</tag>
       </shortcode>
@@ -95,6 +101,9 @@
       </shortcode>
       <shortcode>
             <tag>nectar_icon</tag>
+             <attributes>
+                <attribute>url</attribute>
+            </attributes>
       </shortcode>
       <shortcode>
             <tag>bar</tag>

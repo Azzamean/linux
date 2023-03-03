@@ -55,7 +55,7 @@ if ( $using_secondary === 'header_with_secondary' ) { ?>
 					if ( ! empty( $nectar_secondary_link ) ) {
 						echo '<a href="' . esc_url( $nectar_secondary_link ) . '">';
 					}
-					echo wp_kses_post( $nectar_options['secondary-header-text'] );
+					echo do_shortcode( wp_kses_post( $nectar_options['secondary-header-text'] ) );
 					if ( ! empty( $nectar_secondary_link ) ) {
 						echo '</a>';
 					}

@@ -513,7 +513,8 @@ return array(
       "param_name" => "image_loading",
       "value" => array(
         "Default" => "default",
-				"Lazy Load" => "lazy-load",
+		'Skip Lazy Load' => 'skip-lazy-load',
+		"Lazy Load" => "lazy-load",
       ),
 			"description" => esc_html__("Determine whether to load the image on page load or to use a lazy load method for higher performance.", "salient-core"),
       'std' => 'default',

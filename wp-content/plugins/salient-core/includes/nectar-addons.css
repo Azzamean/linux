@@ -1839,6 +1839,14 @@ body .vc_ui-panel-header-container,
   background-image: none!important;
 }
 
+/* hide element preset for tabbed based items which can not be appended to editor */
+[data-vc-shortcode="vc_row_inner"] .vc_ui-panel-header-controls .vc_ui-settings-button,
+[data-vc-shortcode="item"] .vc_ui-panel-header-controls .vc_ui-settings-button,
+[data-vc-shortcode="tab"] .vc_ui-panel-header-controls .vc_ui-settings-button,
+[data-vc-shortcode="testimonial"] .vc_ui-panel-header-controls .vc_ui-settings-button,
+[data-vc-shortcode="nectar_icon_list_item"] .vc_ui-panel-header-controls .vc_ui-settings-button {
+  display: none;
+}
 
 .vc_ui-tabs-line .vc_ui-tabs-line-dropdown-toggle>.vc_ui-tabs-line-trigger::after {
   font-size: 22px;

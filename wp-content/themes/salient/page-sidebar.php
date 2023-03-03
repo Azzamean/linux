@@ -46,7 +46,7 @@ nectar_page_header( $post->ID );
 		</div><!--/row-->
 		
 	</div><!--/container-->
-
+	<?php nectar_hook_before_container_wrap_close(); ?>
 </div><!--/container-wrap-->
 
 <?php get_footer(); ?>

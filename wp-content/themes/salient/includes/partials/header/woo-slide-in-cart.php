@@ -45,7 +45,7 @@ else if ( $woocommerce && $nav_cart_style === 'slide_in_click' ) {
 
 	echo '<div class="nectar-slide-in-cart style_'.esc_attr($nav_cart_style).'">';
 
-	echo '<div class="inner"><div class="header"><h4>'. esc_html__('Cart', 'salient') .'</h4><a href="#" class="close-cart"><span class="screen-reader-text">'.esc_html__('Close Cart','salient').'</span>'.$close_markup.'</a></div>';
+	echo '<div class="inner"><div class="header"><span data-inherit-heading-family="h4">'. esc_html__('Cart', 'salient') .'</span><a href="#" class="close-cart"><span class="screen-reader-text">'.esc_html__('Close Cart','salient').'</span>'.$close_markup.'</a></div>';
 
 	if ( version_compare( WOOCOMMERCE_VERSION, '2.0.0' ) >= 0 ) {
 
