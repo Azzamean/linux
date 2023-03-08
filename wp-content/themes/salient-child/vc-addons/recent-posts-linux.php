@@ -422,7 +422,7 @@ function recent_posts_linux($atts, $content)
                 "design" => "",
                 "columns" => "",
                 "limit" => "",
-				"sort" => "",
+                "sort" => "",
                 "offset" => "",
                 "category_id" => "",
                 "categories" => "",
@@ -445,7 +445,7 @@ function recent_posts_linux($atts, $content)
     $design = !empty($design) ? $design : "list-design";
     $columns = !empty($columns) ? $columns : "4";
     $limit = !empty($limit) ? $limit : "4";
-    $sort = !empty($sort) ? $sort : "ASC";	
+    $sort = !empty($sort) ? $sort : "ASC";
     $offset = !empty($offset) ? $offset : "";
 
     $categories = !empty($categories) ? $categories : "0";
@@ -469,7 +469,7 @@ function recent_posts_linux($atts, $content)
         "post_type" => "post",
         "post_status" => ["publish"],
         "posts_per_page" => $limit,
-		"order" => $sort,
+        "order" => $sort,
         "offset" => $offset,
         "ignore_sticky_posts" => true,
         "nopaging" => false,
@@ -875,14 +875,26 @@ function recent_posts_linux($atts, $content)
                 }
 
                 if ($excerpt == true && $read_link == false) {
-                    $excerpt_length = !empty($nectar_options[""]) ? intval($nectar_options[""]) : 50;
-                    $excerpt_markup = '<p class="list-design excerpt">' . nectar_excerpt($excerpt_length) . "</p>";
+                    $excerpt_length = !empty($nectar_options[""])
+                        ? intval($nectar_options[""])
+                        : 50;
+                    $excerpt_markup =
+                        '<p class="list-design excerpt">' .
+                        nectar_excerpt($excerpt_length) .
+                        "</p>";
                     $output .= $excerpt_markup;
                 }
 
                 if ($excerpt == true && $read_link == true) {
-                    $excerpt_length = !empty($nectar_options[""]) ? intval($nectar_options[""]) : 50;
-                    $excerpt_markup = '<div class="list-design excerpt"><span>' . nectar_excerpt($excerpt_length) . '</span><a href="' . get_permalink() . '"> Read more.</a></div>';
+                    $excerpt_length = !empty($nectar_options[""])
+                        ? intval($nectar_options[""])
+                        : 50;
+                    $excerpt_markup =
+                        '<div class="list-design excerpt"><span>' .
+                        nectar_excerpt($excerpt_length) .
+                        '</span><a href="' .
+                        get_permalink() .
+                        '"> Read more.</a></div>';
                     $output .= $excerpt_markup;
                 }
 
@@ -920,58 +932,6 @@ function recent_posts_linux($atts, $content)
                     $count = 0;
                 }
             }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
             // GRID DESIGN
             if ($design == "Grid Design") {
@@ -1159,7 +1119,8 @@ function recent_posts_linux($atts, $content)
         // PAGINATION
         if ($pagination != false) {
             $big = 999999999;
-            $output .= '<div class="recent-posts-pagination" style="color:#ffffff">';
+            $output .=
+                '<div class="recent-posts-pagination" style="color:#ffffff">';
             $output .=
                 '<div class="links" style="color:' . $accent_color . '">';
             $output .= paginate_links([

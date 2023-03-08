@@ -57,7 +57,7 @@ function cptui_register_my_taxes_projects_category()
         "label" => __("Projects Categories", "custom-post-type-ui"),
         "labels" => $labels,
         "public" => true,
-        "publicly_queryable" => true,
+        "publicly_queryable" => true, // this makes it a checkbox or like a regular tag
         "hierarchical" => true,
         "show_ui" => false, // This hides it on the left admin dashboard and on singles
         "show_in_menu" => true, // This hides it on the left admin dashboard

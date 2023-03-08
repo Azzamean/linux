@@ -35,6 +35,7 @@ function cptui_register_my_cpts_members()
         "query_var" => true,
         "taxonomies" => ["members_category"],
         "show_in_graphql" => false,
+        "supports" => ["title", "author"],
     ];
 
     register_post_type("members", $args);
@@ -57,14 +58,14 @@ function cptui_register_my_taxes_members_category()
         "label" => esc_html__("Members Categories", "custom-post-type-ui"),
         "labels" => $labels,
         "public" => true,
-        "publicly_queryable" => true, // this makes it a checkbox or like a regular tag
+        "publicly_queryable" => true,
         "hierarchical" => true,
         "show_ui" => true,
         "show_in_menu" => true,
         "show_in_nav_menus" => true,
         "query_var" => true,
         "rewrite" => ["slug" => "members_category", "with_front" => true],
-        "show_admin_column" => false,
+        "show_admin_column" => true,
         "show_in_rest" => true,
         "show_tagcloud" => false,
         "rest_base" => "members_category",

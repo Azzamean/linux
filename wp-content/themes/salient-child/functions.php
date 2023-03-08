@@ -13,19 +13,16 @@ function osano_script()
 }
 
 // GET WP BAKERY CUSTOM MODULES
-require_once "vc-addons/recent-posts-linux.php";
 require_once "vc-addons/projects-linux.php";
-require_once "vc-addons/members-api.php";
-require_once "vc-addons/projects-api.php";
+require_once "vc-addons/webinars-linux.php";
 require_once "vc-addons/members-linux.php";
+require_once "vc-addons/recent-posts-linux.php";
+require_once "vc-addons/members-api-linux.php";
+require_once "vc-addons/projects-api-linux.php";
 
 // GET WP BAKERY CUSTOM FIELDS
 require_once "vc-addons/custom-fields/custom-fields.php";
 
-// GET CUSTOM POST TYPES
-// MOVED TO LINUXFOUNDATION PLUGIN
-//require_once "custom-post-types/projects.php";
-//require_once "custom-post-types/webinars.php";
 // GET CHILD THEME LIBRARIES
 function salient_child_enqueue_styles()
 {
@@ -77,18 +74,21 @@ function lf_meta_header()
     $jdf_banner = '<div class="lfprojects white-background jdf"><div class="container"><a href="https://jointdevelopment.org/" target="_blank" rel="noopener noreferrer"><img src="/wp-content/uploads/banners/jdf_banner_color.svg"></a></div></div>';
     $linux_foundation_white = '<div class="lfprojects white-background"><div class="container"><a href="https://www.linuxfoundation.org/projects" target="_blank" rel="noopener noreferrer"><img src="/wp-content/uploads/banners/lfprojects_banner_color.svg"></a></div></div>';
     $linux_foundation_dark = '<div class="lfprojects"><div class="container"><a href="https://www.linuxfoundation.org/projects" target="_blank" rel="noopener noreferrer"><img src="/wp-content/uploads/banners/lfprojects_banner_other.svg"></a></div></div>';
-	
-	switch ($site_id)
+
+    switch ($site_id)
     {
             // DPEL AWSF
+            
         case "8":
             echo $academy_software_foundation;
         break;
             // OMPF
+            
         case "14":
             echo $linux_foundation_white;
         break;
-            // OVERTURE MAPS FOUNDATION 
+            // OVERTURE MAPS FOUNDATION
+            
         case "16":
             echo $jdf_banner;
         break;
