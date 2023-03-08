@@ -65,6 +65,15 @@ class CustomPostTypes {
 		//	'custom-post-types-admin', // page
 		//	'custom_post_types_setting_section' // section
 		//);
+		
+		add_settings_field(
+			'members_2', // id
+			'Members', // title
+			array( $this, 'members_2_callback' ), // callback
+			'custom-post-types-admin', // page
+			'custom_post_types_setting_section' // section
+		);
+		
 	}
 
 	public function custom_post_types_sanitize($input) {
@@ -76,7 +85,11 @@ class CustomPostTypes {
 		//if ( isset( $input['working_groups_1'] ) ) {
 		//	$sanitary_values['working_groups_1'] = $input['working_groups_1'];
 		//}
-	
+		
+		if ( isset( $input['members_2'] ) ) {
+			$sanitary_values['members_2'] = $input['members_2'];
+		}	
+		
 		return $sanitary_values;
 	}
 
@@ -97,7 +110,13 @@ class CustomPostTypes {
 	//		( isset( $this->custom_post_types_options['working_groups_1'] ) && $this->custom_post_types_options['working_groups_1'] === 'working_groups_1' ) ? 'checked' : ''
 	//	);
 	//}
-
+	
+	public function members_2_callback() {
+		printf(
+			'<input type="checkbox" name="custom_post_types_option_name[members_2]" id="members_2" value="members_2" %s> <label for="members_2">Members Custom Post Type</label>',
+			( isset( $this->custom_post_types_options['members_2'] ) && $this->custom_post_types_options['members_2'] === 'members_2' ) ? 'checked' : ''
+		);
+	}
 }
 if ( is_admin() )
 	$custom_post_types = new CustomPostTypes();
@@ -112,7 +131,7 @@ if ( is_admin() )
 
 $custom_post_types_options = get_option('custom_post_types_option_name');
 $projects_0 = $custom_post_types_options['projects_0'];
-
+$members_2 = $custom_post_types_options['members_2'];
 
 //$working_groups_1 = $custom_post_types_options['working_groups_1'];
 
@@ -123,3 +142,7 @@ if ($projects_0) {
 //if ($working_groups_1) {
 //    require_once(plugin_dir_path(__DIR__).'../themes/salient-child/custom-post-types/working-groups.php');
 //}
+
+if ($members_2) {
+    require_once(plugin_dir_path(__DIR__).'../themes/salient-child/custom-post-types/members.php');
+}

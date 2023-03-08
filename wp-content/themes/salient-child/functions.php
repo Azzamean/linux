@@ -17,6 +17,7 @@ require_once "vc-addons/recent-posts-linux.php";
 require_once "vc-addons/projects-linux.php";
 require_once "vc-addons/members-api.php";
 require_once "vc-addons/projects-api.php";
+require_once "vc-addons/members-linux.php";
 
 // GET WP BAKERY CUSTOM FIELDS
 require_once "vc-addons/custom-fields/custom-fields.php";
