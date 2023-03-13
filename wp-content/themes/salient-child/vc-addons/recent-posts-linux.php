@@ -656,6 +656,16 @@ function recent_posts_linux($atts, $content)
         while ($recent_posts_query->have_posts()):
             $recent_posts_query->the_post();
 
+            if (has_post_format("link")) {
+                global $post;
+                global $nectar_options;
+                $link = get_post_meta($post->ID, "_nectar_link", true);
+            } elseif ($embedded_code == true) {
+                $link = get_field("embedded_code", false, false);
+            } else {
+                $link = get_permalink();
+            }
+
             //List Design
             if ($design == "List Design") {
                 if ($count == 0) {
@@ -667,36 +677,16 @@ function recent_posts_linux($atts, $content)
                 if ($featured_image == true) {
                     $output .= '<div class="list-design left">';
                     if (get_the_post_thumbnail($post->ID) != null) {
-                        if (has_post_format("link")) {
-                            global $post;
-                            global $nectar_options;
-                            $link = get_post_meta(
+                        $output .=
+                            '<a href="' .
+                            $link .
+                            '">' .
+                            get_the_post_thumbnail(
                                 $post->ID,
-                                "_nectar_link",
-                                true
-                            );
-                            $output .=
-                                '<a href="' .
-                                $link .
-                                '">' .
-                                get_the_post_thumbnail(
-                                    $post->ID,
-                                    "full",
-                                    $image_attrs
-                                ) .
-                                "</a>";
-                        } else {
-                            $output .=
-                                '<a href="' .
-                                get_permalink() .
-                                '">' .
-                                get_the_post_thumbnail(
-                                    $post->ID,
-                                    "full",
-                                    $image_attrs
-                                ) .
-                                "</a>";
-                        }
+                                "full",
+                                $image_attrs
+                            ) .
+                            "</a>";
                     } else {
                         $output .=
                             '<img class="list-view-default" src="' .
@@ -783,9 +773,6 @@ function recent_posts_linux($atts, $content)
                     // END OF DATE, AUTHOR, CATEGORIES, AND TAGS SECTION
                 }
                 if (has_post_format("link")) {
-                    global $post;
-                    global $nectar_options;
-                    $link = get_post_meta($post->ID, "_nectar_link", true);
                     $output .=
                         '<h3 class="list-design title"><a class="external-site" href="' .
                         $link .
@@ -797,7 +784,7 @@ function recent_posts_linux($atts, $content)
                 } else {
                     $output .=
                         '<h3 class="list-design title"><a href="' .
-                        get_permalink() .
+                        $link .
                         '" style="color:' .
                         $accent_color .
                         '">' .
@@ -893,7 +880,7 @@ function recent_posts_linux($atts, $content)
                         '<div class="list-design excerpt"><span>' .
                         nectar_excerpt($excerpt_length) .
                         '</span><a href="' .
-                        get_permalink() .
+                        $link .
                         '"> Read more.</a></div>';
                     $output .= $excerpt_markup;
                 }
@@ -904,7 +891,7 @@ function recent_posts_linux($atts, $content)
                 ) {
                     $output .=
                         '<div><a class="list-design navigation-btn" href=' .
-                        get_permalink() .
+                        $link .
                         "><span>" .
                         $navigation_text .
                         "</span></a></div>";
@@ -912,7 +899,7 @@ function recent_posts_linux($atts, $content)
                 if ($navigation == "show_navigation_arrow") {
                     $output .=
                         '<a class="svg-link" href="' .
-                        get_permalink() .
+                        $link .
                         '">' .
                         '<svg class="grid-svg" fill="' .
                         $accent_color .
@@ -1070,7 +1057,7 @@ function recent_posts_linux($atts, $content)
                         '<div class="grid-design excerpt"><span>' .
                         nectar_excerpt($excerpt_length) .
                         '</span><a href="' .
-                        get_permalink() .
+                        $link .
                         '"> Read more.</a></div>';
                     $output .= $excerpt_markup;
                 }
@@ -1079,10 +1066,6 @@ function recent_posts_linux($atts, $content)
                     $navigation == "show_navigation_btn" &&
                     $navigation_text_exists == true
                 ) {
-                    global $post;
-                    global $nectar_options;
-                    $link = get_post_meta($post->ID, "_nectar_link", true);
-                    $link = $embedded_code ? $link : get_permalink();
                     $output .=
                         '<div class="grid-design navigation-btn"><a href="' .
                         $link .
@@ -1095,7 +1078,7 @@ function recent_posts_linux($atts, $content)
                 if ($navigation == "show_navigation_arrow") {
                     $output .=
                         '<a class="svg-link" href="' .
-                        get_permalink() .
+                        $link .
                         '">' .
                         '<svg class="grid-svg" fill="' .
                         $accent_color .
