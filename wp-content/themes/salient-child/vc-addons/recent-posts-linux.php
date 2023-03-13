@@ -268,6 +268,30 @@ class RecentPostsLinux
                         ),
                         "save_always" => true,
                     ],
+
+                    [
+                        "type" => "textfield",
+                        "class" => "",
+                        "heading" => esc_html__(
+                            "Excerpt Length",
+                            "recent_posts"
+                        ),
+                        "param_name" => "excerpt_length",
+                        "value" => "",
+                        "std" => "50",
+
+                        "dependency" => [
+                            "element" => "excerpt",
+                            "value" => ["show-excerpt"],
+                        ],
+
+                        "description" => esc_html__(
+                            "Enter the number of words for the excerpt length. The default is set to 50 words.",
+                            "recent_posts"
+                        ),
+                        "save_always" => true,
+                    ],
+
                     [
                         "type" => "dropdown",
                         "heading" => esc_html__("Navigation", "salient-core"),
@@ -430,6 +454,7 @@ function recent_posts_linux($atts, $content)
                 "embedded_code" => "",
                 "featured_image" => "",
                 "excerpt" => "",
+                "excerpt_length" => "",
                 "read_link" => "",
                 "navigation" => "",
                 "navigation_text" => "",
@@ -457,6 +482,7 @@ function recent_posts_linux($atts, $content)
         ? $featured_image
         : "show-featured-image";
     $excerpt = !empty($excerpt) ? $excerpt : "hide-excerpt";
+    $excerpt_length = !empty($excerpt_length) ? $excerpt_length : "50";
     $read_link = !empty($read_link) ? $read_link : "hide_read_link";
     $navigation = !empty($navigation) ? $navigation : "hide_navigation";
     $navigation_text = !empty($navigation_text) ? $navigation_text : "";
@@ -864,7 +890,7 @@ function recent_posts_linux($atts, $content)
                 if ($excerpt == true && $read_link == false) {
                     $excerpt_length = !empty($nectar_options[""])
                         ? intval($nectar_options[""])
-                        : 50;
+                        : $excerpt_length;
                     $excerpt_markup =
                         '<p class="list-design excerpt">' .
                         nectar_excerpt($excerpt_length) .
@@ -875,7 +901,7 @@ function recent_posts_linux($atts, $content)
                 if ($excerpt == true && $read_link == true) {
                     $excerpt_length = !empty($nectar_options[""])
                         ? intval($nectar_options[""])
-                        : 50;
+                        : $excerpt_length;
                     $excerpt_markup =
                         '<div class="list-design excerpt"><span>' .
                         nectar_excerpt($excerpt_length) .
@@ -1041,7 +1067,7 @@ function recent_posts_linux($atts, $content)
                 if ($excerpt == true && $read_link == false) {
                     $excerpt_length = !empty($nectar_options[""])
                         ? intval($nectar_options[""])
-                        : 50;
+                        : $excerpt_length;
                     $excerpt_markup =
                         '<p class="grid-design excerpt">' .
                         nectar_excerpt($excerpt_length) .
@@ -1052,7 +1078,7 @@ function recent_posts_linux($atts, $content)
                 if ($excerpt == true && $read_link == true) {
                     $excerpt_length = !empty($nectar_options[""])
                         ? intval($nectar_options[""])
-                        : 50;
+                        : $excerpt_length;
                     $excerpt_markup =
                         '<div class="grid-design excerpt"><span>' .
                         nectar_excerpt($excerpt_length) .
