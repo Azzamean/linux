@@ -1034,7 +1034,22 @@ EOF;
 	 * @return bool
 	 */
 	public static function delete_single_post_cache($post_id) {
-	
+		$is_cache_deleted = self::really_delete_single_post_cache($post_id);
+
+		do_action('wpo_single_post_cache_deleted', $post_id);
+
+		return $is_cache_deleted;
+	}
+
+	/**
+	 * Really delete cached files for single post.
+	 *
+	 * @param integer $post_id The post ID
+	 *
+	 * @return bool
+	 */
+	public static function really_delete_single_post_cache($post_id) {
+
 		if (!defined('WPO_CACHE_FILES_DIR')) return;
 
 		$post_url = get_permalink($post_id);
@@ -1116,6 +1131,15 @@ EOF;
 	 * Delete post feed from cache.
 	 */
 	public static function delete_post_feed_cache($post_id) {
+		self::really_delete_post_feed_cache($post_id);
+
+		do_action('wpo_single_post_feed_cache_deleted', $post_id);
+	}
+
+	/**
+	 * Really delete post feed from cache.
+	 */
+	public static function really_delete_post_feed_cache($post_id) {
 		if (!defined('WPO_CACHE_FILES_DIR')) return;
 
 		$post_url = get_permalink($post_id);

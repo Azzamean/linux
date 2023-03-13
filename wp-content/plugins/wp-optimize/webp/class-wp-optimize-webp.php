@@ -30,7 +30,6 @@ class WP_Optimize_WebP {
 		}
 
 		$this->init_webp_cron_scheduler();
-		WP_Optimize_WebP_Images::get_instance();
 	}
 
 	/**

@@ -3,7 +3,7 @@
 Plugin Name: WP-Optimize - Clean, Compress, Cache
 Plugin URI: https://getwpo.com
 Description: WP-Optimize makes your site fast and efficient. It cleans the database, compresses images and caches pages. Fast sites attract more traffic and users.
-Version: 3.2.12
+Version: 3.2.13
 Update URI: https://wordpress.org/plugins/wp-optimize/
 Author: David Anderson, Ruhani Rabin, Team Updraft
 Author URI: https://updraftplus.com
@@ -16,7 +16,7 @@ if (!defined('ABSPATH')) die('No direct access allowed');
 
 // Check to make sure if WP_Optimize is already call and returns.
 if (!class_exists('WP_Optimize')) :
-define('WPO_VERSION', '3.2.12');
+define('WPO_VERSION', '3.2.13');
 define('WPO_PLUGIN_URL', plugin_dir_url(__FILE__));
 define('WPO_PLUGIN_MAIN_PATH', plugin_dir_path(__FILE__));
 define('WPO_PREMIUM_NOTIFICATION', false);
@@ -125,6 +125,7 @@ class WP_Optimize {
 	private function get_class_directories() {
 		return array(
 			'cache',
+			'compatibility',
 			'includes',
 			'minify',
 			'optimizations',
@@ -216,6 +217,14 @@ class WP_Optimize {
 
 	public function get_optimizer() {
 		return WP_Optimizer::instance();
+	}
+
+	/**
+	 * Adds 3rd party plugin compatibilities.
+	 */
+	public function load_compatibilities() {
+		WPO_Polylang_Compatibility::instance();
+		WPO_Beaver_Builder_Compatibility::instance();
 	}
 
 	/**
@@ -529,6 +538,9 @@ class WP_Optimize {
 		// Loads the language file.
 		load_plugin_textdomain('wp-optimize', false, dirname(plugin_basename(__FILE__)) . '/languages');
 
+		// Load 3rd party plugin compatibilities.
+		$this->load_compatibilities();
+
 		// Load page cache.
 		$this->get_page_cache();
 		$this->init_page_cache();
@@ -536,6 +548,10 @@ class WP_Optimize {
 		// Include minify
 		$this->get_minify();
 		$this->run_updates();
+
+		// We need this here because webp can be unavailable because of server moves
+		// This deletes already converted webp images and original image file when a media is deleted
+		WP_Optimize_WebP_Images::get_instance();
 
 		// Include WebP
 		if (WP_Optimize_WebP::is_shell_functions_available() && WPO_USE_WEBP_CONVERSION) {

@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInit30542509262f8cab6d1ada2410cee872
+class ComposerStaticInit8334f72a286139dc5d1f769668d2fd8c
 {
     public static $prefixLengthsPsr4 = array (
         't' => 
@@ -190,6 +190,7 @@ class ComposerStaticInit30542509262f8cab6d1ada2410cee872
         'lessc_parser' => __DIR__ . '/..' . '/marcusschwarz/lesserphp/lessc.inc.php',
         'simplehtmldom\\Debug' => __DIR__ . '/..' . '/simplehtmldom/simplehtmldom/Debug.php',
         'simplehtmldom\\HtmlDocument' => __DIR__ . '/..' . '/simplehtmldom/simplehtmldom/HtmlDocument.php',
+        'simplehtmldom\\HtmlElement' => __DIR__ . '/..' . '/simplehtmldom/simplehtmldom/HtmlElement.php',
         'simplehtmldom\\HtmlNode' => __DIR__ . '/..' . '/simplehtmldom/simplehtmldom/HtmlNode.php',
         'simplehtmldom\\HtmlWeb' => __DIR__ . '/..' . '/simplehtmldom/simplehtmldom/HtmlWeb.php',
     );
@@ -197,10 +198,10 @@ class ComposerStaticInit30542509262f8cab6d1ada2410cee872
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInit30542509262f8cab6d1ada2410cee872::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInit30542509262f8cab6d1ada2410cee872::$prefixDirsPsr4;
-            $loader->prefixesPsr0 = ComposerStaticInit30542509262f8cab6d1ada2410cee872::$prefixesPsr0;
-            $loader->classMap = ComposerStaticInit30542509262f8cab6d1ada2410cee872::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInit8334f72a286139dc5d1f769668d2fd8c::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInit8334f72a286139dc5d1f769668d2fd8c::$prefixDirsPsr4;
+            $loader->prefixesPsr0 = ComposerStaticInit8334f72a286139dc5d1f769668d2fd8c::$prefixesPsr0;
+            $loader->classMap = ComposerStaticInit8334f72a286139dc5d1f769668d2fd8c::$classMap;
 
         }, null, ClassLoader::class);
     }

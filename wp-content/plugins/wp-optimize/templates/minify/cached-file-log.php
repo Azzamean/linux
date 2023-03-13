@@ -1,4 +1,14 @@
 <?php if (!defined('WPO_VERSION')) die('No direct access allowed'); ?>
+
+<?php
+if (isset($log->error)) {
+	?>
+	<div class="wpo_min_file_error"><?php echo wp_kses_post($log->error); ?></div>
+	<?php
+	return;
+}
+?>
+
 <h5><?php echo esc_html($log->header); ?></h5>
 <ul><?php
 foreach ((array) $log->files as $handle => $file) {

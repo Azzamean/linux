@@ -108,7 +108,7 @@ if (function_exists("acf_add_local_field_group")):
             [
                 "key" => "field_6408cfd5f205c",
                 "label" => "Designation",
-                "name" => "speaker_designation",
+                "name" => "webinars_designation",
                 "aria-label" => "",
                 "type" => "text",
                 "instructions" => "",

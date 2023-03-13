@@ -763,6 +763,16 @@ function wpo_get_url_path($url = '') {
 		$url_parts['path'] = preg_replace('/(.*?)index\.php(\/.+)/i', '$1index-php$2', $url_parts['path']);
 	}
 
+	/*
+	 * Convert the hexadecimal digits within the percent-encoded triplet to uppercase, to ensure that the path remains
+	 * consistent. For instance, "example.com/%e0%a6" will be converted to "example.com/%E0%A6".
+	 */
+	if (isset($url_parts['path'])) {
+		$url_parts['path'] = preg_replace_callback('/%[0-9A-F]{2}/i', function($matches) {
+			return strtoupper($matches[0]);
+		}, $url_parts['path']);
+	}
+
 	if (!isset($url_parts['host'])) $url_parts['host'] = '';
 	if (!isset($url_parts['path'])) $url_parts['path'] = '';
 

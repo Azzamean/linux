@@ -1,11 +1,11 @@
 === WP-Optimize - Cache, Clean, Compress. ===  
-Contributors: DavidAnderson, ruhanirabin, DNutbourne, aporter, snightingale, lumberhack
+Contributors: DavidAnderson, ruhanirabin, DNutbourne, aporter, snightingale, lumberhack, webulous
 Donate link: https://david.dw-perspective.org.uk/donate
-Tags: cache, minify, database, image optimize, performance, clean, spam, speed, caching, smush, smushing
+Tags: cache, minify, caching, image cache, performance cache, clean, spam, speed, database, smush, smushing
 Requires PHP: 5.6
 Requires at least: 4.5
-Tested up to: 6.1
-Stable tag: 3.2.12
+Tested up to: 6.2
+Stable tag: 3.2.13
 License: GPLv2+
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -217,6 +217,9 @@ Go to WP-Optimize -> Cache and enable caching. For most people, that will be eno
 = Is the caching feature compatible with e-commerce plugins? =
 Yes, caching with WP-Optimize Cache allows you to safely cache your products, with plugins like WooCommerce or Easy Digital Downloads, or any e-commerce that uses `DONOTCACHEPAGE` to exclude sensitive pages from caching (e.g. my account, cart or checkout pages).
 
+= Is the caching feature compatible with multilingual plugins? =
+Yes, WP-Optimize works with popular multilingual plugins like WPML or Polylang. However, it's important to note that when using WP-Optimize with multilingual plugins, the URL format for different languages should not include any query parameters, for example `https://example.com/?lang=en`. Instead, it should be in a pretty permalink format, such as `https://example.com/en`.
+
 = Do I need a special setup to use the caching feature? =
 No, if WordPress works properly, WP-Optimize will be able to cache your pages and posts.
 
@@ -364,6 +367,23 @@ If none of the above works, disable processing of JavaScript files in the minify
 
 == Changelog ==
 
+
+= 3.2.13 - 13/Mar/2023 =
+
+* FEATURE: WebP - Ability to convert to webp format from media library
+* FIX: Prevent PHP warning when minify-log files are missing or corrupted, also added appropriate error message
+* FIX: Delete webp files and uncompressed file when media is deleted
+* FIX: Polylang compatibility - now upon updating any post, caches for all translated languages are cleared
+* FIX: Prevent adding unsupported media types to the smush task list
+* FIX: WebP - Unsupported formats throws a fatal error
+* FIX: Compress image UI for webp images
+* FIX: Premium - WebP Images are marked as unused images
+* FIX: Resolved an issue where Beaver Builder's edit mode was not functioning properly when WebP conversion was enabled
+* FIX: Prevent creating multiple cache directories for URLs that contain non-English characters
+* TWEAK: Preload allowed time difference is set to be the same as max execution time
+* TWEAK: Premium - Unused images feature - Add compatibility with Yoast SEO social images
+* TWEAK: Prevent jQuery deprecation notices
+* SECURITY: Fixed a non-persistent XSS vulnerability that could occur on certain servers when the WebP conversion option was enabled. This vulnerability could allow an attacker to execute arbitrary JavaScript code in the victim's browser by tricking them into clicking on a specially crafted link. Thanks to Paolo Elia for reporting this.
 
 = 3.2.12 - 06/Feb/2023 =
 
@@ -1334,4 +1354,4 @@ If none of the above works, disable processing of JavaScript files in the minify
 * Fix Interface
 
 == Upgrade Notice ==
-* 3.2.12: Various tweaks and fixes (including a security fix for the short-lived free version 3.2.11) - a recommended update for all
+* 3.2.13: Ability to convert to webp format from media library. A security fix and various tweaks and fixes - a recommended update for all

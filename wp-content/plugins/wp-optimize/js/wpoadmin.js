@@ -136,7 +136,7 @@ var WP_Optimize = function () {
 		 * After tables filtered check if we need show table footer and No tables message.
 		 */
 		table_list.on('filterEnd', function() {
-			var search_value = $.trim(table_list_filter.val());
+			var search_value = table_list_filter.val().trim();
 	
 			if ('' == search_value) {
 				table_footer_line.show();
@@ -1803,10 +1803,10 @@ var WP_Optimize = function () {
 			validate = field.data('validate');
 
 		if (!validate && required) {
-			return ('' != $.trim(value));
+			return ('' != value.trim());
 		}
 
-		if (validate && !required && '' == $.trim(value)) {
+		if (validate && !required && '' == value.trim()) {
 			return true;
 		}
 
@@ -1819,7 +1819,7 @@ var WP_Optimize = function () {
 					email = '';
 
 				for (var i = 0; i < emails.length; i++) {
-					email = $.trim(emails[i]);
+					email = emails[i].trim();
 
 					if ('' == email || !regex.test(email)) {
 						valid = false;
@@ -2232,10 +2232,10 @@ jQuery(function ($) {
 			if (!options.hasOwnProperty(i)) continue;
 
 			if (Array.isArray(options[i])) {
-				placeholder = $.trim(options[i][0]);
-				validate = $.trim(options[i][1]);
+				placeholder = options[i][0].trim();
+				validate = options[i][1].trim();
 			} else {
-				placeholder = $.trim(options[i]);
+				placeholder = options[i].trim();
 				validate = '';
 			}
 
