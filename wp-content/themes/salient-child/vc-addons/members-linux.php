@@ -94,6 +94,7 @@ function members_linux($atts, $content)
         "post_status" => ["publish"],
         "posts_per_page" => -1,
         "order" => $order,
+		"orderby" => "title",
         "ignore_sticky_posts" => true,
     ];
 
