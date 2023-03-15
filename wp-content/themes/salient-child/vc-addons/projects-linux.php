@@ -69,7 +69,7 @@ class Projects
                     "heading" => __("Order By", "projects"),
                     "param_name" => "orderby",
                     "value" => [
-                        __("Name", "projects") => "title",
+                        __("Title", "projects") => "title",
                         __("Date", "projects") => "date",
                         __("ID", "projects") => "ID",
                         __("Random", "projects") => "rand",
@@ -83,11 +83,11 @@ class Projects
                 [
                     "type" => "dropdown",
                     "class" => "",
-                    "heading" => __("Sort order", "projects"),
+                    "heading" => __("Sort Order", "projects"),
                     "param_name" => "order",
                     "value" => [
-                        __("Descending", "projects") => "DESC",
                         __("Ascending", "projects") => "ASC",
+                        __("Descending", "projects") => "DESC",
                     ],
                     "description" => __("Select sorting order.", "projects"),
                     "dependency" => [
@@ -155,15 +155,21 @@ function projects_grid($atts, $content)
         shortcode_atts(
             [
                 "design" => "",
-                "limit" => "-1",
-                "order" => "ASC",
-                "orderby" => "title",
+                "limit" => "",
+                "order" => "",
+                "orderby" => "",
                 "projects_category_id" => "",
                 "columns" => "",
             ],
             $atts
         )
     );
+
+    $design = !empty($design) ? $design : "grid-design";
+    $limit = !empty($limit) ? $limit : "15";
+    $order = !empty($order) ? $order : "ASC";
+    $orderby = !empty($orderby) ? $orderby : "title";
+    $columns = !empty($columns) ? $columns : "2";
 
     $query_args = [
         "post_type" => "projects",
@@ -173,12 +179,6 @@ function projects_grid($atts, $content)
         "orderby" => $orderby,
         "ignore_sticky_posts" => true,
     ];
-
-    $design = !empty($design) ? $design : "grid-design";
-    $limit = !empty($limit) ? $limit : "15";
-    $order = strtolower($order) == "asc" ? "ASC" : "DESC";
-    $orderby = !empty($orderby) ? $orderby : "title";
-    $columns = !empty($columns) ? $columns : "2";
 
     switch ($design) {
         case "grid-design":

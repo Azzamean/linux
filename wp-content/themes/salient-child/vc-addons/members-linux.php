@@ -34,7 +34,7 @@ class Members
                     [
                         "type" => "dropdown",
                         "class" => "",
-                        "heading" => esc_html__("columns", "members"),
+                        "heading" => esc_html__("Columns", "members"),
                         "param_name" => "columns",
                         "value" => [
                             esc_html__("2 columns", "members") => "2",
@@ -55,6 +55,17 @@ class Members
                         "value" => $all_members_category,
                         "description" => __("", "members"),
                     ],
+                    [
+                        "type" => "dropdown",
+                        "class" => "",
+                        "heading" => __("Sort Order", "members"),
+                        "param_name" => "order",
+                        "value" => [
+                            __("Ascending", "members") => "ASC",
+                            __("Descending", "members") => "DESC",
+                        ],
+                        "description" => __("Select sorting order.", "members"),
+                    ],
                 ],
             ]);
         endif;
@@ -69,18 +80,20 @@ function members_linux($atts, $content)
             [
                 "columns" => "",
                 "members_category_id" => "",
+                "order" => "",
             ],
             $atts
         )
     );
 
     $columns = !empty($columns) ? $columns : "";
+    $order = !empty($order) ? $order : "ASC";
 
     $query_args = [
         "post_type" => "members",
         "post_status" => ["publish"],
         "posts_per_page" => -1,
-        "order" => "ASC",
+        "order" => $order,
         "ignore_sticky_posts" => true,
     ];
 
