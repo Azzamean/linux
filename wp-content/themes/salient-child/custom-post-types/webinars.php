@@ -29,7 +29,7 @@ function cptui_register_my_cpts_webinars()
         "capability_type" => "post",
         "map_meta_cap" => true,
         "hierarchical" => false,
-        "can_export" => false,
+        "can_export" => true,
         "rewrite" => ["slug" => "webinars", "with_front" => true],
         "query_var" => true,
         "menu_icon" => "dashicons-admin-page",

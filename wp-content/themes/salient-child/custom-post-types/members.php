@@ -30,7 +30,7 @@ function cptui_register_my_cpts_members()
         "capability_type" => "post",
         "map_meta_cap" => true,
         "hierarchical" => false,
-        "can_export" => false,
+        "can_export" => true,
         "rewrite" => ["slug" => "members", "with_front" => true],
         "query_var" => true,
         "taxonomies" => ["members_category"],
