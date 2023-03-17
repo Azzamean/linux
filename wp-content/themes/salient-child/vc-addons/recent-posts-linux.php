@@ -967,7 +967,7 @@ function recent_posts_linux($atts, $content)
                             );
                         } else {
                             $output .=
-                                '<img class="list-view-default" src="' .
+                                '<img class="grid-view-default" src="' .
                                 nectar_options_img($nectar_options["logo"]) .
                                 '" />';
                         }
