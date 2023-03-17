@@ -952,6 +952,7 @@ function recent_posts_linux($atts, $content)
                     $output .= '<div class="grid-design outer">';
                 }
                 $output .= '<div class="inner">';
+
                 if ($featured_image == true) {
                     if ($embedded_code == true) {
                         $output .=
@@ -959,9 +960,20 @@ function recent_posts_linux($atts, $content)
                             get_field("embedded_code") .
                             "</div>";
                     } else {
-                        $output .= get_the_post_thumbnail($page->ID, "medium");
+                        if (get_the_post_thumbnail($post->ID) != null) {
+                            $output .= get_the_post_thumbnail(
+                                $page->ID,
+                                "medium"
+                            );
+                        } else {
+                            $output .=
+                                '<img class="list-view-default" src="' .
+                                nectar_options_img($nectar_options["logo"]) .
+                                '" />';
+                        }
                     }
                 }
+
                 if ($categories == true) {
                     $i = 0;
                     $comma = "";
