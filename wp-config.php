@@ -25,6 +25,7 @@ if (isset($_SERVER['PANTHEON_ENVIRONMENT']) &&
 }
 
 if (file_exists(dirname(__FILE__) . '/wp-config-pantheon.php') && isset($_ENV['PANTHEON_ENVIRONMENT'])) {
+	define('DISABLE_WP_CRON', false);
 	require_once(dirname(__FILE__) . '/wp-config-pantheon.php');
 /**
  * Local configuration information.
