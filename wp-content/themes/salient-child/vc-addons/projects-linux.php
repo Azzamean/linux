@@ -8,15 +8,26 @@ class Projects
 
     function projects_grid_vc()
     {
-        $types = get_terms([
-            "taxonomy" => "projects_stage",
+        $categoryTypes = get_terms([
+            "taxonomy" => "projects_category",
             "hide_empty" => false,
             "orderby" => "name",
         ]);
 
         $all_projects_category = ["All Projects Categories" => ""];
-        foreach ($types as $type) {
-            $all_projects_category[$type->name] = $type->term_id;
+        foreach ($categoryTypes as $catType) {
+            $all_projects_category[$catType->name] = $catType->term_id;
+        }
+
+        $stageTypes = get_terms([
+            "taxonomy" => "projects_stage",
+            "hide_empty" => false,
+            "orderby" => "name",
+        ]);
+
+        $all_projects_stage = ["All Projects Stages" => ""];
+        foreach ($stageTypes as $stageType) {
+            $all_projects_stage[$stageType->name] = $stageType->term_id;
         }
 
         vc_map([
@@ -123,6 +134,19 @@ class Projects
                         "value" => ["flipbox-design", "grid-design"],
                     ],
                 ],
+
+                [
+                    "type" => "dropdown",
+                    "class" => "",
+                    "heading" => __("Stages", "projects"),
+                    "param_name" => "projects_stages_id",
+                    "value" => $all_projects_stage,
+                    "description" => __("", "projects"),
+                    "dependency" => [
+                        "element" => "design",
+                        "value" => ["flipbox-design", "grid-design"],
+                    ],
+                ],
             ],
         ]);
     }
@@ -159,6 +183,7 @@ function projects_grid($atts, $content)
                 "order" => "",
                 "orderby" => "",
                 "projects_category_id" => "",
+                "projects_stages_id" => "",
                 "columns" => "",
             ],
             $atts
@@ -207,12 +232,38 @@ function projects_grid($atts, $content)
             break;
     }
 
+    if (!empty($projects_category_id) && !empty($projects_stages_id)) {
+        $query_args["tax_query"] = [
+            "relation" => "AND",
+            [
+                "taxonomy" => "projects_category",
+                "field" => "term_id",
+                "terms" => $projects_category_id,
+            ],
+            [
+                "taxonomy" => "projects_stage",
+                "field" => "term_id",
+                "terms" => $projects_stages_id,
+            ],
+        ];
+    }
+
     if (!empty($projects_category_id)) {
+        $query_args["tax_query"] = [
+            [
+                "taxonomy" => "projects_category",
+                "field" => "term_id",
+                "terms" => $projects_category_id,
+            ],
+        ];
+    }
+
+    if (!empty($projects_stages_id)) {
         $query_args["tax_query"] = [
             [
                 "taxonomy" => "projects_stage",
                 "field" => "term_id",
-                "terms" => $projects_category_id,
+                "terms" => $projects_stages_id,
             ],
         ];
     }

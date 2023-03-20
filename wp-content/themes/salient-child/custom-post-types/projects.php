@@ -1,5 +1,4 @@
 <?php
-
 function cptui_register_my_cpts_projects()
 {
     /**
@@ -29,7 +28,7 @@ function cptui_register_my_cpts_projects()
         "capability_type" => "post",
         "map_meta_cap" => true,
         "hierarchical" => false,
-		"can_export" => true,
+        "can_export" => true,
         "rewrite" => ["slug" => "projects", "with_front" => true],
         "query_var" => true,
         "menu_icon" => "dashicons-admin-page",
@@ -60,12 +59,12 @@ function cptui_register_my_taxes_projects_category()
         "public" => true,
         "publicly_queryable" => true, // this makes it a checkbox or like a regular tag
         "hierarchical" => true,
-        "show_ui" => false, // This hides it on the left admin dashboard and on singles
+        "show_ui" => true, // This hides it on the left admin dashboard and on singles
         "show_in_menu" => true, // This hides it on the left admin dashboard
-        "show_in_nav_menus" => false,
+        "show_in_nav_menus" => true,
         "query_var" => true,
         "rewrite" => ["slug" => "projects_category", "with_front" => true],
-        "show_admin_column" => false, // This hides in on the main projects page's list view
+        "show_admin_column" => true, // This hides in on the main projects page's list view
         "show_in_rest" => true,
         "show_tagcloud" => false,
         "rest_base" => "projects_category",
@@ -126,11 +125,7 @@ if (function_exists("acf_add_local_field_group")):
                     "Please select the primary logo (this will be used on the posts display preview)",
                 "required" => 0,
                 "conditional_logic" => 0,
-                "wrapper" => [
-                    "width" => "50",
-                    "class" => "",
-                    "id" => "",
-                ],
+                "wrapper" => ["width" => "50", "class" => "", "id" => ""],
                 "return_format" => "url",
                 "library" => "all",
                 "min_width" => "",
@@ -152,11 +147,7 @@ if (function_exists("acf_add_local_field_group")):
                     "Please select the secondary logo (this is an alternative logo used for the banner)",
                 "required" => 0,
                 "conditional_logic" => 0,
-                "wrapper" => [
-                    "width" => "50",
-                    "class" => "",
-                    "id" => "",
-                ],
+                "wrapper" => ["width" => "50", "class" => "", "id" => ""],
                 "return_format" => "url",
                 "library" => "all",
                 "min_width" => "",
@@ -177,11 +168,7 @@ if (function_exists("acf_add_local_field_group")):
                 "instructions" => "Use a logo instead of the page title",
                 "required" => 0,
                 "conditional_logic" => 0,
-                "wrapper" => [
-                    "width" => "",
-                    "class" => "",
-                    "id" => "",
-                ],
+                "wrapper" => ["width" => "", "class" => "", "id" => ""],
                 "choices" => [
                     "Title" => "Title",
                     "Logo" => "Logo",
@@ -204,11 +191,7 @@ if (function_exists("acf_add_local_field_group")):
                     "Please select the projects banner background image",
                 "required" => 0,
                 "conditional_logic" => 0,
-                "wrapper" => [
-                    "width" => "50",
-                    "class" => "",
-                    "id" => "",
-                ],
+                "wrapper" => ["width" => "50", "class" => "", "id" => ""],
                 "return_format" => "url",
                 "library" => "all",
                 "min_width" => "",
@@ -230,11 +213,7 @@ if (function_exists("acf_add_local_field_group")):
                     "Please select the projects banner background color",
                 "required" => 0,
                 "conditional_logic" => 0,
-                "wrapper" => [
-                    "width" => "25",
-                    "class" => "",
-                    "id" => "",
-                ],
+                "wrapper" => ["width" => "25", "class" => "", "id" => ""],
                 "default_value" => "",
                 "enable_opacity" => 0,
                 "return_format" => "array",
@@ -248,11 +227,7 @@ if (function_exists("acf_add_local_field_group")):
                 "instructions" => "Use a banner image or color",
                 "required" => 0,
                 "conditional_logic" => 0,
-                "wrapper" => [
-                    "width" => "",
-                    "class" => "",
-                    "id" => "",
-                ],
+                "wrapper" => ["width" => "", "class" => "", "id" => ""],
                 "choices" => [
                     "Image" => "Image",
                     "Background Color" => "Background Color",
@@ -274,11 +249,7 @@ if (function_exists("acf_add_local_field_group")):
                     "Please enter the projects excerpt (this will go on the banner and be used for posts display preview)",
                 "required" => 0,
                 "conditional_logic" => 0,
-                "wrapper" => [
-                    "width" => "",
-                    "class" => "",
-                    "id" => "",
-                ],
+                "wrapper" => ["width" => "", "class" => "", "id" => ""],
                 "default_value" => "",
                 "maxlength" => "",
                 "placeholder" => "",
@@ -295,11 +266,7 @@ if (function_exists("acf_add_local_field_group")):
                     "Please enter the projects video link (if applicable)",
                 "required" => 0,
                 "conditional_logic" => 0,
-                "wrapper" => [
-                    "width" => "",
-                    "class" => "",
-                    "id" => "",
-                ],
+                "wrapper" => ["width" => "", "class" => "", "id" => ""],
                 "width" => "",
                 "height" => "",
             ],
@@ -313,11 +280,7 @@ if (function_exists("acf_add_local_field_group")):
                     "Please enter the projects category (this will link to recent posts with the selected category)",
                 "required" => 0,
                 "conditional_logic" => 0,
-                "wrapper" => [
-                    "width" => "",
-                    "class" => "",
-                    "id" => "",
-                ],
+                "wrapper" => ["width" => "", "class" => "", "id" => ""],
                 "taxonomy" => "category",
                 "add_term" => 0,
                 "save_terms" => 0,
@@ -337,11 +300,7 @@ if (function_exists("acf_add_local_field_group")):
                     "Please select to add an icon with a URL attached (the URL will be a clickable icon)",
                 "required" => 0,
                 "conditional_logic" => 0,
-                "wrapper" => [
-                    "width" => "",
-                    "class" => "",
-                    "id" => "",
-                ],
+                "wrapper" => ["width" => "", "class" => "", "id" => ""],
                 "layouts" => [
                     "layout_63a0d4bd47946" => [
                         "key" => "layout_63a0d4bd47946",
@@ -437,11 +396,7 @@ if (function_exists("acf_add_local_field_group")):
                     "Please enter a heading title for your description",
                 "required" => 0,
                 "conditional_logic" => 0,
-                "wrapper" => [
-                    "width" => "",
-                    "class" => "",
-                    "id" => "",
-                ],
+                "wrapper" => ["width" => "", "class" => "", "id" => ""],
                 "default_value" => "",
                 "maxlength" => "",
                 "placeholder" => "",
@@ -457,11 +412,7 @@ if (function_exists("acf_add_local_field_group")):
                 "instructions" => "Please enter the description of the project",
                 "required" => 0,
                 "conditional_logic" => 0,
-                "wrapper" => [
-                    "width" => "",
-                    "class" => "",
-                    "id" => "",
-                ],
+                "wrapper" => ["width" => "", "class" => "", "id" => ""],
                 "default_value" => "",
                 "tabs" => "all",
                 "toolbar" => "full",
