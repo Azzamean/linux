@@ -64,7 +64,7 @@ class Projects
                     "class" => "",
                     "heading" => __("Limit", "projects"),
                     "param_name" => "limit",
-                    "value" => "-1",
+                    "value" => "",
                     "description" => __(
                         "Enter number of people to be displayed. Enter -1 to display all.",
                         "projects"
