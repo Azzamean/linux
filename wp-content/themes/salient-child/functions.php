@@ -7,7 +7,7 @@
 add_action("wp_head", "osano_script");
 function osano_script()
 {
-?>
+    ?>
 <script src="https://cmp.osano.com/16A0DbT9yDNIaQkvZ/3b49aaa9-15ab-4d47-a8fb-96cc25b5543c/osano.js"></script>
 <?php
 }
@@ -27,42 +27,68 @@ require_once "vc-addons/custom-fields/custom-fields.php";
 function salient_child_enqueue_styles()
 {
     $nectar_theme_version = nectar_get_theme_version();
-    wp_enqueue_style("salient-child-style", get_stylesheet_directory_uri() . "/style.css", "", $nectar_theme_version);
-    wp_enqueue_style("vc-addons-style", get_stylesheet_directory_uri() . "/vc-addons/css/vc-addons.css", "", $nectar_theme_version);
-    wp_enqueue_style("templates-style", get_stylesheet_directory_uri() . "/templates/css/templates.css", "", $nectar_theme_version);
-    wp_enqueue_style("fonts-style", get_stylesheet_directory_uri() . "/fonts/fonts.css", "", $nectar_theme_version);
+    wp_enqueue_style(
+        "salient-child-style",
+        get_stylesheet_directory_uri() . "/style.css",
+        "",
+        $nectar_theme_version
+    );
+    wp_enqueue_style(
+        "vc-addons-style",
+        get_stylesheet_directory_uri() . "/vc-addons/css/vc-addons.css",
+        "",
+        $nectar_theme_version
+    );
+    wp_enqueue_style(
+        "templates-style",
+        get_stylesheet_directory_uri() . "/templates/css/templates.css",
+        "",
+        $nectar_theme_version
+    );
+    wp_enqueue_style(
+        "fonts-style",
+        get_stylesheet_directory_uri() . "/fonts/fonts.css",
+        "",
+        $nectar_theme_version
+    );
 
-    if (is_rtl())
-    {
-        wp_enqueue_style("salient-rtl", get_template_directory_uri() . "/rtl.css", [], "1", "screen");
+    if (is_rtl()) {
+        wp_enqueue_style(
+            "salient-rtl",
+            get_template_directory_uri() . "/rtl.css",
+            [],
+            "1",
+            "screen"
+        );
     }
 
-    wp_register_script('salient-child-javascript', get_stylesheet_directory_uri() . '/javascript.js', array(
-        'jquery'
-    ) , '3.6.1', true);
-    wp_enqueue_script('salient-child-javascript');
+    wp_register_script(
+        "salient-child-javascript",
+        get_stylesheet_directory_uri() . "/javascript.js",
+        ["jquery"],
+        "3.6.1",
+        true
+    );
+    wp_enqueue_script("salient-child-javascript");
 
     //wp_enqueue_script('bringaze-font-awesome', 'https://kit.fontawesome.com/8511f9d0cf.js', false);
-    
 }
 add_action("wp_enqueue_scripts", "salient_child_enqueue_styles", 100);
 
 // GRABS SPECIFIC SUBSITES
-if (is_multisite())
-{
+if (is_multisite()) {
     $site_id = get_current_blog_id();
-    switch ($site_id)
-    {
-            // O3D
-            
+    switch ($site_id) {
+        // O3D
+
         case "13":
             require_once "sites/o3d/functions.php";
-        break;
-            // NextArch
-            
+            break;
+        // NextArch
+
         case "15":
             require_once "sites/nextarch/functions.php";
-        break;
+            break;
     }
 }
 
@@ -70,28 +96,31 @@ if (is_multisite())
 function lf_meta_header()
 {
     $site_id = get_current_blog_id();
-    $academy_software_foundation = '<div class="lfprojects awsf-background"><div class="container"><a href="https://www.aswf.io/projects/" target="_blank" rel="noopener noreferrer"><img src="/wp-content/uploads/banners/aswf_banner_dark.svg"></a></div></div>';
-    $jdf_banner = '<div class="lfprojects white-background jdf"><div class="container"><a href="https://jointdevelopment.org/" target="_blank" rel="noopener noreferrer"><img src="/wp-content/uploads/banners/jdf_banner_color.svg"></a></div></div>';
-    $linux_foundation_white = '<div class="lfprojects white-background"><div class="container"><a href="https://www.linuxfoundation.org/projects" target="_blank" rel="noopener noreferrer"><img src="/wp-content/uploads/banners/lfprojects_banner_color.svg"></a></div></div>';
-    $linux_foundation_dark = '<div class="lfprojects"><div class="container"><a href="https://www.linuxfoundation.org/projects" target="_blank" rel="noopener noreferrer"><img src="/wp-content/uploads/banners/lfprojects_banner_other.svg"></a></div></div>';
+    $academy_software_foundation =
+        '<div class="lfprojects awsf-background"><div class="container"><a href="https://www.aswf.io/projects/" target="_blank" rel="noopener noreferrer"><img src="/wp-content/uploads/banners/aswf_banner_dark.svg"></a></div></div>';
+    $jdf_banner =
+        '<div class="lfprojects white-background jdf"><div class="container"><a href="https://jointdevelopment.org/" target="_blank" rel="noopener noreferrer"><img src="/wp-content/uploads/banners/jdf_banner_color.svg"></a></div></div>';
+    $linux_foundation_white =
+        '<div class="lfprojects white-background"><div class="container"><a href="https://www.linuxfoundation.org/projects" target="_blank" rel="noopener noreferrer"><img src="/wp-content/uploads/banners/lfprojects_banner_color.svg"></a></div></div>';
+    $linux_foundation_dark =
+        '<div class="lfprojects"><div class="container"><a href="https://www.linuxfoundation.org/projects" target="_blank" rel="noopener noreferrer"><img src="/wp-content/uploads/banners/lfprojects_banner_other.svg"></a></div></div>';
 
-    switch ($site_id)
-    {
-            // DPEL AWSF
-            
+    switch ($site_id) {
+        // DPEL AWSF
+
         case "8":
             echo $academy_software_foundation;
-        break;
-            // OMPF
-            
+            break;
+        // OMPF
+
         case "14":
             echo $linux_foundation_white;
-        break;
-            // OVERTURE MAPS FOUNDATION
-            
+            break;
+        // OVERTURE MAPS FOUNDATION
+
         case "16":
             echo $jdf_banner;
-        break;
+            break;
         default:
             echo $linux_foundation_dark;
     }
@@ -106,15 +135,21 @@ function custom_post_types_templates($template)
     $defaultWebinarsTemplate = locate_template("templates/single-webinars.php");
     $templateSlug = get_page_template_slug(get_queried_object_id()); // this is null if no template name is given; hence default
     // PROJECTS
-    if (is_singular("projects") && $defaultProjectsTemplate != "" && $templateSlug == null)
-    {
+    if (
+        is_singular("projects") &&
+        $defaultProjectsTemplate != "" &&
+        $templateSlug == null
+    ) {
         //if (is_singular($post_types) && !file_exists(get_stylesheet_directory() . "/single-projects.php") && get_page_template_slug(get_queried_object_id()) == null)
         $template = $defaultProjectsTemplate;
     }
     //if (is_post_type_archive($post_types) && !file_exists(get_stylesheet_directory() . "/archive-projects.php")){}
     // WEBINARS
-    if (is_singular("webinars") && $defaultWebinarsTemplate != "" && $templateSlug == null)
-    {
+    if (
+        is_singular("webinars") &&
+        $defaultWebinarsTemplate != "" &&
+        $templateSlug == null
+    ) {
         $template = $defaultWebinarsTemplate;
     }
     return $template;
@@ -124,8 +159,7 @@ add_filter("template_include", "custom_post_types_templates");
 // REDIRECT PANTHEON LOGIN TO WORK CORRECTLY
 function redirect_pantheon_login()
 {
-    if (strpos($_SERVER["REQUEST_URI"], "/wp-signup.php?") !== false)
-    {
+    if (strpos($_SERVER["REQUEST_URI"], "/wp-signup.php?") !== false) {
         wp_redirect("/wp-admin/");
         exit();
     }
@@ -141,48 +175,51 @@ function cc_mime_types($mimes)
 }
 add_filter("upload_mimes", "cc_mime_types");
 
-add_filter("map_meta_cap", function ($caps, $cap, $user_id)
-{
-    if ("unfiltered_upload" !== $cap)
-    {
-        return $caps;
-    }
-
-    if (user_can($user_id, "edit_others_posts"))
-    {
-        if (false !== ($key = array_search("do_not_allow", $caps)))
-        {
-            unset($caps[$key]);
+add_filter(
+    "map_meta_cap",
+    function ($caps, $cap, $user_id) {
+        if ("unfiltered_upload" !== $cap) {
+            return $caps;
         }
-        $caps[] = "unfiltered_upload";
-        $caps = array_values($caps);
-    }
 
-    return $caps;
-}
-, 10, 3);
+        if (user_can($user_id, "edit_others_posts")) {
+            if (false !== ($key = array_search("do_not_allow", $caps))) {
+                unset($caps[$key]);
+            }
+            $caps[] = "unfiltered_upload";
+            $caps = array_values($caps);
+        }
 
-add_filter("user_has_cap", function ($allcaps, $caps)
-{
-    if (!in_array("unfiltered_upload", $caps))
-    {
+        return $caps;
+    },
+    10,
+    3
+);
+
+add_filter(
+    "user_has_cap",
+    function ($allcaps, $caps) {
+        if (!in_array("unfiltered_upload", $caps)) {
+            return $allcaps;
+        }
+
+        $allcaps["unfiltered_upload"] = true;
+
         return $allcaps;
-    }
-
-    $allcaps["unfiltered_upload"] = true;
-
-    return $allcaps;
-}
-, 10, 4);
+    },
+    10,
+    4
+);
 
 // REMOVE COMMENTS FUNCTION; CAN BE PLACED IN A MU PLUGIN IF WANTED
-add_action("admin_init", function ()
-{
+add_action("admin_init", function () {
     // REDIRECT USERS TRYING TO ACCESS COMMENTS PAGE
     global $pagenow;
 
-    if ($pagenow === "edit-comments.php" || $pagenow === "options-discussion.php")
-    {
+    if (
+        $pagenow === "edit-comments.php" ||
+        $pagenow === "options-discussion.php"
+    ) {
         wp_redirect(admin_url());
         exit();
     }
@@ -191,10 +228,8 @@ add_action("admin_init", function ()
     remove_meta_box("dashboard_recent_comments", "dashboard", "normal");
 
     // DISABLE SUPPORT FOR COMMENTS AND TRACKBACKS IN POST TYPES
-    foreach (get_post_types() as $post_type)
-    {
-        if (post_type_supports($post_type, "comments"))
-        {
+    foreach (get_post_types() as $post_type) {
+        if (post_type_supports($post_type, "comments")) {
             remove_post_type_support($post_type, "comments");
             remove_post_type_support($post_type, "trackbacks");
         }
@@ -209,15 +244,13 @@ add_filter("pings_open", "__return_false", 20, 2);
 add_filter("comments_array", "__return_empty_array", 10, 2);
 
 // REMOVE COMMENTS PAGE AND OPTION PAGE IN MENU
-add_action("admin_menu", function ()
-{
+add_action("admin_menu", function () {
     remove_menu_page("edit-comments.php");
     remove_submenu_page("options-general.php", "options-discussion.php");
 });
 
 // REMOVE COMMENTS LINK FROM ADMIN BAR
-add_action("add_admin_bar_menus", function ()
-{
+add_action("add_admin_bar_menus", function () {
     remove_action("admin_bar_menu", "wp_admin_bar_comments_menu", 60);
 });
 
@@ -228,8 +261,7 @@ function remove_toolbar_items($bar)
     // global $wp_admin_bar;
     // $wp_admin_bar->remove_node( 'blog-1-c' );
     $sites = get_blogs_of_user(get_current_user_id());
-    foreach ($sites as $site)
-    {
+    foreach ($sites as $site) {
         $bar->remove_node("blog-{$site->userblog_id}-c");
     }
 }
@@ -254,9 +286,12 @@ add_action("after_setup_theme", "add_posts_formats", 11);
 function rename_post_formats($translation, $text, $context, $domain)
 {
     $names = ["Standard" => "Normal", "Link" => "External Link"];
-    if ($context == "Post format")
-    {
-        $translation = str_replace(array_keys($names) , array_values($names) , $text);
+    if ($context == "Post format") {
+        $translation = str_replace(
+            array_keys($names),
+            array_values($names),
+            $text
+        );
     }
     return $translation;
 }
@@ -265,7 +300,7 @@ add_filter("gettext_with_context", "rename_post_formats", 10, 4);
 // STYLE ACF BACKEND
 function acf_admin_head()
 {
-?>
+    ?>
 	<style type="text/css">
 	.acf-postbox h2.hndle.ui-sortable-handle {
 		color: #ffffff;
@@ -312,8 +347,7 @@ function acf_admin_head()
 add_action("acf/input/admin_head", "acf_admin_head");
 
 // HIDE ACF ADMIN MENU FROM BEING VIEWED IN DASHBOARD UNLESS SUPER ADMIN
-if (!is_super_admin())
-{
+if (!is_super_admin()) {
     add_filter("acf/settings/show_admin", "my_acf_settings_show_admin");
 }
 
@@ -373,7 +407,16 @@ add_filter(
 add_filter("hidden_meta_boxes", "custom_hidden_meta_boxes");
 function custom_hidden_meta_boxes($hidden)
 {
-    $hidden = ["wpb_wpbakery", "nectar-metabox-header-nav-transparency", "nectar-metabox-fullscreen-rows", "nectar-metabox-page-header", "postcustom", "revisionsdiv", "slugdiv", "authordiv", ];
+    $hidden = [
+        "wpb_wpbakery",
+        "nectar-metabox-header-nav-transparency",
+        "nectar-metabox-fullscreen-rows",
+        "nectar-metabox-page-header",
+        "postcustom",
+        "revisionsdiv",
+        "slugdiv",
+        "authordiv",
+    ];
     return $hidden;
 }
 
@@ -386,22 +429,73 @@ function turn_off_notifications()
 }
 
 // SHORTCODE FOR UBER MENU LOGO
-if (in_array("ubermenu/ubermenu.php", apply_filters("active_plugins", get_option("active_plugins"))))
-{
+if (
+    in_array(
+        "ubermenu/ubermenu.php",
+        apply_filters("active_plugins", get_option("active_plugins"))
+    )
+) {
     function uber_salient_logo($atts = [])
     {
         // ubermenu\pro\search.php
         // salient\nectar\helpers\header.php
         global $nectar_options;
-        $nectar_logo_url = apply_filters("nectar_logo_url", esc_url(home_url()));
-        return '<a id="logo" href="' . esc_url($nectar_logo_url) . '" data-supplied-ml-starting-dark="' . esc_attr($nectar_header_options["using_mobile_logo_starting_dark"]) . '" data-supplied-ml-starting="' . esc_attr($nectar_header_options["using_mobile_logo_starting"]) . '" data-supplied-ml="' . esc_attr($nectar_header_options["using_mobile_logo"]) . '" ' . wp_kses_post($nectar_header_options["logo_class"]) . ">" . '<img class="stnd skip-lazy' . $default_logo_class . $dark_default_class . '" width="' . nectar_logo_dimensions("width", $nectar_options["logo"]) . '" height="' . nectar_logo_dimensions("height", $nectar_options["logo"]) . '" alt="' . esc_html($salient_logo_text) . '" src="' . nectar_options_img($nectar_options["logo"]) . '" ' . $std_retina_srcset . " />" . "</a>";
+        $nectar_logo_url = apply_filters(
+            "nectar_logo_url",
+            esc_url(home_url())
+        );
+        return '<a id="logo" href="' .
+            esc_url($nectar_logo_url) .
+            '" data-supplied-ml-starting-dark="' .
+            esc_attr(
+                $nectar_header_options["using_mobile_logo_starting_dark"]
+            ) .
+            '" data-supplied-ml-starting="' .
+            esc_attr($nectar_header_options["using_mobile_logo_starting"]) .
+            '" data-supplied-ml="' .
+            esc_attr($nectar_header_options["using_mobile_logo"]) .
+            '" ' .
+            wp_kses_post($nectar_header_options["logo_class"]) .
+            ">" .
+            '<img class="stnd skip-lazy' .
+            $default_logo_class .
+            $dark_default_class .
+            '" width="' .
+            nectar_logo_dimensions("width", $nectar_options["logo"]) .
+            '" height="' .
+            nectar_logo_dimensions("height", $nectar_options["logo"]) .
+            '" alt="' .
+            esc_html($salient_logo_text) .
+            '" src="' .
+            nectar_options_img($nectar_options["logo"]) .
+            '" ' .
+            $std_retina_srcset .
+            " />" .
+            "</a>";
     }
     add_shortcode("uber_logo", "uber_salient_logo");
 
     function uber_search_icon()
     {
-        return '<a class="mobile-search" href="#searchbox"><span class="nectar-icon icon-salient-search" aria-hidden="true"></span><span class="screen-reader-text">' . esc_html__("search", "salient") . "</span></a>";
+        return '<a class="mobile-search" href="#searchbox"><span class="nectar-icon icon-salient-search" aria-hidden="true"></span><span class="screen-reader-text">' .
+            esc_html__("search", "salient") .
+            "</span></a>";
     }
     add_shortcode("uber_search", "uber_search_icon");
 }
 
+/* REDIRECT PAGES FOR THE POST FORMAT LINK */
+function format_link_header()
+{
+    //while (have_posts()) {
+    ///the_post();
+    if (has_post_format("link")) {
+        global $post;
+        global $nectar_options;
+        $link = get_post_meta($post->ID, "_nectar_link", true);
+        wp_redirect($link, 301);
+        exit();
+    }
+    //}
+}
+add_action("wp_head", "format_link_header", 1);
