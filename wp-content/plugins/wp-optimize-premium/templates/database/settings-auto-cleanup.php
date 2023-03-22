@@ -1,9 +1,8 @@
 <?php if (!defined('WPO_VERSION')) die('No direct access allowed'); ?>
-
+<div id="wpo_auto_cleanup">
 	<h3><?php _e('Scheduled clean-up settings', 'wp-optimize'); ?></h3>
 
 	<div class="wpo-fieldgroup">
-		<p><a href="#" id="wpo-add-event" class="wpo-repeater__add"><span class="dashicons dashicons-plus"></span> <?php _e('Add scheduled task', 'wp-optimize'); ?></a></p>
 		<div id="wp-optimize-auto-options">
 			<div class="wpo_auto_event_heading wpo_no_schedules"><?php echo __('There are no scheduled tasks.', 'wp-optimize'); ?></div>
 			<div id="save_settings_reminder" class="save_settings_reminder"><?php _e('Remember to save your settings so that your changes take effect.', 'wp-optimize');?></div>
@@ -80,7 +79,9 @@
 				?>
 			</div>
 		</div>
+		<p><a href="#" id="wpo-add-event" class="wpo-repeater__add"><span class="dashicons dashicons-plus"></span> <?php _e('Add scheduled task', 'wp-optimize'); ?></a></p>
 	</div>
+</div>	
 <?php
 /**
  * Displays scheduled event summary
@@ -123,7 +124,7 @@ function wpo_display_event_summary($index, $event) {
 	</div>
 	<?php if (isset($event['status'])) { ?>
 
-			<div class="wpo_schedule_status">
+			<div class="wpo_schedule_status <?php echo ('1' == $event['status']) ? 'active' : 'inactive'; ?>">
 				<?php echo ('1' == $event['status']) ? __('Active', 'wp-optimize') : __('Inactive', 'wp-optimize'); ?>
 			</div>
 	<?php
@@ -290,11 +291,14 @@ function wpo_display_status($status, $count) {
  * @return void
  */
 function wpo_display_actions($index, $edit = false) {
-	echo '<div class="wpo_event_actions">';
+	printf('<div class="wpo_event_actions %s">', $edit ? "wpo_event_edit" : "");
 	if (true === $edit) {
-		printf('<span class="wpo_edit_event" title="%s"><span class="dashicons dashicons-edit"></span></span>', __('Edit', 'wp-optimize'));
+		printf('<span class="wpo_edit_event" title="%1$s">%1$s</span>', __('Edit', 'wp-optimize'));
+		printf('<span class="wpo_remove_event" title="%1$s" data-count="%2$s">%1s</span>', __('Delete', 'wp-optimize'), $index);
+	} else {
+		printf('<span class="wpo_cancel_event button button-secondary" title="%1$s">%1$s</span>', __('Cancel', 'wp-optimize'));
+		printf('<span class="wpo_save_event button button-primary" title="%1$s">%1$s</span>', __('Apply', 'wp-optimize'));
 	}
-	printf('<span class="wpo_remove_event" title="%d" data-count="%s"><span class="dashicons dashicons-no-alt"></span></span>', __('Remove this task', 'wp-optimize'), $index);
 	echo '</div>';
 }
 

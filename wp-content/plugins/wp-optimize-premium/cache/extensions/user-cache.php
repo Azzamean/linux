@@ -2,8 +2,6 @@
 
 if (!defined('ABSPATH')) die('No direct access allowed');
 
-require_once ABSPATH. WPINC . '/pluggable.php';
-
 // Add filter for storing wp_salt() values to cache config
 add_filter('wpo_cache_update_config', 'wpo_cache_add_salt_to_config');
 
@@ -107,6 +105,7 @@ if (!function_exists('wpo_cache_add_salt_to_config')) :
  * @return array
  */
 function wpo_cache_add_salt_to_config($config) {
+	require_once ABSPATH. WPINC . '/pluggable.php';
 	$config['wp_salt_auth'] = wp_salt('auth');
 	$config['wp_salt_logged_in'] = wp_salt('logged_in');
 	return $config;

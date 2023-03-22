@@ -47,7 +47,7 @@ class WP_Optimization_images extends WP_Optimization {
 	 *
 	 * @var array
 	 */
-	private $_images_extensions = array('jpg', 'jpeg', 'jpe', 'png', 'gif', 'bmp', 'tiff', 'svg');
+	private $_images_extensions = array('jpg', 'jpeg', 'jpe', 'png', 'gif', 'bmp', 'tiff', 'svg', 'webp');
 
 	/**
 	 * Used to break process.
@@ -858,6 +858,7 @@ class WP_Optimization_images extends WP_Optimization {
 		$this->init_visual_composer();
 
 		$found_images = array();
+		$yoast_seo_images = array();
 		$property_images = array();
 		$acf_images = array();
 		$acf_block_field_names = array();
@@ -908,6 +909,13 @@ class WP_Optimization_images extends WP_Optimization {
 			if ($this->is_plugin_acf_active()) {
 				$acf_images = array_merge($acf_images, $this->get_image_ids_from_acf_blocks($post_content, $acf_block_field_names));
 			}
+
+			if ($this->is_plugin_yoast_seo_active()) {
+				$yoast_seo_facebook_images = get_post_meta($post->ID, '_yoast_wpseo_opengraph-image-id', false);
+				$yoast_seo_twitter_images = get_post_meta($post->ID, '_yoast_wpseo_twitter-image-id', false);
+				$yoast_seo_images = array_merge($yoast_seo_images, $yoast_seo_facebook_images, $yoast_seo_twitter_images);
+			}
+
 		}
 
 		ob_end_clean();
@@ -915,9 +923,9 @@ class WP_Optimization_images extends WP_Optimization {
 		if (!empty($found_images)) {
 			// get images attachment ids.
 			$post_content_images = array_values($this->get_image_attachment_id_bulk(array_keys($found_images)));
-			return array_unique(array_merge($post_content_images, $property_images, $acf_images), SORT_NUMERIC);
+			return array_unique(array_merge($post_content_images, $property_images, $acf_images, $yoast_seo_images), SORT_NUMERIC);
 		} else {
-			return array_unique(array_merge($found_images, $property_images, $acf_images), SORT_NUMERIC);
+			return array_unique(array_merge($found_images, $property_images, $acf_images, $yoast_seo_images), SORT_NUMERIC);
 		}
 	}
 
@@ -1453,6 +1461,8 @@ class WP_Optimization_images extends WP_Optimization {
 			$found_images_ids = array_merge($found_images_ids, $this->get_single_image_ids_in_post_meta());
 			// Get images from postmeta fields (serialized values) e.g. ACF galleries
 			$found_images_ids = array_merge($found_images_ids, $this->get_multiple_image_ids_in_post_meta());
+			// Get WC Product category images
+			$found_images_ids = array_merge($found_images_ids, $this->get_wc_product_category_images());
 
 			$all_image_ids = $this->get_image_attachments_post_ids();
 			$unused_images_ids = array_diff($all_image_ids, $found_images_ids);
@@ -2871,5 +2881,29 @@ class WP_Optimization_images extends WP_Optimization {
 	 */
 	private function is_plugin_acf_active() {
 		return is_plugin_active('advanced-custom-fields/acf.php') || is_plugin_active('advanced-custom-fields-pro/acf.php');
+	}
+
+	/**
+	 * Get images from WooCommerce product categories
+	 *
+	 * @return array
+	 */
+	private function get_wc_product_category_images() {
+		if (!class_exists('WooCommerce')) return array();
+
+		$this->log('get_wc_product_category_images()');
+
+		global $wpdb;
+		$product_cat_thumbnail_ids = $wpdb->get_col("SELECT meta_value FROM {$wpdb->termmeta} WHERE meta_key = 'thumbnail_id' AND term_id IN (SELECT term_id from {$wpdb->term_taxonomy} WHERE taxonomy = 'product_cat')");
+		return $product_cat_thumbnail_ids;
+	}
+
+	/**
+	 * Determines whether site is using Yoast SEO plugin or not
+	 *
+	 * @return boolean
+	 */
+	private function is_plugin_yoast_seo_active() {
+		return is_plugin_active('wordpress-seo/wp-seo.php');
 	}
 }

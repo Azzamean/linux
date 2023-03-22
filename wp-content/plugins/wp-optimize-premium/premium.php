@@ -544,6 +544,10 @@ class WP_Optimize_Premium {
 			'x_of_x_images_loaded' => __('%s of %s images loaded', 'wp-optimize'),
 			'cancel_scan' => __('Abort scan', 'wp-optimize'),
 			'unused_images_per_page' => apply_filters('wpo_unused_images_per_page', 99),
+			'add_schedule_cancel' => __('Cancel', 'wp-optimize'),
+			'add_schedule_new' => __('Add schedule', 'wp-optimize'),
+			'delete_logger' => __('Delete', 'wp-optimize'),
+			'add_logger' => __('Add', 'wp-optimize'),
 		);
 		return array_merge($translations, $premium_translations);
 	}
@@ -720,7 +724,7 @@ class WP_Optimize_Premium {
 	 * If registered, runs upon the action wp_footer
 	 */
 	public function wp_footer() {
-		$min_or_not_internal = (defined('SCRIPT_DEBUG') && SCRIPT_DEBUG) ? '' : '-'. str_replace('.', '-', WPO_VERSION). '.min';
+		$min_or_not_internal = WP_Optimize()->get_min_or_not_internal_string();
 		echo '<script>';
 		echo file_get_contents(trailingslashit(WPO_PLUGIN_MAIN_PATH) . 'js/wpo-lazy-load' . $min_or_not_internal . '.js');
 		echo '</script>';

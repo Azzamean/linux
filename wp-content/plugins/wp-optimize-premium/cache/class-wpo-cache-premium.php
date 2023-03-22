@@ -194,9 +194,9 @@ class WPO_Cache_Premium {
 		$current_screen = get_current_screen();
 		// Only enqueue If the screen is the post edit page
 		if ('post' == $current_screen->base) {
-			$enqueue_version = (defined('WP_DEBUG') && WP_DEBUG) ? WPO_VERSION.'.'.time() : WPO_VERSION;
-			$min_or_not = (defined('SCRIPT_DEBUG') && SCRIPT_DEBUG) ? '' : '.min';
-			$min_or_not_internal = (defined('SCRIPT_DEBUG') && SCRIPT_DEBUG) ? '' : '-'. str_replace('.', '-', WPO_VERSION). '.min';
+			$enqueue_version = WP_Optimize()->get_enqueue_version();
+			$min_or_not = WP_Optimize()->get_min_or_not_string();
+			$min_or_not_internal = WP_Optimize()->get_min_or_not_internal_string();
 			if (!wp_script_is('select2')) {
 				wp_enqueue_script('select2', WPO_PLUGIN_URL . 'js/select2/select2' . $min_or_not . '.js', array('jquery'), $enqueue_version);
 			}
