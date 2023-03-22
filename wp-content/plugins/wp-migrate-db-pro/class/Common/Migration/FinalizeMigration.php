@@ -147,7 +147,7 @@ class FinalizeMigration
         } else {
             $return = $this->finalize_migration($state_data);
         }
-
+        do_action('wpmdb_after_finalize_migration');
         $result = $this->http->end_ajax($return);
 
         return $result;
@@ -268,6 +268,9 @@ class FinalizeMigration
      **/
     private function get_tables($state_data)
     {
+        if ($state_data['tables'] === '') {
+            return [];
+        }
         $source_tables      = is_string($state_data['tables']) ? explode(',', $state_data['tables']) : $state_data['tables'];
         $source_prefix      = $state_data['source_prefix'];
         $destination_prefix = $state_data['destination_prefix'];
