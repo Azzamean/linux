@@ -139,7 +139,19 @@ function members_linux($atts, $content)
             $output .=
                 '<div class="' . $column_class . ' grid-design members">';
             $output .= '<div class="grid-design image-wrapper">';
-            $output .= '<a href="' . get_field("members_url") . '"><img src="' . get_field("members_logo") . '"/></a>';
+            if (
+                get_field("members_url") != null ||
+                get_field("members_url") != ""
+            ) {
+                $output .=
+                    '<a href="' .
+                    get_field("members_url") .
+                    '"><img src="' .
+                    get_field("members_logo") .
+                    '"/></a>';
+            } else {
+                $output .= '<img src="' . get_field("members_logo") . '"/>';
+            }
             $output .= "</div>";
             $output .= "</div>";
             $count++;
