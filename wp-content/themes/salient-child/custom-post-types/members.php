@@ -109,6 +109,23 @@ if (function_exists("acf_add_local_field_group")):
                 "mime_types" => "",
                 "preview_size" => "medium",
             ],
+            [
+                "key" => "field_641c7aa87e750",
+                "label" => "URL",
+                "name" => "members_url",
+                "aria-label" => "",
+                "type" => "url",
+                "instructions" => "",
+                "required" => 0,
+                "conditional_logic" => 0,
+                "wrapper" => [
+                    "width" => "",
+                    "class" => "",
+                    "id" => "",
+                ],
+                "default_value" => "",
+                "placeholder" => "",
+            ],
         ],
         "location" => [
             [

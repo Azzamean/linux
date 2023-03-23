@@ -40,6 +40,7 @@ class Members
                             esc_html__("2 columns", "members") => "2",
                             esc_html__("3 columns", "members") => "3",
                             esc_html__("4 columns", "members") => "4",
+                            esc_html__("5 columns", "members") => "5",
                         ],
                         "description" => esc_html__(
                             "Please select the number of columns you want displayed",
@@ -107,6 +108,9 @@ function members_linux($atts, $content)
             break;
         case "4":
             $column_class = "vc_col-sm-3";
+            break;
+        case "5":
+            $column_class = "vc_col-sm-1/5";
             break;
         default:
             $column_class = "vc_col-sm-3";
