@@ -79,13 +79,15 @@ add_action("wp_enqueue_scripts", "salient_child_enqueue_styles", 100);
 if (is_multisite()) {
     $site_id = get_current_blog_id();
     switch ($site_id) {
+        // CCC
+        case "10":
+            require_once "sites/ccc/functions.php";
+            break;
         // O3D
-
         case "13":
             require_once "sites/o3d/functions.php";
             break;
         // NextArch
-
         case "15":
             require_once "sites/nextarch/functions.php";
             break;
