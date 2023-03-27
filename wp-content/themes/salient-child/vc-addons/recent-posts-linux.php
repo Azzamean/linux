@@ -1173,6 +1173,8 @@ function recent_posts_linux($atts, $content)
     } else {
         $output .= esc_html__("No recent posts listed", "recent_posts");
     }
+	//do_action( 'myshortcode_processed', $atts );
+	//do_action( 'myshortcode_processed', $atts['navigation_text'] );
     return $output;
 }
 

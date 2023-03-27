@@ -491,7 +491,7 @@ function format_link_header()
 {
     //while (have_posts()) {
     ///the_post();
-    if (has_post_format("link")) {
+    if (has_post_format("link") && !is_category()) {
         global $post;
         global $nectar_options;
         $link = get_post_meta($post->ID, "_nectar_link", true);
