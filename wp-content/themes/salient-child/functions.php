@@ -23,6 +23,10 @@ require_once "vc-addons/projects-api-linux.php";
 // GET WP BAKERY CUSTOM FIELDS
 require_once "vc-addons/custom-fields/custom-fields.php";
 
+// GET CUSTOM WIDGETS
+require_once "widgets/single-posts-linux.php";
+require_once "widgets/featured-items-linux.php";
+
 // GET CHILD THEME LIBRARIES
 function salient_child_enqueue_styles()
 {
@@ -42,6 +46,12 @@ function salient_child_enqueue_styles()
     wp_enqueue_style(
         "templates-style",
         get_stylesheet_directory_uri() . "/templates/css/templates.css",
+        "",
+        $nectar_theme_version
+    );
+	wp_enqueue_style(
+        "widgets-style",
+        get_stylesheet_directory_uri() . "/widgets/css/widgets.css",
         "",
         $nectar_theme_version
     );
