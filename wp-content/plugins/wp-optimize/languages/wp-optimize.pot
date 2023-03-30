@@ -95,7 +95,7 @@ msgstr ""
 msgid "Last preload finished at %s"
 msgstr ""
 
-#: src/cache/class-wpo-cache-config.php:177
+#: src/cache/class-wpo-cache-config.php:182
 msgid "The cache configuration file could not be saved to the disk; please check the file/folder permissions of %s ."
 msgstr ""
 
@@ -103,7 +103,7 @@ msgstr ""
 msgid "Page cache"
 msgstr ""
 
-#: src/cache/class-wpo-page-cache.php:182, src/minify/class-wp-optimize-minify.php:82
+#: src/cache/class-wpo-page-cache.php:182, src/minify/class-wp-optimize-minify.php:95
 msgid "Cache size:"
 msgstr ""
 
@@ -127,7 +127,7 @@ msgstr ""
 msgid "The page cache was not purged."
 msgstr ""
 
-#: src/cache/class-wpo-page-cache.php:358, src/cache/class-wpo-page-cache.php:1370
+#: src/cache/class-wpo-page-cache.php:358, src/cache/class-wpo-page-cache.php:1375
 msgid "Please check file and directory permissions on the file paths up to this point, and your PHP error log."
 msgstr ""
 
@@ -155,55 +155,55 @@ msgstr ""
 msgid "The page caching could not be disabled: the WP_CACHE constant could not be removed from wp-config.php and the request to the filesystem to remove or empty advanced-cache.php failed."
 msgstr ""
 
-#: src/cache/class-wpo-page-cache.php:748
+#: src/cache/class-wpo-page-cache.php:753
 msgid "The file advanced-cache.php needs to be updated, but the automatic process failed."
 msgstr ""
 
-#: src/cache/class-wpo-page-cache.php:749
+#: src/cache/class-wpo-page-cache.php:754
 msgid "Please try to disable and then re-enable the WP-Optimize cache manually."
 msgstr ""
 
-#: src/cache/class-wpo-page-cache.php:847
+#: src/cache/class-wpo-page-cache.php:852
 msgid "Unable to write to or find wp-config.php; please check file/folder permissions."
 msgstr ""
 
-#: src/cache/class-wpo-page-cache.php:855
+#: src/cache/class-wpo-page-cache.php:860
 msgid "Unable to write the file advanced-cache.php inside the wp-content folder; please check file/folder permissions"
 msgstr ""
 
-#: src/cache/class-wpo-page-cache.php:862
+#: src/cache/class-wpo-page-cache.php:867
 msgid "Unable to write inside the cache files folder (%s); please check file/folder permissions (no cache files will be able to be created otherwise)"
 msgstr ""
 
-#: src/cache/class-wpo-page-cache.php:875
+#: src/cache/class-wpo-page-cache.php:880
 msgid "Unable to write inside the cache configuration folder (%s); please check file/folder permissions"
 msgstr ""
 
-#: src/cache/class-wpo-page-cache.php:1341, src/cache/class-wpo-page-cache.php:1362
+#: src/cache/class-wpo-page-cache.php:1346, src/cache/class-wpo-page-cache.php:1367
 msgid "WP-Optimize:"
 msgstr ""
 
-#: src/cache/class-wpo-page-cache.php:1341
+#: src/cache/class-wpo-page-cache.php:1346
 msgid "Please disable the feature \"Gzip compression\" in PageSpeed Ninja to prevent conflicts."
 msgstr ""
 
-#: src/cache/class-wpo-page-cache.php:1362
+#: src/cache/class-wpo-page-cache.php:1367
 msgid "Please disable the feature \"Gzip compression\" in Far Future Expiration to prevent conflicts."
 msgstr ""
 
-#: src/cache/class-wpo-page-cache.php:1369
+#: src/cache/class-wpo-page-cache.php:1374
 msgid "The request to write the file %s failed."
 msgstr ""
 
-#: src/cache/class-wpo-page-cache.php:1389
+#: src/cache/class-wpo-page-cache.php:1394
 msgid "Every time after the cache has expired"
 msgstr ""
 
-#: src/cache/class-wpo-page-cache.php:1394
+#: src/cache/class-wpo-page-cache.php:1399
 msgid "%d minutes"
 msgstr ""
 
-#: src/cache/class-wpo-page-cache.php:1399
+#: src/cache/class-wpo-page-cache.php:1404
 msgid "Same as cache lifespan: %s"
 msgstr ""
 
@@ -779,108 +779,140 @@ msgstr ""
 msgid "You should speak to your web hosting support to find how to enable it."
 msgstr ""
 
+#: src/includes/class-wp-optimize-notices.php:37
+msgid "Make your site even faster with Premium."
+msgstr ""
+
+#: src/includes/class-wp-optimize-notices.php:38
+msgid "Identify orphaned images, load webpages faster and get premium support."
+msgstr ""
+
+#: src/includes/class-wp-optimize-notices.php:39
+msgid "Get advanced options, like the ability to optimize your site using WP-CLI."
+msgstr ""
+
 #: src/includes/class-wp-optimize-notices.php:40
+msgid "Premium is compatible with WordPress multisite, WooCommerce and other add-ons, including multilingual and multi-currency WordPress plugins."
+msgstr ""
+
+#: src/includes/class-wp-optimize-notices.php:42
+msgid "checkout"
+msgstr ""
+
+#: src/includes/class-wp-optimize-notices.php:47
 msgid "Make sure you backup before you optimize your database"
 msgstr ""
 
-#: src/includes/class-wp-optimize-notices.php:41
+#: src/includes/class-wp-optimize-notices.php:48
 msgid "UpdraftPlus is the world's most trusted backup plugin from the owners of WP-Optimize"
 msgstr ""
 
-#: src/includes/class-wp-optimize-notices.php:51
+#: src/includes/class-wp-optimize-notices.php:58
 msgid "Save Time and Money. Manage multiple WordPress sites from one location."
 msgstr ""
 
-#: src/includes/class-wp-optimize-notices.php:52
+#: src/includes/class-wp-optimize-notices.php:59
 msgid "UpdraftCentral is a highly efficient way to take backup, update and manage multiple WP sites from one location."
 msgstr ""
 
-#: src/includes/class-wp-optimize-notices.php:61
+#: src/includes/class-wp-optimize-notices.php:68
 msgid "Hey - We noticed WP-Optimize has kept your site running fast for a while.  If you like us, please consider leaving a positive review to spread the word.  Or if you have any issues or questions please leave us a support message"
 msgstr ""
 
-#: src/includes/class-wp-optimize-notices.php:61
+#: src/includes/class-wp-optimize-notices.php:68
 msgid "here"
 msgstr ""
 
-#: src/includes/class-wp-optimize-notices.php:61
+#: src/includes/class-wp-optimize-notices.php:68
 msgid "Thank you so much!"
 msgstr ""
 
-#: src/includes/class-wp-optimize-notices.php:82
+#: src/includes/class-wp-optimize-notices.php:89
 msgid "Perform optimizations while your visitors sleep"
 msgstr ""
 
-#: src/includes/class-wp-optimize-notices.php:83
+#: src/includes/class-wp-optimize-notices.php:90
 msgid "WP-Optimize Premium features an advanced scheduling system that allows you to run optimizations at the quietest time of day (or night)."
 msgstr ""
 
-#: src/includes/class-wp-optimize-notices.php:93
+#: src/includes/class-wp-optimize-notices.php:100
 msgid "Manage a multisite installation? Need extra control?"
 msgstr ""
 
-#: src/includes/class-wp-optimize-notices.php:94
+#: src/includes/class-wp-optimize-notices.php:101
 msgid "WP-Optimize Premium's multisite feature includes a locking system that restricts optimization commands to users with the right permissions."
 msgstr ""
 
-#: src/includes/class-wp-optimize-notices.php:104
+#: src/includes/class-wp-optimize-notices.php:111
 msgid "WP-Optimize Premium offers unparalleled choice and flexibility"
 msgstr ""
 
-#: src/includes/class-wp-optimize-notices.php:105
+#: src/includes/class-wp-optimize-notices.php:112
 msgid "Upgrade today to combine over a dozen optimization options."
 msgstr ""
 
-#: src/includes/class-wp-optimize-notices.php:115
+#: src/includes/class-wp-optimize-notices.php:122
 msgid "Remove unwanted images for better site performance."
 msgstr ""
 
-#: src/includes/class-wp-optimize-notices.php:116
+#: src/includes/class-wp-optimize-notices.php:123
 msgid "WP-Optimize Premium comes with a feature to easily remove orphaned images, or images that exceed a certain size from your website."
 msgstr ""
 
-#: src/includes/class-wp-optimize-notices.php:126
+#: src/includes/class-wp-optimize-notices.php:133
 msgid "Power tweaks for advanced users and better site performance."
 msgstr ""
 
-#: src/includes/class-wp-optimize-notices.php:127
+#: src/includes/class-wp-optimize-notices.php:134
 msgid "WP-Optimize Premium comes with the power tweaks that will enable you to improve performance by targeting specific weak points, either in WordPress Core, or in popular plugins."
 msgstr ""
 
-#: src/includes/class-wp-optimize-notices.php:137
+#: src/includes/class-wp-optimize-notices.php:144
 msgid "by"
 msgstr ""
 
-#: src/includes/class-wp-optimize-notices.php:138
+#: src/includes/class-wp-optimize-notices.php:145
 msgid "The WordPress subscription extension for WooCommerce store owners."
 msgstr ""
 
-#: src/includes/class-wp-optimize-notices.php:149
-msgid "Black Friday - 20% off WP-Optimize Premium until November 30th"
+#: src/includes/class-wp-optimize-notices.php:156
+msgid "Black Friday Sale"
 msgstr ""
 
-#: src/includes/class-wp-optimize-notices.php:150, src/includes/class-wp-optimize-notices.php:164, src/includes/class-wp-optimize-notices.php:178, src/includes/class-wp-optimize-notices.php:192
-msgid "To benefit, use this discount code:"
+#: src/includes/class-wp-optimize-notices.php:157
+msgid "Get 20%% off with code %s at %s. Hurry, offer ends 28th November."
 msgstr ""
 
-#: src/includes/class-wp-optimize-notices.php:163
-msgid "Happy New Year - 20% off WP-Optimize Premium until January 14th"
+#: src/includes/class-wp-optimize-notices.php:170
+msgid "New Year Sale"
 msgstr ""
 
-#: src/includes/class-wp-optimize-notices.php:177
-msgid "Spring sale - 20% off WP-Optimize Premium until May 31st"
+#: src/includes/class-wp-optimize-notices.php:171
+msgid "Get 20%% off. Use code %s at %s. Hurry, offer ends 14th January."
 msgstr ""
 
-#: src/includes/class-wp-optimize-notices.php:191
-msgid "Summer sale - 20% off WP-Optimize Premium until July 31st"
+#: src/includes/class-wp-optimize-notices.php:184
+msgid "Spring Sale"
 msgstr ""
 
-#: src/includes/class-wp-optimize-notices.php:205
-msgid "The Updraft Plugin Collection Sale"
+#: src/includes/class-wp-optimize-notices.php:185
+msgid "Get 20%% off. Use code %s at %s. Hurry, offer ends 31st May."
 msgstr ""
 
-#: src/includes/class-wp-optimize-notices.php:206
-msgid "Get 20% off any of our plugins. But hurry - offer ends 30th September, use this discount code:"
+#: src/includes/class-wp-optimize-notices.php:198
+msgid "Summer Sale"
+msgstr ""
+
+#: src/includes/class-wp-optimize-notices.php:199
+msgid "Get 20%% off. Use code %s at %s. Hurry, offer ends 31st July."
+msgstr ""
+
+#: src/includes/class-wp-optimize-notices.php:212
+msgid "The UpdraftPlus Plugin Collection Sale"
+msgstr ""
+
+#: src/includes/class-wp-optimize-notices.php:213
+msgid "Visit any of our websites and use code %s at the checkout to get 20%% off all our plugins. Be quick, offer ends 30th September. "
 msgstr ""
 
 #: src/includes/class-wp-optimize-options.php:157
@@ -1049,15 +1081,15 @@ msgstr ""
 msgid "Probably minify preload is running already."
 msgstr ""
 
-#: src/minify/class-wp-optimize-minify.php:82
+#: src/minify/class-wp-optimize-minify.php:95
 msgid "Minify cache"
 msgstr ""
 
-#: src/minify/class-wp-optimize-minify.php:96
+#: src/minify/class-wp-optimize-minify.php:109
 msgid "Purge minify cache"
 msgstr ""
 
-#: src/minify/class-wp-optimize-minify.php:225
+#: src/minify/class-wp-optimize-minify.php:238
 msgid "The minify cache was successfully purged."
 msgstr ""
 

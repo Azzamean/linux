@@ -24,6 +24,11 @@ class WPO_Cache_Config {
 	 */
 	public static $instance;
 
+	/**
+	 * @var array
+	 */
+	public $config;
+
 
 	/**
 	 * Set config defaults
@@ -244,7 +249,7 @@ class WPO_Cache_Config {
 			'site_url'									=> network_home_url('/'),
 			'enable_cache_per_country'					=> false,
 			'permalink_structure'						=> get_option('permalink_structure'),
-			'uploads'									=> wp_upload_dir()['basedir'],
+			'uploads'									=> wp_normalize_path(wp_upload_dir()['basedir']),
 			'gmt_offset'								=> get_option('gmt_offset'),
 		);
 

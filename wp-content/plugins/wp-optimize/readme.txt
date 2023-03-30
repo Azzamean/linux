@@ -5,7 +5,7 @@ Tags: cache, minify, caching, image cache, performance cache, clean, spam, speed
 Requires PHP: 5.6
 Requires at least: 4.5
 Tested up to: 6.2
-Stable tag: 3.2.13
+Stable tag: 3.2.14
 License: GPLv2+
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -367,6 +367,15 @@ If none of the above works, disable processing of JavaScript files in the minify
 
 == Changelog ==
 
+
+= 3.2.14 - 30/Mar/2023 =
+
+* FIX: Compatibility with WordPress 6.2 when using PHP 8.x
+* FIX: Divi builder's edit mode when WebP serving is using the "alter HTML" method
+* FIX: Premium - Unused images feature - improve compatibility with Beaver Builder and its addons
+* FIX: Cache - Page caching wasn't working on the IIS webserver
+* TWEAK: Update seasonal notices
+* TWEAK: Prevent deprecation notices in PHP 8.2+
 
 = 3.2.13 - 13/Mar/2023 =
 
@@ -1354,4 +1363,4 @@ If none of the above works, disable processing of JavaScript files in the minify
 * Fix Interface
 
 == Upgrade Notice ==
-* 3.2.13: Ability to convert to webp format from media library. A security fix and various tweaks and fixes - a recommended update for all
+* 3.2.14: Fixes (including WP 6.2/PHP 8.X compatibility fixes) - a recommended update for all
