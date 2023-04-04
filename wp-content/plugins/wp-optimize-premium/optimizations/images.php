@@ -858,6 +858,7 @@ class WP_Optimization_images extends WP_Optimization {
 		$this->init_visual_composer();
 
 		$found_images = array();
+		$beaver_builder_images = array();
 		$yoast_seo_images = array();
 		$property_images = array();
 		$acf_images = array();
@@ -916,6 +917,10 @@ class WP_Optimization_images extends WP_Optimization {
 				$yoast_seo_images = array_merge($yoast_seo_images, $yoast_seo_facebook_images, $yoast_seo_twitter_images);
 			}
 
+			if ($this->is_plugin_beaver_builder_active()) {
+				$beaver_builder_data = get_post_meta($post->ID, '_fl_builder_data', true);
+				$beaver_builder_images = array_merge($beaver_builder_images, $this->get_beaver_builder_images($beaver_builder_data));
+			}
 		}
 
 		ob_end_clean();
@@ -923,9 +928,9 @@ class WP_Optimization_images extends WP_Optimization {
 		if (!empty($found_images)) {
 			// get images attachment ids.
 			$post_content_images = array_values($this->get_image_attachment_id_bulk(array_keys($found_images)));
-			return array_unique(array_merge($post_content_images, $property_images, $acf_images, $yoast_seo_images), SORT_NUMERIC);
+			return array_unique(array_merge($post_content_images, $property_images, $acf_images, $yoast_seo_images, $beaver_builder_images), SORT_NUMERIC);
 		} else {
-			return array_unique(array_merge($found_images, $property_images, $acf_images, $yoast_seo_images), SORT_NUMERIC);
+			return array_unique(array_merge($found_images, $property_images, $acf_images, $yoast_seo_images, $beaver_builder_images), SORT_NUMERIC);
 		}
 	}
 
@@ -1354,6 +1359,33 @@ class WP_Optimization_images extends WP_Optimization {
 	 */
 	public function filter_acf_fields_per_type($type) {
 		return $type == $this->acf_field_type;
+	}
+
+	/**
+	 * Get image IDs of images used in beaver builder
+	 *
+	 * @param array|object $data
+	 *
+	 * @return array An array of image ids used in beaver builder
+	 */
+	private function get_beaver_builder_images($data) {
+		$images = array();
+
+		if (is_array($data) || is_object($data)) {
+			foreach ($data as $key => $value) {
+				if (is_array($value) && preg_match('/^carousel_photos$|^ss_photos$/', $key)) {
+					$images = array_merge($images, $value);
+				} elseif (is_array($value) || is_object($value)) {
+					$images = array_merge($images, $this->get_beaver_builder_images($value));
+				} elseif (is_string($key) && preg_match('/bg_image$/', $key)) {
+					if (!empty($value)) {
+						$images[] = $value;
+					}
+				}
+			}
+		}
+
+		return $images;
 	}
 
 	/**
@@ -2905,5 +2937,14 @@ class WP_Optimization_images extends WP_Optimization {
 	 */
 	private function is_plugin_yoast_seo_active() {
 		return is_plugin_active('wordpress-seo/wp-seo.php');
+	}
+
+	/**
+	 * Determines whether site is using Beaver Builder plugin or not
+	 *
+	 * @return boolean
+	 */
+	private function is_plugin_beaver_builder_active() {
+		return is_plugin_active('beaver-builder-lite-version/fl-builder.php') || is_plugin_active('bb-plugin/fl-builder.php') || class_exists('FLBuilderLoader');
 	}
 }

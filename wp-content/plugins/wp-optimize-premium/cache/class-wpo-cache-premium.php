@@ -5,6 +5,14 @@ if (!defined('ABSPATH')) die('No direct access allowed');
 if (!class_exists('WPO_Cache_Premium')) :
 
 class WPO_Cache_Premium {
+
+	/**
+	 * Cache config object
+	 *
+	 * @var mixed
+	 */
+	protected $config;
+
 	/**
 	 * Construct WPO_Cache_Premium - setup filters and actions, initiate class variables
 	 */
@@ -38,7 +46,7 @@ class WPO_Cache_Premium {
 		// Cloudflare initialisation.
 		include_once(WPO_PLUGIN_MAIN_PATH.'/cache/class-wp-optimize-cloudflare-api.php');
 		include_once(WPO_PLUGIN_MAIN_PATH.'/cache/class-wp-optimize-cloudflare.php');
-		$this->cloudflare = new WP_Optimize_Cloudflare($this->config);
+		new WP_Optimize_Cloudflare($this->config);
 
 		// Add action for disable caching for selected posts.
 		add_action('wp', array($this, 'disable_posts_caching'));

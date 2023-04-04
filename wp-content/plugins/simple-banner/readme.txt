@@ -3,8 +3,8 @@ Contributors: rpetersen29
 Donate link: https://www.paypal.me/rpetersenDev
 Tags: banner, bar, top, announcement, notification, simple, bulletin, notice, cta, free
 Requires at least: 3.0.1
-Tested up to: 6.1.1
-Stable tag: 2.13.3
+Tested up to: 6.2.0
+Stable tag: 2.14.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -119,6 +119,15 @@ Set your banner position to <code>relative</code> and try this in 'Website Custo
 4. This is the settings page... and the fourth screen shot.
 
 == Changelog ==
+
+= 2.14.2 =
+* More bug fixes
+
+= 2.14.1 =
+* Bug fix
+
+= 2.14.0 =
+* Wordpress 6.2 support, close button expiration supports fractional days, new remove after date feature
 
 = 2.13.3 =
 * Even more bug fixes
@@ -320,6 +329,15 @@ Set your banner position to <code>relative</code> and try this in 'Website Custo
 * First Version.
 
 == Upgrade Notice ==
+
+= 2.14.2 =
+* More bug fixes
+
+= 2.14.1 =
+* Bug fix
+
+= 2.14.0 =
+* Wordpress 6.2 support, close button expiration supports fractional days, new remove after date feature
 
 = 2.13.3 =
 * Even more bug fixes

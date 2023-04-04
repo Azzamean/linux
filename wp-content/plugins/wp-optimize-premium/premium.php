@@ -10,6 +10,13 @@ class WP_Optimize_Premium {
 	protected $cron_scheduler = null;
 
 	/**
+	 * Stores WP_Optimize_Power_Tweaks instance
+	 *
+	 * @var WP_Optimize_Power_Tweaks
+	 */
+	public $power_tweaks;
+
+	/**
 	 * WP_Optimize_Premium constructor
 	 */
 	public function __construct() {

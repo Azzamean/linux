@@ -1262,7 +1262,7 @@ class Updraft_Smush_Manager extends Updraft_Task_Manager_1_3 {
 		$log_header[] = "Outbound connections: ".(defined('WP_HTTP_BLOCK_EXTERNAL') ? 'Y' : 'N');
 		$log_header[] = "safe_mode: $safe_mode";
 		$log_header[] = "max_execution_time: $max_execution_time";
-		$log_header[] = "memory_limit: $memory_limit (used: ${memory_usage}M | ${total_memory_usage}M)";
+		$log_header[] = "memory_limit: $memory_limit (used: {$memory_usage}M | {$total_memory_usage}M)";
 		$log_header[] = "multisite: ".(is_multisite() ? 'Y' : 'N');
 		$log_header[] = "openssl: ".(defined('OPENSSL_VERSION_TEXT') ? OPENSSL_VERSION_TEXT : 'N');
 

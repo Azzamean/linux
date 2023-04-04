@@ -76,14 +76,15 @@ class WP_Optimize_Minify_Functions {
 	/**
 	 * Functions, get hurl info
 	 *
-	 * @param string $src
+	 * @param mixed $src
+	 *
 	 * @return string
 	 */
 	public static function get_hurl($src) {
 		$wp_home = site_url();
 		$wp_domain = trim(str_ireplace(array('http://', 'https://'), '', trim($wp_home, '/')));
 		// preserve empty source handles
-		$hurl = trim($src);
+		$hurl = null === $src ? '' : trim($src);
 		if (empty($hurl)) {
 			return $hurl;
 		}

@@ -3,7 +3,7 @@
 Plugin Name: WP-Optimize Premium - Clean, Compress, Cache
 Plugin URI: https://getwpo.com
 Description: WP-Optimize makes your site fast and efficient. It cleans the database, compresses images and caches pages. Fast sites attract more traffic and users.
-Version: 3.2.13
+Version: 3.2.14
 Update URI: https://getwpo.com/
 Author: David Anderson, Ruhani Rabin, Team Updraft
 Author URI: https://updraftplus.com
@@ -16,7 +16,7 @@ if (!defined('ABSPATH')) die('No direct access allowed');
 
 // Check to make sure if WP_Optimize is already call and returns.
 if (!class_exists('WP_Optimize')) :
-define('WPO_VERSION', '3.2.13');
+define('WPO_VERSION', '3.2.14');
 define('WPO_PLUGIN_URL', plugin_dir_url(__FILE__));
 define('WPO_PLUGIN_MAIN_PATH', plugin_dir_path(__FILE__));
 define('WPO_PREMIUM_NOTIFICATION', false);
@@ -109,7 +109,7 @@ class WP_Optimize {
 		$dirs = $this->get_class_directories();
 
 		foreach ($dirs as $dir) {
-			$class_file = WPO_PLUGIN_MAIN_PATH . $dir . '/class-' . str_replace('_', '-', strtolower($class_name)) . '.php';
+			$class_file = WPO_PLUGIN_MAIN_PATH . trailingslashit($dir) . 'class-' . str_replace('_', '-', strtolower($class_name)) . '.php';
 			if (file_exists($class_file)) {
 				require_once($class_file);
 				return;
@@ -224,7 +224,7 @@ class WP_Optimize {
 	 */
 	public function load_compatibilities() {
 		WPO_Polylang_Compatibility::instance();
-		WPO_Beaver_Builder_Compatibility::instance();
+		WPO_Page_Builder_Compatibility::instance();
 	}
 
 	/**
@@ -684,7 +684,7 @@ class WP_Optimize {
 				add_action('all_admin_notices', array($this, 'show_admin_notice_upgradead'));
 			}
 		}
-		$this->install_or_update_notice = $this->get_install_or_update_notice();
+
 		if ($this->is_wp_smush_installed()) {
 			add_filter('transient_wp-smush-conflict_check', array($this, 'modify_wp_smush_conflict_check'), 9, 1);
 		}
@@ -1641,11 +1641,11 @@ class WP_Optimize {
 
 		$headers = wp_remote_retrieve_headers($response);
 
-		if (is_a($headers, 'Requests_Utility_CaseInsensitiveDictionary')) {
+		if (method_exists($headers, 'getAll')) {
 			$headers = $headers->getAll();
 		}
 
-		return $headers;
+		return is_array($headers) ? $headers : array();
 	}
 
 	/**
