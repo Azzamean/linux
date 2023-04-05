@@ -36,7 +36,7 @@ get_header();
 				<?php if ($projects_banner != null && $projects_banner_type == "Image") { ?>
 					<div class="row-bg projects-background background-image" style="background-image: url(<?php echo $projects_banner; ?>);"></div>
 				<?php } else { ?>
-					<div class="row-bg projects-background background-image" style="background-color: <?php echo $projects_banner_color; ?>"></div>
+					<div class="row-bg projects-background background-image top" style="background-color: <?php echo $projects_banner_color; ?>"></div>
 				<?php } ?>
 				</div>
 			</div>
@@ -77,7 +77,7 @@ get_header();
       } else {
           $banner = "background-color: " . $accent_color;
       } ?>				
-						<div class="row-bg projects-background" style="<?php echo $banner; ?>"></div>
+						<div class="row-bg projects-background bottom" style="<?php echo $banner; ?>"></div>
 					</div>
 				</div>
 					
@@ -111,10 +111,12 @@ get_header();
 			</div>
 			<!--/full-width-section -->
 			
+			<?php if ($projects_header != "Logo") { ?>
 			<div class="projects-logo wrapper"> 
-				<img src="<?php echo $projects_logo; ?>" />
+				<img src="<?php echo $projects_logo; ?>" />		
 			</div>
-
+			<?php } ?>
+			
 			<div class="row" style="padding-bottom: 0">
 				<div class="projects-post-area col" style="margin-bottom: 0">
 				

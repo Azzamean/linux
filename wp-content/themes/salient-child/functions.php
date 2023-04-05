@@ -110,29 +110,37 @@ function lf_meta_header()
     $site_id = get_current_blog_id();
     $academy_software_foundation =
         '<div class="lfprojects awsf-background"><div class="container"><a href="https://www.aswf.io/projects/" target="_blank" rel="noopener noreferrer"><img src="/wp-content/uploads/banners/aswf_banner_dark.svg"></a></div></div>';
-    $jdf_banner =
+    $jdf_banner_light =
         '<div class="lfprojects white-background jdf"><div class="container"><a href="https://jointdevelopment.org/" target="_blank" rel="noopener noreferrer"><img src="/wp-content/uploads/banners/jdf_banner_color.svg"></a></div></div>';
-    $linux_foundation_white =
+     $jdf_banner_dark =
+        '<div class="lfprojects dark-background jdf"><div class="container"><a href="https://jointdevelopment.org/" target="_blank" rel="noopener noreferrer"><img src="/wp-content/uploads/banners/jdf_banner_light.svg"></a></div></div>';
+    $linux_foundation_light =
         '<div class="lfprojects white-background"><div class="container"><a href="https://www.linuxfoundation.org/projects" target="_blank" rel="noopener noreferrer"><img src="/wp-content/uploads/banners/lfprojects_banner_color.svg"></a></div></div>';
     $linux_foundation_dark =
         '<div class="lfprojects"><div class="container"><a href="https://www.linuxfoundation.org/projects" target="_blank" rel="noopener noreferrer"><img src="/wp-content/uploads/banners/lfprojects_banner_other.svg"></a></div></div>';
 
     switch ($site_id) {
+		
         // DPEL AWSF
-
         case "8":
             echo $academy_software_foundation;
             break;
+			
         // OMPF
-
         case "14":
-            echo $linux_foundation_white;
+            echo $linux_foundation_light;
             break;
+			
         // OVERTURE MAPS FOUNDATION
-
         case "16":
-            echo $jdf_banner;
+            echo $jdf_banner_light;
             break;
+			
+        // ULTRA ETHERNET
+        case "20":
+            echo $jdf_banner_dark;
+            break;			
+			
         default:
             echo $linux_foundation_dark;
     }
