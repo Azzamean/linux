@@ -49,7 +49,7 @@ function salient_child_enqueue_styles()
         "",
         $nectar_theme_version
     );
-	wp_enqueue_style(
+    wp_enqueue_style(
         "widgets-style",
         get_stylesheet_directory_uri() . "/widgets/css/widgets.css",
         "",
@@ -90,14 +90,17 @@ if (is_multisite()) {
     $site_id = get_current_blog_id();
     switch ($site_id) {
         // CCC
+
         case "10":
             require_once "sites/ccc/functions.php";
             break;
         // O3D
+
         case "13":
             require_once "sites/o3d/functions.php";
             break;
         // NextArch
+
         case "15":
             require_once "sites/nextarch/functions.php";
             break;
@@ -107,42 +110,47 @@ if (is_multisite()) {
 // TOP LINUX FOUNDATION PROJECTS HEADER BANNER STRIP
 function lf_meta_header()
 {
-    $site_id = get_current_blog_id();
-    $academy_software_foundation =
-        '<div class="lfprojects awsf-background"><div class="container"><a href="https://www.aswf.io/projects/" target="_blank" rel="noopener noreferrer"><img src="/wp-content/uploads/banners/aswf_banner_dark.svg"></a></div></div>';
-    $jdf_banner_light =
-        '<div class="lfprojects white-background jdf"><div class="container"><a href="https://jointdevelopment.org/" target="_blank" rel="noopener noreferrer"><img src="/wp-content/uploads/banners/jdf_banner_color.svg"></a></div></div>';
-     $jdf_banner_dark =
-        '<div class="lfprojects dark-background jdf"><div class="container"><a href="https://jointdevelopment.org/" target="_blank" rel="noopener noreferrer"><img src="/wp-content/uploads/banners/jdf_banner_light.svg"></a></div></div>';
-    $linux_foundation_light =
-        '<div class="lfprojects white-background"><div class="container"><a href="https://www.linuxfoundation.org/projects" target="_blank" rel="noopener noreferrer"><img src="/wp-content/uploads/banners/lfprojects_banner_color.svg"></a></div></div>';
-    $linux_foundation_dark =
-        '<div class="lfprojects"><div class="container"><a href="https://www.linuxfoundation.org/projects" target="_blank" rel="noopener noreferrer"><img src="/wp-content/uploads/banners/lfprojects_banner_other.svg"></a></div></div>';
+    if (is_multisite()) {
+        $site_id = get_current_blog_id();
+        $academy_software_foundation =
+            '<div class="lfprojects awsf-background"><div class="container"><a href="https://www.aswf.io/projects/" target="_blank" rel="noopener noreferrer"><img src="/wp-content/uploads/banners/aswf_banner_dark.svg"></a></div></div>';
+        $jdf_banner_light =
+            '<div class="lfprojects white-background jdf"><div class="container"><a href="https://jointdevelopment.org/" target="_blank" rel="noopener noreferrer"><img src="/wp-content/uploads/banners/jdf_banner_color.svg"></a></div></div>';
+        $jdf_banner_dark =
+            '<div class="lfprojects dark-background jdf"><div class="container"><a href="https://jointdevelopment.org/" target="_blank" rel="noopener noreferrer"><img src="/wp-content/uploads/banners/jdf_banner_light.svg"></a></div></div>';
+        $linux_foundation_light =
+            '<div class="lfprojects white-background"><div class="container"><a href="https://www.linuxfoundation.org/projects" target="_blank" rel="noopener noreferrer"><img src="/wp-content/uploads/banners/lfprojects_banner_color.svg"></a></div></div>';
+        $linux_foundation_dark =
+            '<div class="lfprojects"><div class="container"><a href="https://www.linuxfoundation.org/projects" target="_blank" rel="noopener noreferrer"><img src="/wp-content/uploads/banners/lfprojects_banner_other.svg"></a></div></div>';
 
-    switch ($site_id) {
-		
-        // DPEL AWSF
-        case "8":
-            echo $academy_software_foundation;
-            break;
-			
-        // OMPF
-        case "14":
-            echo $linux_foundation_light;
-            break;
-			
-        // OVERTURE MAPS FOUNDATION
-        case "16":
-            echo $jdf_banner_light;
-            break;
-			
-        // ULTRA ETHERNET
-        case "20":
-            echo $jdf_banner_dark;
-            break;			
-			
-        default:
-            echo $linux_foundation_dark;
+        switch ($site_id) {
+            // DPEL AWSF
+
+            case "8":
+                echo $academy_software_foundation;
+                break;
+
+            // OMPF
+
+            case "14":
+                echo $linux_foundation_light;
+                break;
+
+            // OVERTURE MAPS FOUNDATION
+
+            case "16":
+                echo $jdf_banner_light;
+                break;
+
+            // ULTRA ETHERNET
+
+            case "20":
+                echo $jdf_banner_dark;
+                break;
+
+            default:
+                echo $linux_foundation_dark;
+        }
     }
 }
 add_action("nectar_hook_after_body_open", "lf_meta_header", 10, 0);
@@ -232,59 +240,75 @@ add_filter(
 );
 
 // REMOVE COMMENTS FUNCTION; CAN BE PLACED IN A MU PLUGIN IF WANTED
-add_action("admin_init", function () {
-    // REDIRECT USERS TRYING TO ACCESS COMMENTS PAGE
-    global $pagenow;
+function remove_comments()
+{
+    add_action("admin_init", function () {
+        // REDIRECT USERS TRYING TO ACCESS COMMENTS PAGE
+        global $pagenow;
 
-    if (
-        $pagenow === "edit-comments.php" ||
-        $pagenow === "options-discussion.php"
-    ) {
-        wp_redirect(admin_url());
-        exit();
-    }
+        if (
+            $pagenow === "edit-comments.php" ||
+            $pagenow === "options-discussion.php"
+        ) {
+            wp_redirect(admin_url());
+            exit();
+        }
 
-    // REMOVE COMMENTS METABOX FROM DASHBOARD
-    remove_meta_box("dashboard_recent_comments", "dashboard", "normal");
+        // REMOVE COMMENTS METABOX FROM DASHBOARD
+        remove_meta_box("dashboard_recent_comments", "dashboard", "normal");
 
-    // DISABLE SUPPORT FOR COMMENTS AND TRACKBACKS IN POST TYPES
-    foreach (get_post_types() as $post_type) {
-        if (post_type_supports($post_type, "comments")) {
-            remove_post_type_support($post_type, "comments");
-            remove_post_type_support($post_type, "trackbacks");
+        // DISABLE SUPPORT FOR COMMENTS AND TRACKBACKS IN POST TYPES
+        foreach (get_post_types() as $post_type) {
+            if (post_type_supports($post_type, "comments")) {
+                remove_post_type_support($post_type, "comments");
+                remove_post_type_support($post_type, "trackbacks");
+            }
+        }
+    });
+
+    // CLOSE COMMENTS ON THE FRONT-END
+    add_filter("comments_open", "__return_false", 20, 2);
+    add_filter("pings_open", "__return_false", 20, 2);
+
+    // HIDE EXISTING COMMENTS
+    add_filter("comments_array", "__return_empty_array", 10, 2);
+
+    // REMOVE COMMENTS PAGE AND OPTION PAGE IN MENU
+    add_action("admin_menu", function () {
+        remove_menu_page("edit-comments.php");
+        remove_submenu_page("options-general.php", "options-discussion.php");
+    });
+
+    // REMOVE COMMENTS LINK FROM ADMIN BAR
+    add_action("add_admin_bar_menus", function () {
+        remove_action("admin_bar_menu", "wp_admin_bar_comments_menu", 60);
+    });
+
+    // REMOVE COMMENTS FROM ADMIN BAR ON MULTISITE
+    add_action("admin_bar_menu", "remove_toolbar_items", PHP_INT_MAX - 1);
+    function remove_toolbar_items($bar)
+    {
+        // global $wp_admin_bar;
+        // $wp_admin_bar->remove_node( 'blog-1-c' );
+        $sites = get_blogs_of_user(get_current_user_id());
+        foreach ($sites as $site) {
+            $bar->remove_node("blog-{$site->userblog_id}-c");
         }
     }
-});
+}
 
-// CLOSE COMMENTS ON THE FRONT-END
-add_filter("comments_open", "__return_false", 20, 2);
-add_filter("pings_open", "__return_false", 20, 2);
-
-// HIDE EXISTING COMMENTS
-add_filter("comments_array", "__return_empty_array", 10, 2);
-
-// REMOVE COMMENTS PAGE AND OPTION PAGE IN MENU
-add_action("admin_menu", function () {
-    remove_menu_page("edit-comments.php");
-    remove_submenu_page("options-general.php", "options-discussion.php");
-});
-
-// REMOVE COMMENTS LINK FROM ADMIN BAR
-add_action("add_admin_bar_menus", function () {
-    remove_action("admin_bar_menu", "wp_admin_bar_comments_menu", 60);
-});
-
-// REMOVE COMMENTS FROM ADMIN BAR ON MULTISITE
-add_action("admin_bar_menu", "remove_toolbar_items", PHP_INT_MAX - 1);
-function remove_toolbar_items($bar)
+function comments_logic()
 {
-    // global $wp_admin_bar;
-    // $wp_admin_bar->remove_node( 'blog-1-c' );
-    $sites = get_blogs_of_user(get_current_user_id());
-    foreach ($sites as $site) {
-        $bar->remove_node("blog-{$site->userblog_id}-c");
+    if (is_multisite()) {
+        $site_id = get_current_blog_id();
+        // CCC
+        if ($site_id != "10") {
+            remove_comments();
+        }
     }
 }
+
+comments_logic();
 
 /******* ADVANCED CUSTOM FIELDS *******/
 
