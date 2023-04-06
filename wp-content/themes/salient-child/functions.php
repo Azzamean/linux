@@ -297,6 +297,19 @@ function remove_comments()
     }
 }
 
+// DEFAULT SETTINGS FOR ALL COMMENTS
+function enable_comments()
+{
+    global $wpdb;
+    $wpdb->query(
+        $wpdb->prepare("UPDATE $wpdb->posts SET comment_status = 'open'")
+    ); // Enable comments
+    $wpdb->query(
+        $wpdb->prepare("UPDATE $wpdb->posts SET ping_status = 'open'")
+    ); // Enable trackbacks
+}
+
+// LOGIC FOR COMMENTS ON SITES
 function comments_logic()
 {
     if (is_multisite()) {
@@ -304,6 +317,9 @@ function comments_logic()
         // CCC
         if ($site_id != "10") {
             remove_comments();
+        }
+        if ($site_id == "10") {
+            enable_comments();
         }
     }
 }
