@@ -298,15 +298,23 @@ function remove_comments()
 }
 
 // DEFAULT SETTINGS FOR ALL COMMENTS
-function enable_comments()
+function enable_comments_posts()
 {
-    global $wpdb;
-    $wpdb->query(
-        $wpdb->prepare("UPDATE $wpdb->posts SET comment_status = 'open'")
-    ); // Enable comments
-    $wpdb->query(
-        $wpdb->prepare("UPDATE $wpdb->posts SET ping_status = 'open'")
-    ); // Enable trackbacks
+    global $pagenow;
+    if (
+        "post.php" === $pagenow &&
+        isset($_GET["post"]) &&
+        "post" !== get_post_type($_GET["post"])
+    ) {
+        remove_comments();
+        global $wpdb;
+        $wpdb->query(
+            $wpdb->prepare("UPDATE $wpdb->posts SET comment_status = 'open'")
+        ); // Enable comments
+        $wpdb->query(
+            $wpdb->prepare("UPDATE $wpdb->posts SET ping_status = 'open'")
+        ); // Enable trackbacks
+    }
 }
 
 // LOGIC FOR COMMENTS ON SITES
@@ -319,7 +327,7 @@ function comments_logic()
             remove_comments();
         }
         if ($site_id == "10") {
-            enable_comments();
+            enable_comments_posts();
         }
     }
 }
