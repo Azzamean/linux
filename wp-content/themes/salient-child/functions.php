@@ -319,7 +319,7 @@ function comments_logic()
             remove_comments();
         }
         if ($site_id == "10") {
-            enable_comments();
+            //enable_comments();
         }
     }
 }
