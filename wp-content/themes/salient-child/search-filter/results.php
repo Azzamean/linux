@@ -62,11 +62,11 @@ if ($query->have_posts()) {
         } else {
             $link = get_permalink();
         }
- 
+
         $output .=
             '<a class="grid-design title" href="' .
             $link .
-            '" target="_blank">' .
+            '">' .
             get_the_title() .
             "</a>";
         $output .=

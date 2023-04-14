@@ -206,11 +206,7 @@ function webinars_linux($atts, $content)
             $iframe = get_field("webinars_video_link");
             preg_match('/src="(.+?)"/', $iframe, $matches);
             $src = $matches[1];
-            $params = [
-                "controls" => 0,
-                "hd" => 1,
-                "autohide" => 1,
-            ];
+            $params = ["controls" => 0, "hd" => 1, "autohide" => 1];
             $new_src = add_query_arg($params, $src);
             $iframe = str_replace($src, $new_src, $iframe);
             $attributes = 'frameborder="0"';
@@ -230,34 +226,62 @@ function webinars_linux($atts, $content)
             if (have_rows("webinars_speakers")):
                 while (have_rows("webinars_speakers")):
                     the_row();
-                    if (
-                        get_row_layout() == "webinars_speakers_names_companies"
-                    ):
+                    if (get_row_layout() == "webinars_speakers_information"):
                         if (
-                            get_sub_field("webinars_speakers_company") != null
-                        ) {
+                            get_sub_field("webinars_speakers_company") !=
+                                null &&
+                            get_sub_field("webinars_speakers_title") != null
+                        ):
                             $output .=
                                 "<h3>" .
                                 '<span class="webinars-speaker">' .
                                 get_sub_field("webinars_speakers_name") .
+                                ", " .
+                                "</span>" .
+                                '<span class="webinars-speaker">' .
+                                get_sub_field("webinars_speakers_title") .
                                 "</span>" .
                                 ", " .
                                 '<span class="webinars-designation">' .
                                 get_sub_field("webinars_speakers_company") .
                                 "</span>" .
                                 "</h3>";
-                        } else {
+                        elseif (
+                            get_sub_field("webinars_speakers_company") !=
+                                null &&
+                            get_sub_field("webinars_speakers_title") == null
+                        ):
+                            $output .=
+                                "<h3>" .
+                                '<span class="webinars-speaker">' .
+                                get_sub_field("webinars_speakers_name") .
+                                ", " .
+                                '<span class="webinars-designation">' .
+                                get_sub_field("webinars_speakers_company") .
+                                "</span>" .
+                                "</h3>";
+                        elseif (
+                            get_sub_field("webinars_speakers_company") ==
+                                null &&
+                            get_sub_field("webinars_speakers_title") != null
+                        ):
+                            $output .=
+                                "<h3>" .
+                                '<span class="webinars-speaker">' .
+                                get_sub_field("webinars_speakers_name") .
+                                ", " .
+                                '<span class="webinars-designation">' .
+                                get_sub_field("webinars_speakers_title") .
+                                "</span>" .
+                                "</h3>";
+                        else:
                             $output .=
                                 "<h3>" .
                                 '<span class="webinars-speaker">' .
                                 get_sub_field("webinars_speakers_name") .
                                 "</span>" .
-                                " " .
-                                '<span class="webinars-designation">' .
-                                get_sub_field("webinars_speakers_company") .
-                                "</span>" .
                                 "</h3>";
-                        }
+                        endif;
                     endif;
                 endwhile;
             else:
@@ -285,7 +309,6 @@ function webinars_linux($atts, $content)
         endwhile;
 
         // PAGINATION
-
         $big = 999999999;
         $output .=
             '<div class="recent-posts-pagination" style="color:#ffffff">';
