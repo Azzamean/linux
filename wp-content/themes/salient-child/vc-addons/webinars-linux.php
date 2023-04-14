@@ -236,12 +236,12 @@ function webinars_linux($atts, $content)
                                 "<h3>" .
                                 '<span class="webinars-speaker">' .
                                 get_sub_field("webinars_speakers_name") .
-                                ", " .
+                                '<span class="webinars-comma">, </span>' .
                                 "</span>" .
                                 '<span class="webinars-speaker">' .
                                 get_sub_field("webinars_speakers_title") .
                                 "</span>" .
-                                ", " .
+                                '<span class="webinars-comma">, </span>' .
                                 '<span class="webinars-designation">' .
                                 get_sub_field("webinars_speakers_company") .
                                 "</span>" .
@@ -255,7 +255,7 @@ function webinars_linux($atts, $content)
                                 "<h3>" .
                                 '<span class="webinars-speaker">' .
                                 get_sub_field("webinars_speakers_name") .
-                                ", " .
+                                '<span class="webinars-comma">, </span>' .
                                 '<span class="webinars-designation">' .
                                 get_sub_field("webinars_speakers_company") .
                                 "</span>" .
@@ -269,7 +269,7 @@ function webinars_linux($atts, $content)
                                 "<h3>" .
                                 '<span class="webinars-speaker">' .
                                 get_sub_field("webinars_speakers_name") .
-                                ", " .
+                                '<span class="webinars-comma">, </span>' .
                                 '<span class="webinars-designation">' .
                                 get_sub_field("webinars_speakers_title") .
                                 "</span>" .
