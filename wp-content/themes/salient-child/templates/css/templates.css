@@ -18,6 +18,11 @@
 	float: none;
 }
 
+.col.span_12.section-title.projects-title {
+	display: flex;
+	align-items: center;
+}
+
 .projects-title-text.white {
 	font-size: 34px;
 	line-height: 42px;
@@ -77,7 +82,7 @@
 	text-align: center;
 	display: flex;
 	justify-content: center;
-	align-items: center;
+	align-items: start;
 	padding: 35px 0;
 	position: relative;
 	margin-bottom: 0 !important;
@@ -135,8 +140,9 @@
 }
 
 .projects-title img {
-    height: 200px;
+	height: 200px;
 	margin: 0 auto;
+	object-fit: contain;
 }
 
 .projects-description-title {

@@ -199,8 +199,8 @@ function webinars_linux($atts, $content)
                 $output .= '<div class="webinars-outer">';
             }
 
-            $speaker = get_field("webinars_speaker");
-            $designation = get_field("webinars_designation");
+            $speaker = get_field("webinars_speakers_name");
+            $designation = get_field("webinars_speakers_title");
             $link = get_field("webinars_video_link", false, false);
 
             $iframe = get_field("webinars_video_link");
@@ -227,20 +227,26 @@ function webinars_linux($atts, $content)
             $output .= '<div class="webinars-inner">';
             $output .=
                 '<h2 class="webinars-title">' . get_the_title() . "</h2>";
+            if (have_rows("webinars_speakers")):
+                while (have_rows("webinars_speakers")):
+                    the_row();
+                    if (get_row_layout() == "webinars_speakers_names_titles"):
+                        $output .=
+                            "<h3>" .
+                            '<span class="webinars-speaker">' .
+                            get_sub_field("webinars_speakers_name") .
+                            "</span>" .
+                            " " .
+                            '<span class="webinars-designation">' .
+                            get_sub_field("webinars_speakers_title") .
+                            "</span>" .
+                            "</h3>";
+                    endif;
+                endwhile;
+            else:
+            endif;
             $output .=
-                "<h3>" .
-                '<span class="webinars-speaker">' .
-                $speaker .
-                "</span>" .
-			' ' .
-                '<span class="webinars-designation">' .
-                $designation .
-                "</span>" .
-                "</h3>";
-            $output .=
-                '<h4 class="webinars-date">' .
-                get_the_date("M j, Y") .
-                "</h4>";
+                '<h4 class="webinars-date">' . get_the_date("M j, Y") . "</h4>";
             $output .=
                 '<div class="webinars-navigation-btn"><a href="' .
                 $link .

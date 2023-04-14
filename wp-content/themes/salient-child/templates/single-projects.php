@@ -16,7 +16,7 @@ if (!defined("ABSPATH")) {
 // GET ACF'S
 include_once "acf/templates-acf.php";
 
-// GET SHORTCODES 
+// GET SHORTCODES
 include_once "global-shortcodes.php";
 
 // GET SALIENT COLORS
@@ -42,28 +42,40 @@ get_header();
 				
 			<div class="hentry projects-heading">
 				<div class="col span_12 section-title projects-title">
-					<?php
-     if ($projects_header == "Logo") {
+					<?php if ($projects_header == "Logo") {
          $header = $projects_logo; ?>
-					<img src="<?php echo $header; ?>" />
-					<?php
-     }
-     if ($projects_header == "Secondary Logo") {
-         $header = $projects_secondary_logo; ?>
-					<img src="<?php echo $header; ?>" />
-					<?php
-     }
-     if (
-         $projects_header != "Logo" &&
-         $projects_header != "Secondary Logo"
-     ) { ?>
-					<h1 class="entry-title" style="color:#ffffff;"><?php the_title(); ?></h1>
-					<?php }
-     if ($projects_excerpt != null && $projects_banner != null) { ?>		
+					<?php if (in_array("yes", $projects_header_excerpt)) {
+         if ($projects_excerpt != null && $projects_banner != null) { ?>		
 						<p class="projects-title-text white"> <?php echo $projects_excerpt; ?> </p>
 					<?php } else { ?> <p class="projects-title-text"> <?php echo $projects_excerpt; ?> </p>
 					<?php }
-     ?>
+     } ?>
+					<img src="<?php echo $header; ?>" />
+					<?php
+     } elseif ($projects_header == "Secondary Logo") {
+         $header = $projects_secondary_logo; ?>
+					<?php if (in_array("yes", $projects_header_excerpt)) {
+         if ($projects_excerpt != null && $projects_banner != null) { ?>		
+						<p class="projects-title-text white"> <?php echo $projects_excerpt; ?> </p>
+					<?php } else { ?> <p class="projects-title-text"> <?php echo $projects_excerpt; ?> </p>
+					<?php }
+     } ?>
+					<img src="<?php echo $header; ?>" />	 
+					<?php
+     } elseif (
+         $projects_header != "Logo" ||
+         $projects_header != "Secondary Logo"
+     ) { ?>
+				
+					<?php if (in_array("yes", $projects_header_excerpt)) {
+         if ($projects_excerpt != null && $projects_banner != null) { ?>		
+						<p class="projects-title-text white"> <?php echo $projects_excerpt; ?> </p>
+					<?php } else { ?> <p class="projects-title-text"> <?php echo $projects_excerpt; ?> </p>
+					<?php }
+     } ?>
+	 <h1 class="entry-title" style="color:#ffffff;"><?php the_title(); ?></h1>
+	 <?php } ?>
+
 				</div>
 			</div>
 		</div>

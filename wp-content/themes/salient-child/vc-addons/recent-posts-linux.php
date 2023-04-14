@@ -1036,7 +1036,7 @@ function recent_posts_linux($atts, $content)
                 $output .=
                     '<a class="grid-design title" href="' .
                     get_permalink() .
-                    '" target="_blank">' .
+                    '">' .
                     get_the_title() .
                     "</a>";
                 if ($dut == true) {
@@ -1107,7 +1107,7 @@ function recent_posts_linux($atts, $content)
                     $output .=
                         '<div class="grid-design navigation-btn"><a href="' .
                         $link .
-                        '" target="_blank" style="background-color:' .
+                        '" style="background-color:' .
                         $accent_color .
                         '">' .
                         $navigation_text .

@@ -295,7 +295,7 @@ function projects_grid($atts, $content)
                 $output .=
                     '<a class="grid-design projects-btn" href="' .
                     get_permalink() .
-                    '" target="_blank"">Learn More</a>';
+                    '"">Learn More</a>';
                 $output .= "</div>";
                 $output .= "</div>";
                 $count++;
@@ -336,7 +336,7 @@ function projects_grid($atts, $content)
                 $output .=
                     '<a class="flipbox-design projects-btn" href="' .
                     get_permalink() .
-                    '" target="_blank" style="color: ' .
+                    '" style="color: ' .
                     $accent_color .
                     '" ">Learn More</a>';
                 $output .= "</div>";

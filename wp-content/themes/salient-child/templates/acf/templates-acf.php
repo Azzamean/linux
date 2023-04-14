@@ -9,6 +9,7 @@ $projects_banner_color = get_field("projects_banner_color", false, false);
 //$projects_secondary_banner_color = get_field("projects_secondary_banner_color", false, false);
 $projects_banner_type = get_field("projects_banner_type");
 $projects_header = get_field("projects_header");
+$projects_header_excerpt = get_field("projects_header_excerpt");
 $projects_excerpt = get_field("projects_excerpt");
 $projects_video = get_field("projects_video");
 $projects_post_category = get_field("projects_post_category");
