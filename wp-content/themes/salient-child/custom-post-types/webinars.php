@@ -66,8 +66,8 @@ if (function_exists("acf_add_local_field_group")):
                 "layouts" => [
                     "layout_64346e5644055" => [
                         "key" => "layout_64346e5644055",
-                        "name" => "webinars_speakers_names_titles",
-                        "label" => "Speakers Name(s) and Title(s)",
+                        "name" => "webinars_speakers_names_companies",
+                        "label" => "Speakers Name(s) and Company(s)",
                         "display" => "block",
                         "sub_fields" => [
                             [
@@ -92,8 +92,8 @@ if (function_exists("acf_add_local_field_group")):
                             ],
                             [
                                 "key" => "field_64346fc36dacd",
-                                "label" => "Speakers Title",
-                                "name" => "webinars_speakers_title",
+                                "label" => "Speakers Company",
+                                "name" => "webinars_speakers_company",
                                 "aria-label" => "",
                                 "type" => "text",
                                 "instructions" => "",

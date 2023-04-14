@@ -200,7 +200,7 @@ function webinars_linux($atts, $content)
             }
 
             $speaker = get_field("webinars_speakers_name");
-            $designation = get_field("webinars_speakers_title");
+            $designation = get_field("webinars_speakers_company");
             $link = get_field("webinars_video_link", false, false);
 
             $iframe = get_field("webinars_video_link");
@@ -226,21 +226,38 @@ function webinars_linux($atts, $content)
 
             $output .= '<div class="webinars-inner">';
             $output .=
-                '<h2 class="webinars-title">' . get_the_title() . "</h2>";
+                '<h2 class="webinars-company">' . get_the_title() . "</h2>";
             if (have_rows("webinars_speakers")):
                 while (have_rows("webinars_speakers")):
                     the_row();
-                    if (get_row_layout() == "webinars_speakers_names_titles"):
-                        $output .=
-                            "<h3>" .
-                            '<span class="webinars-speaker">' .
-                            get_sub_field("webinars_speakers_name") .
-                            "</span>" .
-                            " " .
-                            '<span class="webinars-designation">' .
-                            get_sub_field("webinars_speakers_title") .
-                            "</span>" .
-                            "</h3>";
+                    if (
+                        get_row_layout() == "webinars_speakers_names_companies"
+                    ):
+                        if (
+                            get_sub_field("webinars_speakers_company") != null
+                        ) {
+                            $output .=
+                                "<h3>" .
+                                '<span class="webinars-speaker">' .
+                                get_sub_field("webinars_speakers_name") .
+                                "</span>" .
+                                ", " .
+                                '<span class="webinars-designation">' .
+                                get_sub_field("webinars_speakers_company") .
+                                "</span>" .
+                                "</h3>";
+                        } else {
+                            $output .=
+                                "<h3>" .
+                                '<span class="webinars-speaker">' .
+                                get_sub_field("webinars_speakers_name") .
+                                "</span>" .
+                                " " .
+                                '<span class="webinars-designation">' .
+                                get_sub_field("webinars_speakers_company") .
+                                "</span>" .
+                                "</h3>";
+                        }
                     endif;
                 endwhile;
             else:
