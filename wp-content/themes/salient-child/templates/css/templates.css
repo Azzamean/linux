@@ -21,9 +21,10 @@
 .col.span_12.section-title.projects-title {
 	display: flex;
 	align-items: center;
+	justify-content: center;
 }
 
-.projects-title-text.white {
+.projects-excerpt-text.white {
 	font-size: 34px;
 	line-height: 42px;
 	color: #ffffff;
@@ -93,9 +94,9 @@
 }
 
 .projects-links a i {
-	font-size: 5rem !important;
+	font-size: 4rem !important;
 	border: 5px solid #fff;
-	padding: 70px;
+	padding: 50px;
 	border-radius: 50%;
 	display: flex;
 	justify-content: center;
@@ -140,9 +141,13 @@
 }
 
 .projects-title img {
-	height: 200px;
+	height: 300px;
 	margin: 0 auto;
 	object-fit: contain;
+}
+
+.projects-excerpt-container {
+	margin-left: 50px;
 }
 
 .projects-description-title {

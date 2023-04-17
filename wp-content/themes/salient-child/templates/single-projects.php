@@ -30,6 +30,7 @@ get_header();
 	<div class="container main-content">
 
 		<div class="full-width-section">
+		
 			<div class="row-bg-wrap">
 				<div class="inner-wrap">
 				<?php if ($projects_banner != null && $projects_banner_type == "Image") { ?>
@@ -38,46 +39,59 @@ get_header();
 					<div class="row-bg projects-background background-image" style="background-color: <?php echo $projects_banner_color; ?>"></div>
 				<?php } ?>
 				</div>
-			</div>
-				
+			</div>	
+			
 			<div class="hentry projects-heading">
+			
 				<div class="col span_12 section-title projects-title">
 					<?php if ($projects_header == "Logo") {
          $header = $projects_logo; ?>
-					<?php if (in_array("yes", $projects_header_excerpt)) {
-         if ($projects_excerpt != null && $projects_banner != null) { ?>		
-						<p class="projects-title-text white"> <?php echo $projects_excerpt; ?> </p>
-					<?php } else { ?> <p class="projects-title-text"> <?php echo $projects_excerpt; ?> </p>
-					<?php }
-     } ?>
-					<img src="<?php echo $header; ?>" />
+						 <div class="projects-logo-container">
+							<img src="<?php echo $header; ?>" />
+						 </div>		 
+					<?php if (
+         in_array("yes", $projects_header_excerpt)
+     ) { ?> <div class="projects-excerpt-container"> <?php if (
+     $projects_excerpt != null &&
+     $projects_banner != null
+ ) { ?>		
+						<p class="projects-excerpt-text white"> <?php echo $projects_excerpt; ?> </p>
+						<?php } else { ?> <p class="projects-excerpt-text"> <?php echo $projects_excerpt; ?> </p> <?php } ?></div> <?php } ?>	
 					<?php
      } elseif ($projects_header == "Secondary Logo") {
          $header = $projects_secondary_logo; ?>
-					<?php if (in_array("yes", $projects_header_excerpt)) {
-         if ($projects_excerpt != null && $projects_banner != null) { ?>		
-						<p class="projects-title-text white"> <?php echo $projects_excerpt; ?> </p>
-					<?php } else { ?> <p class="projects-title-text"> <?php echo $projects_excerpt; ?> </p>
-					<?php }
-     } ?>
-					<img src="<?php echo $header; ?>" />	 
+						 <div class="projects-logo-container">
+							<img src="<?php echo $header; ?>" />
+						 </div>
+					<?php if (
+         in_array("yes", $projects_header_excerpt)
+     ) { ?> <div class="projects-excerpt-container"> <?php if (
+     $projects_excerpt != null &&
+     $projects_banner != null
+ ) { ?>		
+						<p class="projects-excerpt-text white"> <?php echo $projects_excerpt; ?> </p>
+						<?php } else { ?> <p class="projects-excerpt-text"> <?php echo $projects_excerpt; ?> </p> <?php } ?></div> <?php } ?>	
 					<?php
      } elseif (
          $projects_header != "Logo" ||
          $projects_header != "Secondary Logo"
      ) { ?>
-				
-					<?php if (in_array("yes", $projects_header_excerpt)) {
-         if ($projects_excerpt != null && $projects_banner != null) { ?>		
-						<p class="projects-title-text white"> <?php echo $projects_excerpt; ?> </p>
-					<?php } else { ?> <p class="projects-title-text"> <?php echo $projects_excerpt; ?> </p>
-					<?php }
-     } ?>
-	 <h1 class="entry-title" style="color:#ffffff;"><?php the_title(); ?></h1>
+					<div class="projects-title-container">	
+					<h1 class=""><?php the_title(); ?></h1>
+					</div>
+					<?php if (
+         in_array("yes", $projects_header_excerpt)
+     ) { ?> <div class="projects-excerpt-container"> <?php if (
+     $projects_excerpt != null &&
+     $projects_banner != null
+ ) { ?>		
+						<p class="projects-excerpt-text white"> <?php echo $projects_excerpt; ?> </p>
+						<?php } else { ?> <p class="projects-excerpt-text"> <?php echo $projects_excerpt; ?> </p> <?php } ?></div> <?php } ?>	
 	 <?php } ?>
-
 				</div>
+				
 			</div>
+			
 		</div>
 		<!--/full-width-section -->
 		
@@ -86,18 +100,19 @@ get_header();
 			
 				<div class="wpb_row vc_row-fluid vc_row top-level vc_row-o-equal-height vc_row-flex vc_row-o-content-middle projects-middle">
 				   <div class="row_col_wrap_12 col span_12 dark left">
-					  <div class="vc_col-sm-6 wpb_column column_container vc_column_container col no-extra-padding inherit_tablet inherit_phone dark-blue-border">
+					  <div class="vc_col-sm-6 wpb_column column_container vc_column_container col no-extra-padding inherit_tablet inherit_phone">
 						 <div class="vc_column-inner">
 							<div class="wpb_wrapper">
-							<strong class="projects-small-title">Video</strong>
+							<h6 class='projects-description-title'>Latest Video</h6>
 							<?php echo $projects_video; ?>
 							</div>
 						 </div>
 					  </div>
-					  <div class="vc_col-sm-6 wpb_column column_container vc_column_container col no-extra-padding inherit_tablet inherit_phone dark-blue-border">
+					  <div class="vc_col-sm-6 wpb_column column_container vc_column_container col no-extra-padding inherit_tablet inherit_phone">
 						 <div class="vc_column-inner">
 							<div class="wpb_wrapper">
-							<strong class="projects-small-title absolute">Blog</strong>
+							<!-- <strong class="projects-small-title absolute">Blog</strong> -->
+							<h6 class='projects-description-title'>Project Updates</h6>
 							<?php echo do_shortcode(
            '[recent_posts_linux_foundation design="grid-design" columns="1" limit="1" offset="" category_id="' .
                $projects_post_category .
