@@ -757,6 +757,7 @@ function recent_posts_linux($atts, $content)
                     if ($categories > 0 && $tags == false) {
                         $i = 0;
                         $comma = "";
+						$output .= "<div>";
                         $output .= " In ";
                         foreach (get_the_category() as $cat) {
                             $output .=
@@ -771,10 +772,12 @@ function recent_posts_linux($atts, $content)
                                 break;
                             }
                         }
+						$output .= "</div>";
                     }
                     if ($categories > 0 && $tags == true) {
                         $i = 0;
                         $comma = "";
+						$output .= "<div>";
                         $output .= " In ";
                         foreach (get_the_category() as $cat) {
                             $output .=
@@ -789,6 +792,7 @@ function recent_posts_linux($atts, $content)
                                 break;
                             }
                         }
+						$output .= "</div>";
                         $output .= get_the_tag_list(", ", ", ");
                     }
                     if ($categories == 0 && $tags == true) {
@@ -845,6 +849,7 @@ function recent_posts_linux($atts, $content)
                     if ($categories > 0 && $tags == false) {
                         $i = 0;
                         $comma = "";
+						$output .= "<div>";
                         $output .= " In ";
                         foreach (get_the_category() as $cat) {
                             $output .=
@@ -859,10 +864,12 @@ function recent_posts_linux($atts, $content)
                                 break;
                             }
                         }
+						$output .= "</div>";
                     }
                     if ($categories > 0 && $tags == true) {
                         $i = 0;
                         $comma = "";
+						$output .= "<div>";
                         $output .= " In ";
                         foreach (get_the_category() as $cat) {
                             $output .=
@@ -877,6 +884,7 @@ function recent_posts_linux($atts, $content)
                                 break;
                             }
                         }
+						$output .= "</div>";
                         $output .= get_the_tag_list(", ", ", ");
                     }
                     if ($categories == 0 && $tags == true) {
