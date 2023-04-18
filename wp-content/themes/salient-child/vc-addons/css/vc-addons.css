@@ -34,7 +34,7 @@
 }
 
 .list-design.right .in-category a {
-	margin-left: 5px;
+	margin-left: 5px !important;
 }
 
 .list-design.full-width {
