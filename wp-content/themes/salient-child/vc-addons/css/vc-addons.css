@@ -33,6 +33,10 @@
 	flex-direction: column;
 }
 
+.list-design.right .in-category a {
+	margin-left: 5px;
+}
+
 .list-design.full-width {
 	flex-basis: 100%;
 	flex-direction: column;
