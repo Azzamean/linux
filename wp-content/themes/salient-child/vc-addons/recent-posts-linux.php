@@ -747,7 +747,8 @@ function recent_posts_linux($atts, $content)
                         $output .= '<p class="list-design date">';
                         $output .=
                             "<span>" . get_the_date("M j, Y") . "</span>";
-                        $output .= " | ";
+                        $output .=
+                            '<span class="list-design separator"> | </span>';
                         $output .=
                             "<span>" .
                             get_the_author_meta("display_name", $author_id) .
@@ -757,7 +758,7 @@ function recent_posts_linux($atts, $content)
                     if ($categories > 0 && $tags == false) {
                         $i = 0;
                         $comma = "";
-						$output .= "<div class='in-category'>";
+                        $output .= "<div class='in-category'>";
                         $output .= " In ";
                         foreach (get_the_category() as $cat) {
                             $output .=
@@ -772,12 +773,12 @@ function recent_posts_linux($atts, $content)
                                 break;
                             }
                         }
-						$output .= "</div>";
+                        $output .= "</div>";
                     }
                     if ($categories > 0 && $tags == true) {
                         $i = 0;
                         $comma = "";
-						$output .= "<div class='in-category'>";
+                        $output .= "<div class='in-category'>";
                         $output .= " In ";
                         foreach (get_the_category() as $cat) {
                             $output .=
@@ -792,7 +793,7 @@ function recent_posts_linux($atts, $content)
                                 break;
                             }
                         }
-						$output .= "</div>";
+                        $output .= "</div>";
                         $output .= get_the_tag_list(", ", ", ");
                     }
                     if ($categories == 0 && $tags == true) {
@@ -839,7 +840,8 @@ function recent_posts_linux($atts, $content)
                         $output .= '<p class="list-design date">';
                         $output .=
                             "<span>" . get_the_date("M j, Y") . "</span>";
-                        $output .= " | ";
+                        $output .=
+                            '<span class="list-design separator"> | </span>';
                         $output .=
                             "<span>" .
                             get_the_author_meta("display_name", $author_id) .
@@ -849,7 +851,7 @@ function recent_posts_linux($atts, $content)
                     if ($categories > 0 && $tags == false) {
                         $i = 0;
                         $comma = "";
-						$output .= "<div class='in-category'>";
+                        $output .= "<div class='in-category'>";
                         $output .= " In ";
                         foreach (get_the_category() as $cat) {
                             $output .=
@@ -864,12 +866,12 @@ function recent_posts_linux($atts, $content)
                                 break;
                             }
                         }
-						$output .= "</div>";
+                        $output .= "</div>";
                     }
                     if ($categories > 0 && $tags == true) {
                         $i = 0;
                         $comma = "";
-						$output .= "<div class='in-category'>";
+                        $output .= "<div class='in-category'>";
                         $output .= " In ";
                         foreach (get_the_category() as $cat) {
                             $output .=
@@ -884,7 +886,7 @@ function recent_posts_linux($atts, $content)
                                 break;
                             }
                         }
-						$output .= "</div>";
+                        $output .= "</div>";
                         $output .= get_the_tag_list(", ", ", ");
                     }
                     if ($categories == 0 && $tags == true) {
@@ -1181,8 +1183,8 @@ function recent_posts_linux($atts, $content)
     } else {
         $output .= esc_html__("No recent posts listed", "recent_posts");
     }
-	//do_action( 'myshortcode_processed', $atts );
-	//do_action( 'myshortcode_processed', $atts['navigation_text'] );
+    //do_action( 'myshortcode_processed', $atts );
+    //do_action( 'myshortcode_processed', $atts['navigation_text'] );
     return $output;
 }
 
