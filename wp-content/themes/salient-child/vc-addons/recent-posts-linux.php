@@ -732,7 +732,7 @@ function recent_posts_linux($atts, $content)
                 if ($dut == false) {
                     // DATE, AUTHOR, CATEGORIES, AND TAGS SECTION
                     if ($date_author == "date") {
-                        $output .= '<p class="list-design date">';
+                        $output .= '<p class="list-design date-calendar">';
                         $output .=
                             "<span>" . get_the_date("M j, Y") . "</span>";
                     }
@@ -744,13 +744,15 @@ function recent_posts_linux($atts, $content)
                             "</span>";
                     }
                     if ($date_author == "date-and-author") {
-                        $output .= '<p class="list-design date">';
+                        $output .= '<p class="list-design date-calendar">';
                         $output .=
-                            "<span>" . get_the_date("M j, Y") . "</span>";
+                            '<span class="list-design date">' .
+                            get_the_date("M j, Y") .
+                            "</span>";
                         $output .=
                             '<span class="list-design separator"> | </span>';
                         $output .=
-                            "<span>" .
+                            '<span class="list-design author">' .
                             get_the_author_meta("display_name", $author_id) .
                             "</span>";
                     }
@@ -825,7 +827,7 @@ function recent_posts_linux($atts, $content)
                 if ($dut == true) {
                     // DATE, AUTHOR, CATEGORIES, AND TAGS SECTION
                     if ($date_author == "date") {
-                        $output .= '<p class="list-design date">';
+                        $output .= '<p class="list-design date-calendar">';
                         $output .=
                             "<span>" . get_the_date("M j, Y") . "</span>";
                     }
@@ -837,13 +839,15 @@ function recent_posts_linux($atts, $content)
                             "</span>";
                     }
                     if ($date_author == "date-and-author") {
-                        $output .= '<p class="list-design date">';
+                        $output .= '<p class="list-design date-calendar">';
                         $output .=
-                            "<span>" . get_the_date("M j, Y") . "</span>";
+                            '<span class="list-design date">' .
+                            get_the_date("M j, Y") .
+                            "</span>";
                         $output .=
                             '<span class="list-design separator"> | </span>';
                         $output .=
-                            "<span>" .
+                            '<span class="list-design author">' .
                             get_the_author_meta("display_name", $author_id) .
                             "</span>";
                     }

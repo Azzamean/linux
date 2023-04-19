@@ -34,7 +34,7 @@
 }
 
 .list-design.right .in-category a {
-    margin-left: 5px !important;
+	margin-left: 5px !important;
 }
 
 .list-design.full-width {
@@ -63,7 +63,7 @@
 	font-size: 0.75rem;
 }
 
-.list-design.date {
+.list-design.date-calendar {
 	font-size: 1rem;
 	line-height: 1.25rem;
 	padding: 0 0 10px 0;
@@ -74,7 +74,7 @@
 	padding-bottom: 0 !important;
 }
 
-.list-design.date:before {
+.list-design.date-calendar:before {
 	content: "\f073";
 	font-family: "FontAwesome";
 	margin: 0 10px 0 0;
