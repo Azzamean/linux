@@ -215,14 +215,26 @@ function webinars_linux($atts, $content)
                 " " . $attributes . "></iframe>",
                 $iframe
             );
-
             $output .= ' <div class="webinars-inner">';
-            $output .= $iframe;
+            if ($matches[1]) {
+                $output .= $iframe;
+            } else {
+                $output .=
+                    '<div class="webinars-non-iframe">' .
+                    get_field("webinars_video_link") .
+                    "</div>";
+            }
             $output .= "</div>";
 
             $output .= '<div class="webinars-inner">';
             $output .=
-                '<h2 class="webinars-company">' . get_the_title() . "</h2>";
+                '<h2 class="webinars-company">' .
+                '<a href="' .
+                get_the_permalink() .
+                '">' .
+                get_the_title() .
+                "</a>" .
+                "</h2>";
             if (have_rows("webinars_speakers")):
                 while (have_rows("webinars_speakers")):
                     the_row();

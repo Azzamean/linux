@@ -16,7 +16,7 @@ if (!defined("ABSPATH")) {
 // GET ACF'S
 include_once "acf/templates-acf.php";
 
-// GET SHORTCODES 
+// GET SHORTCODES
 include_once "global-shortcodes.php";
 
 // GET SALIENT COLORS
