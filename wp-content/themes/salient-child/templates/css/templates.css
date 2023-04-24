@@ -262,6 +262,18 @@
 }
 
 
+
+/* WEBINARS */
+
+.webinars-description,
+.webinars-speakers {
+    padding-top: 30px;
+}
+
+
+
+
+
 /* FONT AWESOME ICON FIXES FOR PROJECTS */
 
 i.fa-solid.fa-calendar-days:before {

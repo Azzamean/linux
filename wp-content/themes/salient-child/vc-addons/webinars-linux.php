@@ -215,7 +215,7 @@ function webinars_linux($atts, $content)
                 " " . $attributes . "></iframe>",
                 $iframe
             );
-            $output .= ' <div class="webinars-inner">';
+            $output .= '<div class="webinars-inner">';
             if ($matches[1]) {
                 $output .= $iframe;
             } else {

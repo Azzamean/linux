@@ -1,7 +1,5 @@
 <?php
-
 // PROJECTS ACF'S
-
 $projects_logo = get_field("projects_logo");
 $projects_secondary_logo = get_field("projects_secondary_logo");
 $projects_banner = get_field("projects_banner");
@@ -94,6 +92,8 @@ $projects_links = [
 */
 
 // WEBINARS ACF'S
-$webinarDescription = get_field("webinars_description");
-$slides = get_field("webinars_slides");
-$video = get_field("webinars_video");
+//$webinarDescription = get_field("webinars_description");
+//$slides = get_field("webinars_slides");
+//$video = get_field("webinars_video");
+$banner = get_field("webinars_banner");
+$description = get_field("webinars_description");

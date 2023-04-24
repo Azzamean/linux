@@ -5,7 +5,7 @@
             Hide Simple Banner
             <br><span style="font-weight:400;">This can hide the banner, essentially applies <code>display: none;</code> to the banner</span>
         </th>
-        <td style="vertical-align:top;">
+        <td>
             <!-- -->
             <input type="radio" id="yes" name="hide_simple_banner" value="yes" <?php echo ((get_option('hide_simple_banner') == 'yes') ? 'checked' : '' ); ?>>
             <label for="yes">yes</label>
@@ -40,7 +40,7 @@
                 The amount of time until the close button action will expire. Enter the amount of days until the close button action will expire (e.g. <code>14</code>), fractions of days (e.g. <code>0.5</code>), or the exact day and time (e.g. <code>21 Feb 2022 15:53:22 GMT</code>). Default is 0.
             </span>
         </th>
-        <td>
+        <td style="vertical-align:top;">
             <input id="close_button_expiration" name="close_button_expiration" style="width:60%;"
                             value="<?php echo esc_attr( get_option('close_button_expiration') ); ?>" />
         </td>
@@ -66,7 +66,7 @@
         <td style="vertical-align:top;">
             <input type="text" id="simple_banner_color" name="simple_banner_color" placeholder="Hex value"
                             value="<?php echo esc_attr( get_option('simple_banner_color') ); ?>" />
-            <input style="height: 30px;width: 100px;" type="color" id="simple_banner_color_show"
+            <input style="height: 30px;width: 100px;vertical-align: inherit;" type="color" id="simple_banner_color_show"
                             value="<?php echo ((get_option('simple_banner_color') == '') ? '#024985' : esc_attr( get_option('simple_banner_color') )); ?>">
         </td>
     </tr>
@@ -79,7 +79,7 @@
         <td style="vertical-align:top;">
             <input type="text" id="simple_banner_text_color" name="simple_banner_text_color" placeholder="Hex value"
                             value="<?php echo esc_attr( get_option('simple_banner_text_color') ); ?>" />
-            <input style="height: 30px;width: 100px;" type="color" id="simple_banner_text_color_show"
+            <input style="height: 30px;width: 100px;vertical-align: inherit;" type="color" id="simple_banner_text_color_show"
                             value="<?php echo ((get_option('simple_banner_text_color') == '') ? '#ffffff' : esc_attr( get_option('simple_banner_text_color') )); ?>">
         </td>
     </tr>
@@ -92,7 +92,7 @@
         <td style="vertical-align:top;">
             <input type="text" id="simple_banner_link_color" name="simple_banner_link_color" placeholder="Hex value"
                             value="<?php echo esc_attr( get_option('simple_banner_link_color') ); ?>" />
-            <input style="height: 30px;width: 100px;" type="color" id="simple_banner_link_color_show"
+            <input style="height: 30px;width: 100px;vertical-align: inherit;" type="color" id="simple_banner_link_color_show"
                             value="<?php echo ((get_option('simple_banner_link_color') == '') ? '#f16521' : esc_attr( get_option('simple_banner_link_color') )); ?>">
         </td>
     </tr>
@@ -105,7 +105,7 @@
         <td style="vertical-align:top;">
             <input type="text" id="simple_banner_close_color" name="simple_banner_close_color" placeholder="Hex value"
                             value="<?php echo esc_attr( get_option('simple_banner_close_color') ); ?>" />
-            <input style="height: 30px;width: 100px;" type="color" id="simple_banner_close_color_show"
+            <input style="height: 30px;width: 100px;vertical-align: inherit;" type="color" id="simple_banner_close_color_show"
                             value="<?php echo ((get_option('simple_banner_close_color') == '') ? 'black' : esc_attr( get_option('simple_banner_close_color') )); ?>">
         </td>
     </tr>
@@ -125,7 +125,7 @@
             Simple Banner Custom CSS
         </th>
         <td>
-            <span style="font-weight:400;">CSS will be applied directly to the <code>simple-banner</code> class, the <code>simple-banner-scrolling</code> class for scrolling styles, the <code>simple-banner-text</code> class for text specific styles, and the <code>simple-banner-button</code> class for close button specific styles.</span>
+            <span style="font-weight:400;">CSS will be applied directly to the <code>simple-banner</code> class, the <code>simple-banner-scrolling</code> class for styles applied as the page scrolls, the <code>simple-banner-text</code> class for text specific styles, and the <code>simple-banner-button</code> class for close button specific styles.</span>
             <strong style="color:red;">Be very careful, bad CSS can break the banner.</strong>
         </td>
     </tr>
@@ -159,7 +159,7 @@
     <tr valign="top">
         <th scope="row">
             Simple Banner Position
-            <br><span style="font-weight:400;">Change the <code>position</code> value of your banner. More information <a target="_blank" href="https://www.w3schools.com/cssref/pr_class_position.asp">here</a></span>
+            <br><span style="font-weight:400;">Change the <code>position</code> value of your banner. More information <a target="_blank" href="https://developer.mozilla.org/en-US/docs/Web/CSS/position">here</a>.</span>
         </th>
         <td style="vertical-align:top;">
             <!-- -->
