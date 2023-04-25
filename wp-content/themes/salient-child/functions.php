@@ -567,3 +567,9 @@ function format_link_header()
     //}
 }
 add_action("wp_head", "format_link_header", 1);
+
+// ALLOW EDITORS TO ACCESS THE APPEARANCE TAB AND ITS CHILDREN
+$roleObject = get_role("editor");
+if (!$roleObject->has_cap("edit_theme_options")) {
+    $roleObject->add_cap("edit_theme_options");
+}
