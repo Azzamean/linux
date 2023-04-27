@@ -154,7 +154,43 @@ function lf_meta_header()
     }
 }
 add_action("nectar_hook_after_body_open", "lf_meta_header", 10, 0);
+// ALLOW EDITORS TO ACCESS THE APPEARANCE TAB AND ITS CHILDREN
+function editor_appearance_access()
+{
+    $roleObject = get_role("editor");
+    if (!$roleObject->has_cap("edit_theme_options")) {
+        $roleObject->add_cap("edit_theme_options");
+    }
+}
 
+// LOGIC FOR COMMENTS ON SITES
+function editor_granted_appearance_access()
+{
+    if (is_multisite()) {
+        $site_id = get_current_blog_id();
+        // LF Energy
+        if ($site_id == "18") {
+            editor_appearance_access();
+        }
+    }
+}
+editor_granted_appearance_access();
+// LOGIC FOR COMMENTS ON SITES
+function comments_logic()
+{
+    if (is_multisite()) {
+        $site_id = get_current_blog_id();
+        // CCC
+        if ($site_id != "10") {
+            remove_comments();
+        }
+        if ($site_id == "10") {
+            enable_comments_posts();
+        }
+    }
+}
+
+comments_logic();
 // CUSTOM POST TYPE TEMPLATES FROM A DIRECTORY
 function custom_post_types_templates($template)
 {
@@ -316,23 +352,6 @@ function enable_comments_posts()
         ); // Enable trackbacks
     }
 }
-
-// LOGIC FOR COMMENTS ON SITES
-function comments_logic()
-{
-    if (is_multisite()) {
-        $site_id = get_current_blog_id();
-        // CCC
-        if ($site_id != "10") {
-            remove_comments();
-        }
-        if ($site_id == "10") {
-            enable_comments_posts();
-        }
-    }
-}
-
-comments_logic();
 
 /******* ADVANCED CUSTOM FIELDS *******/
 
@@ -567,9 +586,3 @@ function format_link_header()
     //}
 }
 add_action("wp_head", "format_link_header", 1);
-
-// ALLOW EDITORS TO ACCESS THE APPEARANCE TAB AND ITS CHILDREN
-$roleObject = get_role("editor");
-if (!$roleObject->has_cap("edit_theme_options")) {
-    $roleObject->add_cap("edit_theme_options");
-}
