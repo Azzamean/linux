@@ -23,7 +23,7 @@
             <tr valign="top">
                 <th scope="row">
                     Permissions
-                    <br><span style="font-weight:400;">Allow roles to edit Simple Banner.</span>
+                    <div>Allow roles to edit Simple Banner.</div>
                 </th>
                 <td>
                     <div id="simple_banner_pro_permissions">
@@ -60,11 +60,10 @@
             <th scope="row">
                 <span style="color: limegreen;">NEW</span>
                 Insert Inside Element
-                <br>
-                <span style="font-weight:400;">
+                <div>
                     Insert the banner inside a specific element on your page.
                     (e.g. <code>header</code> for the header element or <code>#main-navigation</code> for an id attribute). Default is <code>body</code>.
-                </span>
+                </div>
             </th>
             <td style="vertical-align:top;">
                 <?php
@@ -87,10 +86,9 @@
             <th scope="row">
                 <span style="color: limegreen;">NEW</span>
                 Remove After Date
-                <br>
-                <span style="font-weight:400;">
+                <div>
                     This can remove the banner after a given date. Enter the exact day and time (e.g. <code>21 Feb 2022 15:53:22 GMT</code>).
-                </span>
+                </div>
             </th>
             <td style="vertical-align:top;">
                 <?php
@@ -106,10 +104,9 @@
         <tr valign="top">
             <th scope="row">
                 Disabled on Posts
-                <br>
-                <span style="font-weight:400;">
+                <div>
                     Disable Simple Banner on all posts.
-                </span>
+                </div>
             </th>
             <td style="padding-top:0;">
                 <?php
@@ -126,7 +123,7 @@
         <tr valign="top">
             <th scope="row">
                 Disabled Pages
-                <br><span style="font-weight:400;">Disable Simple Banner on the following pages.</span>
+                <div>Disable Simple Banner on the following pages.</div>
             </th>
             <td>
                 <div id="simple_banner_pro_disabled_pages">
@@ -165,7 +162,7 @@
         <tr valign="top">
             <th scope="row">
                 Website Custom CSS
-                <br><span style="font-weight:400;">CSS will be applied to the entire website</span>
+                <div>CSS will be applied to the entire website</div>
             </th>
             <td>
                 <?php
@@ -196,7 +193,7 @@
         <tr valign="top">
             <th scope="row">
                 Website Custom JS
-                <br><span style="font-weight:400;">JavaScript will be applied to the entire website</span>
+                <div>JavaScript will be applied to the entire website</div>
             </th>
             <td>
                 <?php
@@ -227,7 +224,7 @@
         <tr valign="top">
             <th scope="row">
                 Debug Mode
-                <br><span style="font-weight:400;">If enabled, will log all variables in the console of your browser</span>
+                <div>If enabled, will log all variables in the console of your browser</div>
             </th>
             <td>
                 <?php
