@@ -150,7 +150,7 @@ get_header();
 			</div>
 
 		<div class="projects-bottom-navigation">
-			<a class="back-to-all" href="/projects/">< Back To All Projects</a>
+			<a class="back-to-all" href="/our-projects/">< Back To All Projects</a>
 			<a class="view-next" href="<?php echo $next_post_link_url; ?>">View Next Project ></a>
 		</div>
 	
