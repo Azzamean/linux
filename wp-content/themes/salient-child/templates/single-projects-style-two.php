@@ -83,7 +83,7 @@ get_header();
 					
 				<div class="top-information">
 					<div class="col span_3 top-information-left">
-					<a href="/projects/">Back To All Projects</a>
+					<a href="/our-projects/">Back To All Projects</a>
 					</div>
 					<div class="col span_6 top-information-middle">
 					<?php if (have_rows("projects_icon_urls")):
