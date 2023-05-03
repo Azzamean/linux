@@ -203,8 +203,15 @@
 
 .top-information {
 	display: flex;
-
 	padding: 15px 35px;
+	align-items: center;
+}
+
+.top-information .projects-icon-name {
+	font-size: 12px;
+	padding-bottom: 0;
+	color: #666666;
+	margin-top: -10px;
 }
 
 .top-information a {
@@ -228,6 +235,7 @@
 
 .top-information-middle .projects-icons {
 	margin: 0 25px;
+	text-align: center;
 }
 
 .top-information-right {
@@ -262,16 +270,12 @@
 }
 
 
-
 /* WEBINARS */
 
 .webinars-description,
 .webinars-speakers {
-    padding-top: 30px;
+	padding-top: 30px;
 }
-
-
-
 
 
 /* FONT AWESOME ICON FIXES FOR PROJECTS */

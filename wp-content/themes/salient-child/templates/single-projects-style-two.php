@@ -16,14 +16,14 @@ if (!defined("ABSPATH")) {
 // GET ACF'S
 include_once "acf/templates-acf.php";
 
-// GET SHORTCODES 
+// GET SHORTCODES
 include_once "global-shortcodes.php";
 
 // GET SALIENT COLORS
 $nectar_options = get_nectar_theme_options();
 $accent_color = $nectar_options["accent-color"];
 //$templateFile = get_page_template_slug(get_queried_object_id());if ($templateFile == null){echo "This is the default template";}else{echo "This is the template file: " . $templateFile;}
-$next_post_link_url = get_permalink( get_adjacent_post(false,'',false)->ID );
+$next_post_link_url = get_permalink(get_adjacent_post(false, "", false)->ID);
 get_header();
 ?>
 
@@ -99,13 +99,16 @@ get_header();
                      "'>" .
                      $projects_icon .
                      "</a>";
+                 echo "<p class='projects-icon-name'>" .
+                     $projects_icon_name .
+                     "</p>";
                  echo "</div>";
              endif;
          endwhile;
      endif; ?>
 					</div>
 					<div class="col span_3 top-information-right">
-					<a href="<?php echo $next_post_link_url  ?>">View Next Project</a>
+					<a href="<?php echo $next_post_link_url; ?>">View Next Project</a>
 					</div>	
 				</div>
 			</div>
@@ -148,7 +151,7 @@ get_header();
 
 		<div class="projects-bottom-navigation">
 			<a class="back-to-all" href="/projects/">< Back To All Projects</a>
-			<a class="view-next" href="<?php echo $next_post_link_url  ?>">View Next Project ></a>
+			<a class="view-next" href="<?php echo $next_post_link_url; ?>">View Next Project ></a>
 		</div>
 	
 		<?php echo global_shortcode(); ?>
