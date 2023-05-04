@@ -108,7 +108,18 @@ get_header();
      endif; ?>
 					</div>
 					<div class="col span_3 top-information-right">
-					<a href="<?php echo $next_post_link_url; ?>">View Next Project</a>
+					<!-- <a href="">View Next Project</a> -->
+					<?php
+						if( get_adjacent_post(false, '', true) ) { 
+							previous_post_link('%link', 'View Next Project');
+						} else { 
+
+								$last = new WP_Query('post_type=projects&posts_per_page=1&order=DESC'); $last->the_post();
+
+							echo '<a href="' . get_permalink() . '">View Next Project</a>';
+							wp_reset_postdata();
+						}; 
+					?>
 					</div>	
 				</div>
 			</div>
