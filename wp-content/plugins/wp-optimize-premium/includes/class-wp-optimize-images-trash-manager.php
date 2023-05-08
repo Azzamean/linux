@@ -5,11 +5,11 @@
 
 if (!defined('ABSPATH')) die('Access denied.');
 
-if (!class_exists('Updraft_Task_Manager_1_3')) require_once(WPO_PLUGIN_MAIN_PATH . 'vendor/team-updraft/common-libs/src/updraft-tasks/class-updraft-task-manager.php');
+if (!class_exists('Updraft_Task_Manager_1_4')) require_once(WPO_PLUGIN_MAIN_PATH . 'vendor/team-updraft/common-libs/src/updraft-tasks/class-updraft-task-manager.php');
 
 if (!class_exists('WP_Optimize_Images_Trash_Manager')) :
 
-class WP_Optimize_Images_Trash_Manager extends Updraft_Task_Manager_1_3 {
+class WP_Optimize_Images_Trash_Manager extends Updraft_Task_Manager_1_4 {
 
 	protected $options;
 

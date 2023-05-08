@@ -18,9 +18,9 @@ function wpo_cache_get_visitor_country_code() {
 	$defaults = wpo_cache_config_get('default_values');
 
 	// 1. check if the server has geolocated the user already:
-	if (!empty($_SERVER["HTTP_CF_IPCOUNTRY"])) {
+	if (!empty($_SERVER['HTTP_CF_IPCOUNTRY']) && !in_array($_SERVER['HTTP_CF_IPCOUNTRY'], array('XX', 'T1'))) {
 		// CloudFlare has a variable available.
-		$country_code = strtoupper($_SERVER["HTTP_CF_IPCOUNTRY"]);
+		$country_code = strtoupper($_SERVER['HTTP_CF_IPCOUNTRY']);
 	} elseif (!empty($_SERVER['GEOIP_COUNTRY_CODE'])) {
 		// WP.com VIP has a variable available.
 		$country_code = strtoupper($_SERVER['GEOIP_COUNTRY_CODE']);

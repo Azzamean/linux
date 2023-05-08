@@ -263,11 +263,32 @@ var WPO_LazyLoad = function() {
 	 */
 	function handle(element) {
 		remove_class(element, settings.select_class);
-
+		if (is_element_in_viewport(element)) {
+			if (element.dataset.hasOwnProperty('src')) {
+				element.src = element.dataset.src;
+			}
+			if (element.dataset.hasOwnProperty('srcset')) {
+				element.srcset = element.dataset.srcset;
+			}
+			return;
+		}
 		if (!has_class(element, settings.observe_class)) {
 			add_class(element, settings.observe_class);
 			intersection_observer.observe(element);
 		}
+	}
+
+	/**
+	 * Checks if given element is within viewport or not
+	 *
+	 * @param {object} element
+	 *
+	 * @return {boolean}
+	 */
+	function is_element_in_viewport(element) {
+		const rect = element.getBoundingClientRect();
+		const window_height = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
+		return rect.top > 0 && rect.top < window_height;
 	}
 
 	/**

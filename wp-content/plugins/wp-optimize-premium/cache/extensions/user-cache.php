@@ -18,14 +18,6 @@ if (!empty($GLOBALS['wpo_cache_config']['enable_user_specific_cache'])) {
 if (!function_exists('wpo_username_from_cookies')) :
 function wpo_username_from_cookies() {
 
-	global $wpdb;
-
-	// initialize database if it isn't initialized.
-	if (!$wpdb) {
-		require_wp_db();
-		wp_set_wpdb_vars();
-	}
-
 	// if salt value doesn't exist in configuration the return.
 	if (empty($GLOBALS['wpo_cache_config']['wp_salt_logged_in'])) return false;
 
@@ -43,6 +35,14 @@ function wpo_username_from_cookies() {
 
 	// if cookies expired then return false.
 	if ($expiration < time()) return false;
+
+	global $wpdb;
+
+	// initialize database if it isn't initialized.
+	if (!$wpdb) {
+		require_wp_db();
+		wp_set_wpdb_vars();
+	}
 
 	// get user password hash from database.
 	$user = $wpdb->get_row($wpdb->prepare("SELECT user_pass FROM {$wpdb->users} WHERE user_login=%s", $username));
@@ -226,6 +226,31 @@ function wpo_we_cache_per_role() {
 }
 
 endif;
+
+if (!function_exists('str_contains')) :
+	/**
+	 * Polyfill for `str_contains()` function added in PHP 8.0.
+	 *
+	 * This polyfill is necessary because the current codebase relies on the `class-wpdb.php` file, which
+	 * utilizes the `str_contains()` function. Without this polyfill, a PHP fatal error may occur when
+	 * running on MariaDB with a version prefix of '5.5.5-' and PHP versions earlier than 8.0.
+	 *
+	 * Note: We chose this solution over including `wp-includes/compat.php` using `require_once` to avoid
+	 * introducing different types of fatal errors. This is because `compat.php` will be loaded later
+	 * in `wp-settings.php` via a `require` statement (as opposed to `require_once`).
+	 *
+	 * @link https://github.com/WordPress/wordpress-develop/blob/6.2.0/src/wp-includes/class-wpdb.php#L4041
+	 *       Usage of `str_contains()` function inside `class-wpdb.php` file.
+	 *
+	 * @param string $haystack The string to search in.
+	 * @param string $needle   The substring to search for in the haystack.
+	 * @return bool True if `$needle` is in `$haystack`, otherwise false.
+	 */
+	function str_contains($haystack, $needle) {
+		return ('' === $needle || false !== strpos($haystack, $needle));
+	}
+endif;
+
 
 /**
  * Add cache filename filter when we cache per role

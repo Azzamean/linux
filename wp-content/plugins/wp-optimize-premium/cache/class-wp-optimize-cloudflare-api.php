@@ -173,7 +173,7 @@ class WP_Optimize_Cloudflare_API {
 			'method' => $method,
 			'timeout' => 30,
 			'headers' => $headers,
-			'body' => json_encode($params),
+			'body' => empty($params) ? null : json_encode($params),
 		);
 
 		$url = self::API_URL . $endpoint. (!empty($query_params) ? '?'.http_build_query($query_params) : '');

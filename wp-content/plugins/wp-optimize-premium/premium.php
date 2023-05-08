@@ -76,6 +76,11 @@ class WP_Optimize_Premium {
 
 		add_action('admin_init', array($this, 'handle_unused_images_csv'));
 
+		/**
+		 * Add action for loading 3rd party plugin compatibilities.
+		 */
+		add_action('wpo_load_compatibilities', array($this, 'load_compatibilities'));
+
 		$this->schedule_image_optimization_jobs();
 		$this->include_lazy_load();
 		$this->include_images_trash();
@@ -553,8 +558,6 @@ class WP_Optimize_Premium {
 			'unused_images_per_page' => apply_filters('wpo_unused_images_per_page', 99),
 			'add_schedule_cancel' => __('Cancel', 'wp-optimize'),
 			'add_schedule_new' => __('Add schedule', 'wp-optimize'),
-			'delete_logger' => __('Delete', 'wp-optimize'),
-			'add_logger' => __('Add', 'wp-optimize'),
 		);
 		return array_merge($translations, $premium_translations);
 	}
@@ -725,6 +728,13 @@ class WP_Optimize_Premium {
 				die('Security check');
 			}
 		}
+	}
+
+	/**
+	 * Adds 3rd party plugin compatibilities.
+	 */
+	public function load_compatibilities() {
+		WPO_WCML_Compatibility::instance();
 	}
 	
 	/**

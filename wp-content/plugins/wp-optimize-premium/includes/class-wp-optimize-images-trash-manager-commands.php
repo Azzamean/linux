@@ -25,7 +25,7 @@ class WP_Optimize_Images_Trash_Manager_Commands extends Updraft_Task_Manager_Com
 	 */
 	public static function get_allowed_ajax_commands() {
 
-		$commands = apply_filters('updraft_task_manager_allowed_ajax_commands', array());
+		$commands = parent::get_allowed_ajax_commands();
 
 		$trash_commands = array(
 			'move_images_to_trash',
