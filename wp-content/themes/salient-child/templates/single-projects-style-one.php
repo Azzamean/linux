@@ -59,10 +59,17 @@ get_header();
      ) { ?>
 					<h1 class="entry-title" style="color:#ffffff;"><?php the_title(); ?></h1>
 					<?php }
-     if ($projects_excerpt != null && $projects_banner != null) { ?>		
-						<p class="projects-title-text white"> <?php echo $projects_excerpt; ?> </p>
-					<?php } else { ?> <p class="projects-title-text"> <?php echo $projects_excerpt; ?> </p>
-					<?php }
+
+     foreach ($projects_header_excerpt as $value) {
+         $values[] = $value;
+     }
+     if (
+         $projects_excerpt != null &&
+         $projects_banner != null &&
+         $value == "yes"
+     ) 
+	 //echo implode(',', $values);
+	 { ?><h1 class="projects-title-text white"> <?php echo $projects_excerpt; ?> </h1> <?php } else {}
      ?>
 				</div>
 			</div>

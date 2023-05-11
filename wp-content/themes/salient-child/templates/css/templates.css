@@ -24,6 +24,18 @@
 	justify-content: center;
 }
 
+.col.span_12.section-title.projects-title img {
+	max-height: 200px;
+	max-width: 500px;
+	object-fit: contain;
+}
+
+h1.projects-title-text.white {
+	font-size: 38px;
+	line-height: 46px;
+	margin-left: 30px;
+}
+
 .projects-excerpt-text.white {
 	font-size: 34px;
 	line-height: 42px;
