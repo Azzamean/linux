@@ -26,6 +26,7 @@ require_once "vc-addons/custom-fields/custom-fields.php";
 // GET CUSTOM WIDGETS
 require_once "widgets/single-posts-linux.php";
 require_once "widgets/featured-items-linux.php";
+require_once "widgets/testing-new-posts.php";
 
 // GET CHILD THEME LIBRARIES
 function salient_child_enqueue_styles()
