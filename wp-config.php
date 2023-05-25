@@ -121,8 +121,10 @@ if ( ! empty( $_ENV['PANTHEON_ENVIRONMENT'] ) ) {
 /** Absolute path to the WordPress directory. */
 if ( !defined('ABSPATH') )
 	define('ABSPATH', dirname(__FILE__) . '/');
+
 /** Sets up WordPress vars and included files. */
 require_once(ABSPATH . 'wp-settings.php');
+
 /* ALLOW ALL FILE TYPES; EXAMPLE: SVG's */
 define('ALLOW_UNFILTERED_UPLOADS', true);
 
