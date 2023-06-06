@@ -5,7 +5,7 @@
         'type' => 'wordpress-plugin',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
-        'reference' => '9e41dcec653b7a542acc4cf7c3f9908f836ca345',
+        'reference' => '8f5ae9ce472952520bde76244ccbd6741918e5d3',
         'name' => 'publishpress/publishpress-authors',
         'dev' => false,
     ),
@@ -43,7 +43,7 @@
             'type' => 'wordpress-plugin',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
-            'reference' => '9e41dcec653b7a542acc4cf7c3f9908f836ca345',
+            'reference' => '8f5ae9ce472952520bde76244ccbd6741918e5d3',
             'dev_requirement' => false,
         ),
         'publishpress/publishpress-instance-protection' => array(

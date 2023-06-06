@@ -5,7 +5,7 @@
 //grant_super_admin(5);
 /* Osano code for tracking */
 
-add_action('template_redirect', function () {
+add_action("template_redirect", function () {
     ob_start();
 });
 

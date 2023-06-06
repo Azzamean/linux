@@ -110,7 +110,11 @@ function cptui_register_my_taxes_projects_stage()
 }
 add_action("init", "cptui_register_my_taxes_projects_stage");
 
-if (function_exists("acf_add_local_field_group")):
+add_action("acf/include_fields", function () {
+    if (!function_exists("acf_add_local_field_group")) {
+        return;
+    }
+
     acf_add_local_field_group([
         "key" => "group_63a0d06a0a370",
         "title" => "Projects",
@@ -352,6 +356,30 @@ if (function_exists("acf_add_local_field_group")):
                 "multiple" => 0,
             ],
             [
+                "key" => "field_647faeddc6cf7",
+                "label" => "Projects Category",
+                "name" => "projects_category",
+                "aria-label" => "",
+                "type" => "taxonomy",
+                "instructions" =>
+                    "Please enter the projects category (this will link to the projects selected category)",
+                "required" => 0,
+                "conditional_logic" => 0,
+                "wrapper" => [
+                    "width" => "",
+                    "class" => "",
+                    "id" => "",
+                ],
+                "taxonomy" => "projects_category",
+                "add_term" => 0,
+                "save_terms" => 0,
+                "load_terms" => 0,
+                "return_format" => "id",
+                "field_type" => "select",
+                "allow_null" => 0,
+                "multiple" => 0,
+            ],
+            [
                 "key" => "field_63a0d4b97218a",
                 "label" => "Icon URLs",
                 "name" => "projects_icon_urls",
@@ -492,6 +520,100 @@ if (function_exists("acf_add_local_field_group")):
                 "media_upload" => 1,
                 "delay" => 0,
             ],
+            [
+                "key" => "field_647faf3b5a2a9",
+                "label" => "Case Studies",
+                "name" => "projects_case_studies",
+                "aria-label" => "",
+                "type" => "flexible_content",
+                "instructions" => "",
+                "required" => 0,
+                "conditional_logic" => 0,
+                "wrapper" => [
+                    "width" => "",
+                    "class" => "",
+                    "id" => "",
+                ],
+                "layouts" => [
+                    "layout_647faf3ce73cd" => [
+                        "key" => "layout_647faf3ce73cd",
+                        "name" => "projects_add_case_study",
+                        "label" => "Add Projects Case Study",
+                        "display" => "block",
+                        "sub_fields" => [
+                            [
+                                "key" => "field_647faf5e5a2aa",
+                                "label" => "Case Studies Image",
+                                "name" => "projects_case_studies_image",
+                                "aria-label" => "",
+                                "type" => "image",
+                                "instructions" =>
+                                    "Please enter an image for your case study",
+                                "required" => 0,
+                                "conditional_logic" => 0,
+                                "wrapper" => [
+                                    "width" => "",
+                                    "class" => "",
+                                    "id" => "",
+                                ],
+                                "return_format" => "url",
+                                "library" => "all",
+                                "min_width" => "",
+                                "min_height" => "",
+                                "min_size" => "",
+                                "max_width" => "",
+                                "max_height" => "",
+                                "max_size" => "",
+                                "mime_types" => "",
+                                "preview_size" => "medium",
+                            ],
+                            [
+                                "key" => "field_647faf8b5a2ab",
+                                "label" => "Case Studies Title",
+                                "name" => "projects_case_studies_title",
+                                "aria-label" => "",
+                                "type" => "text",
+                                "instructions" =>
+                                    "Please enter a title for your case study",
+                                "required" => 0,
+                                "conditional_logic" => 0,
+                                "wrapper" => [
+                                    "width" => "",
+                                    "class" => "",
+                                    "id" => "",
+                                ],
+                                "default_value" => "",
+                                "maxlength" => "",
+                                "placeholder" => "",
+                                "prepend" => "",
+                                "append" => "",
+                            ],
+                            [
+                                "key" => "field_647fb0075a2ac",
+                                "label" => "Case Studies Download URL",
+                                "name" => "projects_case_studies_download_url",
+                                "aria-label" => "",
+                                "type" => "url",
+                                "instructions" => "",
+                                "required" => 0,
+                                "conditional_logic" => 0,
+                                "wrapper" => [
+                                    "width" => "",
+                                    "class" => "",
+                                    "id" => "",
+                                ],
+                                "default_value" => "",
+                                "placeholder" => "",
+                            ],
+                        ],
+                        "min" => "",
+                        "max" => "",
+                    ],
+                ],
+                "min" => "",
+                "max" => "",
+                "button_label" => "Add Row",
+            ],
         ],
         "location" => [
             [
@@ -512,4 +634,4 @@ if (function_exists("acf_add_local_field_group")):
         "description" => "",
         "show_in_rest" => 0,
     ]);
-endif;
+});

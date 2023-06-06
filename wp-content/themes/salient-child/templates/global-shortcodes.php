@@ -6,13 +6,13 @@ function global_shortcode()
     if (is_multisite()) {
         $site_id = get_current_blog_id();
     }
-    switch ($site_id) {	
+    switch ($site_id) {
         // CCC
         case "10":
             $selected_shortcode = do_shortcode(
                 '[nectar_global_section id="115"]'
             );
-            break;		
+            break;
         // OMP
         case "14":
             $selected_shortcode = do_shortcode(
@@ -24,7 +24,13 @@ function global_shortcode()
             $selected_shortcode = do_shortcode(
                 '[nectar_global_section id="6806"]'
             );
-            break;		
+            break;
+        // LF Edge
+        case "24":
+            $selected_shortcode = do_shortcode(
+                '[nectar_global_section id="164"]'
+            );
+            break;
     }
     return $selected_shortcode;
 }
