@@ -10,7 +10,6 @@
 
 namespace TEC\Events_Pro\Custom_Tables\V1\Updates;
 
-use tad_DI52_ServiceProvider as Service_Provider;
 use TEC\Events\Custom_Tables\V1\Models\Occurrence;
 use TEC\Events\Custom_Tables\V1\Provider_Contract;
 use WP_Error;
@@ -19,6 +18,7 @@ use WP_Post;
 use WP_REST_Request;
 use Tribe__Events__Main as TEC;
 use WP_REST_Response;
+use TEC\Common\Contracts\Service_Provider;
 
 /**
  * Class Provider
@@ -467,6 +467,7 @@ class Provider extends Service_Provider implements Provider_Contract {
 	 * Filters the unique post slug generated, or set, for an Event Occurrence.
 	 *
 	 * @since 6.0.0
+	 * @since 6.0.12 Removed strict typing from this public hook callback.
 	 *
 	 * @param string $slug          The post slug.
 	 * @param int    $post_ID       Post ID.
@@ -477,9 +478,14 @@ class Provider extends Service_Provider implements Provider_Contract {
 	 *
 	 * @return string The filtered unique post slug.
 	 */
-	public function unique_post_slug_for_occurrence( string $slug, int $post_ID, string $post_status, string $post_type, int $post_parent, string $original_slug ): string {
+	public function unique_post_slug_for_occurrence( $slug, $post_ID, $post_status, $post_type, $post_parent, $original_slug ): string {
+		// Some basic sanity check and type check validation.
+		if ( ! is_string( $post_type ) || ! is_string( $original_slug ) || ! is_numeric( $post_ID ) ) {
+			return $slug;
+		}
+
 		return $this->container->make( Post_Ops::class )
-		                       ->get_occurrence_post_slug( $slug, $post_ID, $post_type, $original_slug );
+		                       ->get_occurrence_post_slug( $slug, (int) $post_ID, $post_type, $original_slug );
 	}
 
 	/**
@@ -531,7 +537,7 @@ class Provider extends Service_Provider implements Provider_Contract {
 	 * REST API delete requests will not specify an `id` parameter until later in the request
 	 * handling process; working out the `id` from the request should be left to WordPress and
 	 * filtering functions. This method is a workaround to ensure that the correct update method
-	 * is called as soon as the `id` parmater of the request is known.
+	 * is called as soon as the `id` parameter of the request is known.
 	 *
 	 * @since 6.0.0
 	 *
