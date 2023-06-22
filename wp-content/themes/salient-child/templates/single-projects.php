@@ -116,7 +116,7 @@ get_header();
 							<?php echo do_shortcode(
            '[recent_posts_linux_foundation design="grid-design" columns="1" limit="1" offset="" category_id="' .
                $projects_post_category .
-               '" categories="0" embedded_code="" featured_image="hide-featured-image" excerpt="" navigation="show_navigation_arrow" date_author="date-and-author" dut="show-dut" pagination="hide-pagination"]'
+               '" categories="0" embedded_code="" featured_image="hide-featured-image" excerpt="" navigation="show_navigation_arrow" date_author="author" pagination="hide-pagination"]'
        ); ?>
 							</div>
 						 </div>
