@@ -324,4 +324,31 @@ i.fa-solid.fa-file-pdf:before {
 		margin-bottom: 15px !important;
 		display: inline-block;
 	}
+
+	.col.span_12.section-title.projects-title {
+		flex-direction: column;
+	}
+
+	.col.span_12.section-title.projects-title img {
+		min-width: 150px;
+		width: 100%;
+	}
+
+	.projects-excerpt-container {
+		margin-left: 0;
+	}
+
+	.projects-excerpt-text.white {
+		font-size: 26px;
+		line-height: 34px;
+	}
+
+	.projects-links {
+		flex-direction: column;
+		align-items: center;
+	}
+
+	.projects-icons {
+		margin: 20px 0;
+	}
 }
