@@ -85,6 +85,58 @@ if ($query->have_posts()) {
         }
     }
     echo $output;
+	
+	
+	
+	
+	
+	?>
+		Page <?php echo $query->query['paged']; ?> of <?php echo $query->max_num_pages; ?><br />
+	
+	<div class="pagination">
+		
+		<div class="nav-previous"><?php next_posts_link( 'Next', $query->max_num_pages ); ?></div>
+		<div class="nav-next"><?php previous_posts_link( 'Previous' ); ?></div>
+		<?php
+			/* example code for using the wp_pagenavi plugin */
+			if (function_exists('wp_pagenavi'))
+			{
+				echo "<br />";
+				wp_pagenavi( array( 'query' => $query ) );
+			}
+		?>
+	</div>
+	<?php
+	
+	
+           $big = 999999999;
+            $output2 .=
+                '<div class="recent-posts-pagination" style="color:#ffffff">';
+            $output2 .=
+                '<div class="links" style="color:' . $accent_color . '">';
+            $output2 .= paginate_links([
+                "base" => str_replace(
+                    $big,
+                    "%#%",
+                    esc_url(get_pagenum_link($big))
+                ),
+                "format" => "?paged=%#%",
+                "current" => max(1, get_query_var("paged")),
+                "total" => $query->max_num_pages,
+                "before_page_number" =>
+                    '<span style="background-color:red">',
+                "after_page_number" => "</span>",
+                "next_text" =>
+                    '<span style="background-color:red">Next →</span>',
+                "prev_text" =>
+                    '<span style="background-color:red">Prev ←</span>',
+            ]);
+            $output2 .= "</div>";
+            $output2 .= "</div>";
+			
+			echo $output2;
+	
+	
 } else {
     echo "No Results Found";
 }
