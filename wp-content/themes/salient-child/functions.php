@@ -62,6 +62,12 @@ function salient_child_enqueue_styles()
         $nectar_theme_version
     );
     wp_enqueue_style(
+        "results-style",
+        get_stylesheet_directory_uri() . "/search-filter/css/results.css",
+        "",
+        $nectar_theme_version
+    );
+    wp_enqueue_style(
         "fonts-style",
         get_stylesheet_directory_uri() . "/fonts/fonts.css",
         "",

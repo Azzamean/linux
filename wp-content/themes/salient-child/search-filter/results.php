@@ -28,6 +28,7 @@ if (!defined("ABSPATH")) {
 }
 
 if ($query->have_posts()) {
+
     $count = 0;
     while ($query->have_posts()) {
         $query->the_post();
@@ -85,58 +86,74 @@ if ($query->have_posts()) {
         }
     }
     echo $output;
+    ?>
 	
+		<!-- Page <?php
+    //echo $query->query['paged'];
+    ?> of <?php
+    //echo $query->max_num_pages;
+    ?><br />
 	
-	
-	
-	
-	?>
-		Page <?php echo $query->query['paged']; ?> of <?php echo $query->max_num_pages; ?><br />
-	
-	<div class="pagination">
+	 <div class="pagination">
 		
-		<div class="nav-previous"><?php next_posts_link( 'Next', $query->max_num_pages ); ?></div>
-		<div class="nav-next"><?php previous_posts_link( 'Previous' ); ?></div>
+		<div class="nav-previous"><?php
+    //next_posts_link( 'Next', $query->max_num_pages );
+    ?></div>
+		<div class="nav-next"><?php
+    //previous_posts_link( 'Previous' );
+    ?></div>
 		<?php
-			/* example code for using the wp_pagenavi plugin */
-			if (function_exists('wp_pagenavi'))
-			{
-				echo "<br />";
-				wp_pagenavi( array( 'query' => $query ) );
-			}
-		?>
-	</div>
+    /* example code for using the wp_pagenavi plugin */
+    //if (function_exists('wp_pagenavi'))
+    //{
+    //	echo "<br />";
+    //	wp_pagenavi( array( 'query' => $query ) );
+    //}
+    ?>
+	</div> -->
+	
 	<?php
-	
-	
-           $big = 999999999;
-            $output2 .=
-                '<div class="recent-posts-pagination" style="color:#ffffff">';
-            $output2 .=
-                '<div class="links" style="color:' . $accent_color . '">';
-            $output2 .= paginate_links([
-                "base" => str_replace(
-                    $big,
-                    "%#%",
-                    esc_url(get_pagenum_link($big))
-                ),
-                "format" => "?paged=%#%",
-                "current" => max(1, get_query_var("paged")),
-                "total" => $query->max_num_pages,
-                "before_page_number" =>
-                    '<span style="background-color:red">',
-                "after_page_number" => "</span>",
-                "next_text" =>
-                    '<span style="background-color:red">Next →</span>',
-                "prev_text" =>
-                    '<span style="background-color:red">Prev ←</span>',
-            ]);
-            $output2 .= "</div>";
-            $output2 .= "</div>";
-			
-			echo $output2;
-	
-	
+ // GET SALIENT COLORS
+ $nectar_options = get_nectar_theme_options();
+ $accent_color = $nectar_options["accent-color"];
+ $extra_color1 = $nectar_options["extra-color-1"];
+ $extra_color2 = $nectar_options["extra-color-2"];
+ $extra_color3 = $nectar_options["extra-color-3"];
+ //$accent_color = substr($nectar_options["accent-color"], 1);
+ $ac_r = hexdec(substr($accent_color, 0, 2));
+ $ac_g = hexdec(substr($accent_color, 2, 2));
+ $ac_b = hexdec(substr($accent_color, 4, 2));
+ $ac_rgba =
+     "rgba(" .
+     esc_attr($ac_r) .
+     "," .
+     esc_attr($ac_g) .
+     "," .
+     esc_attr($ac_b) .
+     ", 0.3)";
+ $big = 999999999;
+ $pagination_output .=
+     '<div class="recent-posts-pagination search-filter" style="color:#ffffff">';
+ $pagination_output .=
+     '<div class="links" style="color:' . $accent_color . '">';
+ $pagination_output .= paginate_links([
+     "base" => str_replace($big, "%#%", esc_url(get_pagenum_link($big))),
+     "format" => "?paged=%#%",
+     "current" => max(1, get_query_var("paged")),
+     "total" => $query->max_num_pages,
+     "before_page_number" =>
+         '<span style="background-color:' . $accent_color . '">',
+     "after_page_number" => "</span>",
+     "next_text" =>
+         '<span style="background-color:' . $accent_color . '">Next →</span>',
+     "prev_text" =>
+         '<span style="background-color:' . $accent_color . '">Prev ←</span>',
+ ]);
+ $pagination_output .= "</div>";
+ $pagination_output .= "</div>";
+
+ echo $pagination_output;
+
 } else {
     echo "No Results Found";
 }
