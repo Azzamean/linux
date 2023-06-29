@@ -295,7 +295,7 @@ if ("fixed" === $blog_social_style) {
     }
 }
 
-// OMP
+// CCC
 if ($site_id == "10") { ?>
 	<div class="row call-to-action">
 	<?php echo do_shortcode(
