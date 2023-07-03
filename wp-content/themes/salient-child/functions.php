@@ -97,6 +97,21 @@ function salient_child_enqueue_styles()
 }
 add_action("wp_enqueue_scripts", "salient_child_enqueue_styles", 100);
 
+// DISABLE PLUGIN NOTIFICATIONS
+add_action("admin_enqueue_scripts", "acf_template_fields");
+add_action("login_enqueue_scripts", "acf_template_fields");
+function acf_template_fields()
+{
+    wp_register_script(
+        "salient-child-acf-template-fields-javascript",
+        get_stylesheet_directory_uri() . "/templates/js/templates.js",
+        ["jquery"],
+        "3.6.1",
+        true
+    );
+    wp_enqueue_script("salient-child-acf-template-fields-javascript");
+}
+
 // GRABS SPECIFIC SUBSITES
 if (is_multisite()) {
     $site_id = get_current_blog_id();

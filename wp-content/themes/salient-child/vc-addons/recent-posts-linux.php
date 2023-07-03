@@ -951,7 +951,7 @@ function recent_posts_linux($atts, $content)
                 $output .= "</div>";
                 $count++;
                 if (
-                    $count == $columns ||
+                    $count == $limit ||
                     $recent_posts_query->current_post + 1 ==
                         $recent_posts_query->post_count
                 ) {

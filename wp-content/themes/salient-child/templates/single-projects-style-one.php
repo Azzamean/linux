@@ -1,6 +1,6 @@
 <?php
 /**
- * Template Name: Template Style One
+ * Template Name: Template Style 1 (One)
  * Template Post Type: projects
  * The template for displaying single projects custom post types.
  *
@@ -67,9 +67,9 @@ get_header();
          $projects_excerpt != null &&
          $projects_banner != null &&
          $value == "yes"
-     ) 
-	 //echo implode(',', $values);
-	 { ?><h1 class="projects-title-text white"> <?php echo $projects_excerpt; ?> </h1> <?php } else {}
+     ) {<?php
+         //echo implode(',', $values);
+         ?><h1 class="projects-title-text white"> <?php echo $projects_excerpt; ?> </h1> <?php } else {}
      ?>
 				</div>
 			</div>

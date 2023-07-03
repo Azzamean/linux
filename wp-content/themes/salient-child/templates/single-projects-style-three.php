@@ -1,6 +1,6 @@
 <?php
 /**
- * Template Name: Template Style Three
+ * Template Name: Template Style 3 (Three)
  * Template Post Type: projects
  * The template for displaying single projects custom post types.
  *
