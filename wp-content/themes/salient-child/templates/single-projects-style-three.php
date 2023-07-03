@@ -117,7 +117,9 @@ get_header();
                   $projects_icon = get_sub_field("projects_icon");
                   $projects_icon_name = get_sub_field("projects_icon_name");
                   echo "<div class='projects-icons'>";
-                  echo "<a class='projects-icon' href='" . $projects_url . "'>" .
+                  echo "<a class='projects-icon' href='" .
+                      $projects_url .
+                      "'>" .
                       $projects_icon .
                       "</a>" .
                       "<p><a href='" .
@@ -153,18 +155,24 @@ get_header();
 	            </div>
 	            <div class="row_col_wrap_12_inner col span_12  left">
 						<?php if (have_rows("projects_case_studies")):
-						  while (have_rows("projects_case_studies")):
-							  the_row();
-							  if (get_row_layout() == "projects_add_case_study"):
-								  $projects_case_studies_image = get_sub_field("projects_case_studies_image");
-								  $projects_case_studies_title = get_sub_field("projects_case_studies_title");
-								  $projects_case_studies_download_url = get_sub_field("projects_case_studies_download_url");
-								  echo '<div class="vc_col-sm-6 wpb_column column_container vc_column_container col child_column no-extra-padding inherit_tablet inherit_phone"><div class="vc_column-inner"><div class="wpb_wrapper"><div class="wpb_text_column wpb_content_element "><div class="wpb_wrapper">';
-								  echo $projects_case_studies_title;
-								  echo '</div></div></div></div></div>';
-							  endif;
-						  endwhile;
-						endif; ?>
+          while (have_rows("projects_case_studies")):
+              the_row();
+              if (get_row_layout() == "projects_add_case_study"):
+                  $projects_case_studies_image = get_sub_field(
+                      "projects_case_studies_image"
+                  );
+                  $projects_case_studies_title = get_sub_field(
+                      "projects_case_studies_title"
+                  );
+                  $projects_case_studies_download_url = get_sub_field(
+                      "projects_case_studies_download_url"
+                  );
+                  echo '<div class="vc_col-sm-6 wpb_column column_container vc_column_container col child_column no-extra-padding inherit_tablet inherit_phone"><div class="vc_column-inner"><div class="wpb_wrapper"><div class="wpb_text_column wpb_content_element "><div class="wpb_wrapper">';
+                  echo $projects_case_studies_title;
+                  echo "</div></div></div></div></div>";
+              endif;
+          endwhile;
+      endif; ?>
 					</section>
 	            </div>
 	          </div>

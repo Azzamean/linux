@@ -67,8 +67,8 @@ get_header();
          $projects_excerpt != null &&
          $projects_banner != null &&
          $value == "yes"
-     ) {<?php
-         //echo implode(',', $values);
+     ) {
+         // echo implode(',', $values);
          ?><h1 class="projects-title-text white"> <?php echo $projects_excerpt; ?> </h1> <?php } else {}
      ?>
 				</div>
