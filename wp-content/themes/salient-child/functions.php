@@ -5,6 +5,20 @@
 //grant_super_admin(5);
 /* Osano code for tracking */
 
+
+/* SECURITY HEADERS */
+function security_headers() {
+	header("Content-Security-Policy: default-src 'self'");
+	header( 'Strict-Transport-Security: max-age=2592000' );	
+    header( 'X-XSS-Protection: 1; mode=block' );	
+    header( 'X-Content-Type-Options: nosniff' );	
+    header( 'X-Frame-Options: DENY' );	
+    header( 'Referrer-Policy: no-referrer-when-downgrade' );	
+	header( 'Permissions-Policy: geolocation=()' );	
+}
+add_action( 'send_headers', 'security_headers' );
+
+ 
 add_action("template_redirect", function () {
     ob_start();
 });
