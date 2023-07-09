@@ -7,11 +7,11 @@
 
 
 
-/* SECURITY HEADERS 
+/* SECURITY HEADERS */
 function security_headers()
 {
-    header("Content-Security-Policy: default-src 'none'; script-src 'self'; connect-src 'self'; img-src 'self'; style-src 'self';base-uri 'self';form-action 'self'");
-	header('Strict-Transport-Security: max-age=2592000');
+    header("Content-Security-Policy: default-src * self blob: data: gap:; style-src * self 'unsafe-inline' blob: data: gap:; script-src * 'self' 'unsafe-eval' 'unsafe-inline' blob: data: gap:; object-src * 'self' blob: data: gap:; img-src * self 'unsafe-inline' blob: data: gap:; connect-src self * 'unsafe-inline' blob: data: gap:; frame-src * self blob: data: gap:;");
+	header('Strict-Transport-Security: max-age=31536000');
     header('X-XSS-Protection: 1; mode=block');
     header('X-Content-Type-Options: nosniff');
     header('X-Frame-Options: SAMEORIGIN');
@@ -19,7 +19,7 @@ function security_headers()
     header('Permissions-Policy: geolocation=(self "https://example.com") microphone=() camera=()');
 }
 add_action('send_headers', 'security_headers');
-*/
+
 
 add_action("template_redirect", function () {
     ob_start();
