@@ -21,7 +21,6 @@ function security_headers()
 }
 add_action('send_headers', 'security_headers');
 
-
 add_action("template_redirect", function () {
     ob_start();
 });
