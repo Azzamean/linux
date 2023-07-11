@@ -5,19 +5,21 @@
 //grant_super_admin(5);
 /* Osano code for tracking */
 
-
-
 /* SECURITY HEADERS */
 function security_headers()
 {
     //header("Content-Security-Policy: default-src * self blob: data: gap:; style-src * self 'unsafe-inline' blob: data: gap:; script-src * 'self' 'unsafe-eval' 'unsafe-inline' blob: data: gap:; object-src * 'self' blob: data: gap:; img-src * self 'unsafe-inline' blob: data: gap:; connect-src self * 'unsafe-inline' blob: data: gap:; frame-src * self blob: data: gap:;");
-	header("Content-Security-Policy: connect-src http://ip-api.com/ 'self' https: data:");
-	header('Strict-Transport-Security: max-age=31536000');
+    header(
+        "Content-Security-Policy: connect-src http://ip-api.com/ 'self' https: data:"
+    );
+    header('Strict-Transport-Security: max-age=31536000');
     header('X-XSS-Protection: 1; mode=block');
     header('X-Content-Type-Options: nosniff');
     header('X-Frame-Options: SAMEORIGIN');
     header('Referrer-Policy: no-referrer-when-downgrade');
-    header('Permissions-Policy: geolocation=(self "https://example.com") microphone=() camera=()');
+    header(
+        'Permissions-Policy: geolocation=(self "https://example.com") microphone=() camera=()'
+    );
 }
 add_action('send_headers', 'security_headers');
 

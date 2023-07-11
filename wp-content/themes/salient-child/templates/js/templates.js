@@ -16,15 +16,15 @@ jQuery(document).ready(function ($) {
       $('[data-name="projects_post_category"]').show();
    }
 
-   if ($('#page_template :selected').text() == 'Template Style 1 (One)') {
+   else if ($('#page_template :selected').text() == 'Template Style 1 (One)') {
 
    }
 
-   if ($('#page_template :selected').text() == 'Template Style 2 (Two)') {
+   else if ($('#page_template :selected').text() == 'Template Style 2 (Two)') {
 
    }
 
-   if ($('#page_template :selected').text() == 'Template Stlye 3 (Three)') {
+   else if ($('#page_template :selected').text() == 'Template Style 3 (Three)') {
       $('[data-name="projects_category"]').show();
       $('[data-name="projects_case_studies"]').show();
    }
