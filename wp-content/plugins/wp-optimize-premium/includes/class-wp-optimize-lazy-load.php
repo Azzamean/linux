@@ -30,8 +30,9 @@ class WP_Optimize_Lazy_Load {
 
 		$skip_classes = array_map('trim', explode(',', $this->options['skip_classes']));
 		$skip_classes[] = 'no-lazy';
+		$skip_classes[] = 'skip-lazy';
 
-		$this->options['skip_classes'] = $skip_classes;
+		$this->options['skip_classes'] = apply_filters('wp_optimize_lazy_load_skip_classes', $skip_classes);
 		
 		$hook_these = apply_filters('wp_optimize_lazy_load_hook_these', array('get_avatar', 'the_content', 'widget_text', 'get_image_tag', 'post_thumbnail_html', 'woocommerce_product_get_image', 'woocommerce_single_product_image_thumbnail_html'));
 		

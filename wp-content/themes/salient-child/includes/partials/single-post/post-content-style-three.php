@@ -89,6 +89,9 @@ $blog_social_style = get_option("salient_social_button_style")
   echo '<div class="content-inner"' . esc_html($gallery_attr) . ">";
   // Post content.
   if ("link" !== $nectar_post_format) {
+	  
+	  ?><h2 class="entry-title-small"> <?php the_title(); ?></h2> <?php
+	  
       the_content(
           '<span class="continue-reading">' .
               esc_html__("Read More", "salient") .
@@ -100,7 +103,7 @@ $blog_social_style = get_option("salient_social_button_style")
   ?>
       		<div class="single-blog-bottom-navigation">
 			<a class="back-to-all" href="/blog/">< Back To All Blog Posts</a>
-			<a class="view-next" href="<?php echo $next_post_link_url  ?>">View Next Blog Post ></a>
+			<a class="view-next" href="<?php echo $next_post_link_url; ?>">View Next Blog Post ></a>
 		</div>  
       </div><!--/post-content-->
       

@@ -173,8 +173,10 @@ class WP_Optimize_CLI_Command extends WP_CLI_Command {
 		if (isset($result['error'])) {
 			WP_CLI::error($result['error']);
 		}
-
-		WP_CLI::success($result['message']);
+		
+		if (isset($result['message'])) {
+			WP_CLI::success($result['message']);
+		}
 	}
 
 	/**
@@ -277,7 +279,7 @@ class WP_Optimize_CLI_Command extends WP_CLI_Command {
 		if ('status' == $command) {
 			$status = $minify_commands->get_status();
 			WP_CLI::log(__('WP-Optimize minification status:', 'wp-optimize'));
-			WP_CLI::log(' - '.sprintf(_x('<inification is %s', '%s is replaced by a colored version of enabled or disabled (WP_CLI)', 'wp-optimize'), ($status['enabled'] ? $this->colorize(__('enabled', 'wp-optimize'), 'green_bright') : $this->colorize(__('disabled', 'wp-optimize'), 'red_bright'))));
+			WP_CLI::log(' - '.sprintf(_x('Minification is %s', '%s is replaced by a colored version of enabled or disabled (WP_CLI)', 'wp-optimize'), ($status['enabled'] ? $this->colorize(__('enabled', 'wp-optimize'), 'green_bright') : $this->colorize(__('disabled', 'wp-optimize'), 'red_bright'))));
 			WP_CLI::log(' - '.sprintf(__('JavaScript minification: %s', 'wp-optimize'), ($status['js'] ? $this->colorize(__('ON', 'wp-optimize'), 'green_bright') : $this->colorize(__('OFF', 'wp-optimize'), 'red_bright'))));
 			WP_CLI::log(' - '.sprintf(__('CSS minification: %s', 'wp-optimize'), ($status['css'] ? $this->colorize(__('ON', 'wp-optimize'), 'green_bright') : $this->colorize(__('OFF', 'wp-optimize'), 'red_bright'))));
 			WP_CLI::log(' - '.sprintf(__('HTML minification: %s', 'wp-optimize'), ($status['html'] ? $this->colorize(__('ON', 'wp-optimize'), 'green_bright') : $this->colorize(__('OFF', 'wp-optimize'), 'red_bright'))));
@@ -285,7 +287,7 @@ class WP_Optimize_CLI_Command extends WP_CLI_Command {
 			WP_CLI::log(' - '.sprintf(__('Cache date: %s', 'wp-optimize'), $this->colorize($status['stats']['cacheTime'], 'bright')));
 			WP_CLI::log(' - '.sprintf(__('Number of CSS files: %s', 'wp-optimize'), $this->colorize(count($status['stats']['css']), 'bright')));
 			WP_CLI::log(' - '.sprintf(__('Number of JavaScript files: %s', 'wp-optimize'), $this->colorize(count($status['stats']['js']), 'bright')));
-			WP_CLI::log(' - '.sprintf(__('Cache path: %s', 'wp-optimize'), $this->colorize(count($status['stats']['cachePath']), 'bright')));
+			WP_CLI::log(' - '.sprintf(__('Cache path: %s', 'wp-optimize'), $this->colorize($status['stats']['cachePath'], 'bright')));
 			return;
 		}
 

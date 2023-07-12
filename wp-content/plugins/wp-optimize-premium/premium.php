@@ -735,6 +735,11 @@ class WP_Optimize_Premium {
 	 */
 	public function load_compatibilities() {
 		WPO_WCML_Compatibility::instance();
+		WPO_YITH_POS_Compatibility::instance();
+		WPO_Elementor::instance();
+		WPO_Yoast_SEO::instance();
+		WPO_Estatik::instance();
+		WPO_Beaver_Builder::instance();
 	}
 	
 	/**

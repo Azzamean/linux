@@ -698,7 +698,10 @@ class WP_Optimization_images extends WP_Optimization {
 	 */
 	public function after_get_info() {
 		// if output already prepared.
-		if ($this->_done) return;
+		if ($this->_done) {
+			$this->_tasks_queue()->unlock();
+			return;
+		}
 
 		$this->log('after_get_info()');
 
@@ -858,9 +861,8 @@ class WP_Optimization_images extends WP_Optimization {
 		$this->init_visual_composer();
 
 		$found_images = array();
-		$beaver_builder_images = array();
-		$yoast_seo_images = array();
-		$property_images = array();
+		$plugin_images = array();
+		$plugin_images_from_metadata = array();
 		$acf_images = array();
 		$acf_block_field_names = array();
 		if ($this->is_plugin_acf_active()) {
@@ -900,37 +902,22 @@ class WP_Optimization_images extends WP_Optimization {
 				}
 			}
 
-			if ($this->is_plugin_estatik_active()) {
-				$es_property_gallery = get_post_meta($post->ID, 'es_property_gallery', true);
-				if (!empty($es_property_gallery)) {
-					$property_images = array_merge($property_images, $es_property_gallery);
-				}
-			}
-
 			if ($this->is_plugin_acf_active()) {
 				$acf_images = array_merge($acf_images, $this->get_image_ids_from_acf_blocks($post_content, $acf_block_field_names));
 			}
-
-			if ($this->is_plugin_yoast_seo_active()) {
-				$yoast_seo_facebook_images = get_post_meta($post->ID, '_yoast_wpseo_opengraph-image-id', false);
-				$yoast_seo_twitter_images = get_post_meta($post->ID, '_yoast_wpseo_twitter-image-id', false);
-				$yoast_seo_images = array_merge($yoast_seo_images, $yoast_seo_facebook_images, $yoast_seo_twitter_images);
-			}
-
-			if ($this->is_plugin_beaver_builder_active()) {
-				$beaver_builder_data = get_post_meta($post->ID, '_fl_builder_data', true);
-				$beaver_builder_images = array_merge($beaver_builder_images, $this->get_beaver_builder_images($beaver_builder_data));
-			}
+			$plugin_images = array_merge($plugin_images, apply_filters('wpo_get_posts_content_images_from_plugins', $plugin_images, $post->ID));
 		}
 
 		ob_end_clean();
 
+		$plugin_images_from_metadata = array_merge($plugin_images_from_metadata, apply_filters('wpo_get_plugin_images_from_meta', $plugin_images_from_metadata));
+
 		if (!empty($found_images)) {
 			// get images attachment ids.
 			$post_content_images = array_values($this->get_image_attachment_id_bulk(array_keys($found_images)));
-			return array_unique(array_merge($post_content_images, $property_images, $acf_images, $yoast_seo_images, $beaver_builder_images), SORT_NUMERIC);
+			return array_unique(array_merge($post_content_images, $plugin_images_from_metadata, $acf_images, $plugin_images), SORT_NUMERIC);
 		} else {
-			return array_unique(array_merge($found_images, $property_images, $acf_images, $yoast_seo_images, $beaver_builder_images), SORT_NUMERIC);
+			return array_unique(array_merge($found_images, $plugin_images_from_metadata, $acf_images, $plugin_images), SORT_NUMERIC);
 		}
 	}
 
@@ -1359,33 +1346,6 @@ class WP_Optimization_images extends WP_Optimization {
 	 */
 	public function filter_acf_fields_per_type($type) {
 		return $type == $this->acf_field_type;
-	}
-
-	/**
-	 * Get image IDs of images used in beaver builder
-	 *
-	 * @param array|object $data
-	 *
-	 * @return array An array of image ids used in beaver builder
-	 */
-	private function get_beaver_builder_images($data) {
-		$images = array();
-
-		if (is_array($data) || is_object($data)) {
-			foreach ($data as $key => $value) {
-				if (is_array($value) && preg_match('/^carousel_photos$|^ss_photos$/', $key)) {
-					$images = array_merge($images, $value);
-				} elseif (is_array($value) || is_object($value)) {
-					$images = array_merge($images, $this->get_beaver_builder_images($value));
-				} elseif (is_string($key) && preg_match('/bg_image$/', $key)) {
-					if (!empty($value)) {
-						$images[] = $value;
-					}
-				}
-			}
-		}
-
-		return $images;
 	}
 
 	/**
@@ -2898,15 +2858,6 @@ class WP_Optimization_images extends WP_Optimization {
 	}
 
 	/**
-	 * Determines whether site is using Estatik plugin or not
-	 *
-	 * @return boolean
-	 */
-	private function is_plugin_estatik_active() {
-		return is_plugin_active('estatik/estatik.php');
-	}
-
-	/**
 	 * Determines whether site is using ACF plugin or not
 	 *
 	 * @return bool
@@ -2928,23 +2879,5 @@ class WP_Optimization_images extends WP_Optimization {
 		global $wpdb;
 		$product_cat_thumbnail_ids = $wpdb->get_col("SELECT meta_value FROM {$wpdb->termmeta} WHERE meta_key = 'thumbnail_id' AND term_id IN (SELECT term_id from {$wpdb->term_taxonomy} WHERE taxonomy = 'product_cat')");
 		return $product_cat_thumbnail_ids;
-	}
-
-	/**
-	 * Determines whether site is using Yoast SEO plugin or not
-	 *
-	 * @return boolean
-	 */
-	private function is_plugin_yoast_seo_active() {
-		return is_plugin_active('wordpress-seo/wp-seo.php');
-	}
-
-	/**
-	 * Determines whether site is using Beaver Builder plugin or not
-	 *
-	 * @return boolean
-	 */
-	private function is_plugin_beaver_builder_active() {
-		return is_plugin_active('beaver-builder-lite-version/fl-builder.php') || is_plugin_active('bb-plugin/fl-builder.php') || class_exists('FLBuilderLoader');
 	}
 }

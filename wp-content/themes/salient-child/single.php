@@ -76,13 +76,13 @@ if (have_posts()):
             // LF Networking
             if ($site_id == "7") {
                 get_template_part(
-                    "includes/partials/single-post/post-header-lfn"
+                    "includes/partials/single-post/post-header-style-one"
                 );
             }
-            // LF Energy
-            elseif ($site_id == "18") {
+            // LF Energy || LF Edge
+            elseif ($site_id == "18" || $site_id == "24") {
                 get_template_part(
-                    "includes/partials/single-post/post-header-lfenergy"
+                    "includes/partials/single-post/post-header-style-three"
                 );
             } else {
                 nectar_page_header($post->ID);
@@ -126,10 +126,10 @@ if ($blog_type === "std-blog-fullwidth" || $hide_sidebar === "1") {
   }
   // OMP
   elseif ($site_id == "14") {
-      get_template_part("includes/partials/single-post/post-header-omp");
+      get_template_part("includes/partials/single-post/post-header-style-two");
   }
-  // LF Energy
-  elseif ($site_id == "18") {
+  // LF Energy || LF Edge
+  elseif ($site_id == "18" || $site_id == "24") {
       // DO NOTHING
   } else {
       get_template_part(
@@ -182,19 +182,19 @@ if ($blog_type === "std-blog-fullwidth" || $hide_sidebar === "1") {
            // LF Networking
            if ($site_id == "7") {
                get_template_part(
-                   "includes/partials/single-post/post-content-lfn"
+                   "includes/partials/single-post/post-content-style-one"
                );
            }
            // OMP
            elseif ($site_id == "14") {
                get_template_part(
-                   "includes/partials/single-post/post-content-omp"
+                   "includes/partials/single-post/post-content-style-two"
                );
            }
-           // OMP
-           elseif ($site_id == "18") {
+           // LF Energy || LF Edge
+           elseif ($site_id == "18" || $site_id == "24") {
                get_template_part(
-                   "includes/partials/single-post/post-content-lfenergy"
+                   "includes/partials/single-post/post-content-style-three"
                );
            } else {
                get_template_part("includes/partials/single-post/post-content");
@@ -295,6 +295,11 @@ if ("fixed" === $blog_social_style) {
     }
 }
 
+
+// GET SHORTCODES
+//include_once "global-shortcodes.php";
+//echo global_shortcode();
+		
 // CCC
 if ($site_id == "10") { ?>
 	<div class="row call-to-action">
