@@ -490,7 +490,15 @@ function recent_posts_linux($atts, $content)
     $dut = !empty($dut) ? $dut : "hide-dut";
     $pagination = !empty($pagination) ? $pagination : "show-pagination";
     $paged = get_query_var("paged") ? get_query_var("paged") : 1;
-
+	$paging;
+	
+	if( $limit == -1 ){
+		$paging = true;
+	}
+	else {
+		$paging = false;
+	}
+	
     $query_args = [
         "post_type" => "post",
         "post_status" => ["publish"],
@@ -498,9 +506,10 @@ function recent_posts_linux($atts, $content)
         "order" => $sort,
         "offset" => $offset,
         "ignore_sticky_posts" => true,
-        "nopaging" => false,
+        "nopaging" => $paging,
         "paged" => $paged,
     ];
+
     // KEEP UNDER FIRST QUERY ARGS
     if (!empty($category_id)) {
         $query_args["tax_query"] = [

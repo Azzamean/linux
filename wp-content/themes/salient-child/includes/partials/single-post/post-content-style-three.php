@@ -10,6 +10,13 @@ if (!defined("ABSPATH")) {
     exit();
 }
 
+function add_class_previous_post_link($html)
+{
+    $html = str_replace('<a', '<a class="view-next"', $html);
+    return $html;
+}
+add_filter('previous_post_link', 'add_class_previous_post_link', 10, 1);
+
 global $nectar_options;
 
 $nectar_post_format = get_post_format();
@@ -88,22 +95,30 @@ $blog_social_style = get_option("salient_social_button_style")
 		<?php
   echo '<div class="content-inner"' . esc_html($gallery_attr) . ">";
   // Post content.
-  if ("link" !== $nectar_post_format) {
-	  
-	  ?><h2 class="entry-title-small"> <?php the_title(); ?></h2> <?php
-	  
-      the_content(
-          '<span class="continue-reading">' .
-              esc_html__("Read More", "salient") .
-              "</span>"
-      );
-  }
+  if (
+      "link" !== $nectar_post_format
+  ) { ?><h2 class="entry-title-small"> <?php the_title(); ?></h2> <?php the_content(
+    '<span class="continue-reading">' .
+        esc_html__("Read More", "salient") .
+        "</span>"
+);}
 
   echo "</div>";
   ?>
       		<div class="single-blog-bottom-navigation">
 			<a class="back-to-all" href="/blog/">< Back To All Blog Posts</a>
-			<a class="view-next" href="<?php echo $next_post_link_url; ?>">View Next Blog Post ></a>
+			<!-- <a class="view-next" href="<?php echo $next_post_link_url; ?>">View Next Blog Post ></a> -->
+				<?php if (get_adjacent_post(false, "", true)) {
+        previous_post_link("%link", "View Next Blog Post >");
+    } else {
+        $last = new WP_Query("post_type=posts&posts_per_page=1&order=DESC");
+        $last->the_post();
+
+        echo '<a class="view-next" href="' .
+            get_permalink() .
+            '">View Next Blog Post ></a>';
+        wp_reset_postdata();
+    } ?>
 		</div>  
       </div><!--/post-content-->
       
