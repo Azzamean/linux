@@ -604,7 +604,7 @@ if (
             $std_retina_srcset .
             " />" .
             "</a>";
-    }
+    } 
     add_shortcode("uber_logo", "uber_salient_logo");
 
     function uber_search_icon()
