@@ -427,6 +427,43 @@ if ( ! function_exists( 'nectar_project_single_controls' ) ) {
 							if( has_filter('salient_portfolio_pagination_use_header_img') ) {
 								$use_project_header_img = apply_filters('salient_portfolio_pagination_use_header_img', $use_project_header_img);
 							}
+
+							// Circular Loop for Next only.
+							if( isset($nectar_options['after_project_next_only_last_link']) && 
+								'first_project' === $nectar_options['after_project_next_only_last_link'] && 
+								empty($next_post) ) {
+								
+									global $post;
+
+									if( 'default' === $navigation_order ) {
+										$args = array(
+											'numberposts' => 1, 
+											'post_type' => $post->post_type, 
+											'post_status' => 'publish'
+										);
+										$recent = wp_get_recent_posts( $args, OBJECT );
+										if( !empty($recent) ) {
+											$next_post = $recent[0];
+											$only_class = null;
+										}
+
+									} else {
+										$args = array(
+											'numberposts' => 1000, 
+											'post_type' => $post->post_type, 
+											'post_status' => 'publish'
+										);
+										$recent = wp_get_recent_posts( $args, OBJECT );
+										if( !empty($recent) ) {
+											$next_post = end($recent);
+											$only_class = null;
+										}
+
+									}
+									
+									
+								
+							}
 							
 							echo '<li class="previous-project ' . $hidden_class . $only_class . '">';
 
@@ -743,9 +780,12 @@ if ( ! function_exists( 'nectar_portfolio_video_popup_link' ) ) {
 
 	function nectar_portfolio_video_popup_link( $post, $project_style, $video_embed, $video_m4v ) {
 
+		global $nectar_options;
+
 		$project_video_src  = null;
 		$project_video_link = null;
 		$video_markup       = null;
+		$using_fancybox     = ( defined('NECTAR_THEME_NAME') && isset($nectar_options['lightbox_script']) && $nectar_options['lightbox_script'] === 'fancybox') ? true : false;
 
 		if ( $video_embed ) {
 
@@ -753,8 +793,23 @@ if ( ! function_exists( 'nectar_portfolio_video_popup_link' ) ) {
 
 			if ( preg_match( '%(?:youtube(?:-nocookie)?\.com/(?:[^/]+/.+/|(?:v|e(?:mbed)?)/|.*[?&]v=)|youtu\.be/)([^"&?/ ]{11})%i', $project_video_src, $video_match ) ) {
 
+				// handle query params.
+				$query_args = '';
+
+				// iframe src.
+				if(strpos($project_video_src, '<iframe') !== false && $using_fancybox === true ) {
+					preg_match('/src="([^"]+)"/', $project_video_src, $iframe_src_match);
+					$iframe_src = $iframe_src_match[1];
+
+					$parsed_iframe_src = parse_url($iframe_src);
+					
+					if( isset($parsed_iframe_src['query']) && $parsed_iframe_src['query'] !== null ) {
+						$query_args = '&' . $parsed_iframe_src['query'];
+					}
+				}
+
 				// youtube
-				$project_video_link = 'https://www.youtube.com/watch?v=' . $video_match[1];
+				$project_video_link = 'https://www.youtube.com/watch?v=' . $video_match[1] . $query_args;
 
 			} elseif ( preg_match( '/player\.vimeo\.com\/video\/([0-9]*)/', $project_video_src, $video_match ) ) {
 
@@ -782,11 +837,9 @@ if ( ! function_exists( 'nectar_portfolio_video_popup_link' ) ) {
 			$video_markup = '<div id="video-popup-' . $post->ID . '" class="mfp-figure mfp-with-anim mfp-iframe-scaler"><div class="video">' . do_shortcode( $video_output ) . '</div></div>';
 			
 			// fancyBox3 uses raw browser player.
-			global $nectar_options;
-			
-			if(defined('NECTAR_THEME_NAME') && ! empty( $video_m4v ) ) {
+			if( !empty( $video_m4v ) ) {
 				  
-				if( isset($nectar_options['lightbox_script']) && !empty($nectar_options['lightbox_script']) && $nectar_options['lightbox_script'] === 'fancybox' ) {
+				if( $using_fancybox === true ) {
 					$project_video_link = $video_m4v;
 					$video_markup = null;
 				}

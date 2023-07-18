@@ -350,14 +350,14 @@ if (!class_exists('SalientWPbakeryParamGroups')) {
         }
 
 
-        public static function font_sizing_group() {
+        public static function font_sizing_group($desktop_font_name = 'font_size_desktop', $label = 'Custom Font Size') {
 
             $font_sizing_arr = array(
                 array(
                     "type" => "textfield",
-                    "heading" => '<span class="group-title">' . esc_html__("Custom Font Size", "salient-core") . "</span>",
+                    "heading" => '<span class="group-title">' . esc_html__($label, "salient-core") . "</span>",
                     "edit_field_class" => "desktop font-size-device-group",
-                    "param_name" => "font_size_desktop",
+                    "param_name" => $desktop_font_name,
                 ),
                 array(
                     "type" => "textfield",

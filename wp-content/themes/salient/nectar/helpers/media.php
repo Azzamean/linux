@@ -19,44 +19,111 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * @since 8.0
  */
+
 if ( ! function_exists( 'nectar_add_image_sizes' ) ) {
 
 	function nectar_add_image_sizes() {
 
-		add_image_size( 'portfolio-thumb_large', 900, 604, true );
+		global $nectar_options;
+		
 		add_image_size( 'portfolio-thumb', 600, 403, true );
-		add_image_size( 'portfolio-thumb_small', 400, 269, true );
-		add_image_size( 'portfolio-widget', 100, 100, true );
 		add_image_size( 'nectar_small_square', 140, 140, true );
 
-		global $nectar_options;
+
+		if( isset($nectar_options['image-size-portfolio-thumb_large']) && 
+			'1' === $nectar_options['image-size-portfolio-thumb_large'] ) {
+			add_image_size( 'portfolio-thumb_large', 900, 604, true );
+		}
+		
+		if( isset($nectar_options['image-size-portfolio-thumb_small']) && 
+			'1' === $nectar_options['image-size-portfolio-thumb_small'] ) {
+			add_image_size( 'portfolio-thumb_small', 400, 269, true );
+		}
+
+		if( isset($nectar_options['image-size-portfolio-widget']) && 
+			'1' === $nectar_options['image-size-portfolio-widget'] ) {
+			add_image_size( 'portfolio-widget', 100, 100, true );
+		}
+
+
 		$masonry_sizing_type = ( ! empty( $nectar_options['portfolio_masonry_grid_sizing'] ) && $nectar_options['portfolio_masonry_grid_sizing'] === 'photography' ) ? 'photography' : 'default';
 
 		if ( $masonry_sizing_type !== 'photography' ) {
 			
-			add_image_size( 'wide', 1000, 500, true );
-			add_image_size( 'wide_small', 670, 335, true );
-			add_image_size( 'regular', 500, 500, true );
-			add_image_size( 'regular_small', 350, 350, true );
-			add_image_size( 'tall', 500, 1000, true );
-			add_image_size( 'wide_tall', 1000, 1000, true );
-			add_image_size( 'wide_photography', 900, 600, true );
+			if( isset($nectar_options['image-size-wide']) && 
+				'1' === $nectar_options['image-size-wide'] ) {
+				add_image_size( 'wide', 1000, 500, true );
+				add_image_size( 'wide_photography', 900, 600, true );
+			}
+
+			if( isset($nectar_options['image-size-wide_small']) && 
+				'1' === $nectar_options['image-size-wide_small'] ) {
+				add_image_size( 'wide_small', 670, 335, true );
+			}
+
+			if( isset($nectar_options['image-size-regular']) && 
+				'1' === $nectar_options['image-size-regular'] ) {
+				add_image_size( 'regular', 500, 500, true );
+			}
+
+			if( isset($nectar_options['image-size-regular_small']) && 
+				'1' === $nectar_options['image-size-regular_small'] ) {
+				add_image_size( 'regular_small', 350, 350, true );
+			}
+
+			if( isset($nectar_options['image-size-tall']) && 
+				'1' === $nectar_options['image-size-tall'] ) {
+				add_image_size( 'tall', 500, 1000, true );
+			}
+			
+			if( isset($nectar_options['image-size-wide_tall']) && 
+				'1' === $nectar_options['image-size-wide_tall'] ) {
+				add_image_size( 'wide_tall', 1000, 1000, true );
+			}
+			
+
 		} else {
 			
 			// These three are still needed for meta overlaid masonry blog.
-			add_image_size( 'regular', 500, 500, true );
-			add_image_size( 'regular_small', 350, 350, true );
-			add_image_size( 'wide_tall', 1000, 1000, true );
+			if( isset($nectar_options['image-size-regular']) && 
+				'1' === $nectar_options['image-size-regular'] ) {
+				add_image_size( 'regular', 500, 500, true );
+				add_image_size( 'regular_photography', 450, 600, true );
+			}
 
-			add_image_size( 'wide_photography', 900, 600, true );
-			add_image_size( 'wide_photography_small', 675, 450, true );
-			add_image_size( 'regular_photography', 450, 600, true );
-			add_image_size( 'regular_photography_small', 350, 467, true );
-			add_image_size( 'wide_tall_photography', 900, 1200, true );
+			if( isset($nectar_options['image-size-regular_small']) && 
+				'1' === $nectar_options['image-size-regular_small'] ) {
+				add_image_size( 'regular_small', 350, 350, true );
+				add_image_size( 'regular_photography_small', 350, 467, true );
+			}
+
+			if( isset($nectar_options['image-size-wide_tall']) && 
+				'1' === $nectar_options['image-size-wide_tall'] ) {
+				add_image_size( 'wide_tall', 1000, 1000, true );
+				add_image_size( 'wide_tall_photography', 900, 1200, true );
+			}
+
+			if( isset($nectar_options['image-size-wide']) && 
+				'1' === $nectar_options['image-size-wide'] ) {
+				add_image_size( 'wide_photography', 900, 600, true );
+			}
+
+			if( isset($nectar_options['image-size-wide_small']) && 
+				'1' === $nectar_options['image-size-wide_small'] ) {
+				add_image_size( 'wide_photography_small', 675, 450, true );
+			}
+
 		}
 
-		add_image_size( 'large_featured', 1870, 770, true );
-		add_image_size( 'medium_featured', 800, 800, true );
+		if( isset($nectar_options['image-size-large_featured']) && 
+			'1' === $nectar_options['image-size-large_featured'] ) {
+			add_image_size( 'large_featured', 1870, 770, true );
+		}
+
+		if( isset($nectar_options['image-size-medium_featured']) && 
+			'1' === $nectar_options['image-size-medium_featured'] ) {
+			add_image_size( 'medium_featured', 800, 800, true );
+		}
 
 	}
 }
@@ -364,8 +431,11 @@ if ( ! function_exists( 'nectar_extract_video_lightbox_link' ) ) {
 
  function nectar_extract_video_lightbox_link( $post, $video_embed, $video_mp4 ) {
 
+	 global $nectar_options;
+
 	 $project_video_src  = null;
 	 $project_video_link = null;
+	 $using_fancybox     = ( isset($nectar_options['lightbox_script']) && $nectar_options['lightbox_script'] === 'fancybox') ? true : false;
 
 	 if ( $video_embed ) {
 
@@ -374,7 +444,22 @@ if ( ! function_exists( 'nectar_extract_video_lightbox_link' ) ) {
 		 if ( preg_match( '%(?:youtube(?:-nocookie)?\.com/(?:[^/]+/.+/|(?:v|e(?:mbed)?)/|.*[?&]v=)|youtu\.be/)([^"&?/ ]{11})%i', $project_video_src, $video_match ) ) {
 
 			 // youtube
-			 $project_video_link = 'https://www.youtube.com/watch?v=' . $video_match[1];
+			 // handle query params.
+			 $query_args = '';
+
+			 // iframe src.
+			 if(strpos($project_video_src, '<iframe') !== false && $using_fancybox === true ) {
+				 preg_match('/src="([^"]+)"/', $project_video_src, $iframe_src_match);
+				 $iframe_src = $iframe_src_match[1];
+
+				 $parsed_iframe_src = parse_url($iframe_src);
+				 
+				 if( isset($parsed_iframe_src['query']) && $parsed_iframe_src['query'] !== null ) {
+					 $query_args = '&' . $parsed_iframe_src['query'];
+				 }
+			 }
+
+			 $project_video_link = 'https://www.youtube.com/watch?v=' . $video_match[1] . $query_args;
 
 		 } elseif ( preg_match( '/player\.vimeo\.com\/video\/([0-9]*)/', $project_video_src, $video_match ) ) {
 

@@ -125,7 +125,8 @@ body[data-col-gap*="px"] .full-width-content .inner_row[data-column-margin="none
 
 
 /* Border Radius */
-.wpb_column[data-border-radius*="px"] > .vc_column-inner > .column-bg-overlay-wrap {
+.wpb_column[data-border-radius*="px"] > .vc_column-inner > .column-bg-overlay-wrap,
+.wpb_column[data-border-radius*="px"] .n-sticky > .vc_column-inner > .column-bg-overlay-wrap  {
   overflow: hidden;
 }
 

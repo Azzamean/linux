@@ -155,8 +155,8 @@ function nectar_icon($atts, $content = null) {
   			
   		  $icon_markup .= '<svg style="height:0;width:0;position:absolute;" aria-hidden="true" focusable="false">
   			  <linearGradient id="'.$icon_id.'" x2="1" y2="1">
-  			    <stop offset="0%" stop-color="'.$accent_gradient_from.'" />
-  			    <stop offset="100%" stop-color="'.$accent_gradient_to.'" />
+  			    <stop offset="0%" stop-color="'.esc_attr($accent_gradient_from).'" />
+  			    <stop offset="100%" stop-color="'.esc_attr($accent_gradient_to).'" />
   			  </linearGradient>
   			</svg>';
   	} 
@@ -341,7 +341,7 @@ function nectar_button($atts, $content = null) {
       $color === 'extra-color-gradient-2' ||
        $color === 'see-through-extra-color-gradient-1' || 
        $color === 'see-through-extra-color-gradient-2') {
-  			return $button_open_tag . ' href="' . esc_url($url) . '" '.$color_or.$hover_color_override.$hover_text_color_override.'><span class="start loading">' . wp_kses_post($text) . $button_icon. '</span><span class="hover">' . $text . $button_icon. '</span></a>'. $button_close_tag;
+  			return $button_open_tag . ' href="' . esc_url($url) . '" '.$color_or.$hover_color_override.$hover_text_color_override.'><span class="start loading">' . wp_kses_post($text) . $button_icon. '</span><span class="hover">' . wp_kses_post($text) . $button_icon. '</span></a>'. $button_close_tag;
   		}
       else {
   			return $button_open_tag . ' href="' . esc_url($url) . '" '.$color_or.$hover_color_override.$hover_text_color_override.'><span>' . wp_kses_post($text) . '</span>'. $button_icon . '</a>'. $button_close_tag;

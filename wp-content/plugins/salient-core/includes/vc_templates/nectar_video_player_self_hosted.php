@@ -90,7 +90,7 @@ echo '<div class="' . nectar_clean_classnames(esc_attr( $css_class )) . '" data-
 
 $video_attrs_arr = array();
 $video_classes_arr = array('nectar-video-self-hosted');
-if( empty($video_mp4) && empty($video_webm) ) {
+if( empty($video_mp4) && empty($video_webm) && false === $video_image_src ) {
   $video_classes_arr[] = 'no-video';
 }
 

@@ -223,6 +223,10 @@ div[id^="video-popup-"].mfp-iframe-scaler > .video > .wp-video > video {
 	color: #888;
 }
 
+.single-portfolio #sidebar .nectar_hook_sidebar_top {
+	margin-bottom: 40px;
+}
+
 #sidebar #sidebar-inner .project-sharing:not([data-sharing-style="fixed"]) {
 	margin-bottom: 20px;
 	margin-left: 0;
@@ -1649,8 +1653,8 @@ body .container-wrap[data-nav-pos="after_project_2"] .bottom_controls .previous-
 	display: inline-block;
 	margin-top: 0;
 	padding-top: 0;
-	-webkit-transform: translateY(-50%) translateX(-50%);
-	transform: translateY(-50%) translateX(-50%);
+	-webkit-transform: translateY(-50%) translateX(-50%) translateZ(0);
+	transform: translateY(-50%) translateX(-50%) translateZ(0);
 }
 
 .portfolio-items[data-ps="8"] .col .work-item.style-2[data-custom-content="on"] .vert-center {
@@ -1805,8 +1809,10 @@ body .portfolio-items .col .work-item.style-3-alt {
 .recent-work-carousel .portfolio-items.carousel .work-item:not([class*="style"]):hover .work-info .vert-center > * {
 	 opacity: 1;
 }
-.recent-work-carousel .portfolio-items.carousel .work-item:not([class*="style"]):hover .work-info .vert-center > a.default-link {
-	opacity: 0;
+@media only screen and (max-width: 1000px) {
+	.recent-work-carousel .portfolio-items.carousel .work-item:not([class*="style"]):hover .work-info .vert-center > a.default-link {
+		opacity: 0;
+	}
 }
 
 .recent-work-carousel .portfolio-items.carousel .work-item:not([class*="style"]):hover .work-info-bg {
@@ -1916,18 +1922,15 @@ body .portfolio-items .col {
 
 .portfolio-items[data-ps="7"] .col .work-info .vert-center { 
 	margin: 0;
-	-ms-transition: transform 1s cubic-bezier(0, 1, 0.5, 1), opacity 1s cubic-bezier(0, 1, 0.5, 1);
 	-webkit-transition: transform 1s cubic-bezier(0, 1, 0.5, 1), opacity 1s cubic-bezier(0, 1, 0.5, 1);
 	transition: transform 1s cubic-bezier(0, 1, 0.5, 1), opacity 1s cubic-bezier(0, 1, 0.5, 1);
-	-ms-transform: translateY(-50%) perspective(1px) scale(0.8);
-	-webkit-transform: translateY(-50%) perspective(1px) scale(0.8);
-	transform: translateY(-50%) perspective(1px) scale(0.8);
+	-webkit-transform: translateY(-50%) perspective(1px) scale(0.8) translateZ(0);
+	transform: translateY(-50%) perspective(1px) scale(0.8) translateZ(0);
 	-webkit-backface-visibility: hidden;
 	backface-visibility: hidden;
 	opacity: 0;
 }
 .portfolio-items[data-ps="7"] .col .work-info-bg {
-	-ms-transition:  opacity 1s cubic-bezier(0, 1, 0.5, 1);
 	-webkit-transition: opacity 1s cubic-bezier(0, 1, 0.5, 1);
 	transition: opacity 1s cubic-bezier(0, 1, 0.5, 1);
 }
@@ -1958,9 +1961,9 @@ body .portfolio-items .col {
 }
 .portfolio-items[data-ps="7"] .col:hover .work-info .vert-center {
 	opacity: 1;
-	-webkit-transform: scale(1) perspective(1px) translateY(-50%);
-	-ms-transform: scale(1) perspective(1px) translateY(-50%);
-	transform: scale(1) perspective(1px) translateY(-50%);
+	-webkit-transform: scale(1) perspective(1px) translateY(-50%) translateZ(0);
+	-ms-transform: scale(1) perspective(1px) translateY(-50%) translateZ(0);
+	transform: scale(1) perspective(1px) translateY(-50%) translateZ(0);
 }
 
 .portfolio-items[data-ps="8"] .col img {
@@ -2348,10 +2351,24 @@ body .portfolio-items[data-col-num="elastic"] .work-info-bg {
 	z-index: 10;
 	top: 50%;
 	width: 100%;
-  -webkit-transform: translateY(-50%);
-	transform: translateY(-50%);
+  -webkit-transform: translateY(-50%) translateZ(0);
+	transform: translateY(-50%) translateZ(0);
   -webkit-transition: all 0.2s ease-out 0s;
 	transition: all 0.2s ease-out 0s;
+}
+.portfolio-items[data-ps="2"] .col .work-info .vert-center {
+	-webkit-transition: opacity 0.2s ease-out, transform 0.2s ease-out;
+	transition: opacity 0.2s ease-out, transform 0.2s ease-out;
+	-webkit-transform: translateY(calc(-50% - 20px)) translateZ(0);
+	transform: translateY(calc(-50% - 20px)) translateZ(0);
+	margin-top: 0;
+}
+.portfolio-items[data-ps="2"] .col .work-item:hover .work-info .vert-center {
+	-webkit-transform: translateY(-50%) translateZ(0);
+	transform: translateY(-50%) translateZ(0);
+}
+.portfolio-items[data-ps="2"] .col .work-item .work-info .vert-center > * {
+	opacity: 1;
 }
 
 .portfolio-items .col .work-info .vert-center .no-text {
@@ -2385,6 +2402,7 @@ body .portfolio-items .col .work-info .vert-center.no-text {
 	-webkit-transition: all 0.2s ease;
 }
 
+.portfolio-items[data-ps="6"] .work-item .work-meta .inner .custom-content *,
 .portfolio-items .col .work-info .vert-center .custom-content, 
 .portfolio-items .col .work-info .vert-center .custom-content *,
 .portfolio-items .custom-content .sharing-default-minimal .nectar-social[data-color-override="override"] .nectar-social-inner a:not(:hover) i {
@@ -2392,11 +2410,19 @@ body .portfolio-items .col .work-info .vert-center.no-text {
 	color: #fff;
 }
 
+.portfolio-items[data-ps="6"] .work-item .work-meta .inner .custom-content a {
+	position: relative;
+	width: auto;
+	height: auto;
+}
+
+
 .portfolio-items .custom-content .sharing-default-minimal .nectar-social-inner > .nectar-sharing:not(:hover) {
 	border-color: #fff;
 }
 
-.portfolio-items .col .work-info .vert-center .custom-content .nectar-button {
+.portfolio-items .col .work-info .vert-center .custom-content .nectar-button,
+.portfolio-items[data-ps="6"] .work-item .work-meta .inner .custom-content .nectar-button {
 	display: inline-block!important;
 }
 
@@ -2817,6 +2843,7 @@ body.cssreflections .portfolio-items .parallaxImg.transition {
 .portfolio-items[data-ps="2"] .col .work-item:hover .work-info .vert-center > *,
 .portfolio-items[data-ps="1"] .col .work-item:hover .work-info,
 .portfolio-items[data-ps="1"] .col .work-item:hover .work-info .vert-center > *,
+.recent-work-carousel.default-style .work-item:hover .work-info .vert-center > *,
 .portfolio-items.carousel .col .work-item.style-2:hover .work-info,
 .portfolio-items.carousel .col .work-item.style-2:hover .work-info .vert-center > * {
 	opacity: 1;
@@ -4080,9 +4107,13 @@ body[data-ext-responsive="true"][data-full-width-header="true"] .nectar_fullscre
 	}
 	
 	.project-title #all-items {
-		left: 142px;
+		left: 50%;
+		transform: translateX(-50%);
 		float: none;
 		position: absolute;
+	}
+	.project-title #portfolio-nav #all-items a {
+		margin: 0;
 	}
 	
 

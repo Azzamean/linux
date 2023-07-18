@@ -63,10 +63,10 @@ if( function_exists('nectar_el_dynamic_classnames') ) {
 echo '<div class="'.nectar_clean_classnames(implode(' ',$el_classes)).'"'.$styles.'>';
 
 if (!empty($link_href)) {
-    echo '<a href="'.esc_url($link_href).'">'.wpb_js_remove_wpautop( $content, true ).'</a>';
+    echo '<a href="'.esc_url($link_href).'">'.wpb_js_remove_wpautop( wp_kses_post( $content ), true ).'</a>';
 } 
 else {
-    echo wpb_js_remove_wpautop( $content, true );
+    echo wpb_js_remove_wpautop( wp_kses_post( $content ), true );
 }
 
 echo '</div>';

@@ -54,6 +54,7 @@ if( !function_exists('nectar_wpbakery_element_list') ) {
 			'nectar_post_grid',
 			'nectar_single_testimonial',
 			'nectar_video_lightbox',
+			'nectar_video_player_self_hosted',
 			'nectar_woo_products',
 			'page_link',
 			'page_submenu',
@@ -1441,11 +1442,10 @@ function nectar_custom_maps() {
 					"type" => "nectar_attach_video",
 					"class" => "",
 					"group" => "Background",
-					"heading" => esc_html__("WebM File URL", "salient-core"),
+					"heading" => esc_html__("MP4 File URL", "salient-core"),
 					"value" => "",
-					"param_name" => "video_webm",
-					"description" => esc_html__("You must include this format & the mp4 format to render your video with cross browser compatibility. OGV is optional.
-				Video must be in a 16:9 aspect ratio.", "salient-core"),
+					"param_name" => "video_mp4",
+					"description" => esc_html__("You must include this format or the .webm format to render your video with cross browser compatibility. OGV is optional. Video must be in a 16:9 aspect ratio.", "salient-core"),
 					"dependency" => Array('element' => "video_bg", 'value' => array('use_video'))
 				),
 
@@ -1453,12 +1453,14 @@ function nectar_custom_maps() {
 					"type" => "nectar_attach_video",
 					"class" => "",
 					"group" => "Background",
-					"heading" => esc_html__("MP4 File URL", "salient-core"),
+					"heading" => esc_html__("WebM File URL", "salient-core"),
 					"value" => "",
-					"param_name" => "video_mp4",
-					"description" => esc_html__("Enter the URL for your mp4 video file here", "salient-core"),
+					"param_name" => "video_webm",
+					"description" => esc_html__("Enter the URL for your .webm video file here.", "salient-core"),
 					"dependency" => Array('element' => "video_bg", 'value' => array('use_video'))
 				),
+
+				
 
 				array(
 					"type" => "nectar_attach_video",
@@ -1467,7 +1469,7 @@ function nectar_custom_maps() {
 					"heading" => esc_html__("OGV File URL", "salient-core"),
 					"value" => "",
 					"param_name" => "video_ogv",
-					"description" => esc_html__("Enter the URL for your ogv video file here", "salient-core"),
+					"description" => esc_html__("Enter the URL for your .ogv video file here.", "salient-core"),
 					"dependency" => Array('element' => "video_bg", 'value' => array('use_video'))
 				),
 
@@ -2652,8 +2654,8 @@ function nectar_custom_maps() {
 					"dependency" => Array('element' => "bg_image_animation", 'value' => array('clip-path')),
 					"description" => '',
 					"value" => array(
-						esc_html__("Triggered Once When Visible", "salient-core") => "default",
-						esc_html__("Scroll Position Animation", "salient-core") => "scroll",
+						esc_html__("Triggered Once", "salient-core") => "default",
+						esc_html__("Scroll Position", "salient-core") => "scroll",
 					),
 				),
 
@@ -4087,11 +4089,10 @@ function nectar_custom_maps() {
 					"type" => "nectar_attach_video",
 					"class" => "",
 					'group' => esc_html__( 'Background', 'salient-core' ),
-					"heading" => esc_html__("WebM File URL", "salient-core"),
+					"heading" => esc_html__("MP4 File URL", "salient-core"),
 					"value" => "",
-					"param_name" => "video_webm",
-					"description" => esc_html__("You must include this format & the mp4 format to render your video with cross browser compatibility. OGV is optional.
-				Video must be in a 16:9 aspect ratio.", "salient-core"),
+					"param_name" => "video_mp4",
+					"description" => esc_html__("You must include this format or the .webm format to render your video with cross browser compatibility. OGV is optional. Video must be in a 16:9 aspect ratio.", "salient-core"),
 					"dependency" => Array('element' => "video_bg", 'value' => array('use_video'))
 				),
 
@@ -4099,10 +4100,10 @@ function nectar_custom_maps() {
 					"type" => "nectar_attach_video",
 					"class" => "",
 					'group' => esc_html__( 'Background', 'salient-core' ),
-					"heading" => esc_html__("MP4 File URL", "salient-core"),
+					"heading" => esc_html__("WebM File URL", "salient-core"),
 					"value" => "",
-					"param_name" => "video_mp4",
-					"description" => esc_html__("Enter the URL for your mp4 video file here", "salient-core"),
+					"param_name" => "video_webm",
+					"description" => esc_html__("Enter the URL for your .webm video file here.", "salient-core"),
 					"dependency" => Array('element' => "video_bg", 'value' => array('use_video'))
 				),
 
@@ -4113,7 +4114,7 @@ function nectar_custom_maps() {
 					"heading" => esc_html__("OGV File URL", "salient-core"),
 					"value" => "",
 					"param_name" => "video_ogv",
-					"description" => esc_html__("Enter the URL for your ogv video file here", "salient-core"),
+					"description" => esc_html__("Enter the URL for your .ogv video file here.", "salient-core"),
 					"dependency" => Array('element' => "video_bg", 'value' => array('use_video'))
 				),
 
@@ -4582,6 +4583,7 @@ function nectar_custom_maps() {
 					"value" => array(
 						 esc_html__("Triggered Once When Visible", "salient-core") => "default",
 						 esc_html__("Scroll Position Animation", "salient-core") => "parallax",
+						 esc_html__("Scroll Position Advanced", "salient-core") => "scroll_pos_advanced",
 					),
 				),
 
@@ -4624,6 +4626,170 @@ function nectar_custom_maps() {
 					"description" => '',
 					"group" => "Animation"
 				),
+
+
+
+
+				array(
+					'type' => 'nectar_multi_range_slider',
+					'heading' => esc_html__('Viewport Trigger Offset', 'salient-core'),
+					'param_name' => 'animation_trigger_offset',
+					"group" => "Animation",
+					'value' => '0,100',
+					'options' => array(
+						'min' => '0',
+						'max' => '100',
+					),
+					"dependency" => Array('element' => "animation_type", 'value' => array('scroll_pos_advanced')),
+					'description' => esc_html__('Set the percentage of the viewport that the animation will trigger and end at.', 'salient-core'),
+				),
+
+				array(
+					"type" => "nectar_radio_tab_selection",
+					"class" => "",
+					"group" => "Animation",
+					"heading" => esc_html__("Animation State", "salient-core"),
+					"dependency" => Array('element' => "animation_type", 'value' => array('scroll_pos_advanced')),
+					"param_name" => "animation_adv_start_end",
+					"options" => array(
+						esc_html__("Start", "salient-core") => "start",
+						esc_html__("End", "salient-core") => "end",
+					),
+				),
+
+				array(
+					"type" => "nectar_numerical",
+					"class" => "",
+					"heading" => esc_html__("Translate Y", "salient-core"),
+					"value" => "",
+					"group" => "Animation",
+					"placeholder" => '',
+					"edit_field_class" => "col-md-6 radio_tab_dep dep--animation_adv_start_end--start",
+					"dependency" => Array('element' => "animation_type", 'value' => array('scroll_pos_advanced')),
+					"param_name" => "animation_start_translate_y",
+					"description" => ""
+				),
+				array(
+					"type" => "nectar_numerical",
+					"class" => "",
+					"group" => "Animation",
+					"heading" => esc_html__("Translate Y", "salient-core"),
+					"value" => "",
+					"placeholder" => '',
+					"edit_field_class" => "col-md-6 radio_tab_dep dep--animation_adv_start_end--end",
+					"dependency" => Array('element' => "animation_type", 'value' => array('scroll_pos_advanced')),
+					"param_name" => "animation_end_translate_y",
+					"description" => ""
+				),
+
+
+				array(
+					"type" => "nectar_numerical",
+					"class" => "",
+					"group" => "Animation",
+					"placeholder" => '',
+					"heading" => esc_html__("Translate X", "salient-core"),
+					"value" => "",
+					"edit_field_class" => "col-md-6 col-md-6-last radio_tab_dep dep--animation_adv_start_end--start",
+					"dependency" => Array('element' => "animation_type", 'value' => array('scroll_pos_advanced')),
+					"param_name" => "animation_start_translate_x",
+					"description" => ""
+				),
+
+				array(
+					"type" => "nectar_numerical",
+					"class" => "",
+					"group" => "Animation",
+					"placeholder" => '',
+					"heading" => esc_html__("Translate X", "salient-core"),
+					"value" => "",
+					"edit_field_class" => "col-md-6 col-md-6-last radio_tab_dep dep--animation_adv_start_end--end",
+					"dependency" => Array('element' => "animation_type", 'value' => array('scroll_pos_advanced')),
+					"param_name" => "animation_end_translate_x",
+					"description" => ""
+				),
+
+
+				array(
+					'type' => 'nectar_range_slider',
+					'heading' => esc_html__( 'Scale', 'salient-core' ),
+					'param_name' => 'animation_start_scale',
+					"edit_field_class" => "col-md-6 radio_tab_dep dep--animation_adv_start_end--start",
+					"dependency" => Array('element' => "animation_type", 'value' => array('scroll_pos_advanced')),
+					"group" => "Animation",
+					'value' => '1',
+					'options' => array(
+						'min' => '0',
+						'max' => '3',
+						'step' => '0.05',
+						'suffix' => 'x'
+					),
+					'description' => ''
+				),
+
+				array(
+					'type' => 'nectar_range_slider',
+					'heading' => esc_html__( 'Scale', 'salient-core' ),
+					'param_name' => 'animation_end_scale',
+					"edit_field_class" => "col-md-6 radio_tab_dep dep--animation_adv_start_end--end",
+					"dependency" => Array('element' => "animation_type", 'value' => array('scroll_pos_advanced')),
+					"group" => "Animation",
+					'value' => '1',
+					'options' => array(
+						'min' => '0',
+						'max' => '3',
+						'step' => '0.05',
+						'suffix' => 'x'
+					),
+					'description' => ''
+				),
+
+				array(
+					'type' => 'nectar_range_slider',
+					'heading' => esc_html__( 'Opacity', 'salient-core' ),
+					'param_name' => 'animation_start_opacity',
+					"edit_field_class" => "col-md-6 col-md-6-last radio_tab_dep dep--animation_adv_start_end--start",
+					"dependency" => Array('element' => "animation_type", 'value' => array('scroll_pos_advanced')),
+					"group" => "Animation",
+					'value' => '1',
+					'options' => array(
+						'min' => '0',
+						'max' => '1',
+						'step' => '0.01',
+						'suffix' => ''
+					),
+					'description' => ''
+				),
+
+				array(
+					'type' => 'nectar_range_slider',
+					'heading' => esc_html__( 'Opacity', 'salient-core' ),
+					'param_name' => 'animation_end_opacity',
+					"edit_field_class" => "col-md-6 col-md-6-last radio_tab_dep dep--animation_adv_start_end--end",
+					"dependency" => Array('element' => "animation_type", 'value' => array('scroll_pos_advanced')),
+					"group" => "Animation",
+					'value' => '1',
+					'options' => array(
+						'min' => '0',
+						'max' => '1',
+						'step' => '0.01',
+						'suffix' => ''
+					),
+					'description' => ''
+				),
+				array(
+					"type" => "checkbox",
+					"class" => "",
+					"heading" => esc_html__("Persist Animation On Mobile", "salient-core"),
+					"value" => array("Enable" => "true" ),
+					"param_name" => "persist_animation_on_mobile",
+					"dependency" => Array('element' => "animation_type", 'value' => array('scroll_pos_advanced')),
+					'edit_field_class' => 'vc_col-xs-12 salient-fancy-checkbox',
+					"description" => '',
+					"group" => "Animation"
+				),
+
+				
         
 				array(
 					"type" => "checkbox",
@@ -5993,11 +6159,10 @@ function nectar_custom_maps() {
 					"type" => "nectar_attach_video",
 					"class" => "",
 					'group' => esc_html__( 'Background', 'salient-core' ),
-					"heading" => esc_html__("WebM File URL", "salient-core"),
+					"heading" => esc_html__("MP4 File URL", "salient-core"),
 					"value" => "",
-					"param_name" => "video_webm",
-					"description" => esc_html__("You must include this format & the mp4 format to render your video with cross browser compatibility.
-				Video must be in a 16:9 aspect ratio.", "salient-core"),
+					"param_name" => "video_mp4",
+					"description" => esc_html__("You must include this format or the .webm format to render your video with cross browser compatibility. Video must be in a 16:9 aspect ratio.", "salient-core"),
 					"dependency" => Array('element' => "video_bg", 'value' => array('use_video'))
 				),
 
@@ -6005,12 +6170,13 @@ function nectar_custom_maps() {
 					"type" => "nectar_attach_video",
 					"class" => "",
 					'group' => esc_html__( 'Background', 'salient-core' ),
-					"heading" => esc_html__("MP4 File URL", "salient-core"),
+					"heading" => esc_html__("WebM File URL", "salient-core"),
 					"value" => "",
-					"param_name" => "video_mp4",
-					"description" => esc_html__("Enter the URL for your mp4 video file here", "salient-core"),
+					"param_name" => "video_webm",
+					"description" => esc_html__("Enter the URL for your .webm video file here.", "salient-core"),
 					"dependency" => Array('element' => "video_bg", 'value' => array('use_video'))
 				),
+
 				array(
 					"type" => "dropdown",
 					"class" => "",
@@ -6428,9 +6594,10 @@ function nectar_custom_maps() {
 					"group" => "Animation",
 					"param_name" => "animation_type",
 					"value" => array(
-						esc_html__("Triggered Once When Visible", "salient-core") => "default",
-						esc_html__("Scroll Position Animation", "salient-core") => "parallax",
-						esc_html__("Scroll Position Animation + Entrance", "salient-core") => "entrance_and_parallax",
+						esc_html__("Triggered Once", "salient-core") => "default",
+						esc_html__("Scroll Position", "salient-core") => "parallax",
+						esc_html__("Scroll Position + Entrance", "salient-core") => "entrance_and_parallax",
+						esc_html__("Scroll Position Advanced", "salient-core") => "scroll_pos_advanced",
 					),
 				),
 		
@@ -6449,7 +6616,170 @@ function nectar_custom_maps() {
 					),
 				),
 
-        array(
+				array(
+					'type' => 'nectar_multi_range_slider',
+					'heading' => esc_html__('Viewport Trigger Offset', 'salient-core'),
+					'param_name' => 'animation_trigger_offset',
+					"group" => "Animation",
+					'value' => '0,100',
+					'options' => array(
+						'min' => '0',
+						'max' => '100',
+					),
+					"dependency" => Array('element' => "animation_type", 'value' => array('scroll_pos_advanced')),
+					'description' => esc_html__('Set the percentage of the viewport that the animation will trigger and end at.', 'salient-core'),
+				),
+
+				array(
+					"type" => "nectar_radio_tab_selection",
+					"class" => "",
+					"group" => "Animation",
+					"heading" => esc_html__("Animation State", "salient-core"),
+					"dependency" => Array('element' => "animation_type", 'value' => array('scroll_pos_advanced')),
+					"param_name" => "animation_adv_start_end",
+					"options" => array(
+						esc_html__("Start", "salient-core") => "start",
+						esc_html__("End", "salient-core") => "end",
+					),
+				),
+
+				array(
+					"type" => "nectar_numerical",
+					"class" => "",
+					"heading" => esc_html__("Translate Y", "salient-core"),
+					"value" => "",
+					"group" => "Animation",
+					"placeholder" => '',
+					"edit_field_class" => "col-md-6 radio_tab_dep dep--animation_adv_start_end--start",
+					"dependency" => Array('element' => "animation_type", 'value' => array('scroll_pos_advanced')),
+					"param_name" => "animation_start_translate_y",
+					"description" => ""
+				),
+				array(
+					"type" => "nectar_numerical",
+					"class" => "",
+					"group" => "Animation",
+					"heading" => esc_html__("Translate Y", "salient-core"),
+					"value" => "",
+					"placeholder" => '',
+					"edit_field_class" => "col-md-6 radio_tab_dep dep--animation_adv_start_end--end",
+					"dependency" => Array('element' => "animation_type", 'value' => array('scroll_pos_advanced')),
+					"param_name" => "animation_end_translate_y",
+					"description" => ""
+				),
+
+
+				array(
+					"type" => "nectar_numerical",
+					"class" => "",
+					"group" => "Animation",
+					"placeholder" => '',
+					"heading" => esc_html__("Translate X", "salient-core"),
+					"value" => "",
+					"edit_field_class" => "col-md-6 col-md-6-last radio_tab_dep dep--animation_adv_start_end--start",
+					"dependency" => Array('element' => "animation_type", 'value' => array('scroll_pos_advanced')),
+					"param_name" => "animation_start_translate_x",
+					"description" => ""
+				),
+
+				array(
+					"type" => "nectar_numerical",
+					"class" => "",
+					"group" => "Animation",
+					"placeholder" => '',
+					"heading" => esc_html__("Translate X", "salient-core"),
+					"value" => "",
+					"edit_field_class" => "col-md-6 col-md-6-last radio_tab_dep dep--animation_adv_start_end--end",
+					"dependency" => Array('element' => "animation_type", 'value' => array('scroll_pos_advanced')),
+					"param_name" => "animation_end_translate_x",
+					"description" => ""
+				),
+
+
+				array(
+					'type' => 'nectar_range_slider',
+					'heading' => esc_html__( 'Scale', 'salient-core' ),
+					'param_name' => 'animation_start_scale',
+					"edit_field_class" => "col-md-6 radio_tab_dep dep--animation_adv_start_end--start",
+					"dependency" => Array('element' => "animation_type", 'value' => array('scroll_pos_advanced')),
+					"group" => "Animation",
+					'value' => '1',
+					'options' => array(
+						'min' => '0',
+						'max' => '3',
+						'step' => '0.05',
+						'suffix' => 'x'
+					),
+					'description' => ''
+				),
+
+				array(
+					'type' => 'nectar_range_slider',
+					'heading' => esc_html__( 'Scale', 'salient-core' ),
+					'param_name' => 'animation_end_scale',
+					"edit_field_class" => "col-md-6 radio_tab_dep dep--animation_adv_start_end--end",
+					"dependency" => Array('element' => "animation_type", 'value' => array('scroll_pos_advanced')),
+					"group" => "Animation",
+					'value' => '1',
+					'options' => array(
+						'min' => '0',
+						'max' => '3',
+						'step' => '0.05',
+						'suffix' => 'x'
+					),
+					'description' => ''
+				),
+
+				array(
+					'type' => 'nectar_range_slider',
+					'heading' => esc_html__( 'Opacity', 'salient-core' ),
+					'param_name' => 'animation_start_opacity',
+					"edit_field_class" => "col-md-6 col-md-6-last radio_tab_dep dep--animation_adv_start_end--start",
+					"dependency" => Array('element' => "animation_type", 'value' => array('scroll_pos_advanced')),
+					"group" => "Animation",
+					'value' => '1',
+					'options' => array(
+						'min' => '0',
+						'max' => '1',
+						'step' => '0.01',
+						'suffix' => ''
+					),
+					'description' => ''
+				),
+
+				array(
+					'type' => 'nectar_range_slider',
+					'heading' => esc_html__( 'Opacity', 'salient-core' ),
+					'param_name' => 'animation_end_opacity',
+					"edit_field_class" => "col-md-6 col-md-6-last radio_tab_dep dep--animation_adv_start_end--end",
+					"dependency" => Array('element' => "animation_type", 'value' => array('scroll_pos_advanced')),
+					"group" => "Animation",
+					'value' => '1',
+					'options' => array(
+						'min' => '0',
+						'max' => '1',
+						'step' => '0.01',
+						'suffix' => ''
+					),
+					'description' => ''
+				),
+				array(
+					"type" => "checkbox",
+					"class" => "",
+					"heading" => esc_html__("Persist Animation On Mobile", "salient-core"),
+					"value" => array("Enable" => "true" ),
+					"param_name" => "persist_animation_on_mobile",
+					"dependency" => Array('element' => "animation_type", 'value' => array('scroll_pos_advanced')),
+					'edit_field_class' => 'vc_col-xs-12 salient-fancy-checkbox',
+					"description" => '',
+					"group" => "Animation"
+				),
+				
+
+
+
+
+        		array(
 					"type" => "nectar_numerical",
 					"class" => "",
 					"group" => "Animation",
@@ -6462,7 +6792,8 @@ function nectar_custom_maps() {
 					"description" => '',
 				),
 
-        array(
+				
+        		array(
 					"type" => "checkbox",
 					"class" => "",
 					"heading" => esc_html__("Persist Movement On Mobile", "salient-core"),
@@ -7423,36 +7754,6 @@ function nectar_custom_maps() {
 		 "value" => ''
 	 ));
 
-		vc_add_param("vc_row_inner", array(
-			"type" => "textfield",
-			"class" => "",
-			"heading" => '<span class="group-title">' . esc_html__("Minimum Width", "salient-core") . "</span>",
-			"value" => "",
-			"edit_field_class" => "desktop row-min-width-device-group",
-			"param_name" => "min_width_desktop",
-			"description" => ""
-		));
-
-		vc_add_param("vc_row_inner", array(
-			"type" => "textfield",
-			"class" => "",
-			"heading" => "",
-			"value" => "",
-			"edit_field_class" => "tablet row-min-width-device-group",
-			"param_name" => "min_width_tablet",
-			"description" => ""
-		));
-
-		vc_add_param("vc_row_inner", array(
-			"type" => "textfield",
-			"class" => "",
-			"heading" => "",
-			"value" => "",
-			"edit_field_class" => "phone row-min-width-device-group",
-			"param_name" => "min_width_phone",
-			"description" => ""
-		));
-
 
     vc_add_param("vc_row_inner", array(
 			"type" => "dropdown",
@@ -7623,13 +7924,66 @@ function nectar_custom_maps() {
     ));
 
 
-		vc_add_param("vc_row_inner", array(
-			"type" => "textfield",
-			"class" => "",
-			"heading" => esc_html__("Extra Class Name", "salient-core"),
-			"param_name" => "class",
-			"value" => ""
-		));
+	vc_add_param("vc_row_inner", array(
+		"type" => "textfield",
+		"class" => "",
+		"heading" => '<span class="group-title">' . esc_html__("Minimum Width", "salient-core") . "</span>",
+		"value" => "",
+		"edit_field_class" => "desktop row-min-width-device-group",
+		"param_name" => "min_width_desktop",
+		"description" => ""
+	));
+
+	vc_add_param("vc_row_inner", array(
+		"type" => "textfield",
+		"class" => "",
+		"heading" => "",
+		"value" => "",
+		"edit_field_class" => "tablet row-min-width-device-group",
+		"param_name" => "min_width_tablet",
+		"description" => ""
+	));
+
+	vc_add_param("vc_row_inner", array(
+		"type" => "textfield",
+		"class" => "",
+		"heading" => "",
+		"value" => "",
+		"edit_field_class" => "phone row-min-width-device-group",
+		"param_name" => "min_width_phone",
+		"description" => ""
+	));
+
+
+	vc_add_param("vc_row_inner", array(
+		"type" => "textfield",
+		"class" => "",
+		"heading" => '<span class="group-title">' . esc_html__("Maximum Width", "salient-core") . "</span>",
+		"value" => "",
+		"edit_field_class" => "desktop row-max-width-device-group",
+		"param_name" => "max_width_desktop",
+		"description" => ""
+	));
+
+	vc_add_param("vc_row_inner", array(
+		"type" => "textfield",
+		"class" => "",
+		"heading" => "",
+		"value" => "",
+		"edit_field_class" => "tablet row-max-width-device-group",
+		"param_name" => "max_width_tablet",
+		"description" => ""
+	));
+
+	vc_add_param("vc_row_inner", array(
+		"type" => "textfield",
+		"class" => "",
+		"heading" => "",
+		"value" => "",
+		"edit_field_class" => "phone row-max-width-device-group",
+		"param_name" => "max_width_phone",
+		"description" => ""
+	));
 
 		vc_add_param("vc_row_inner", array(
 			"type" => "textfield",
@@ -7661,6 +8015,14 @@ function nectar_custom_maps() {
 				  "None" => "none",
 			),
 			'save_always' => true
+		));
+
+		vc_add_param("vc_row_inner", array(
+			"type" => "textfield",
+			"class" => "",
+			"heading" => esc_html__("Extra Class Name", "salient-core"),
+			"param_name" => "class",
+			"value" => ""
 		));
 
 		vc_add_param("vc_row_inner",  array(
@@ -7735,8 +8097,8 @@ function nectar_custom_maps() {
 
 	  	$bar = '
 	  	<div class="nectar-progress-bar">
-	  		<p>' . $title . '</p>
-	  		<div class="bar-wrap"><span class="'.strtolower($color).'" data-width="' . $percent . '"> <strong><i>' . $percent . '</i>%</strong> </span></div>
+	  		<p>' . wp_kses_post($title) . '</p>
+	  		<div class="bar-wrap"><span class="'.strtolower($color).'" data-width="' . esc_attr($percent) . '"> <strong><i>' . wp_kses_post($percent) . '</i>%</strong> </span></div>
 	  	</div>';
 	    return $bar;
 	  }
@@ -7934,23 +8296,23 @@ function nectar_custom_maps() {
 								}
 								
 							} else {
-			          $bg_style_markup = (!empty($image_bg)) ? 'style="background-image:url('. $image_bg[0] .');"' : '';
+			          $bg_style_markup = (!empty($image_bg)) ? 'style="background-image:url('. esc_attr($image_bg[0]) .');"' : '';
 							}
 
 		        }
 
-		        $bg_overlay_markup = (!empty($atts['color_overlay'])) ? 'style=" background-color: '.$atts['color_overlay'].';"' : '';
+		        $bg_overlay_markup = (!empty($atts['color_overlay'])) ? 'style=" background-color: '.esc_attr($atts['color_overlay']).';"' : '';
 
-		        $markup .= '<div class="nectar-category-grid-item"> <div class="inner"> <a class="nectar-category-grid-link" href="'. get_term_link($temp_cat_obj_holder->term_id) .'" aria-label="'.$temp_cat_obj_holder->name.'"></a>';
+		        $markup .= '<div class="nectar-category-grid-item"> <div class="inner"> <a class="nectar-category-grid-link" href="'. get_term_link($temp_cat_obj_holder->term_id) .'" aria-label="'.esc_attr($temp_cat_obj_holder->name).'"></a>';
 		        $markup .= '<div class="nectar-category-grid-item-bg" '.$bg_style_markup.'></div>';
 		        $markup .= '<div class="bg-overlay" '.$bg_overlay_markup.' data-opacity="'. $atts['color_overlay_opacity'] .'" data-hover-opacity="'. $atts['color_overlay_hover_opacity'] .'"></div>';
-		        $markup .= '<div class="content" data-subtext-vis="'. $atts['subtext_visibility'] .'" data-subtext="'. $atts['subtext'] .'" >';
+		        $markup .= '<div class="content" data-subtext-vis="'. esc_attr($atts['subtext_visibility']) .'" data-subtext="'. esc_attr($atts['subtext']) .'" >';
 
 						$heading_tag = 'h3';
 						if( isset($atts['heading_tag']) && in_array($atts['heading_tag'], array('h2','h3','h4')) ) {
 							$heading_tag = $atts['heading_tag'];
 						}
-						$markup .='<'.esc_html($heading_tag).' class="cat-heading">'. $temp_cat_obj_holder->name .'</'.esc_html($heading_tag).'>';
+						$markup .='<'.esc_html($heading_tag).' class="cat-heading">'. wp_kses_post($temp_cat_obj_holder->name) .'</'.esc_html($heading_tag).'>';
 
 		        if($atts['subtext'] === 'cat_item_count') {
 
@@ -7977,7 +8339,7 @@ function nectar_custom_maps() {
 		          $markup .= $subtext_count_markup;
 
 		        } else if($atts['subtext'] === 'custom') {
-		          $markup .= '<span class="subtext">' . $atts['custom_subtext'] . '</span>';
+		          $markup .= '<span class="subtext">' . wp_kses_post($atts['custom_subtext']) . '</span>';
 		        }
 		        $markup .= '</div>';
 		        $markup .= '</div></div>';
@@ -9828,6 +10190,23 @@ function nectar_custom_maps() {
 
 
 
+add_filter( 'nectar_mask_image_src', 'nectar_mask_image_src_mod', 10, 1);
+/**
+ * Mask image src.
+ *
+ * @since 2.0
+ */
+if( !function_exists('nectar_mask_image_src_mod') ) {
+	function nectar_mask_image_src_mod($src) {
+		if( !empty($src) && strpos($src, 'LOCAL_SVG_ASSET__') !== false ) {
+			$src = str_replace('LOCAL_SVG_ASSET__', '', $src);
+			return SALIENT_CORE_PLUGIN_PATH  . '/includes/img/masks/custom/'.sanitize_text_field($src).'.svg';
+		}
+		
+		return $src;
+	}
+
+}
 
 
 add_filter( 'vc_iconpicker-type-iconsmind', 'vc_iconpicker_type_iconsmind' );

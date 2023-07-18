@@ -22,20 +22,21 @@ class NectarElAssets {
 
   private static $instance;
 
-  public static $using_woocommerce      = false;
-  public static $post_content           = '';
-  public static $portfolio_content      = '';
-  public static $woo_shop_content       = '';
-  public static $woo_taxonmy_content    = '';
-  public static $woo_short_desc_content = '';
-  public static $templatera_content     = array();
+  public static $using_woocommerce                = false;
+  public static $post_content                     = '';
+  public static $portfolio_content                = '';
+  public static $woo_shop_content                 = '';
+  public static $woo_taxonmy_content              = '';
+  public static $woo_short_desc_content           = '';
+  public static $global_section_locations_content = array();
+  public static $templatera_content               = array();
 
 	/**
 	 * Constructor.
 	 */
   public function __construct() {
 		if( !is_admin() ) {
-	    add_action( 'wp', array( $this, 'get_page_content' ), 10 );
+	    	add_action( 'wp', array( $this, 'get_page_content' ), 10 );
 		}
   }
 
@@ -58,7 +59,7 @@ class NectarElAssets {
     global $post;
 
     if ( ! is_object( $post ) ) {
-			return;
+		return;
     }
 
     // Check if using WooCommerce.
@@ -72,7 +73,7 @@ class NectarElAssets {
     // Page/Post.
     self::$post_content = ( isset( $post->post_content ) ) ? $post->post_content : '';
 
-		// WooCommerce.
+	// WooCommerce.
     if( self::$using_woocommerce ) {
 
       // WooCommerce Shop Page.
@@ -95,13 +96,13 @@ class NectarElAssets {
     }
 
 
-		// Global template shortcodes.
-		preg_match_all( '/\[templatera(\s.*?)?\]/s', self::$post_content, $templatera_shortcode_match, PREG_SET_ORDER  );
-		
-		preg_match_all( '/\[nectar_global_section(\s.*?)?\]/s', self::$post_content, $nectar_global_section_match, PREG_SET_ORDER  );
-		preg_match_all( '/\[nectar_global_section(\s.*?)?\]/s', self::$portfolio_content, $nectar_global_section_match_portfolio, PREG_SET_ORDER  );
-		
-		$global_template_shortcode_match = array_merge($templatera_shortcode_match, $nectar_global_section_match, $nectar_global_section_match_portfolio);
+	// Global template shortcodes.
+	preg_match_all( '/\[templatera(\s.*?)?\]/s', self::$post_content, $templatera_shortcode_match, PREG_SET_ORDER  );
+	
+	preg_match_all( '/\[nectar_global_section(\s.*?)?\]/s', self::$post_content, $nectar_global_section_match, PREG_SET_ORDER  );
+	preg_match_all( '/\[nectar_global_section(\s.*?)?\]/s', self::$portfolio_content, $nectar_global_section_match_portfolio, PREG_SET_ORDER  );
+	
+	$global_template_shortcode_match = array_merge($templatera_shortcode_match, $nectar_global_section_match, $nectar_global_section_match_portfolio);
 
     if( !empty($global_template_shortcode_match) ) {
 
@@ -132,28 +133,59 @@ class NectarElAssets {
 
     } // End found global template shortcode.
 		
-		// Global template theme options.
-		$theme_template_locations = NectarThemeManager::$global_seciton_options;
+
+	// Global template theme options
+	$theme_template_locations = NectarThemeManager::$global_seciton_options;
+	
+	$nectar_options = NectarThemeManager::$options;
+	
+	foreach ($theme_template_locations as $key => $location) {
 		
-		$nectar_options = NectarThemeManager::$options;
-		
-		foreach ($theme_template_locations as $key => $location) {
+		if( isset($nectar_options[$location]) &&
+			!empty($nectar_options[$location]) ) {
 			
-			if( isset($nectar_options[$location]) &&
-			    !empty($nectar_options[$location]) ) {
+				$template_ID = intval($nectar_options[$location]);
+				$global_section_content_query = get_post($template_ID);
 				
-					$template_ID = intval($nectar_options[$location]);
-					$global_section_content_query = get_post($template_ID);
-					
-					if( isset($global_section_content_query->post_content) && 
-					    !empty($global_section_content_query->post_content) ) {
-								
-								self::$templatera_content[] = $global_section_content_query->post_content;
-					}
-				
-			}
+				if( isset($global_section_content_query->post_content) && 
+					!empty($global_section_content_query->post_content) ) {
+							
+							self::$templatera_content[] = $global_section_content_query->post_content;
+				}
 			
 		}
+		
+	}
+
+
+	// Global Section Locations.
+	$global_sections_query_args = array(
+		'post_type'    => 'salient_g_sections',
+		'post_status'  => 'publish',
+		'ignore_sticky_posts' => true,
+		'no_found_rows'  => true
+	);
+	
+	$global_sections_query = new WP_Query( $global_sections_query_args );
+
+	if( $global_sections_query->have_posts() ) : while( $global_sections_query->have_posts() ) : $global_sections_query->the_post();
+			
+		$global_section_id = get_the_ID();
+
+		// Locations.
+		$locations = get_post_meta($global_section_id, 'nectar_g_section_locations', true);
+		
+		if( empty( $locations ) || !is_array($locations) ) {
+			continue;
+		}
+
+		self::$global_section_locations_content[] = get_the_content();
+
+	endwhile; endif;  
+	
+	wp_reset_query();
+
+	set_transient('salient_global_sections_asset_refresh', 'false', 0);
 
 
 
@@ -165,7 +197,7 @@ class NectarElAssets {
 	 *
 	 * @return bool True if found. False otherwise.
 	 */
-  public static function locate($search_arr = '') {
+  public static function locate($search_arr = array()) {
 
     foreach( $search_arr as $string ) {
 
@@ -176,15 +208,21 @@ class NectarElAssets {
   			return true;
   		}
 
-			// Templatera.
-			foreach( self::$templatera_content as $template_content ) {
+		// Templatera.
+		foreach( self::$templatera_content as $template_content ) {
 
-				if( strpos( $template_content, $string ) !== false ) {
-					return true;
-				}
-
+			if( strpos( $template_content, $string ) !== false ) {
+				return true;
 			}
 
+		}
+
+		// Global Section Locations.
+		foreach( self::$global_section_locations_content as $global_section_content ) {
+			if( strpos( $global_section_content, $string ) !== false ) {
+				return true;
+			}
+		}
   	}
 
   	return false;

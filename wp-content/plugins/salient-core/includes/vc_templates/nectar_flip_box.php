@@ -178,8 +178,8 @@ if( !empty($icon) ) {
 				
 			  $icon_markup .= '<svg style="height:0;width:0;position:absolute;" aria-hidden="true" focusable="false">
 				  <linearGradient id="'.$icon_id.'" x2="1" y2="1">
-				    <stop offset="0%" stop-color="'.$accent_gradient_to.'" />
-				    <stop offset="100%" stop-color="'.$accent_gradient_from.'" />
+				    <stop offset="0%" stop-color="'.esc_attr($accent_gradient_to).'" />
+				    <stop offset="100%" stop-color="'.esc_attr($accent_gradient_from).'" />
 				  </linearGradient>
 				</svg>';
 		} 
@@ -196,6 +196,6 @@ if( !empty($icon) ) {
 }
 
 echo '<div class="nectar-flip-box" data-min-height="'.esc_attr($min_height).'" data-flip-direction="'.esc_attr($flip_direction).'" data-h_text_align="'.esc_attr($h_text_align).'" data-v_text_align="'.esc_attr($v_text_align).'">';
-echo '<div class="flip-box-front" '.$front_lazy_escaped.' data-bg-overlay="'.esc_attr($bg_color_overlay).'" data-text-color="'.esc_attr($text_color).'" style="'.$style.'"> <div class="inner">'.$icon_markup . do_shortcode($front_content).'</div> </div>';
-echo '<div class="flip-box-back" '.$back_lazy_escaped.' data-bg-overlay="'.esc_attr($bg_color_overlay_2).'" data-text-color="'.esc_attr($text_color_2).'" style="'.$style2.'"> <div class="inner">'.do_shortcode($content).'</div> </div>';
+echo '<div class="flip-box-front" '.$front_lazy_escaped.' data-bg-overlay="'.esc_attr($bg_color_overlay).'" data-text-color="'.esc_attr($text_color).'" style="'.$style.'"> <div class="inner">'.$icon_markup . do_shortcode(wp_kses_post($front_content)).'</div> </div>';
+echo '<div class="flip-box-back" '.$back_lazy_escaped.' data-bg-overlay="'.esc_attr($bg_color_overlay_2).'" data-text-color="'.esc_attr($text_color_2).'" style="'.$style2.'"> <div class="inner">'.do_shortcode(wp_kses_post($content)).'</div> </div>';
 echo '</div>';

@@ -41,6 +41,8 @@ extract(shortcode_atts(array(
   'max_width' => '100%',
   'max_width_mobile' => '100%',
 	'max_width_custom' => '',
+  'image_width' => '',
+  'image_height' => '',
   'image_size' => '',
   'custom_image_size' => '',
   'custom_sizes_attr' => '',
@@ -56,8 +58,8 @@ extract(shortcode_atts(array(
   (!empty($alt)) ? $alt_tag = $alt : $alt_tag = null;
   $wp_img_caption_markup_escaped = '';
   $dynamic_el_styles = '';
-  $image_width  = '100';
-  $image_height = '100';
+  $image_width  = (!empty($image_width)) ? esc_attr($image_width) : '100';
+  $image_height = (!empty($image_height)) ? esc_attr($image_height) : '100';
   $image_srcset = null;
   $has_dimension_data = false;
   $wp_image_size = ( !empty($image_size) ) ? esc_html($image_size) : 'full';

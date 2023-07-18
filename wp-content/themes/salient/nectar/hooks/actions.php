@@ -22,13 +22,14 @@ if( function_exists('wp_body_open') ) {
 }
 
 // Before content.
+add_action('nectar_hook_before_content', 'nectar_hook_before_content_global_section', 2);
 add_action('nectar_hook_before_content', 'nectar_yoast_breadcrumbs');
 add_action('nectar_hook_before_content', 'nectar_buddypress_title');
 add_action('nectar_hook_before_content', 'nectar_fullpage_markup_open');
 
 // After content.
+add_action('nectar_hook_after_content', 'nectar_hook_global_section_after_content', 2);
 add_action('nectar_hook_after_content', 'nectar_fullpage_markup_close');
-
 
 // Before Header Navigation.
 add_action('nectar_hook_before_header_nav', 'nectar_material_skin_ocm_wrap_open');
@@ -76,10 +77,40 @@ add_action('nectar_hook_after_wp_footer', 'nectar_material_skin_ocm_wrap_close')
 
 // After theme outer wrap open.
 add_action('nectar_hook_after_outer_wrap_open', 'nectar_fullscreen_blur_wrap_open');
+add_action('nectar_hook_after_outer_wrap_open', 'nectar_hook_global_section_after_header_navigation');
 
 
 // Before theme outer wrap close.
+add_action('nectar_hook_before_footer_open', 'nectar_hook_global_section_footer', 2);
+add_action('nectar_hook_before_outer_wrap_close', 'nectar_hook_global_section_parallax_footer', 3);
+add_action('nectar_hook_before_outer_wrap_close', 'nectar_hook_global_section_after_footer', 4);
 add_action('nectar_hook_before_outer_wrap_close', 'nectar_fullscreen_blur_wrap_close');
+
+// WooCommerce.
+add_action( 'woocommerce_before_shop_loop', 'nectar_woocommerce_before_shop_loop', 99 );
+add_action( 'woocommerce_after_shop_loop', 'nectar_woocommerce_after_shop_loop', 99 );
+add_action( 'woocommerce_single_product_summary', 'nectar_woocommerce_before_single_product_summary', 2);
+add_action( 'woocommerce_before_add_to_cart_form', 'nectar_woocommerce_before_add_to_cart_form', 2);
+add_action( 'woocommerce_after_add_to_cart_form', 'nectar_woocommerce_after_add_to_cart_form', 2);
+add_action( 'woocommerce_after_single_product_summary', 'nectar_woocommerce_after_single_product_summary', 19);
+add_action( 'woocommerce_before_checkout_billing_form', 'nectar_woocommerce_before_checkout_billing_form', 10);
+add_action( 'woocommerce_after_checkout_billing_form', 'nectar_woocommerce_after_checkout_billing_form', 10);
+add_action( 'woocommerce_before_checkout_shipping_form', 'nectar_woocommerce_before_checkout_shipping_form', 10);
+add_action( 'woocommerce_before_order_notes', 'nectar_woocommerce_before_order_notes', 10);
+add_action( 'woocommerce_after_order_notes', 'nectar_woocommerce_after_order_notes', 10);
+add_action( 'woocommerce_checkout_before_order_review', 'nectar_woocommerce_checkout_before_order_review', 10);
+add_action( 'woocommerce_review_order_before_payment', 'nectar_woocommerce_review_order_before_payment', 10);
+add_action( 'woocommerce_review_order_after_payment', 'nectar_woocommerce_review_order_after_payment', 10);
+
+add_action( 'woocommerce_cart_coupon', 'nectar_woocommerce_cart_coupon', 10);
+add_action( 'woocommerce_before_cart_totals', 'nectar_woocommerce_before_cart_totals', 10);
+add_action( 'woocommerce_cart_totals_before_shipping', 'nectar_woocommerce_cart_totals_before_shipping', 10);
+add_action( 'woocommerce_before_shipping_calculator', 'nectar_woocommerce_before_shipping_calculator', 10);
+add_action( 'woocommerce_after_shipping_calculator', 'nectar_woocommerce_after_shipping_calculator', 10);
+add_action( 'woocommerce_proceed_to_checkout', 'nectar_woocommerce_proceed_to_checkout', 10);
+
+
+
 
 
 // Header text widget.

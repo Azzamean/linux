@@ -89,12 +89,11 @@ return array(
       ),
 		array(
 			"type" => "textarea_html",
-			"holder" => "div",
+			"admin_label" => true,
 			"heading" => esc_html__("Text Content", "salient-core"),
 			"param_name" => "content",
 			"value" => '',
 			"description" => '',
-			"admin_label" => false,
 			'dependency' => array(
 				'element' => 'animation_type',
 				'value' => array('default'),

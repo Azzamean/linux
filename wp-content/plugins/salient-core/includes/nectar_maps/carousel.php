@@ -61,7 +61,6 @@ return array(
 		),
 		array(
 			"type" => "textarea",
-			"holder" => "div",
 			"heading" => esc_html__("Text Content", 'salient-core'),
 			"param_name" => "flickity_fixed_content",
 			"value" => '',
@@ -110,7 +109,6 @@ return array(
 		),
 		array(
 			"type" => "dropdown",
-			"holder" => "div",
 			"class" => "",
 			'save_always' => true,
 			"heading" => esc_html__('CTA Button Color','salient-core'),
@@ -294,7 +292,7 @@ return array(
 				),
 			  'save_always' => true,
 				"dependency" => array('element' => "flickity_formatting", 'value' => array('default')),
-			  "description" => esc_html__("Please select the controls you would like for your gallery ", "salient-core"),
+			  "description" => esc_html__("Please select the controls you would like for your carousel", "salient-core"),
 		),
 
     array(
@@ -302,8 +300,9 @@ return array(
       "heading" => esc_html__("Touch Indicator Style", "salient-core"),
       "param_name" => "flickity_touch_total_style",
       "value" => array(
-          esc_html__("Border Outline",'salient-core') => "default",
-          esc_html__("Solid Background",'salient-core') => "solid_bg",
+          esc_html__("Border Outline Arrows",'salient-core') => "default",
+          esc_html__("Solid Background Arrows",'salient-core') => "solid_bg",
+		  esc_html__('Tooltip text','salient-core') => "tooltip_text",
       ),
       'save_always' => true,
       "dependency" => array('element' => "flickity_controls", 'value' => array('touch_total')),
@@ -316,17 +315,26 @@ return array(
 			"heading" => "Touch Indicator BG Color",
 			"param_name" => "flickity_touch_total_indicator_bg_color",
 			"value" => "",
-      "dependency" => array('element' => "flickity_touch_total_style", 'value' => array('solid_bg')),
+      "dependency" => array('element' => "flickity_touch_total_style", 'value' => array('solid_bg','tooltip_text')),
 			"description" =>  esc_html__("The color of the background of your touch indicator button.", "salient-core")	  	
 		),
     array(
 			"type" => "colorpicker",
 			"class" => "",
-			"heading" => "Touch Indicator Icon Color",
+			"heading" => "Touch Indicator Text/Icon Color",
 			"param_name" => "flickity_touch_total_indicator_icon_color",
 			"value" => "",
-      "dependency" => array('element' => "flickity_touch_total_style", 'value' => array('solid_bg')),
+      		"dependency" => array('element' => "flickity_touch_total_style", 'value' => array('solid_bg','tooltip_text')),
 			"description" =>  esc_html__("The color of your touch indicator button icon.", "salient-core")	  	
+		),
+		array(
+			"type" => 'checkbox',
+			"heading" => esc_html__("Touch Indicator Blurred BG", "salient-core"),
+			"param_name" => "flickity_touch_total_indicator_blurred_bg",
+			'edit_field_class' => 'vc_col-xs-12 salient-fancy-checkbox',
+			"description" => esc_html__("This will blur the background behind your indicator. This effect will only be visible when using semi-transparent coloring.", "salient-core"),
+			"dependency" => array('element' => "flickity_touch_total_style", 'value' => array('solid_bg','tooltip_text')),
+			"value" => Array(esc_html__("Yes, please", "salient-core") => 'yes')
 		),
 
 		array(
@@ -354,7 +362,6 @@ return array(
 
 		array(
 			"type" => "dropdown",
-			"holder" => "div",
 			"class" => "",
 			'save_always' => true,
 			"heading" => esc_html__('Control Coloring','salient-core'),
@@ -605,7 +612,6 @@ return array(
 
 		array(
 			"type" => "dropdown",
-			"holder" => "div",
 			"class" => "",
 			"admin_label" => false,
 			"heading" => esc_html__("Easing", 'salient-core'),

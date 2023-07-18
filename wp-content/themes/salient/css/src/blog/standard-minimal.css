@@ -56,7 +56,7 @@ Description: Styles for the "Standard Minimal" post style.
  .post-area.standard-minimal .post .content-inner .article-content-wrap >.video >.wp-video, 
  .post-area.standard-minimal .post .content-inner .article-content-wrap .audio-wrap, 
  .post-area.standard-minimal .post .content-inner .quote-inner{
-     margin-bottom:60px!important
+     margin-bottom:40px!important
 }
  .post-area.standard-minimal .post .content-inner .quote-inner h3 {
     color:#fff;
@@ -258,9 +258,6 @@ Description: Styles for the "Standard Minimal" post style.
     display:none
 }
  @media only screen and (min-width : 690px) and (max-width : 999px) {
-     .container, .post-area.standard-minimal.full-width-content .post .inner-wrap {
-         max-width: 600px;
-    }
      .post-area.standard-minimal .post-author .grav-wrap {
          width: 70px;
          height: 70px;
@@ -269,15 +266,10 @@ Description: Styles for the "Standard Minimal" post style.
          padding-left: 140px;
     }
 }
- @media only screen and (max-width: 321px) {
-     .post-area.standard-minimal.full-width-content .post .inner-wrap {
-         max-width: 300px;
-    }
-}
- @media only screen and (min-width: 480px) and (max-width: 690px) {
-     .post-area.standard-minimal.full-width-content .post .inner-wrap {
-         max-width: 420px;
-    }
+@media only screen and (max-width : 999px) {
+    .post-area.standard-minimal.full-width-content .post .inner-wrap {
+        max-width: var(--mobile-container-width);
+   }
 }
  @media only screen and (max-width: 690px) {
      .post-area.standard-minimal .post-author {

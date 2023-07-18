@@ -37,7 +37,7 @@ return array(
 		),
     array(
 			"type" => "textarea",
-			"holder" => "div",
+			"admin_label" => true,
 			"heading" => esc_html__("Dynamic Text Content", "salient-core"),
 			"param_name" => "dynamic_text",
 			"value" => '',

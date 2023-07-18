@@ -8,6 +8,12 @@ class Redux_Options_upload {
      *
      * @since Redux_Options 1.0.0
     */
+    public $field = array();
+    public $value = '';
+    public $url = '';
+    public $args = array();
+    public $parent = null;
+
     function __construct($field = array(), $value ='', $parent = '') {
         $this->field = $field;
 		$this->value = $value;

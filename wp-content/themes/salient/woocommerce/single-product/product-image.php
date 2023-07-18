@@ -13,7 +13,7 @@
  * @see     https://docs.woocommerce.com/document/template-structure/
  * @author  WooThemes
  * @package WooCommerce/Templates
- * @version 3.5.1
+ * @version 7.8.0
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -212,7 +212,7 @@ else if( 'two_column_images' === $product_gallery_style ) {
 	) ); ?>
 	
 	<div class="<?php echo esc_attr( implode( ' ', array_map( 'sanitize_html_class', $wrapper_classes ) ) ); ?>">
-		<figure class="woocommerce-product-gallery__wrapper">
+		<div class="woocommerce-product-gallery__wrapper">
 		<?php 
 		// Featured Image.
 		if ( has_post_thumbnail() ) {
@@ -258,7 +258,7 @@ else if( 'two_column_images' === $product_gallery_style ) {
 			}
 		}
 		?>
-	</figure>
+	</div>
 	</div>
 	
 	<?php 
@@ -286,7 +286,7 @@ else { ?>
 		) );
 		?>
 		<div class="<?php echo esc_attr( implode( ' ', array_map( 'sanitize_html_class', $wrapper_classes ) ) ); ?>" data-columns="<?php echo esc_attr( $columns ); ?>" style="opacity: 0; transition: opacity .25s ease-in-out;">
-			<figure class="woocommerce-product-gallery__wrapper">
+			<div class="woocommerce-product-gallery__wrapper">
 				<?php
 				if ( has_post_thumbnail() ) {
 					$html = wc_get_gallery_image_html( $post_thumbnail_id, true );
@@ -300,7 +300,7 @@ else { ?>
 
 				do_action( 'woocommerce_product_thumbnails' );
 				?>
-			</figure>
+			</div>
 		</div>
 
 
@@ -324,7 +324,7 @@ else { ?>
 		) );
 		?>
 		<div class="<?php echo esc_attr( implode( ' ', array_map( 'sanitize_html_class', $wrapper_classes ) ) ); ?>" data-columns="<?php echo esc_attr( $columns ); ?>" style="opacity: 0; transition: opacity .25s ease-in-out;">
-			<figure class="woocommerce-product-gallery__wrapper">
+			<div class="woocommerce-product-gallery__wrapper">
 				<?php
 				$attributes = array(
 					'title'                   => get_post_field( 'post_title', $post_thumbnail_id ),
@@ -349,7 +349,7 @@ else { ?>
 
 				do_action( 'woocommerce_product_thumbnails' );
 				?>
-			</figure>
+			</div>
 		</div>
 
 

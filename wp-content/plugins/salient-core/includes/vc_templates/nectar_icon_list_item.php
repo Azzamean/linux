@@ -95,8 +95,8 @@ if( !empty($icon) ) {
 				
 			  $icon_markup .= '<svg style="height:0;width:0;position:absolute;" aria-hidden="true" focusable="false">
 				  <linearGradient id="'.$icon_id.'" x2="1" y2="1">
-				    <stop offset="0%" stop-color="'.$accent_gradient_from.'" />
-				    <stop offset="100%" stop-color="'.$accent_gradient_to.'" />
+				    <stop offset="0%" stop-color="'.esc_attr($accent_gradient_from).'" />
+				    <stop offset="100%" stop-color="'.esc_attr($accent_gradient_to).'" />
 				  </linearGradient>
 				</svg>';
 		} 

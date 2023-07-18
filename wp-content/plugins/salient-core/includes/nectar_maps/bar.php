@@ -28,7 +28,7 @@ return array(
 	"params" => array(
 		array(
 			"type" => "textfield",
-			"holder" => "div",
+			"admin_label" => true,
 			"class" => "",
 			"heading" => esc_html__('Title','salient-core'),
 			"param_name" => "title",
@@ -36,7 +36,6 @@ return array(
 		),
 		array(
 			"type" => "textfield",
-			"holder" => "div",
 			"class" => "",
 			"heading" => esc_html__('Percentage','salient-core'),
 			"param_name" => "percent",
@@ -44,7 +43,6 @@ return array(
 		),
 		array(
 			"type" => "dropdown",
-			"holder" => "div",
 			"class" => "",
 			'save_always' => true,
 			"heading" => esc_html__('Bar Color', 'salient-core'),

@@ -66,7 +66,7 @@ return array(
 		),
 		array(
 			"type" => "dropdown",
-			"holder" => "div",
+			"admin_label" => true,
 			"class" => "",
 			"heading" => "Color",
 			"param_name" => "color",

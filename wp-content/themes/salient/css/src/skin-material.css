@@ -339,7 +339,7 @@ body.material #header-outer[data-full-width="true"][data-has-buttons="no"]:not([
 }
 
 /* last menu item in default layout when no buttons are present */
-body.material #header-outer[data-has-buttons="no"][data-full-width="false"][data-format="default"] #top nav >.sf-menu >li:not([class*="button_"]):last-child a {
+body.material #header-outer[data-has-buttons="no"][data-full-width="false"][data-format="default"]:not([data-lhe="button_bg"]) #top nav >.sf-menu >li:not([class*="button_"]):last-child a {
   padding-right: 0;
 }
 
@@ -813,6 +813,9 @@ body #header-outer[data-transparent-header="true"].transparent #top nav ul #nect
   transition: all 0.2s;
   pointer-events: none;
 }
+#header-outer:not([data-format="left-header"]).material-search-open header .span_3 {
+  pointer-events: none!important;
+}
 #header-outer.material-search-open {
   box-shadow: none;
 }
@@ -976,6 +979,12 @@ blockquote::before {
   width: 4px;
   content: '';
   border-left: 4px solid rgba(0,0,0,0.1);
+}
+blockquote.tiktok-embed {
+  padding-left: 0;
+}
+blockquote.tiktok-embed:before {
+  display: none;
 }
 
 blockquote.wp-block-quote.has-text-align-center.is-style-large {
@@ -1154,24 +1163,31 @@ body.material .post .content-inner {
   position: relative;
   top: auto;
   right: auto;
-  margin-top: 5px;
+  margin-top: 1em;
   bottom: auto;
 }
 .material .comment-list .reply a {
-  font-size: 13px;
+  font-size: 14px;
   background-color:transparent;
-  color: #888;
   border-radius:0;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  line-height: 1;
   padding: 0;
 }
-.material .comment-list .reply a:before {
-  content: "\f112";
-  display: inline-block;
-  transform: rotate(180deg);
-  padding-left: 6px;
+.material .comment-list .reply .nectar-cta {
+  line-height: 0;
 }
 .comment-list .comment-meta {
   font-size: 13px;
+}
+.comment-list .comment-meta a {
+  transition: opacity 0.2s ease;
+}
+.material .comment-list .comment-meta a:hover {
+  color: inherit;
+  opacity: 0.65;
 }
 body .comment-list .reply a:hover,
 body .comment-list .reply a:focus {
@@ -1190,8 +1206,18 @@ body.material .comment-list .pingback > div {
   padding-left:85px;
   padding-bottom:0;
   padding-top:0;
-  margin-top:4em
+  margin-top:2.5em;
+  overflow: visible;
 }
+@media only screen and (min-width: 1000px) {
+  #ajax-content-wrap .comment-list .comment #respond {
+    padding-left: 85px;
+  }
+  #ajax-content-wrap .comment-list .comment .comment #respond {
+    padding-left: 65px;
+  }
+}
+
 body.material .comment-list .comment > div img.avatar,
 body.material .comment-list .pingback > div img.avatar {
   left:0;
@@ -1208,7 +1234,7 @@ body.material .comment-list .pingback .pingback > div {
   padding-left: 65px;
 }
 .comment-list .comment > div p,.comment-list .pingback > div p {
-  margin-top:30px
+  margin-top: 1em;
 }
 .comment-list .children {
   border-left: none;

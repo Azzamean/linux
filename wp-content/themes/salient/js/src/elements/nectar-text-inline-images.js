@@ -139,7 +139,7 @@
 
             $('.nectar-text-inline-images').each(function(i){
 
-                if( usingFrontEndEditor == false ) {
+                if( usingFrontEndEditor == false && 'IntersectionObserver' in window ) {
                     lazyInitInlineImages($(this), i);
                 }
                 else {

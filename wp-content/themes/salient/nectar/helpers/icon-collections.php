@@ -4,12 +4,36 @@
  *
  * @package Salient WordPress Theme
  * @subpackage helpers
- * @version 12.5
+ * @version 15.5
  */
 
 // Exit if accessed directly
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
+}
+
+
+
+if ( !function_exists('nectar_get_svg_curved_arrow_markup') ) {
+	function nectar_get_svg_curved_arrow_markup() {
+		$svg = '<span class="nectar-cta" data-style="curved-arrow-animation" data-triggered-by=".comment-reply-link">
+			<span class="link_text">
+				<svg aria-hidden="true" width="20" height="20" viewBox="0 0 22 22" preserveAspectRatio="xMidYMid meet">
+					<g transform="matrix(1,0,0,-1,12,11)">
+						<g transform="matrix(1,0,0,-1,-1,3)">
+							<path class="line" stroke-linejoin="round" stroke-linecap="round" fill-opacity="0" stroke="#000" stroke-width="1.5" d="M 7 3.3 L -3.2 3.3 C -5 3.3 -6.5 1.8 -6.5 0 L -6.5 -2.5"></path>
+						</g>
+						<g transform="matrix(1,0,0,-1,4,-0.5)">
+							<path class="arrow" fill-opacity="0" stroke-linejoin="round" stroke-linecap="round" stroke-width="1.5" stroke="#000" d="M -2.5 5 C -2.5 5 2.5 0 2.5 0"></path>
+							<path class="arrow" fill-opacity="0" stroke-linejoin="round" stroke-linecap="round" stroke-width="1.5" stroke="#000" d="M -2.5 -5 C -2.5 -5 2.5 0 2.5 0"></path>
+						</g>
+					</g>
+				</svg>
+			</span>
+		</span>';
+
+		return $svg;
+	}
 }
 
 /**

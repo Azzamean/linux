@@ -4,7 +4,7 @@
  *
  * @package Salient WordPress Theme
  * @subpackage Partials
- * @version 14.1
+ * @version 15.1
  */
 
 // Exit if accessed directly
@@ -23,6 +23,7 @@ $bg_alignment   = get_post_meta($post->ID, '_nectar_page_header_bg_alignment', t
 $load_animation = (isset($nectar_options['blog_header_load_in_animation']) ) ? $nectar_options['blog_header_load_in_animation'] : 'none'; 
 $parallax_bg    = (isset($nectar_options['blog_header_scroll_effect']) && 'parallax' === $nectar_options['blog_header_scroll_effect'] ) ? true : false;
 $hide_featrued  = (isset($nectar_options['blog_hide_featured_image'] ) ) ? $nectar_options['blog_hide_featured_image'] : false;
+$show_excerpt   = (isset($nectar_options['blog_header_image_under_excerpt'] ) ) ? $nectar_options['blog_header_image_under_excerpt'] : false;
 ?>
 
 <div class="row hentry featured-media-under-header" data-animate="<?php echo esc_attr($load_animation); ?>">
@@ -32,7 +33,9 @@ $hide_featrued  = (isset($nectar_options['blog_hide_featured_image'] ) ) ? $nect
     </div>
 
     <h1 class="entry-title"><?php the_title(); ?></h1>
-
+    <?php if( '1' === $show_excerpt && has_excerpt() ) {
+        echo '<div class="featured-media-under-header__excerpt">' . get_the_excerpt() . '</div>';
+    } ?>
     <div class="featured-media-under-header__meta-wrap nectar-link-underline-effect">
     <?php get_template_part( 'includes/partials/single-post/post-meta-fields' ); ?>
     </div>

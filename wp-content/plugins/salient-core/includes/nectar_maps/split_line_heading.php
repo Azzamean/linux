@@ -5,107 +5,101 @@ if (!defined('ABSPATH')) {
 	exit;
 }
 
-return array(
-	"name" => esc_html__("Split Line Heading", "salient-core"),
-	"base" => "split_line_heading",
-	"icon" => "icon-wpb-split-line-heading",
-	"allowed_container_element" => 'vc_row',
-	"weight" => '2',
-	"category" => esc_html__('Typography', 'salient-core'),
-	"description" => esc_html__('Animated multi line heading', 'salient-core'),
-	"params" => array(
-		array(
-			"type" => "dropdown",
-			"heading" => esc_html__("Functionality", "salient-core"),
-			"param_name" => "animation_type",
-			"value" => array(
-				esc_html__("Line reveal by available space", "salient-core") => "line-reveal-by-space",
-				esc_html__("Line reveal by each new line", "salient-core") => "default",
-				esc_html__("Twist in entire element", "salient-core") => "twist-in"
-			),
-			'save_always' => true,
-			"description" => ''
+$split_line_heading_params = array(
+	array(
+		"type" => "dropdown",
+		"heading" => esc_html__("Functionality", "salient-core"),
+		"param_name" => "animation_type",
+		"value" => array(
+			esc_html__("Line reveal by available space", "salient-core") => "line-reveal-by-space",
+			esc_html__("Line reveal by each new line", "salient-core") => "default",
+			esc_html__("Twist in entire element", "salient-core") => "twist-in"
 		),
-		array(
-			"type" => "textarea_html",
-			"holder" => "div",
-			"heading" => esc_html__("Text Content", "salient-core"),
-			"param_name" => "content",
-			"value" => '',
-			"description" => '',
-			"admin_label" => false,
-			'dependency' => array(
-				'element' => 'animation_type',
-				'value' => array('default'),
-			),
+		'save_always' => true,
+		"description" => ''
+	),
+	array(
+		"type" => "textarea_html",
+		"heading" => esc_html__("Text Content", "salient-core"),
+		"param_name" => "content",
+		"value" => '',
+		"description" => '',
+		"admin_label" => true,
+		'dependency' => array(
+			'element' => 'animation_type',
+			'value' => array('default'),
 		),
-		array(
-			"type" => "textarea",
-			"heading" => esc_html__("Text", "salient-core"),
-			"param_name" => "text_content",
-			"admin_label" => true,
-			'dependency' => array(
-				'element' => 'animation_type',
-				'value' => array('line-reveal-by-space', 'letter-fade-reveal', 'twist-in'),
-			),
-			"description" => ''
+	),
+	array(
+		"type" => "textarea",
+		"heading" => esc_html__("Text", "salient-core"),
+		"param_name" => "text_content",
+		"admin_label" => true,
+		'dependency' => array(
+			'element' => 'animation_type',
+			'value' => array('line-reveal-by-space', 'letter-fade-reveal', 'twist-in'),
 		),
+		"description" => ''
+	),
+	array(
+		"type" => "dropdown",
+		"class" => "",
+		'save_always' => true,
+		"heading" => "Text Font Style",
+		'dependency' => array(
+			'element' => 'animation_type',
+			'value' => array('line-reveal-by-space', 'letter-fade-reveal', 'twist-in'),
+		),
+		"description" => esc_html__("Choose what element your text will inherit styling from", "salient-core"),
+		"param_name" => "font_style",
+		"value" => array(
+			"H1" => "h1",
+			"H2" => "h2",
+			"H3" => "h3",
+			"H4" => "h4",
+			"H5" => "h5",
+			"H6" => "h6",
+			"Paragraph" => "p",
+			"Italic" => "i",
+		)
+	),
+	array(
+		"type" => "colorpicker",
+		"class" => "",
+		"heading" => "Text Color",
+		"param_name" => "text_color",
+		"value" => "",
+		'dependency' => array(
+			'element' => 'animation_type',
+			'value' => array('line-reveal-by-space', 'letter-fade-reveal', 'twist-in'),
+		),
+		"description" => esc_html__("Defaults to light or dark based on the current row text color.", "salient-core")
+	)
+);
+
+$font_size_group = SalientWPbakeryParamGroups::font_sizing_group('font_size', 'Custom Font Size');
+
+$imported_groups = array($font_size_group);
+
+foreach ($imported_groups as $group) {
+
+	foreach ($group as $option) {
+		$split_line_heading_params[] = $option;
+	}
+}
+
+$split_line_heading_params = array_merge(
+	$split_line_heading_params,
+	array(
 		array(
-			"type" => "dropdown",
+			"type" => "checkbox",
 			"class" => "",
-			'save_always' => true,
-			"heading" => "Text Font Style",
-			'dependency' => array(
-				'element' => 'animation_type',
-				'value' => array('line-reveal-by-space', 'letter-fade-reveal', 'twist-in'),
-			),
-			"description" => esc_html__("Choose what element your text will inherit styling from", "salient-core"),
-			"param_name" => "font_style",
-			"value" => array(
-				"H1" => "h1",
-				"H2" => "h2",
-				"H3" => "h3",
-				"H4" => "h4",
-				"H5" => "h5",
-				"H6" => "h6",
-				"Paragraph" => "p",
-				"Italic" => "i",
-			)
-		),
-		array(
-			"type" => "colorpicker",
-			"class" => "",
-			"heading" => "Text Color",
-			"param_name" => "text_color",
-			"value" => "",
-			'dependency' => array(
-				'element' => 'animation_type',
-				'value' => array('line-reveal-by-space', 'letter-fade-reveal', 'twist-in'),
-			),
-			"description" => esc_html__("Defaults to light or dark based on the current row text color.", "salient-core")
-		),
-		array(
-			"type" => "textfield",
-			"heading" => '<span class="group-title">' . esc_html__("Custom Font Size", "salient-core") . "</span>",
-			"edit_field_class" => "desktop font-size-device-group",
-			"param_name" => "font_size",
-		),
-		array(
-			"type" => "textfield",
-			"heading" => '',
-			"edit_field_class" => "tablet font-size-device-group",
-			"param_name" => "font_size_tablet",
-		),
-		array(
-			"type" => "textfield",
-			"heading" => '',
-			"edit_field_class" => "phone font-size-device-group",
-			"param_name" => "font_size_phone",
-		),
-		array(
-			"type" => "textfield",
-			"heading" =>  esc_html__("Custom Line Height", "salient-core"),
-			"param_name" => "font_line_height",
+			'edit_field_class' => 'vc_col-xs-12 salient-fancy-checkbox',
+			"heading" => esc_html__("Fit text to container", "salient-core"),
+			"param_name" => "fit_text_to_container",
+			"value" => array(esc_html__("Yes", "salient-core") => 'true'),
+			"description" => esc_html__("This will scales up (or down) text so it fits perfectly to the parent column.", "salient-core"),
+			"dependency" => array('callback' => 'nectarFitTextCallback'),
 		),
 		array(
 			"type" => "dropdown",
@@ -124,6 +118,7 @@ return array(
 				esc_html__("Twist in from bottom", 'salient-core') => "twist-bottom-2",
 				esc_html__("Reveal Single Letter From Top", 'salient-core') => "letter-reveal-top",
 				esc_html__("Reveal Single Letter From Bottom", 'salient-core') => "letter-reveal-bottom",
+				esc_html__("Scroll Opacity Reveal", 'salient-core') => "scroll-opacity-reveal",
 				esc_html__("None", 'salient-core') => "none",
 			)
 		),
@@ -210,6 +205,12 @@ return array(
 			)
 		),
 
+		array(
+			"type" => "textfield",
+			"heading" => esc_html__("Extra Class Name", "salient-core"),
+			"param_name" => "el_class",
+			"description" => ''
+		),
 
 		array(
 			"type" => "textfield",
@@ -259,7 +260,7 @@ return array(
 			"value" => "",
 			"dependency" => array('element' => "link_indicator", 'not_empty' => true),
 			'group' => esc_html__('Link', 'salient-core'),
-			"description" =>  esc_html__("The color of the background of your touch indicator button.", "salient-core")
+			"description" => esc_html__("The color of the background of your touch indicator button.", "salient-core")
 		),
 		array(
 			"type" => "colorpicker",
@@ -269,8 +270,22 @@ return array(
 			"value" => "",
 			'group' => esc_html__('Link', 'salient-core'),
 			"dependency" => array('element' => "link_indicator", 'not_empty' => true),
-			"description" =>  esc_html__("The color of your touch indicator button icon.", "salient-core")
-		),
+			"description" => esc_html__("The color of your touch indicator button icon.", "salient-core")
+		)
 
 	)
+);
+
+
+
+
+return array(
+	"name" => esc_html__("Split Line Heading", "salient-core"),
+	"base" => "split_line_heading",
+	"icon" => "icon-wpb-split-line-heading",
+	"allowed_container_element" => 'vc_row',
+	"weight" => '2',
+	"category" => esc_html__('Typography', 'salient-core'),
+	"description" => esc_html__('Animated multi line heading', 'salient-core'),
+	"params" => $split_line_heading_params
 );

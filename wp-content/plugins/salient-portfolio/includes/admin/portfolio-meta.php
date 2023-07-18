@@ -138,7 +138,7 @@ if( !function_exists('salient_portfolio_metabox') ) {
 					),
           array( 
 						'name' => esc_html__('Secondary Overlaid Image', 'salient-portfolio'),
-						'desc' => esc_html__('Certain styles within the Post Grid page builder element will allow for this to be overlaid on top of your featured image.', 'salient-portfolio'),
+						'desc' => esc_html__('Certain styles within the Post Loop Builder page builder element will allow for this to be overlaid on top of your featured image.', 'salient-portfolio'),
 						'id' => '_nectar_portfolio_secondary_thumbnail',
 						'type' => 'file',
 						'std' => ''
@@ -316,7 +316,7 @@ if( !function_exists('salient_portfolio_metabox') ) {
 					),
           array( 
 						'name' => esc_html__('Secondary Overlaid Image', 'salient-portfolio'),
-						'desc' => esc_html__('Certain styles within the Post Grid page builder element will allow for this to be overlaid on top of your featured image.', 'salient-portfolio'),
+						'desc' => esc_html__('Certain styles within the Post Loop Builder page builder element will allow for this to be overlaid on top of your featured image.', 'salient-portfolio'),
 						'id' => '_nectar_portfolio_secondary_thumbnail',
 						'type' => 'file',
 						'std' => ''

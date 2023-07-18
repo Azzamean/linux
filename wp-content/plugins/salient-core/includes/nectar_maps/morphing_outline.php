@@ -15,16 +15,14 @@ return array(
 	"params" => array(
 		array(
 			"type" => "textarea",
-			"holder" => "div",
 			"heading" => esc_html__("Text Content", "salient-core"),
 			"param_name" => "content",
 			"value" => '',
 			"description" => esc_html__("Enter the text that will be wrapped here", "salient-core"),
-			"admin_label" => false
+			"admin_label" => true
 		),
 		array(
 			"type" => "textfield",
-			"holder" => "div",
 			"class" => "",
 			"heading" => esc_html__("Border Thickness", "salient-core"),
 			"param_name" => "border_thickness",

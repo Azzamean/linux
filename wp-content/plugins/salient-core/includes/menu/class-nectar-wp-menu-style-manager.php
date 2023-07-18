@@ -76,7 +76,7 @@
        add_action( 'redux/options/salient_redux/saved', array( $this, 'write_css' ) );
 
        //// General transient trigger.
-       add_action( 'admin_init', array( $this, 'check_transient' ) );
+       add_action( 'wp', array( $this, 'check_transient' ) );
 
 
      }
@@ -145,8 +145,56 @@
               $hover_class = ( isset($menu_item_options['menu_item_link_bg_hover']) && !empty($menu_item_options['menu_item_link_bg_hover']) ) ? ' hover-' . $menu_item_options['menu_item_link_bg_hover'] : '';
               $style_class = ( isset($menu_item_options['menu_item_link_bg_style']) && !empty($menu_item_options['menu_item_link_bg_style']) ) ? ' style-' . $menu_item_options['menu_item_link_bg_style'] : '';
 
+              // Video.
+              $video_layer = '';
+							if( isset($menu_item_options['menu_item_link_bg_img_video']) && 
+              !empty($menu_item_options['menu_item_link_bg_img_video']) ) {
+
+                $video_src_type = 'mp4';
+
+                if( strpos($menu_item_options['menu_item_link_bg_img_video'], '.webm') !== false ) {
+                  $video_src_type = 'webm';
+                }
+
+                $video_layer .= '<video class="nectar-lazy-video" autoplay muted playsinline loop width="1280" height="720">';
+                $video_layer .= '<source data-nectar-video-src="'. esc_url($menu_item_options['menu_item_link_bg_img_video']) .'"  type="video/'.$video_src_type.'">';
+                $video_layer .= '</video>';
+              }
+
+              // Button
+              $button = '';
+              $button_class = '';
+              if( isset($menu_item_options['menu_item_link_button_cta']) && 
+                  'on' === $menu_item_options['menu_item_link_button_cta'] ) {
+
+                    $button_class = ' has-button';
+                    $button_text = ( isset($menu_item_options['menu_item_link_cta_text']) ) ? $menu_item_options['menu_item_link_cta_text'] : '';
+                    $button_bg_color = ( isset($menu_item_options['menu_item_link_cta_button_bg_color']) ) ? $menu_item_options['menu_item_link_cta_button_bg_color'] : false;
+                    $button_text_color = ( isset($menu_item_options['menu_item_link_cta_button_text_color']) ) ? $menu_item_options['menu_item_link_cta_button_text_color'] : false;
+                    $button_style = ( isset($menu_item_options['menu_item_link_cta_button_style']) ) ? $menu_item_options['menu_item_link_cta_button_style'] : 'button_solid'; 
+                    
+                    $button_css = '';
+                    $cta_padding_right = 0;
+                    $cta_padding_left = 0;
+                    $cta_padding_top = 0;
+                    $cta_padding_bottom = 0;
+
+                    if( !empty($button_bg_color) && $button_bg_color !== 'transparent' ) {
+                      $cta_padding_right = '2em';
+                      $cta_padding_left = '2em';
+                      $cta_padding_top = '0.8em';
+                      $cta_padding_bottom = '0.8em';
+                    }
+                    
+                    $button_shortcode = do_shortcode('[nectar_cta bypass_link="true" btn_style="'.esc_attr($button_style).'" heading_tag="span" text_color="'.esc_attr($button_text_color).'" button_color="'.esc_attr($button_bg_color).'" link_type="regular" alignment="left" display="block" link_text="'.esc_attr($button_text).'" padding_top="'.esc_attr($cta_padding_top).'" padding_bottom="'.esc_attr($cta_padding_bottom).'" padding_left="'.esc_attr($cta_padding_left).'" padding_right="'.esc_attr($cta_padding_right).'"]');
+
+                    $button = $button_css.'<span class="nectar-ext-menu-item__button nectar-inherit-btn-type '.$button_style.'">';
+                    $button .= $button_shortcode;
+                    $button .= '</span>';
+              }
+
               // Markup.
-              $title = '<div class="nectar-ext-menu-item'.esc_attr($style_class).'"><div class="image-layer-outer'.esc_attr($hover_class).'"><div class="image-layer"></div>'.$color_overlay_markup.'</div><div class="inner-content">'.$title . $item_desc .'</div></div>' ;
+              $title = '<div class="nectar-ext-menu-item'.esc_attr($style_class).'"><div class="image-layer-outer'.esc_attr($hover_class).'"><div class="image-layer">'.$video_layer.'</div>'.$color_overlay_markup.'</div><div class="inner-content'.$button_class.'">'.$title . $item_desc . $button .'</div></div>' ;
 
             }
 
@@ -267,6 +315,11 @@
        	background-position: center;
         transition: opacity 0.25s ease 0.1s;
        }
+       .nectar-ext-menu-item .image-layer video {
+        object-fit: cover;
+        width: 100%;
+        height: 100%;
+       }
        #header-outer nav .nectar-ext-menu-item .image-layer:not(.loaded) {
          background-image: none!important;
        }
@@ -316,6 +369,20 @@
 
        .menu-item .widget-area-active[data-margin="default"] > div:not(:last-child) {
        	margin-bottom: 20px;
+       }
+
+       .nectar-ext-menu-item__button {
+        display: inline-block;
+        padding-top: 2em;
+       }
+
+       #header-outer nav li:not([class*="current"]) > a .nectar-ext-menu-item .inner-content.has-button .title .menu-title-text{
+        background-image: none;
+       }
+
+       .nectar-ext-menu-item__button .nectar-cta:not([data-color="transparent"]) {
+        margin-top: 0.8em;
+        margin-bottom: 0.8em;
        }
        ';
 
@@ -423,6 +490,7 @@
            'header-slide-out-widget-area-style' => 'slide-out-from-right',
            'header-dropdown-hover-effect' => 'color_change',
            'header_format' => 'default',
+           'header-hover-effect-button-bg-size' => 'default',
            'header-hover-effect' => 'animated_underline',
            'header-slide-out-widget-area-image-display' => 'default',
            'use-logo' => 'false',
@@ -516,6 +584,9 @@
 
                 $p_text_color = ( isset($menu_item_options['menu_item_link_coloring_custom_text_p']) && !empty($menu_item_options['menu_item_link_coloring_custom_text_p']) ) ? $menu_item_options['menu_item_link_coloring_custom_text_p'] : false;
                 $p_text_hover_color = ( isset($menu_item_options['menu_item_link_coloring_custom_text_h_p']) && !empty($menu_item_options['menu_item_link_coloring_custom_text_h_p']) ) ? $menu_item_options['menu_item_link_coloring_custom_text_h_p'] : false;
+                $button_effect_default = ( isset($menu_item_options['menu_item_link_coloring_custom_button_bg']) && !empty($menu_item_options['menu_item_link_coloring_custom_button_bg']) ) ? $menu_item_options['menu_item_link_coloring_custom_button_bg'] : false;
+                $button_effect_active = ( isset($menu_item_options['menu_item_link_coloring_custom_button_bg_active']) && !empty($menu_item_options['menu_item_link_coloring_custom_button_bg_active']) ) ? $menu_item_options['menu_item_link_coloring_custom_button_bg_active'] : false;
+                $button_effect_active_text = ( isset($menu_item_options['menu_item_link_coloring_custom_button_text_active']) && !empty($menu_item_options['menu_item_link_coloring_custom_button_text_active']) ) ? $menu_item_options['menu_item_link_coloring_custom_button_text_active'] : false;
 
                 if( $p_text_color ) {
                   $menu_item_css .= '
@@ -549,6 +620,9 @@
 
                   $menu_item_css .= '
                   #header-outer:not(.transparent) li.menu-item-'.esc_attr($item->ID) .' > a:hover > .menu-title-text,
+                  #header-outer:not(.transparent) #top li.menu-item-'.esc_attr($item->ID) .' > a:hover > .sf-sub-indicator i,
+                  #header-outer:not(.transparent) li.menu-item-'.esc_attr($item->ID) .'.sfHover > a > .menu-title-text,
+                  #header-outer:not(.transparent) #top li.menu-item-'.esc_attr($item->ID) .'.sfHover > a > .sf-sub-indicator i,
                   body #header-outer[data-has-menu="true"]:not(.transparent) #top li.menu-item-'.esc_attr($item->ID) .'[class*="current"] > a  > i.nectar-menu-icon,
                   #header-outer:not(.transparent) li.menu-item-'.esc_attr($item->ID) .'[class*="current"] > a > .menu-title-text {
                     color: '.esc_attr($p_text_hover_color) .'!important;
@@ -561,6 +635,42 @@
                     color: '.esc_attr($p_text_hover_color) .'!important;
                   }';
 
+                }
+
+                // Button effect BG 
+                if( isset($nectar_options['header-hover-effect']) &&
+                      'button_bg' === $nectar_options['header-hover-effect'] ) {
+                  
+                  $menu_item_css .= '
+                  #header-outer.transparent li.menu-item-'.esc_attr($item->ID) .' > a:hover > .menu-title-text,
+                  #header-outer.transparent #top li.menu-item-'.esc_attr($item->ID) .' > a:hover > .sf-sub-indicator i,
+                  #header-outer.transparent li.menu-item-'.esc_attr($item->ID) .'.sfHover > a > .menu-title-text,
+                  #header-outer.transparent #top li.menu-item-'.esc_attr($item->ID) .'.sfHover > a > .sf-sub-indicator i {
+                    color: '.esc_attr($p_text_hover_color) .'!important;
+                  }';
+
+                  // button default.
+                  if( $button_effect_default ) {
+                    $menu_item_css .= 'body #top .sf-menu > li.menu-item-'.esc_attr($item->ID) .' > a .menu-title-text:before {
+                      background-color: '.esc_attr($button_effect_default) .'!important;
+                      filter: none;
+                    }';
+                  }
+
+                  // button active
+                  if( $button_effect_active ) {
+                    $menu_item_css .= 'body #top .sf-menu > li[class*="current"].menu-item-'.esc_attr($item->ID) .' > a .menu-title-text:before {
+                      background-color: '.$button_effect_active.'!important;	
+                    }';
+                  }
+                  // button active text
+                  if( $button_effect_active_text ) {
+                    $menu_item_css .= 'body #top .sf-menu > li[class*="current"].menu-item-'.esc_attr($item->ID) .' > a .menu-title-text,
+                    body #header-outer #top .sf-menu > li[class*="current"].menu-item-'.esc_attr($item->ID) .' > a > .sf-sub-indicator i {
+                      color: '.$button_effect_active_text.'!important;	
+                    }';
+                  }
+                  
                 }
 
               }
@@ -609,6 +719,20 @@
                 }
                
                 // Button Core.
+                $button_padding = '24px';
+                $button_padding_w = '48px';
+
+                if( 'button_bg' === $nectar_options['header-hover-effect'] && isset($nectar_options['header-hover-effect-button-bg-size']) ) {
+                  if( 'small' === $nectar_options['header-hover-effect-button-bg-size'] ) {
+                    $button_padding = '14px';
+                    $button_padding_w = '28px';
+                  }
+                  else if ( 'medium' === $nectar_options['header-hover-effect-button-bg-size'] ) {
+                    $button_padding = '18px';
+                    $button_padding_w = '36px';
+                  }
+                }
+
                 $menu_item_css .= '
                 @media only screen and (max-width: 999px) {
                   body #header-outer #logo {
@@ -633,8 +757,8 @@
 
                 @media only screen and (min-width: 1000px) {
                   body #header-outer .menu-item-'.esc_attr($item->ID) .' > a {
-                    border-left-width: 24px;
-                    border-right-width: 24px;
+                    border-left-width: '.$button_padding.';
+                    border-right-width: '.$button_padding.';
                   }
                   body #header-outer #header-secondary-outer .menu-item-'.esc_attr($item->ID) .' > a {
                     border-left: 12px solid transparent;
@@ -643,8 +767,9 @@
                
                   body #header-outer .menu-item-'.esc_attr($item->ID) .' > a:before,
                   body #header-outer .menu-item-'.esc_attr($item->ID) .' > a:after {
-                    left: -24px;
-                    width: calc(100% + 48px);
+                    left: -'.$button_padding.';
+                    height: calc(100% + '.$button_padding.');
+                    width: calc(100% + '.$button_padding_w.');
                   }
 
                   #header-outer #header-secondary-outer .menu-item-'.esc_attr($item->ID) .' > a:before,
@@ -684,7 +809,9 @@
                     #header-outer .menu-item-'.esc_attr($item->ID) .' > a,
                     #header-outer #top nav .menu-item-'.esc_attr($item->ID) .' > a,
                     #header-outer.transparent nav > ul.sf-menu .menu-item.menu-item-'.esc_attr($item->ID) .' > a,
-                    #header-outer.transparent #top nav > ul.sf-menu .menu-item.menu-item-'.esc_attr($item->ID) .' > a {
+                    #header-outer.transparent #top nav > ul.sf-menu .menu-item.menu-item-'.esc_attr($item->ID) .' > a,
+                    body #header-outer[data-lhe="default"] #top nav .sf-menu > .sfHover:not(#social-in-menu).menu-item-'.esc_attr($item->ID) .' > a,
+                    body #header-outer[data-lhe="default"] #top nav > ul > li.menu-item-'.esc_attr($item->ID) .' > a:hover {
                       color: #fff!important;
                     }';
                   }
@@ -1340,6 +1467,36 @@
                     }';
               }
 
+              // Menu Menu EXT item CTA button 
+              if( isset($menu_item_options['menu_item_link_button_cta']) && 
+                  'on' === $menu_item_options['menu_item_link_button_cta']  ) {
+                  
+                    // Base button styles 
+                    $content_alignment = isset($menu_item_options['menu_item_link_content_alignment']) ? $menu_item_options['menu_item_link_content_alignment'] : 'top-left';
+                    if( in_array($content_alignment, array('top-left', 'top-center', 'top-right')) ) {
+
+                      $flex_align_items = 'flex-start';
+                      
+                      if( 'top-center' === $content_alignment ) {
+                        $flex_align_items = 'center';
+                      } else if( 'top-right' === $content_alignment ) {
+                        $flex_align_items = 'flex-end';
+                      }
+
+                      $menu_item_css .= self::menu_item_css_selector($nectar_options, 'li.menu-item-'.esc_attr($item->ID) .' > a .nectar-ext-menu-item .inner-content.has-button') . '{';
+                      $menu_item_css .= ' align-self: stretch;
+                            display: flex;
+                            flex-direction: column;
+                            align-items: '.$flex_align_items.';
+                      }';
+
+                      $menu_item_css .= self::menu_item_css_selector($nectar_options, 'li.menu-item-'.esc_attr($item->ID) .' > a .nectar-ext-menu-item .nectar-ext-menu-item__button') . '{';
+                        $menu_item_css .= ' margin-top: auto;
+                        }';
+                    }
+              }
+
+
 
     					// Content Alignment.
     					$degree = '270';
@@ -1507,6 +1664,11 @@
       */
      public static function write_css() {
 
+          if( !self::is_writable() ) {
+            update_option('salient_menu_dynamic_css_success', 'false');
+            return;
+          }
+
           // Generate the styles.
        		$css = self::generate_all_css();
 
@@ -1539,6 +1701,25 @@
        		$random_number = rand( 0, 99999 );
        		update_option('salient_menu_dynamic_css_version', $random_number);
 
+     }
+
+     public static function is_writable() {
+
+        global $wp_filesystem;
+        require_once( ABSPATH . 'wp-admin/includes/file.php' );
+        
+        $wp_upload_dir = wp_upload_dir( null, false );
+        $upload_dir = $wp_upload_dir['basedir'];
+    
+        if ( ! function_exists( 'WP_Filesystem' ) ) {
+          return false;
+        }
+
+        WP_Filesystem();
+    
+        $writable = WP_Filesystem( false, $upload_dir );
+    
+        return ( $writable && 'direct' === $wp_filesystem->method );
      }
 
 

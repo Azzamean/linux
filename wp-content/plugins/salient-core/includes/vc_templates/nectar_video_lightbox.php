@@ -43,7 +43,7 @@ if( $link_style === 'play_button_with_text' ) {
 	$the_color = $nectar_play_button_color;
 
 	if( $text_color != 'default' && in_array( $nectar_play_button_style, array('small','bordered_top')) ) {
-		$text_color_class = ' text-color-'. $text_color;
+		$text_color_class = ' text-color-'. esc_attr($text_color);
 	}
 }
 

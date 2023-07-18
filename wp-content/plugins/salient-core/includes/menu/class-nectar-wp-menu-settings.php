@@ -221,7 +221,7 @@
          /************* menu item *************/
          'menu_item_link_bg_header' => array(
            'type'          => 'header',
-           'label'         => esc_html__('Image','salient-core'),
+           'label'         => esc_html__('Media','salient-core'),
            'max_depth' => '-1',
            'min_depth' => '1',
            'custom_attrs'    => array(
@@ -231,18 +231,19 @@
          'menu_item_link_bg_type' => array(
            'type'           => 'dropdown',
            'category'       => 'menu-item',
-           'label'          => esc_html__('Image Type','salient-core'),
-           'description'    => esc_html__('Specify if you would like this menu item to use an image.','salient-core'),
+           'label'          => esc_html__('Media Type','salient-core'),
+           'description'    => esc_html__('Specify if you would like this menu item to use an image or video.','salient-core'),
            'custom_attrs'    => array(
              'data-toggles' => 'menu_item_link_bg_img',
            ),
            'default_value'  => 'none',
            'max_depth' => '-1',
            'min_depth' => '1',
-           'options'        => array(
-             'none'         => esc_html__('None','salient-core'),
-             'custom'       => esc_html__('Custom','salient-core'),
-             'featured_image' => esc_html__('Featured Image','salient-core')
+           'options'          => array(
+             'none'           => esc_html__('None','salient-core'),
+             'custom'         => esc_html__('Custom Image','salient-core'),
+             'video'          => esc_html__('Custom Video','salient-core'),
+             'featured_image' => esc_html__('Featured Image','salient-core'),
            )
          ),
          'menu_item_link_bg_img_custom' => array(
@@ -257,24 +258,33 @@
              'url' => ''
            )
          ),
+         'menu_item_link_bg_img_video' => array(
+          'type'          => 'video',
+          'category'      => 'menu-item',
+          'label'         => esc_html__('Menu Item Video','salient-core'),
+          'description'   => esc_html__('Optionally set a video for your menu item.','salient-core'),
+          'max_depth' => '-1',
+          'min_depth' => '1',
+          'default_value' => ''
+        ),
          'menu_item_link_bg_style' => array(
            'type'           => 'dropdown',
            'category'       => 'menu-item',
-           'label'          => esc_html__('Image Style','salient-core'),
-           'description'    => esc_html__('Determines how the image will be used in your menu item.','salient-core'),
+           'label'          => esc_html__('Media Style','salient-core'),
+           'description'    => esc_html__('Determines how the media will be used in your menu item.','salient-core'),
            'default_value'  => 'default',
            'max_depth' => '-1',
            'min_depth' => '1',
            'options'        => array(
-             'default' => esc_html__('Image Behind Menu Text','salient-core'),
-             'img-above-text' => esc_html__('Image Above Menu Text','salient-core')
+             'default' => esc_html__('Media Behind Menu Text','salient-core'),
+             'img-above-text' => esc_html__('Media Above Menu Text','salient-core')
            )
          ),
          'menu_item_link_bg_hover' => array(
            'type'           => 'dropdown',
            'category'       => 'menu-item',
-           'label'          => esc_html__('Image Hover','salient-core'),
-           'description'    => esc_html__('Define a hover effect for your menu item image.','salient-core'),
+           'label'          => esc_html__('Media Hover','salient-core'),
+           'description'    => esc_html__('Define a hover effect for your menu item media.','salient-core'),
            'default_value'  => 'default',
            'max_depth' => '-1',
            'min_depth' => '1',
@@ -376,7 +386,7 @@
            'type'          => 'dropdown',
            'category'      => 'menu-item',
            'label'         => esc_html__('Menu Item Border Radius','salient-core'),
-           'description'   => esc_html__('This allows you to round the corners of your menu item link when using a menu image.','salient-core'),
+           'description'   => esc_html__('This allows you to round the corners of your menu item link when using media.','salient-core'),
            'default_value' => 'default',
            'max_depth' => '-1',
            'min_depth' => '1',
@@ -388,6 +398,85 @@
              '10px' => esc_html__('10px','salient-core'),
            )
          ),
+
+         'menu_item_link_button_cta' => array(
+          'type'          => 'switch_toggle',
+          'category'       => 'menu-item',
+          'label'         => esc_html__('Enable CTA Button','salient-core'),
+          'description'   => esc_html__('This will add a button after your menu item heading/description.','salient-core'),
+          'max_depth' => '-1',
+          'min_depth' => '1',
+          'custom_attrs'    => array(
+            'data-toggled-by' => 'menu_item_link_bg_type',
+            'data-toggled-by-value' => 'custom,video,featured_image'
+          ),
+        ),
+        'menu_item_link_cta_text' => array(
+          'type'          => 'text',
+          'category'      => 'menu-item',
+          'label'         => esc_html__('Menu Item CTA Text','salient-core'),
+          'description'   => esc_html__('CTA button Text. ','salient-core'),
+          'default_value' => '',
+          'max_depth' => '-1',
+          'min_depth' => '1',
+          'custom_attrs'    => array(
+            'data-toggled-by' => 'menu_item_link_bg_type',
+            'data-toggled-by-value' => 'custom,video,featured_image'
+          ),
+        ),
+        'menu_item_link_cta_button_style' => array(
+          'type'           => 'dropdown',
+          'category'       => 'menu-item',
+          'label'          => esc_html__('Menu Item CTA Style','salient-core'),
+          'description'    => esc_html__('CTA button style. ','salient-core'),
+          'default_value'  => 'none',
+          'max_depth' => '-1',
+          'min_depth' => '1',
+          'options'        => array(
+            "basic" => esc_html__("Basic", "salient-core"),
+            "arrow-animation" => esc_html__("Arrow Animation", "salient-core"),
+            "underline" => esc_html__("Underline", "salient-core"),
+            "text-reveal-wave" => esc_html__("Text Reveal Wave", "salient-core"),
+          ),
+          'custom_attrs'    => array(
+            'data-toggled-by' => 'menu_item_link_bg_type',
+            'data-toggled-by-value' => 'custom,video,featured_image'
+          ),
+        ),
+        'menu_item_link_cta_button_bg_color' => array(
+          'type'           => 'dropdown',
+          'category'       => 'menu-item',
+          'label'          => esc_html__('Menu Item CTA BG Color','salient-core'),
+          'description'    => esc_html__('CTA button background color. ','salient-core'),
+          'default_value'  => 'none',
+          'max_depth' => '-1',
+          'min_depth' => '1',
+          'options'        => array(
+            "transparent" => esc_html__("Transparent", "salient-core"),
+            "accent-color" => esc_html__("Accent Color", "salient-core"),
+            "extra-color-1" => esc_html__("Extra Color #1", "salient-core"),
+            "extra-color-2" => esc_html__("Extra Color #2", "salient-core"),
+            "extra-color-3" => esc_html__("Extra Color #3", "salient-core"),
+          ),
+          'custom_attrs'    => array(
+            'data-toggled-by' => 'menu_item_link_bg_type',
+            'data-toggled-by-value' => 'custom,video,featured_image'
+          ),
+        ),
+        'menu_item_link_cta_button_text_color' => array(
+          'type'           => 'color',
+          'category'       => 'menu-item',
+          'label'          => esc_html__('Menu Item CTA Button Text Color','salient-core'),
+          'description'    => 'The color used for your CTA button text.',
+          'default_value'  => '#ffffff',
+          'max_depth' => '-1',
+          'min_depth' => '1',
+          'custom_attrs'    => array(
+            'data-toggled-by' => 'menu_item_link_bg_type',
+            'data-toggled-by-value' => 'custom,video,featured_image'
+          ),
+        ),
+
 
          'menu_item_link_text_header' => array(
            'type'          => 'header',
@@ -535,6 +624,34 @@
            'max_depth' => '-1',
            'min_depth' => '1'
          ),
+
+         'menu_item_link_coloring_custom_button_bg' => array(
+          'type'           => 'color',
+          'category'       => 'menu-item',
+          'label'          => esc_html__('Menu Item Button Effect BG','salient-core'),
+          'description'    => 'The color used for the button effect background.',
+          'default_value'  => '#eeeeee',
+          'theme_option_conditional' => array( 'header-hover-effect', 'button_bg' ),
+          'max_depth' => '0',
+        ),
+        'menu_item_link_coloring_custom_button_bg_active' => array(
+          'type'           => 'color',
+          'category'       => 'menu-item',
+          'label'          => esc_html__('Menu Item Button Effect BG Active','salient-core'),
+          'description'    => 'The color used for the button effect background in the active state.',
+          'default_value'  => '#000000',
+          'theme_option_conditional' => array( 'header-hover-effect', 'button_bg' ),
+          'max_depth' => '0',
+        ),
+        'menu_item_link_coloring_custom_button_text_active' => array(
+          'type'           => 'color',
+          'category'       => 'menu-item',
+          'label'          => esc_html__('Menu Item Button Effect Text Active','salient-core'),
+          'description'    => 'The color used for the button effect text in the active state.',
+          'default_value'  => '#ffffff',
+          'theme_option_conditional' => array( 'header-hover-effect', 'button_bg' ),
+          'max_depth' => '0',
+        ),
 
          'menu_item_link_coloring_custom_text_p' => array(
            'type'           => 'color',

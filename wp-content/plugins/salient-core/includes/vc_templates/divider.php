@@ -36,9 +36,19 @@ extract(shortcode_atts(array(
 		$calculated_height      = intval($custom_height) . 'px';
 		$calculated_height_half = intval($custom_height)/2 . 'px';
 	}
+
+  if( strpos($custom_line_width, 'px') ) {
+    $custom_line_width = intval($custom_line_width) . 'px';
+  } else if( strpos($custom_line_width, '%') ) {
+    $custom_line_width = intval($custom_line_width) . '%';
+  } else if( strpos($custom_line_width, 'vw') ) {
+    $custom_line_width = intval($custom_line_width) . 'vw';
+  } else if( strpos($custom_line_width, 'vh') ) {
+    $custom_line_width = intval($custom_line_width) . 'vh';
+  }
 	
   if ($line_type === 'Small Thick Line' || $line_type === 'Small Line' ) {
-    $height  = (!empty($custom_height)) ? 'style="margin-top: '.esc_attr($calculated_height_half).'; width: '.esc_attr($custom_line_width).'px; height: '.esc_attr($line_thickness).'px; margin-bottom: '.esc_attr($calculated_height_half).';"' : null;
+    $height  = (!empty($custom_height)) ? 'style="margin-top: '.esc_attr($calculated_height_half).'; width: '.esc_attr($custom_line_width).'; height: '.esc_attr($line_thickness).'px; margin-bottom: '.esc_attr($calculated_height_half).';"' : null;
     $divider = '<div '.$height.' data-width="'.esc_attr($custom_line_width).'" data-animate="'.esc_attr($animate).'" data-animation-delay="'.esc_attr($delay).'" data-color="'.esc_attr($divider_color).'" class="divider-small-border"></div>';
   } 
   else if ($line_type === 'Full Width Line' ) {

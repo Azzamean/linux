@@ -17,7 +17,9 @@ $nectar_animated_shape_params = array(
         'options' => array(
             '<div style="clip-path: circle(50% at 50% 50%)" class="nectar-shape"></div>' => 'circle',
             '<div style="clip-path: polygon(50% 0%, 0% 100%, 100% 100%)" class="nectar-shape"></div>' => 'triangle',
-            '<div style="clip-path: polygon(25% 0%, 100% 0%, 75% 100%, 0% 100%)" class="nectar-shape"></div>' => 'parallelogram'
+            '<div style="clip-path: polygon(25% 0%, 100% 0%, 75% 100%, 0% 100%)" class="nectar-shape"></div>' => 'parallelogram',
+            '<div style="clip-path: circle(50% at 50% 100%)" class="nectar-shape"></div>' => 'half-circle-top',
+            '<div style="clip-path: circle(50% at 50% 0%)" class="nectar-shape"></div>' => 'half-circle-bottom',
         ),
         'description' => '',
         'std' => 'circle',

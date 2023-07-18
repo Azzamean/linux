@@ -3,7 +3,7 @@
  * Salient welcome page
  *
  * @package Salient WordPress Theme
- * @version 13.0
+ * @version 16.0
  */
 
 // Exit if accessed directly
@@ -59,15 +59,21 @@ function nectar_upgrade_theme_welcome_redirect() {
 		if ( is_network_admin() || isset( $_GET['activate-multi'] ) ) {
 			return;
 		}
+
 		
 		if( $salient_current_version != $salient_upgrading_version && 
         false == $on_welcome_page &&
         current_user_can('switch_themes') ) {
 			
 			update_option('salient_upgrading_version', $salient_current_version);
+
+			// Skip redirect for minor releases.
+			if ( !empty($salient_upgrading_version) && intval($salient_current_version) - intval($salient_upgrading_version) < 1 ) {
+				return;
+			}
 			
 			// Redirect.
-	    wp_safe_redirect( add_query_arg( array( 'page' => 'salient-welcome-screen' ), admin_url( 'index.php' ) ) );
+			wp_safe_redirect( add_query_arg( array( 'page' => 'salient-welcome-screen' ), admin_url( 'index.php' ) ) );
 		}
 		
 	}
@@ -107,11 +113,11 @@ function nectar_salient_welcome_content() {
   <div class="salient-welcome-wrap">
 		<div class="salient-version-box">
 				<div class="content">
-				  <h1><?php echo esc_html__('Salient Version 15','salient'); ?></h1>
-					<p class="subtitle"><?php echo esc_html__('To explore what\'s new in version 15 and view a full list of changes, check out the','salient'); ?> <a href="https://themenectar.com/changelogs/salient.html" target="_blank"><?php echo esc_html__('changelog','salient'); ?>.</a></p>
+				  <h1><?php echo esc_html__('Salient Version','salient') . ' ' . nectar_get_theme_version(); ?></h1>
+					<p class="subtitle"><?php echo esc_html__('To explore what\'s new in version 16 and view a full list of changes, check out the','salient'); ?> <a href="https://themenectar.com/changelogs/salient.html" target="_blank"><?php echo esc_html__('changelog','salient'); ?>.</a></p>
 			  </div>
-        <div class="cache-notice"><h3><?php echo esc_html('A note for upgrading users','salient'); ?></h3><p><?php echo esc_html__('This is a major release. If you\'re using a performance plugin to cache or minify your assets, you must clear the cache, or else layout issues are likely to occur.','salient'); ?></p></div>
-        <div class="salient-version-box__img-wrap"><img src="<?php echo get_template_directory_uri(). '/nectar/welcome/img/version-15.jpg'; ?>" alt="Salient verison 15" width="" height="" /></div>
+        <div class="cache-notice"><h3><?php echo esc_html__('A note for upgrading users','salient'); ?></h3><p><?php echo esc_html__('This is a major release. If you\'re using a performance plugin to cache or minify your assets, you must clear the cache, or else layout issues are likely to occur.','salient'); ?></p></div>
+        <div class="salient-version-box__img-wrap"><img src="<?php echo get_template_directory_uri(). '/nectar/welcome/img/version-16.jpg'; ?>" alt="Salient version 16" width="" height="" /></div>
 		</div>
 		<?php 
 		if( ! class_exists('Salient_Portfolio') ||
@@ -171,7 +177,7 @@ function nectar_salient_welcome_content() {
       </div>
       <div class="col col-3">
         <h3><?php echo esc_html__('What\'s New','salient'); ?></h3></p>
-        <p><?php echo esc_html__('Salient has been going strong for over 9 years and is constantly evolving. ','salient'); ?></p>
+        <p><?php echo esc_html__('Salient has been going strong for over 10 years and is constantly evolving. ','salient'); ?></p>
         <a class="button button-primary" href="//themenectar.com/changelogs/salient.html" target="_blank"><?php echo esc_html__('View Changelog','salient'); ?> </a>
       </div>
       <div class="col col-3">

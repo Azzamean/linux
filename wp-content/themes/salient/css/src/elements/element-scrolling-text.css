@@ -41,6 +41,11 @@ Description: Styles for the "Scrolling Text" page builder element.
 	color: inherit;
 }
 
+#ajax-content-wrap .nectar-scrolling-text.prevent-animation .nectar-scrolling-text-inner > *,
+#ajax-content-wrap .nectar-scrolling-text.prevent-animation .nectar-scrolling-text-inner span.spin {
+	animation: none;
+}
+
 .nectar-scrolling-text .nectar-scrolling-text-inner > * {
 	transform: translateX(-20%) translateZ(0);
 	animation: nectar-scrolling-text-animation linear infinite 15s;
@@ -91,6 +96,10 @@ Description: Styles for the "Scrolling Text" page builder element.
 	margin-bottom: 0;
 }
 
+.nectar-scrolling-text.custom_color a {
+	color: inherit;
+}
+
 .nectar-scrolling-text .nectar-scrolling-text-inner span.custom {
 	padding: 0 0.4em;
   display: inline-block;
@@ -99,16 +108,19 @@ Description: Styles for the "Scrolling Text" page builder element.
 }
 
 .nectar-scrolling-text .nectar-scrolling-text-inner span.custom[data-scale="three-fourths"] {
-	-webkit-transform: scale(0.75);
-	transform: scale(0.75);
-		padding: 0 0.35em;
+	font-size: 0.75em;
+	padding: 0 0.5em;
+}
+.nectar-scrolling-text .nectar-scrolling-text-inner span.custom[data-scale="three-fourths"] *,
+.nectar-scrolling-text .nectar-scrolling-text-inner span.custom[data-scale="half"] * {
+	font-size: inherit;
 }
 
 .nectar-scrolling-text .nectar-scrolling-text-inner span.custom[data-scale="half"] {
-	-webkit-transform: scale(0.5);
-	transform: scale(0.5);
-	padding: 0 0.3em;
+	font-size: 0.5em;
+	padding: 0 0.6em;
 }
+
 
 @keyframes nectar-scrolling-text-animation {
 	  from {

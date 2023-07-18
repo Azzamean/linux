@@ -381,6 +381,12 @@
             </attributes>
         </shortcode>
         <shortcode>
+            <tag>nectar_global_section</tag>
+            <attributes>
+                <attribute>id</attribute>
+            </attributes>
+        </shortcode>
+        <shortcode>
             <tag>vc_wp_text</tag>
             <attributes>
                 <attribute>title</attribute>

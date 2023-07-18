@@ -23,6 +23,7 @@ if( !empty($current_options) ) {
 		'navigation_dropdown_font_family',
 		'portfolio_filters_font_family',
 		'portfolio_caption_font_family',
+		'blog_single_post_content_font_family',
 		'page_heading_font_family',
 		'page_heading_subtitle_font_family',
 		'off_canvas_nav_font_family',
@@ -1181,22 +1182,21 @@ if( $woocommerce && 'h3' === $product_tab_heading_typography ) {
 		.tabbed[data-style="minimal_alt"] > ul li a,
 		.material .widget .nectar_widget[class*="nectar_blog_posts_"] > li .post-title,
 		body.material .tagcloud a,
-    .material .main-content .widget li a,
-    .material #footer-outer .widget li a,
+    	.material .main-content .widget li a,
+    	.material #footer-outer .widget li a,
 		.nectar-recent-posts-slider_multiple_visible
 		.recent-post-container.container .strong a,
 		.material .recentcomments .comment-author-link,
 		.single .post-area .content-inner > .post-tags a,
 		.masonry.material .masonry-blog-item .grav-wrap a,
-		.nectar-recent-posts-single_featured .grav-wrap a,
 		.masonry.material .masonry-blog-item .meta-category a,
 		.post-area.featured_img_left article .meta-category a,
 		.post-area.featured_img_left article .grav-wrap .text a,
 		.related-posts[data-style="material"] .meta-category a,
 		.masonry.auto_meta_overlaid_spaced article.post.quote .author,
 		.masonry.material article.post.quote .author,
-    .nectar-post-grid-wrap[data-style="vertical_list"] .nectar-link-underline,
-    .nectar-post-grid.vert_list_counter .item-main:before,
+    	.nectar-post-grid-wrap[data-style="vertical_list"] .nectar-link-underline,
+    	.nectar-post-grid.vert_list_counter .item-main:before,
 		body.search-results #search-results[data-layout="list-no-sidebar"] .result .inner-wrap h2 span,
 		.material .tabbed >ul li a,
 		.post-area.featured_img_left article.post.quote .author,
@@ -1215,10 +1215,10 @@ if( $woocommerce && 'h3' === $product_tab_heading_typography ) {
 		body .nectar-quick-view-box .single_add_to_cart_button,
 		.nectar-quick-view-box .single_add_to_cart_button,
 		body .cart .quantity input.qty,
-	  body .cart .quantity input.plus,
+	  	body .cart .quantity input.plus,
 		body .cart .quantity input.minus,
 		body .woocommerce-mini-cart .quantity input.qty,
-	  body .woocommerce-mini-cart .quantity input.plus,
+	  	body .woocommerce-mini-cart .quantity input.plus,
 		body .woocommerce-mini-cart .quantity input.minus,
 		.style_slide_in_click .product-meta > .quantity .amount,
 		.pum-theme-salient-page-builder-optimized .pum-container .pum-content+.pum-close,
@@ -1229,7 +1229,9 @@ if( $woocommerce && 'h3' === $product_tab_heading_typography ) {
 		#header-outer .widget_shopping_cart .cart_list a,
 		.woocommerce .yith-wcan-reset-navigation.button,
 		.single-product .entry-summary p.stock.out-of-stock,
-    .nectar-post-grid .nectar-post-grid-item .content .meta-category a,
+    	.nectar-post-grid .nectar-post-grid-item .content .meta-category a,
+		.nectar-post-grid-item .item-main > .meta-author .meta-author-name,
+		.nectar-post-grid-item .post-heading-wrap .meta-author-name,
 		.nectar-slide-in-cart.style_slide_in_click ul.product_list_widget li dl dt,
 		.woocommerce-tabs ol.commentlist li .comment-text p.meta strong,
 		#ajax-content-wrap .nectar-inherit-label
@@ -1238,9 +1240,55 @@ if( $woocommerce && 'h3' === $product_tab_heading_typography ) {
 			// Output font properties.
 			nectar_output_font_props('label_font', $line_height, $nectar_options);
 
-		echo ' }'; ?>
+		echo ' }'; 
+		
+		// Label without sizing.
+		echo '.material .comment-list .reply a,
+			  .nectar-recent-posts-single_featured .grav-wrap a,
+			  .wc-blocks-filter-wrapper .wc-block-components-checkbox,
+			  .wc-block-product-categories-list-item-count,
+			  .comment-list .comment-author, 
+			  .comment-list .pingback .comment-body > a,
+			  .netar-inherit-label-font--simple {';
+			nectar_output_font_props('label_font', 'bypass', $nectar_options, 'bypass');
+		echo '}';
+
+		?>
 
 	<?php } // attrs in use ?>
+
+	<?php 
+	/*-------------------------------------------------------------------------*/
+	/*	Blog Single Content Area Font
+	/*-------------------------------------------------------------------------*/
+	$styles = explode('-', $nectar_options['blog_single_post_content_font_style']);
+
+	( intval( substr($nectar_options['blog_single_post_content_font_size'],0,-2) ) > 8 ) ? $line_height = intval(substr($nectar_options['blog_single_post_content_font_size'],0,-2)) +10 .'px' : $line_height = null;
+
+	if( is_array($nectar_options['blog_single_post_content_font_family']) && $nectar_options['blog_single_post_content_font_family']['attrs_in_use'] ) {
+
+		echo '.single-post .post-area .post-content { ';
+
+			// Output font properties.
+			nectar_output_font_props('blog_single_post_content_font', $line_height, $nectar_options);
+
+		echo '}'; 
+		
+		if( !empty($nectar_options['blog_single_post_content_font_size']) && 
+			$nectar_options['blog_single_post_content_font_size'] != '-' && 
+			intval($nectar_options['blog_single_post_content_font_size']) >= 20 ) {
+				echo '@media only screen and (max-width: 690px) {
+					.single-post .post-area .post-content { 
+						font-size: 18px;
+						line-height: 1.55;
+					}
+				}';
+		}
+		
+		?>
+
+   <?php } // attrs in use ?>
+
 
 	<?php
 	/*-------------------------------------------------------------------------*/
@@ -1903,7 +1951,8 @@ if( $woocommerce && 'h3' === $product_tab_heading_typography ) {
       body[data-form-submit="see-through-2"] button[type=submit],
       body[data-form-submit="see-through"] input[type=submit],
       body[data-form-submit="see-through"] button[type=submit],
-      body[data-form-submit="regular"] input[type=submit] body[data-form-submit="regular"] button[type=submit],
+      body[data-form-submit="regular"] input[type=submit], 
+	  body[data-form-submit="regular"] button[type=submit],
       .nectar_team_member_overlay .team_member_details .title,
       body:not([data-header-format="left-header"]) #header-outer nav > ul > .megamenu > ul > li > ul > li.has-ul > a,
       .nectar_fullscreen_zoom_recent_projects .project-slide .project-info .normal-container > a,

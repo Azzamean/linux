@@ -268,6 +268,13 @@ body:not([data-header-format="left-header"]).ascend #header-outer[data-full-widt
   padding-left:29px
 }
 
+.nectar_team_member_overlay .inner-wrap {
+    padding-top: 0!important;
+  }
+  .nectar_team_member_overlay {
+    z-index: 10000;
+  }
+
 .ascend #header-outer .cart-wrap {
     top:-7px;
 }

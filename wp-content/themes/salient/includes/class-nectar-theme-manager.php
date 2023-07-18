@@ -136,6 +136,21 @@ if( !class_exists('NectarThemeManager') ) {
 
     }
 
+    public static function get_active_special_locations() {
+      $special_locations = get_option( 'salient_global_section_special_locations', array() );
+      return $special_locations;
+    }
+
+   /**
+    * Determines if a special location is active.
+    * @param string $location
+    * @return mixed
+    */
+    public static function is_special_location_active($location) {
+        $special_locations = self::get_active_special_locations();
+        return isset($special_locations[$location]) ? $special_locations[$location] : false;
+    }
+
 
   }
   

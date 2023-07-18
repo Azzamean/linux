@@ -17,9 +17,15 @@ extract(shortcode_atts(
   'slider_size' => '600',
   'mlf_navigation_location' => 'side',
   'large_featured_padding' => '10%',
+  'load_in_animation' => 'none',
+  'large_featured_content_max_width' => 'default',
+  'large_featured_heading_tag' => 'h2',
+  'button_arrow_style' => 'default',
   'color_scheme' => 'light',
   'auto_rotate' => 'none',
   'slider_above_text' => '',
+  'single_large_featured_content_side_spacing' => 'default',
+  'single_large_featured_content_alignment' => 'default',
   'multiple_large_featured_num' => '4',
   'posts_per_page' => '4',
   'columns' => '4',
@@ -42,6 +48,23 @@ if( isset($_GET['vc_editable']) ) {
     $auto_rotate = 'none';
   }
 }
+
+$recent_post_dynamic_classes = '';
+if( function_exists('nectar_el_dynamic_classnames') ) {
+  $recent_post_dynamic_classes = nectar_el_dynamic_classnames('recent_posts', $atts);
+}
+
+wp_enqueue_style('nectar-element-recent-posts');
+
+if( $style === 'classic_enhanced' || $style === 'classic_enhanced_alt' ) {
+  wp_enqueue_style('nectar-blog-masonry-core');
+  wp_enqueue_style('nectar-blog-masonry-classic-enhanced');
+}
+
+if( $style === 'slider_multiple_visible' || $style === 'slider' ) {
+  wp_enqueue_script('flickity');
+}
+
 
 $posts_page_id    = get_option('page_for_posts');
 $posts_page       = get_page($posts_page_id);
@@ -84,7 +107,7 @@ if( $style !== 'slider' &&
     ob_start();
 
     if( $title_labels === 'true' ) {
-      echo '<h2 class="uppercase recent-posts-title">'. wp_kses_post( $recent_posts_title_text ) .'<a href="'. $posts_page_link .'" class="button"> / '. wp_kses_post( $recent_posts_link_text ) .'</a></h2>';
+      echo '<h2 class="uppercase recent-posts-title">'. wp_kses_post( $recent_posts_title_text ) .'<a href="'. esc_attr($posts_page_link) .'" class="button"> / '. wp_kses_post( $recent_posts_link_text ) .'</a></h2>';
     }
 
     $modded_style = $style;
@@ -356,6 +379,9 @@ if( $style !== 'slider' &&
 
             <?php
             if($r_post_count <= $columns) {
+
+              do_action('nectar_recent_posts_list_featured_first_row_after_title');
+              
               $excerpt_length = (!empty($nectar_options['blog_excerpt_length'])) ? intval($nectar_options['blog_excerpt_length']) : 15;
               echo '<div class="excerpt">'.nectar_excerpt($excerpt_length).'</div>';
 
@@ -507,8 +533,10 @@ else if( $style === 'single_large_featured' ) { //single_large_featured
   $recent_posts_query = new WP_Query($recentBlogPosts);
 
   $animate_in_effect = (!empty($nectar_options['header-animate-in-effect'])) ? $nectar_options['header-animate-in-effect'] : 'none';
-
-  echo '<div id="'.uniqid('rps_').'" class="nectar-recent-posts-single_featured parallax_section" data-padding="'. esc_attr( $large_featured_padding ) .'" data-bg-overlay="'. esc_attr( $bg_overlay ) .'" data-height="'. esc_attr( $slider_size ) .'" data-animate-in-effect="'. esc_attr( $animate_in_effect ) .'" data-remove-post-date="'. esc_attr( $blog_remove_post_date ) .'" data-remove-post-author="'. esc_attr( $blog_remove_post_author ) .'" data-remove-post-comment-number="'.$blog_remove_post_comment_number.'" data-remove-post-nectar-love="'.$blog_remove_post_nectar_love.'">';
+  $load_in_animation_classes = ( !empty($load_in_animation) && $load_in_animation !== 'none' ) ? ' ' . esc_attr($load_in_animation) .' nectar-waypoint-el' : ''; 
+  $load_in_animation_attrs = ( !empty($load_in_animation) && $load_in_animation !== 'none' ) ? ' data-nectar-waypoint-el-offset="70%"' : '';
+  
+  echo '<div id="'.uniqid('rps_').'" class="nectar-recent-posts-single_featured nectar-recent-posts-element parallax_section'.$load_in_animation_classes. $recent_post_dynamic_classes.'"'.$load_in_animation_attrs.' data-max-width="'.esc_attr($large_featured_content_max_width).'" data-align="'.esc_attr($single_large_featured_content_alignment).'" data-side-spacing="'.esc_attr($single_large_featured_content_side_spacing).'" data-padding="'. esc_attr( $large_featured_padding ) .'" data-bg-overlay="'. esc_attr( $bg_overlay ) .'" data-height="'. esc_attr( $slider_size ) .'" data-animate-in-effect="'. esc_attr( $animate_in_effect ) .'" data-remove-post-date="'. esc_attr( $blog_remove_post_date ) .'" data-remove-post-author="'. esc_attr( $blog_remove_post_author ) .'" data-remove-post-comment-number="'.esc_attr($blog_remove_post_comment_number).'" data-remove-post-nectar-love="'.esc_attr($blog_remove_post_nectar_love).'">';
 
   $i = 0;
   if( $recent_posts_query->have_posts() ) :  while( $recent_posts_query->have_posts() ) : $recent_posts_query->the_post(); global $post; ?>
@@ -566,9 +594,15 @@ else if( $style === 'single_large_featured' ) { //single_large_featured
 
 
           echo '<div class="grav-wrap"><a href="'.get_author_posts_url($post->post_author).'">'.get_avatar( get_the_author_meta('email'), 70,  null, get_the_author() ). '</a><div class="text"><span>'.esc_html__( 'By','salient').' <a href="'.get_author_posts_url($post->post_author).'" rel="author">' .get_the_author().'</a></span><span> '.esc_html__( 'In','salient').'</span> '. trim( $cat_output) . '</div></div>';
-          ?>
+          
+          
+          if( !in_array($large_featured_heading_tag, array('h2','h3','h4'))) {
+            $large_featured_heading_tag = 'h2';
+          }
+          echo '<'.$large_featured_heading_tag . ' class="large-featured-post-title post-ref-'. esc_attr($i). '">'; ?>
+          <a href=" <?php echo esc_url(get_permalink()); ?>" class="full-slide-link"> <?php echo the_title(); ?> </a>
+          <?php echo '</'.$large_featured_heading_tag .'>'; ?>
 
-          <h2 class="post-ref-<?php echo esc_attr($i); ?>"><a href=" <?php echo esc_url(get_permalink()); ?>" class="full-slide-link"> <?php echo the_title(); ?> </a></h2>
           <?php echo '<div class="excerpt">' . nectar_excerpt(20) . '</div>';  ?>
 
           <?php
@@ -586,8 +620,21 @@ else if( $style === 'single_large_featured' ) { //single_large_featured
           else if( $stored_theme_skin == 'material' && $button_color === 'extra-color-gradient-2' ) {
             $button_color = 'm-extra-color-gradient-2';
           }
+
+          $has_icon_class = ( $button_arrow_style === 'default' || $button_arrow_style === 'curved' ) ? ' has-icon' : null;
           ?>
-          <a class="nectar-button large regular <?php echo esc_attr( $button_color ) .  esc_attr( $regular_btn_class ); ?> has-icon" href="<?php echo esc_url(get_permalink()); ?>" data-color-override="false" data-hover-color-override="false" data-hover-text-color-override="#fff" ><span><?php echo esc_html__( 'Read More', 'salient'); ?></span> <i class="icon-button-arrow"></i></a>
+          <a class="nectar-button large regular <?php echo esc_attr( $button_color ) .  esc_attr( $regular_btn_class ) . $has_icon_class; ?>" data-arrow-style="<?php echo $button_arrow_style; ?>" href="<?php echo esc_url(get_permalink()); ?>" data-color-override="false" data-hover-color-override="false" data-hover-text-color-override="#fff" >
+            <span><?php echo esc_html__( 'Read More', 'salient'); ?></span>
+            <?php if( $button_arrow_style === 'default' ) {
+              echo '<i class="icon-button-arrow"></i>';
+            } else if( $button_arrow_style === 'curved'&& function_exists('nectar_get_curved_arrow_markup')) {
+              echo '<span class="nectar-cta nectar-inherit-label" data-triggered-by=".nectar-button" data-style="curved-arrow-animation">';
+              echo '<span class="link_text">' .nectar_get_curved_arrow_markup() . '</span>';
+              echo '</span>';
+            } ?>
+          </a>
+
+        </div>
 
         </div>
 
@@ -599,7 +646,7 @@ else if( $style === 'single_large_featured' ) { //single_large_featured
 
   wp_reset_postdata();
 
-  echo '</div></div>';
+  echo '</div>';
 
   wp_reset_query();
 
@@ -654,8 +701,10 @@ else if( $style === 'multiple_large_featured' ) { //multiple_large_featured
 
   $button_color      = strtolower($button_color);
   $animate_in_effect = (!empty($nectar_options['header-animate-in-effect'])) ? $nectar_options['header-animate-in-effect'] : 'none';
-
-  echo '<div id="'.uniqid('rps_').'" class="nectar-recent-posts-single_featured multiple_featured parallax_section" data-button-color="'. esc_attr( $button_color ) .'" data-nav-location="'. esc_attr( $mlf_navigation_location ) .'" data-bg-overlay="'. esc_attr( $bg_overlay ) .'" data-padding="'. esc_attr( $large_featured_padding ) .'" data-autorotate="'. esc_attr( $auto_rotate ) .'" data-height="'. esc_attr( $slider_size ) .'" data-animate-in-effect="'. esc_attr( $animate_in_effect ) .'" data-remove-post-date="'. esc_attr( $blog_remove_post_date ) .'" data-remove-post-author="'. esc_attr( $blog_remove_post_author ) .'" data-remove-post-comment-number="'. esc_attr( $blog_remove_post_comment_number ) .'" data-remove-post-nectar-love="'. esc_attr( $blog_remove_post_nectar_love ) .'">';
+  $load_in_animation_classes = ( !empty($load_in_animation) && $load_in_animation !== 'none' ) ? ' ' . esc_attr($load_in_animation) .' nectar-waypoint-el' : ''; 
+  $load_in_animation_attrs = ( !empty($load_in_animation) && $load_in_animation !== 'none' ) ? ' data-nectar-waypoint-el-offset="70%"' : '';
+  
+  echo '<div id="'.uniqid('rps_').'" class="nectar-recent-posts-single_featured nectar-recent-posts-element multiple_featured parallax_section'.$load_in_animation_classes.$recent_post_dynamic_classes.'"'.$load_in_animation_attrs.' data-max-width="'.esc_attr($large_featured_content_max_width).'" data-button-color="'. esc_attr( $button_color ) .'" data-nav-location="'. esc_attr( $mlf_navigation_location ) .'" data-bg-overlay="'. esc_attr( $bg_overlay ) .'" data-padding="'. esc_attr( $large_featured_padding ) .'" data-autorotate="'. esc_attr( $auto_rotate ) .'" data-height="'. esc_attr( $slider_size ) .'" data-animate-in-effect="'. esc_attr( $animate_in_effect ) .'" data-remove-post-date="'. esc_attr( $blog_remove_post_date ) .'" data-remove-post-author="'. esc_attr( $blog_remove_post_author ) .'" data-remove-post-comment-number="'. esc_attr( $blog_remove_post_comment_number ) .'" data-remove-post-nectar-love="'. esc_attr( $blog_remove_post_nectar_love ) .'">';
 
   $i = 0;
   if( $recent_posts_query->have_posts() ) : while( $recent_posts_query->have_posts() ) : $recent_posts_query->the_post(); global $post; ?>
@@ -709,7 +758,7 @@ else if( $style === 'multiple_large_featured' ) { //multiple_large_featured
               $i = 0;
               foreach( $categories as $category ) {
                 $i++;
-                $cat_output .= '<a class="'.$category->slug.'" href="' . esc_url( get_category_link( $category->term_id ) ) . '"><span class="'.$category->slug.'">'.esc_html( $category->name ) .'</span></a>';
+                $cat_output .= '<a class="'.$category->slug.'" href="' . esc_url( get_category_link( $category->term_id ) ) . '"><span class="'.esc_attr($category->slug).'">'.esc_html( $category->name ) .'</span></a>';
                 if($i > 0) {
                   break;
                 }
@@ -719,9 +768,13 @@ else if( $style === 'multiple_large_featured' ) { //multiple_large_featured
 
 
           echo '<div class="grav-wrap"><a href="'.get_author_posts_url($post->post_author).'">'.get_avatar( get_the_author_meta('email'), 70,  null, get_the_author() ). '</a><div class="text"><span>'.esc_html__( 'By','salient').' <a href="'.get_author_posts_url($post->post_author).'" rel="author">' .get_the_author().'</a></span><span> '.esc_html__( 'In','salient').'</span> '. trim( $cat_output) . '</div></div>';
-          ?>
-
-          <h2 class="post-ref-<?php echo esc_attr($i); ?>"><a href="<?php echo esc_url(get_permalink()); ?>" class="full-slide-link"> <?php echo the_title(); ?> </a></h2>
+          
+          if( !in_array($large_featured_heading_tag, array('h2','h3','h4'))) {
+            $large_featured_heading_tag = 'h2';
+          }
+          echo '<'.$large_featured_heading_tag . ' class="large-featured-post-title post-ref-'. esc_attr($i). '">'; ?>
+          <a href=" <?php echo esc_url(get_permalink()); ?>" class="full-slide-link"> <?php echo the_title(); ?> </a>
+          <?php echo '</'.$large_featured_heading_tag .'>'; ?>
 
           <?php
           
@@ -745,7 +798,18 @@ else if( $style === 'multiple_large_featured' ) { //multiple_large_featured
             $button_color = 'm-extra-color-gradient-2';
           }
           ?>
-          <a class="nectar-button large regular <?php echo esc_attr($button_color) .  esc_attr($regular_btn_class); ?> has-icon" href="<?php echo esc_url(get_permalink()); ?>" data-color-override="false" data-hover-color-override="false" data-hover-text-color-override="#fff" ><span><?php echo esc_html__( 'Read Article', 'salient-core'); ?> </span><i class="icon-button-arrow"></i></a>
+          <a class="nectar-button large regular <?php echo esc_attr( $button_color ) .  esc_attr( $regular_btn_class ); ?> has-icon" data-arrow-style="<?php echo $button_arrow_style; ?>" href="<?php echo esc_url(get_permalink()); ?>" data-color-override="false" data-hover-color-override="false" data-hover-text-color-override="#fff" >
+            <span><?php echo esc_html__( 'Read Article', 'salient-core'); ?></span>
+            <?php if( $button_arrow_style === 'default' ) {
+              echo '<i class="icon-button-arrow"></i>';
+            } else if( $button_arrow_style === 'curved'&& function_exists('nectar_get_curved_arrow_markup')) {
+              echo '<span class="nectar-cta nectar-inherit-label" data-triggered-by=".nectar-button" data-style="curved-arrow-animation">';
+              echo '<span class="link_text">' .nectar_get_curved_arrow_markup() . '</span>';
+              echo '</span>';
+
+            } ?>
+          </a>
+
 
 
           </div><!--/inner-wrap-->

@@ -26,13 +26,17 @@ if ( !defined ( 'ABSPATH' ) ) {
 
 // Don't duplicate me!
 if ( !class_exists ( 'ReduxFramework_divide' ) ) {
-
+    
     /**
      * Main ReduxFramework_divide class
      *
      * @since       1.0.0
      */
     class ReduxFramework_divide {
+
+        public $field = array();
+        public $value = '';
+        public $parent = null;
 
         /**
          * Field Constructor.

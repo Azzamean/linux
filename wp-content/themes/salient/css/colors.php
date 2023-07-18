@@ -31,6 +31,10 @@ label span,
 body [class^="icon-"].icon-default-style,
 .blog-recent[data-style*="classic_enhanced"] .post-meta a:hover i,
 .masonry.classic_enhanced .post .post-meta a:hover i,
+.comment-list .comment-meta a:hover,
+.comment-list .comment-meta a:focus,
+.comment-author a:hover,
+.comment-author a:focus,
 .post .post-header h2 a,
 .post .post-header a:hover,
 .post .post-header a:focus,
@@ -114,14 +118,10 @@ body #header-secondary-outer #social a:focus i,
 .single #single-meta div a:hover i,
 .single #single-meta div:hover > a,
 .single #single-meta div:focus > a,
-.comment-list .comment-meta a:hover,
-.comment-list .comment-meta a:focus,
 .result .title a,
 .circle-border,
 .home .blog-recent:not([data-style="list_featured_first_row"]) .col .post-header a:hover,
 .home .blog-recent .col .post-header h3 a,
-.comment-author a:hover,
-.comment-author a:focus,
 .project-attrs li i,
 .nectar-milestone .number.accent-color,
 body #portfolio-nav a:hover i,
@@ -564,7 +564,7 @@ if ($woocommerce) {
 		.woocommerce #sidebar div ul li a:hover ~ .count,
 		.woocommerce #sidebar div ul li.chosen > a ~ .count,
 		.woocommerce #sidebar div ul .current-cat > .count,
-		.woocommerce #sidebar .wc-block-product-categories-list-item:hover .wc-block-product-categories-list-item-count,
+		.woocommerce #sidebar .wc-block-product-categories-list-item:hover > .wc-block-product-categories-list-item-count,
 		.woocommerce .widget_price_filter .ui-slider .ui-slider-range,
 		.material.woocommerce-page .widget_price_filter .ui-slider .ui-slider-range,
 		.woocommerce-account .woocommerce-form-login button.button,
@@ -1055,6 +1055,9 @@ echo '}';
 
 ///////// Custom bg/font colors.
 if( !empty($nectar_options['overall-bg-color']) ) {
+
+	echo ':root { --nectar-bg-color: '. esc_attr($nectar_options['overall-bg-color']) .'; }';
+
 	echo '
 	body,
 	.container-wrap,
@@ -1114,7 +1117,6 @@ if( !empty($nectar_options['overall-font-color']) ) {
 		echo '.comment-list .comment-meta a:not(:hover),
 		      .material .comment-list .reply a:not(:hover) {
 			color: '.esc_attr($nectar_options['overall-font-color']).';
-			opacity: 0.7;
 		}';
 	}
 	if ($woocommerce) {
@@ -1275,6 +1277,11 @@ if( !empty($nectar_options['header-color']) && $nectar_options['header-color'] =
 		#header-outer:not(.transparent) #top .slide-out-widget-area-toggle .close-line {
 			border-color:'.esc_attr($nectar_options['header-font-color']).';
 		}';
+		if( nectar_is_contained_header() ) {
+			echo '#header-outer.transparent #top .slide-out-widget-area-toggle .close-line {
+				background-color:'.esc_attr($nectar_options['header-font-color']).';
+			}';
+		}
 	}
 
 
@@ -1364,6 +1371,42 @@ if( !empty($nectar_options['header-color']) && $nectar_options['header-color'] =
 		}';
 
 	} // End custom header font color.
+
+	// Button BG hover effect
+	if( 'button_bg' === $header_hover_animation ) {
+		$header_btn_bg = (isset($nectar_options['header-font-button-bg']) && !empty($nectar_options['header-font-button-bg'])) ? $nectar_options['header-font-button-bg'] : false ;
+		$header_btn_bg_active = (isset($nectar_options['header-font-button-bg-active']) && !empty($nectar_options['header-font-button-bg-active'])) ? $nectar_options['header-font-button-bg-active'] : false ;
+		$header_btn_text_active = (isset($nectar_options['header-font-button-text-active']) && !empty($nectar_options['header-font-button-text-active'])) ? $nectar_options['header-font-button-text-active'] : false ;
+
+		if( $header_btn_bg ) {
+			echo '#top .sf-menu > li:not([class*="menu-item-btn"]) > a .menu-title-text:before {
+				background-color: '.$header_btn_bg.';	
+			}';
+		}
+
+		if( $header_btn_bg_active ) {
+			echo '#top .sf-menu > li[class*="current"]:not([class*="menu-item-btn"]) > a .menu-title-text:before {
+				background-color: '.$header_btn_bg_active.';	
+			}';
+		}
+		if( $header_btn_text_active ) {
+			echo '#top .sf-menu > li[class*="current"]:not([class*="menu-item-btn"]) > a .menu-title-text {
+				color: '.$header_btn_text_active.';	
+			}
+			#header-outer #top .sf-menu > li[class*="current"]:not([class*="menu-item-btn"]) > a > .sf-sub-indicator i {
+				color: '.$header_btn_text_active.'!important;	
+			}';
+		}
+
+		if( !empty($nectar_options['header-font-hover-color']) ) {
+			echo '
+			#header-outer #top nav .sf-menu > .sfHover:not([class*="current"]):not(#social-in-menu) > a .menu-title-text,
+			#header-outer #top nav > ul > li:not([class*="current"]) > a:hover .menu-title-text {
+				color: '.$nectar_options['header-font-hover-color'].';
+			}';
+		}
+		
+	}
 
 
 	if( !empty($nectar_options['header-icon-color']) ) {
@@ -2043,6 +2086,9 @@ if( 'classic_enhanced' === $masonry_type || 'material' === $theme_skin ) {
 			$terms = get_option( "taxonomy_$t_id" );
 
 			if( !empty($terms['category_color']) ) {
+
+				$button_text_color = (isset($terms['category_text_color']) && !empty($terms['category_text_color']) ) ? esc_attr($terms['category_text_color']) : '#fff';
+
 				echo '
         .featured-media-under-header__cat-wrap .meta-category .'.esc_attr($v->slug) . ':hover,
 				.single .heading-title[data-header-style="default_minimal"] .meta-category .'.esc_attr($v->slug) . ':hover,
@@ -2065,6 +2111,7 @@ if( 'classic_enhanced' === $masonry_type || 'material' === $theme_skin ) {
 				.material.masonry .masonry-blog-item.category-'.esc_attr($v->slug) . ' .video-play-button,
 				.material.masonry .masonry-blog-item.category-'.esc_attr($v->slug) . ' .link-inner:before {
 					background-color: '.esc_attr($terms['category_color']).'!important;
+					color: '.esc_attr($button_text_color).';
 				}
 
 				[data-style="list_featured_first_row"] .meta-category .'.esc_attr($v->slug) . ',

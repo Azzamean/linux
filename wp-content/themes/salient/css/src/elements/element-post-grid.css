@@ -62,10 +62,16 @@ Description: Styles for the "Category Grid" page builder element.
 .nectar-post-grid-wrap[data-style="content_overlaid"] .nectar-post-grid[data-animation="fade-in-from-bottom"] .nectar-post-grid-item,
 .nectar-post-grid-wrap[data-style="content_under_image"] .nectar-post-grid[data-animation="fade-in-from-bottom"] .nectar-post-grid-item,
 .nectar-post-grid-wrap[data-style="mouse_follow_image"] .nectar-post-grid[data-animation="fade-in-from-bottom"] .nectar-post-grid-item .post-heading span,
-.nectar-post-grid-wrap[data-style="mouse_follow_image"] .nectar-post-grid[data-animation="fade-in-from-bottom"] .nectar-post-grid-item .meta-date {
+.nectar-post-grid-wrap[data-style="mouse_follow_image"] .nectar-post-grid[data-animation="fade-in-from-bottom"] .nectar-post-grid-item .nectar-post-grid-item__meta-wrap {
   opacity: 0;
   -webkit-transform: translateY(80px);
   transform: translateY(80px);
+}
+.nectar-post-grid-wrap[data-style="content_overlaid"] .nectar-post-grid[data-animation="fade-in-from-right"] .nectar-post-grid-item,
+.nectar-post-grid-wrap[data-style="content_under_image"] .nectar-post-grid[data-animation="fade-in-from-right"] .nectar-post-grid-item {
+  opacity: 0;
+  -webkit-transform: translateX(80px);
+  transform: translateX(80px);
 }
 
 .nectar-post-grid-wrap[data-style="mouse_follow_image"] .nectar-post-grid[data-post-title-overlay="yes"] .nectar-post-grid-item .post-heading a:before {
@@ -84,7 +90,9 @@ Description: Styles for the "Category Grid" page builder element.
 }
 
 .nectar-post-grid-wrap[data-style="content_overlaid"] .nectar-post-grid[data-animation="fade-in-from-bottom"] .nectar-post-grid-item.animated-in,
-.nectar-post-grid-wrap[data-style="content_under_image"] .nectar-post-grid[data-animation="fade-in-from-bottom"] .nectar-post-grid-item.animated-in {
+.nectar-post-grid-wrap[data-style="content_under_image"] .nectar-post-grid[data-animation="fade-in-from-bottom"] .nectar-post-grid-item.animated-in,
+.nectar-post-grid-wrap[data-style="content_overlaid"] .nectar-post-grid[data-animation="fade-in-from-right"] .nectar-post-grid-item.animated-in,
+.nectar-post-grid-wrap[data-style="content_under_image"] .nectar-post-grid[data-animation="fade-in-from-right"] .nectar-post-grid-item.animated-in {
   opacity: 1;
   -webkit-transform: translateY(0px);
   transform: translateY(0px);
@@ -92,7 +100,7 @@ Description: Styles for the "Category Grid" page builder element.
 }
 
 .nectar-post-grid-wrap[data-style="mouse_follow_image"] .nectar-post-grid[data-animation="fade-in-from-bottom"] .nectar-post-grid-item.animated-in .post-heading span,
-.nectar-post-grid-wrap[data-style="mouse_follow_image"] .nectar-post-grid[data-animation="fade-in-from-bottom"] .nectar-post-grid-item.animated-in .meta-date {
+.nectar-post-grid-wrap[data-style="mouse_follow_image"] .nectar-post-grid[data-animation="fade-in-from-bottom"] .nectar-post-grid-item.animated-in .nectar-post-grid-item__meta-wrap {
   opacity: 1;
   -webkit-transform: translateY(0px);
   transform: translateY(0px);
@@ -104,6 +112,13 @@ Description: Styles for the "Category Grid" page builder element.
 }
 
 
+[data-style="content_overlaid"] .nectar-post-grid .nectar-post-grid-item .content {
+  top: 0;
+}
+[data-style="content_overlaid"] .nectar-post-grid .nectar-post-grid-item-bg-wrap {
+  height: 100%;
+}
+
 .nectar-post-grid .nectar-post-grid-item .content {
  position: absolute;
  width: 100%;
@@ -112,8 +127,9 @@ Description: Styles for the "Category Grid" page builder element.
 
 .nectar-post-grid .nectar-post-grid-item .content .item-main {
   position: relative;
-  z-index: 9;
+  z-index: 11;
   display: inline-block;
+  pointer-events: none;
 }
 .nectar-post-grid .nectar-post-grid-item .content .meta-category {
   position: relative;
@@ -132,7 +148,14 @@ Description: Styles for the "Category Grid" page builder element.
 .nectar-post-grid .nectar-post-grid-item .meta-excerpt {
   margin-top: 10px;
   display: block;
+  line-height: 1.6;
   transition: color 0.45s cubic-bezier(.15,.75,.5,1) 0s;
+}
+
+@media only screen and (max-width: 690px) {
+  .nectar-post-grid .nectar-post-grid-item .meta-excerpt {
+    font-size: 14px;
+  }
 }
 
 .nectar-post-grid[data-shadow-hover="yes"] .nectar-post-grid-item:after {
@@ -170,6 +193,11 @@ Description: Styles for the "Category Grid" page builder element.
   color: #fff;
 }
 
+.nectar-post-grid[data-text-color="dark"][data-text-hover-color="light"] .nectar-post-grid-item:hover .content *,
+.full-width-section > .col.span_12.dark .nectar-post-grid[data-text-color="dark"][data-text-hover-color="light"] .nectar-post-grid-item:hover .content * {
+  color: #fff;
+}
+
 .nectar-post-grid[data-text-color="light"] .meta-category a:before {
     background-color: #fff;
 }
@@ -177,6 +205,9 @@ Description: Styles for the "Category Grid" page builder element.
 .nectar-post-grid .meta-category a {
   margin: 0 10px 10px 0;
   display: inline-block;
+  line-height: 1.1em;
+}
+body .nectar-post-grid .nectar-post-grid-item .content .meta-category a {
   line-height: 1.1em;
 }
 .nectar-post-grid[data-text-align="center"] .meta-category a:last-child {
@@ -235,7 +266,7 @@ Description: Styles for the "Category Grid" page builder element.
    flex-direction: column;
 }
 
-.nectar-post-grid[data-text-layout="all_bottom_left_shadow"] .nectar-post-grid-item:before {
+.nectar-post-grid[data-text-layout="all_bottom_left_shadow"] .nectar-post-grid-item div.inner:before {
   position: absolute;
   bottom: 0;
   left: 0;
@@ -271,6 +302,10 @@ Description: Styles for the "Category Grid" page builder element.
 .nectar-post-grid[data-text-layout="all_middle"] .nectar-post-grid-item .content .post-heading {
   margin: 0 auto;
 }
+.nectar-post-grid[data-text-layout="all_middle"] .nectar-post-grid-item .nectar-post-grid-item__meta-wrap,
+.nectar-post-grid[data-text-layout="all_middle"] .nectar-post-grid-item .item-main > .meta-author {
+  justify-content: center;
+}
 
 .nectar-post-grid .meta-date {
   margin-top: 20px;
@@ -278,6 +313,46 @@ Description: Styles for the "Category Grid" page builder element.
   display: block;
   transition: color 0.45s cubic-bezier(.15,.75,.5,1) 0s;
 }
+.nectar-post-grid .meta-reading-time,
+.nectar-post-grid .meta-author span {
+  transition: color 0.45s cubic-bezier(.15,.75,.5,1) 0s;
+}
+.nectar-post-grid .meta-author a {
+  transition: none;
+}
+
+.nectar-post-grid-item__meta-wrap {
+  margin-top: 20px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.7em;
+  align-items: center;
+  pointer-events: none;
+}
+
+.nectar-post-grid-item__meta-wrap a {
+  pointer-events: all;
+}
+
+.nectar-post-grid .nectar-post-grid-item__meta-wrap * {
+  margin-top: 0;
+  line-height: 1.1;
+}
+/* separators */
+.nectar-post-grid .nectar-post-grid-item__meta-wrap > span:not(:nth-child(1)) {
+  display: flex;
+  align-items: center;
+}
+.nectar-post-grid .nectar-post-grid-item__meta-wrap > span:not(:nth-child(1)):before {
+  height: 2px;
+  width: 2px;
+  display: block;
+  background-color: currentColor;
+  border-radius: 100px;
+  margin-right: 0.7em;
+  content: '';
+}
+
 
 .rtl .nectar-post-grid-wrap[data-style="mouse_follow_image"] .meta-date {
   text-align: right;
@@ -285,12 +360,18 @@ Description: Styles for the "Category Grid" page builder element.
 
 .nectar-post-grid .nectar-post-grid-item .content .post-heading {
  margin: 0;
- transition: all 0.45s cubic-bezier(.15,.75,.5,1) 0s;
- line-height: 1.2em;
- max-width: 70%;
+ transition: transform 0.45s cubic-bezier(.15,.75,.5,1), opacity 0.45s cubic-bezier(.15,.75,.5,1), color 0.45s cubic-bezier(.15,.75,.5,1);
+ line-height: 1.3em;
+ max-width: 75%;
 }
 .nectar-post-grid .nectar-post-grid-item .content .post-heading a span {
   transition: color 0.3s ease;
+}
+.nectar-post-grid .nectar-post-grid-item .content .post-heading a .nectar-split-heading > * > span {
+  line-height: 1.3em;
+}
+.nectar-post-grid .nectar-post-grid-item .nectar-split-heading p {
+  padding-bottom: 0;
 }
 .nectar-post-grid[data-alignment*="right"]  .nectar-post-grid-item  .content .post-heading {
   max-width: 100%;
@@ -405,12 +486,41 @@ Description: Styles for the "Category Grid" page builder element.
   width: 100%;
   height: 100%;
 }
-
+body .nectar-post-grid .nectar-post-grid-item-bg img {
+  height: 100%;
+}
 .nectar-post-grid .nectar-post-grid-item-bg img {
   object-fit: cover;
 }
 .row .nectar-post-grid .nectar-post-grid-item-bg img:not([srcset]) {
   width: 100%;
+}
+
+
+.nectar-post-grid-item .nectar-el-parallax-scroll {
+  height: 100%;
+}
+
+[data-style="content_overlaid"] .nectar-post-grid-item-bg-wrap[data-n-parallax-bg],
+[data-style="content_overlaid"] .nectar-post-grid-item-bg-wrap[data-n-parallax-bg] .nectar-post-grid-item-bg-wrap-inner {
+  height: 100%;
+  width: 100%;
+}
+
+.nectar-post-grid-item .nectar-el-parallax-scroll .nectar-post-grid-item-bg-wrap-inner {
+  transform: scale(1.275);
+  height: 100%;
+  width: 100%;
+}
+@media only screen and (min-width: 1000px) {
+  .top-level .nectar-post-grid-item .nectar-el-parallax-scroll .nectar-post-grid-item-bg-wrap-inner {
+    transform: scale(1.27);
+    transform-origin: 50% 75%;
+  }
+  .nectar-archive-blog-wrap .nectar-post-grid-item .nectar-el-parallax-scroll .nectar-post-grid-item-bg-wrap-inner {
+    transform: scale(1.275);
+    transform-origin: center;
+  }
 }
 
 .nectar-post-grid .bg-overlay {
@@ -449,7 +559,7 @@ Description: Styles for the "Category Grid" page builder element.
 .nectar-post-grid-wrap:not([data-style="content_overlaid"]) .nectar-post-grid .nectar-post-grid-item {
   min-height: 0;
 }
-
+/* TODO can this be removed to fix display issue in masonry variant? */
 .nectar-post-grid-wrap:not([data-style="content_overlaid"]) .nectar-post-grid[data-masonry="yes"] {
    grid-auto-rows: auto;
 }
@@ -460,8 +570,12 @@ Description: Styles for the "Category Grid" page builder element.
 }
 
 .nectar-post-grid-wrap[data-style="content_under_image"] .nectar-post-grid[data-columns="4"] .nectar-post-grid-item  .content .post-heading,
-.nectar-post-grid-wrap[data-style="content_under_image"] .nectar-post-grid[data-columns="3"] .nectar-post-grid-item  .content .post-heading {
+.nectar-post-grid-wrap[data-style="content_under_image"] .nectar-post-grid[data-columns="3"] .nectar-post-grid-item  .content .post-heading,
+.wpb_column:not(.vc_col-sm-12) .nectar-post-grid-wrap[data-style="content_under_image"] .nectar-post-grid .nectar-post-grid-item  .content .post-heading {
   max-width: 100%;
+}
+.nectar-post-grid-wrap[data-style="content_under_image"] .nectar-post-grid[data-columns="1"] .item-meta-extra {
+  width: 100%;
 }
 
 .nectar-post-grid-wrap:not([data-style="content_overlaid"]) .nectar-post-grid-item-bg-wrap a {
@@ -498,10 +612,17 @@ Description: Styles for the "Category Grid" page builder element.
 .nectar-post-grid-wrap[data-style="content_under_image"] .nectar-post-grid[data-text-align="center"] .nectar-post-grid-item .post-heading {
   margin: 0 auto;
 }
+.nectar-post-grid-wrap[data-style="content_under_image"] .nectar-post-grid[data-text-align="center"] .item-main > .meta-author,
+.nectar-post-grid-wrap[data-style="content_under_image"] .nectar-post-grid[data-text-align="center"] .nectar-post-grid-item__meta-wrap {
+  justify-content: center;
+}
 .nectar-post-grid-wrap[data-style="content_under_image"] .nectar-post-grid[data-text-align="right"] .content {
   text-align: right;
 }
 
+.nectar-post-grid-wrap[data-style="content_under_image"] .nectar-post-grid[data-text-align="right"] .nectar-post-grid-item__meta-wrap {
+  justify-content: flex-end;
+}
 
 .nectar-post-grid-wrap[data-style="content_under_image"] .nectar-post-grid .img-wrap.nectar-lazy-wrap {
   background-color: rgba(0,0,0,0.2);
@@ -579,7 +700,7 @@ Description: Styles for the "Category Grid" page builder element.
   transition: transform 0.32s ease, background-color .32s ease;
 }
 .nectar-post-grid-wrap[data-style="content_under_image"] .nectar-post-grid[data-card="yes"] .nectar-post-grid-item .content {
-  padding: 30px;
+  padding: max(7%, 30px);
 }
 .nectar-post-grid-wrap[data-style="content_under_image"] .nectar-post-grid[data-card="yes"][data-text-align="center"] .nectar-post-grid-item .content {
   padding: 35px 45px;
@@ -589,7 +710,7 @@ Description: Styles for the "Category Grid" page builder element.
   transition: opacity .55s ease, box-shadow .35s ease;
 }
 
-.nectar-post-grid-wrap[data-style="content_under_image"] .nectar-post-grid[data-card="yes"] .nectar-post-grid-item .content .post-heading {
+.nectar-post-grid-wrap[data-style="content_under_image"] .nectar-post-grid[data-card="yes"] .post-heading {
   line-height: 1.4em;
 }
 
@@ -680,9 +801,14 @@ Description: Styles for the "Category Grid" page builder element.
   width: auto;
 }
 
-.nectar-post-grid-wrap[data-style="mouse_follow_image"] .meta-date {
+.nectar-post-grid-wrap[data-style="mouse_follow_image"] .meta-date,
+.nectar-post-grid-wrap[data-style="mouse_follow_image"] .nectar-post-grid-item__meta-wrap {
   margin-top: 15px;
   opacity: 0.7;
+}
+.nectar-post-grid-wrap[data-style="mouse_follow_image"] .nectar-post-grid-item__meta-wrap .meta-date {
+  margin-top: 0;
+  opacity: 1;
 }
 
 .nectar-post-grid-wrap[data-style="mouse_follow_image"] .nectar-post-grid-item-bg-wrap,
@@ -1205,7 +1331,8 @@ body[data-button-style^="rounded"] .nectar-post-grid-filters h4 {
     grid-row-end: span 2;
   }
   .nectar-post-grid[data-columns="2"][data-masonry="yes"] > div:nth-of-type(3n + 1) .item-meta-extra,
-  .nectar-post-grid[data-columns="1"] > div .item-meta-extra {
+  .nectar-post-grid[data-columns="1"] > div .item-meta-extra,
+  .nectar-post-grid[data-columns="1"][data-text-layout*="all_bottom_left"] .content .item-meta-extra {
     width: 75%;
   }
 
@@ -1247,7 +1374,8 @@ body[data-button-style^="rounded"] .nectar-post-grid-filters h4 {
         grid-template-columns: none;
         grid-auto-rows: auto;
     }
-    body .wpb_row .nectar-post-grid[data-columns][data-masonry="yes"] > div {
+    body .wpb_row .nectar-post-grid[data-columns][data-masonry="yes"] > div,
+    #ajax-content-wrap .nectar-post-grid[data-columns][data-masonry="yes"] > div {
       grid-row-end: auto;
       width: 100%!important;
       grid-column-end: auto;
@@ -1259,11 +1387,7 @@ body[data-button-style^="rounded"] .nectar-post-grid-filters h4 {
         -webkit-transform: none;
         transform: none;
     }
-    body.material .main-content .nectar-post-grid .nectar-post-grid-item .inner {
-      overflow: visible;
-      border-radius: 0;
-    }
-  
+
 
     .nectar-post-grid[data-columns="2"][data-masonry="yes"] > div:nth-of-type(3n + 1) .item-meta-extra,
     .nectar-post-grid[data-columns="1"] > div .item-meta-extra {

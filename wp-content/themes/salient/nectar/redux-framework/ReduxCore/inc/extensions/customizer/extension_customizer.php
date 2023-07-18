@@ -42,6 +42,7 @@
             private static $post_values = array();
             public static $version = "2.0.0";
             private $options = array();
+            public $upload_dir = '';
 
             /**
              * Class Constructor. Defines the args for the extions class

@@ -62,15 +62,24 @@ if( !empty($animation_movement_intensity) ) {
 }
 
 // Shapes
-$svg_output = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100" preserveAspectRatio="xMidYMid meet" style="width: 100%; height: 100%;">';
+$viewbox = in_array( $shape, array('half-circle-top','half-circle-bottom') ) ? '0 0 100 50' : '0 0 100 100';
+$height = in_array( $shape, array('half-circle-top','half-circle-bottom') ) ? '50' : '100';
+
+$svg_output = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="'.$viewbox.'" width="100" height="'.$height.'" preserveAspectRatio="xMidYMid meet" style="width: 100%; height: 100%; overflow: hidden;">';
 if( 'circle' === $shape ) {
-    $svg_output .= '<circle cx="50" cy="50" r="50" fill="'.$shape_color.'" />';
+    $svg_output .= '<circle cx="50" cy="50" r="50" fill="'.esc_attr($shape_color).'" />';
 } 
 else if( 'triangle' === $shape ) {
-    $svg_output .= '<polygon points="50 0, 0 100, 100 100" fill="'.$shape_color.'" />';
+    $svg_output .= '<polygon points="50 0, 0 100, 100 100" fill="'.esc_attr($shape_color).'" />';
 }
 else if( 'parallelogram' === $shape ) {
-    $svg_output .= '<polygon points="25 0, 100 0, 75 100, 0 100" fill="'.$shape_color.'" />';
+    $svg_output .= '<polygon points="25 0, 100 0, 75 100, 0 100" fill="'.esc_attr($shape_color).'" />';
+}
+else if( 'half-circle-top' === $shape ) {
+    $svg_output .= '<circle cx="50" cy="50" r="50" fill="'.esc_attr($shape_color).'" />';
+}
+else if( 'half-circle-bottom' === $shape ) {
+    $svg_output .= '<circle cx="50" cy="50" r="50" fill="'.esc_attr($shape_color).'" />';
 }
 $svg_output .= '</svg>';
 

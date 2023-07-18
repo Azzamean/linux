@@ -4,7 +4,7 @@
  * The template for displaying the Blog index.
  *
  * @package Salient WordPress Theme
- * @version 14.0
+ * @version 15.1
  */
 
 // Exit if accessed directly.
@@ -12,22 +12,23 @@ if (!defined('ABSPATH')) {
 	exit;
 }
 
-get_header(); ?>
+get_header();
 
-<?php nectar_page_header(get_option('page_for_posts')); ?>
+nectar_page_header(get_option('page_for_posts')); ?>
 
 <div class="container-wrap">
 
 	<div class="container main-content">
 
-		<?php do_action('nectar_before_blog_loop_row'); ?>
+		<?php do_action('nectar_before_blog_loop_row'); 
+		
+		$row_class = apply_filters('nectar_blog_row_class', 'row');
 
-		<div class="row">
-
-			<?php
+		echo '<div class="'.$row_class.'">';
+		
 			$nectar_options = get_nectar_theme_options();
-
-			$blog_type = $nectar_options['blog_type'];
+			
+			$blog_type = apply_filters('nectar_blog_type', $nectar_options['blog_type']);
 			if ($blog_type === null) {
 				$blog_type = 'std-blog-sidebar';
 			}
@@ -61,7 +62,8 @@ get_header(); ?>
 
 			if (
 				!empty($nectar_options['blog_pagination_type']) &&
-				$nectar_options['blog_pagination_type'] === 'infinite_scroll'
+				$nectar_options['blog_pagination_type'] === 'infinite_scroll' && 
+				!has_action('nectar_blog_loop_post_item')
 			) {
 				$infinite_scroll_class = ' infinite_scroll';
 			}
@@ -86,6 +88,9 @@ get_header(); ?>
 				$std_minimal_class = 'featured_img_left';
 			}
 
+			if( has_action('nectar_blog_loop_post_item') ) {
+				$masonry_class = $masonry_style = $std_minimal_class = $auto_masonry_spacing = $load_in_animation = '';
+			}
 
 			if ($blog_type === 'std-blog-sidebar' || $blog_type === 'masonry-blog-sidebar') {
 				echo '<div class="post-area col ' . $std_minimal_class . ' span_9 ' . esc_attr($masonry_class) . ' ' . esc_attr($masonry_style) . ' ' . $infinite_scroll_class . '" role="main" data-ams="' . esc_attr($auto_masonry_spacing) . '" data-remove-post-date="' . esc_attr($remove_post_date) . '" data-remove-post-author="' . esc_attr($remove_post_author) . '" data-remove-post-comment-number="' . esc_attr($remove_post_comment_number) . '" data-remove-post-nectar-love="' . esc_attr($remove_post_nectar_love) . '"> <div class="posts-container"  data-load-animation="' . esc_attr($load_in_animation) . '">'; // WPCS: XSS ok.
@@ -102,8 +107,11 @@ get_header(); ?>
 
 				echo '<div class="post-area col ' . $std_minimal_class . ' span_12 col_last ' . esc_attr($masonry_class) . ' ' . esc_attr($masonry_style) . ' ' . $infinite_scroll_class . '" role="main" data-ams="' . esc_attr($auto_masonry_spacing) . '" data-remove-post-date="' . esc_attr($remove_post_date) . '" data-remove-post-author="' . esc_attr($remove_post_author) . '" data-remove-post-comment-number="' . esc_attr($remove_post_comment_number) . '" data-remove-post-nectar-love="' . esc_attr($remove_post_nectar_love) . '"> <div class="posts-container" data-load-animation="' . esc_attr($load_in_animation) . '">'; // WPCS: XSS ok.
 			}
+			
 
 			add_filter('wp_get_attachment_image_attributes', 'nectar_remove_lazy_load_functionality');
+
+			do_action('nectar_before_blog_loop_start');
 
 			do_action('nectar_before_blog_loop_content');
 
@@ -122,13 +130,17 @@ get_header(); ?>
 						$nectar_post_format = false;
 					}
 
-					// Masonry layouts.
-					if (null !== $masonry_class) {
-						get_template_part('includes/partials/blog/styles/masonry-' . $masonry_style_parsed . '/entry', $nectar_post_format);
-					}
-					// Standard layouts.
-					else {
-						get_template_part('includes/partials/blog/styles/standard-' . $standard_style_parsed . '/entry', $nectar_post_format);
+					if( !has_action('nectar_blog_loop_post_item') ) {
+						// Masonry layouts.
+						if (null !== $masonry_class) {
+							get_template_part('includes/partials/blog/styles/masonry-' . $masonry_style_parsed . '/entry', $nectar_post_format);
+						}
+						// Standard layouts.
+						else {
+							get_template_part('includes/partials/blog/styles/standard-' . $standard_style_parsed . '/entry', $nectar_post_format);
+						}
+					} else {
+						do_action('nectar_blog_loop_post_item');
 					}
 
 
@@ -137,36 +149,31 @@ get_header(); ?>
 
 			do_action('nectar_after_blog_loop_content');
 
-			?>
+			do_action('nectar_before_blog_loop_end');
+
+		echo '</div>'; // closing posts-container.
+			
+		nectar_pagination(); ?>
 
 		</div>
-		<!--/posts container-->
 
-		<?php nectar_pagination(); ?>
+		<?php
+		if ($blog_type === 'masonry-blog-full-screen-width') {
+			echo '</div>';
+		}
+		
+		if ( strpos($blog_type, 'sidebar') !== false ) { ?>
+			<div id="sidebar" data-nectar-ss="<?php echo esc_attr($enable_ss); ?>" class="col span_3 col_last">
+				<?php 
+					nectar_hook_sidebar_top();
+					get_sidebar(); 
+					nectar_hook_sidebar_bottom();
+				?>
+			</div>
+		<?php } ?>
 
+		</div>
 	</div>
-	<!--/post-area-->
-
-	<?php
-	if ($blog_type === 'masonry-blog-full-screen-width') {
-		echo '</div>';
-	}
-	?>
-
-	<?php if ($blog_type === 'std-blog-sidebar' || $blog_type === 'masonry-blog-sidebar') { ?>
-		<div id="sidebar" data-nectar-ss="<?php echo esc_attr($enable_ss); ?>" class="col span_3 col_last">
-			<?php get_sidebar(); ?>
-		</div>
-		<!--/span_3-->
-	<?php } ?>
-
-</div>
-<!--/row-->
-
-</div>
-<!--/container-->
 <?php nectar_hook_before_container_wrap_close(); ?>
 </div>
-<!--/container-wrap-->
-
 <?php get_footer(); ?>

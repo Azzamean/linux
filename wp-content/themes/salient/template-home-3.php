@@ -436,7 +436,7 @@ if ( class_exists( 'Salient_Home_Slider' ) ) { ?>
 			</div><!--/blog-recent-->
 	
 	</div><!--/container-->
-
+	<?php nectar_hook_before_container_wrap_close(); ?>
 </div><!--/home-wrap-->
 	
 <?php get_footer(); ?>

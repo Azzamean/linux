@@ -311,7 +311,9 @@ Better rank ordering method by Stefan Gustavson in 2012.
       this.setup();
       this.events();
       this.rafLoop();
-      setTimeout(() => { this.canvas.classList.add('loaded'); });
+
+      var self = this;
+      setTimeout(function() { self.canvas.classList.add('loaded'); });
     };
 
     const proto = NectarGradient.prototype;
@@ -392,11 +394,11 @@ Better rank ordering method by Stefan Gustavson in 2012.
 
       this.trackInView();
 
-      window.addEventListener('resize', () => {
+      window.addEventListener('resize', function() {
         if(that.onMobile && !that.orientationChanged) {
           return;
         }
-        this.resize();
+        that.resize();
       });
 
       window.addEventListener("orientationchange", function() {
@@ -439,7 +441,7 @@ Better rank ordering method by Stefan Gustavson in 2012.
     };
 
     proto.trackInView = function() {
-
+      if( 'IntersectionObserver' in window ) {
         let that = this;
         let observer = new IntersectionObserver(function(entries) {
 
@@ -457,6 +459,7 @@ Better rank ordering method by Stefan Gustavson in 2012.
         });
 
         observer.observe(this.container);
+      }
     };
 
     proto.rgbObj = function(hex) {
@@ -498,6 +501,9 @@ Better rank ordering method by Stefan Gustavson in 2012.
   };
     
     proto.rafLoop = function() {
+
+      var that = this;
+
         if( this.inView ) {
           for (var x = 0; x < this.resolution; x++) {
               for (var y = 0; y < this.resolution; y++) {
@@ -518,8 +524,8 @@ Better rank ordering method by Stefan Gustavson in 2012.
          
         }
 
-        requestAnimationFrame(() => {
-          this.rafLoop();
+        requestAnimationFrame(function() {
+          that.rafLoop();
         });
     };
 
@@ -529,7 +535,7 @@ Better rank ordering method by Stefan Gustavson in 2012.
     function initGradients() {
       const gradients = document.querySelectorAll('[data-nectar-animated-gradient-settings]');
       
-      gradients.forEach((row) => {
+      gradients.forEach(function(row) {
         const rowBG = row.querySelector('.row-bg-wrap');
         if( !rowBG ) {
           return;
@@ -543,7 +549,7 @@ Better rank ordering method by Stefan Gustavson in 2012.
       if (!usingFrontEndEditor) {
         initGradients();
       }
-      $(window).on('vc_reload', () => {
+      $(window).on('vc_reload', function () {
         initGradients();
       });
 

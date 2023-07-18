@@ -1,11 +1,11 @@
 <?php
 /**
  * Plugin Name: Salient Social
- * Plugin URI: --
+ * Plugin URI: https://themenectar.com
  * Description: Add beautiful social sharing buttons for posts. Also includes a reusable WPBakery page builder element.
  * Author: ThemeNectar
  * Author URI: https://themenectar.com
- * Version: 1.2.2
+ * Version: 1.2.3
  * Text Domain: salient-social
  */
 
@@ -21,7 +21,7 @@ class Salient_Social {
 	
 	static $instance = false;
 	
-	public $plugin_version = '1.2.2';
+	public $plugin_version = '1.2.3';
 		
 	private function __construct() {
 		

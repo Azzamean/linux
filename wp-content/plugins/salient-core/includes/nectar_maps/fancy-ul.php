@@ -939,7 +939,7 @@ $fancy_ul_params = array(
 
 	array(
 	  "type" => "textarea_html",
-	  "holder" => "div",
+	  "admin_label" => true,
 	  "heading" => esc_html__("Text Content", "salient-core"),
 	  "param_name" => "content",
 	  "value" => '',
@@ -957,6 +957,20 @@ foreach ($imported_groups as $group) {
         $fancy_ul_params[] = $option;
     }
 }
+
+$fancy_ul_params[] = array(
+	"type" => "dropdown",
+	"heading" => esc_html__("Link Hover Style", "salient-core"),
+	"param_name" => "link_style",
+	"admin_label" => false,
+	'save_always' => true,
+	"value" => array(
+	   esc_html__("Default",  "salient-core") => "default",
+	   esc_html__("Opacity Change",  "salient-core") => "opacity",
+	   esc_html__("Animated Underline",  "salient-core") => "underline",
+	 ),
+	"description" => ''
+);
 
 return array(
 	  "name" => esc_html__("Fancy Unordered List", "salient-core"),

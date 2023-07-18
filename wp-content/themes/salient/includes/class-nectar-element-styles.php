@@ -203,7 +203,7 @@ class NectarElDynamicStyles {
   * Generates dynamic CSS of elements on current page.
   */
   public static function generate_el_styles($post_content) {
-
+    
     // Regular Pages.
     if(!empty($post_content) ) {
 
@@ -533,6 +533,18 @@ class NectarElDynamicStyles {
             }
           }
         ';
+        self::$element_css[] = '@media only screen and (max-width: 999px) { 
+          #ajax-content-wrap .column-margin-'.nectar_el_decimal_unit_type_class($atts['column_margin_custom']).'.wpb_row > .span_12:has([class*="vc_col-xs"]:not(.vc_col-xs-12)) {
+            margin-left: calc('.$custom_column_gap.'/-2);
+            margin-right: calc('.$custom_column_gap.'/-2);
+          }
+          #ajax-content-wrap .column-margin-'.nectar_el_decimal_unit_type_class($atts['column_margin_custom']).' .wpb_column[class*="vc_col-xs"]:not(.vc_col-xs-12):not(.child_column),
+          #ajax-content-wrap .column-margin-'.nectar_el_decimal_unit_type_class($atts['column_margin_custom']).'.inner_row .child_column[class*="vc_col-xs"]:not(.vc_col-xs-12) {
+            padding-left: calc('.$custom_column_gap.'/2);
+            padding-right: calc('.$custom_column_gap.'/2);
+          }
+        }';
+
       }
 
       // Reverse Columns.
@@ -543,6 +555,14 @@ class NectarElDynamicStyles {
             flex-direction: row-reverse;
           }
         }';
+      }
+
+      // z-index special case.
+      if ( isset($atts['zindex']) && $atts['zindex'] === 'auto' ) {
+        self::$element_css[] = $row_selector.'.z-index-auto > .row_col_wrap_12 {
+          z-index: auto;
+        }';
+    
       }
       
       // Inner Row specific.
@@ -560,6 +580,12 @@ class NectarElDynamicStyles {
         if( isset($atts['min_width_desktop']) && strlen($atts['min_width_desktop']) > 0 ) {
           self::$element_css[] = $row_selector.'.min_width_desktop_'. esc_attr( self::percent_unit_type_class($atts['min_width_desktop']) ) .' {
             min-width: '.esc_attr( self::percent_unit_type($atts['min_width_desktop']) ).';
+          }';
+        }
+        // max width.
+        if( isset($atts['max_width_desktop']) && strlen($atts['max_width_desktop']) > 0 ) {
+          self::$element_css[] = $row_selector.'.max_width_desktop_'. esc_attr( self::percent_unit_type_class($atts['max_width_desktop']) ) .' {
+            max-width: '.esc_attr( self::percent_unit_type($atts['max_width_desktop']) ).';
           }';
         }
         
@@ -607,6 +633,17 @@ class NectarElDynamicStyles {
             } }';
 
           }
+
+          // Max Width.
+          if( isset($atts['max_width_'.$device]) && strlen($atts['max_width_'.$device]) > 0 ) {
+
+            self::$element_css[] = '@media only screen and (max-width: '.$media_query.') {
+              body '.$row_selector.'.max_width_'.$device.'_'. esc_attr( self::percent_unit_type_class($atts['max_width_'.$device]) ) .' {
+              max-width: '.esc_attr( self::percent_unit_type($atts['max_width_'.$device]) ).';
+            } }';
+
+          }
+
 
           // Positioning.
 
@@ -872,7 +909,7 @@ class NectarElDynamicStyles {
             overflow:hidden;
             width:100%;
             height:100%;
-            z-index:1;
+            z-index:2;
             -webkit-backface-visibility:hidden;
             backface-visibility:hidden;
             -webkit-transform:translate3d(0px,0px,0px);
@@ -1133,13 +1170,15 @@ class NectarElDynamicStyles {
       if( true !== $fullscreen_rows_bypass ) {
 
         if( isset($atts['left_padding_desktop']) && strlen($atts['left_padding_desktop']) > 0 ) {
-          self::$element_css[] = '#ajax-content-wrap ' . $row_selector.'.left_padding_'. esc_attr( self::percent_unit_type_class($atts['left_padding_desktop']) ) . ' ' . $row_span12_selector .' {
+          self::$element_css[] = '#ajax-content-wrap ' . $row_selector.'.left_padding_'. esc_attr( self::percent_unit_type_class($atts['left_padding_desktop']) ) . ' ' . $row_span12_selector .',
+            .nectar-global-section ' . $row_selector.'.left_padding_'. esc_attr( self::percent_unit_type_class($atts['left_padding_desktop']) ) . ' ' . $row_span12_selector .' {
             padding-left: '.esc_attr( self::percent_unit_type($atts['left_padding_desktop']) ).';
           } ';
         }
         //// Right Padding.
         if( isset($atts['right_padding_desktop']) && strlen($atts['right_padding_desktop']) > 0 ) {
-          self::$element_css[] = '#ajax-content-wrap ' . $row_selector.'.right_padding_'. esc_attr( self::percent_unit_type_class($atts['right_padding_desktop']) ) . ' ' . $row_span12_selector .' {
+          self::$element_css[] = '#ajax-content-wrap ' . $row_selector.'.right_padding_'. esc_attr( self::percent_unit_type_class($atts['right_padding_desktop']) ) . ' ' . $row_span12_selector .',
+            .nectar-global-section ' . $row_selector.'.right_padding_'. esc_attr( self::percent_unit_type_class($atts['right_padding_desktop']) ) . ' ' . $row_span12_selector .' {
             padding-right: '.esc_attr( self::percent_unit_type($atts['right_padding_desktop']) ).';
           } ';
         }
@@ -1500,6 +1539,7 @@ class NectarElDynamicStyles {
       $shadow = (isset($atts['column_shadow'])) ? esc_attr($atts['column_shadow']) : false;
 
       self::$element_css[] = self::mask_param_group_styles('wpb_column', ' > .vc_column-inner > .column-bg-layer', $shadow, $atts);
+      self::$element_css[] = self::mask_param_group_styles('wpb_column', ' > .n-sticky > .vc_column-inner > .column-bg-layer', $shadow, $atts);
       
       // BG Image Stacking order.
       if( isset($atts['background_image_stacking']) && 'front' === $atts['background_image_stacking'] ) {
@@ -1572,8 +1612,7 @@ class NectarElDynamicStyles {
         'border_right' => 'border-right-width',
         'border_bottom' => 'border-bottom-width'
       );
-     
-      $column_border_inner_or_outer = ' > .vc_column-inner ';
+    
 
       // Advanced Border Styling.
       if( isset($atts['border_type']) && 'advanced' === $atts['border_type'] ) {
@@ -1583,7 +1622,8 @@ class NectarElDynamicStyles {
 
           if( isset($atts[$param.'_desktop']) && strlen($atts[$param.'_desktop']) > 0 ) {
 
-            self::$element_css[] = $col_selector . '.' . $param . '_desktop_' . esc_attr( self::percent_unit_type_class($atts[$param.'_desktop']) ) . $column_border_inner_or_outer . ' {
+            self::$element_css[] = $col_selector . '.' . $param . '_desktop_' . esc_attr( self::percent_unit_type_class($atts[$param.'_desktop']) ) . ' > .vc_column-inner, 
+            '.$col_selector . '.' . $param . '_desktop_' . esc_attr( self::percent_unit_type_class($atts[$param.'_desktop']) ) . ' > .n-sticky > .vc_column-inner {
               '. $css_prop .': '.esc_attr( self::percent_unit_type($atts[$param.'_desktop']) ).';
             }';
           }
@@ -1593,7 +1633,8 @@ class NectarElDynamicStyles {
         // Border color.
         if( isset($atts['column_border_color']) && strlen($atts['column_border_color']) > 0 ) {
           $border_color = ltrim($atts['column_border_color'],'#');
-          self::$element_css[] = $col_selector . '.border_color_' . esc_attr( $border_color )  . $column_border_inner_or_outer . ' {
+          self::$element_css[] = $col_selector . '.border_color_' . esc_attr( $border_color )  . ' > .vc_column-inner, 
+          '. $col_selector . '.border_color_' . esc_attr( $border_color )  . ' > .n-sticky > .vc_column-inner  {
             border-color: #'.esc_attr($border_color).';
           }';
         }
@@ -1603,7 +1644,8 @@ class NectarElDynamicStyles {
           $atts['column_border_style'] = 'solid';
         }
         if( isset($atts['column_border_style']) && strlen($atts['column_border_style']) > 0 ) {
-          self::$element_css[] = $col_selector . '.border_style_' . esc_attr( $atts['column_border_style'] )  . $column_border_inner_or_outer . ' {
+          self::$element_css[] = $col_selector . '.border_style_' . esc_attr( $atts['column_border_style'] )  . ' > .vc_column-inner,
+          '.$col_selector . '.border_style_' . esc_attr( $atts['column_border_style'] )  . ' > .n-sticky > .vc_column-inner {
             border-style: '.esc_attr($atts['column_border_style']).';
           }';
         }
@@ -1863,7 +1905,7 @@ class NectarElDynamicStyles {
 
             if( isset($atts[$param.'_'.$device]) && strlen($atts[$param.'_'.$device]) > 0 ) {
 
-              self::$element_css[] = '@media only screen and (max-width: '.$media_query.') { .wpb_row '.$col_selector . '.' . $param . '_'.$device.'_' . esc_attr( self::percent_unit_type_class($atts[$param.'_'.$device]) ) . $column_border_inner_or_outer . ' {
+              self::$element_css[] = '@media only screen and (max-width: '.$media_query.') { .wpb_row '.$col_selector . '.' . $param . '_'.$device.'_' . esc_attr( self::percent_unit_type_class($atts[$param.'_'.$device]) ) . ' > .vc_column-inner ' . ' {
                 '. $css_prop .': '.esc_attr( self::percent_unit_type($atts[$param.'_'.$device]) ).';
               }}';
             }
@@ -1914,7 +1956,9 @@ class NectarElDynamicStyles {
 
 
       // Border Radius.
-      if( isset($atts['column_border_radius']) && !empty($atts['column_border_radius']) && 'none' !== $atts['column_border_radius'] ) {
+      if( isset($atts['column_border_radius']) && !empty($atts['column_border_radius']) && 
+      'none' !== $atts['column_border_radius'] && 
+      'custom' !== $atts['column_border_radius'] ) {
         self::$element_css[] = '
         .wpb_column[data-border-radius="'.esc_attr($atts['column_border_radius']).'"],
         .wpb_column[data-border-radius="'.esc_attr($atts['column_border_radius']).'"] > .vc_column-inner,
@@ -1922,7 +1966,9 @@ class NectarElDynamicStyles {
         .wpb_column[data-border-radius="'.esc_attr($atts['column_border_radius']).'"] > .vc_column-inner > .column-bg-overlay-wrap,
         .wpb_column[data-border-radius="'.esc_attr($atts['column_border_radius']).'"] > .vc_column-inner > .column-image-bg-wrap[data-bg-animation="zoom-out-reveal"],
         .wpb_column[data-border-radius="'.esc_attr($atts['column_border_radius']).'"] > .vc_column-inner > .column-image-bg-wrap .column-image-bg,
-        .wpb_column[data-border-radius="'.esc_attr($atts['column_border_radius']).'"] > .vc_column-inner > .column-image-bg-wrap[data-n-parallax-bg="true"] {
+        .wpb_column[data-border-radius="'.esc_attr($atts['column_border_radius']).'"] > .vc_column-inner > .column-image-bg-wrap[data-n-parallax-bg="true"],
+        .wpb_column[data-border-radius="'.esc_attr($atts['column_border_radius']).'"] > .n-sticky > .vc_column-inner,
+        .wpb_column[data-border-radius="'.esc_attr($atts['column_border_radius']).'"] > .n-sticky > .vc_column-inner > .column-bg-overlay-wrap {
           border-radius: '.esc_attr($atts['column_border_radius']).';
         }';
       }
@@ -2012,6 +2058,10 @@ class NectarElDynamicStyles {
             
             .vc_row:not(.vc_row-o-equal-height) .nectar-sticky-column-css.vc_column_container > .n-sticky {
               height: 100%;
+            }
+
+            .nectar-sticky-column-css.vc_column_container > .n-sticky {
+              width: 100%;
             }
 
             .nectar-sticky-column-css.vc_column_container > .n-sticky > .vc_column-inner {
@@ -2181,6 +2231,10 @@ class NectarElDynamicStyles {
         line-height: 1;
         color: #fff;
         border-radius: '.esc_attr($badge_border_radius).';
+      }
+      
+      .nectar-badge.position_desktop_absolute {
+        white-space: nowrap;
       }';
 
       self::$element_css[] = '.padding-amount-'.$badge_padding.' .nectar-badge__inner {
@@ -2253,7 +2307,7 @@ class NectarElDynamicStyles {
        }';
 
       // Custom font size.
-      self::$element_css[] = self::font_size_group_styles('nectar-price-typography', $atts);
+      self::$element_css[] = self::font_size_group_styles('nectar-price-typography', false, false, '', $atts);
 
     }
 
@@ -2267,16 +2321,22 @@ class NectarElDynamicStyles {
         margin-bottom: 0;
         font-size: inherit; 
         line-height: inherit;
+        color: inherit;
       }';
 
       // Custom font size.
-      self::$element_css[] = self::font_size_group_styles('nectar-responsive-text', $atts);
+      self::$element_css[] = self::font_size_group_styles('nectar-responsive-text', false, false, '', $atts);
 
     }
 
     else if( false !== strpos($shortcode[0],'[nectar_animated_shape ') ) {
 
       $atts = shortcode_parse_atts($shortcode_inner);
+
+      // Core.
+      self::$element_css[] = '.nectar-animated-shape {
+        line-height: 0;
+      }';
 
        // Positioning.
        $positions = self::positioning_group_styles('nectar-animated-shape',$atts);
@@ -2339,7 +2399,7 @@ class NectarElDynamicStyles {
       $atts = shortcode_parse_atts($shortcode_inner);
 
       // Custom font size.
-      $custom_font_sizing = self::font_size_group_styles('nectar-fancy-ul', $atts);
+      $custom_font_sizing = self::font_size_group_styles('nectar-fancy-ul', false, false, '', $atts);
 
       if ( !empty($custom_font_sizing) ) {
         self::$element_css[] = $custom_font_sizing;
@@ -2352,6 +2412,32 @@ class NectarElDynamicStyles {
         .nectar-fancy-ul ul li .icon-default-style[class^="icon-"] {
           font-size: 1.1em;
         }';
+      }
+
+      // Link style.
+      $link_style = isset($atts['link_style']) ? $atts['link_style'] : 'default';
+
+      if ( $link_style === 'underline' ) {
+        self::$element_css[] = '
+        .nectar-fancy-ul.link_style_'. esc_attr($atts['link_style']) .' a {
+          text-decoration: none;
+          color: inherit;
+          transition: opacity 0.25s ease;
+        }';
+      }
+
+      if ( $link_style === 'opacity' ) {
+        self::$element_css[] = '
+        .nectar-fancy-ul.link_style_'. esc_attr($atts['link_style']) .' a {
+          opacity: 0.6;
+          text-decoration: none;
+          color: inherit;
+          transition: opacity 0.25s ease;
+        }
+        .nectar-fancy-ul.link_style_'. esc_attr($atts['link_style']) .' a:hover {
+          opacity: 1;
+        }
+        ';
       }
      
 
@@ -3127,6 +3213,12 @@ class NectarElDynamicStyles {
             self::$element_css[] = '.position_desktop_absolute.nectar-cta:not(.position_tablet_relative):not(.position_phone_relative) .link_wrap { 
               display: flex!important; justify-content: center; align-items: center; 
             }';
+            // when user expands position to match partent column. i.e. top, bottom, left, right = 0;
+            self::$element_css[] = '
+            .position_desktop_absolute.nectar-cta:not(.position_tablet_relative):not(.position_phone_relative) > *,
+            .position_desktop_absolute.nectar-cta:not(.position_tablet_relative):not(.position_phone_relative) .link_wrap { 
+              height: 100%;
+            }';
           }
           if( 'absolute' === $position_tablet ) {
             self::$element_css[] = '@media only screen and (max-width: 999px) and (min-width: 691px) {
@@ -3220,6 +3312,13 @@ class NectarElDynamicStyles {
               }
               
 
+            }
+
+            // Border radius.
+            if( isset($atts['border_radius']) && strlen($atts['border_radius']) > 0 ) {
+              self::$element_css[] = '#ajax-content-wrap .nectar-cta.border_radius_'. self::percent_unit_type(esc_attr( $atts['border_radius'])) .' .link_wrap {
+                border-radius: '.self::percent_unit_type(esc_attr( $atts['border_radius'] )).'!important;
+              }';
             }
 
             // Custom Alignment.
@@ -3869,10 +3968,21 @@ class NectarElDynamicStyles {
 
           self::$element_css[] = '
           .nectar-post-grid[data-border-radius="'.$post_grid_br.'"][data-text-layout="all_bottom_left_shadow"] .nectar-post-grid-item:before,
-          .nectar-post-grid[data-border-radius="'.$post_grid_br.'"] .nectar-post-grid-item .inner,
+          .nectar-post-grid-wrap:not([data-style="content_under_image"]) .nectar-post-grid[data-border-radius="'.$post_grid_br.'"] .nectar-post-grid-item .inner,
           .nectar-post-grid[data-border-radius="'.$post_grid_br.'"] .bg-overlay,
-          [data-style="mouse_follow_image"] .nectar-post-grid[data-border-radius="'.$post_grid_br.'"] .nectar-post-grid-item-bg-wrap-inner {
+          .nectar-post-grid[data-border-radius="'.$post_grid_br.'"][data-shadow-hover="yes"] .nectar-post-grid-item:after,
+          .nectar-post-grid[data-border-radius="'.$post_grid_br.'"] .nectar-post-grid-item-bg,
+          .nectar-post-grid[data-border-radius="'.$post_grid_br.'"] .nectar-post-grid-item-bg-wrap,
+          [data-style="mouse_follow_image"] .nectar-post-grid[data-border-radius="'.$post_grid_br.'"] .nectar-post-grid-item-bg-wrap-inner,
+          .nectar-post-grid[data-border-radius="'.$post_grid_br.'"][data-text-layout="all_bottom_left_shadow"] .nectar-post-grid-item div.inner:before {
             border-radius: '.$post_grid_br.';
+          }
+          .nectar-post-grid[data-border-radius="'.$post_grid_br.'"] .nectar-post-grid-item-bg,
+          .nectar-post-grid[data-border-radius="'.$post_grid_br.'"] .nectar-post-grid-item-bg-wrap {
+            overflow: hidden; 
+          }
+          .nectar-post-grid[data-border-radius="'.$post_grid_br.'"] .nectar-post-grid-item-bg-wrap {
+            transform: translateZ(0);
           }';
 
           if( $post_grid_style === 'content_under_image' ) {
@@ -3896,6 +4006,72 @@ class NectarElDynamicStyles {
              border-radius: 0px;
           }
           ';
+        }
+
+        // Button style
+        if( isset($atts['category_style']) && 'button' === $atts['category_style'] ) {
+          self::$element_css[] = '
+          .nectar-post-grid .meta-category .style-button {
+            padding: 0.5em 1em;
+            line-height: 1!important;
+            background-color: var(--nectar-accent-color);
+          }
+          #ajax-content-wrap .nectar-post-grid .meta-category .style-button {
+            color: #fff;
+          }
+          .nectar-post-grid .meta-category .style-button:before {
+            display: none;
+          }';
+        }
+
+        // Read more button.
+        if( isset($atts['read_more_button']) && 'yes' === $atts['read_more_button'] ) {
+          self::$element_css[] = '
+          .nectar-post-grid .nectar-cta {
+             display: block;
+             margin-top: 10px;
+          }
+          @media only screen and (max-width: 690px) {
+            .vc_col-xs-4 .nectar-post-grid .nectar-cta .link_text,
+            .vc_col-xs-6 .nectar-post-grid .nectar-cta .link_text {
+              font-size: 11px;
+            }
+            .vc_col-xs-4 .nectar-post-grid .nectar-cta svg,
+            .vc_col-xs-6 .nectar-post-grid .nectar-cta svg {
+              width: 18px;
+            }
+          }
+          ';
+        }
+
+        // Excerpt.
+        self::$element_css[] = '
+        @media only screen and (max-width: 690px) {
+          .vc_col-xs-4 .nectar-post-grid .nectar-post-grid-item .meta-excerpt,
+          .vc_col-xs-6 .nectar-post-grid .nectar-post-grid-item .meta-excerpt {
+            font-size: 12px;
+          }
+          .nectar-post-grid .nectar-post-grid-item .content .post-heading,
+          .nectar-post-grid-wrap:not([data-style=content_overlaid]) .nectar-post-grid-item .content .meta-excerpt {
+            max-width: 100%;
+          }
+        }
+        ';
+        if (isset($atts['excerpt_display']) && 'desktop_only' === $atts['excerpt_display']) {
+          self::$element_css[] = '
+          @media only screen and (max-width: 1000px) {
+            .nectar-post-grid.excerpt-desktop_only .meta-excerpt {
+              display: none;
+            }
+          }
+          ';
+        }
+
+        // Meta sizine.
+        if( isset($atts['additional_meta_size']) && 'small' === $atts['additional_meta_size'] ) {
+          self::$element_css[] = '.nectar-post-grid-wrap.additional-meta-size-small .nectar-post-grid-item__meta-wrap {
+            font-size: 0.8em;
+          }';
         }
 
         // Spacing.
@@ -4127,6 +4303,10 @@ class NectarElDynamicStyles {
                 .wpb_row.full-width-content .vc_col-sm-12 .nectar-post-grid[data-grid-spacing="35px"] {
                   margin: 20px;
                 }
+                .nectar-post-grid[data-grid-spacing="35px"]:not([data-columns="1"]) {
+                  margin-left: -20px;
+                  margin-right: -20px;
+                }
               }
               
               .nectar-post-grid[data-columns="4"][data-grid-spacing="35px"] .nectar-post-grid-item {
@@ -4308,15 +4488,1843 @@ class NectarElDynamicStyles {
 
         }
 
+        // Author.
+        if ( isset($atts['display_author']) && 'yes' === $atts['display_author'] ) {
+          self::$element_css[] = '.nectar-post-grid-item .meta-author,
+          .nectar-post-grid-item .meta-author-inner,
+          .nectar-post-grid-item .meta-author a {
+            display: flex;
+            align-items: center;
+          }
+          .nectar-post-grid-item .meta-author img {
+            border-radius: 40px;
+            width: 24px;
+            height: 24px;
+            margin-bottom: 0;
+            margin-right: 8px;
+          }
+          .nectar-post-grid-item .post-heading-wrap .meta-author {
+            margin-top: 10px;
+          }
+          .nectar-post-grid-item .post-heading-wrap .meta-author span {
+            transition: none;
+          }
+          .nectar-post-grid-item .post-heading-wrap .meta-author .meta-author-name {
+            transition: color 0.45s cubic-bezier(.15,.75,.5,1) 0s;
+          }
+          [data-style="vertical_list"] .nectar-post-grid-item__meta-wrap:empty {
+            display: none;
+          }
+          ';
+
+          $author_position = ( isset($atts['author_position']) ) ? $atts['author_position'] : 'default';
+          if ( 'multiline' === $author_position ) {
+            self::$element_css[] = '.nectar-post-grid-item .item-main > .meta-author {
+              display: flex;
+              align-items: center;
+              margin-top: 15px;
+              position: relative;
+              z-index: 11;
+              pointer-events: none;
+            }
+            .nectar-post-grid-item .item-main > .meta-author a {
+              pointer-events: all;
+            }
+            .nectar-post-grid-item .item-main > .meta-author img {
+              width: 42px;
+              height: 42px;
+              margin-right: 15px;
+            }
+            .nectar-post-grid-item__meta-wrap:empty {
+              margin-top: 0;
+            }
+            .nectar-post-grid-item .item-main > .meta-author .meta-author-name {
+              font-size: 1em!important;
+              line-height: 1.6em;
+            }
+            .nectar-post-grid-item .item-main > .meta-author > .meta-author-inner {
+              flex-direction: column;
+              align-items: flex-start;
+            }
+            .nectar-post-grid-item .item-main > .meta-author > .meta-author-inner > span {
+              font-size: 0.8em;
+            }
+            .nectar-post-grid-item .item-main > .meta-author .meta-date {
+              margin-top: 0;
+            }
+            ';
+          }
+
+        }
+
+        // Carousel 
+       if ( isset($atts['display_type']) && 'carousel' === $atts['display_type'] ) {
+
+        // carousel core.
+        self::$element_css[] = '
+
+        .nectar-flickity.nectar-post-grid {
+          display: block;
+          transition: none;
+        }
+
+        .nectar-flickity.nectar-post-grid.flickity-enabled.is-draggable .flickity-viewport.is-pointer-down a {
+          cursor: -webkit-grabbing;
+          cursor: grabbing;
+        }
+
+        body:not(.compose-mode) .nectar-flickity.nectar-post-grid .flickity-slider {
+          display: flex;
+          flex-wrap: nowrap;
+        }
+
+        
+        .nectar-flickity.nectar-post-grid:not(.flickity-enabled) .flickity-slider {
+          position: relative;
+        }
+
+        .nectar-flickity.nectar-post-grid:not(.flickity-enabled) .flickity-slider,
+        .nectar-flickity.nectar-post-grid:not(.flickity-enabled) .flickity-viewport {
+          height: auto;
+        }
+
+        #ajax-content-wrap .nectar-post-grid[data-wrap="no-wrap"]:not(.flickity-enabled) .flickity-slider .nectar-post-grid-item:first-child  {
+          margin-left: 0;
+        }
+
+        .nectar-flickity.nectar-post-grid:not(.flickity-enabled) .nectar-post-grid-item {
+          flex: 0 0 auto;
+        }
+      
+        .nectar-post-grid .flickity-viewport {
+          width: 100%;
+        }
+
+        #ajax-content-wrap .nectar-post-grid .flickity-viewport .nectar-post-grid-item {
+          transition: none; 
+        }
+
+        .nectar-post-grid[data-wrap="no-wrap"] .flickity-viewport .flickity-slider > div:first-child {
+          margin-left: 0;
+        }
+        .nectar-post-grid[data-wrap="no-wrap"] .flickity-viewport .flickity-slider > div:last-child {
+          margin-right: 0;
+        }
+
+        #ajax-content-wrap [data-style="content_overlaid"] .nectar-post-grid .flickity-viewport .nectar-post-grid-item .content,
+        .flickity-viewport .nectar-post-grid-item .bg-overlay,
+        .nectar-post-grid[data-text-layout="all_bottom_left_shadow"] .flickity-viewport  .nectar-post-grid-item div.inner:before,
+        [data-style="content_under_image"] .category-position-overlaid .flickity-viewport .nectar-post-grid-item .meta-category {
+          transform: translateZ(0);
+        }
+
+        #ajax-content-wrap .nectar-post-grid .flickity-page-dots {
+          bottom: 0;
+        }
+        #ajax-content-wrap .nectar-post-grid[data-controls] .flickity-viewport {
+          margin-top: 0;
+          margin-bottom: 0;
+        }
+        #ajax-content-wrap .nectar-post-grid[data-controls="default"] .flickity-viewport {
+          margin-top: 0;
+          margin-bottom: 50px;
+        }
+        #ajax-content-wrap .nectar-post-grid.nectar-flickity {
+          margin: 0;
+        }
+       .nectar-post-grid[data-animation="fade-in-from-bottom"] .flickity-viewport .nectar-post-grid-item .inner {
+           transform: translateY(50px);
+           opacity: 0;
+           transition: 
+              transform 0.75s cubic-bezier(0.22, 0.61, 0.36, 1), 
+              opacity 0.75s cubic-bezier(0.22, 0.61, 0.36, 1);
+        }
+        .nectar-post-grid[data-animation="fade-in-from-bottom"] .flickity-viewport .nectar-post-grid-item.animated-in .inner {
+          transform: translateY(0px);
+          opacity: 1;
+       }
+       
+       .nectar-post-grid[data-animation="fade-in-from-right"] .flickity-viewport .nectar-post-grid-item .inner {
+        transform: translateX(50px);
+        opacity: 0;
+        transition: 
+           transform 0.75s cubic-bezier(0.22, 0.61, 0.36, 1), 
+           opacity 0.75s cubic-bezier(0.22, 0.61, 0.36, 1);
+     }
+     .nectar-post-grid[data-animation="fade-in-from-right"] .flickity-viewport .nectar-post-grid-item.animated-in .inner {
+       transform: translateY(0px);
+       opacity: 1;
+    }';
+
+        // Spacing.
+        if( isset($post_grid_spacing) && in_array($post_grid_spacing, array('5px','10px','15px','20px','25px','30px', '35px', '40px', '45px')) ) {
+
+          $desktop_cols           = ( isset($atts['columns']) ) ? $atts['columns'] : '4';
+          $small_desktop_cols     = ( isset($atts['desktop_small_cols_flickity']) ) ? $atts['desktop_small_cols_flickity'] : 'default';
+          $tablet_cols            = ( isset($atts['tablet_cols_flickity']) ) ? $atts['tablet_cols_flickity'] : 'default';
+          $phone_cols             = ( isset($atts['phone_cols_flickity']) ) ? $atts['phone_cols_flickity'] : 'default';
+          $desktop_cols_mod       = intval($desktop_cols) - 1;
+          $small_desktop_cols_mod = max(intval($small_desktop_cols) - 1, 1);
+          $tablet_cols_mod        = max(intval($tablet_cols) - 1, 1);
+          $phone_cols_mod         = max(intval($phone_cols) - 1, 1);
+          
+      
+
+          // Basic calc for space between = ((colNum - 1) x spacing) x 2
+
+          // Desktop.
+          if( in_array($desktop_cols, array('2','3','4','5','6')) ) {
+            self::$element_css[] = '
+            @media only screen and (min-width:1300px) {
+              .nectar-post-grid.nectar-flickity[data-columns="'.esc_attr($desktop_cols).'"][data-grid-spacing="'.esc_attr($post_grid_spacing).'"] .nectar-post-grid-item {
+                width: calc((100% - '. ( intval($desktop_cols_mod) * intval($post_grid_spacing) * 2 ) .'px) / '.esc_attr($desktop_cols).');
+              }
+            }';
+
+            if( $small_desktop_cols === 'default' ) {
+              self::$element_css[] = '
+              @media only screen and (min-width:1000px) {
+                .nectar-post-grid.nectar-flickity[data-columns="'.esc_attr($desktop_cols).'"][data-grid-spacing="'.esc_attr($post_grid_spacing).'"] .nectar-post-grid-item {
+                  width: calc((100% - '. ( intval($desktop_cols_mod) * intval($post_grid_spacing) * 2 ) .'px) / '.esc_attr($desktop_cols).');
+                }
+              }';
+            }
+          }
+
+          // Small desktop.
+          if( in_array($small_desktop_cols, array('1','2','3','4','5','6')) ) {
+            if( $small_desktop_cols == '1' ) {
+              self::$element_css[] = '
+              @media only screen and (max-width:1299px) and (min-width:1000px) {
+                .nectar-post-grid.nectar-flickity.sm-desktop-cols-'.$small_desktop_cols.'[data-grid-spacing="'.esc_attr($post_grid_spacing).'"] .nectar-post-grid-item {
+                  width: 100%;
+                }
+              }';
+            } else {
+              self::$element_css[] = '
+              @media only screen and (max-width:1299px) and (min-width:1000px) {
+                .nectar-post-grid.nectar-flickity.sm-desktop-cols-'.$small_desktop_cols.'[data-grid-spacing="'.esc_attr($post_grid_spacing).'"] .nectar-post-grid-item {
+                  width: calc((100% - '. ( intval($small_desktop_cols_mod) * intval($post_grid_spacing) * 2 ) .'px) / '.esc_attr($small_desktop_cols).');
+                }
+              }';
+            }
+            
+          }
+
+          // Tablet.
+          if( in_array($tablet_cols, array('1','2','3','4','5','6')) ) {
+    
+            if( $tablet_cols == '1' ) {
+              self::$element_css[] = '
+              @media only screen and (max-width:999px) {
+                #ajax-content-wrap .nectar-post-grid.nectar-flickity.tablet-cols-'.$tablet_cols.'[data-grid-spacing="'.esc_attr($post_grid_spacing).'"] .nectar-post-grid-item {
+                  width: 100%;
+                }
+              }';
+            }
+            else {
+              self::$element_css[] = '
+              @media only screen and (max-width:999px) {
+                #ajax-content-wrap .nectar-post-grid.nectar-flickity.tablet-cols-'.$tablet_cols.'[data-grid-spacing="'.esc_attr($post_grid_spacing).'"] .nectar-post-grid-item {
+                  width: calc((100% - '. ( intval($tablet_cols_mod) * intval($post_grid_spacing) * 2 ) .'px) / '.esc_attr($tablet_cols).');
+                }
+              }';
+            }
+            
+            
+          }
+
+
+          // Phone.
+          if( in_array($phone_cols, array('1','2','3','4','5','6')) ) {
+            self::$element_css[] = '
+            @media only screen and (max-width:690px) {
+              body #ajax-content-wrap .nectar-post-grid.nectar-flickity.phone-cols-'.$phone_cols.'[data-grid-spacing="'.esc_attr($post_grid_spacing).'"] .nectar-post-grid-item {
+                width: calc((100% - '. ( intval($phone_cols_mod) * intval($post_grid_spacing) * 2 ) .'px) / '.esc_attr($phone_cols).');
+              }
+            }';
+          }
+
+       
+
+
+        } // End carousel spacing.
+
+        // Drag indicator.
+        if (isset($atts['flickity_touch_total_style']) && 'tooltip_text' === $atts['flickity_touch_total_style']) {
+              self::$element_css[] = self::get_drag_indicator_tooltip_css();
+        }
+
+        if (isset($atts['flickity_touch_total_style']) && 'solid_bg' === $atts['flickity_touch_total_style']) {
+          self::$element_css[] = '
+            .nectar-drag-indicator[data-type="solid"] {
+              mix-blend-mode: normal;
+              left: -47px;
+              top: -47px;
+              width: 94px;
+              height: 94px;
+            }
+            .nectar-drag-indicator[data-type="solid"] .color-circle {
+              background-color: #000;
+              width: 100%;
+              height: 100%;
+              display: block;
+              position: absolute;
+              left: -2px;
+              top: -2px;
+              transform: scale(0.2);
+              transition: transform 0.45s ease, opacity 0.3s ease;
+              opacity: 0;
+              border-radius: 50%;
+            }
+
+            .nectar-drag-indicator[data-type="solid"].visible .color-circle{
+              transform: scale(1);
+              opacity: 1;
+            }
+            .nectar-drag-indicator[data-type="solid"] i {
+              font-size: 21px;
+              top: -13px;
+            }
+            
+            .nectar-drag-indicator[data-type="solid"]:before {
+              display: none;
+            }
+            .nectar-drag-indicator[data-type="solid"].visible i {
+              transition: transform 0.45s ease, opacity 0.3s ease, color 0.3s ease;
+            }
+            .nectar-drag-indicator[data-type="solid"] i.fa-angle-left {
+              left: 23px;
+            }
+            .nectar-drag-indicator[data-type="solid"] i.fa-angle-right {
+              right: 27px;
+            }
+            .nectar-drag-indicator.visible.pointer-down[data-type="solid"] .color-circle {
+              transform: scale(0.15);
+            }
+            .nectar-drag-indicator.visible.pointer-down[data-type="solid"] i {
+              color: inherit!important;
+            }
+      
+            .nectar-drag-indicator.visible.pointer-down[data-type="solid"] i.fa-angle-left {
+              transform: translateX(-10px);
+            }
+            .nectar-drag-indicator.visible.pointer-down[data-type="solid"] i.fa-angle-right {
+              transform: translateX(10px);
+            }
+          ';
+          }
+       } // end carousel.
+
+       // Mobile columns -- non carousel.
+       if ( isset($atts['columns_tablet']) && 'default' !== $atts['columns_tablet'] ) {
+          $tablet_cols = $atts['columns_tablet'];
+          if ( $tablet_cols === '1' ) {
+            self::$element_css[] = '
+            @media only screen and (max-width:999px) {
+              body .nectar-post-grid.tablet-cols-1 .nectar-post-grid-item {
+               width: 100%!important;
+              }
+            }
+            ';
+          }
+        }
+        if ( isset($atts['columns_phone']) && 'default' !== $atts['columns_phone'] ) {
+          $phone_cols = $atts['columns_phone'];
+          if ( $phone_cols === '2' ) {
+
+            if( in_array($post_grid_spacing, array( '1vw', '2vw', '3vw', '4vw')) ) {
+              self::$element_css[] = '
+                @media only screen and (max-width:690px) {
+                  body .nectar-post-grid.phone-cols-2[data-grid-spacing="'.esc_attr($post_grid_spacing).'"] .nectar-post-grid-item {
+                  width: calc(50% - '.(floatval($post_grid_spacing)*2).'vw)!important;
+                  margin: '.$post_grid_spacing.'!important;
+                  }
+                }';
+            }
+            else {
+              self::$element_css[] = '
+                @media only screen and (max-width:690px) {
+                  body .nectar-post-grid.phone-cols-2[data-grid-spacing="'.esc_attr($post_grid_spacing).'"] .nectar-post-grid-item {
+                  width: calc(50% - '.(floatval($post_grid_spacing)*2).'px)!important;
+                  margin: '.$post_grid_spacing.'!important;
+                  }
+                }';
+            }
+            
+          }
+        }
+
+
+       // Masonry Layout Variants.
+       $additional_meta_dispay = ( isset($atts['additional_meta_display']) ) ? $atts['additional_meta_display'] : 'default';
+       if( $post_grid_masonry ) {
+
+        // 3 columns ==============================
+          if( isset($atts['columns']) && '3' === $atts['columns'] ) {
+
+            $masonry_variant = ( isset($atts['3_col_masonry_layout']) ) ? $atts['3_col_masonry_layout'] : 'default';
+            // vert staggered ==============================
+            if( 'vert_staggered' === $masonry_variant ) {
+
+              // core.
+              self::$element_css[] = '
+              @media only screen and (min-width: 691px) {
+
+                #ajax-content-wrap .nectar-post-grid[data-columns="3"].layout-vert_staggered {
+                  grid-auto-flow: dense;
+                }
+               
+                #ajax-content-wrap .nectar-post-grid[data-columns="3"].layout-vert_staggered > div {
+                  grid-column-end: span 1;
+
+                }
+                #ajax-content-wrap .nectar-post-grid[data-columns="3"].layout-vert_staggered > div:nth-child(6n + 1) {
+                  grid-column-end: span 2;
+                  grid-row-end: span 2;
+                }
+              }
+              @media only screen and (min-width: 1000px) {
+                #ajax-content-wrap .nectar-post-grid[data-columns="3"].layout-vert_staggered > div:nth-child(6n + 5) {
+                  grid-column-end: span 2;
+                  grid-row-end: span 2;
+                }
+              }';
+
+              // Limit meta display.
+              if ( 'large_items_only' === $additional_meta_dispay ) {
+                self::$element_css[] = '
+                @media only screen and (min-width: 1000px) {
+                  .nectar-post-grid[data-columns="3"].layout-vert_staggered.meta-display-large_items_only > div:nth-child(6n + 5) [class*="meta-"]:not(.meta-category) {
+                    display: flex;
+                  }
+                  .nectar-post-grid[data-columns="3"].layout-vert_staggered[data-text-align="center"] > div:nth-child(6n + 5) [class*="meta-"]:not(.meta-category) {
+                    justify-content: center;
+                    display: flex;
+                  }
+                }
+
+                #ajax-content-wrap .nectar-post-grid[data-columns="3"].layout-vert_staggered.meta-display-large_items_only > div:nth-child(6n + 1) .nectar-post-grid-item__read-more {
+                  display: none;
+                }
+
+                .nectar-post-grid[data-columns="3"].layout-vert_staggered.meta-display-large_items_only > div [class*="meta-"]:not(.meta-category) {
+                  display: none;
+                }
+                .nectar-post-grid[data-columns="3"].layout-vert_staggered.meta-display-large_items_only > div:nth-child(6n + 1) [class*="meta-"]:not(.meta-category) {
+                  display: flex;
+                }
+                .nectar-post-grid[data-columns="3"].layout-vert_staggered[data-text-align="center"] > div:nth-child(6n + 1) [class*="meta-"]:not(.meta-category) {
+                  justify-content: center;
+                  display: flex;
+                }
+                ';
+              }
+
+              
+              if( $post_grid_style === 'content_under_image' || $post_grid_style === 'content_overlaid' ) {
+                  self::$element_css[] = '
+
+                  @media only screen and (min-width: 1000px) {
+
+
+                    .nectar-post-grid[data-columns="3"].layout-vert_staggered > div:nth-child(6n + 5) .nectar-post-grid-item-bg-wrap {
+                      flex: 1;
+                    }
+
+                    .nectar-post-grid[data-columns="3"].layout-vert_staggered > div:nth-child(6n + 5) .nectar-post-grid-item-bg {
+                      height: 100%;
+                    }
+
+                    [data-columns="3"].layout-vert_staggered > div:nth-child(6n + 5) .post-heading a,
+                    [data-columns="3"].layout-vert_staggered > div:nth-child(6n + 1) .post-heading a {
+                      font-size: 2em;
+                      line-height: 1.3em;
+                    }
+
+                    #ajax-content-wrap [data-columns="3"].layout-vert_staggered > div:nth-child(6n + 5) .meta-category,
+                    #ajax-content-wrap [data-columns="3"].layout-vert_staggered > div:nth-child(6n + 1) .meta-category {
+                      position: relative;
+                      top: auto;
+                      left: auto;
+                    }
+
+                    #ajax-content-wrap [data-columns="3"].layout-vert_staggered > div:nth-child(6n + 5) .meta-excerpt {
+                      font-size: 1.3em;
+                      line-height: 1.6em;
+                      max-width: 75%;
+                    }
+  
+  
+                    [data-text-layout*="all_bottom_left"][data-columns="3"].layout-vert_staggered > div:nth-child(6n + 5) .content {
+                      top: auto;
+                      left: 0;
+                      transform: none;
+                      padding: 35px;
+                      max-width: 85%;
+                    }
+
+                    [data-text-align="center"][data-columns="3"].layout-vert_staggered > div:nth-child(6n + 5) .content,
+                    [data-text-layout="all_middle"][data-columns="3"].layout-vert_staggered > div:nth-child(6n + 5) .content {
+                      top: 50%;
+                      left: 50%;
+                      transform: translate(-50%, -50%);
+                    }
+                    
+                    [data-columns="3"].layout-vert_staggered:not([data-text-layout="all_bottom_left_shadow"]) > div:nth-child(6n + 5) div.inner:before {
+                      position: absolute;
+                      top: 0;
+                      left: 0;
+                      content: "";
+                      display: block;
+                      width: 100%;
+                      height: 100%;
+                      z-index: 10;
+                      pointer-events: none;
+                      border-radius: var(--post-grid-border-radius);
+                      background: radial-gradient(circle at 0 0, rgba(0,0,0,0.75) 0, transparent 70%);
+                    }
+
+                  }
+
+                  @media only screen and (min-width: 1000px) {
+                    .top-level .nectar-post-grid[data-columns="3"].layout-vert_staggered > div:nth-child(6n + 1) .nectar-el-parallax-scroll .nectar-post-grid-item-bg-wrap-inner,
+                    .top-level .nectar-post-grid[data-columns="3"].layout-vert_staggered > div:nth-child(6n + 5) .nectar-el-parallax-scroll .nectar-post-grid-item-bg-wrap-inner {
+                      transform: scale(1.09);
+                    }
+                  }
+
+                  .nectar-post-grid[data-columns="3"].layout-vert_staggered div.inner,
+                  .nectar-post-grid[data-columns="3"].layout-vert_staggered .nectar-post-grid-item-bg-wrap-inner{
+                    height: 100%;
+                  }
+
+                  .nectar-post-grid[data-columns="3"].layout-vert_staggered > div:nth-child(6n + 1) .nectar-post-grid-item-bg-wrap {
+                    flex: 1;
+                  }
+
+                  .nectar-post-grid.layout-vert_staggered .nectar-post-grid-item .content .post-heading {
+                    max-width: 100%;
+                  }
+
+                
+                  @media only screen and (min-width: 691px) {
+                    .nectar-post-grid[data-columns="3"].layout-vert_staggered > div:nth-child(6n + 1) .nectar-post-grid-item-bg {
+                      height: 100%;
+                    }
+                  }
+
+                  
+                  @media only screen and (max-width: 999px) and (min-width: 691px) {
+,
+                    #ajax-content-wrap .nectar-post-grid[data-columns="3"].layout-vert_staggered > div:nth-child(6n + 1) .content {
+                      position: relative;
+                      padding-bottom: 5%;
+                    }
+
+                    #ajax-content-wrap .nectar-post-grid[data-columns="3"].layout-vert_staggered > div:nth-child(6n + 1) .nectar-post-grid-item-bg-wrap {
+                      position: absolute;
+                      top: 0;
+                      left: 0;
+                      width: 100%;
+                      height: 100%;
+                    }
+                  }
+
+
+                  #ajax-content-wrap [data-columns="3"].layout-vert_staggered > div:nth-child(6n + 1) .meta-excerpt {
+                    font-size: 1.3em;
+                    line-height: 1.6em;
+                    max-width: 75%;
+                  }
+
+
+                  [data-text-layou*="all_bottom_left"][data-columns="3"].layout-vert_staggered > div:nth-child(6n + 1) .content {
+                    top: auto;
+                    left: 0;
+                    transform: none;
+                    padding: 35px;
+                    max-width: 85%;
+                  }
+                  
+
+                  [data-text-align="center"][data-columns="3"].layout-vert_staggered > div:nth-child(6n + 1) .content,
+                  [data-text-layout="all_middle"][data-columns="3"].layout-vert_staggered > div:nth-child(6n + 1) .content {
+                    top: 50%;
+                    left: 50%;
+                    transform: translate(-50%, -50%);
+                  }
+                  
+                  [data-columns="3"].layout-vert_staggered:not([data-text-layout="all_bottom_left_shadow"]) > div:nth-child(6n + 1) div.inner:before {
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    content: "";
+                    display: block;
+                    width: 100%;
+                    height: 100%;
+                    z-index: 10;
+                    pointer-events: none;
+                    border-radius: var(--post-grid-border-radius);
+                    background: radial-gradient(circle at 0 0, rgba(0,0,0,0.75) 0, transparent 70%);
+                  }
+
+                  @media only screen and (max-width: 1000px) {
+                    [data-style="content_overlaid"] [data-text-layout*="left"][data-columns="3"].layout-vert_staggered > div:nth-child(6n + 1) .content {
+                      padding: 35px;
+                    }
+                  }
+
+                  
+                
+                  ';
+                  if( in_array($post_grid_br, array('3px','5px','10px','15px')) ) {
+                    self::$element_css[] = '
+                    [data-border-radius="'.$post_grid_br.'"][data-columns="3"].layout-vert_staggered > div div.inner:before {
+                      border-radius: '.esc_attr($post_grid_br).';
+                    }
+                    ';
+                  }
+              }
+
+              // specific to content overlaid.
+              if( $post_grid_style === 'content_overlaid' ) {
+                self::$element_css[] = '
+                @media only screen and (min-width: 1000px) {
+                  [data-style="content_overlaid"] [data-columns="3"].layout-vert_staggered > div:nth-child(6n + 5) .content {
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    padding: 0;
+                    padding-right: 30%;
+                    padding-top: min( max(35px, 3.5vw), 50px);
+                    padding-left: min( max(35px, 3.5vw), 50px);
+                  }
+                  [data-style="content_overlaid"] [data-text-layout*="all_bottom_left"][data-columns="3"].layout-vert_staggered > div:nth-child(6n + 5) .content {
+                    top: auto;
+                    padding-bottom: min( max(35px, 3.5vw), 50px);
+                    max-width: 100%;
+                  }
+                  [data-style="content_overlaid"] [data-text-layout="all_middle"][data-columns="3"].layout-vert_staggered > div:nth-child(6n + 5) .content {
+                    top: 50%;
+                    left: 50%;
+                    padding-top: 0;
+                    padding-left: 10%;
+                    padding-right: 10%;
+                  }
+                }
+
+                [data-style="content_overlaid"] [data-columns="3"].layout-vert_staggered > div:nth-child(6n + 1) .content {
+                  position: absolute;
+                  top: 0;
+                  left: 0;
+                  padding: 0;
+                  padding-right: 30%;
+                  padding-top: min( max(35px, 3.5vw), 50px);
+                  padding-left: min( max(35px, 3.5vw), 50px);
+                }
+
+                [data-style="content_overlaid"] [data-text-layout*="all_bottom_left"][data-columns="3"].layout-vert_staggered > div:nth-child(6n + 1) .content {
+                  top: auto;
+                  padding-bottom: min( max(35px, 3.5vw), 50px);
+                }
+                [data-style="content_overlaid"] [data-text-layout="all_middle"][data-columns="3"].layout-vert_staggered > div:nth-child(6n + 1) .content {
+                  top: 50%;
+                  left: 50%;
+                  padding-top: 0;
+                  padding-left: 10%;
+                  padding-right: 10%;
+                }';
+
+              }
+               // specific to content under featured image.
+              if( $post_grid_style === 'content_under_image' ) {
+                self::$element_css[] = '
+
+                @media only screen and (min-width: 1000px) {
+
+                  #ajax-content-wrap [data-style="content_under_image"] [data-columns="3"].layout-vert_staggered > div:nth-child(6n + 5) .content * {
+                    color: #fff;
+                  }
+
+                  [data-columns="3"].layout-vert_staggered > div.nectar-underline:nth-child(6n + 5) .post-heading {
+                    background-image: linear-gradient(to right,#fff 0,#fff 100%);
+                  }
+
+                  [data-style="content_under_image"] [data-columns="3"].layout-vert_staggered > div.nectar-underline:nth-child(6n + 5):hover .content .nectar-split-heading.effect-removed {
+                    text-decoration: underline 1px rgba(255, 255, 255, 1)
+                  }
+
+                  .nectar-post-grid-wrap[data-style="content_under_image"] [data-columns="3"].layout-vert_staggered > div:nth-child(6n + 5) .content {
+                    padding: min( max(35px, 3.5vw), 50px);
+                  }
+
+
+                  [data-style="content_under_image"] [data-columns="3"].layout-vert_staggered > div:nth-child(6n + 5) .nectar-post-grid-item-bg-wrap {
+                    position: absolute;
+                    width: 100%;
+                    height: 100%;
+                    top: 0;
+                    left: 0;
+                  }
+                  [data-style="content_under_image"] [data-columns="3"].layout-vert_staggered > div:nth-child(6n + 5) .nectar-post-grid-item-bg {
+                    height: 100%!important;
+                  }
+
+                }
+
+
+                #ajax-content-wrap [data-style="content_under_image"] [data-columns="3"].layout-vert_staggered > div:nth-child(6n + 1) .content * {
+                  color: #fff;
+                }
+
+                [data-columns="3"].layout-vert_staggered > div.nectar-underline:nth-child(6n + 1) .post-heading {
+                  background-image: linear-gradient(to right,#fff 0,#fff 100%);
+                }
+
+                [data-style="content_under_image"] [data-columns="3"].layout-vert_staggered > div.nectar-underline:nth-child(6n + 1):hover .content .nectar-split-heading.effect-removed {
+                  text-decoration: underline 1px rgba(255, 255, 255, 1)
+                }
+
+                .nectar-post-grid-wrap[data-style="content_under_image"] [data-columns="3"].layout-vert_staggered > div:nth-child(6n + 1) .content {
+                  padding: min( max(35px, 3.5vw), 50px);
+                }
+
+                @media only screen and (min-width: 690px) {
+                  .nectar-post-grid-wrap[data-style="content_under_image"] [data-columns="3"].layout-vert_staggered > div:nth-child(6n + 1) .content {
+                    max-width: 70%;
+                  }
+                }
+
+                [data-style="content_under_image"] [data-columns="3"].layout-vert_staggered > div:nth-child(6n + 1) .nectar-post-grid-item-bg-wrap {
+                  position: absolute;
+                  width: 100%;
+                  height: 100%;
+                  top: 0;
+                  left: 0;
+                } 
+                [data-style="content_under_image"] [data-columns="3"].layout-vert_staggered > div:nth-child(6n + 1) .nectar-post-grid-item-bg {
+                  height: 100%!important;
+                }
+                ';
+              }
+              
+
+            } // end vert staggered variant.
+            
+          } // end 3 column variants.
+
+
+
+          // 4 columns ==============================
+          if( isset($atts['columns']) && '4' === $atts['columns'] ) {
+            $masonry_variant = ( isset($atts['4_col_masonry_layout']) ) ? $atts['4_col_masonry_layout'] : 'default';
+            
+            // mixed style  ==============================
+            if( 'mixed' === $masonry_variant ) {
+
+              // Limit meta display.
+              if ( 'large_items_only' === $additional_meta_dispay ) {
+                self::$element_css[] = '
+               
+
+                #ajax-content-wrap .nectar-post-grid[data-columns="4"].layout-mixed.meta-display-large_items_only > div:nth-child(10n + 1) .nectar-post-grid-item__read-more,
+                #ajax-content-wrap .nectar-post-grid[data-columns="4"].layout-mixed.meta-display-large_items_only > div:nth-child(10n + 8) .nectar-post-grid-item__read-more {
+                  display: none;
+                }
+
+                .nectar-post-grid[data-columns="4"].layout-mixed.meta-display-large_items_only > div [class*="meta-"]:not(.meta-category) {
+                  display: none;
+                }
+                .nectar-post-grid[data-columns="4"].layout-mixed.meta-display-large_items_only > div:nth-child(10n + 1) [class*="meta-"]:not(.meta-category),
+                .nectar-post-grid[data-columns="4"].layout-mixed.meta-display-large_items_only > div:nth-child(10n + 8) [class*="meta-"]:not(.meta-category) {
+                  display: flex;
+                }
+                .nectar-post-grid[data-columns="4"].layout-mixed[data-text-align="center"] > div:nth-child(10n + 1) [class*="meta-"]:not(.meta-category),
+                .nectar-post-grid[data-columns="4"].layout-mixed[data-text-align="center"] > div:nth-child(10n + 8) [class*="meta-"]:not(.meta-category) {
+                  justify-content: center;
+                  display: flex;
+                }
+                ';
+              }
+
+
+              // core.
+              self::$element_css[] = '
+              @media only screen and (min-width: 691px) {
+
+                #ajax-content-wrap .nectar-post-grid[data-columns="4"].layout-mixed {
+                  grid-auto-flow: dense;
+                }
+               
+                #ajax-content-wrap .nectar-post-grid[data-columns="4"].layout-mixed > div {
+                  grid-column-end: span 1;
+
+                }
+                #ajax-content-wrap .nectar-post-grid[data-columns="4"].layout-mixed > div:nth-child(10n + 1),
+                #ajax-content-wrap .nectar-post-grid[data-columns="4"].layout-mixed > div:nth-child(10n + 8) {
+                  grid-column-end: span 2;
+                  grid-row-end: span 2;
+                }
+              }
+
+
+              @media only screen and (min-width: 1000px) {
+                [data-columns="4"].layout-mixed > div:nth-child(10n + 1) .post-heading a {
+                  font-size: 2em;
+                  line-height: 1.3em;
+                }
+
+                #ajax-content-wrap [data-columns="4"].layout-mixed > div:nth-child(10n + 1) .meta-category {
+                  position: relative;
+                  top: auto;
+                  left: auto;
+                }
+
+                #ajax-content-wrap [data-columns="4"].layout-mixed > div:nth-child(10n + 1) .meta-excerpt {
+                  font-size: 1.2em;
+                  line-height: 1.6em;
+                  max-width: 75%;
+                }
+               
+                .nectar-post-grid-wrap[data-style="content_under_image"] [data-columns="4"].layout-mixed > div:nth-child(10n + 1) .content,
+                .nectar-post-grid-wrap[data-style="content_under_image"] [data-columns="4"].layout-mixed > div:nth-child(10n + 8) .content  {
+                  max-width: 80%;
+                }
+  
+              }
+
+              @media only screen and (max-width: 1000px) {
+                [data-columns="4"].layout-mixed > div:nth-child(10n + 1) .post-heading a {
+                  font-size: 1.4em;
+                  line-height: 1.3em;
+                }
+              }
+
+              @media only screen and (min-width: 1px) {
+
+                .nectar-post-grid[data-columns="4"].layout-mixed > div:nth-child(10n + 1) .nectar-post-grid-item-bg-wrap {
+                  flex: 1;
+                }
+                .nectar-post-grid[data-columns="4"].layout-mixed > div:nth-child(10n + 1) .nectar-post-grid-item-bg {
+                  height: 100%;
+                }
+
+  
+                [data-text-layout*="all_bottom_left"][data-columns="4"].layout-mixed > div:nth-child(10n + 1) .content {
+                  top: auto;
+                  left: 0;
+                  transform: none;
+                  padding: 35px;
+                  padding-right: 15%;
+                  max-width: 100%;
+                }
+  
+                [data-text-align="center"][data-columns="4"].layout-mixed > div:nth-child(10n + 1) .content {
+                  top: 50%;
+                  left: 50%;
+                  transform: translate(-50%, -50%);
+                }
+                
+                [data-columns="4"].layout-mixed:not([data-text-layout="all_bottom_left_shadow"]) > div:nth-child(10n + 1) div.inner:before {
+                  position: absolute;
+                  top: 0;
+                  left: 0;
+                  content: "";
+                  display: block;
+                  width: 100%;
+                  height: 100%;
+                  z-index: 10;
+                  pointer-events: none;
+                  border-radius: var(--post-grid-border-radius);
+                  background: radial-gradient(circle at 0 0, rgba(0,0,0,0.75) 0, transparent 70%);
+                }
+  
+                #ajax-content-wrap [data-style="content_under_image"] [data-columns="4"].layout-mixed > div:nth-child(10n + 1) .content * {
+                  color: #fff;
+                }
+  
+                [data-style="content_under_image"] [data-columns="4"].layout-mixed > div.nectar-underline:nth-child(10n + 1):hover .content .nectar-split-heading.effect-removed {
+                  text-decoration: underline 1px rgba(255, 255, 255, 1)
+                }
+
+                [data-columns="4"].layout-mixed > div:nth-child(10n + 1).nectar-underline .post-heading {
+                  background-image: linear-gradient(to right,#fff 0,#fff 100%);
+                }
+  
+                .nectar-post-grid-wrap[data-style="content_under_image"] [data-columns="4"].layout-mixed > div:nth-child(10n + 1) .content {
+                  padding: min( max(35px, 3.5vw), 50px);
+                  min-height: 45vh;
+                }
+  
+  
+                [data-style="content_under_image"] [data-columns="4"].layout-mixed > div:nth-child(10n + 1) .nectar-post-grid-item-bg-wrap {
+                  position: absolute;
+                  width: 100%;
+                  height: 100%;
+                  top: 0;
+                  left: 0;
+                }
+                [data-style="content_under_image"] [data-columns="4"].layout-mixed > div:nth-child(10n + 1) .nectar-post-grid-item-bg {
+                  height: 100%!important;
+                }
+  
+                #ajax-content-wrap [data-style="content_under_image"] [data-columns="4"].layout-mixed > div:nth-child(10n + 1) .content * {
+                  color: #fff;
+                }
+
+                [data-columns="4"].layout-mixed > div:nth-child(10n + 1).nectar-underline .post-heading {
+                  background-image: linear-gradient(to right,#fff 0,#fff 100%);
+                }
+                
+                [data-style="content_under_image"] [data-columns="4"].layout-mixed > div.nectar-underline:nth-child(10n + 1):hover .content .nectar-split-heading.effect-removed {
+                  text-decoration: underline 1px rgba(255, 255, 255, 1)
+                }
+  
+                .nectar-post-grid-wrap[data-style="content_under_image"] [data-columns="4"].layout-mixed > div:nth-child(10n + 1) .content {
+                  padding: min( max(35px, 3.5vw), 50px);
+                }
+  
+          
+  
+                [data-style="content_under_image"] [data-columns="4"].layout-mixed > div:nth-child(10n + 1) .nectar-post-grid-item-bg-wrap {
+                  position: absolute;
+                  width: 100%;
+                  height: 100%;
+                  top: 0;
+                  left: 0;
+                } 
+                [data-style="content_under_image"] [data-columns="4"].layout-mixed > div:nth-child(10n + 1) .nectar-post-grid-item-bg {
+                  height: 100%!important;
+                }
+  
+                .nectar-post-grid[data-columns="4"].layout-mixed > div:nth-child(10n + 1) .nectar-post-grid-item-bg-wrap {
+                  flex: 1;
+                }
+
+              }
+
+
+
+              @media only screen and (min-width: 1000px) {
+                
+                .nectar-post-grid[data-columns="4"].layout-mixed > div:nth-child(10n + 8) .nectar-post-grid-item-bg-wrap {
+                  flex: 1;
+                }
+
+                .nectar-post-grid[data-columns="4"].layout-mixed > div:nth-child(10n + 8) .nectar-post-grid-item-bg {
+                  height: 100%;
+                }
+
+
+                [data-columns="4"].layout-mixed > div:nth-child(10n + 8) .post-heading a {
+                  font-size: 2em;
+                  line-height: 1.3em;
+                }
+
+                #ajax-content-wrap [data-columns="4"].layout-mixed > div:nth-child(10n + 8) .meta-category {
+                  position: relative;
+                  top: auto;
+                  left: auto;
+                }
+
+                #ajax-content-wrap [data-columns="4"].layout-mixed > div:nth-child(10n + 8) .meta-excerpt {
+                  font-size: 1.2em;
+                  line-height: 1.6em;
+                  max-width: 75%;
+                }
+
+
+                [data-text-layout*="all_bottom_left"][data-columns="4"].layout-mixed > div:nth-child(10n + 8) .content {
+                  top: auto;
+                  left: 0;
+                  transform: none;
+                  padding: 35px;
+                  padding-right: 15%;
+                  max-width: 100%;
+                }
+
+
+                [data-text-layout="all_middle"][data-columns="4"].layout-mixed > div:nth-child(10n + 8) .content {
+                  top: 50%;
+                  left: 50%;
+                  transform: translate(-50%, -50%);
+                }
+                
+                [data-columns="4"].layout-mixed:not([data-text-layout="all_bottom_left_shadow"]) > div:nth-child(10n + 8) div.inner:before {
+                  position: absolute;
+                  top: 0;
+                  left: 0;
+                  content: "";
+                  display: block;
+                  width: 100%;
+                  height: 100%;
+                  z-index: 10;
+                  pointer-events: none;
+                  border-radius: var(--post-grid-border-radius);
+                  background: radial-gradient(circle at 0 0, rgba(0,0,0,0.75) 0, transparent 70%);
+                }
+
+                #ajax-content-wrap [data-style="content_under_image"] [data-columns="4"].layout-mixed > div:nth-child(10n + 8) .content * {
+                  color: #fff;
+                }
+
+                [data-columns="4"].layout-mixed > div:nth-child(10n + 8).nectar-underline .post-heading {
+                  background-image: linear-gradient(to right,#fff 0,#fff 100%);
+                }
+
+                [data-style="content_under_image"] [data-columns="4"].layout-mixed > div.nectar-underline:nth-child(10n + 8):hover .content .nectar-split-heading.effect-removed {
+                  text-decoration: underline 1px rgba(255, 255, 255, 1)
+                }
+
+
+                .nectar-post-grid-wrap[data-style="content_under_image"] [data-columns="4"].layout-mixed > div:nth-child(10n + 8) .content {
+                  padding: min( max(35px, 3.5vw), 50px);
+                  max-width: 70%;
+                }
+                
+
+                [data-style="content_under_image"] [data-columns="4"].layout-mixed > div:nth-child(10n + 8) .nectar-post-grid-item-bg-wrap {
+                  position: absolute;
+                  width: 100%;
+                  height: 100%;
+                  top: 0;
+                  left: 0;
+                }
+
+                [data-style="content_under_image"] [data-columns="4"].layout-mixed > div:nth-child(10n + 8) .nectar-post-grid-item-bg  {
+                  height: 100%!important;
+                }
+
+              
+                #ajax-content-wrap [data-style="content_under_image"] [data-columns="4"].layout-mixed > div:nth-child(10n + 8) .content * {
+                  color: #fff;
+                }
+                
+
+                [data-style="content_under_image"] [data-columns="4"].layout-mixed > div.nectar-underline:nth-child(10n + 8):hover .content .nectar-split-heading.effect-removed {
+                  text-decoration: underline 1px rgba(255, 255, 255, 1)
+                }
+
+                .nectar-post-grid-wrap[data-style="content_under_image"] [data-columns="4"].layout-mixed > div:nth-child(10n + 8) .content {
+                  padding: min( max(35px, 3.5vw), 50px);
+                }
+
+              
+                .nectar-post-grid-wrap[data-style="content_under_image"] [data-columns="4"].layout-mixed > div:nth-child(10n + 8) .content {
+                  max-width: 80%;
+                }
+                
+
+
+                [data-style="content_under_image"] [data-columns="4"].layout-mixed > div:nth-child(10n + 8) .nectar-post-grid-item-bg-wrap {
+                  position: absolute;
+                  width: 100%;
+                  height: 100%;
+                  top: 0;
+                  left: 0;
+                } 
+
+                [data-style="content_under_image"] [data-columns="4"].layout-mixed > div:nth-child(10n + 8) .nectar-post-grid-item-bg {
+                  height: 100%!important;
+                }
+
+                .nectar-post-grid[data-columns="4"].layout-mixed > div:nth-child(10n + 8) .nectar-post-grid-item-bg-wrap {
+                  flex: 1;
+                }
+
+              }
+
+
+              @media only screen and (min-width: 1000px) {
+                .top-level [data-style="content_under_image"] [data-columns="4"].layout-mixed > div:nth-child(10n + 1) .nectar-el-parallax-scroll .nectar-post-grid-item-bg-wrap-inner {
+                  transform: scale(1.09);
+                }
+              }
+
+
+              @media only screen and (max-width: 1000px) {
+                #ajax-content-wrap .nectar-post-grid[data-columns="4"].layout-mixed > div:nth-child(10n + 8) {
+                  grid-column-end: span 1;
+                  grid-row-end: span 1;
+                }
+
+                [data-style="content_overlaid"] [data-columns="4"].layout-mixed > div:nth-child(10n + 1) .post-heading a {
+                  font-size: 1em;
+                }
+
+              }
+
+
+              .nectar-post-grid[data-columns="4"].layout-mixed div.inner,
+              .nectar-post-grid[data-columns="4"].layout-mixed .nectar-post-grid-item-bg-wrap-inner{
+                height: 100%;
+              }
+              
+              .nectar-post-grid[data-columns="4"].layout-mixed .nectar-post-grid-item .content .post-heading {
+                max-width: 100%;
+              }
+              
+              ';
+
+            } // end mixed variant
+
+
+
+
+            // 4 col staggered variant ==============================================
+            if( 'vert_staggered' === $masonry_variant ) {
+
+              // Limit meta display.
+              if ( 'large_items_only' === $additional_meta_dispay ) {
+                self::$element_css[] = '
+               
+
+                #ajax-content-wrap .nectar-post-grid[data-columns="4"].layout-vert_staggered.meta-display-large_items_only > div:nth-child(6n + 1) .nectar-post-grid-item__read-more,
+                #ajax-content-wrap .nectar-post-grid[data-columns="4"].layout-vert_staggered.meta-display-large_items_only > div:nth-child(6n + 6) .nectar-post-grid-item__read-more {
+                  display: none;
+                }
+
+                .nectar-post-grid[data-columns="4"].layout-vert_staggered.meta-display-large_items_only > div [class*="meta-"]:not(.meta-category) {
+                  display: none;
+                }
+                .nectar-post-grid[data-columns="4"].layout-vert_staggered.meta-display-large_items_only > div:nth-child(6n + 1) [class*="meta-"]:not(.meta-category),
+                .nectar-post-grid[data-columns="4"].layout-vert_staggered.meta-display-large_items_only > div:nth-child(6n + 6) [class*="meta-"]:not(.meta-category) {
+                  display: flex;
+                }
+                .nectar-post-grid[data-columns="4"].layout-vert_staggered[data-text-align="center"] > div:nth-child(6n + 1) [class*="meta-"]:not(.meta-category),
+                .nectar-post-grid[data-columns="4"].layout-vert_staggered[data-text-align="center"] > div:nth-child(6n + 6) [class*="meta-"]:not(.meta-category) {
+                  justify-content: center;
+                  display: flex;
+                }
+                ';
+              }
+
+
+              // core.
+              self::$element_css[] = '
+              @media only screen and (min-width: 691px) {
+
+                #ajax-content-wrap .nectar-post-grid[data-columns="4"].layout-vert_staggered {
+                  grid-auto-flow: dense;
+                }
+               
+                #ajax-content-wrap .nectar-post-grid[data-columns="4"].layout-vert_staggered > div {
+                  grid-column-end: span 1;
+
+                }
+                #ajax-content-wrap .nectar-post-grid[data-columns="4"].layout-vert_staggered > div:nth-child(6n + 1),
+                #ajax-content-wrap .nectar-post-grid[data-columns="4"].layout-vert_staggered > div:nth-child(6n + 6) {
+                  grid-column-end: span 2;
+                  grid-row-end: span 1;
+                }
+              }
+
+
+              @media only screen and (min-width: 1000px) {
+                [data-columns="4"].layout-vert_staggered > div:nth-child(6n + 1) .post-heading a {
+                  font-size: 2em;
+                  line-height: 1.3em;
+                }
+
+                #ajax-content-wrap [data-columns="4"].layout-vert_staggered > div:nth-child(6n + 1) .meta-category {
+                  position: relative;
+                  top: auto;
+                  left: auto;
+                }
+
+                #ajax-content-wrap [data-columns="4"].layout-vert_staggered > div:nth-child(6n + 1) .meta-excerpt {
+                  font-size: 1.2em;
+                  line-height: 1.6em;
+                  max-width: 75%;
+                }
+                .nectar-post-grid-wrap[data-style="content_under_image"] [data-columns="4"].layout-vert_staggered > div:nth-child(6n + 1) .content {
+                  max-width: 80%;
+                }
+  
+              }
+
+
+              @media only screen and (min-width: 690px) {
+                .nectar-post-grid-wrap[data-style="content_under_image"] [data-columns="4"].layout-vert_staggered > div:nth-child(6n + 1) .content {
+                  max-width: 80%;
+                }
+              }
+
+
+              @media only screen and (min-width: 1px) {
+
+                .nectar-post-grid[data-columns="4"].layout-vert_staggered > div:nth-child(6n + 1) .nectar-post-grid-item-bg-wrap {
+                  flex: 1;
+                }
+                .nectar-post-grid[data-columns="4"].layout-vert_staggered > div:nth-child(6n + 1) .nectar-post-grid-item-bg {
+                  height: 100%;
+                  padding: 0;
+                }
+
+  
+                [data-text-layout*="all_bottom_left"][data-columns="4"].layout-vert_staggered > div:nth-child(6n + 1) .content {
+                  top: auto;
+                  left: 0;
+                  transform: none;
+                  padding: 35px;
+                  max-width: 100%;
+                  padding-right: 15%;
+                }
+  
+                [data-text-align="center"][data-columns="4"].layout-vert_staggered > div:nth-child(6n + 1) .content {
+                  top: 50%;
+                  left: 50%;
+                  transform: translate(-50%, -50%);
+                }
+                
+                [data-columns="4"].layout-vert_staggered:not([data-text-layout="all_bottom_left_shadow"]) > div:nth-child(6n + 1) div.inner:before {
+                  position: absolute;
+                  top: 0;
+                  left: 0;
+                  content: "";
+                  display: block;
+                  width: 100%;
+                  height: 100%;
+                  z-index: 10;
+                  pointer-events: none;
+                  border-radius: var(--post-grid-border-radius);
+                  background: radial-gradient(circle at 0 0, rgba(0,0,0,0.75) 0, transparent 70%);
+                }
+  
+                #ajax-content-wrap [data-style="content_under_image"] [data-columns="4"].layout-vert_staggered > div:nth-child(6n + 1) .content * {
+                  color: #fff;
+                }
+                
+                [data-columns="4"].layout-vert_staggered > div:nth-child(6n + 1).nectar-underline .post-heading {
+                  background-image: linear-gradient(to right,#fff 0,#fff 100%);
+                }
+  
+                [data-style="content_under_image"] [data-columns="4"].layout-vert_staggered > div.nectar-underline:nth-child(6n + 1):hover .content .nectar-split-heading.effect-removed {
+                  text-decoration: underline 1px rgba(255, 255, 255, 1)
+                }
+  
+                .nectar-post-grid-wrap[data-style="content_under_image"] [data-columns="4"].layout-vert_staggered > div:nth-child(6n + 1) .content {
+                  padding: min( max(35px, 3.5vw), 50px);
+                }
+  
+  
+                [data-style="content_under_image"] [data-columns="4"].layout-vert_staggered > div:nth-child(6n + 1) .nectar-post-grid-item-bg-wrap {
+                  position: absolute;
+                  width: 100%;
+                  height: 100%;
+                  top: 0;
+                  left: 0;
+                }
+                [data-style="content_under_image"] [data-columns="4"].layout-vert_staggered > div:nth-child(6n + 1) .nectar-post-grid-item-bg {
+                  height: 100%!important;
+                }
+  
+                #ajax-content-wrap [data-style="content_under_image"] [data-columns="4"].layout-vert_staggered > div:nth-child(6n + 1) .content * {
+                  color: #fff;
+                }
+                
+                [data-style="content_under_image"] [data-columns="4"].layout-vert_staggered > div.nectar-underline:nth-child(6n + 1):hover .content .nectar-split-heading.effect-removed {
+                  text-decoration: underline 1px rgba(255, 255, 255, 1)
+                }
+  
+                .nectar-post-grid-wrap[data-style="content_under_image"] [data-columns="4"].layout-vert_staggered > div:nth-child(6n + 1) .content {
+                  padding: min( max(35px, 3.5vw), 50px);
+                }
+  
+               
+                [data-style="content_under_image"] [data-columns="4"].layout-vert_staggered > div:nth-child(6n + 1) .nectar-post-grid-item-bg-wrap {
+                  position: absolute;
+                  width: 100%;
+                  height: 100%;
+                  top: 0;
+                  left: 0;
+                } 
+                [data-style="content_under_image"] [data-columns="4"].layout-vert_staggered > div:nth-child(6n + 1) .nectar-post-grid-item-bg {
+                  height: 100%!important;
+                }
+  
+                .nectar-post-grid[data-columns="4"].layout-vert_staggered > div:nth-child(6n + 1) .nectar-post-grid-item-bg-wrap {
+                  flex: 1;
+                }
+
+              }
+
+
+
+              @media only screen and (min-width: 1000px) {
+                
+                .nectar-post-grid[data-columns="4"].layout-vert_staggered > div:nth-child(6n + 6) .nectar-post-grid-item-bg-wrap {
+                  flex: 1;
+                }
+
+                .nectar-post-grid[data-columns="4"].layout-vert_staggered > div:nth-child(6n + 6) .nectar-post-grid-item-bg {
+                  height: 100%;
+                  padding: 0;
+                }
+
+
+                [data-columns="4"].layout-vert_staggered > div:nth-child(6n + 6) .post-heading a {
+                  font-size: 2.5em;
+                  line-height: 1.3em;
+                }
+
+                #ajax-content-wrap [data-columns="4"].layout-vert_staggered > div:nth-child(6n + 6) .meta-category {
+                  position: relative;
+                  top: auto;
+                  left: auto;
+                }
+
+                #ajax-content-wrap [data-columns="4"].layout-vert_staggered > div:nth-child(6n + 6) .meta-excerpt {
+                  font-size: 1.2em;
+                  line-height: 1.6em;
+                  max-width: 75%;
+                }
+
+
+                [data-text-layout*="all_bottom_left"][data-columns="4"].layout-vert_staggered > div:nth-child(6n + 6) .content {
+                  top: auto;
+                  left: 0;
+                  transform: none;
+                  padding: 35px;
+                  max-width: 100%;
+                  padding-right: 15%;
+                }
+
+
+                [data-text-layout="all_middle"][data-columns="4"].layout-vert_staggered > div:nth-child(6n + 6) .content {
+                  top: 50%;
+                  left: 50%;
+                  transform: translate(-50%, -50%);
+                }
+                
+                [data-columns="4"].layout-vert_staggered:not([data-text-layout="all_bottom_left_shadow"]) > div:nth-child(6n + 6) div.inner:before {
+                  position: absolute;
+                  top: 0;
+                  left: 0;
+                  content: "";
+                  display: block;
+                  width: 100%;
+                  height: 100%;
+                  z-index: 10;
+                  pointer-events: none;
+                  border-radius: var(--post-grid-border-radius);
+                  background: radial-gradient(circle at 0 0, rgba(0,0,0,0.75) 0, transparent 70%);
+                }
+
+                #ajax-content-wrap [data-style="content_under_image"] [data-columns="4"].layout-vert_staggered > div:nth-child(6n + 6) .content * {
+                  color: #fff;
+                }
+
+                [data-columns="4"].layout-vert_staggered > div:nth-child(6n + 6).nectar-underline .post-heading {
+                  background-image: linear-gradient(to right,#fff 0,#fff 100%);
+                }
+
+
+                [data-style="content_under_image"] [data-columns="4"].layout-vert_staggered > div.nectar-underline:nth-child(6n + 6):hover .content .nectar-split-heading.effect-removed {
+                  text-decoration: underline 1px rgba(255, 255, 255, 1)
+                }
+
+
+                .nectar-post-grid-wrap[data-style="content_under_image"] [data-columns="4"].layout-vert_staggered > div:nth-child(6n + 6) .content {
+                  padding: min( max(35px, 3.5vw), 50px);
+                }
+                
+
+                [data-style="content_under_image"] [data-columns="4"].layout-vert_staggered > div:nth-child(6n + 6) .nectar-post-grid-item-bg-wrap {
+                  position: absolute;
+                  width: 100%;
+                  height: 100%;
+                  top: 0;
+                  left: 0;
+                }
+
+                [data-style="content_under_image"] [data-columns="4"].layout-vert_staggered > div:nth-child(6n + 6) .nectar-post-grid-item-bg  {
+                  height: 100%!important;
+                }
+
+              
+                #ajax-content-wrap [data-style="content_under_image"] [data-columns="4"].layout-vert_staggered > div:nth-child(6n + 6) .content * {
+                  color: #fff;
+                }
+                
+
+                [data-style="content_under_image"] [data-columns="4"].layout-vert_staggered > div.nectar-underline:nth-child(6n + 6):hover .content .nectar-split-heading.effect-removed {
+                  text-decoration: underline 1px rgba(255, 255, 255, 1)
+                }
+
+                .nectar-post-grid-wrap[data-style="content_under_image"] [data-columns="4"].layout-vert_staggered > div:nth-child(6n + 6) .content {
+                  padding: min( max(35px, 3.5vw), 50px);
+                }
+
+              
+                .nectar-post-grid-wrap[data-style="content_under_image"] [data-columns="4"].layout-vert_staggered > div:nth-child(6n + 6) .content {
+                  max-width: 80%;
+                }
+                
+
+
+                [data-style="content_under_image"] [data-columns="4"].layout-vert_staggered > div:nth-child(6n + 6) .nectar-post-grid-item-bg-wrap {
+                  position: absolute;
+                  width: 100%;
+                  height: 100%;
+                  top: 0;
+                  left: 0;
+                } 
+
+                [data-style="content_under_image"] [data-columns="4"].layout-vert_staggered > div:nth-child(6n + 6) .nectar-post-grid-item-bg {
+                  height: 100%!important;
+                }
+
+                .nectar-post-grid[data-columns="4"].layout-vert_staggered > div:nth-child(6n + 6) .nectar-post-grid-item-bg-wrap {
+                  flex: 1;
+                }
+
+              }
+
+
+
+              @media only screen and (max-width: 1000px) {
+                #ajax-content-wrap .nectar-post-grid[data-columns="4"].layout-vert_staggered > div:nth-child(6n + 6) {
+                  grid-column-end: span 1;
+                  grid-row-end: span 1;
+                }
+
+                #ajax-content-wrap .nectar-post-grid[data-columns="4"].layout-vert_staggered > div:nth-child(6n + 1) .content {
+                  padding-bottom: 20vw;
+                  max-width: 100%;
+                }
+                #ajax-content-wrap .nectar-post-grid[data-columns="4"][data-text-layout="all_middle"].layout-vert_staggered > div:nth-child(6n + 1) .content {
+                  padding: 35px;
+                }
+                #ajax-content-wrap .nectar-post-grid[data-columns="4"][data-text-layout*="all_bottom_left"].layout-vert_staggered > div:nth-child(6n + 1) .content {
+                  padding: 35px;
+                  max-width: 100%;
+                }
+                
+              }
+
+
+            
+              .nectar-post-grid[data-columns="4"].layout-vert_staggered div.inner,
+              .nectar-post-grid[data-columns="4"].layout-vert_staggered .nectar-post-grid-item-bg-wrap-inner{
+                height: 100%;
+              }
+              
+              .nectar-post-grid[data-columns="4"].layout-vert_staggered .nectar-post-grid-item .content .post-heading {
+                max-width: 100%;
+              }
+              
+              ';
+
+            } // end staggered variant
+
+
+
+            // 4 col staggered variant ==============================================
+            if( 'vert_staggered_middle' === $masonry_variant ) {
+
+              // Limit meta display.
+              if ( 'large_items_only' === $additional_meta_dispay ) {
+                self::$element_css[] = '
+               
+
+                #ajax-content-wrap .nectar-post-grid[data-columns="4"].layout-vert_staggered_middle.meta-display-large_items_only > div:nth-child(7n + 2) .nectar-post-grid-item__read-more {
+                  display: none;
+                }
+
+                .nectar-post-grid[data-columns="4"].layout-vert_staggered_middle.meta-display-large_items_only > div [class*="meta-"]:not(.meta-category) {
+                  display: none;
+                }
+                .nectar-post-grid[data-columns="4"].layout-vert_staggered_middle.meta-display-large_items_only > div:nth-child(7n + 2) [class*="meta-"]:not(.meta-category) {
+                  display: flex;
+                }
+                .nectar-post-grid[data-columns="4"].layout-vert_staggered_middle[data-text-align="center"] > div:nth-child(7n + 2) [class*="meta-"]:not(.meta-category) {
+                  justify-content: center;
+                  display: flex;
+                }
+                ';
+              }
+
+
+              // core.
+              self::$element_css[] = '
+              @media only screen and (min-width: 691px) {
+
+                #ajax-content-wrap .nectar-post-grid[data-columns="4"].layout-vert_staggered_middle {
+                  grid-auto-flow: dense;
+                }
+               
+                #ajax-content-wrap .nectar-post-grid[data-columns="4"].layout-vert_staggered_middle > div {
+                  grid-column-end: span 1;
+
+                }
+                #ajax-content-wrap .nectar-post-grid[data-columns="4"].layout-vert_staggered_middle > div:nth-child(7n + 2) {
+                  grid-column-end: span 2;
+                  grid-row-end: span 1;
+                }
+              }
+
+
+              @media only screen and (min-width: 1000px) {
+                [data-columns="4"].layout-vert_staggered_middle > div:nth-child(7n + 2) .post-heading a {
+                  font-size: 2em;
+                  line-height: 1.3em;
+                }
+
+                #ajax-content-wrap [data-columns="4"].layout-vert_staggered_middle > div:nth-child(7n + 2) .meta-category {
+                  position: relative;
+                  top: auto;
+                  left: auto;
+                }
+
+                #ajax-content-wrap [data-columns="4"].layout-vert_staggered_middle > div:nth-child(7n + 2) .meta-excerpt {
+                  font-size: 1.2em;
+                  line-height: 1.6em;
+                  max-width: 75%;
+                }
+                .nectar-post-grid-wrap[data-style="content_under_image"] [data-columns="4"].layout-vert_staggered_middle > div:nth-child(7n + 2) .content {
+                  max-width: 80%;
+                }
+  
+              }
+
+
+              @media only screen and (min-width: 690px) {
+                .nectar-post-grid-wrap[data-style="content_under_image"] [data-columns="4"].layout-vert_staggered_middle > div:nth-child(7n + 2) .content {
+                  max-width: 80%;
+                }
+              }
+
+
+              @media only screen and (min-width: 1px) {
+
+                .nectar-post-grid[data-columns="4"].layout-vert_staggered_middle > div:nth-child(7n + 2) .nectar-post-grid-item-bg-wrap {
+                  flex: 1;
+                }
+                .nectar-post-grid[data-columns="4"].layout-vert_staggered_middle > div:nth-child(7n + 2) .nectar-post-grid-item-bg {
+                  height: 100%;
+                  padding: 0;
+                }
+
+  
+                [data-text-layout*="all_bottom_left"][data-columns="4"].layout-vert_staggered_middle > div:nth-child(7n + 2) .content {
+                  top: auto;
+                  left: 0;
+                  transform: none;
+                  padding: 35px;
+                  padding-right: 15%;
+                  max-width: 100%;
+                }
+  
+                [data-text-align="center"][data-columns="4"].layout-vert_staggered_middle > div:nth-child(7n + 2) .content {
+                  top: 50%;
+                  left: 50%;
+                  transform: translate(-50%, -50%);
+                }
+                
+                [data-columns="4"].layout-vert_staggered_middle:not([data-text-layout="all_bottom_left_shadow"]) > div:nth-child(7n + 2) div.inner:before {
+                  position: absolute;
+                  top: 0;
+                  left: 0;
+                  content: "";
+                  display: block;
+                  width: 100%;
+                  height: 100%;
+                  z-index: 10;
+                  pointer-events: none;
+                  border-radius: var(--post-grid-border-radius);
+                  background: radial-gradient(circle at 0 0, rgba(0,0,0,0.75) 0, transparent 70%);
+                }
+  
+                #ajax-content-wrap [data-style="content_under_image"] [data-columns="4"].layout-vert_staggered_middle > div:nth-child(7n + 2) .content * {
+                  color: #fff;
+                }
+
+                [data-columns="4"].layout-vert_staggered_middle > div:nth-child(7n + 2).nectar-underline .post-heading {
+                  background-image: linear-gradient(to right,#fff 0,#fff 100%);
+                }
+  
+                [data-style="content_under_image"] [data-columns="4"].layout-vert_staggered_middle > div.nectar-underline:nth-child(7n + 2):hover .content .nectar-split-heading.effect-removed {
+                  text-decoration: underline 1px rgba(255, 255, 255, 1)
+                }
+  
+                .nectar-post-grid-wrap[data-style="content_under_image"] [data-columns="4"].layout-vert_staggered_middle > div:nth-child(7n + 2) .content {
+                  padding: min( max(35px, 3.5vw), 50px);
+                }
+  
+  
+                [data-style="content_under_image"] [data-columns="4"].layout-vert_staggered_middle > div:nth-child(7n + 2) .nectar-post-grid-item-bg-wrap {
+                  position: absolute;
+                  width: 100%;
+                  height: 100%;
+                  top: 0;
+                  left: 0;
+                }
+                [data-style="content_under_image"] [data-columns="4"].layout-vert_staggered_middle > div:nth-child(7n + 2) .nectar-post-grid-item-bg {
+                  height: 100%!important;
+                }
+  
+                #ajax-content-wrap [data-style="content_under_image"] [data-columns="4"].layout-vert_staggered_middle > div:nth-child(7n + 2) .content * {
+                  color: #fff;
+                }
+                
+                [data-style="content_under_image"] [data-columns="4"].layout-vert_staggered_middle > div.nectar-underline:nth-child(7n + 2):hover .content .nectar-split-heading.effect-removed {
+                  text-decoration: underline 1px rgba(255, 255, 255, 1)
+                }
+  
+                .nectar-post-grid-wrap[data-style="content_under_image"] [data-columns="4"].layout-vert_staggered_middle > div:nth-child(7n + 2) .content {
+                  padding: min( max(35px, 3.5vw), 50px);
+                }
+  
+               
+                [data-style="content_under_image"] [data-columns="4"].layout-vert_staggered_middle > div:nth-child(7n + 2) .nectar-post-grid-item-bg-wrap {
+                  position: absolute;
+                  width: 100%;
+                  height: 100%;
+                  top: 0;
+                  left: 0;
+                } 
+                [data-style="content_under_image"] [data-columns="4"].layout-vert_staggered_middle > div:nth-child(7n + 2) .nectar-post-grid-item-bg {
+                  height: 100%!important;
+                }
+  
+                .nectar-post-grid[data-columns="4"].layout-vert_staggered_middle > div:nth-child(7n + 2) .nectar-post-grid-item-bg-wrap {
+                  flex: 1;
+                }
+
+              }
+
+
+
+              @media only screen and (max-width: 1000px) {
+  
+                #ajax-content-wrap .nectar-post-grid[data-columns="4"].layout-vert_staggered_middle > div:nth-child(7n + 2) .content {
+                  padding-bottom: 20vw;
+                  max-width: 100%;
+                  min-height: 45vh;
+                }
+                [data-text-layout*="all_bottom_left"][data-columns="4"].layout-vert_staggered_middle > div:nth-child(7n + 2) .content {
+                  padding-right: 35px;
+                }
+
+                #ajax-content-wrap .nectar-post-grid[data-columns="4"][data-text-layout="all_middle"].layout-vert_staggered_middle > div:nth-child(7n + 2) .content,
+                #ajax-content-wrap .nectar-post-grid[data-columns="4"][data-text-layout*="bottom_left"].layout-vert_staggered_middle > div:nth-child(7n + 2) .content { 
+                  padding-bottom: 35px;
+                }
+
+                [data-columns="4"].layout-vert_staggered_middle > div:nth-child(7n + 2) .post-heading a {
+                  font-size: 1.4em;
+                  line-height: 1.3em;
+                }
+                [data-style="content_overlaid"] [data-columns="4"].layout-vert_staggered_middle > div:nth-child(7n + 2) .post-heading a {
+                  font-size: 1em;
+                }
+                
+              }
+
+
+            
+              .nectar-post-grid[data-columns="4"].layout-vert_staggered_middle div.inner,
+              .nectar-post-grid[data-columns="4"].layout-vert_staggered_middle .nectar-post-grid-item-bg-wrap-inner{
+                height: 100%;
+              }
+              
+              .nectar-post-grid[data-columns="4"].layout-vert_staggered_middle .nectar-post-grid-item .content .post-heading {
+                max-width: 100%;
+              }
+              
+              ';
+
+            } // end staggered alt variant
+
+
+
+          }
+          
+
+        }
+
+
+        // Post grid animation load in.
+        if( isset($atts['animation']) && $atts['animation'] === 'zoom-out-reveal' ) {
+
+          $cubic_beziers = nectar_cubic_bezier_easings();
+          $cubic_bezier = '0.25,1,0.5,1';
+
+          $animation_easing = 'default';
+          if( isset($atts['animation_easing']) && !empty($atts['animation_easing']) && 'default' !== $atts['animation_easing'] ) {
+            $animation_easing = $atts['animation_easing'];
+          } 
+          if( isset($cubic_beziers[$animation_easing]) ) {
+            $cubic_bezier = $cubic_beziers[$animation_easing];
+          }
+
+          $post_grid_border_radius = '0px';
+          if( in_array($post_grid_br, array('3px','5px','10px','15px')) ) {
+            $post_grid_border_radius = $post_grid_br;
+          }
+
+          self::$element_css[] = '
+          .nectar-post-grid-item .nectar-split-heading span .inner {
+            position: relative;
+            display: inline-block;
+            transform: translateY(1.3em);
+          }
+          .nectar-post-grid-item .nectar-split-heading span {
+            vertical-align: bottom;
+          }
+          .nectar-post-grid-item .nectar-split-heading > * > span {
+              position: relative;
+              display: inline-block;
+              overflow: hidden;
+              line-height: inherit;
+          }
+
+          .nectar-post-grid-item .nectar-split-heading:not(.markup-generated) {
+            opacity: 0;
+          }
+
+          [data-style*="content"] .nectar-post-grid-item .nectar-split-heading .inner {
+            background-color: transparent;
+            overflow: visible;
+            line-height: inherit;
+          }
+          #ajax-content-wrap [data-animation="zoom-out-reveal"] .nectar-underline .post-heading {
+            background-image: none;
+          }
+          [data-style*="content"] [data-animation="zoom-out-reveal"] .nectar-post-grid-item.nectar-underline .nectar-split-heading {
+              text-decoration: underline 1px rgba(255, 255, 255, 0);
+              transition: text-decoration 0.2s ease, color 0.3s ease;
+              text-underline-offset: 0.17em;
+          }
+        
+          [data-style*="content"] [data-animation="zoom-out-reveal"] .nectar-post-grid-item.nectar-underline:hover .nectar-split-heading.effect-removed {
+            text-decoration: underline 1px rgba(255, 255, 255, 1);
+          }
+          [data-style*="content"] [data-text-hover-color="dark"][data-animation="zoom-out-reveal"] .nectar-post-grid-item.nectar-underline:hover .nectar-split-heading.effect-removed {
+            text-decoration: underline 1px rgba(0, 0, 0, 1);
+          }
+
+          [data-style*="content"] .nectar-post-grid-item .nectar-split-heading[data-animation-type="line-reveal-by-space"][data-stagger="true"] span .inner {
+            transition: transform 1.2s cubic-bezier(0.25,1,0.5,1) 0.6s,
+                        opacity 1.2s cubic-bezier(0.25,1,0.5,1) 0.6s,
+                        color 0.3s ease;
+          }
+          
+
+            .nectar-post-grid[data-animation="zoom-out-reveal"] .meta-category,
+            .nectar-post-grid[data-animation="zoom-out-reveal"] .nectar-cta,
+            .nectar-post-grid[data-animation="zoom-out-reveal"] .item-main > .meta-author,
+            .nectar-post-grid[data-animation="zoom-out-reveal"] .meta-excerpt,
+            .nectar-post-grid[data-animation="zoom-out-reveal"] .nectar-post-grid-item__meta-wrap {
+              opacity: 0;
+              transform: translateY(20px);
+              transition: transform 1.2s cubic-bezier(0.25,1,0.5,1) 0.7s, 
+                          opacity 1.2s cubic-bezier(0.25,1,0.5,1) 0.7s;
+            }
+            [data-style*="content"] .nectar-post-grid[data-animation="zoom-out-reveal"] .nectar-post-grid-item-bg img {
+              transform: scale(1.3);
+              transition: transform 1.2s cubic-bezier('.$cubic_bezier.'), opacity 1.2s cubic-bezier('.$cubic_bezier.');
+            }
+
+            [data-style*="content"] .nectar-post-grid[data-animation="zoom-out-reveal"][data-border-radius="'.$post_grid_br.'"] .nectar-post-grid-item-bg-wrap,
+            [data-style*="content"] .nectar-post-grid[data-animation="zoom-out-reveal"][data-border-radius="'.$post_grid_br.'"] .inner:before {
+              clip-path: inset(30px round '.$post_grid_border_radius.');
+              opacity: 0;
+              transition: opacity 1.2s cubic-bezier('.$cubic_bezier.'), transform 1.2s cubic-bezier('.$cubic_bezier.'), clip-path 1.2s cubic-bezier('.$cubic_bezier.');
+            }
+            
+
+            [data-style*="content"] .nectar-post-grid[data-animation="zoom-out-reveal"][data-border-radius="'.$post_grid_br.'"] .animated-in .nectar-post-grid-item-bg-wrap,
+            [data-style*="content"] .nectar-post-grid[data-animation="zoom-out-reveal"][data-border-radius="'.$post_grid_br.'"] .animated-in .inner:before {
+              clip-path: inset(0 round '.$post_grid_border_radius.');
+              opacity: 1;
+            }';
+
+            if( $post_grid_style === 'vertical_list' ) {
+              self::$element_css[] = '
+              [data-style="vertical_list"] .nectar-post-grid[data-animation="zoom-out-reveal"] .nectar-link-underline,
+              [data-style="vertical_list"] .nectar-post-grid[data-animation="zoom-out-reveal"] .item-main:before,
+              [data-style="vertical_list"] .nectar-post-grid[data-animation="zoom-out-reveal"] .nectar-post-grid-item__meta-wrap,
+              [data-style="vertical_list"] .nectar-post-grid[data-animation="zoom-out-reveal"] .post-heading-wrap .meta-author {
+                opacity: 0;
+                transform: translateY(10px);
+                transition: transform 1.2s cubic-bezier(0.25,1,0.5,1) 0.5s, 
+                            opacity 1.2s cubic-bezier(0.25,1,0.5,1) 0.5s;
+              }
+              [data-style="vertical_list"] [data-animation="zoom-out-reveal"] .animated-in .nectar-link-underline,
+              [data-style="vertical_list"] [data-animation="zoom-out-reveal"] .animated-in .item-main:before,
+              [data-style="vertical_list"] [data-animation="zoom-out-reveal"] .animated-in .nectar-post-grid-item__meta-wrap,
+              [data-style="vertical_list"] [data-animation="zoom-out-reveal"] .animated-in .post-heading-wrap .meta-author {
+                opacity: 1;
+                transform: translateY(0);
+              }
+              @media only screen and (max-width: 999px) {
+                [data-style="vertical_list"] .nectar-post-grid[data-animation="zoom-out-reveal"] .meta-category,
+                [data-style="vertical_list"] .nectar-post-grid[data-animation="zoom-out-reveal"] .meta-author,
+                [data-style="vertical_list"] .nectar-post-grid[data-animation="zoom-out-reveal"] .nectar-link-underline,
+                [data-style="vertical_list"] .nectar-post-grid[data-animation="zoom-out-reveal"] .item-main:before,
+                [data-style="vertical_list"] .nectar-post-grid[data-animation="zoom-out-reveal"] .nectar-post-grid-item__meta-wrap {
+                  transform: translateY(0)!important;
+                }
+              }';
+            }
+
+            if( $post_grid_style === 'content_overlaid' ) {
+              self::$element_css[] = '
+
+              [data-style="content_overlaid"] .nectar-post-grid[data-animation="zoom-out-reveal"][data-border-radius="'.$post_grid_br.'"] .nectar-post-grid-item-bg-wrap-inner {
+                height: 100%;
+              }
+              
+              [data-style="content_overlaid"] .nectar-post-grid[data-animation="zoom-out-reveal"][data-border-radius="'.$post_grid_br.'"] div.inner,
+              [data-style="content_overlaid"] .nectar-post-grid[data-animation="zoom-out-reveal"][data-border-radius="'.$post_grid_br.'"] .nectar-post-grid-item-bg-wrap-inner,
+              [data-style="content_overlaid"] .nectar-post-grid[data-animation="zoom-out-reveal"][data-border-radius="'.$post_grid_br.'"] .nectar-post-grid-item:not(.animated-in) .bg-overlay {
+                clip-path: inset(30px round '.$post_grid_border_radius.');
+                opacity: 0;
+                transition: opacity 1.2s cubic-bezier('.$cubic_bezier.'), transform 1.2s cubic-bezier('.$cubic_bezier.'), clip-path 1.2s cubic-bezier('.$cubic_bezier.');
+              }
+
+              [data-style="content_overlaid"] .nectar-post-grid[data-animation="zoom-out-reveal"][data-border-radius="'.$post_grid_br.'"] .animated-in div.inner,
+              [data-style="content_overlaid"] .nectar-post-grid[data-animation="zoom-out-reveal"][data-border-radius="'.$post_grid_br.'"] .animated-in .nectar-post-grid-item-bg-wrap-inner {
+                clip-path: inset(0 round '.$post_grid_border_radius.');
+                opacity: 1;
+              }';
+            }
+            
+            self::$element_css[] = '
+            body .nectar-post-grid[data-animation="zoom-out-reveal"] .animated-in .nectar-post-grid-item-bg img {
+              transform: scale(1);
+              opacity: 1;
+            }
+            .nectar-post-grid[data-animation="zoom-out-reveal"] .animated-in .meta-excerpt,
+            .nectar-post-grid[data-animation="zoom-out-reveal"] .animated-in .nectar-cta,
+            .nectar-post-grid[data-animation="zoom-out-reveal"] .animated-in .meta-category,
+            .nectar-post-grid[data-animation="zoom-out-reveal"] .animated-in .item-main > .meta-author,
+            .nectar-post-grid[data-animation="zoom-out-reveal"] .animated-in .nectar-post-grid-item__meta-wrap {
+              opacity: 1;
+              transform: translateY(0);
+            }';
+        }
+
+
+
         // Font size.
         if( isset($atts['custom_font_size']) && !empty($atts['custom_font_size']) ) {
 
           $font_size = self::font_sizing_format($atts['custom_font_size']);
 
-          self::$element_css[] = '@media only screen and (min-width: 1000px) { .nectar-post-grid.font_size_'.esc_attr(self::decimal_unit_type_class($font_size)).' .post-heading {
+          self::$element_css[] = '@media only screen and (min-width: 1000px) { .nectar-post-grid.custom_font_size_'.esc_attr(self::decimal_unit_type_class($font_size)).' .post-heading {
             font-size: '.esc_attr($font_size).';
           } }';
 
+        }
+
+        $custom_font_sizing = self::font_size_group_styles('nectar-post-grid .nectar-post-grid-item .post-heading', 'custom_font_size', 'and (min-width: 1000px)', '', $atts);
+
+        if ( !empty($custom_font_sizing) ) {
+          self::$element_css[] = $custom_font_sizing;
         }
 
 
@@ -4514,7 +6522,58 @@ class NectarElDynamicStyles {
         } // End secondary overlaid image.
 
         
+        // Overlaid category.
+        if (  'content_under_image' === $post_grid_style ) {
+              self::$element_css[] = '
+              #ajax-content-wrap .nectar-post-grid-wrap .category-position-overlaid .nectar-post-grid-item .content {
+                position: static;
+              }
+              .nectar-post-grid-wrap .category-position-overlaid .nectar-post-grid-item .meta-category {
+                position: absolute;
+                width: calc(100% - 40px);
+                z-index: 100;
+                top: 20px;
+                left: 20px;
+              }';
+
+              if( isset($atts['category_style']) && 'underline' === $atts['category_style'] ) {
+                self::$element_css[] = '#ajax-content-wrap .nectar-post-grid-wrap .category-position-overlaid .nectar-post-grid-item .meta-category a.style-underline {
+                  color: #fff;
+                }
+                #ajax-content-wrap .nectar-post-grid-wrap .category-position-overlaid .nectar-post-grid-item .meta-category a.style-underline:before {
+                  background-color: #fff;
+                }';
+              }
+        }
+
         // Content overlaid/content under style.
+        if ( 'content_next_to_image' === $post_grid_style ) {
+          if( isset($atts['category_position']) && 'below_title' === $atts['category_position'] ) {
+            self::$element_css[] = '.category-position-after-title .content {
+              display: flex;
+              flex-direction: column;
+            }
+            .category-position-after-title .meta-category  {
+              order: 2;
+              margin: 0
+            }
+            .category-position-after-title  .meta-category a {
+              margin: 10px 10px 0 0;
+            }
+            .category-position-after-title .item-main  {
+              order: 1;
+            }
+            ';
+           }
+           else if( isset($atts['category_position']) && 'default' === $atts['category_position'] ) {
+            self::$element_css[] = '.category-position-before-title.nectar-post-grid .nectar-post-grid-item .item-meta-extra {
+                margin-top: 0;
+              }
+              .category-position-before-title .item-main > .nectar-post-grid-item__meta-wrap:not(:empty) {
+                margin-top: 10px;
+              }';
+            }
+        }
         if( 'content_under_image' === $post_grid_style || 'content_overlaid' === $post_grid_style ) {
 
           // Category position.
@@ -4534,6 +6593,16 @@ class NectarElDynamicStyles {
               order: 1;
             }';
            }
+           if ( isset($atts['category_position']) && 'default' === $atts['category_position']  ) {
+            // When category position is default, we'll move the additional meta below excerpt.
+            self::$element_css[] = '.category-position-before-title.nectar-post-grid .nectar-post-grid-item .item-meta-extra {
+              margin-top: 0;
+            }
+            .category-position-before-title .item-main > .nectar-post-grid-item__meta-wrap:not(:empty) {
+              margin-top: 10px;
+            }';
+            
+           }
 
            // Featured First Item
            if( isset($atts['featured_top_item']) && 'yes' === $atts['featured_top_item'] ) {
@@ -4544,7 +6613,189 @@ class NectarElDynamicStyles {
 
         }
 
-       
+
+        // Content Next to Image style.
+        if ( 'content_next_to_image' === $post_grid_style ) {
+          
+          //// core.
+          self::$element_css[] = '.nectar-post-grid-wrap[data-style="content_next_to_image"] .nectar-post-grid-item .inner {
+            display: flex; 
+            align-items: flex-start;
+            gap: 5%;
+          }
+          .nectar-post-grid-wrap[data-style="content_next_to_image"] .nectar-post-grid-item {
+            display: flex;
+            align-items: center;
+          }
+    
+          #ajax-content-wrap .nectar-post-grid-wrap[data-style="content_next_to_image"] .nectar-post-grid-item .content {
+            flex: 1;
+            padding: 0;
+          }
+          .nectar-post-grid-wrap[data-style="content_next_to_image"] .nectar-post-grid-item-bg,
+          .nectar-post-grid-wrap[data-style="content_next_to_image"] .nectar-post-grid-item-bg img {
+            position: relative;
+            margin-bottom: 0;
+          }
+          .nectar-post-grid-wrap[data-style="content_next_to_image"] .nectar-post-grid-item-bg-wrap {
+            width: 33.3%;
+          }
+          .nectar-post-grid-wrap[data-style="content_next_to_image"] .nectar-post-grid-item-bg-wrap-inner {
+            overflow: hidden;
+          }
+
+          .nectar-post-grid-wrap[data-style="content_next_to_image"] .nectar-post-grid .nectar-post-grid-item .content .post-heading {
+            max-width: 100%;
+          }
+          [data-style="content_next_to_image"] .nectar-post-grid[data-columns="1"] > div .item-meta-extra {
+            width: 100%;
+          }
+
+          @media only screen and (max-width: 690px) {
+            .nectar-post-grid-wrap[data-style="content_next_to_image"] .nectar-post-grid-item .content .meta-excerpt {
+              max-width: 100%;
+            }
+          }
+          
+          ';
+
+          // Locked to aspect ratio
+          if( $post_grid_custom_ar && isset($atts['aspect_ratio_image_size']) && 'yes' === $atts['aspect_ratio_image_size']) {
+            self::$element_css[] = '
+            .nectar-post-grid-wrap[data-style="content_next_to_image"] .custom-aspect-ratio-'.esc_attr($post_grid_custom_ar).' .nectar-post-grid-item-bg {
+              padding-bottom: '.esc_attr(self::image_aspect_ratio($post_grid_custom_ar)).';
+              height: auto!important;
+            }
+            .nectar-post-grid-wrap[data-style="content_next_to_image"] .custom-aspect-ratio-'.esc_attr($post_grid_custom_ar).' .nectar-post-grid-item-bg img {
+              position: absolute;
+            }';
+          }
+
+          // Divider.
+          if( isset($atts['content_next_to_image_divider']) && 
+            $atts['content_next_to_image_divider'] === 'yes' && 
+            isset($atts['content_next_to_image_divider_color']) && 
+            isset($atts['columns']) && '1' === $atts['columns']  ) {
+              
+            $color = ltrim($atts['content_next_to_image_divider_color'],'#');
+            
+            if (in_array( $post_grid_spacing, array('10px','15px','25px','35px','40px','45px'))) {
+              self::$element_css[] = '.nectar-post-grid-wrap[data-style="content_next_to_image"] .content_next_to_image_divider_'. esc_attr($color).'[data-columns="1"][data-grid-spacing="'.esc_attr($post_grid_spacing).'"]  .nectar-post-grid-item:not(:last-child) {
+                padding-bottom: '.(intval($post_grid_spacing)*2).'px;
+              }';
+            } else if (in_array( $post_grid_spacing, array('1vw','2vw','3vw','4vw'))) {
+              self::$element_css[] = '.nectar-post-grid-wrap[data-style="content_next_to_image"] .content_next_to_image_divider_'. esc_attr($color).'[data-columns="1"][data-grid-spacing="'.esc_attr($post_grid_spacing).'"]  .nectar-post-grid-item:not(:last-child) {
+                padding-bottom: '.(intval($post_grid_spacing)*2).'vw;
+              }';
+            }
+
+            self::$element_css[] = '.nectar-post-grid-wrap[data-style="content_next_to_image"] .content_next_to_image_divider_'. esc_attr($color).'[data-columns="1"] .nectar-post-grid-item:not(:last-child)  {
+              border-bottom: 1px solid #'.esc_attr($color).';
+            }';
+
+          }
+          
+          // Animation.
+
+          //// Zoom out reveal is grouped with other style.
+
+          //// Fade in from bottom
+          if( isset($atts['animation']) && $atts['animation'] === 'fade-in-from-bottom' ) {
+            self::$element_css[] = '
+            .nectar-post-grid-wrap[data-style="content_next_to_image"] .nectar-post-grid[data-animation="fade-in-from-bottom"] .nectar-post-grid-item {
+              opacity: 0;
+              -webkit-transform: translateY(30px);
+              transform: translateY(30px);
+            }
+            .nectar-post-grid-wrap[data-style="content_next_to_image"] .nectar-post-grid[data-animation="fade-in-from-bottom"] .nectar-post-grid-item.animated-in {
+              opacity: 1;
+              -webkit-transform: translateY(0px);
+              transform: translateY(0px);
+              transition: transform 0.75s cubic-bezier(0.22, 0.61, 0.36, 1), opacity 0.75s cubic-bezier(0.22, 0.61, 0.36, 1);
+          }';
+        }
+        //// Fade in from right
+        if( isset($atts['animation']) && $atts['animation'] === 'fade-in-from-right' ) {
+          self::$element_css[] = '
+          .nectar-post-grid-wrap[data-style="content_next_to_image"] .nectar-post-grid[data-animation="fade-in-from-bottom"] .nectar-post-grid-item {
+            opacity: 0;
+            -webkit-transform: translateX(30px);
+            transform: translateX(30px);
+          }
+          .nectar-post-grid-wrap[data-style="content_next_to_image"] .nectar-post-grid[data-animation="fade-in-from-bottom"] .nectar-post-grid-item.animated-in {
+            opacity: 1;
+            -webkit-transform: translateX(0px);
+            transform: translateX(0px);
+            transition: transform 0.75s cubic-bezier(0.22, 0.61, 0.36, 1), opacity 0.75s cubic-bezier(0.22, 0.61, 0.36, 1);
+        }';
+      }
+
+          // Border radius
+          if( in_array($post_grid_br, array('3px','5px','10px','15px')) ) {
+            self::$element_css[] = '
+            .nectar-post-grid-wrap[data-style="content_next_to_image"] [data-border-radius="'.$post_grid_br.'"] .nectar-post-grid-item-bg-wrap-inner {
+              border-radius: '.esc_attr($post_grid_br).';
+            }
+            ';
+          }
+
+          // Image gap.
+          if ( isset($atts['content_next_to_image_image_gap']) && in_array($atts['content_next_to_image_image_gap'], array('5%','7%','10%','10px', '15px', '20px', '25px'))) {
+            self::$element_css[] = '.nectar-post-grid-wrap[data-style="content_next_to_image"] [data-image-gap="'.esc_attr($atts['content_next_to_image_image_gap']).'"] .nectar-post-grid-item .inner {
+              gap: ' . $atts['content_next_to_image_image_gap'] . ';
+            }';
+          }
+
+          // Image width.
+          if ( isset($atts['content_next_to_image_image_width']) && in_array($atts['content_next_to_image_image_width'], array('25%','33.3%','50%'))) {
+            self::$element_css[] = '.nectar-post-grid-wrap[data-style="content_next_to_image"] [data-image-width="'.esc_attr($atts['content_next_to_image_image_width']).'"] .nectar-post-grid-item-bg-wrap {
+              width: ' . $atts['content_next_to_image_image_width'] . ';
+            }';
+          }
+
+          // Image position.
+          if ( isset($atts['content_next_to_image_image_position']) && 'right' === $atts['content_next_to_image_image_position'] ) {
+            self::$element_css[] = '.nectar-post-grid-wrap[data-style="content_next_to_image"] [data-image-position="right"] .nectar-post-grid-item .inner {
+              flex-direction: row-reverse;
+            }';
+          }
+
+          // Vertical alignment.
+          if ( isset($atts['content_next_to_image_vertical_align']) ) {
+            if ( 'middle' === $atts['content_next_to_image_vertical_align'] ) {
+              self::$element_css[] = '.nectar-post-grid-wrap[data-style="content_next_to_image"] [data-vertical-align="middle"] .nectar-post-grid-item .inner {
+                align-items: center;
+              }';
+            }
+            else if ( 'bottom' === $atts['content_next_to_image_vertical_align'] ) {
+              self::$element_css[] = '.nectar-post-grid-wrap[data-style="content_next_to_image"] [data-vertical-align="bottom"] .nectar-post-grid-item .inner {
+                align-items: flex-end;
+              }';
+            }
+          }
+
+        }
+
+
+        // Content overlaid.
+        if( 'content_overlaid' === $post_grid_style ) {
+
+          // Custom padding
+          foreach( self::$devices as $device => $media_query_size ) {
+
+            $body_selector = ('desktop' !== $device) ? 'body ' : '';
+
+            $device_padding = ( isset($atts['content_overlaid_padding_'.$device]) ) ? $atts['content_overlaid_padding_'.$device] : false;
+            if( $device_padding ) {
+              self::$element_css[] = '@media only screen '.$media_query_size.' {
+                '.$body_selector.' [data-style="content_overlaid"] .nectar-post-grid.'.$device.'_padding_'.self::percent_unit_type_class($device_padding).' .content {
+                  padding: '.self::percent_unit_type($device_padding).';
+                }
+              }';
+            }
+          }
+        }
+        
 
         // Vertical List style.
         if( 'vertical_list' === $post_grid_style ) {
@@ -4619,7 +6870,8 @@ class NectarElDynamicStyles {
             width: 100%;
           } 
 
-          .nectar-post-grid-wrap[data-style="vertical_list"] .item-main .meta-date {
+          .nectar-post-grid-wrap[data-style="vertical_list"] .item-main .meta-date,
+          .nectar-post-grid-wrap[data-style="vertical_list"] .item-main .nectar-post-grid-item__meta-wrap {
             margin-top: 0;
           }
 
@@ -4638,9 +6890,15 @@ class NectarElDynamicStyles {
             .nectar-post-grid-wrap[data-style="vertical_list"] .nectar-post-grid-item .content .item-main {
               flex-direction: row;
             }
-            .nectar-post-grid-wrap[data-style="vertical_list"] .item-main .meta-date {
+            .nectar-post-grid-wrap[data-style="vertical_list"] .item-main .meta-date,
+            .nectar-post-grid-wrap[data-style="vertical_list"] .item-main .nectar-post-grid-item__meta-wrap {
               padding-right: 8%;
               min-width: 22%;
+            }
+
+            .nectar-post-grid-wrap[data-style="vertical_list"] .item-main .nectar-post-grid-item__meta-wrap .meta-date {
+              padding-right: 0;
+              min-width: none;
             }
         
             .nectar-post-grid-wrap[data-style="vertical_list"] .item-main .nectar-link-underline {
@@ -5220,7 +7478,7 @@ class NectarElDynamicStyles {
         }
 
          // Custom font size.
-        $custom_font_sizing = self::font_size_group_styles('nectar-highlighted-text[data-style] > *', $atts);
+        $custom_font_sizing = self::font_size_group_styles('nectar-highlighted-text[data-style] > *', false, false, '', $atts);
         if ( !empty($custom_font_sizing) ) {
           self::$element_css[] = $custom_font_sizing;
         }
@@ -5612,7 +7870,6 @@ class NectarElDynamicStyles {
         foreach( self::$devices as $device => $media_query_size ) {
 
           // Alignment
-          
           if( isset($atts['alignment_'.$device]) && $atts['alignment_'.$device] != 'inherit' ) {
 
             $alignment = $atts['alignment_'.$device];
@@ -5626,7 +7883,8 @@ class NectarElDynamicStyles {
             }
 
             self::$element_css[] = '@media only screen '.$media_query_size.' {
-                .nectar-circle-images.alignment_'.$alignment.'_'.$device.' .nectar-circle-images__inner {
+              .nectar-circle-images.alignment_'.$alignment.'_'.$device.', 
+              .nectar-circle-images.alignment_'.$alignment.'_'.$device.' .nectar-circle-images__inner {
                   justify-content: '.$flex_align.';
                 }
               }';
@@ -5874,8 +8132,40 @@ class NectarElDynamicStyles {
               line-height: inherit;
             }
           }';
+          
         }
 
+        if( isset($atts['font_size_min']) && !empty($atts['font_size_min']) ) {
+          self::$element_css[] = '@media only screen and (max-width: 1000px) {
+            .nectar-split-heading[class*="font_size_min"] > * {
+              font-size: inherit;
+              line-height: inherit;
+            }
+          }';
+        }
+        
+        if( isset($atts['fit_text_to_container']) && 'true' === $atts['fit_text_to_container'] ) {
+
+          if ( !self::$using_front_end_editor ) {
+            self::$element_css[] = '.nectar-split-heading[data-has-fit-text="true"]:not(.fitty-fit) {
+              opacity: 0!important;
+            }';
+          }
+          
+          self::$element_css[] = '.nectar-split-heading[data-has-fit-text="true"] {
+            white-space: nowrap;
+            display: inline-block;
+          }
+          .nectar-split-heading[data-has-fit-text="true"] * {
+            font-size: inherit;
+          }
+          .nectar-split-heading[data-has-fit-text="true"][data-text-effect] * {
+            line-height: 1; 
+          }';
+        }
+
+
+        
 
         $split_heading_line_height = ( isset($atts['font_line_height']) && !empty($atts['font_line_height']) ) ? $atts['font_line_height'] : false;
 
@@ -5905,7 +8195,7 @@ class NectarElDynamicStyles {
               $line_height = esc_attr(intval($font_size)*$multi) .'px';
             }
 
-            // User has set unitless line height
+            //User has set unitless line height
             if( $split_heading_line_height && 
                 false === strpos($split_heading_line_height, 'px') &&
                 floatval($split_heading_line_height) > 0.3 && 
@@ -5915,19 +8205,19 @@ class NectarElDynamicStyles {
 
             self::$element_css[] = '@media only screen and (max-width: '.$media_query.') { 
               .nectar-split-heading.font_size_'.$device.'_'. $font_size .' {
-              font-size: '. $font_size . esc_attr( $override ).';
-              line-height: '. $line_height . esc_attr( $override ).';
-            } 
-            .nectar-split-heading.font_size_'.$device.'_'. $font_size .' * {
-              font-size: inherit'. esc_attr( $override ).';
-              line-height: inherit'. esc_attr( $override ).';
-            }
+                line-height: '. $line_height . esc_attr( $override ).';
+              } 
+    
+              .nectar-split-heading.font_size_'.$device.'_'. $font_size .' * {
+                font-size: inherit'. esc_attr( $override ).';
+                line-height: inherit'. esc_attr( $override ).';
+              }
             }';
           }
 
         }
 
-        // Custom line height.
+        //Custom line height.
         if( $split_heading_line_height ) {
           self::$element_css[] = '.nectar-split-heading.font_line_height_'.esc_attr(self::decimal_unit_type_class($atts['font_line_height'])).' {
             line-height: '.esc_attr($atts['font_line_height']). esc_attr( $override ).'; 
@@ -5935,6 +8225,13 @@ class NectarElDynamicStyles {
           .nectar-split-heading.font_line_height_'.esc_attr(self::decimal_unit_type_class($atts['font_line_height'])).' * {
             line-height: '.esc_attr($atts['font_line_height']). esc_attr( $override ).'; 
           }';
+        }
+
+        // Custom font size.
+        $custom_font_sizing = self::font_size_group_styles('nectar-split-heading', 'font_size', false, '!important', $atts);
+
+        if ( !empty($custom_font_sizing) ) {
+          self::$element_css[] = $custom_font_sizing;
         }
 
 
@@ -5988,10 +8285,31 @@ class NectarElDynamicStyles {
             opacity: 1;
           }';
 
+
+          // Scroll opacity reveal 
+          if( 'scroll-opacity-reveal' ===  $text_effect ) {
+            self::$element_css[] = '
+            .nectar-split-heading[data-animation-type="line-reveal-by-space"][data-text-effect="scroll-opacity-reveal"] span .inner {
+              -webkit-transform: translateY(0);
+              transform: translateY(0);
+              opacity: 0.2;
+              transition: none!important;
+            }
+            #nectar_fullscreen_rows .nectar-split-heading[data-animation-type="line-reveal-by-space"][data-text-effect="scroll-opacity-reveal"] span .inner {
+              transition: opacity 0.65s ease!important;
+            }
+            @media only screen and (max-width: 999px) {
+              .nectar-split-heading[data-text-effect="scroll-opacity-reveal"][data-m-rm-animation="true"] .inner {
+                opacity: 1!important;
+              }
+            }
+            ';
+          }
           // Letter reveal top
           if( 'letter-reveal-top' ===  $text_effect ) {
             self::$element_css[] = '
-            .nectar-split-heading[data-animation-type="line-reveal-by-space"][data-text-effect="letter-reveal-top"] span .inner {
+            .nectar-split-heading[data-animation-type="line-reveal-by-space"][data-text-effect="letter-reveal-top"] span .inner,
+            .nectar-split-heading[data-stored-text-effect="letter-reveal-top"] span .inner  {
               -webkit-transform: translateY(-1.3em);
               transform: translateY(-1.3em);
             }
@@ -6011,29 +8329,36 @@ class NectarElDynamicStyles {
 
           // Rotate from bottom
           if( 'twist-bottom' ===  $text_effect ) {
-            self::$element_css[] = 'body .nectar-split-heading[data-text-effect="twist-bottom"] > * > span {
+            self::$element_css[] = 'body .nectar-split-heading[data-text-effect="twist-bottom"] > * > span,
+            .nectar-split-heading[data-stored-text-effect="twist-bottom"] > * > span {
               overflow: visible;
             }
 
-            .nectar-split-heading[data-text-effect="twist-bottom"] {
+            .nectar-split-heading[data-text-effect="twist-bottom"],
+            .nectar-split-heading[data-stored-text-effect="twist-bottom"] {
               perspective: 700px;
             }
             @media not all and (min-resolution:.001dpcm) { @media {
-              .nectar-split-heading[data-text-effect="twist-bottom"] {
+              .nectar-split-heading[data-text-effect="twist-bottom"],
+              .nectar-split-heading[data-stored-text-effect="twist-bottom"] {
                 perspective: inherit;
               }
              }
             }
             body .nectar-split-heading[data-text-effect="twist-bottom"] > *,
-            body .nectar-split-heading[data-text-effect="twist-bottom"] > * > span {
+            body .nectar-split-heading[data-text-effect="twist-bottom"] > * > span,
+            .nectar-split-heading[data-stored-text-effect="twist-bottom"] > *,
+            .nectar-split-heading[data-stored-text-effect="twist-bottom"] > * > span {
               transform-style: preserve-3d;
             }
             
-            .nectar-split-heading[data-text-effect="twist-bottom"][data-animation-type="line-reveal-by-space"][data-stagger="true"] span .inner {
+            .nectar-split-heading[data-text-effect="twist-bottom"][data-animation-type="line-reveal-by-space"][data-stagger="true"] span .inner,
+            .nectar-split-heading[data-stored-text-effect="twist-bottom"][data-stagger="true"] span .inner {
               transition: transform 1.2s cubic-bezier(0.25,1,0.5,1),opacity 0.5s cubic-bezier(0.25,1,0.5,1);
             }
 
-            body .nectar-split-heading[data-text-effect="twist-bottom"] span .inner {
+            body .nectar-split-heading[data-text-effect="twist-bottom"] span .inner,
+            .nectar-split-heading[data-stored-text-effect="twist-bottom"] span .inner {
               transform-origin: center center -2em;
               transform: rotateX(-70deg);
               opacity: 0;
@@ -6041,19 +8366,23 @@ class NectarElDynamicStyles {
           }
 
           if( 'twist-bottom-2' ===  $text_effect ) {
-            self::$element_css[] = 'body .nectar-split-heading[data-text-effect="twist-bottom-2"] > * > span {
+            self::$element_css[] = 'body .nectar-split-heading[data-text-effect="twist-bottom-2"] > * > span,
+            .nectar-split-heading[data-stored-text-effect="twist-bottom-2"] > * > span {
               overflow: visible;
             }
 
-            .nectar-split-heading[data-text-effect="twist-bottom-2"] > * {
+            .nectar-split-heading[data-text-effect="twist-bottom-2"] > *,
+            .nectar-split-heading[data-stored-text-effect="twist-bottom-2"] > * {
               perspective: 1000px;
             }
 
-            body .nectar-split-heading[data-text-effect="twist-bottom-2"] > * > span {
+            body .nectar-split-heading[data-text-effect="twist-bottom-2"] > * > span,
+            .nectar-split-heading[data-stored-text-effect="twist-bottom-2"] > * > span {
               transform-style: preserve-3d;
             }
 
-            body .nectar-split-heading[data-text-effect="twist-bottom-2"] span .inner {
+            body .nectar-split-heading[data-text-effect="twist-bottom-2"] span .inner,
+            .nectar-split-heading[data-stored-text-effect="twist-bottom-2"] span .inner  {
               transform-origin: center center -2em;
               transform: rotateX(-40deg) rotateY(13deg) rotateZ(13deg);
               opacity: 0;
@@ -6107,7 +8436,31 @@ class NectarElDynamicStyles {
 
         // Twist in
         else if( isset($atts['animation_type']) && 'twist-in' === $atts['animation_type'] ) {
-          self::$element_css[] = '.nectar-split-heading[data-animation-type="twist-in"] {
+          self::$element_css[] = '
+          .nectar-split-heading[data-animation-type="twist-in"][data-align="center"] {
+            display: flex;
+            justify-content: center;
+          }
+          .nectar-split-heading[data-animation-type="twist-in"][data-align="right"] {
+            display: flex;
+            justify-content: flex-end;
+          }
+          @media only screen and (max-width: 1000px) {
+            .nectar-split-heading[data-animation-type="twist-in"][data-m-align="left"] {
+              display: flex;
+              justify-content: flex-start;
+            }
+            .nectar-split-heading[data-animation-type="twist-in"][data-m-align="center"] {
+              display: flex;
+              justify-content: center;
+            }
+            .nectar-split-heading[data-animation-type="twist-in"][data-m-align="right"] {
+              display: flex;
+              justify-content: flex-end;
+            }
+          }
+
+          .nectar-split-heading[data-animation-type="twist-in"] {
             transform: rotateY(25deg) rotateZ(-4deg);
             opacity: 0;
             transition: opacity 1s cubic-bezier(.15,.75,.4,1), transform 1.2s cubic-bezier(.15,.75,.4,1);
@@ -6608,9 +8961,16 @@ class NectarElDynamicStyles {
             }';
           }
         
-
         }
 
+
+        // custom divider.
+        if ( isset($atts['text_repeat_divider']) && $atts['text_repeat_divider'] === 'custom') {
+          self::$element_css[] = '.nectar-scrolling-text.has-custom-divider .nectar-scrolling-text-inner__text-chunk > * {
+            display: flex;
+            align-items: center;
+          }';
+        }
         // BG Image.
         if( isset($atts['background_image_url']) && !empty($atts['background_image_url']) ) {
           
@@ -6702,7 +9062,7 @@ class NectarElDynamicStyles {
           self::$element_css[] = '@media only screen and (min-width: 1000px) {
             .nectar-scrolling-text.font_size_'.esc_attr($font_size).' .nectar-scrolling-text-inner * {
             font-size: '.esc_attr($font_size).';
-            line-height: 1.1em;
+            line-height: 1em;
           } }';
 
         }
@@ -6717,6 +9077,39 @@ class NectarElDynamicStyles {
             line-height: 1.1em;
           } }';
 
+        }
+
+        // Spin animation.
+        if ( isset($atts['text_repeat_divider_custom_spin_animation']) && 
+            'yes' === $atts['text_repeat_divider_custom_spin_animation'] ) {
+              self::$element_css[] = '
+              @keyframes nectar_looped_rotate {
+                0% {
+                  transform: rotate(0deg);
+                }
+  
+                100% {
+                  transform: rotate(360deg);
+                }
+              }
+              .nectar-scrolling-text .nectar-scrolling-text-inner span.custom span {
+                display: block;
+              }
+              .nectar-scrolling-text .nectar-scrolling-text-inner span.spin {
+                animation: nectar_looped_rotate 10s linear infinite;
+              }
+              .nectar-scrolling-text[data-s-dir="ltr"] .nectar-scrolling-text-inner span.spin {
+                animation: nectar_looped_rotate 10s linear infinite reverse;
+              }';
+        }
+
+        // move on scroll animation
+        if ( isset($atts['move_on_scroll_animation']) && 
+        'yes' === $atts['move_on_scroll_animation'] ) {
+          self::$element_css[] = '
+          .nectar-scrolling-text .nectar-scrolling-text-inner {
+            overflow: visible; 
+          }';
         }
 
       } // End Nectar Scrolling Text.
@@ -6887,6 +9280,9 @@ class NectarElDynamicStyles {
           if( 'right' === $image_alignment ) {
             self::$element_css[] = '.right.img-with-aniamtion-wrap[data-max-width="'.esc_attr($atts['max_width']).'"] img {
               display: block;
+            }
+            .right.img-with-aniamtion-wrap[data-max-width="'.esc_attr($atts['max_width']).'"] img:not([srcset]) {
+              width: 100%;
             }';
             self::$element_css[] = '.img-with-aniamtion-wrap.right[data-max-width="'.esc_attr($atts['max_width']).'"] .inner{
               margin-left: '.esc_attr($image_right_margin_rel[$image_max_width]).';
@@ -7594,6 +9990,9 @@ class NectarElDynamicStyles {
         if( isset($atts['box_style']) && 'color_box_hover' === $atts['box_style'] ) {
 
           self::$element_css[] = '
+          .nectar-fancy-box[data-style="color_box_hover"] .box-inner-wrap {
+            transform: translateZ(0);
+          }
           .nectar-fancy-box[data-style="color_box_hover"] .inner-wrap > i {
             margin-bottom: 25px;
           }
@@ -7978,6 +10377,135 @@ class NectarElDynamicStyles {
             box-shadow: 0 40px 95px -15px rgba(0,0,0,0.15);
           }
           ';
+        }
+
+        if(isset( $atts['style'] ) && 'single_large_featured' === $atts['style'] ||
+           isset( $atts['style'] ) && 'multiple_large_featured' === $atts['style'] ) {
+            
+          $load_in_animation = isset($atts['load_in_animation']) && !empty($atts['load_in_animation']) ? esc_attr($atts['load_in_animation']) : false;
+          $content_align = isset($atts['single_large_featured_content_alignment']) ? $atts['single_large_featured_content_alignment'] : 'default';
+
+          // Font size
+          if( isset($atts['font_size_desktop']) && !empty($atts['font_size_desktop']) ) {
+            self::$element_css[] = '.nectar-recent-posts-element[class*="font_size_desktop"] .large-featured-post-title {
+                line-height: 1.3;
+            }';
+          }
+          self::$element_css[] = self::font_size_group_styles('nectar-recent-posts-element .large-featured-post-title', false, 'and (min-width: 1000px)', '', $atts);
+          
+          self::$element_css[] = '
+          .nectar-recent-posts-single_featured h2,
+          .nectar-recent-posts-single_featured h2 * {
+            line-height: 1.3;
+          }';
+
+          // Load in animations.
+          if ( 'zoom_out_reveal' === $load_in_animation ) {
+            self::$element_css[] = '.nectar-recent-posts-single_featured.zoom_out_reveal {
+              clip-path: inset(5% 5% 5% 5% round 10px);
+              transition: clip-path 1.2s cubic-bezier(0.65,0,0.35,1);
+              opacity: 1;
+            }
+            .nectar-recent-posts-single_featured.zoom_out_reveal.animated-in {
+              clip-path: inset(0% 0% 0% 0% round 0px);
+            }
+            
+            .nectar-recent-posts-single_featured.zoom_out_reveal .inner-wrap > * {
+              opacity: 0;
+              transform: translateY(30px);
+              transition: transform 1.2s cubic-bezier(0.25,1,0.5,1), opacity 1.2s cubic-bezier(0.25,1,0.5,1);
+            }
+
+            .nectar-recent-posts-single_featured.zoom_out_reveal.animated-in .inner-wrap > * {
+              opacity: 1;
+              transform: translateY(0);
+            }
+            ';
+
+            if ( 'bottom' === $content_align ) {
+              self::$element_css[] = '
+              .nectar-recent-posts-single_featured.zoom_out_reveal .inner-wrap > *:nth-child(1) { transition-delay: 0.75s; }
+              .nectar-recent-posts-single_featured.zoom_out_reveal .inner-wrap > *:nth-child(2) { transition-delay: 0.85s; }
+              .nectar-recent-posts-single_featured.zoom_out_reveal .inner-wrap > *:nth-child(3) { transition-delay: 0.95s; }
+              .nectar-recent-posts-single_featured.zoom_out_reveal .inner-wrap > *:nth-child(4) { transition-delay: 1.05s; }
+              .nectar-recent-posts-single_featured.zoom_out_reveal .inner-wrap > *:nth-child(5) { transition-delay: 1.15s; }
+              ';
+            } else {
+              self::$element_css[] = '
+              .nectar-recent-posts-single_featured.zoom_out_reveal .inner-wrap > *:nth-child(1) { transition-delay: 0.5s; }
+              .nectar-recent-posts-single_featured.zoom_out_reveal .inner-wrap > *:nth-child(2) { transition-delay: 0.6s; }
+              .nectar-recent-posts-single_featured.zoom_out_reveal .inner-wrap > *:nth-child(3) { transition-delay: 0.7s; }
+              .nectar-recent-posts-single_featured.zoom_out_reveal .inner-wrap > *:nth-child(4) { transition-delay: 0.8s; }
+              .nectar-recent-posts-single_featured.zoom_out_reveal .inner-wrap > *:nth-child(5) { transition-delay: 0.9s; }
+              ';
+            }
+
+          }
+
+        }
+
+
+        if( isset( $atts['style'] ) && 'single_large_featured' === $atts['style'] ) {
+          
+          $side_spacing = isset($atts['single_large_featured_content_side_spacing']) && $atts['single_large_featured_content_side_spacing'] !== 'default' ? $atts['single_large_featured_content_side_spacing'] : false;
+          $content_align = isset($atts['single_large_featured_content_alignment']) ? $atts['single_large_featured_content_alignment'] : 'default';
+          $vertical_padding = isset($atts['large_featured_padding']) ? $atts['large_featured_padding'] : false;
+
+          // side spacing
+          if( false !== $side_spacing ) {
+            self::$element_css[] = '#ajax-content-wrap .nectar-recent-posts-single_featured[data-side-spacing="'.$side_spacing.'"] .nectar-recent-post-slide .recent-post-container {
+              padding-left: '.esc_attr($side_spacing).';
+              padding-right: '.esc_attr($side_spacing).';
+            }';
+
+            if( 'bottom' === $content_align ) {
+              self::$element_css[] = '#ajax-content-wrap .nectar-recent-posts-single_featured[data-side-spacing="'.$side_spacing.'"][data-align="bottom"] .nectar-recent-post-slide .recent-post-container {
+                padding-bottom: '.esc_attr($side_spacing).';
+              }';
+            }
+            if( 'top' === $content_align ) {
+              self::$element_css[] = '#ajax-content-wrap .nectar-recent-posts-single_featured[data-side-spacing="'.$side_spacing.'"][data-align="top"] .nectar-recent-post-slide .recent-post-container {
+                padding-top: '.esc_attr($side_spacing).';
+              }';
+            }
+          }
+
+          // content alignment
+          ////bottom
+          if ( 'bottom' === $content_align ) {
+            
+            if( $vertical_padding ) {
+              self::$element_css[] = '#ajax-content-wrap .nectar-recent-posts-single_featured[data-align="'.$content_align.'"][data-padding="'.$vertical_padding.'"] .nectar-recent-post-slide .recent-post-container {
+                padding-top: '.(intval($vertical_padding)*2).'%;
+              }';
+            }
+
+
+            self::$element_css[] = '#ajax-content-wrap .nectar-recent-posts-single_featured[data-align="'.$content_align.'"] .nectar-recent-post-slide .recent-post-container {
+              padding-bottom: var(--container-padding);
+            }';
+
+            // altered shadow
+            self::$element_css[] = '.nectar-recent-posts-single_featured[data-align="'.$content_align.'"][data-bg-overlay="diagonal_gradient"] .nectar-recent-post-slide:after {
+              background: radial-gradient(circle at 0 100%,rgba(0,0,0,0.75) 0,transparent 70%);
+            }';
+            
+          }
+
+          //// top
+          if ( 'top' === $content_align ) {
+
+            if( $vertical_padding ) {
+              self::$element_css[] = '#ajax-content-wrap .nectar-recent-posts-single_featured[data-align="'.$content_align.'"][data-padding="'.$vertical_padding.'"] .nectar-recent-post-slide .recent-post-container {
+                padding-bottom: '.(intval($vertical_padding)*2).'%;
+              }';
+            }
+
+            self::$element_css[] = '#ajax-content-wrap .nectar-recent-posts-single_featured[data-align="'.$content_align.'"] .nectar-recent-post-slide .recent-post-container {
+              padding-top: 50px;
+            }';
+          }
+
         }
 
       }
@@ -8467,15 +10995,15 @@ class NectarElDynamicStyles {
           div[data-style*="minimal"].toggles--minimal-shadow .toggle i {
             transition:transform 0.45s cubic-bezier(.3,.4,.2,1),border-color 0.15s ease;
           }
-          div[data-style*="minimal"] .toggle.open i {
+          div[data-style*="minimal"] .toggle.open .toggle-title i {
             transform: rotate(90deg);
           }
-          div[data-style*="minimal"] .toggle.open i:before {
+          div[data-style*="minimal"] .toggle.open .toggle-title i:before {
             -ms-transform: scale(0,1);
             transform: scale(0,1);
             -webkit-transform: scale(0,1);
           }
-          div[data-style*="minimal"] .toggle.open i:after {
+          div[data-style*="minimal"] .toggle.open .toggle-title i:after {
             -ms-transform: scale(1,1);
             transform: scale(1,1);
             -webkit-transform: scale(1,1);
@@ -9367,6 +11895,13 @@ class NectarElDynamicStyles {
 
             .nectar-scrolling-tabs .scrolling-tab-nav.single-tab .skip-hash {
               pointer-events: none;
+            }
+
+            .scrolling-tab-nav .menu-item .sub-desc .nectar-line-break,
+            .scrolling-tab-nav .menu-item .sub-desc br {
+              display: block;
+              content: "";
+              margin-bottom: 1em;
             }
 
             @media only screen and (max-width: 999px ) {
@@ -10633,67 +13168,16 @@ class NectarElDynamicStyles {
         $atts = shortcode_parse_atts($shortcode_inner);
 
         // Flickity.
-        // Alt drag indicator.
+        // drag indicator.
+        if( isset($atts['script']) && 'flickity' === $atts['script'] && 
+            isset($atts['flickity_touch_total_style']) && 'tooltip_text' === $atts['flickity_touch_total_style'] ) {
+              self::$element_css[] = self::get_drag_indicator_tooltip_css();
+        }
+
           if( ( isset($atts['script']) && 'flickity' === $atts['script'] &&
              isset($atts['flickity_touch_total_style']) && 'solid_bg' === $atts['flickity_touch_total_style'] ) || 
              isset($atts['simple_slider_touch_indicator']) && 'true' === $atts['simple_slider_touch_indicator'] ) {
-            self::$element_css[] = '
-              .nectar-drag-indicator[data-type="solid"] {
-                mix-blend-mode: normal;
-                left: -47px;
-                top: -47px;
-                width: 94px;
-                height: 94px;
-              }
-              .nectar-drag-indicator[data-type="solid"] .color-circle {
-                background-color: #000;
-                width: 100%;
-                height: 100%;
-                display: block;
-                position: absolute;
-                left: -2px;
-                top: -2px;
-                transform: scale(0.2);
-                transition: transform 0.45s ease, opacity 0.3s ease;
-                opacity: 0;
-                border-radius: 50%;
-              }
-
-              .nectar-drag-indicator[data-type="solid"].visible .color-circle{
-                transform: scale(1);
-                opacity: 1;
-              }
-              .nectar-drag-indicator[data-type="solid"] i {
-                font-size: 21px;
-                top: -13px;
-              }
-              
-              .nectar-drag-indicator[data-type="solid"]:before {
-                display: none;
-              }
-              .nectar-drag-indicator[data-type="solid"].visible i {
-                transition: transform 0.45s ease, opacity 0.3s ease, color 0.3s ease;
-              }
-              .nectar-drag-indicator[data-type="solid"] i.fa-angle-left {
-                left: 23px;
-              }
-              .nectar-drag-indicator[data-type="solid"] i.fa-angle-right {
-                right: 27px;
-              }
-              .nectar-drag-indicator.visible.pointer-down[data-type="solid"] .color-circle {
-                transform: scale(0.15);
-              }
-              .nectar-drag-indicator.visible.pointer-down[data-type="solid"] i {
-                color: inherit!important;
-              }
-         
-              .nectar-drag-indicator.visible.pointer-down[data-type="solid"] i.fa-angle-left {
-                transform: translateX(-10px);
-              }
-              .nectar-drag-indicator.visible.pointer-down[data-type="solid"] i.fa-angle-right {
-                transform: translateX(10px);
-              }
-            ';
+            self::$element_css[] = self::get_drag_indicator_solid_css();
           }
           
           if( isset($atts['script']) && 'flickity' === $atts['script'] ) {
@@ -11931,6 +14415,114 @@ class NectarElDynamicStyles {
 
 
 
+  public static function get_drag_indicator_solid_css() {
+    return '.nectar-drag-indicator[data-type="solid"] {
+      mix-blend-mode: normal;
+      left: -47px;
+      top: -47px;
+      width: 94px;
+      height: 94px;
+    }
+    .nectar-drag-indicator[data-type="solid"] .color-circle {
+      background-color: #000;
+      width: 100%;
+      height: 100%;
+      display: block;
+      position: absolute;
+      left: -2px;
+      top: -2px;
+      transform: scale(0.2);
+      transition: transform 0.45s ease, opacity 0.3s ease;
+      opacity: 0;
+      border-radius: 50%;
+    }
+
+    .nectar-drag-indicator[data-type="solid"].visible .color-circle{
+      transform: scale(1);
+      opacity: 1;
+    }
+    .nectar-drag-indicator[data-type="solid"] i {
+      font-size: 21px;
+      top: -13px;
+    }
+    
+    .nectar-drag-indicator[data-type="solid"]:before {
+      display: none;
+    }
+    .nectar-drag-indicator[data-type="solid"].visible i {
+      transition: transform 0.45s ease, opacity 0.3s ease, color 0.3s ease;
+    }
+    .nectar-drag-indicator[data-type="solid"] i.fa-angle-left {
+      left: 23px;
+    }
+    .nectar-drag-indicator[data-type="solid"] i.fa-angle-right {
+      right: 27px;
+    }
+    .nectar-drag-indicator.visible.pointer-down[data-type="solid"] .color-circle {
+      transform: scale(0.15);
+    }
+    .nectar-drag-indicator.visible.pointer-down[data-type="solid"] i {
+      color: inherit!important;
+    }
+
+    .nectar-drag-indicator.visible.pointer-down[data-type="solid"] i.fa-angle-left {
+      transform: translateX(-10px);
+    }
+    .nectar-drag-indicator.visible.pointer-down[data-type="solid"] i.fa-angle-right {
+      transform: translateX(10px);
+    }';
+  }
+
+  public static function get_drag_indicator_tooltip_css() {
+    return '.nectar-drag-indicator[data-type="tooltip_text"] {
+      mix-blend-mode: normal;
+      left: 12px;
+      top: 12px;
+      width: auto;
+      height: auto;
+      line-height: 1;
+      padding: 7px 14px;
+    }
+    .nectar-drag-indicator[data-type="tooltip_text"] .fa-angle-left,
+    .nectar-drag-indicator[data-type="tooltip_text"] .fa-angle-right {
+      display: none;
+    }
+    .nectar-drag-indicator[data-type="tooltip_text"]:before {
+      display: none;
+    }
+
+    .nectar-drag-indicator[data-type="tooltip_text"] .color-circle {
+      background-color: #000;
+      width: 100%;
+      height: 100%;
+      display: block;
+      position: absolute;
+      left: 0px;
+      top: 0px;
+      opacity: 0;
+      border-radius: var(--nectar-border-radius);
+      transition: opacity 0.2s ease-in-out, transform 0.2s ease-in-out;
+      transform: scale(0.65);
+    }
+    .nectar-drag-indicator[data-type="tooltip_text"] span {
+      opacity: 0; 
+      position: relative;
+      top: 0;
+      left: 0;
+      font-size: 14px;
+      transition: opacity 0.2s ease-in-out;
+      transform: none;
+    }
+    
+    .nectar-drag-indicator[data-type="tooltip_text"].visible .color-circle{
+      transform: scale(1);
+    }
+    .nectar-drag-indicator[data-type="tooltip_text"].visible span,
+    .nectar-drag-indicator[data-type="tooltip_text"].visible .color-circle {
+      opacity: 1;
+    }';
+  }
+
 
   /**
   * Prepares font sizing
@@ -12531,6 +15123,9 @@ class NectarElDynamicStyles {
 
     foreach( self::$devices as $device => $media_query_size) {
 
+      $body_selector = ($device !== 'desktop') ? 'body ' : '';
+      $html_selector = ($device === 'phone') ? 'html ' : '';
+
       // Transforms.
       $transform_vals = '';
       $transform_x    = false;
@@ -12591,7 +15186,7 @@ class NectarElDynamicStyles {
         strlen($atts['position_'.$device]) > 0 && 
         in_array($atts['position_'.$device], array('relative', 'absolute', 'fixed')) ) {
 
-          $css[] = '@media only screen '.$media_query_size.' { .'.$element_name.'.position_'.$device.'_'. esc_attr($atts['position_'.$device]) .' {
+          $css[] = '@media only screen '.$media_query_size.' { '. $html_selector . $body_selector.' .'.$element_name.'.position_'.$device.'_'. esc_attr($atts['position_'.$device]) .' {
             position: '.esc_attr($atts['position_'.$device]).';
           }
          }';
@@ -12603,7 +15198,7 @@ class NectarElDynamicStyles {
 
         foreach ($positions as $position) {
             if (isset($atts[$position.'_position_'.$device]) && strlen($atts[$position.'_position_'.$device]) > 0) {
-              $css[] = '@media only screen '.$media_query_size.' { .'.$element_name.'.'.$position.'_position_'.$device.'_'. esc_attr(self::percent_unit_type_class($atts[$position.'_position_'.$device])) .' {
+              $css[] = '@media only screen '.$media_query_size.' { '. $html_selector . $body_selector.' .'.$element_name.'.'.$position.'_position_'.$device.'_'. esc_attr(self::percent_unit_type_class($atts[$position.'_position_'.$device])) .' {
                 '.$position.': '.esc_attr(self::percent_unit_type($atts[$position.'_position_'.$device])).';
               }
             }';
@@ -12768,7 +15363,7 @@ class NectarElDynamicStyles {
 
 
 
-  public static function font_size_group_styles($element_name, $atts) {
+  public static function font_size_group_styles($element_name, $desktop_param_name = false, $desktop_media_query_size = false, $important = '', $atts = array()) {
     
     $css = '';  
 
@@ -12777,23 +15372,25 @@ class NectarElDynamicStyles {
 
     foreach( self::$devices as $device => $media_query_size ) {
 
-      // Font sizes.
-      if(isset($atts['font_size_'.$device])) {
+      $device_param = ( $device === 'desktop' && $desktop_param_name !== false ) ? $desktop_param_name : 'font_size_'.$device ;
 
-        $computed_size = self::font_size_output($atts['font_size_'.$device]);
+      // Font sizes.
+      if(isset($atts[$device_param])) {
+
+        $computed_size = self::font_size_output($atts[$device_param]);
 
         $using_min_max = false;
         $minmax_classes = '';
         
         // Min/max font size.
         if( !empty($min) ) {
-          $computed_size = 'max('.$min.','.$computed_size.')';
+          $computed_size = 'max('.self::font_size_output($min).','.$computed_size.')';
           $using_min_max = true;
           $minmax_classes .= '.font_size_min_'.esc_attr(self::decimal_unit_type_class($min));
         }
 
         if( !empty($max) ) {
-          $computed_size = 'min('.$max.','.$computed_size.')';
+          $computed_size = 'min('.self::font_size_output($max).','.$computed_size.')';
           $using_min_max = true;
           $minmax_classes .= '.font_size_max_'.esc_attr(self::decimal_unit_type_class($max));
         }
@@ -12802,18 +15399,24 @@ class NectarElDynamicStyles {
 
         $container_selector = ('desktop' !== $device) ? '.container-wrap ' : '';
 
+        if( $device === 'desktop' && $desktop_media_query_size !== false ) {
+          $media_query_size = $desktop_media_query_size;
+        }
+        
         $css .= '@media only screen '.$media_query_size.' {
-          '.$html_selector.$body_selector.'#ajax-content-wrap '.$container_selector.'.font_size_'.$device.'_'.esc_attr(self::decimal_unit_type_class($atts['font_size_'.$device])).$minmax_classes.'.'.$element_name .' {
-            font-size: '.$computed_size.';
+          '.$html_selector.$body_selector.'#ajax-content-wrap '.$container_selector.'.'.$device_param.'_'.esc_attr(self::decimal_unit_type_class($atts[$device_param])).$minmax_classes.'.'.$element_name .',
+          '.$html_selector.$body_selector.$container_selector.'.'.$device_param.'_'.esc_attr(self::decimal_unit_type_class($atts[$device_param])).$minmax_classes.'.'.$element_name .' {
+            font-size: '.$computed_size.$important.';
           }
         }';
+
       }
 
     }
 
     // Line height.
     if(isset($atts['font_line_height'])) {
-      $css .= '.font_line_height_'.esc_attr(self::decimal_unit_type_class($atts['font_line_height'])).'.'.$element_name .' {
+      $css .= '#ajax-content-wrap .font_line_height_'.esc_attr(self::decimal_unit_type_class($atts['font_line_height'])).'.'.$element_name .' {
           line-height: '.self::line_height_output($atts['font_line_height']).';
       }';
     }
@@ -13155,7 +15758,7 @@ if ( !function_exists('nectar_spacing_param_group_classes') ) {
 * @since 14.1
 */
 if (!function_exists('nectar_font_param_group_classes')) {
-  function nectar_font_param_group_classes($atts) {
+  function nectar_font_param_group_classes($atts, $desktop_param = 'font_size_desktop') {
     
     $classnames = '';
 
@@ -13226,6 +15829,11 @@ if (!function_exists('nectar_font_param_group_classes')) {
 				   $classnames .= 'min_width_desktop_'. nectar_el_percent_unit_type_class(esc_attr($atts['min_width_desktop'])) . ' ';
 			   }
 
+         // max width,
+         if( isset($atts['max_width_desktop']) && strlen($atts['max_width_desktop']) > 0 ) {
+          $classnames .= 'max_width_desktop_'. nectar_el_percent_unit_type_class(esc_attr($atts['max_width_desktop'])) . ' ';
+        }
+
         // positioning.
          if( isset($atts['row_position']) && 
              strlen($atts['row_position']) > 0 &&
@@ -13261,6 +15869,7 @@ if (!function_exists('nectar_font_param_group_classes')) {
 
  
 				 $row_params[] = 'min_width';
+         $row_params[] = 'max_width';
          $row_params[] = 'top_position';
          $row_params[] = 'right_position';
          $row_params[] = 'left_position';
@@ -13363,6 +15972,12 @@ if (!function_exists('nectar_font_param_group_classes')) {
       if( isset($atts['column_margin_custom']) && !empty($atts['column_margin_custom']) ) {
         $classnames .= 'column-margin-'.nectar_el_decimal_unit_type_class($atts['column_margin_custom']).' ';
       }
+
+      // z-index
+      if ( isset($atts['zindex']) && $atts['zindex'] === 'auto' ) {
+        $classnames .= 'z-index-auto ';
+      }
+      
 
 			 // loop.
 			 foreach( $row_params as $param ) {
@@ -13664,6 +16279,10 @@ if (!function_exists('nectar_font_param_group_classes')) {
         $classnames .= 'border_thickness_'. esc_attr($atts['button_border_thickness']) . ' ';
       }
       
+      // Custom border radius.
+      if( isset($atts['border_radius']) && strlen($atts['border_radius']) > 0 && $atts['border_radius'] !== '0px') {
+        $classnames .= 'border_radius_'. nectar_el_percent_unit_type_class(esc_attr($atts['border_radius'])) . ' ';
+      }
 
        // Custom Alignment.
 			 if( isset($atts['alignment_tablet']) && strlen($atts['alignment_tablet']) > 0 ) {
@@ -13738,9 +16357,19 @@ if (!function_exists('nectar_font_param_group_classes')) {
         $classnames .= 'font_size_mobile_'. esc_attr($atts['custom_font_size_mobile']) . ' ';
       }
 
+      // Custom color.
+      if( isset($atts['text_color']) && !empty($atts['text_color']) ) {
+        $classnames .= 'custom_color ';
+      }
+
       //Text Space.
       if( isset($atts['text_space_amount']) && !empty($atts['text_space_amount']) && 'default' !== $atts['text_space_amount'] ) {
         $classnames .= 'text_space_'. esc_attr($atts['text_space_amount']) . ' ';
+      }
+
+      // custom icon
+      if( isset($atts['text_repeat_divider']) && $atts['text_repeat_divider'] === 'custom' ) {
+        $classnames .= 'has-custom-divider ';
       }
 
     }
@@ -13929,16 +16558,13 @@ if (!function_exists('nectar_font_param_group_classes')) {
      else if( 'split_line_heading' === $el ) {
 
       // Custom Font Size.
-      if( isset($atts['font_size_tablet']) && strlen($atts['font_size_tablet']) > 0 ) {
-        $classnames .= 'font_size_tablet_'. nectar_el_percent_unit_type_class(esc_attr($atts['font_size_tablet'])) . ' ';
-      }
-      if( isset($atts['font_size_phone']) && strlen($atts['font_size_phone']) > 0 ) {
-        $classnames .= 'font_size_phone_'. nectar_el_percent_unit_type_class(esc_attr($atts['font_size_phone'])) . ' ';
-      }
+      $using_fit_text = isset($atts['fit_text_to_container']) && 'true' === $atts['fit_text_to_container'] ? true : false;
 
-      // Line height.
-      if( isset($atts['font_line_height']) && !empty($atts['font_line_height']) ) {
-        $classnames .= 'font_line_height_'.esc_attr(nectar_el_decimal_unit_type_class($atts['font_line_height'])). ' ';
+      if( !$using_fit_text ) {
+        if( isset($atts['font_size']) ) {
+          $classnames .= 'font_size_'. esc_attr(nectar_el_decimal_unit_type_class($atts['font_size'])). ' ';
+        }
+        $classnames .= nectar_font_param_group_classes($atts);
       }
 
     }
@@ -14069,10 +16695,14 @@ if (!function_exists('nectar_font_param_group_classes')) {
 
 		 else if( 'nectar_post_grid' === $el ) {
 
+      $post_grid_style = ( isset($atts['grid_style']) && !empty($atts['grid_style']) ) ? $atts['grid_style'] : '';
+
 			 // Custom font size.
 			 if( isset($atts['custom_font_size']) ) {
-				 $classnames .= 'font_size_'. esc_attr(nectar_el_decimal_unit_type_class($atts['custom_font_size'])). ' ';
+				 $classnames .= 'custom_font_size_'. esc_attr(nectar_el_decimal_unit_type_class($atts['custom_font_size'])). ' ';
 			 }
+       $classnames .= nectar_font_param_group_classes($atts);
+
 			 // Hover color.
 			 if( isset($atts['card_bg_color_hover']) ) {
 				 $color = ltrim($atts['card_bg_color_hover'],'#');
@@ -14094,11 +16724,33 @@ if (!function_exists('nectar_font_param_group_classes')) {
         $classnames .= 'custom-aspect-ratio-'. esc_attr($post_grid_custom_ar) . ' ';
        }
 
+       // Excerpt Display.
+       if (isset($atts['excerpt_display']) && 'default' !== $atts['excerpt_display']) {
+         $classnames .= 'excerpt-'. esc_attr($atts['excerpt_display']) . ' ';
+       }
+
+       // Masonry Layout Variants.
+       if( isset($atts['enable_masonry']) && 'yes' === $atts['enable_masonry']) {
+          if( isset($atts['columns']) && '4' === $atts['columns'] && 
+              isset($atts['4_col_masonry_layout']) && 'default' !== $atts['4_col_masonry_layout']) {
+              $classnames .= 'layout-'. esc_attr($atts['4_col_masonry_layout']) . ' ';
+          }
+          if( isset($atts['columns']) && '3' === $atts['columns'] && 
+              isset($atts['3_col_masonry_layout']) && 'default' !== $atts['3_col_masonry_layout']) {
+              $classnames .= 'layout-'. esc_attr($atts['3_col_masonry_layout']) . ' ';
+          }
+          if( isset($atts['columns']) && '2' === $atts['columns'] && 
+              isset($atts['2_col_masonry_layout']) && 'default' !== $atts['2_col_masonry_layout']) {
+              $classnames .= 'layout-'. esc_attr($atts['2_col_masonry_layout']) . ' ';
+          }
+        }
+
 
        if( isset($atts['featured_top_item']) && 'yes' === $atts['featured_top_item'] ) {
         $classnames .= 'featured-first-item ';
        }
 
+    
       
        // Secondary project image.
        if( isset($atts['overlay_secondary_project_image']) && 'yes' === $atts['overlay_secondary_project_image'] ) {
@@ -14107,11 +16759,23 @@ if (!function_exists('nectar_font_param_group_classes')) {
          }
         
        }
+
        
+       // Category pos.
        if( isset($atts['category_position']) && 'below_title' === $atts['category_position'] ) {
         $classnames .= 'category-position-after-title ';
+       } else if ( in_array($post_grid_style, array('content_under_image')) && 
+                  isset($atts['category_position']) && 
+                  'overlaid' === $atts['category_position'] ) {
+                $classnames .= 'category-position-overlaid ';
+       } else {
+        $classnames .= 'category-position-before-title ';
        }
 
+       // Additional meta.
+       if( isset($atts['additional_meta_display']) && 'default' !== $atts['additional_meta_display'] ) {
+        $classnames .= 'meta-display-'.esc_attr($atts['additional_meta_display']). ' ';
+       }
 
        // Vertical list.
        if( isset($atts['vertical_list_custom_text_color']) ) {
@@ -14135,6 +16799,47 @@ if (!function_exists('nectar_font_param_group_classes')) {
       }
       if( isset($atts['vertical_list_counter']) && 'yes' === $atts['vertical_list_counter'] ) {
         $classnames .= 'vert_list_counter ';
+      }
+
+      // Image next to content.
+       if( isset($atts['content_next_to_image_divider']) && 
+        $atts['content_next_to_image_divider'] === 'yes' && 
+        isset($atts['content_next_to_image_divider_color']) ) {
+        $color = ltrim($atts['content_next_to_image_divider_color'],'#');
+        $classnames .= 'content_next_to_image_divider_'. esc_attr($color) . ' ';
+      }
+
+      // Custom padding
+      $devices = array('desktop','tablet','phone');
+      foreach( $devices as $device ) {
+        if( isset($atts['content_overlaid_padding_'.$device]) && !empty($atts['content_overlaid_padding_'.$device]) ) {
+          $classnames .= $device.'_padding_'.nectar_el_percent_unit_type_class($atts['content_overlaid_padding_'.$device]).' ';
+        }
+      }
+      
+
+      // Post grid flickity carousel
+      if ( isset($atts['display_type']) && 'carousel' === $atts['display_type'] ) {
+        
+        if( isset($atts['desktop_small_cols_flickity']) && 'default' !== $atts['desktop_small_cols_flickity'] ) {
+          $classnames .= 'sm-desktop-cols-'. esc_attr($atts['desktop_small_cols_flickity']) . ' ';
+        }
+        if( isset($atts['tablet_cols_flickity']) && 'default' !== $atts['tablet_cols_flickity'] ) {
+          $classnames .= 'tablet-cols-'. esc_attr($atts['tablet_cols_flickity']) . ' ';
+        }
+        if( isset($atts['phone_cols_flickity']) && 'default' !== $atts['phone_cols_flickity'] ) {
+          $classnames .= 'phone-cols-'. esc_attr($atts['phone_cols_flickity']) . ' ';
+        }
+
+      } else {
+
+        // Mobile columns -- non carousel.
+        if ( isset($atts['columns_tablet']) && 'default' !== $atts['columns_tablet'] ) {
+          $classnames .= 'tablet-cols-'. esc_attr($atts['columns_tablet']) . ' ';
+        }
+        if ( isset($atts['columns_phone']) && 'default' !== $atts['columns_phone'] ) {
+          $classnames .= 'phone-cols-'. esc_attr($atts['columns_phone']) . ' ';
+        }
       }
 
 		 }
@@ -14400,6 +17105,27 @@ if (!function_exists('nectar_font_param_group_classes')) {
      else if( 'nectar-fancy-ul' === $el ) {
       // Custom font size.
       $classnames .= nectar_font_param_group_classes($atts);
+
+      // Link style.
+      if (isset($atts['link_style']) && 'default' !== $atts['link_style'] ) {
+        $classnames .= 'link_style_'. esc_attr($atts['link_style']) . ' ';
+
+        if( $atts['link_style'] === 'underline' ) {
+          $classnames .= 'nectar-link-underline-effect ';
+        }
+
+
+      }
+
+     }
+
+     else if ( 'recent_posts' === $el ) {
+
+      // Custom font size.
+      if (isset($atts['style']) && in_array($atts['style'], array('multiple_large_featured', 'single_large_featured')) ) {
+        $classnames .= ' '. nectar_font_param_group_classes($atts);
+      }
+
      }
 
      else if ( 'nectar_price_typography' === $el ) {

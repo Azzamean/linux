@@ -213,7 +213,7 @@ function nectar_metabox_salient_headers_post($post_type) {
 			'fields' => array(
 				array( 
 					'name' =>  esc_html__('Disable Transparency From Navigation', 'salient-core'),
-					'desc' => esc_html__('You can use this option to force your navigation header to stay a solid color even if it qualifies to trigger the','salient-core') . '<a target="_blank" href="'. esc_url(admin_url('?page='.NectarThemeInfo::$theme_options_name.'&tab=17')) .'"> transparent effect</a> ' . esc_html__('you have activated in the Salient options panel.', 'salient-core'),
+					'desc' => esc_html__('You can use this option to force your navigation header to stay a solid color even if it qualifies to trigger the','salient-core') . '<a target="_blank" href="'. esc_url(admin_url('?page='.NectarThemeInfo::$theme_options_name.'&tab=18')) .'"> transparent effect</a> ' . esc_html__('you have activated in the Salient options panel.', 'salient-core'),
 					'id' => '_disable_transparent_header',
 					'type' => 'checkbox',
 					'std' => ''
@@ -327,7 +327,7 @@ function nectar_metabox_salient_headers_post($post_type) {
 					'desc' => esc_html__('Please choose how you would like your header background to be aligned', 'salient-core'),
 					'id' => '_nectar_page_header_bg_alignment',
 					'type' => 'select',
-					'std' => 'top',
+					'std' => 'center',
 					'options' => array(
 						"top" => esc_html__("Top", 'salient-core'),
 						"center" => esc_html__("Center", 'salient-core'),

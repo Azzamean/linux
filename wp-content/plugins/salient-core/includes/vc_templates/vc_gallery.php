@@ -143,7 +143,7 @@ if(!function_exists('wp_get_attachment')) {
 if ( $type === 'flexslider_style' ) {
     $el_start = '<li>';
     $el_end = '</li>';
-    $slides_wrap_start = '<ul class="slides" data-d-autorotate="'.$disable_auto_rotate.'">';
+    $slides_wrap_start = '<ul class="slides" data-d-autorotate="'.esc_attr($disable_auto_rotate).'">';
     $slides_wrap_end = '</ul>';
 
     wp_enqueue_script('flexslider');
@@ -209,8 +209,8 @@ if ( $type === 'flexslider_style' ) {
     $autorotation_attr = '';
   }
 
-	$slides_wrap_start .= '<div class="nectar-slider-wrap" style="height: '.$slide_height.'px" data-flexible-height="'.esc_attr($flexible_slider_height).'" data-overall_style="classic" data-button-styling="btn_with_count" data-fullscreen="false"  data-full-width="false" data-parallax="false" '.$autorotation_attr.' id="ns-id-'.uniqid().'">';
-	$slides_wrap_start .=	'<div class="swiper-container" style="height: '.$slide_height.'px"  data-loop="'.esc_attr($bulk_param).'" data-height="'.esc_attr($slide_height).'" data-bullets="'.esc_attr($bullet_navigation).'" data-bullet_style="'.esc_attr($bullet_navigation_style).'" '.$arrow_markup.' data-desktop-swipe="'.esc_attr($bulk_param).'" data-settings="">';
+	$slides_wrap_start .= '<div class="nectar-slider-wrap" style="height: '.esc_attr($slide_height).'px" data-flexible-height="'.esc_attr($flexible_slider_height).'" data-overall_style="classic" data-button-styling="btn_with_count" data-fullscreen="false"  data-full-width="false" data-parallax="false" '.$autorotation_attr.' id="ns-id-'.uniqid().'">';
+	$slides_wrap_start .=	'<div class="swiper-container" style="height: '.esc_attr($slide_height).'px"  data-loop="'.esc_attr($bulk_param).'" data-height="'.esc_attr($slide_height).'" data-bullets="'.esc_attr($bullet_navigation).'" data-bullet_style="'.esc_attr($bullet_navigation_style).'" '.$arrow_markup.' data-desktop-swipe="'.esc_attr($bulk_param).'" data-settings="">';
 	$slides_wrap_start .=	'<div class="swiper-wrapper">';
 
 
@@ -476,7 +476,7 @@ foreach ( $images as $attach_id ) {
         $link_end = '</a>';
     }
     else if ( $onclick === 'custom_link' && isset( $custom_links[$i] ) && $custom_links[$i] != '' ) {
-        $link_start = '<a href="'.$custom_links[$i].'"' . (!empty($custom_links_target) ? ' target="'.$custom_links_target.'"' : '') . '>';
+        $link_start = '<a href="'.$custom_links[$i].'"' . (!empty($custom_links_target) ? ' target="'.esc_attr($custom_links_target).'"' : '') . '>';
         $link_end = '</a>';
     }
 
@@ -518,7 +518,7 @@ foreach ( $images as $attach_id ) {
 	        $slide_link = '<a class="entire-slide-link" '.$ns_image_title.' href="'.$p_img_large[0].'"'.$pretty_rel_random.'></a>';
 	    }
 	    else if ( $onclick === 'custom_link' && isset( $custom_links[$i] ) && $custom_links[$i] != '' ) {
-	        $slide_link = '<a class="entire-slide-link ext-url-link" href="'.$custom_links[$i].'"' . (!empty($custom_links_target) ? ' target="'.$custom_links_target.'"' : '') . '></a>';
+	        $slide_link = '<a class="entire-slide-link ext-url-link" href="'.$custom_links[$i].'"' . (!empty($custom_links_target) ? ' target="'.esc_attr($custom_links_target).'"' : '') . '></a>';
 	    } else {
 	    	$slide_link = null;
 	    }
@@ -646,7 +646,7 @@ foreach ( $images as $attach_id ) {
 	        $slide_link = '<a class="entire-slide-link" '.$flickity_image_title.' href="'.$p_img_large[0].'"'.$pretty_rel_random.'></a>';
 	    }
 	    else if ( $onclick === 'custom_link' && isset( $custom_links[$i] ) && $custom_links[$i] != '' ) {
-	        $slide_link = '<a class="entire-slide-link ext-url-link" href="'.$custom_links[$i].'"' . (!empty($custom_links_target) ? ' target="'.$custom_links_target.'"' : '') . '></a>';
+	        $slide_link = '<a class="entire-slide-link ext-url-link" href="'.$custom_links[$i].'"' . (!empty($custom_links_target) ? ' target="'.esc_attr($custom_links_target).'"' : '') . '></a>';
 	    } else {
 	    	$slide_link = null;
 	    }
@@ -1085,7 +1085,7 @@ foreach ( $images as $attach_id ) {
 											} else {
 												echo '<div class="vert-center"><a ';
 												 if(!empty($attachment_meta['description'])) echo 'title="'.esc_attr(wp_kses_post($attachment_meta['description'])).'"';
-												echo ' href="'.$p_img_large[0].'" class="default-link pretty_photo">'.esc_html__("View Larger", 'salient-core').'</a> ';
+												echo ' href="'.esc_attr($p_img_large[0]).'" class="default-link pretty_photo">'.esc_html__("View Larger", 'salient-core').'</a> ';
 											} ?>
 											</div><!--/vert-center-->
 										<?php } ?>
@@ -1398,10 +1398,10 @@ foreach ( $images as $attach_id ) {
     $gal_images .= $el_start . $link_start . $thumbnail . $link_end . $el_end;
 }
 $css_class =  apply_filters(VC_SHORTCODE_CUSTOM_CSS_FILTER_TAG, 'wpb_gallery wpb_content_element'.$el_class.' clearfix', $this->settings['base'], $atts );
-$output .= "\n\t".'<div class="'.$css_class.'">';
+$output .= "\n\t".'<div class="'.esc_attr($css_class).'">';
 $output .= "\n\t\t".'<div class="wpb_wrapper">';
 $output .= wpb_widget_title(array('title' => $title, 'extraclass' => 'wpb_gallery_heading'));
-$output .= '<div class="wpb_gallery_slides'.$type.'" data-onclick="'.esc_attr($onclick).'" data-interval="'.esc_attr($interval).'"'.$flex_fx.'>'.$slides_wrap_start.$gal_images.$slides_wrap_end.'</div>';
+$output .= '<div class="wpb_gallery_slides'.esc_attr($type).'" data-onclick="'.esc_attr($onclick).'" data-interval="'.esc_attr($interval).'"'.$flex_fx.'>'.$slides_wrap_start.$gal_images.$slides_wrap_end.'</div>';
 $output .= "\n\t\t".'</div> '.$this->endBlockComment('.wpb_wrapper');
 $output .= "\n\t".'</div> '.$this->endBlockComment('.wpb_gallery');
 

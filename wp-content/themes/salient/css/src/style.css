@@ -603,7 +603,7 @@ ul li{
   list-style-position:outside
 }
 
-ol li{
+ol > li{
   list-style:decimal;
   list-style-position:outside
 }
@@ -876,6 +876,27 @@ blockquote.wp-block-quote cite {
 .nectar-global-section.after-nav > .row {
 	padding-bottom: 0;
 }
+.nectar-global-section > .container {
+  padding-bottom: 0
+}
+
+.nectar-global-section.nectar_before_blog_loop_start, 
+.nectar-global-section.nectar_before_blog_loop_end {
+  padding-bottom: 4%;
+}
+.nectar-global-section.nectar_before_blog_loop_end {
+  padding-top: 4%;
+}
+
+#ajax-content-wrap .force-contained-rows .nectar-global-section > .container,
+.nectar_hook_after_content > .container,
+.nectar_hook_before_content_global_section > .container,
+.nectar_hook_global_section_after_content > .container {
+  padding: 0;
+}
+.nectar_hook_global_section_parallax_footer {
+  overflow: hidden;
+}
 
 
 .container-wrap .row >.wpb_row:last-child,
@@ -1005,9 +1026,7 @@ body:not(.ascend) #top nav >.buttons {
 body #header-outer[data-full-width="false"][data-has-buttons="no"]:not([data-format="left-header"]) #top nav >.buttons {
   margin-left: 0;
 }
-body:not(.ascend) #header-outer[data-full-width="true"][data-remove-border="true"] #top nav ul #search-btn{
-  margin-left:22px
-}
+
 #top nav >.buttons{
   transition:padding 0.8s ease
 }
@@ -1435,6 +1454,7 @@ body[data-megamenu-width="full-width"] #header-outer #top .sf-menu > .megamenu.n
 
 
 body .no-transition,
+.no-pseudo-after-transition .menu-title-text:after,
 body #slide-out-widget-area-bg.fullscreen-alt.open.no-transition,
 body #slide-out-widget-area-bg.fullscreen-alt.no-transition,
 .page-submenu.no-trans,
@@ -2041,7 +2061,8 @@ body.original #header-outer[data-full-width="true"][data-format="default"] #soci
   margin-right: 22px;
 }
 #header-outer[data-lhe="animated_underline"] #top nav >ul >#social-in-menu >a,
-#header-outer[data-lhe="default"] #top nav >ul >#social-in-menu >a{
+#header-outer[data-lhe="default"] #top nav >ul >#social-in-menu >a,
+#header-outer[data-lhe="button_bg"] #top nav >ul >#social-in-menu >a{
   margin-left:0;
   margin-right:0;
   padding-right:0;
@@ -2866,7 +2887,7 @@ body .wpb_column.centered-text img,
   width:100%;
   height:100%;
   display:block;
-  z-index:10
+  z-index:11
 }
 
 
@@ -3602,6 +3623,10 @@ body[data-button-style^="rounded"].ascend .container-wrap .search-form input[typ
 .nectar-cta > p {
 	padding-bottom: 0;
 }
+.nectar-cta > h5,
+.nectar-cta > h6 {
+  margin-bottom: 0;
+}
 .nectar-cta[data-text-color="custom"] .link_wrap .link_text:after,
 .nectar-cta[data-text-color="custom"] .link_wrap:after{
   border-color:inherit!important
@@ -3825,9 +3850,89 @@ body[data-button-style^="rounded"].ascend .container-wrap .search-form input[typ
 	animation: ctaArrowSVGStart 0.45s cubic-bezier(0.23, 0.46, 0.4, 1) forwards;
 }
 
+.nectar-cta[data-style="curved-arrow-animation"] .link_text {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5em;
+  padding-right: 0;
+}
+
+.nectar-cta[data-style="curved-arrow-animation"] .line {
+  stroke-dasharray: 18px;
+  stroke: currentColor;
+}
+.nectar-cta[data-style="curved-arrow-animation"] .arrow {
+  stroke-dasharray: 8px;
+  stroke: currentColor;
+}
+#ajax-content-wrap .nectar-cta[data-style="curved-arrow-animation"] .link_wrap {
+  transition: border-color .45s cubic-bezier(0.25,1,0.33,1), background-color .45s cubic-bezier(0.25,1,0.33,1), color .45s cubic-bezier(0.25,1,0.33,1);
+}
+.nectar-cta[data-style="curved-arrow-animation"] .hover svg {
+  animation: nectar_curved_arrow_animation__svg 0.9s  cubic-bezier(.15,.75,.5,1) forwards;
+}
+.nectar-cta[data-style="curved-arrow-animation"] .hover .line {
+  animation: nectar_curved_arrow_animation__line 0.9s  cubic-bezier(.15,.75,.5,1) forwards;
+}
+.nectar-cta[data-style="curved-arrow-animation"] .hover .arrow {
+  animation: nectar_curved_arrow_animation__arrow 0.9s  cubic-bezier(.15,.75,.5,1) forwards;
+}
+@keyframes nectar_curved_arrow_animation__svg {
+  0% {
+    opacity: 1;
+  }
+  15% {
+    opacity: 1;
+  }
+  45% {
+    transform: translateX(4px);
+    opacity: 0;
+  }
+  50% {
+    transform: translateX(4px);
+    opacity: 0;
+  }
+  51% {
+    transform: translateX(0px);
+    opacity: 1;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+@keyframes nectar_curved_arrow_animation__arrow {
+  0% {
+    stroke-dashoffset: 0px;
+  }
+  15% {
+    stroke-dashoffset: 0px;
+  }
+  50% {
+    stroke-dashoffset: -8px;
+  }
+  70% {
+    stroke-dashoffset: -8px;
+  }
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+@keyframes nectar_curved_arrow_animation__line {
+  0% {
+    stroke-dashoffset: 0px;
+  }
+  50% {
+    stroke-dashoffset: 18px;
+  }
+  100% {
+    stroke-dashoffset: 35px;
+  }
+}
+
 
 .nectar-cta[data-style="basic"] .link_wrap .link_text:after,
-.nectar-cta[data-style="text-reveal-wave"] .link_wrap .link_text:after {
+.nectar-cta[data-style="text-reveal-wave"] .link_wrap .link_text:after,
+.nectar-cta[data-style="curved-arrow-animation"] .link_wrap .link_text:after {
 	display: none;
 }
 .nectar-cta[data-style="basic"] .link_wrap .link_text,
@@ -4384,6 +4489,10 @@ img.img-with-animation[data-animation="fade-in-from-bottom"],
 .img-with-aniamtion-wrap[data-animation="fade-in-from-bottom"] .hover-wrap,
 .nectar-fade-in-from-bottom {
   transform:translateY(100px);
+}
+
+.wpb_column.has-animation[data-animation="slight-fade-in-from-bottom"] {
+  transform:translateY(50px);
 }
 .col.has-animation[data-animation="fade-in-from-bottom"],
 .wpb_column.has-animation[data-animation="fade-in-from-bottom"],
@@ -5056,7 +5165,8 @@ body.single-portfolio #ajax-content-wrap #sidebar #project-meta ul li:first-chil
 #project-meta ul li i.icon-salient-heart-2{
   line-height:20px!important
 }
-.single-post #single-meta{
+.single-post #single-meta,
+.single [data-post-hs="default"] #single-meta{
   top:50%;
   margin-top:-13px;
   float:none;
@@ -6039,7 +6149,18 @@ body .related-posts[data-style="material"] .inner-wrap {
 
 /* 12.1. General/Pagination */
 
-.post-area #pagination{
+nav#pagination ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+nav#pagination ul li {
+  list-style: none;
+  display: inline-block;
+}
+
+
+.post-area #pagination {
   padding-left:95px
 }
 
@@ -6603,6 +6724,7 @@ p >a >i.icon-3x{
 }
 body #pagination span.page-numbers.dots,
 body #pagination >a,
+nav#pagination > ul a,
 .woocommerce nav.woocommerce-pagination ul li a,
 body nav.woocommerce-pagination ul li span.page-numbers.dots{
   background-color:transparent!important;
@@ -6613,6 +6735,7 @@ body nav.woocommerce-pagination ul li span.page-numbers.dots{
 
 body #pagination span.page-numbers.dots,
 body #pagination >a,
+nav#pagination > ul a,
 body #pagination .page-numbers.prev,
 body #pagination .page-numbers.next{
   color:inherit!important;
@@ -7345,6 +7468,17 @@ body[data-form-style="minimal"] .main-content .post-password-form input[type=sub
   max-width:100%
 }
 
+#sidebar .nectar-global-section .full-width-content,
+#sidebar .nectar-global-section .full-width-section, 
+#sidebar .nectar-global-section .row-bg-wrap {
+  width: 100%!important;
+  left: 0!important;
+  margin: 0!important;
+}
+#sidebar .nectar-global-section > .container {
+  padding: 0;
+}
+
 .span_12.light .wpb_widgetised_column #sidebar .widget .nectar_widget[class*="nectar_blog_posts_"] > li .post-date,
 .span_12.light .wpb_widgetised_column #sidebar h4,
 .span_12.light .wpb_widgetised_column #sidebar .widget li a,
@@ -7444,7 +7578,7 @@ body:not(.material) .comment-list .children{
   font-family:'Open Sans';
   font-weight:600;
 	font-size: 16px;
-	line-height: 30px;
+	line-height: 1.5;
 }
 .comment-list .pingback .comment-body > a { display: block; }
 
@@ -7764,6 +7898,11 @@ body .post-area.span_9 .full-width-section .row-bg-wrap,
 body .post-area.span_9 .full-width-section .nectar-parallax-scene,
 body .post-area.span_9  .full-width-section > .nectar-shape-divider-wrap,
 body .post-area.span_9  .full-width-section > .video-color-overlay,
+#ajax-content-wrap .force-contained-rows .full-width-content,
+#ajax-content-wrap .force-contained-rows .full-width-section .row-bg-wrap,
+#ajax-content-wrap .force-contained-rows .full-width-section .nectar-parallax-scene,
+#ajax-content-wrap .force-contained-rows .full-width-section > .nectar-shape-divider-wrap,
+#ajax-content-wrap .force-contained-rows .full-width-section  > .video-color-overlay,
 body .masonry-blog-item .wpb_row.full-width-content,
 body[data-aie="zoom-out"] .post-area.span_9 .first-section .row-bg-wrap,
 body[data-aie="long-zoom-out"] .post-area.span_9 .first-section .row-bg-wrap,

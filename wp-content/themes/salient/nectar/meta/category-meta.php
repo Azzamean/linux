@@ -71,6 +71,40 @@
 		 </td>
 	 </tr>
 
+	 <tr class="form-field">
+		 <th scope="row" valign="top"><label for="term_meta[category_text_color]"><?php _e( 'Category Text Color', 'salient' ); ?></label></th>
+		 <td>
+			 <?php
+			 if(get_bloginfo('version') >= '3.5') {
+				 wp_enqueue_style('wp-color-picker');
+				 wp_enqueue_script(
+					 'redux-opts-field-color-js',
+					 NECTAR_FRAMEWORK_DIRECTORY . 'options/fields/color/field_color.js',
+					 array('wp-color-picker'),
+					 time(),
+					 true
+				 );
+			 } else {
+				 wp_enqueue_script(
+					 'redux-opts-field-color-js',
+					 NECTAR_FRAMEWORK_DIRECTORY . 'options/fields/color/field_color_farb.js',
+					 array('jquery', 'farbtastic'),
+					 time(),
+					 true
+				 );
+			 }
+
+			 if(get_bloginfo('version') >= '3.5') { ?>
+				 <input type="text" id="term_meta[category_text_color]" name="term_meta[category_text_color]" value="<?php echo isset( $term_meta['category_text_color'] ) ? esc_attr( $term_meta['category_text_color'] ) : ''; ?>" class=" popup-colorpicker" style="width: 70px;" data-default-color=""/>
+			 <?php } else { ?>
+				 <div class="farb-popup-wrapper">
+					 <input type="text" id="term_meta[category_text_color]" name="term_meta[category_text_color]" value="<?php echo isset( $term_meta['category_text_color'] ) ? esc_attr( $term_meta['category_text_color'] ) : ''; ?>" class=" popup-colorpicker" style="width:70px;"/>
+					 <div class="farb-popup"><div class="farb-popup-inside"><div id="term_meta[category_text_color]" class="color-picker"></div></div></div>
+				 </div>
+			 <?php  } ?>
+		 </td>
+	 </tr>
+
 		<?php ob_end_flush();
 	}
 

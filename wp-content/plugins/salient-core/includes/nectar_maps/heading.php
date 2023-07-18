@@ -14,7 +14,7 @@ return array(
 	"params" => array(
 		array(
 			"type" => "textarea_html",
-			"holder" => "div",
+			"admin_label" => true,
 			"heading" => esc_html__("Heading", "salient-core"),
 			"param_name" => "content",
 			"value" => ''

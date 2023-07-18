@@ -39,6 +39,14 @@
              * @access      public
              * @return      void
              */
+
+            public $field = array();
+            public $value = '';
+            public $parent = null;
+            public $extension_dir = '';
+            public $extension_url = '';
+            public $is_field = '';
+
             function __construct( $field, $value, $parent ) {
 
                 $this->parent   = $parent;

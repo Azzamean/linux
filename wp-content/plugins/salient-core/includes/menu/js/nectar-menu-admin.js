@@ -262,6 +262,7 @@
   NectarMenuAdmin.prototype.fieldsInit = function() {
     this.fieldSwitch();
     this.fieldImageUpload();
+    this.fieldVideoUpload();
     this.fieldIcon();
     this.fieldDropdownToggle();
     this.fieldNumerical();
@@ -372,10 +373,31 @@
         }
 
         // Hide Deps.
+        var selectedVal = $(this).val();
+        var fieldName = $(this).attr('name');
+
         that.$modalInner.find('[id*="' + $parentSetting.attr('data-toggles') + '"]').parents('.setting-field').hide().addClass('dep-hidden');
+        
+        //// toggle by array 
+        that.$modalInner.find('[data-toggled-by]').each(function(){
+
+          if( $(this).attr('data-toggled-by') === fieldName ) {
+
+            $(this).hide();
+
+            var values = $(this).attr('data-toggled-by-value');
+          
+            values = values.split(',');
+
+            if( values.includes(selectedVal) ) {
+              $(this).show();
+            } 
+            
+          }
+          
+        });
 
         // Show Dep.
-        var selectedVal = $(this).val();
         if( that.$modalInner.find('[id*="' + $parentSetting.attr('data-toggles') + '_' + selectedVal + '"]').length > 0 ) {
           that.$modalInner.find('[id*="' + $parentSetting.attr('data-toggles') + '_' + selectedVal + '"]').parents('.setting-field').show().removeClass('dep-hidden');
         }
@@ -512,6 +534,57 @@
     });
 
   };
+
+
+  // Video Field.
+  NectarMenuAdmin.prototype.fieldVideoUpload = function() {
+
+    var that = this;
+
+    that.$modalInner.find(".nectar-add-video-btn").on('click', function(e) {
+
+      var $that = $(this);  
+      var custom_file_frame = null;
+
+      custom_file_frame = wp.media.frames.customHeader = wp.media({
+        title: $(this).data("choose"),
+        library: {
+          type: 'video'
+        },
+        button: {
+          text: $(this).data("update")
+        }
+      });
+      
+      custom_file_frame.on( "select", function() {
+        
+        var file_attachment = custom_file_frame.state().get("selection").first();
+        
+        $('#' + $that.attr('rel-id') ).val(file_attachment.attributes.url).trigger('change');
+        
+        $('#_nectar_video_embed').trigger('keyup');
+        
+        $that.parent().find('.nectar-add-video-btn').hide();
+        $that.parent().find('.nectar-remove-video-btn').css('display','inline-block');
+        
+      });
+      
+      custom_file_frame.open();
+
+    });
+
+    that.$modalInner.find(".nectar-remove-video-btn").on('click', function(e) {
+
+      e.preventDefault();
+    
+      $('#' + $(this).attr('rel-id')).val('');
+      $(this).parents('.setting-field').find('.nectar-add-video-btn').css('display','inline-block');
+      $(this).css('display','none');
+
+    });
+
+  };
+
 
   // Image Field.
   NectarMenuAdmin.prototype.fieldImageUpload = function() {

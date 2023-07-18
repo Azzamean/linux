@@ -1073,7 +1073,9 @@ if( isset($options['delay-js-execution']) &&
 		?>
 		
 		</div><!--/container-->
-		
+		<?php if( function_exists('nectar_hook_before_container_wrap_close') ) {
+			nectar_hook_before_container_wrap_close();
+		} ?>
 	</div><!--/container-wrap-->
 
 </div>

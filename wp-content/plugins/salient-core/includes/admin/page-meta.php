@@ -61,22 +61,53 @@ function nectar_metabox_salient_headers_page($post_type) {
           'type' => 'text',
           'std' => ''
         ),
+        array( 
+          'name' => esc_html__('Header Navigation Entrance Animation Easing', 'salient-core'),
+          'desc' => esc_html__('Optionally specify a custom easing for the header animation.', 'salient-core'),
+          'id' => '_header_nav_entrance_animation_easing',
+          'type' => 'select',
+          'std' => '',
+          'options' => array(
+            'default' => esc_html__("Inherit From Theme Options", "salient-core"),
+            'easeInQuad'=>'easeInQuad',
+            'easeOutQuad' => 'easeOutQuad',
+            'easeInOutQuad'=>'easeInOutQuad',
+            'easeInCubic'=>'easeInCubic',
+            'easeOutCubic'=>'easeOutCubic',
+            'easeInOutCubic'=>'easeInOutCubic',
+            'easeInQuart'=>'easeInQuart',
+            'easeOutQuart'=>'easeOutQuart',
+            'easeInOutQuart'=>'easeInOutQuart',
+            'easeInQuint'=>'easeInQuint',
+            'easeOutQuint'=>'easeOutQuint',
+            'easeInOutQuint'=>'easeInOutQuint',
+            'easeInExpo'=>'easeInExpo',
+            'easeOutExpo'=>'easeOutExpo',
+            'easeInOutExpo'=>'easeInOutExpo',
+            'easeInSine'=>'easeInSine',
+            'easeOutSine'=>'easeOutSine',
+            'easeInOutSine'=>'easeInOutSine',
+            'easeInCirc'=>'easeInCirc',
+            'easeOutCirc'=>'easeOutCirc',
+            'easeInOutCirc'=>'easeInOutCirc'
+           )
+        ),
      )
    );
-
+   
   
 
    if( isset($nectar_options['transparent-header']) && $nectar_options['transparent-header'] === '1' ) {
     $meta_box['fields'][] = array( 
       'name' =>  esc_html__('Disable Transparency From Navigation', 'salient-core'),
-      'desc' => esc_html__('You can use this option to force your navigation header to stay a solid color even if it qualifies to trigger the','salient-core') . '<a target="_blank" href="'. esc_url(admin_url('?page='.NectarThemeInfo::$theme_options_name.'&tab=17')) .'"> transparent effect</a> ' . esc_html__('you have activated in the Salient options panel.', 'salient-core'),
+      'desc' => esc_html__('You can use this option to force your navigation header to stay a solid color even if it qualifies to trigger the','salient-core') . '<a target="_blank" href="'. esc_url(admin_url('?page='.NectarThemeInfo::$theme_options_name.'&tab=18')) .'"> transparent effect</a> ' . esc_html__('you have activated in the Salient options panel.', 'salient-core'),
       'id' => '_disable_transparent_header',
       'type' => 'checkbox',
       'std' => ''
     );
     $meta_box['fields'][] = array( 
       'name' =>  esc_html__('Force Transparency On Navigation', 'salient-core'),
-      'desc' => esc_html__('You can use this option to force your navigation header to start transparent even if it does not qualify to trigger the','salient-core') . '<a target="_blank" href="'. esc_url(admin_url('?page='.NectarThemeInfo::$theme_options_name.'&tab=17')) .'"> transparent effect</a> ' . esc_html__('you have activated in the Salient options panel.', 'salient-core'),
+      'desc' => esc_html__('You can use this option to force your navigation header to start transparent even if it does not qualify to trigger the','salient-core') . '<a target="_blank" href="'. esc_url(admin_url('?page='.NectarThemeInfo::$theme_options_name.'&tab=18')) .'"> transparent effect</a> ' . esc_html__('you have activated in the Salient options panel.', 'salient-core'),
       'id' => '_force_transparent_header',
       'type' => 'checkbox',
       'std' => ''

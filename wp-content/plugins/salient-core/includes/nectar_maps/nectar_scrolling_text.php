@@ -51,14 +51,21 @@ return array(
 		),
 		array(
 			"type" => "textarea_html",
-			"holder" => "div",
 			"heading" => esc_html__("Text Content", "salient-core"),
 			"param_name" => "content",
 			"value" => '',
 			"description" => esc_html__("Please ensure your text is using a heading tag - The text you enter will appear in a single line.", "salient-core"),
-			"admin_label" => false
+			"admin_label" => true
 		),
 
+		array(
+			"type" => 'checkbox',
+			"heading" => esc_html__("Move on Scroll", "salient-core"),
+			"param_name" => "move_on_scroll_animation",
+			"description" => esc_html__("This will cause your text movment to react to user scrolling.", "salient-core"),
+			'edit_field_class' => 'vc_col-xs-12 salient-fancy-checkbox',
+			"value" => Array(esc_html__("Yes, please", "salient-core") => 'yes')
+		),
 		array(
 			"type" => "dropdown",
 			"heading" => esc_html__("Italic Style", "salient-core"),
@@ -85,6 +92,19 @@ return array(
 			'save_always' => true,
 			"description" => ''
 		),
+
+		array(
+			"type" => "dropdown",
+			"heading" => esc_html__("Outline Applies To", "salient-core"),
+			"param_name" => "outline_applies_to",
+			"dependency" => array('callback' => 'nectarOutlineAppliesToCallback'),
+			"value" => array(
+				esc_html__("Text Content", "salient-core") => "text_only",
+				esc_html__("Text Content and Custom Divider", "salient-core") => "both",
+			),
+			'save_always' => true,
+		),
+
 		array(
 			"type" => "textfield",
 			"heading" => esc_html__("Custom Font Size", "salient-core"),
@@ -156,6 +176,22 @@ return array(
 				esc_html__("1/2 Font Size", "salient-core") => "half",
 			),
 			'save_always' => true,
+		),
+		array(
+			"type" => "colorpicker",
+			"class" => "",
+			"heading" => esc_html__("Custom Text Repeat Divider Color", "salient-core"),
+			"param_name" => "text_repeat_divider_custom_color",
+			"dependency" => array('element' => "text_repeat_divider", 'value' => array('custom')),
+			"value" => "",
+		),
+		array(
+			"type" => 'checkbox',
+			"heading" => esc_html__("Custom Text Repeat Divider Spin on Scroll", "salient-core"),
+			"param_name" => "text_repeat_divider_custom_spin_animation",
+			'edit_field_class' => 'vc_col-xs-12 salient-fancy-checkbox',
+			"dependency" => array('element' => "text_repeat_divider", 'value' => array('custom')),
+			"value" => Array(esc_html__("Yes, please", "salient-core") => 'yes')
 		),
 		array(
 			"type" => "dropdown",

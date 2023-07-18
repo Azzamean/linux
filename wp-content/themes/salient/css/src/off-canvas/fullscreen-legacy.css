@@ -134,6 +134,44 @@ body #slide-out-widget-area .inner .off-canvas-menu-container li.menu-item-has-i
      margin:20px auto 40px auto;
      padding:0 90px
 }
+
+#slide-out-widget-area[class*="fullscreen"] .nectar-global-section {
+   opacity: 0;
+}
+.nectar-global-section.nectar_hook_ocm_after_menu {
+   margin-top: 25px;
+ }
+
+@keyframes fullscreenGlobalFadein {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+#slide-out-widget-area[class*="fullscreen"].open .nectar-global-section {
+   animation: fullscreenGlobalFadein 0.5s ease-in-out forwards 0.4s;
+}
+
+#slide-out-widget-area-bg:not(.open) + #slide-out-widget-area[class*="fullscreen"].open .nectar-global-section {
+   opacity: 0!important;
+}
+
+#slide-out-widget-area.fullscreen .nectar-global-section .full-width-content,
+#slide-out-widget-area.fullscreen-alt .nectar-global-section .full-width-content {
+   width: auto!important;
+   left: 0!important;
+   margin: 0;
+   margin-right: 20px;
+ }
+ 
+ #slide-out-widget-area.fullscreen .nectar-global-section .container,
+ #slide-out-widget-area.fullscreen-alt .nectar-global-section .container {
+    padding: 0;
+ }
+
+ 
  @media only screen and (min-width:690px){
     #slide-out-widget-area.fullscreen .recent_projects_widget div a,
     #slide-out-widget-area.fullscreen-alt .recent_projects_widget div a{

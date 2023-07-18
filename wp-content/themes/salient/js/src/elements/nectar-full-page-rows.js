@@ -564,11 +564,13 @@
     // Split line
     $('.nectar-split-heading').removeClass('animated-in');
     $('.nectar-split-heading .heading-line > div').css({'transform':'translate(0,200%)'});
-    $('.nectar-split-heading[data-animation-type="line-reveal-by-space"] .inner').css({'transform':'translate(0,1.2em)'});
+    $('.nectar-split-heading[data-animation-type="line-reveal-by-space"]:not(.scroll-timeline) .inner').css({'transform':'translate(0,1.2em)'});
     $('.nectar-split-heading[data-animation-type="line-reveal-by-space"][data-text-effect="letter-reveal-top"] .inner').css({'transform':''});
     $('.nectar-split-heading[data-animation-type="line-reveal-by-space"][data-text-effect="letter-reveal-bottom"] .inner').css({'transform':''});
     $('.nectar-text-inline-images__marker').removeClass('animated-in');
     
+    $('.nectar-split-heading[data-text-effect="scroll-opacity-reveal"].scroll-timeline .inner').css({'opacity':'0.2'});
+
     // Rotating Text.
     $('.nectar-rotating-words-title.element_stagger_words').removeClass('animated-in');
     $('.nectar-rotating-words-title.element_stagger_words .text-wrap > span').css({'transform':'translate(0,1.2em)'});

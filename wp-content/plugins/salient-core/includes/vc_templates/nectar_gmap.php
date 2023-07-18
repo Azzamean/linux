@@ -66,7 +66,9 @@ wp_enqueue_style( 'nectar-element-interactive-map' );
   
 	if( !empty($marker_image) ) {
 		$marker_image_src = wp_get_attachment_image_src($marker_image, 'full');
-		$marker_image_src = $marker_image_src[0];
+		if( isset($marker_image_src[0]) ) {
+			$marker_image_src = $marker_image_src[0];
+		}
 	}
 	
   $map_class = ($map_type === 'google') ? 'nectar-google-map' : 'nectar-leaflet-map';
@@ -88,7 +90,7 @@ wp_enqueue_style( 'nectar-element-interactive-map' );
 			if(empty($markersArr[$count][1])) { $markersArr[$count][1] = null; }
 			if(empty($markersArr[$count][2])) { $markersArr[$count][2] = null; }
 		
-			echo '<div class="map-marker" data-marker-image-width="'. esc_attr($marker_image_width) .'" data-marker-image-height="'. esc_attr($marker_image_height) .'" data-lat="'.esc_attr($markersArr[$count][0]).'" data-lng="'.esc_attr($markersArr[$count][1]).'" data-mapinfo="'.$markersArr[$count][2].'"></div>';
+			echo '<div class="map-marker" data-marker-image-width="'. esc_attr($marker_image_width) .'" data-marker-image-height="'. esc_attr($marker_image_height) .'" data-lat="'.esc_attr($markersArr[$count][0]).'" data-lng="'.esc_attr($markersArr[$count][1]).'" data-mapinfo="'.wp_kses_post($markersArr[$count][2]).'"></div>';
 
 			$count++;
 		}

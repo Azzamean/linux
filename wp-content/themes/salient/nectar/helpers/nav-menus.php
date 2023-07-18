@@ -86,6 +86,7 @@ if ( function_exists( 'register_nav_menus' ) ) {
 					'top_nav_pull_right' => 'Top Navigation Menu Pull Right',
 					'top_nav_pull_left'  => 'Top Navigation Menu Pull Left',
 					'secondary_nav'      => 'Secondary Navigation Menu',
+					'off_canvas_nav'    => 'Off Canvas Navigation Menu',
 				);
 			}
 			else if ( $usingPRCompatLayout == true ) {
@@ -94,6 +95,7 @@ if ( function_exists( 'register_nav_menus' ) ) {
 					'top_nav'            => 'Top Navigation Menu',
 					'top_nav_pull_right' => 'Top Navigation Menu Pull Right',
 					'secondary_nav'      => 'Secondary Navigation Menu',
+					'off_canvas_nav'    => 'Off Canvas Navigation Menu',
 				);
 
 			} elseif ( $usingTopLeftRightCompatLayout == true ) {
@@ -109,6 +111,7 @@ if ( function_exists( 'register_nav_menus' ) ) {
 				$nectar_menu_arr = array(
 					'top_nav'       => 'Top Navigation Menu',
 					'secondary_nav' => 'Secondary Navigation Menu',
+					'off_canvas_nav'    => 'Off Canvas Navigation Menu',
 				);
 			}
 		}
@@ -306,7 +309,7 @@ if ( ! function_exists( 'nectar_walker_nav_menu' ) ) {
 								isset($menu_item_options['menu_item_icon']) ) {
 
 									// Add font awesome icon.
-									$item_icon_output = '<i class="nectar-menu-icon fa '.esc_attr( $menu_item_options['menu_item_icon'] ).'"></i>';
+									$item_icon_output = '<i class="nectar-menu-icon fa '.esc_attr( $menu_item_options['menu_item_icon'] ).'" role="presentation"></i>';
 									$element->classes[] = 'menu-item-has-icon';
                   wp_enqueue_style( 'font-awesome' );
 
@@ -903,6 +906,11 @@ function nectar_nav_button_style_update( $menu_id, $menu_item_db_id, $menu_item_
 	}
 
 	$current_screen = get_current_screen();
+	
+	// Only run this when editing menus in Apperaence > Menus
+	if( $current_screen && isset( $current_screen->base ) && $current_screen->base !== 'nav-menus' ) {
+		return;
+	}
 
 	// fix auto add new pages to top nav
 	$on_post_type = ( $current_screen && isset( $current_screen->post_type ) && ! empty( $current_screen->post_type ) ) ? true : false;

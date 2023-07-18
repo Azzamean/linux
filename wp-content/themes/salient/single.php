@@ -20,7 +20,8 @@ $theme_skin        = NectarThemeManager::$skin;
 $header_format     = ( ! empty( $nectar_options['header_format'] ) ) ? $nectar_options['header_format'] : 'default';
 
 $hide_sidebar                      = ( ! empty( $nectar_options['blog_hide_sidebar'] ) ) ? $nectar_options['blog_hide_sidebar'] : '0';
-$blog_type                         = $nectar_options['blog_type'];
+$blog_type                         = apply_filters( 'nectar_single_blog_type', $nectar_options['blog_type'] );
+
 $blog_social_style                 = ( get_option( 'salient_social_button_style' ) ) ? get_option( 'salient_social_button_style' ) : 'fixed';
 $enable_ss                         = ( ! empty( $nectar_options['blog_enable_ss'] ) ) ? $nectar_options['blog_enable_ss'] : 'false';
 $remove_single_post_date           = ( ! empty( $nectar_options['blog_remove_single_date'] ) ) ? $nectar_options['blog_remove_single_date'] : '0';
@@ -68,7 +69,6 @@ if ( true === $fullscreen_header ) {
 			nectar_hook_before_content();
 
 			$blog_standard_type = ( ! empty( $nectar_options['blog_standard_type'] ) ) ? $nectar_options['blog_standard_type'] : 'classic';
-			$blog_type          = $nectar_options['blog_type'];
 
 			if ( null === $blog_type ) {
 				$blog_type = 'std-blog-sidebar';
@@ -81,7 +81,7 @@ if ( true === $fullscreen_header ) {
 			}
 
 			$single_post_area_col_class = 'span_9';
-
+		
 			// No sidebar.
 			if ( 'std-blog-fullwidth' === $blog_type || '1' === $hide_sidebar ) {
 				$single_post_area_col_class = 'span_12 col_last';
@@ -139,7 +139,11 @@ if ( true === $fullscreen_header ) {
 			<?php if ( 'std-blog-fullwidth' !== $blog_type && '1' !== $hide_sidebar ) { ?>
 
 				<div id="sidebar" data-nectar-ss="<?php echo esc_attr( $enable_ss ); ?>" class="col span_3 col_last">
-					<?php get_sidebar(); ?>
+					<?php 
+						nectar_hook_sidebar_top();
+						get_sidebar(); 
+						nectar_hook_sidebar_bottom();
+					?>
 				</div><!--/sidebar-->
 
 			<?php } ?>

@@ -114,6 +114,8 @@ else {
 }
 
 
+// sanitize text content.
+$content = wp_kses_post( $content );
 
 /* Interpolate symbol */
 $content = preg_replace_callback( '/\*/', function( $match ) use( $images_markup_arr, &$count ) {

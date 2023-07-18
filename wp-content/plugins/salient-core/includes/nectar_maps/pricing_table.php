@@ -26,7 +26,6 @@ return array(
 		),
 		array(
 			"type" => "dropdown",
-			"holder" => "div",
 			"admin_label" => false,
 			"class" => "",
 			"heading" => "Style",

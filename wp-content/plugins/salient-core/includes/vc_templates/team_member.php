@@ -298,7 +298,7 @@ extract(shortcode_atts(array(
               $target = 'target="_blank"';
             }
             
-            $html .=  "<li><a ".$target." href='" . esc_url($social_arr[$i + 1]) . "'>" . $social_arr[$i] . "</a></li>";   
+            $html .=  "<li><a ".$target." href='" . esc_url($social_arr[$i + 1]) . "'>" . wp_kses_post($social_arr[$i]) . "</a></li>";   
           }
           
         }

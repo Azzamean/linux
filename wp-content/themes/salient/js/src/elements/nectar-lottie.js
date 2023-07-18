@@ -19,7 +19,10 @@
     this.setupProps();
     this.domPosition();
 
-    if( $(this.el).parents('.tabbed').length == 0 && !this.isInstagram() ) {
+    if( $(this.el).parents('.tabbed').length == 0 && 
+        !this.isInstagram() && 
+        $('#nectar_fullscreen_rows').length == 0 &&
+        'IntersectionObserver' in window ) {
       this.inViewLoad(); 
     } else {
       this.init();
@@ -34,29 +37,33 @@
 
     // Convert sttings to bools
     const arrayAttrs = Object.keys(attrs);
-    arrayAttrs.forEach((key) => {
+    arrayAttrs.forEach(function(key) {
       attrs[key] = attrs[key] === "true" ? true : attrs[key];
     });
 
+
     // Set defaults
-    Object.assign(
-      this,
-      {
-        json_url: "",
-        trigger_type: "viewport",
-        hover_func: 'hover',
-        loop: false,
-        mobile_func: 'default',
-        trigger_offset: '0, 100',
-        trigger_delay: 0,
-        frame_constraint: '0, 100',
-        speed: 1,
-        frameCount: 0,
-        attach_to_element: '',
-        preserve_aspect_ratio: 'xMidYMid meet'
-      },
-      attrs
-    );
+    if( typeof Object.assign == 'function' ) {
+      Object.assign(
+        this,
+        {
+          json_url: "",
+          trigger_type: "viewport",
+          hover_func: 'hover',
+          hover_trigger: 'default',
+          loop: false,
+          mobile_func: 'default',
+          trigger_offset: '0, 100',
+          trigger_delay: 0,
+          frame_constraint: '0, 100',
+          speed: 1,
+          frameCount: 0,
+          attach_to_element: '',
+          preserve_aspect_ratio: 'xMidYMid meet'
+        },
+        attrs
+      );
+    }
 
     if( window.nectarDOMInfo && window.nectarDOMInfo.winW > 1000) {
       this.mobile_func = 'default';
@@ -108,27 +115,29 @@
     }
 
     // Autoplay type setting frame range.
+    var self = this;
+
     if( this.trigger_type === "autoplay" ) {
-        this.instance.addEventListener("DOMLoaded", () => {
-          if( this.trigger_delay != 0 ) {
-            setTimeout(this.playFrames.bind(this), this.trigger_delay);
+        this.instance.addEventListener("DOMLoaded", function() {
+          if( self.trigger_delay != 0 ) {
+            setTimeout(self.playFrames.bind(self), self.trigger_delay);
           } else {
-            this.playFrames();
+            self.playFrames();
           }     
         }); 
     } 
 
 
-    this.instance.addEventListener("data_ready", () => {
+    this.instance.addEventListener("data_ready", function() {
 
         // Store frame range as it can change after playing segments.
-        this.frameCount = this.instance.totalFrames;
+        self.frameCount = self.instance.totalFrames;
 
          // Scroll/Hover based.
-        if( this.trigger_type !== "autoplay" && this.trigger_delay == 0) {
-            this.lottieInteractivity();
-        } else if( this.trigger_type == "play" && this.trigger_delay != 0) {
-          this.scrollTriggerPlay();
+        if( self.trigger_type !== "autoplay" && self.trigger_delay == 0) {
+          self.lottieInteractivity();
+        } else if( self.trigger_type === "play" && self.trigger_delay != 0) {
+          self.scrollTriggerPlay();
         }
     });
   
@@ -144,11 +153,17 @@
     let that = this;
 
     let viewportPercentages = this.trigger_offset.split(',');
-    viewportPercentages = viewportPercentages.map((item) => parseInt(item)/100);
+    viewportPercentages = viewportPercentages.map(function(item) {
+      return parseInt(item)/100;
+    });
+ 
 
     let framePercentages = this.frame_constraint.split(',');
-    framePercentages = framePercentages.map((item) => Math.floor(this.instance.totalFrames * (parseInt(item)/100)));
+    framePercentages = framePercentages.map(function(item) {
+      return Math.floor(that.instance.totalFrames * (parseInt(item)/100));
+    });
 
+  
     if( this.trigger_type === 'seek' ) {
         framePercentages[1] -= 1;
     }
@@ -156,15 +171,20 @@
     let mode = (this.trigger_type === 'hover') ? 'cursor' : 'scroll';
     let type = (this.trigger_type === 'hover') ? this.hover_func : this.trigger_type;
 
+    let hoverTriggerContainer = this.el;
+    if ( this.hover_trigger === 'parent_column' && mode === 'cursor' ) {
+      hoverTriggerContainer = $(this.el).parents('.wpb_column')[0];
+    }
     this.interactiveInstance = LottieInteractivity.create({
         mode: mode,
         player: this.instance,
+        container: hoverTriggerContainer,
         actions: [
           {
             visibility: viewportPercentages, // arr like [0, 1.0]]
             type: type, // string
             frames: [framePercentages[0], framePercentages[1]], // arr like [0,100]]
-          },
+          }
         ],
       });
 
@@ -180,27 +200,31 @@
     */
   proto.scrollTriggerPlay = function() {
 
-    const that = this;
-    const observer = new IntersectionObserver(function(entries) {
+    if( 'IntersectionObserver' in window ) {
 
-      entries.forEach(function(entry){
-        var isIntersecting = entry.isIntersecting;
+      const that = this;
+      const observer = new IntersectionObserver(function(entries) {
 
-        if (isIntersecting) {
-          setTimeout(that.playFrames.bind(that), that.trigger_delay);
-          $(window).trigger('salient-parallax-el-recalculate');
-          $(window).trigger('salient-parallax-bg-recalculate');
-          observer.unobserve(entry.target);
-        } 
+        entries.forEach(function(entry){
+          var isIntersecting = entry.isIntersecting;
+
+          if (isIntersecting) {
+            setTimeout(that.playFrames.bind(that), that.trigger_delay);
+            $(window).trigger('salient-parallax-el-recalculate');
+            $(window).trigger('salient-parallax-bg-recalculate');
+            observer.unobserve(entry.target);
+          } 
+        });
+
+      }, {
+        root: (this.isSafari()) ? null : document,
+        rootMargin: '-12% 0% -12% 0%',
+        threshold: 0
       });
 
-    }, {
-      root: (this.isSafari()) ? null : document,
-      rootMargin: '-12% 0% -12% 0%',
-      threshold: 0
-    });
-
-    observer.observe(this.el);
+      observer.observe(this.el);
+      
+    }
     
   };
 
@@ -303,8 +327,12 @@
     */
   proto.playFrames = function(reset) {
     
+    var self = this;
+
     let framePercentages = this.frame_constraint.split(',');
-    framePercentages = framePercentages.map((item) => Math.floor(this.frameCount * (parseInt(item)/100)));
+    framePercentages = framePercentages.map(function(item) { 
+     return Math.floor(self.frameCount * (parseInt(item)/100));
+    });
 
     // Disable on mobile
     if( this.mobile_func == 'last_frame' ) {
@@ -328,7 +356,7 @@
   function initLottie() {
     let lottieEls = document.querySelectorAll(".nectar-lottie");
 
-    instances = [...lottieEls].map((el) => {
+    instances = Array.from(lottieEls).map(function(el) {
       return new NectarLottie(el);
     });
 
@@ -343,16 +371,16 @@
     }
 
     // Front end editor.
-    $(window).on('vc_reload', () => {
+    $(window).on('vc_reload', function() {
       lottie.destroy();
       initLottie();
     });
 
     // Full page screen rows.
     $(window).on('fp-section-init', function(){
-      instances.forEach((instance) => {
+      instances.forEach(function (instance) {
         if (instance.trigger_type == 'play') {
-          
+
           // Active in current row
           if( $(instance.el).parents('.fp-table.active').length > 0 ) { 
             instance.playFrames();

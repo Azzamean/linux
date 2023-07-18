@@ -46,7 +46,7 @@ if ( ! function_exists( 'nectar_portfolio_register' ) ) {
 			 'hierarchical'       => false,
 			 'menu_position'      => 9,
 			 'menu_icon'          => $portolfio_menu_icon,
-			 'supports'           => array( 'title', 'editor', 'thumbnail', 'comments', 'revisions' ),
+			 'supports'           => array( 'title', 'editor', 'thumbnail', 'comments', 'revisions', 'custom-fields' ),
 		 );
 
 		register_post_type( 'portfolio', $args );

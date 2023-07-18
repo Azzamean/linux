@@ -531,6 +531,8 @@ body[data-button-style^="rounded"] .section-down-arrow.hovered i.fa-angle-down {
 
 body #pagination > a:hover,
 body #pagination > a.page-numbers:hover,
+body nav#pagination a:hover,
+body nav#pagination a.page-numbers:hover,
 body nav.woocommerce-pagination li a:hover {
   background-color: transparent !important;
 }
@@ -816,7 +818,8 @@ body[data-ajax-transitions] .row-bg-wrap[data-bg-animation="zoom-out-reveal"].an
   mix-blend-mode: normal;
 }
 
-.nectar-view-indicator.blurred-bg .color-circle {
+.nectar-view-indicator.blurred-bg .color-circle,
+.nectar-drag-indicator.blurred-bg .color-circle  {
   -webkit-backdrop-filter: blur(12px);
   backdrop-filter: blur(12px);
 }
@@ -853,4 +856,45 @@ body .nectar-view-indicator span {
 .nectar-drag-indicator.in-boxed,
 .nectar-view-indicator.in-boxed {
   z-index: 10000;
+}
+
+.nectar-view-indicator.style-tooltip_text {
+  left: 12px;
+  top: 12px;
+  width: auto;
+  height: auto;
+  line-height: 1;
+  padding: 7px 14px;
+}
+
+.nectar-view-indicator.style-tooltip_text .color-circle {
+  width: 100%;
+  height: 100%;
+  display: block;
+  position: absolute;
+  left: 0px;
+  top: 0px;
+  opacity: 0;
+  border-radius: var(--nectar-border-radius);
+  transform: scale(0.65);
+  transition: transform 0.2s ease-in-out, opacity 0.2s ease-in-out;
+}
+.nectar-view-indicator.style-tooltip_text span {
+  opacity: 0; 
+  position: relative;
+  top: 0;
+  left: 0;
+  line-height: 1;
+  font-size: 14px;
+  transform: none;
+  transition: opacity 0.2s ease-in-out;
+}
+
+
+.nectar-view-indicator.style-tooltip_text.visible .color-circle {
+  transform: scale(1);
+}
+.nectar-view-indicator.style-tooltip_text.visible span,
+.nectar-view-indicator.style-tooltip_text.visible .color-circle {
+  opacity: 1;
 }

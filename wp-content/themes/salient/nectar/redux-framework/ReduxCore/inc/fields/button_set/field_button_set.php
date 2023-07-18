@@ -35,6 +35,10 @@
          */
         class ReduxFramework_button_set {
 
+            public $field = array();
+            public $value = '';
+            public $parent = null;
+
             /**
              * Holds configuration settings for each field in a model.
              * Defining the field options

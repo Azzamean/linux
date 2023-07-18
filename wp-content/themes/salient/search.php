@@ -202,7 +202,11 @@ $using_excerpt = ( $search_results_layout === 'list-no-sidebar' || $search_resul
 			<?php if ( $using_sidebar === true ) { ?>
 
 				<div id="sidebar" class="col span_3 col_last">
-					<?php get_sidebar(); ?>
+					<?php 
+						nectar_hook_sidebar_top();
+						get_sidebar(); 
+						nectar_hook_sidebar_bottom();
+					?>
 				</div><!--/span_3-->
 
 			<?php } ?>

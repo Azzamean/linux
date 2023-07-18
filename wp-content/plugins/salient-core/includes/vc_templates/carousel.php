@@ -24,9 +24,10 @@ extract(shortcode_atts(array(
 	'flickity_adaptive_height' => '',
 	'flickity_element_spacing' => 'default',
 	'flickity_autorotate_pause_on_hover' => '',
-  'flickity_touch_total_style' => 'default',
-  'flickity_touch_total_indicator_bg_color' => '#000',
-  'flickity_touch_total_indicator_icon_color' => '#fff',
+	'flickity_touch_total_style' => 'default',
+	'flickity_touch_total_indicator_bg_color' => '#000',
+	'flickity_touch_total_indicator_icon_color' => '#fff',
+	'flickity_touch_total_indicator_blurred_bg' => '',
 	'easing' => 'easeInExpo',
 	'autorotate' => '',
 	'autorotate_type' => '',
@@ -103,7 +104,7 @@ if( $script === 'carouFredSel' ) {
 		</div>
 	</div>
 	<ul class="row carousel" data-scroll-speed="<?php echo esc_attr($scroll_speed); ?>" data-easing="<?php echo esc_attr($easing); ?>" data-autorotate="<?php echo esc_attr($autorotate); ?>">
-	<?php echo do_shortcode($content) . '</ul></div>';
+	<?php echo do_shortcode(wp_kses_post($content)) . '</ul></div>';
 }
 
 // Owl.
@@ -114,7 +115,7 @@ else if( $script === 'owl_carousel' ) {
 
 	$delay = intval($delay);
 	echo '<div class="owl-carousel" data-enable-animation="'.esc_attr($enable_animation).'" data-loop="'.esc_attr($loop).'"  data-animation-delay="'.esc_attr($delay).'" data-autorotate="' . esc_attr($autorotate) . '" data-autorotation-speed="'.esc_attr($autorotation_speed).'" data-column-padding="'.esc_attr($column_padding).'" data-desktop-cols="'.esc_attr($desktop_cols).'" data-desktop-small-cols="'.esc_attr($desktop_small_cols).'" data-tablet-cols="'.esc_attr($tablet_cols).'" data-mobile-cols="'.esc_attr($mobile_cols).'">';
-	echo do_shortcode($content);
+	echo do_shortcode(wp_kses_post($content));
 	echo '</div>';
 }
 
@@ -127,7 +128,7 @@ else if( $script === 'flickity' ) {
 	if( $flickity_formatting === 'fixed_text_content_fullwidth' ) {
 
 		echo '<div class="nectar-carousel-flickity-fixed-content" data-alignment="'.esc_attr($flickity_fixed_content_alignment).'" data-control-color="'.esc_attr($color).'"> <div class="nectar-carousel-fixed-content">';
-		echo do_shortcode($flickity_fixed_content);
+		echo do_shortcode(wp_kses_post($flickity_fixed_content));
 
 		if(!empty($cta_button_text)) {
 
@@ -135,26 +136,26 @@ else if( $script === 'flickity' ) {
 
 			$button_color      = strtolower($button_color);
 			$regular_btn_class = ' regular-button';
-			$btn_text_markup   = '<span>'.$cta_button_text.'</span> <i class="icon-button-arrow"></i>';
+			$btn_text_markup   = '<span>'.wp_kses_post($cta_button_text).'</span> <i class="icon-button-arrow"></i>';
 
 			if($button_color === 'extra-color-gradient-1' || $button_color === 'extra-color-gradient-2') {
 				$regular_btn_class = '';
-				$btn_text_markup   = '<span class="start">'.$cta_button_text.' <i class="icon-button-arrow"></i></span><span class="hover">'.$cta_button_text.' <i class="icon-button-arrow"></i></span>';
+				$btn_text_markup   = '<span class="start">'.wp_kses_post($cta_button_text).' <i class="icon-button-arrow"></i></span><span class="hover">'.wp_kses_post($cta_button_text).' <i class="icon-button-arrow"></i></span>';
 			}
 
 			if($nectar_options['theme-skin'] === 'material' && $button_color === 'extra-color-gradient-1') {
 				$button_color    = 'm-extra-color-gradient-1';
-				$btn_text_markup = '<span>'.$cta_button_text.'</span> <i class="icon-button-arrow"></i>';
+				$btn_text_markup = '<span>'.wp_kses_post($cta_button_text).'</span> <i class="icon-button-arrow"></i>';
 			}
 
 			else if( $nectar_options['theme-skin'] === 'material' && $button_color === 'extra-color-gradient-2') {
 				$button_color    = 'm-extra-color-gradient-2';
-				$btn_text_markup = '<span>'.$cta_button_text.'</span> <i class="icon-button-arrow"></i>';
+				$btn_text_markup = '<span>'.wp_kses_post($cta_button_text).'</span> <i class="icon-button-arrow"></i>';
 			}
 
 			$btn_target_markup = (!empty($cta_button_open_new_tab) && $cta_button_open_new_tab == 'true' ) ? 'target="_blank"' : null;
 
-			echo '<div><a class="nectar-button large regular '. $button_color .  $regular_btn_class . ' has-icon" href="'.esc_url($cta_button_url).'" '.$btn_target_markup.' data-color-override="false" data-hover-color-override="false" data-hover-text-color-override="#fff">'.$btn_text_markup.'</a></div>';
+			echo '<div><a class="nectar-button large regular '. esc_attr($button_color) .  $regular_btn_class . ' has-icon" href="'.esc_url($cta_button_url).'" '.$btn_target_markup.' data-color-override="false" data-hover-color-override="false" data-hover-text-color-override="#fff">'.$btn_text_markup.'</a></div>';
 		}
 
 		echo '</div>';
@@ -170,11 +171,16 @@ else if( $script === 'flickity' ) {
 
   $flickity_attrs = '';
 
-  if( $flickity_touch_total_style == 'solid_bg' ) {
+  if( $flickity_touch_total_style == 'solid_bg' || $flickity_touch_total_style == 'tooltip_text') {
+	
+	if( $flickity_touch_total_indicator_blurred_bg == 'yes') {
+		$flickity_attrs .= 'data-indicator-blur="true" '; 
+	}
 
+	$flickity_attrs .= 'data-indicator-style="'.esc_attr($flickity_touch_total_style).'" ';
     $flickity_attrs .= 'data-indicator-bg="'.esc_attr($flickity_touch_total_indicator_bg_color).'" ';
     $flickity_attrs .= 'data-indicator-icon="'.esc_attr($flickity_touch_total_indicator_icon_color).'" ';
-
+	$flickity_attrs .= 'data-indicator-text="'.esc_html__('Drag','salient-core').'" ';
   }
 
   if( 'ticker' === $autorotate_type ) {
@@ -182,7 +188,7 @@ else if( $script === 'flickity' ) {
   }
 
 	echo '<div class="nectar-flickity not-initialized nectar-carousel'.esc_attr($dynamic_class_names).'" '.$flickity_attrs.'data-centered-cells="'.esc_attr($flickity_centered_cells).'" data-pause-on-hover="'.esc_attr($flickity_autorotate_pause_on_hover).'" data-touch-icon-color="'.esc_attr($flickity_touch_total_icon_color).'" data-control-color="'.esc_attr($color).'" data-overflow="'.esc_attr($flickity_overflow).'" data-r-bottom-total="'.esc_attr($flickity_touch_total_hide_indicator).'" data-drag-scale="'.esc_attr($flickity_image_scale_on_drag).'" data-wrap="'.esc_attr($flickity_wrap_around).'" data-spacing="'.esc_attr($flickity_spacing).'" data-controls="'.esc_attr($flickity_controls).'" data-pagination-alignment="'.esc_attr($pagination_alignment_flickity).'" data-adaptive-height="'.esc_attr($flickity_adaptive_height).'" data-border-radius="'.esc_attr($border_radius).'" data-column-border="'.esc_attr($enable_column_border).'" data-column-padding="'.esc_attr($column_padding).'" data-format="'.esc_attr($flickity_formatting).'" data-autoplay="'.esc_attr($autorotate).'" data-autoplay-dur="'.esc_attr($autorotation_speed).'" data-control-style="material_pagination" data-desktop-columns="'.esc_attr($desktop_cols_flickity).'" data-small-desktop-columns="'.esc_attr($desktop_small_cols_flickity).'" data-tablet-columns="'.esc_attr($tablet_cols_flickity).'" data-phone-columns="'.esc_attr($phone_cols_flickity).'" data-column-color="'.esc_attr($column_color).'">';
-	echo '<div class="flickity-viewport"> <div class="flickity-slider">' . do_shortcode($content) . '</div></div>';
+	echo '<div class="flickity-viewport"> <div class="flickity-slider">' . do_shortcode(wp_kses_post($content)) . '</div></div>';
 	echo '</div>';
 
 	if( $flickity_formatting === 'fixed_text_content_fullwidth' ) {
@@ -236,7 +242,7 @@ else if( $script === 'simple_slider' ) {
 	}
 
 	echo '<div class="nectar-carousel"><div class="'.esc_attr(implode(" ", $class_names)).'" '.implode(" ", $attrs).'>';
-	echo '<div class="flickity-viewport"><div class="flickity-slider">' . do_shortcode($content) . '</div></div>';
+	echo '<div class="flickity-viewport"><div class="flickity-slider">' . do_shortcode(wp_kses_post($content)) . '</div></div>';
 	echo '</div></div>';
 }
 

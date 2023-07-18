@@ -435,14 +435,20 @@ function nectar_main_styles() {
 	 }
 
 
+	 if( defined('WPCF7_VERSION') ) {
+		wp_enqueue_style( 'nectar-cf7', $nectar_get_template_directory_uri . '/css/'.$src_dir.'/third-party/cf7.css', '', $nectar_theme_version );
+	}
+	if( defined('WPFORMS_VERSION') ) {
+		wp_enqueue_style( 'nectar-wpforms', $nectar_get_template_directory_uri . '/css/'.$src_dir.'/third-party/wpforms.css', '', $nectar_theme_version );
+	}
 	if( class_exists( 'bbPress' ) ) {
-		wp_enqueue_style( 'nectar-basic-bbpress', $nectar_get_template_directory_uri . '/css/build/third-party/bbpress.css', '', $nectar_theme_version );
+		wp_enqueue_style( 'nectar-basic-bbpress', $nectar_get_template_directory_uri . '/css/'.$src_dir.'/third-party/bbpress.css', '', $nectar_theme_version );
 	}
 	if( class_exists( 'BuddyPress' ) ) {
-		wp_enqueue_style( 'nectar-basic-buddypress', $nectar_get_template_directory_uri . '/css/build/third-party/buddypress.css', '', $nectar_theme_version );
+		wp_enqueue_style( 'nectar-basic-buddypress', $nectar_get_template_directory_uri . '/css/'.$src_dir.'/third-party/buddypress.css', '', $nectar_theme_version );
 	}
 	if( class_exists( 'Tribe__Main' ) ) {
-		wp_enqueue_style( 'nectar-basic-events-calendar', $nectar_get_template_directory_uri . '/css/build/third-party/events-calendar.css', '', $nectar_theme_version );
+		wp_enqueue_style( 'nectar-basic-events-calendar', $nectar_get_template_directory_uri . '/css/'.$src_dir.'/third-party/events-calendar.css', '', $nectar_theme_version );
 	}
 
 	// Icons
@@ -670,7 +676,7 @@ function nectar_page_sepcific_styles() {
 
 	// Page builder elements.
 	if( NectarElAssets::locate(array('[nectar_blog')) ||
-      NectarElAssets::locate(array('[recent_posts')) ) {
+      	NectarElAssets::locate(array('[recent_posts')) ) {
 
         //// Core.
         if( NectarElAssets::locate(array('blog_masonry_style="material"')) || 
@@ -731,7 +737,12 @@ function nectar_page_sepcific_styles() {
 	} // End page builder elements.
 
 	// Archives.
-	if( $nectar_on_blog_archive_check ) {
+	$using_post_grid_archive = false;
+	if ( NectarThemeManager::is_special_location_active('nectar_special_location__blog_loop') ) {
+		$using_post_grid_archive = true;
+	}
+
+	if( $nectar_on_blog_archive_check && !$using_post_grid_archive ) {
 
 		//// Masonry Styles.
 		if( $nectar_blog_type === 'masonry-blog-sidebar' ||
@@ -884,6 +895,7 @@ function nectar_page_sepcific_styles() {
 		'script="simple_slider"',
 		'style="multiple_visible_minimal"',
 		'style="slider"',
+		'display_type="carousel"'
 	);
 
 	if ( NectarElAssets::locate($nectar_flickity_els) ) {
@@ -1004,6 +1016,10 @@ function nectar_page_sepcific_styles() {
 		}
 		body #error-404 .nectar-button {
 		  margin-top: 50px;
+		}
+
+		body.error404 .main-content > .row > .col.span_12 {
+			padding-bottom: 0;
 		}
 
 		@media only screen and (max-width : 690px) {
@@ -1368,6 +1384,7 @@ add_action( 'wp_head', 'nectar_preload_key_requests', 5 );
 
 			 if( 'material' === $theme_skin ) {
 				 wp_enqueue_style('nectar-ocm-slide-out-right-material');
+				 wp_enqueue_style( 'nectar-ocm-slide-out-right-hover' );
 			 }
 
 		 }

@@ -6,6 +6,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 wp_enqueue_style( 'nectar-element-testimonial' );
+wp_enqueue_script( 'nectar-testimonial-sliders' );
 
 extract(shortcode_atts(array(
   "autorotate"=> '', 
@@ -53,6 +54,6 @@ if( 'multiple_visible' === $style && 'true' === $enable_shadow ) {
   $attributes .= 'data-shadow="'.esc_attr(nectar_generate_shadow_css($atts)).'"';
 }
 
-echo '<div class="'. nectar_clean_classnames(implode(' ', $el_classnames)) . $height_animation_class.'" '.$attributes.'><div class="slides">'.$flickity_markup_opening.do_shortcode($content).$flickity_markup_closing.'</div></div>';
+echo '<div class="'. nectar_clean_classnames(implode(' ', $el_classnames)) . $height_animation_class.'" '.$attributes.'><div class="slides">'.$flickity_markup_opening.do_shortcode(wp_kses_post($content)).$flickity_markup_closing.'</div></div>';
 
 ?>

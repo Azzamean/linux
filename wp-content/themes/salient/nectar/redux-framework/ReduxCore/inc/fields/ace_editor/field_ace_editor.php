@@ -26,6 +26,10 @@
     if ( ! class_exists( 'ReduxFramework_ace_editor' ) ) {
         class ReduxFramework_ace_editor {
 
+            public $field = array();
+            public $value = '';
+            public $parent = null;
+
             /**
              * Field Constructor.
              * Required - must call the parent constructor, then assign field and value to vars, and obviously call the render field function

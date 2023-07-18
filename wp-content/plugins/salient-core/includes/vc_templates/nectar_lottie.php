@@ -8,6 +8,7 @@ if (!defined('ABSPATH')) {
 extract(shortcode_atts(array(
     'json_url' => '',
     'trigger_type' => 'autoplay',
+    'hover_trigger' => 'default',
     'loop' => '',
     'trigger_offset' => '0, 1',
     'frame_constraint' => '0, 100',

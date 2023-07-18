@@ -34,6 +34,8 @@ if ( $header_format === 'left-header' ) {
 $using_secondary      	 	= ( ! empty( $nectar_options['header_layout'] ) && $header_format !== 'left-header' ) ? $nectar_options['header_layout'] : ' ';
 $secondary_header_text 		= ( ! empty( $nectar_options['secondary-header-text'] ) ) ? 'true' : 'false';
 
+nectar_hook_before_secondary_header();
+
 if ( $using_secondary === 'header_with_secondary' ) { ?>
 	
 	<div id="header-secondary-outer" class="<?php echo esc_attr( $header_format ); ?>" data-mobile="<?php echo esc_attr($header_mobile_func); ?>" data-remove-fixed="<?php echo esc_attr( $header_remove_stickiness ); ?>" data-lhe="<?php echo esc_attr( $header_link_hover_effect ); ?>" data-secondary-text="<?php echo esc_attr( $secondary_header_text ); ?>" data-full-width="<?php echo ( ! empty( $nectar_options['header-fullwidth'] ) && $nectar_options['header-fullwidth'] === '1' ) ? 'true' : 'false'; ?>" data-mobile-fixed="<?php echo esc_attr( $mobile_fixed ); ?>" data-permanent-transparent="<?php echo esc_attr( $perm_trans ); ?>" >

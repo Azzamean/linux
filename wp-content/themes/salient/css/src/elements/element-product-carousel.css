@@ -127,6 +127,8 @@ body .woocommerce .nectar-woo-flickity .flickity-slider .flickity-cell {
   width: 100%;
 }
 
+
+
 body .woocommerce ul.products[data-product-style="material"] .flickity-page-dots li,
 .woocommerce-page ul.products[data-product-style="material"] .flickity-page-dots li {
   display: inline-block;
@@ -213,6 +215,26 @@ body .woocommerce .nectar-woo-flickity[data-item-shadow="1"] li.product.text_on_
 
 }
 
+@media only screen and (max-width: 1300px) and (min-width: 1000px) {
+  .woocommerce.columns-4 .nectar-woo-flickity .flickity-cell .material [data-nectar-quickview="true"] a {
+    line-height: 1!important;
+  }
+  .woocommerce.columns-4 .nectar-woo-flickity .flickity-cell .material [data-nectar-quickview="true"] a span {
+    padding: 6px 5px!important;
+    font-size: 12px!important;
+ }
+
+ .woocommerce.columns-4 .nectar-woo-flickity .flickity-cell .minimal .product-image-wrap [data-nectar-quickview="true"] a{
+    font-size: 12px;
+    padding: 10px 3px!important;
+  }
+}
+
+@media only screen and (max-width: 1100px) and (min-width: 1000px) {
+  .woocommerce.columns-4 .nectar-woo-flickity .flickity-cell .material [data-nectar-quickview="true"] a span {
+    font-size: 11px!important;
+ }
+}
 
 
 @media only screen and (min-width: 1000px) and (max-width: 1300px) {

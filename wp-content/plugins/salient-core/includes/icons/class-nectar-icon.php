@@ -16,6 +16,13 @@
 
    class Nectar_Icon {
 
+    public $icon_name;
+    public $icon_family;
+    public $icon_collection;
+    public $icon;
+    public $letter;
+    public $defaults;
+
     public function __construct( $icon_props ) {
       
       // Defaults.
@@ -69,7 +76,7 @@
     public function render_icon() {
 
       if( !empty($this->icon) ) {
-        return '<svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="'.esc_attr($this->icon['width']).'" height="'.esc_attr($this->icon['height']).'" viewBox="0 0 '.esc_attr($this->icon['width']).' '.esc_attr($this->icon['height']).'">
+        return '<svg role="presentation" version="1.1" xmlns="http://www.w3.org/2000/svg" width="'.esc_attr($this->icon['width']).'" height="'.esc_attr($this->icon['height']).'" viewBox="0 0 '.esc_attr($this->icon['width']).' '.esc_attr($this->icon['height']).'">
         <path d="'.esc_attr($this->icon['path']).'"></path>
         </svg>';
       }

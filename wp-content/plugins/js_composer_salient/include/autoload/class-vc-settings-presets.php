@@ -392,7 +392,7 @@ class Vc_Settings_Preset {
 						$shortcodesAndPresets[ $presetId ] = array(
 							'name' => $preset,
 							'base' => $shortcode['base'],
-							'description' => $shortcode['description'],
+							'description' => isset($shortcode['description']) ? $shortcode['description'] : '', // nectar addition -- user saved elements dont have a description
 							'presetId' => $presetId,
 							'_category_ids' => array( '_my_elements_' ),
 						);

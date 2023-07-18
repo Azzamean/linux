@@ -110,13 +110,13 @@ if( !class_exists('NectarWPMenu') ) {
 			// Access Level.
 			if( !current_user_can('administrator') ) {
 					die ( 'Only an administrator can access these settings.');
-      }
+			}
 
 			// Verify Nonce.
-    	$nonce = $_POST['nonce'];
+			$nonce = $_POST['nonce'];
 
-    	if ( ! wp_verify_nonce( $nonce, 'nectar_menu_settings_ajax_nonce' ) ) {
-        die ( 'Invalid Nonce!');
+			if ( ! wp_verify_nonce( $nonce, 'nectar_menu_settings_ajax_nonce' ) ) {
+				 die ( 'Invalid Nonce!');
 			}
 
 			// Grab post.
@@ -136,7 +136,7 @@ if( !class_exists('NectarWPMenu') ) {
 					continue;
 				}
 
-		    $options = maybe_unserialize( get_post_meta( $menu_item_id, 'nectar_menu_options', true ) );
+		    	$options = maybe_unserialize( get_post_meta( $menu_item_id, 'nectar_menu_options', true ) );
 
 				$value = ( isset($options[$id]) ) ? $options[$id] : false;
 
@@ -144,7 +144,21 @@ if( !class_exists('NectarWPMenu') ) {
 					$value = ( isset( $field['default_value'] ) ) ? $field['default_value'] : null;
 				}
 
-		    new Nectar_Setting_Field( $id, $field, $value );
+				// theme option conditional
+				if( defined( 'NECTAR_THEME_NAME' ) && function_exists('get_nectar_theme_options') && isset($field['theme_option_conditional']) ) {
+					
+					$nectar_options = get_nectar_theme_options();
+					$theme_option_field = $field['theme_option_conditional'][0];
+					$theme_option_required_val = $field['theme_option_conditional'][1];
+
+					if( isset($nectar_options[$theme_option_field]) && 
+						$nectar_options[$theme_option_field] !== $theme_option_required_val ) {
+						continue;
+					}
+
+				}
+
+		    	new Nectar_Setting_Field( $id, $field, $value );
 		  }
 
 			wp_die();
@@ -199,20 +213,26 @@ if( !class_exists('NectarWPMenu') ) {
 				'mega_menu_bg_img_alignment'              => 'regular',
 				'mega_menu_padding'                       => 'default',
 				'menu_item_column_width'                  => 'regular',
-			  'menu_item_column_padding'                => 'regular',
+				'menu_item_column_padding'                => 'regular',
 				'menu_item_column_bg_color'               => 'regular',
+				'menu_item_link_bg_img_video'             => 'regular',
 				'menu_item_bg_img'                        => 'array',
 				'menu_item_bg_img_alignment'              => 'regular',
 				'menu_item_icon_type'                     => 'regular',
 				'menu_item_icon_custom'                   => 'array',
 				'menu_item_icon'                          => 'regular',
-        'menu_item_icon_iconsmind'                => 'regular',
+				'menu_item_icon_iconsmind'                => 'regular',
 				'menu_item_icon_custom_border_radius'     => 'regular',
 				'menu_item_link_bg_type'                  => 'regular',
 				'menu_item_link_bg_img_custom'            => 'array',
 				'menu_item_link_height'                   => 'array',
 				'menu_item_link_content_alignment'        => 'regular',
 				'menu_item_link_label'                    => 'regular',
+				'menu_item_link_button_cta'               => 'regular',
+				'menu_item_link_cta_text'                 => 'regular',
+				'menu_item_link_cta_button_style'         => 'regular',
+				'menu_item_link_cta_button_bg_color'      => 'regular',
+				'menu_item_link_cta_button_text_color'    => 'regular',
 				'menu_item_link_color_overlay'            => 'regular',
 				'menu_item_link_color_overlay_fade'       => 'regular',
 				'menu_item_link_color_overlay_opacity'    => 'array',
@@ -224,6 +244,9 @@ if( !class_exists('NectarWPMenu') ) {
 				'menu_item_link_coloring_custom_text_p'   => 'regular',
 				'menu_item_link_coloring_custom_text_h_p' => 'regular',
 				'menu_item_link_coloring_custom_label'    => 'regular',
+				'menu_item_link_coloring_custom_button_bg'          => 'regular',
+				'menu_item_link_coloring_custom_button_bg_active'   => 'regular',
+				'menu_item_link_coloring_custom_button_text_active' => 'regular',
 				'menu_item_link_bg_hover'                 => 'regular',
 				'menu_item_link_bg_style'                 => 'regular',
 				'menu_item_link_padding'                  => 'regular',
@@ -236,9 +259,9 @@ if( !class_exists('NectarWPMenu') ) {
 				'menu_item_icon_spacing'                  => 'regular',
 				'menu_item_persist_mobile_header'         => 'regular',
 				'menu_item_hide_menu_title_modifier'      => 'regular',
-		'menu_item_link_link_style'               => 'regular',
-		'menu_item_link_link_text_style'               => 'regular',
-        'menu_item_ocm_image'                     => 'array'
+				'menu_item_link_link_style'               => 'regular',
+				'menu_item_link_link_text_style'          => 'regular',
+				'menu_item_ocm_image'                     => 'array'
 			);
 
 			foreach ($options_arr as $param_name => $type) {

@@ -235,7 +235,7 @@
 
     if( !function_exists('salient_redux_options_js') ) {
       function salient_redux_options_js() {
-        wp_enqueue_script('salient-redux-options', get_template_directory_uri() . '/nectar/redux-framework/salient-redux.js', array( 'jquery' ), '13.1', true);
+        wp_enqueue_script('salient-redux-options', get_template_directory_uri() . '/nectar/redux-framework/salient-redux.js', array( 'jquery' ), '15.1', true);
       }
     }
  
@@ -697,10 +697,10 @@
           'subtitle' => esc_html__('If you are using a performance plugin that caches your pages, this will need to be set to "All Devices" in order to take effect.', 'salient'),
           'required' => array( 'delay-js-execution', '=', '1' ),
           'options' => array(
-            "mobile" => esc_html__("Mobile (Default)", "salient"),
             "all" => esc_html__("All Devices", "salient"),
+            "mobile" => esc_html__("Mobile", "salient"),
           ),
-          'default' => 'mobile'
+          'default' => 'all'
         ),
          array(
            'id' => 'global_lazy_load_images',
@@ -771,6 +771,106 @@
         ),
        )
      ) );
+
+
+
+     Redux::setSection( $opt_name, array(
+      'title'            => esc_html__( 'Image Sizes', 'salient' ),
+      'id'               => 'general-settings-image-sizes',
+      'desc' => esc_html__('Control which sizes that Salient registers. Disabling sizes will reduce number of variants that WordPress cuts when uploading new images. Removing unused sizes will reduce the amount of server space taken up by images and speed up upload time.', 'salient'),
+      'subsection'       => true,
+      'fields'           => array(
+       array(
+         'id' => 'image-size-portfolio-widget',
+         'type' => 'switch',
+         'title' => esc_html__('portfolio-widget', 'salient'),
+         'subtitle' => '100x100',
+         'desc' => '',
+         'default' => '1'
+       ),
+       array(
+        'id' => 'image-size-portfolio-thumb_small',
+        'type' => 'switch',
+        'title' => esc_html__('portfolio-thumb_small', 'salient'),
+        'subtitle' => '400x270',
+        'desc' => '',
+        'default' => '1'
+      ),
+      array(
+        'id' => 'image-size-portfolio-thumb_large',
+        'type' => 'switch',
+        'title' => esc_html__('portfolio-thumb_large', 'salient'),
+        'subtitle' => '900x600',
+        'desc' => '',
+        'default' => '1'
+      ),
+      array(
+        'id' => 'image-size-regular_small',
+        'type' => 'switch',
+        'title' => esc_html__('regular_small', 'salient'),
+        'subtitle' => '350x350',
+        'desc' => '',
+        'default' => '1'
+      ),
+      array(
+        'id' => 'image-size-regular',
+        'type' => 'switch',
+        'title' => esc_html__('regular', 'salient'),
+        'subtitle' => '500x500',
+        'desc' => '',
+        'default' => '1'
+      ),
+      array(
+        'id' => 'image-size-wide_small',
+        'type' => 'switch',
+        'title' => esc_html__('wide_small', 'salient'),
+        'subtitle' => '670x335',
+        'desc' => '',
+        'default' => '1'
+      ),
+      array(
+        'id' => 'image-size-wide',
+        'type' => 'switch',
+        'title' => esc_html__('wide', 'salient'),
+        'subtitle' => '1000x500',
+        'desc' => '',
+        'default' => '1'
+      ),
+      array(
+        'id' => 'image-size-tall',
+        'type' => 'switch',
+        'title' => esc_html__('tall', 'salient'),
+        'subtitle' => '500x1000',
+        'desc' => '',
+        'default' => '1'
+      ),
+      array(
+        'id' => 'image-size-wide_tall',
+        'type' => 'switch',
+        'title' => esc_html__('wide_tall', 'salient'),
+        'subtitle' => '1000x1000',
+        'desc' => '',
+        'default' => '1'
+      ),
+      array(
+        'id' => 'image-size-medium_featured',
+        'type' => 'switch',
+        'title' => esc_html__('medium_featured', 'salient'),
+        'subtitle' => '800x800',
+        'desc' => '',
+        'default' => '1'
+      ),
+      array(
+        'id' => 'image-size-large_featured',
+        'type' => 'switch',
+        'title' => esc_html__('large_featured', 'salient'),
+        'subtitle' => '1870x770',
+        'desc' => '',
+        'default' => '1'
+      ),
+
+      )
+    ) );
 
     
      // Theme coloring.
@@ -1211,7 +1311,7 @@
      ) );
 
      Redux::setSection( $opt_name, array(
-       'title'            => esc_html__( 'Nectar Specific elements', 'salient' ),
+       'title'            => esc_html__( 'Salient Elements/Areas', 'salient' ),
        'id'               => 'typography-nectar',
        'subsection'       => true,
        'fields'           => array(
@@ -1260,7 +1360,6 @@
            'default'  => array()
          ),
 
-
          array(
            'id'       => 'testimonial_font_family',
            'type'     => 'typography',
@@ -1271,6 +1370,17 @@
            'fonts' =>  $nectar_std_fonts,
            'default'  => array()
          ),
+
+         array(
+          'id'       => 'blog_single_post_content_font_family',
+          'type'     => 'typography',
+          'title'    => esc_html__( 'Blog Single Post Content', 'salient' ),
+          'subtitle' => esc_html__( 'Specify the font properties for the blog single post content area.', 'salient' ),
+          'google'   => true,
+          'fonts' =>  $nectar_std_fonts,
+          'all_styles'  => false,
+          'default'  => array()
+        ),
 
          array(
            'id'       => 'portfolio_filters_font_family',
@@ -1857,7 +1967,6 @@
            'default' => '0'
          ),
 
-
          array(
            'id' => 'header-box-shadow',
            'type' => 'select',
@@ -1935,6 +2044,26 @@
            ),
            'default' => 'default'
          ),
+
+         array(
+          'id' => 'header-enable-border',
+          'type' => 'switch',
+          'title' => esc_html__('Header Enable Border', 'salient'),
+          'subtitle' => esc_html__('This will add a border onto your header navigation.', 'salient'),
+          'desc' => '',
+          'switch' => true,
+          'default' => '0'
+        ),
+        array(
+          'id' => 'header-border-color',
+          'type' => 'color',
+          'title' => esc_html__('Header Border Color', 'salient'),
+          'subtitle' => '',
+          'transparent' => false,
+          'required' => array( array( 'header-enable-border', '=', '1' ) ),
+          'desc' => '',
+          'default' => '#000000'
+        ),
 
          array(
           'id'    => 'header-cs-new-loc',
@@ -2020,10 +2149,11 @@
          array(
            'id' => 'header-fullwidth',
            'type' => 'switch',
-           'title' => esc_html__('Full Width Header', 'salient'),
-           'subtitle' => esc_html__('Do you want the header to span the full width of the page?', 'salient'),
+           'title' => esc_html__('Full Width Header Content', 'salient'),
+           'subtitle' => esc_html__('Do you want the header content to span the full width of the page?', 'salient'),
            'desc' => '',
            'switch' => true,
+           'required' => array( 'header-size', '=', 'default' ),
            'default' => '0'
          ),
          array(
@@ -2034,6 +2164,45 @@
            'desc' => '',
            'required' => array( 'header-fullwidth', '=', '1' )
          ),
+
+         array(
+          'id' => 'header-size',
+          'type' => 'select',
+          'required' => array( 
+            array( 'header_format', '!=', 'left-header' ),
+            array( 'header_format', '!=', 'centered-menu-bottom-bar' ),
+            array( 'header_layout', '!=', 'header_with_secondary' ),
+            array( 'boxed_layout', '!=', '1' ),
+            
+          ),
+          'title' => esc_html__('Header Size', 'salient'),
+          'subtitle' => esc_html__('Please select your header size here.', 'salient'),
+          'desc' => '',
+          'options' => array(
+            'default' => esc_html__('Default (Expanded to screen edges)', 'salient'),
+            'contained' => esc_html__('Contained', 'salient'),
+          ),
+          'default' => 'default'
+        ),
+        array(
+          'id' => 'header-border-radius',
+          'type'      => 'slider',
+          'required' => array( 
+              array( 'header_format', '!=', 'left-header' ),
+              array( 'header_format', '!=', 'centered-menu-bottom-bar' ),
+              array( 'header_layout', '!=', 'header_with_secondary' ),
+              array( 'boxed_layout', '!=', '1' ),
+              array( 'header-size', '=', 'contained' ),
+          ),
+          'title'     => esc_html__('Header Roundness', 'salient'),
+          'subtitle'  => esc_html__('This allows you to round the corners of your header. (Amount to round in px)', 'salient'),
+          'desc'      => '',
+          "default"   => 0,
+          "min"       => 0,
+          "step"      => 1,
+          "max"       => 50,
+          'display_value' => 'label'
+        ),
 
          array(
            'id' => 'header-account-button',
@@ -2466,7 +2635,9 @@
      Redux::setSection( $opt_name, array(
        'title'            => esc_html__( 'Transparent Header Effect', 'salient' ),
        'id'               => 'header-nav-transparency',
+       'class'            => 'salient-header-nav-transparency',
        'subsection'       => true,
+       'desc'             => __('Inactive while using "Contained" for the "Header Size" option.', 'salient'),
        'fields'           => array(
 
 
@@ -2621,10 +2792,40 @@
            'desc' => '',
            'options' => array(
              'default' => esc_html__('Color Change', 'salient'),
-             'animated_underline' => esc_html__('Animated Underline', 'salient')
+             'animated_underline' => esc_html__('Animated Underline', 'salient'),
+             'button_bg' => esc_html__('Button Background', 'salient')
            ),
            'default' => 'animated_underline'
          ),
+
+         array(
+          'id' => 'header-hover-effect-button-bg-size',
+          'type' => 'select',
+          'title' => esc_html__('Button Background Size', 'salient'),
+          'subtitle' => esc_html__('Alters the button background size releative to link tett.', 'salient'),
+          'desc' => '',
+          'options' => array(
+            'small' => esc_html__('Small', 'salient'),
+            'medium' => esc_html__('Medium', 'salient'),
+            'large' => esc_html__('Large', 'salient'),
+          ),
+          'required' => array( 'header-hover-effect', '=', 'button_bg' ),
+          'default' => 'medium'
+        ),
+
+         array(
+          'id' => 'header-hover-effect-button-bg-style',
+          'type' => 'select',
+          'title' => esc_html__('Button Background Animation', 'salient'),
+          'subtitle' => esc_html__('Alters the button background entrance animation.', 'salient'),
+          'desc' => '',
+          'options' => array(
+            'fade-in' => esc_html__('Fade In', 'salient'),
+            'grow-in' => esc_html__('Grow In', 'salient'),
+          ),
+          'required' => array( 'header-hover-effect', '=', 'button_bg' ),
+          'default' => 'fade-in'
+        ),
 
          array(
            'id' => 'header-hide-until-needed',
@@ -2930,6 +3131,16 @@
          ),
 
          array(
+          'id' => 'header-slide-out-widget-area-separate-mobile',
+          'type' => 'switch',
+          'title' => esc_html__('Off Canvas Menu Separate Mobile Menu', 'salient'),
+          'subtitle' => esc_html__('This will cause your off canvas to only display navigation menu items assigned to the "Off Canvas Navigation Menu" location when viewing on a mobile device.', 'salient'),
+          'desc' => '',
+          'required' => array(  array('header-slide-out-widget-area', '!=', '1') ),
+          'default' => '0'
+        ),
+
+         array(
           'id' => 'fullscreen-inline-images-default',
           'type' => 'media',
           'required' => array(  array('header-slide-out-widget-area-style', '=', 'fullscreen-inline-images') ),
@@ -2951,6 +3162,16 @@
            'default' => 'separate-dropdown-parent-link',
            'required' => array(  array('header-slide-out-widget-area-style', '!=', 'fullscreen'), array('header-slide-out-widget-area-style', '!=', 'fullscreen-inline-images' ), array('header-slide-out-widget-area-style', '!=', 'fullscreen-alt' ), array('header-slide-out-widget-area-style', '!=', 'simple' ) ),
          ),
+
+         array(
+          'id' => 'header-slide-out-from-right-simplify-mobile',
+          'type' => 'switch',
+          'title' => esc_html__('Simplify Animation/Style of OCM on Mobile', 'salient'),
+          'subtitle' => esc_html__('The "Slide Out From Side" animation can be difficult for some mobile devices to render correctly. You can use this to offer a simplified version when accessed from a mobile device.', 'salient'),
+          'desc' => '',
+          'required' => array(  array('header-slide-out-widget-area-style', '=', 'slide-out-from-right'), array( 'theme-skin', '=', 'material') ),
+          'default' => '0'
+        ),
          array(
            'id' => 'header-menu-label',
            'type' => 'switch',
@@ -3192,6 +3413,41 @@
           'class' => 'hover-state',
           'default' => '#3452ff'
         ),
+
+        array(
+          'id' => 'header-font-button-bg',
+          'type' => 'color',
+          'title' => esc_html__('Header Button Effect', 'salient'),
+          'subtitle' => '',
+          'transparent' => false,
+          'class' => 'no-border',
+          'desc' => esc_html__('BG Default State', 'salient'),
+          'default' => '#eeeeee',
+          'required' => array( 'header-hover-effect', '=', 'button_bg' ),
+        ),
+        array(
+          'id' => 'header-font-button-bg-active',
+          'type' => 'color',
+          'title' => '',
+          'subtitle' => '',
+          'transparent' => false,
+          'class' => 'hover-state no-border-middle',
+          'desc' => esc_html__('BG Active State', 'salient'),
+          'default' => '#000000',
+          'required' => array( 'header-hover-effect', '=', 'button_bg' ),
+        ),
+        array(
+          'id' => 'header-font-button-text-active',
+          'type' => 'color',
+          'title' => '',
+          'subtitle' => '',
+          'transparent' => false,
+          'class' => 'hover-state',
+          'desc' => esc_html__('Text Active State', 'salient'),
+          'default' => '#ffffff',
+          'required' => array( 'header-hover-effect', '=', 'button_bg' ),
+        ),
+
         array(
           'id' => 'header-icon-color',
           'type' => 'color',
@@ -3477,9 +3733,18 @@
      Redux::setSection( $opt_name, array(
        'title'  => esc_html__( 'Global Sections', 'salient' ),
        'id'     => 'global-sections',
-       'desc'   => esc_html__( 'Use this area to assign templates from your ','salient') . '<a href="'.esc_url( admin_url('edit.php?post_type=salient_g_sections') ).'">' . esc_html__('Global Sections','salient') . '</a> ' . esc_html__('to various locations within Salient.','salient') . '<br/>' . esc_html__('If you\'re not seeing the Global Sections post type available in your setup, you likely need to update your version of the Salient Core plugin.', 'salient' ),
+       'desc'   => esc_html__( 'Use this area to assign templates from your ','salient') . '<a href="'.esc_url( admin_url('edit.php?post_type=salient_g_sections') ).'">' . esc_html__('Global Sections','salient') . '</a> ' . esc_html__('to various locations within Salient.','salient'),
        'icon'   => 'el el-website',
        'fields' => array(
+        array(
+          'id'    => 'info_success',
+          'type'  => 'info',
+          'class' => 'nectar-announcement',
+          'style' => 'success',
+          'title' => esc_html__('New Functionality Available', 'salient'),
+          'icon'  => 'el-icon-info-sign',
+          'desc'  => esc_html__( 'As of v16, Global Sections can now be assigned to locations from within each section settings with greater control over the display.', 'salient') . ' <a target="_blank" rel="noopener noreferrer" href="https://themenectar.com/docs/salient/page-builder-global-sections/#locations">' .esc_html__('See documentation for more information.','salient') . '</a>'
+        ),
          array(
            'id' => 'global-section-after-header-navigation',
            'type' => 'select',
@@ -4663,7 +4928,7 @@
             'title' => esc_html__('Project Navigation Ordering', 'salient'),
             'subtitle' => esc_html__('Please select how you would like your next/previous post links to function.', 'salient'),
             'desc' => '',
-            'hint' => array('content' => '<strong>'. esc_html__('Default:','salient') . '</strong> '. esc_html__('the next pproject link will be the next','salient') . ' <i>'. esc_html__('oldest','salient') .'</i> ' . esc_html__('project.','salient') . '<br/> <strong>' . esc_html__('Reverse Order:','salient') .'</strong> ' . esc_html__('the next project link will be the next', 'salient') . ' <i>'. esc_html__('newest', 'salient') . '</i> ' . esc_html__('project.','salient'), 'title' => ''),
+            'hint' => array('content' => '<strong>'. esc_html__('Default:','salient') . '</strong> '. esc_html__('the next project link will be the next','salient') . ' <i>'. esc_html__('oldest','salient') .'</i> ' . esc_html__('project.','salient') . '<br/> <strong>' . esc_html__('Reverse Order:','salient') .'</strong> ' . esc_html__('the next project link will be the next', 'salient') . ' <i>'. esc_html__('newest', 'salient') . '</i> ' . esc_html__('project.','salient'), 'title' => ''),
             'options' => array(
               "default" => esc_html__("Default", 'salient'),
               "reverse" => esc_html__("Reverse Order", 'salient')
@@ -4671,6 +4936,19 @@
             'default' => 'default'
           ),
 
+          array(
+            'id' => 'after_project_next_only_last_link',
+            'type' => 'select',
+            'title' => esc_html__('Project Navigation Last Project Link', 'salient'),
+            'subtitle' => esc_html__('When viewing the final project in your portfolio, choose what to link to in the bottom Project Navigation.', 'salient'),
+            'desc' => '',
+            'required' => array( array('portfolio_single_nav', '=', 'after_project_next_only'), array('portfolio_same_category_single_nav','!=','1') ),
+            'options' => array(
+              "default" => esc_html__("Previous Project", 'salient'),
+              "first_project" => esc_html__("First Project (Circular Loop)", 'salient')
+            ),
+            'default' => 'default'
+          ),
            
            array(
              'id' => 'portfolio_remove_single_header',
@@ -4707,6 +4985,8 @@
             'desc' => '',
             'default' => '0'
           ),
+          
+
          )
 
        ) );
@@ -4826,288 +5106,668 @@
        ) );
 
 
+      $using_post_grid_archive = false;
+      if ( NectarThemeManager::is_special_location_active('nectar_special_location__blog_loop') ) {
+        $using_post_grid_archive = true;
+      }
+
+      $blog_layout_options = array(
+        array(
+          'id' => 'blog_type_post_grid',
+          'class' => $using_post_grid_archive ? '' : 'hidden-theme-option',
+          'type' => 'select',
+          'title' => esc_html__('Blog Format', 'salient'),
+          'subtitle' => esc_html__('Please select your blog format here.', 'salient') . '<br/><br/><strong>' . esc_html__('Note: Your blog archive design is currently being handled through a', 'salient') .' <a target="_blank" href="'.esc_url( admin_url( 'post.php?post='.$using_post_grid_archive.'&action=edit' ) ).'">'.esc_html__('global section.', 'salient').'</a></strong>',
+          'desc' => '',
+          'options' => array(
+            'contained' => esc_html__('Contained', 'salient'),
+            'contained-sidebar' => esc_html__('Contained + sidebar', 'salient'),
+            'fullwidth' => esc_html__('Fullwidth', 'salient')
+          ),
+          'default' => 'contained'
+        ),
+
+        array(
+          'id' => 'blog_type',
+          'class' => $using_post_grid_archive ? 'hidden-theme-option' : '',
+          'type' => 'select',
+          'title' => esc_html__('Blog Type', 'salient'),
+          'subtitle' => esc_html__('Please select your blog format here.', 'salient'),
+          'desc' => '',
+          'options' => array(
+            'std-blog-sidebar' => esc_html__('Standard Blog W/ Sidebar', 'salient'),
+            'std-blog-fullwidth' => esc_html__('Standard Blog No Sidebar', 'salient'),
+            'masonry-blog-sidebar' => esc_html__('Masonry Blog W/ Sidebar', 'salient'),
+            'masonry-blog-fullwidth' => esc_html__('Masonry Blog No Sidebar', 'salient'),
+            'masonry-blog-full-screen-width' => esc_html__('Masonry Blog Fullwidth', 'salient')
+          ),
+          'default' => 'masonry-blog-sidebar'
+        ),
+        array(
+          'id' => 'blog_standard_type',
+          'class' => $using_post_grid_archive ? 'hidden-theme-option' : '',
+          'type' => 'radio',
+          'title' => esc_html__('Standard Blog Style', 'salient'),
+          'subtitle' => esc_html__('Please select the style you would like your posts to use when the standard layout is displayed', 'salient'),
+          'desc' => '',
+          'options' => array(
+            'classic' => esc_html__('Classic', 'salient'),
+            'minimal' => esc_html__('Minimal', 'salient'),
+            'featured_img_left' => esc_html__('Featured Image Left', 'salient')
+          ),
+          'default' => 'featured_img_left',
+          'required' => array( 'blog_type', 'contains', 'std-blog' )
+        ),
+        array(
+          'id' => 'blog_masonry_type',
+          'class' => $using_post_grid_archive ? 'hidden-theme-option' : '',
+          'type' => 'radio',
+          'title' => esc_html__('Masonry Style', 'salient'),
+          'subtitle' => esc_html__('Please select the style you would like your posts to use when the masonry layout is displayed', 'salient'),
+          'desc' => '',
+          'hint' => array('content' => esc_html__('Hint: Auto Masonry based layouts load the fastest. This is because the layouts are calculated with pure CSS and do not rely on any scripting.', 'salient'), 'title' => ''),
+          'options' => array(
+            'classic' => esc_html__('Classic', 'salient'),
+            'classic_enhanced' => esc_html__('Classic Enhanced', 'salient'),
+            'material' =>  esc_html__('Material', 'salient'),
+            'meta_overlaid' => esc_html__('Meta Overlaid', 'salient'),
+            'auto_meta_overlaid_spaced' => esc_html__('Auto Masonry: Meta Overlaid Spaced', 'salient')
+          ),
+          'default' => 'auto_meta_overlaid_spaced'
+        ),
+
+        array(
+          'id' => 'blog_auto_masonry_spacing',
+          'class' => $using_post_grid_archive ? 'hidden-theme-option' : '',
+          'type' => 'select',
+          'title' => esc_html__('Auto Masonry Spacing', 'salient'),
+          'subtitle' => esc_html__('Please select the amount of spacing you would like for your auto masonry layout', 'salient'),
+          'desc' => '',
+          'options' => array(
+            '4px' => '4px',
+            '8px' => '8px',
+            '12px' => '12px',
+            '16px' => '16px',
+            '20px' => '20px',
+          ),
+          'default' => '8px',
+          'required' => array( 'blog_masonry_type', '=', 'auto_meta_overlaid_spaced' )
+        )
+      );
+       
+
+       $blog_styling_options = array(
+        array(
+          'id' => 'blog_loading_animation',
+          'type' => 'select',
+          'class' => $using_post_grid_archive ? 'hidden-theme-option' : '',
+          'title' => esc_html__('Archive Load In Animation', 'salient'),
+          'subtitle' => esc_html__('Please select the loading animation you would like for your posts.', 'salient'),
+          'desc' => '',
+          'options' => array(
+            "none" => esc_html__("None", 'salient'),
+            "fade_in" => esc_html__("Fade In", 'salient'),
+            "fade_in_from_bottom" => esc_html__("Fade In From Bottom", 'salient'),
+            "perspective" => esc_html__("Perspective Fade In", 'salient')
+          ),
+          'default' => 'fade_in_from_bottom'
+        ),
+
+        
+        array(
+          'id' => 'blog_enable_ss',
+          'type' => 'switch',
+          'title' => esc_html__('Enable Sticky Sidebar', 'salient'),
+          'subtitle' => esc_html__('Would you like to have your sidebar follow down as your scroll in a sticky manner?', 'salient'),
+          'desc' => '',
+          'default' => '0',
+        ),
+
+        array(
+          'id' => 'blog_auto_excerpt',
+          'type' => 'switch',
+          'title' => esc_html__('Automatic Post Excerpts', 'salient'),
+          'subtitle' => esc_html__('Using this will create automatic excerpts for your posts.', 'salient'),
+          'desc' => '',
+          'default' => '1'
+        ),
+        
+        array(
+          'id' => 'blog_excerpt_length',
+          'type' => 'text',
+          'required' => array( 'blog_auto_excerpt', '=', '1' ),
+          'title' => esc_html__('Excerpt Length', 'salient'),
+          'subtitle' => esc_html__('How many words would you like to display for your post excerpts? The default is 30.', 'salient'),
+          'desc' => ''
+        ),
+        
+       );
+
 
        Redux::setSection( $opt_name, array(
-         'title'            => esc_html__( 'Styling', 'salient' ),
+         'title'            => esc_html__( 'General Settings', 'salient' ),
          'id'               => 'Blog-style',
          'subsection'       => true,
-         'fields'           => array(
-           array(
-             'id' => 'blog_type',
-             'type' => 'select',
-             'title' => esc_html__('Blog Type', 'salient'),
-             'subtitle' => esc_html__('Please select your blog format here.', 'salient'),
-             'desc' => '',
-             'options' => array(
-               'std-blog-sidebar' => esc_html__('Standard Blog W/ Sidebar', 'salient'),
-               'std-blog-fullwidth' => esc_html__('Standard Blog No Sidebar', 'salient'),
-               'masonry-blog-sidebar' => esc_html__('Masonry Blog W/ Sidebar', 'salient'),
-               'masonry-blog-fullwidth' => esc_html__('Masonry Blog No Sidebar', 'salient'),
-               'masonry-blog-full-screen-width' => esc_html__('Masonry Blog Fullwidth', 'salient')
-             ),
-             'default' => 'masonry-blog-sidebar'
-           ),
-           array(
-             'id' => 'blog_standard_type',
-             'type' => 'radio',
-             'title' => esc_html__('Standard Blog Style', 'salient'),
-             'subtitle' => esc_html__('Please select the style you would like your posts to use when the standard layout is displayed', 'salient'),
-             'desc' => '',
-             'options' => array(
-               'classic' => esc_html__('Classic', 'salient'),
-               'minimal' => esc_html__('Minimal', 'salient'),
-               'featured_img_left' => esc_html__('Featured Image Left', 'salient')
-             ),
-             'default' => 'featured_img_left',
-             'required' => array( 'blog_type', 'contains', 'std-blog' )
-           ),
-           array(
-             'id' => 'blog_masonry_type',
-             'type' => 'radio',
-             'title' => esc_html__('Masonry Style', 'salient'),
-             'subtitle' => esc_html__('Please select the style you would like your posts to use when the masonry layout is displayed', 'salient'),
-             'desc' => '',
-             'hint' => array('content' => esc_html__('Hint: Auto Masonry based layouts load the fastest. This is because the layouts are calculated with pure CSS and do not rely on any scripting.', 'salient'), 'title' => ''),
-             'options' => array(
-               'classic' => esc_html__('Classic', 'salient'),
-               'classic_enhanced' => esc_html__('Classic Enhanced', 'salient'),
-               'material' =>  esc_html__('Material', 'salient'),
-               'meta_overlaid' => esc_html__('Meta Overlaid', 'salient'),
-               'auto_meta_overlaid_spaced' => esc_html__('Auto Masonry: Meta Overlaid Spaced', 'salient')
-             ),
-             'default' => 'auto_meta_overlaid_spaced'
-           ),
+         'fields'           => array_merge($blog_layout_options, $blog_styling_options)
+       ) );
 
-           array(
-             'id' => 'blog_auto_masonry_spacing',
-             'type' => 'select',
-             'title' => esc_html__('Auto Masonry Spacing', 'salient'),
-             'subtitle' => esc_html__('Please select the amount of spacing you would like for your auto masonry layout', 'salient'),
-             'desc' => '',
-             'options' => array(
-               '4px' => '4px',
-               '8px' => '8px',
-               '12px' => '12px',
-               '16px' => '16px',
-               '20px' => '20px',
-             ),
-             'default' => '8px',
-             'required' => array( 'blog_masonry_type', '=', 'auto_meta_overlaid_spaced' )
-           ),
+       Redux::setSection( $opt_name, array(
+        'title'            => esc_html__( 'Single Post', 'salient' ),
+        'id'               => 'blog-single-post',
+        'subsection'       => true,
+        'fields'           => array(
+          
 
-           array(
-             'id' => 'blog_loading_animation',
-             'type' => 'select',
-             'title' => esc_html__('Archive Load In Animation', 'salient'),
-             'subtitle' => esc_html__('Please select the loading animation you would like for your posts.', 'salient'),
-             'desc' => '',
-             'options' => array(
-               "none" => esc_html__("None", 'salient'),
-               "fade_in" => esc_html__("Fade In", 'salient'),
-               "fade_in_from_bottom" => esc_html__("Fade In From Bottom", 'salient'),
-               "perspective" => esc_html__("Perspective Fade In", 'salient')
-             ),
-             'default' => 'fade_in_from_bottom'
-           ),
-
-           array(
-             'id' => 'blog_header_type',
-             'type' => 'select',
-             'title' => esc_html__('Blog Header Type', 'salient'),
-             'subtitle' => esc_html__('Please select your blog header format here.', 'salient'),
-             'desc' => '',
-             'options' => array(
-               'default' => esc_html__('Variable Height & Meta Overlaid', 'salient'),
-               'default_minimal' => esc_html__('Variable Height Minimal', 'salient'),
-               'fullscreen' => esc_html__('Fullscreen with Meta Under', 'salient'),
-               'image_under' => esc_html__('Featured Media Under Heading', 'salient')
-             ),
-             'default' => 'default_minimal'
-           ),
-
-           array(
-            'id' => 'blog_header_aspect_ratio',
-            'type' => 'select',
-            'title' => esc_html__('Blog Header Image Sizing', 'salient'),
-            'subtitle' => '',
+          array(
+            'id' => 'blog_hide_sidebar',
+            'type' => 'switch',
+            'title' => esc_html__('Hide Sidebar on Single Post', 'salient'),
+            'subtitle' => esc_html__('Using this will remove the sidebar from appearing on your single post page.', 'salient'),
             'desc' => '',
-            'required' => array( 'blog_header_type', '=', 'image_under'  ),
-            'options' => array(
-              '40' => esc_html__('Slim (2.5:1)', 'salient'),
-              '50' => esc_html__('Narrow (2:1)', 'salient'),
-              '56.25' => esc_html__('Regular (16:9)', 'salient'),
-              '66.66' => esc_html__('Tall (3:2)', 'salient'),
-              '100' => esc_html__('Square (1:1)', 'salient'),
-            ),
-            'default' => '40'
+            'default' => '1'
           ),
+          array(
+            'id' => 'blog_width',
+            'type' => 'select',
+            'title' => esc_html__('Blog Content Width', 'salient'),
+            'options' => array(
+              'default' => esc_html__('Default', 'salient'),
+              '1000px' => esc_html__('1000px', 'salient'),
+              '900px' => esc_html__('900px', 'salient'),
+              '800px' => esc_html__('800px', 'salient'),
+              '700px' => esc_html__('700px', 'salient')
+            ),
+            'required' => array( 'blog_hide_sidebar', '=', '1' ),
+            'default' => 'default'
+          ),
+          array(
+           'id' => 'blog_full_width_row_func',
+           'type' => 'select',
+           'title' => esc_html__('Blog Full Width Row Functionality', 'salient'),
+           'options' => array(
+             'default' => esc_html__('Expand To Edges Of Screen', 'salient'),
+             'limit' => esc_html__('Limited To Max Container Width', 'salient'),
+           ),
+           'subtitle' => esc_html__('Allows you to limit the overall max width of page builder rows set to Full Width Content/Full Width Background on non-mobile viewports. When setting to limit, the width will match what you have defined in General Settings > Functionality for the "Max Website Container Width"
+           ', 'salient'),
+           'required' => array( array('blog_width', '!=', 'default') ),
+           'default' => 'default'
+         ),
+   
+        array(
+          'id' => 'author_bio',
+          'type' => 'switch',
+          'title' => esc_html__('Author\'s Bio', 'salient'),
+          'subtitle' => esc_html__('Display the author\'s bio at the bottom of posts?', 'salient'),
+          'desc' => '',
+          'default' => '1'
+        ),
 
-           array(
-            'id' => 'std_blog_header_overlay_color',
+        array(
+          'id' => 'blog_next_post_link',
+          'type' => 'switch',
+          'title' => esc_html__('Post Navigation Links On Single Post Page', 'salient'),
+          'subtitle' => esc_html__('Using this will add navigation link(s) at the bottom of every post page.', 'salient'),
+          'desc' => '',
+          'type' => 'switch',
+          'default' => '1'
+        ),
+        array(
+          'id' => 'blog_next_post_link_style',
+          'type' => 'select',
+          'title' => esc_html__('Post Navigation Style', 'salient'),
+          'subtitle' => esc_html__('Please select the style you would like your post navigation to display in.', 'salient'),
+          'desc' => '',
+          'required' => array( 'blog_next_post_link', '=', '1' ),
+          'options' => array(
+            "fullwidth_next_only" => esc_html__("Fullwidth Next Link Only", 'salient'),
+            "fullwidth_next_prev" => esc_html__("Fullwidth Next & Prev Links", 'salient'),
+            "contained_next_prev" => esc_html__("Contained Next & Prev Links", 'salient'),
+            "parallax_next_only" => esc_html__("Parallax Contained Next Link Only", 'salient'),
+          ),
+          'default' => 'fullwidth_next_prev'
+        ),
+        array(
+         'id' => 'blog_next_post_limit_cat',
+         'type' => 'switch',
+         'title' => esc_html__('Limit Post Navigation To Same Category', 'salient'),
+         'subtitle' => esc_html__('This will ensure that the next/prev links will only show posts that are set in the same catgory of the post being viewed.', 'salient'),
+         'desc' => '',
+         'type' => 'switch',
+         'required' => array( 'blog_next_post_link', '=', '1' ),
+         'default' => '0'
+       ),
+
+        array(
+          'id' => 'blog_next_post_link_order',
+          'type' => 'select',
+          'title' => esc_html__('Post Navigation Ordering', 'salient'),
+          'subtitle' => esc_html__('Please select how you would like your next/previous post links to function.', 'salient'),
+          'desc' => '',
+          'hint' => array('content' => '<strong>'. esc_html__('Default:','salient') . '</strong> '. esc_html__('the next post link will be the next','salient') . ' <i>'. esc_html__('oldest','salient') .'</i> ' . esc_html__('post.','salient') . '<br/> <strong>' . esc_html__('Reverse Order:','salient') .'</strong> ' . esc_html__('the next post link will be the next', 'salient') . ' <i>'. esc_html__('newest', 'salient') . '</i> ' . esc_html__('post.','salient'), 'title' => ''),
+          'required' => array( 'blog_next_post_link', '=', '1' ),
+          'options' => array(
+            "default" => esc_html__("Default", 'salient'),
+            "reverse" => esc_html__("Reverse Order", 'salient')
+          ),
+          'default' => 'default'
+        ),
+
+        array(
+          'id' => 'blog_related_posts',
+          'type' => 'switch',
+          'title' => esc_html__('Related Posts On Single Post Page', 'salient'),
+          'subtitle' => esc_html__('Using this will add related post links at the bottom of every post page.', 'salient'),
+          'desc' => '',
+          'type' => 'switch',
+          'default' => '0'
+        ),
+
+        array(
+          'id' => 'blog_related_posts_functionality',
+          'type' => 'select',
+          'title' => esc_html__('Related Posts Functionality', 'salient'),
+          'subtitle' => esc_html__('Determines how the related posts are picked for each post."', 'salient'),
+          'desc' => '',
+          'required' => array( 'blog_related_posts', '=', '1' ),
+          'options' => array(
+            "default" => esc_html__("Recent in same category", 'salient'),
+            "random_same_cat" => esc_html__("Random in same category", 'salient'),
+            "random" => esc_html__("Random in any category", 'salient'),
+       
+          ),
+          'default' => 'default'
+        ),
+        
+        array(
+          'id' => 'blog_related_posts_style',
+          'type' => 'select',
+          'class' => $using_post_grid_archive ? 'hidden-theme-option' : '',
+          'title' => esc_html__('Related Posts Style', 'salient'),
+          'subtitle' => esc_html__('Please select the style you would like for the related posts."', 'salient'),
+          'desc' => '',
+          'required' => array( 'blog_related_posts', '=', '1' ),
+          'options' => array(
+            "material" => esc_html__("Material", 'salient'),
+            "classic_enhanced" => esc_html__("Classic Enhanced", 'salient'),
+          ),
+          'default' => 'material'
+        ),
+
+        array(
+          'id' => 'blog_related_posts_excerpt',
+          'type' => 'switch',
+          'class' => $using_post_grid_archive ? 'hidden-theme-option' : '',
+          'title' => esc_html__('Display Excerpt In Related Posts', 'salient'),
+          'subtitle' => '',
+          'desc' => '',
+          'required' => array( 'blog_related_posts', '=', '1' ),
+          'type' => 'switch',
+          'default' => '0'
+        ),
+
+        array(
+          'id' => 'blog_related_posts_title_text',
+          'type' => 'select',
+          'title' => esc_html__('Related Posts Title Text', 'salient'),
+          'subtitle' => esc_html__('Please select the header text you would like above the related posts.', 'salient'),
+          'desc' => '',
+          'required' => array( 'blog_related_posts', '=', '1' ),
+          'options' => array(
+            "related_posts" => esc_html__("Related Posts", 'salient'),
+            "similar_posts" => esc_html__("Similar Posts", 'salient'),
+            "you_may_also_like" => esc_html__("You May Also Like", 'salient'),
+            "recommended_for_you" => esc_html__("Recommended For You", 'salient'),
+            "hidden" => esc_html__("None (Hidden)", 'salient')
+          ),
+          'default' => 'related_posts'
+        ),
+
+
+
+        array(
+          'id' => 'blog_section_title',
+          'type' => 'select',
+          'title' => esc_html__('Blog Section Title Typography', 'salient'),
+          'subtitle' => esc_html__('Select which typography settings the single post section title headings should inherit styling from.', 'salient'),
+          'desc' => '',
+          'options' => array(
+            "default" => "Default",
+            "h2" => "Heading 2",
+            "h3" => "Heading 3",
+            "h4" => "Heading 4",
+            "h5" => "Heading 5",
+          ),
+          'default' => 'default',
+        ),
+
+
+        array(
+          'id' => 'blog_comment_author_style',
+          'type' => 'select',
+          'title' => esc_html__('Author Style in Comments', 'salient'),
+          'subtitle' => esc_html__('Choose the styling that will be unique to the post author in the comments section.', 'salient'),
+          'desc' => '',
+          'options' => array(
+            "default" => esc_html__("Default (Inherit from theme skin)", 'salient'),
+            "author_badge" => esc_html__("\"Author\" Badge Next to Name", 'salient'),
+          ),
+          'default' => 'default'
+        ),
+        array(
+          'id' => 'display_tags',
+          'type' => 'switch',
+          'title' => esc_html__('Display Tags', 'salient'),
+          'subtitle' => esc_html__('Display tags at the bottom of posts?', 'salient'),
+          'desc' => '',
+          'switch' => true,
+          'default' => '0'
+        ),
+
+        )
+      ) );
+
+
+      Redux::setSection( $opt_name, array(
+        'title'            => esc_html__( 'Single Post Header', 'salient' ),
+        'id'               => 'blog-single-post-header',
+        'subsection'       => true,
+        'fields'           => array(
+          array(
+            'id' => 'blog_header_type',
+            'type' => 'select',
+            'title' => esc_html__('Blog Header Type', 'salient'),
+            'subtitle' => esc_html__('Please select your blog header format here.', 'salient'),
+            'desc' => '',
+            'options' => array(
+              'default' => esc_html__('Variable Height & Meta Overlaid', 'salient'),
+              'default_minimal' => esc_html__('Variable Height Minimal', 'salient'),
+              'fullscreen' => esc_html__('Fullscreen with Meta Under', 'salient'),
+              'image_under' => esc_html__('Featured Media Under Heading', 'salient')
+            ),
+            'default' => 'default_minimal'
+          ),
+  
+          array(
+           'id' => 'blog_header_aspect_ratio',
+           'type' => 'select',
+           'title' => esc_html__('Blog Header Image Sizing', 'salient'),
+           'subtitle' => '',
+           'desc' => '',
+           'required' => array( 'blog_header_type', '=', 'image_under'  ),
+           'options' => array(
+             '40' => esc_html__('Slim (2.5:1)', 'salient'),
+             '50' => esc_html__('Narrow (2:1)', 'salient'),
+             '56.25' => esc_html__('Regular (16:9)', 'salient'),
+             '66.66' => esc_html__('Tall (3:2)', 'salient'),
+             '100' => esc_html__('Square (1:1)', 'salient'),
+           ),
+           'default' => '40'
+         ),
+  
+         array(
+           'id' => 'blog_header_image_under_align',
+           'type' => 'select',
+           'title' => esc_html__('Blog Header Alignment', 'salient'),
+           'subtitle' => '',
+           'desc' => '',
+           'required' => array( 'blog_header_type', '=', 'image_under'  ),
+           'options' => array(
+             'default' => esc_html__('Default (Left)', 'salient'),
+             'center' => esc_html__('Center', 'salient'),
+           ),
+           'default' => 'default'
+         ),
+  
+         array(
+           'id' => 'blog_header_image_under_author_style',
+           'type' => 'select',
+           'title' => esc_html__('Blog Header Author Style', 'salient'),
+           'subtitle' => '',
+           'desc' => '',
+           'required' => array( 'blog_header_type', '=', 'image_under'  ),
+           'options' => array(
+             'default' => esc_html__('Small Image Inline', 'salient'),
+             'large' => esc_html__('Large Image Multiline ', 'salient'),
+           ),
+           'default' => 'default'
+         ),
+  
+         array(
+           'id' => 'blog_header_image_under_excerpt',
+           'type' => 'switch',
+           'required' => array( 'blog_header_type', '=', 'image_under'  ),
+           'title' => esc_html__('Blog Header Display Excerpt', 'salient'),
+           'subtitle' => esc_html__('Enabling this will add the excerpt field under your blog title.', 'salient'),
+           'desc' => '',
+           'default' => '0'
+         ),
+  
+          array(
+           'id' => 'std_blog_header_overlay_color',
+           'type' => 'color',
+           'title' => esc_html__('Blog Header Overlay Color', 'salient'),
+           'subtitle' => '',
+           'desc' => '',
+           'default' => '',
+           'required' => array( array( 'blog_header_type', '!=', 'default_minimal' ), array( 'blog_header_type', '!=', 'image_under' ) ),
+           'transparent' => false
+         ),
+         array(
+           'id'        => 'std_blog_header_overlay_opacity',
+           'type'      => 'slider',
+           'required' => array( array( 'blog_header_type', '!=', 'default_minimal' ), array( 'blog_header_type', '!=', 'image_under' ) ),
+           'title'     => esc_html__('Blog Header Overlay Opacity', 'salient'),
+           'desc'      => '',
+           "default"   => 0.0,
+           "min"       => 0,
+           "step"      => 0.1,
+           "max"       => 1,
+           'resolution' => 0.1,
+           'display_value' => 'text'
+         ),
+  
+          array(
+            'id' => 'default_minimal_overlay_color',
             'type' => 'color',
             'title' => esc_html__('Blog Header Overlay Color', 'salient'),
             'subtitle' => '',
             'desc' => '',
-            'default' => '',
-            'required' => array( array( 'blog_header_type', '!=', 'default_minimal' ), array( 'blog_header_type', '!=', 'image_under' ) ),
+            'default' => '#2d2d2d',
+            'required' => array( 'blog_header_type', '=', 'default_minimal' ),
             'transparent' => false
           ),
           array(
-            'id'        => 'std_blog_header_overlay_opacity',
+            'id'        => 'default_minimal_overlay_opacity',
             'type'      => 'slider',
-            'required' => array( array( 'blog_header_type', '!=', 'default_minimal' ), array( 'blog_header_type', '!=', 'image_under' ) ),
+            'required' => array( 'blog_header_type', '=', 'default_minimal' ),
             'title'     => esc_html__('Blog Header Overlay Opacity', 'salient'),
             'desc'      => '',
-            "default"   => 0.0,
+            "default"   => 0.4,
             "min"       => 0,
             "step"      => 0.1,
             "max"       => 1,
             'resolution' => 0.1,
             'display_value' => 'text'
           ),
-
-           array(
-             'id' => 'default_minimal_overlay_color',
-             'type' => 'color',
-             'title' => esc_html__('Blog Header Overlay Color', 'salient'),
-             'subtitle' => '',
-             'desc' => '',
-             'default' => '#2d2d2d',
-             'required' => array( 'blog_header_type', '=', 'default_minimal' ),
-             'transparent' => false
-           ),
-           array(
-             'id'        => 'default_minimal_overlay_opacity',
-             'type'      => 'slider',
-             'required' => array( 'blog_header_type', '=', 'default_minimal' ),
-             'title'     => esc_html__('Blog Header Overlay Opacity', 'salient'),
-             'desc'      => '',
-             "default"   => 0.4,
-             "min"       => 0,
-             "step"      => 0.1,
-             "max"       => 1,
-             'resolution' => 0.1,
-             'display_value' => 'text'
-           ),
-           array(
-             'id' => 'default_minimal_text_color',
-             'type' => 'color',
-             'title' => esc_html__('Blog Header Text Color', 'salient'),
-             'subtitle' => '',
-             'desc' => '',
-             'default' => '#ffffff',
-             'required' => array( 'blog_header_type', '=', 'default_minimal' ),
-             'transparent' => false
-           ),
-
-           array(
-             'id' => 'blog_header_sizing',
-             'type' => 'select',
-             'title' => esc_html__('Blog Header Sizing', 'salient'),
-             'desc' => esc_html__('Using a responsive sizing option will override the post height set on individual posts.', 'salient'),
-             'required' => array( array( 'blog_header_type', '!=', 'fullscreen' ), array( 'blog_header_type', '!=', 'image_under' ) ),
-             'options' => array(
-               'default' => esc_html__('Height Set Per Post', 'salient'),
-               'responsive' => esc_html__('Responsive Sizing', 'salient')
-             ),
-             'default' => 'default'
-           ),
-           array(
-             'id' => 'blog_header_scroll_effect',
-             'type' => 'select',
-             'title' => esc_html__('Blog Header Scroll Effect', 'salient'),
-             'desc' => esc_html__('Globally define a scroll effect for your blog header.', 'salient'),
-             'options' => array(
-               'default' => esc_html__('None', 'salient'),
-               'parallax' => esc_html__('Parallax', 'salient')
-             ),
-             'default' => 'default'
-           ),
-           array(
-            'id' => 'blog_header_load_in_animation',
-            'type' => 'select',
-            'title' => esc_html__('Blog Header Load In Animation', 'salient'),
-            'subtitle' => esc_html__('Please select the loading animation you would like for blog header on the single post template.', 'salient'),
+          array(
+            'id' => 'default_minimal_text_color',
+            'type' => 'color',
+            'title' => esc_html__('Blog Header Text Color', 'salient'),
+            'subtitle' => '',
             'desc' => '',
-            'required' => array( 'blog_header_type', '=', 'image_under'  ),
-            'options' => array(
-              "none" => esc_html__("None", 'salient'),
-              "fade_in" => esc_html__("Fade In Staggered", 'salient'),
-            ),
-            'default' => 'none'
+            'default' => '#ffffff',
+            'required' => array( 'blog_header_type', '=', 'default_minimal' ),
+            'transparent' => false
           ),
-
-           array(
-             'id' => 'blog_hide_sidebar',
-             'type' => 'switch',
-             'title' => esc_html__('Hide Sidebar on Single Post', 'salient'),
-             'subtitle' => esc_html__('Using this will remove the sidebar from appearing on your single post page.', 'salient'),
-             'desc' => '',
-             'default' => '1'
-           ),
-           array(
-             'id' => 'blog_width',
-             'type' => 'select',
-             'title' => esc_html__('Blog Content Width', 'salient'),
-             'options' => array(
-               'default' => esc_html__('Default', 'salient'),
-               '1000px' => esc_html__('1000px', 'salient'),
-               '900px' => esc_html__('900px', 'salient'),
-               '800px' => esc_html__('800px', 'salient'),
-               '700px' => esc_html__('700px', 'salient')
-             ),
-             'required' => array( 'blog_hide_sidebar', '=', '1' ),
-             'default' => 'default'
-           ),
-           array(
-            'id' => 'blog_full_width_row_func',
+  
+          array(
+            'id' => 'blog_header_sizing',
             'type' => 'select',
-            'title' => esc_html__('Blog Full Width Row Functionality', 'salient'),
+            'title' => esc_html__('Blog Header Sizing', 'salient'),
+            'desc' => esc_html__('Using a responsive sizing option will override the post height set on individual posts.', 'salient'),
+            'required' => array( array( 'blog_header_type', '!=', 'fullscreen' ), array( 'blog_header_type', '!=', 'image_under' ) ),
             'options' => array(
-              'default' => esc_html__('Expand To Edges Of Screen', 'salient'),
-              'limit' => esc_html__('Limited To Max Container Width', 'salient'),
+              'default' => esc_html__('Height Set Per Post', 'salient'),
+              'responsive' => esc_html__('Responsive Sizing', 'salient')
             ),
-            'subtitle' => esc_html__('Allows you to limit the overall max width of page builder rows set to Full Width Content/Full Width Background on non-mobile viewports. When setting to limit, the width will match what you have defined in General Settings > Functionality for the "Max Website Container Width"
-            ', 'salient'),
-            'required' => array( array('blog_width', '!=', 'default') ),
             'default' => 'default'
           ),
-           array(
-             'id' => 'blog_enable_ss',
-             'type' => 'switch',
-             'title' => esc_html__('Enable Sticky Sidebar', 'salient'),
-             'subtitle' => esc_html__('Would you like to have your sidebar follow down as your scroll in a sticky manner?', 'salient'),
-             'desc' => '',
-             'default' => '0',
+          array(
+            'id' => 'blog_header_scroll_effect',
+            'type' => 'select',
+            'title' => esc_html__('Blog Header Scroll Effect', 'salient'),
+            'desc' => esc_html__('Globally define a scroll effect for your blog header.', 'salient'),
+            'options' => array(
+              'default' => esc_html__('None', 'salient'),
+              'parallax' => esc_html__('Parallax', 'salient')
+            ),
+            'default' => 'default'
+          ),
+          array(
+           'id' => 'blog_header_load_in_animation',
+           'type' => 'select',
+           'title' => esc_html__('Blog Header Load In Animation', 'salient'),
+           'subtitle' => esc_html__('Please select the loading animation you would like for blog header on the single post template.', 'salient'),
+           'desc' => '',
+           'required' => array( 'blog_header_type', '=', 'image_under'  ),
+           'options' => array(
+             "none" => esc_html__("None", 'salient'),
+             "fade_in" => esc_html__("Fade In Staggered", 'salient'),
            ),
-           array(
-             'id' => 'blog_hide_featured_image',
-             'type' => 'switch',
-             'title' => esc_html__('Hide Featured Media on Single Post', 'salient'),
-             'subtitle' => esc_html__('Using this will remove the featured media (determined by the selected post format) from appearing in the top of your single blog posts.', 'salient'),
-             'desc' => '',
-             'default' => '0'
-           ),
-           array(
-             'id' => 'blog_archive_bg_image',
-             'type' => 'media',
-             'title' => esc_html__('Archive Header Background Image', 'salient'),
-             'subtitle' => esc_html__('Upload an optional background that will be used on all blog archive pages.', 'salient'),
-             'desc' => ''
-           ),
-           array(
-             'id' => 'blog_post_header_inherit_featured_image',
-             'type' => 'switch',
-             'title' => esc_html__('Single Post Header Inherits Featured Image', 'salient'),
-             'subtitle' => esc_html__('Using this will cause the default background of your post header to use your featured image when no other post header image is supplied.', 'salient'),
-             'desc' => '',
-             'required' => array( array( 'blog_header_type', '!=', 'image_under' ) ),
-             'default' => '1'
-           ),
+           'default' => 'none'
+         ),
 
-         )
-       ) );
+         array(
+          'id' => 'blog_hide_featured_image',
+          'type' => 'switch',
+          'title' => esc_html__('Hide Featured Media on Single Post', 'salient'),
+          'subtitle' => esc_html__('Using this will remove the featured media (determined by the selected post format) from appearing in the top of your single blog posts.', 'salient'),
+          'desc' => '',
+          'default' => '0'
+        ),
+       
+        array(
+          'id' => 'blog_post_header_inherit_featured_image',
+          'type' => 'switch',
+          'title' => esc_html__('Single Post Header Inherits Featured Image', 'salient'),
+          'subtitle' => esc_html__('Using this will cause the default background of your post header to use your featured image when no other post header image is supplied.', 'salient'),
+          'desc' => '',
+          'required' => array( array( 'blog_header_type', '!=', 'image_under' ) ),
+          'default' => '1'
+        ),
 
+        array(
+          'id' => 'blog_header_category_display',
+          'type' => 'select',
+          'title' => esc_html__('Blog Header Category Display', 'salient'),
+          'subtitle' => esc_html__('Please select how you would like your post categories displayed in the header.', 'salient'),
+          'desc' => '',
+          'options' => array(
+            "default" => esc_html__("Display All", 'salient'),
+            "parent_only" => esc_html__("Parent Categories Only", 'salient'),
+          ),
+          'default' => 'default'
+        ),
+
+        )
+      ) );
+
+
+       Redux::setSection( $opt_name, array(
+        'title'            => esc_html__( 'Archive Header', 'salient' ),
+        'id'               => 'blog-archive-header',
+        'subsection'       => true,
+        'fields'           => array(
+
+          array(
+            'id' => 'blog_archive_bg_functionality',
+            'type' => 'select',
+            'title' => esc_html__('Blog Archive Header Type', 'salient'),
+            'options' => array(
+              'image' => esc_html__('Image Background', 'salient'),
+              'color' => esc_html__('Color Background', 'salient'),
+            ),
+            'default' => 'image'
+          ),
+
+          array(
+            'id' => 'blog_archive_bg_color',
+            'type' => 'color',
+            'title' => esc_html__('Blog Archive Header Background Color', 'salient'),
+            'desc' => '',
+            'default' => '#b6c1ff',
+            'subtitle' => esc_html__('Select a background color that will be used as the default on all blog archive pages.', 'salient'),
+            'required' => array( 'blog_archive_bg_functionality', '=', 'color' ),
+            'transparent' => false
+          ),
+          array(
+            'id' => 'blog_archive_bg_text_color',
+            'type' => 'color',
+            'title' => esc_html__('Blog Archive Header Text Color', 'salient'),
+            'desc' => '',
+            'default' => '#000000',
+            'subtitle' => esc_html__('Select a text color that will be used as the default on all blog archive pages.', 'salient'),
+            'required' => array( 'blog_archive_bg_functionality', '=', 'color' ),
+            'transparent' => false
+          ),
+
+          array(
+            'id' => 'blog_archive_bg_image',
+            'type' => 'media',
+            'title' => esc_html__('Blog Archive Header Background Image', 'salient'),
+            'subtitle' => esc_html__('Upload an optional background that will be used as the default on all blog archive pages.', 'salient'),
+            'desc' => '',
+            'required' => array( 'blog_archive_bg_functionality', '=', 'image' ),
+          ),
+
+          array(
+            'id' => 'blog_archive_bg_color_layout',
+            'type' => 'select',
+            'title' => esc_html__('Blog Archive Background Color Layout', 'salient'),
+            'required' => array( 'blog_archive_bg_functionality', '=', 'color' ),
+            'options' => array(
+              'default' => esc_html__('Default (Solid)', 'salient'),
+              'gradient' => esc_html__('Gradient', 'salient'),
+            ),
+            'default' => 'default'
+          ),
+          
+          array(
+            'id' => 'blog_archive_text_alignment',
+            'type' => 'select',
+            'title' => esc_html__('Blog Archive Text Alignment', 'salient'),
+            'options' => array(
+              'default' => esc_html__('Default', 'salient'),
+              'left' => esc_html__('Left', 'salient'),
+              'center' => esc_html__('Center', 'salient'),
+              'right' => esc_html__('Right', 'salient'),
+            ),
+            'default' => 'default'
+          ),
+
+          array(
+            'id' => 'blog_archive_format',
+            'type' => 'select',
+            'title' => esc_html__('Blog Archive Format', 'salient'),
+            'options' => array(
+              'default' => esc_html__('Default', 'salient'),
+              'minimal' => esc_html__('Minimal', 'salient'),
+            ),
+            'default' => 'default'
+          ),
+
+          array(
+            'id' => 'blog_archive_author_gravatar',
+            'type' => 'switch',
+            'title' => esc_html__('Blog Archive Author Gravatar', 'salient'),
+            'subtitle' => esc_html__('Display the author gravatar on author archives.', 'salient'),
+            'desc' => '',
+            'default' => ''
+          ),
+
+        )
+      ) );
 
 
        Redux::setSection( $opt_name, array(
@@ -5116,159 +5776,14 @@
          'subsection'       => true,
          'fields'           => array(
 
-           array(
-             'id' => 'author_bio',
-             'type' => 'switch',
-             'title' => esc_html__('Author\'s Bio', 'salient'),
-             'subtitle' => esc_html__('Display the author\'s bio at the bottom of posts?', 'salient'),
-             'desc' => '',
-             'default' => '1'
-           ),
-           array(
-             'id' => 'blog_auto_excerpt',
-             'type' => 'switch',
-             'title' => esc_html__('Automatic Post Excerpts', 'salient'),
-             'subtitle' => esc_html__('Using this will create automatic excerpts for your posts.', 'salient'),
-             'desc' => '',
-             'default' => '1'
-           ),
-           array(
-             'id' => 'blog_lazy_load',
-             'type' => 'switch',
-             'title' => esc_html__('Lazy Load Blog Images', 'salient'),
-             'subtitle' => esc_html__('Enabling this will load all featured images within the blog element via a lazy load method for higher performance.', 'salient'),
-             'desc' => '',
-             'default' => '0'
-           ),
-           array(
-             'id' => 'blog_excerpt_length',
-             'type' => 'text',
-             'required' => array( 'blog_auto_excerpt', '=', '1' ),
-             'title' => esc_html__('Excerpt Length', 'salient'),
-             'subtitle' => esc_html__('How many words would you like to display for your post excerpts? The default is 30.', 'salient'),
-             'desc' => ''
-           ),
-           array(
-             'id' => 'blog_next_post_link',
-             'type' => 'switch',
-             'title' => esc_html__('Post Navigation Links On Single Post Page', 'salient'),
-             'subtitle' => esc_html__('Using this will add navigation link(s) at the bottom of every post page.', 'salient'),
-             'desc' => '',
-             'type' => 'switch',
-             'default' => '1'
-           ),
-           array(
-             'id' => 'blog_next_post_link_style',
-             'type' => 'select',
-             'title' => esc_html__('Post Navigation Style', 'salient'),
-             'subtitle' => esc_html__('Please select the style you would like your post navigation to display in.', 'salient'),
-             'desc' => '',
-             'required' => array( 'blog_next_post_link', '=', '1' ),
-             'options' => array(
-               "fullwidth_next_only" => esc_html__("Fullwidth Next Link Only", 'salient'),
-               "fullwidth_next_prev" => esc_html__("Fullwidth Next & Prev Links", 'salient'),
-               "contained_next_prev" => esc_html__("Contained Next & Prev Links", 'salient'),
-               "parallax_next_only" => esc_html__("Parallax Contained Next Link Only", 'salient'),
-             ),
-             'default' => 'fullwidth_next_prev'
-           ),
-           array(
-            'id' => 'blog_next_post_limit_cat',
+          array(
+            'id' => 'blog_lazy_load',
             'type' => 'switch',
-            'title' => esc_html__('Limit Post Navigation To Same Category', 'salient'),
-            'subtitle' => esc_html__('This will ensure that the next/prev links will only show posts that are set in the same catgory of the post being viewed.', 'salient'),
+            'title' => esc_html__('Lazy Load Blog Images', 'salient'),
+            'subtitle' => esc_html__('Enabling this will load all featured images within the blog element via a lazy load method for higher performance.', 'salient'),
             'desc' => '',
-            'type' => 'switch',
-            'required' => array( 'blog_next_post_link', '=', '1' ),
             'default' => '0'
           ),
-
-           array(
-             'id' => 'blog_next_post_link_order',
-             'type' => 'select',
-             'title' => esc_html__('Post Navigation Ordering', 'salient'),
-             'subtitle' => esc_html__('Please select how you would like your next/previous post links to function.', 'salient'),
-             'desc' => '',
-             'hint' => array('content' => '<strong>'. esc_html__('Default:','salient') . '</strong> '. esc_html__('the next post link will be the next','salient') . ' <i>'. esc_html__('oldest','salient') .'</i> ' . esc_html__('post.','salient') . '<br/> <strong>' . esc_html__('Reverse Order:','salient') .'</strong> ' . esc_html__('the next post link will be the next', 'salient') . ' <i>'. esc_html__('newest', 'salient') . '</i> ' . esc_html__('post.','salient'), 'title' => ''),
-             'required' => array( 'blog_next_post_link', '=', '1' ),
-             'options' => array(
-               "default" => esc_html__("Default", 'salient'),
-               "reverse" => esc_html__("Reverse Order", 'salient')
-             ),
-             'default' => 'default'
-           ),
-
-           array(
-             'id' => 'blog_related_posts',
-             'type' => 'switch',
-             'title' => esc_html__('Related Posts On Single Post Page', 'salient'),
-             'subtitle' => esc_html__('Using this will add related post links at the bottom of every post page.', 'salient'),
-             'desc' => '',
-             'type' => 'switch',
-             'default' => '0'
-           ),
-
-           array(
-             'id' => 'blog_related_posts_style',
-             'type' => 'select',
-             'title' => esc_html__('Related Posts Style', 'salient'),
-             'subtitle' => esc_html__('Please select the style you would like for the related posts"', 'salient'),
-             'desc' => '',
-             'required' => array( 'blog_related_posts', '=', '1' ),
-             'options' => array(
-               "material" => esc_html__("Material", 'salient'),
-               "classic_enhanced" => esc_html__("Classic Enhanced", 'salient'),
-             ),
-             'default' => 'material'
-           ),
-
-           array(
-             'id' => 'blog_related_posts_excerpt',
-             'type' => 'switch',
-             'title' => esc_html__('Display Excerpt In Related Posts', 'salient'),
-             'subtitle' => '',
-             'desc' => '',
-             'required' => array( 'blog_related_posts', '=', '1' ),
-             'type' => 'switch',
-             'default' => '0'
-           ),
-
-           array(
-             'id' => 'blog_related_posts_title_text',
-             'type' => 'select',
-             'title' => esc_html__('Related Posts Title Text', 'salient'),
-             'subtitle' => esc_html__('Please select the header text you would like above the related posts"', 'salient'),
-             'desc' => '',
-             'required' => array( 'blog_related_posts', '=', '1' ),
-             'options' => array(
-               "related_posts" => esc_html__("Related Posts", 'salient'),
-               "similar_posts" => esc_html__("Similar Posts", 'salient'),
-               "you_may_also_like" => esc_html__("You May Also Like", 'salient'),
-               "recommended_for_you" => esc_html__("Recommended For You", 'salient'),
-               "hidden" => esc_html__("None (Hidden)", 'salient')
-             ),
-             'default' => 'related_posts'
-           ),
-
-
-           array(
-             'id'    => 'blog_social',
-             'type'  => 'info',
-             'style' => 'success',
-             'title' => esc_html__('Blog Social Sharing Options', 'salient'),
-             'icon'  => 'el-icon-info-sign',
-             'desc'  => esc_html__( 'As of Salient v10.1 the blog social settings have been moved into WordPress customizer (Appearance > Customize). Ensure that you have the "Salient Social" plugin installed and activated to use them.', 'salient')
-           ),
-
-           array(
-             'id' => 'display_tags',
-             'type' => 'switch',
-             'title' => esc_html__('Display Tags', 'salient'),
-             'subtitle' => esc_html__('Display tags at the bottom of posts?', 'salient'),
-             'desc' => '',
-             'switch' => true,
-             'default' => '0'
-           ),
 
            array(
              'id' => 'display_full_date',
@@ -5301,6 +5816,15 @@
              ),
              'default' => 'default'
            ),
+
+           array(
+            'id'    => 'blog_social',
+            'type'  => 'info',
+            'style' => 'success',
+            'title' => esc_html__('Blog Social Sharing Options', 'salient'),
+            'icon'  => 'el-icon-info-sign',
+            'desc'  => esc_html__( 'As of Salient v10.1 the blog social settings have been moved into WordPress customizer (Appearance > Customize). Ensure that you have the "Salient Social" plugin installed and activated to use them.', 'salient')
+          ),
            array(
              'id' => 'recent-posts-title',
              'type' => 'text',
@@ -5467,7 +5991,7 @@
                'id' => 'ajax-add-to-cart',
                'type' => 'switch',
                'title' => esc_html__('AJAX Product Template Add to Cart', 'salient'),
-               'subtitle' => esc_html__('Enabling this will allow products to be added to the cart without causing a page refresh on the single product template and in the quickview modal.', 'salient'),
+               'subtitle' => esc_html__('Enabling this will allow products to be added to the cart without causing a page refresh on the single product template and in the quickview modal.', 'salient') .'<br /><br /><strong>'. esc_html__('Note:','salient') . '</strong>'. esc_html__('This option may not work with some third-party addons which extend the product data set. If you encounter any issues adding items to your cart, try disabling this option.','salient'),
                'default' => '0',
                'required' => array( 'enable-cart', '=', '1' ),
              ),
@@ -6174,9 +6698,6 @@
            )
          )
        ));
-
-
-
 
 
 

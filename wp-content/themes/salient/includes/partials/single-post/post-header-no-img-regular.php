@@ -4,7 +4,7 @@
  *
  * @package Salient WordPress Theme
  * @subpackage Partials
- * @version 13.1
+ * @version 15.5
  */
 
 // Exit if accessed directly
@@ -18,7 +18,12 @@ $nectar_options = get_nectar_theme_options();
 
 $bg                                = apply_filters('nectar_page_header_bg_val', get_post_meta( $post->ID, '_nectar_header_bg', true ));
 $bg_color                          = apply_filters('nectar_page_header_bg_color_val', get_post_meta( $post->ID, '_nectar_header_bg_color', true ));
-$single_post_header_inherit_fi     = ( ! empty( $nectar_options['blog_post_header_inherit_featured_image'] ) ) ? $nectar_options['blog_post_header_inherit_featured_image'] : '0';
+$blog_post_type_list = array('post');
+if( has_filter('nectar_metabox_post_types_post_header') ) {
+	$blog_post_type_list = apply_filters('nectar_metabox_post_types_post_header', $blog_post_type_list);
+}
+$is_blog_header_post_type          = ( isset($post->post_type) && in_array($post->post_type, $blog_post_type_list) && is_single()) ? true : false;
+$single_post_header_inherit_fi     = ( ! empty( $nectar_options['blog_post_header_inherit_featured_image'] ) && $is_blog_header_post_type ) ? $nectar_options['blog_post_header_inherit_featured_image'] : '0';
 $theme_skin                        = NectarThemeManager::$skin;
 $fullscreen_header                 = ( ! empty( $nectar_options['blog_header_type'] ) && $nectar_options['blog_header_type'] === 'fullscreen' && is_singular( 'post' ) ) ? true : false;
 $blog_header_type                  = ( ! empty( $nectar_options['blog_header_type'] ) ) ? $nectar_options['blog_header_type'] : 'default';
@@ -46,16 +51,14 @@ if ( get_post_format() !== 'status' && get_post_format() !== 'aside' && 'image_u
 
 	  <div class="row heading-title hentry" data-header-style="<?php echo esc_attr( $blog_header_type ); ?>">
 		<div class="col span_12 section-title blog-title">
+				<?php do_action('nectar_before_post_title'); ?>
 				<?php if ( $blog_header_type === 'default_minimal' && 'post' === get_post_type() ) { ?>
 		  <span class="meta-category">
 
 					<?php
 					$categories = get_the_category();
 					if ( ! empty( $categories ) ) {
-						$output = null;
-						foreach ( $categories as $category ) {
-							$output .= '<a class="' . esc_attr( $category->slug ) . '" href="' . esc_url( get_category_link( $category->term_id ) ) . '" alt="' . esc_attr( sprintf( __( 'View all posts in %s', 'salient' ), $category->name ) ) . '">' . esc_html( $category->name ) . '</a>';
-						}
+						$output = nectar_get_category_list();
 						echo apply_filters('nectar_blog_page_header_categories',trim( $output )); // WPCS: XSS ok.
 					}
 					?>
@@ -93,7 +96,7 @@ if ( get_post_format() !== 'status' && get_post_format() !== 'aside' && 'image_u
 				}
 
 				if( $blog_header_type != 'default_minimal') {
-					echo '<span class="meta-category">'.apply_filters('nectar_blog_page_header_categories',get_the_category_list(', ')).'</span>';
+					echo '<span class="meta-category">'.apply_filters('nectar_blog_page_header_categories',nectar_get_category_list(',')).'</span>';
 				} else {
 					echo '<span class="meta-comment-count"><a href="'.get_comments_link().'">'. get_comments_number_text( esc_html__('No Comments', 'salient'), esc_html__('One Comment', 'salient'), esc_html__('% Comments', 'salient') ) . '</a></span>';
 				}

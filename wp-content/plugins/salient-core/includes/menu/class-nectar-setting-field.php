@@ -30,6 +30,7 @@
          'dropdown_dual',
          'widget_areas',
          'image',
+         'video',
          'icon',
          'color',
          'alignment',
@@ -272,6 +273,26 @@
        echo '</div>';
        echo '<input type="hidden" name="'.$this->field_id.'" id="' . $this->field_id . '" value="' . $this->field_value() . '" />';
      }
+
+     public function video() {
+
+      $value = $this->field_value();
+
+      if( isset($value) && !empty($value) ) {
+        $add_class = ' hidden';
+        $remove_class = '';
+      } else {
+        $add_class = '';
+        $remove_class = ' hidden';
+      }
+  
+       echo '<input type="text" rel-id="' . $this->field_id . '" id="' . $this->field_id . '" name="'.$this->field_id.'" value="' . esc_attr($value) . '" />';
+     
+       echo '<a href="#" class="nectar-remove-video-btn button-secondary' . $remove_class . '" rel-id="' . $this->field_id . '"><span class="dashicons dashicons-no-alt"></span> ' . esc_html__('Remove', 'salient-core') . '</a>';
+       echo '<a href="#" data-update="' . esc_html__('Select Video', 'salient-core') . '" data-title="' . esc_html__('Choose Your Video', 'salient-core') . '" class="nectar-add-video-btn button-secondary' . $add_class . '" rel-id="' . $this->field_id . '"><span class="dashicons dashicons-plus-alt2"></span> ' . esc_html__('Add Video', 'salient-core') . '</a>';
+
+
+    }
 
      public function image() {
 

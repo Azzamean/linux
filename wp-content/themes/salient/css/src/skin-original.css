@@ -433,6 +433,13 @@ body .nectar-button.see-through-extra-color-gradient-2.has-icon:hover i{
    z-index:100
 }
 
+.nectar_team_member_overlay .inner-wrap {
+   padding-top: 0!important;
+ }
+ .nectar_team_member_overlay {
+   z-index: 10000;
+ }
+
 .comment-wrap {
   padding: 60px 0;
 }
@@ -505,6 +512,18 @@ body.original .bypostauthor .comment-body:before {
 	border: none;
 }
 
+
+#slide-out-widget-area.slide-out-from-right .nectar-global-section .full-width-content {
+   width: 100%!important;
+   left: 0!important;
+   margin: 0!important;
+ }
+ 
+ #slide-out-widget-area.slide-out-from-right .nectar-global-section .container {
+    padding: 0;
+ }
+
+ 
 #slide-out-widget-area.slide-out-from-right .off-canvas-menu-container li {
   margin-top: 3px;
   margin-bottom: 3px;

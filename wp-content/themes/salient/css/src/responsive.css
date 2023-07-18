@@ -3,6 +3,10 @@ Theme Name:  Salient
 Description: Global responsive styles
 */
 
+:root {
+  --mobile-container-width: 88%;
+}
+
 @media only screen and (min-width: 1300px) {
 
   .container,
@@ -96,7 +100,6 @@ Description: Global responsive styles
   }
 
  
-
   /* Tablet width override */
   body .vc_row-fluid .wpb_column[data-t-w-inherits="small_desktop"] {
     margin-bottom: 0;
@@ -113,18 +116,12 @@ Description: Global responsive styles
 
   /* Tablet width override end */
 
-
   body .vc_row-fluid.full-width-content .vc_col-xs-6 {
     width: 50%;
   }
 
   body .vc_row-fluid .vc_col-xs-12[class*="vc_col-xs-"] {
     width: 100%;
-  }
-
-
-  .container {
-    max-width: 600px;
   }
 
 
@@ -320,12 +317,6 @@ Description: Global responsive styles
   }
 
 
-  .container,
-  .orbit-wrapper .slider-nav,
-  .post-area.standard-minimal.full-width-content .post .inner-wrap {
-    max-width: 320px;
-  }
-
   body[data-slide-out-widget-area-style="simple"] #header-outer[data-full-width="true"] #mobile-menu,
   body #header-outer[data-full-width="true"] header > .container,
   body #header-secondary-outer[data-full-width="true"] > .container {
@@ -433,7 +424,7 @@ Description: Global responsive styles
     border-left: 1px solid rgba(0,0,0,0.1);
   }
   body.material .container .comment-list .comment > div {
-    padding: 0px 0 40px 0;
+    padding: 0;
   }
   body.material #ajax-content-wrap .comment-list .children {
     margin-left: 0;
@@ -720,12 +711,26 @@ Description: Global responsive styles
 /* Phone and Tablet */
 @media only screen and (min-width : 1px) and (max-width : 999px) {
 
+  .container {
+    max-width: var(--mobile-container-width);
+  }
+
+  .container .nectar-global-section > .container {
+    max-width: 100%;
+  }
+
+
   .n-sticky {
     width: 100%;
   }
   
   #to-top:not(.mobile-enabled) {
     display: none;
+  }
+
+  div[data-advanced-animation="true"]:not([data-persist-animation]) {
+    transform: none!important;
+    opacity: 1!important;
   }
 
   body[data-ajax-transitions="true"] #ajax-loading-screen[data-method="standard"][data-disable-mobile="1"] {
@@ -739,7 +744,7 @@ Description: Global responsive styles
     display: none!important;
   }
 
-  body #header-outer:not(.transparent)  #top .span_3 #logo .mobile-only-logo,
+  body #header-outer:not(.transparent) #top .span_3 #logo .mobile-only-logo,
   body #header-outer.transparent #top .span_3 #logo[data-supplied-ml-starting="true"] img.mobile-only-logo.starting-logo:not(.dark-version),
   body #header-outer.transparent #top .span_3 #logo[data-supplied-ml-starting-dark="true"] img.mobile-only-logo.starting-logo.dark-version,
   #page-header-bg[data-parallax="1"] .span_6 .inner-wrap,
@@ -1547,16 +1552,6 @@ Description: Global responsive styles
 }
 
 
-/* Legacy Phone with Narrow Width */
-@media only screen and (max-width: 321px) {
-
-  .container,
-  .slider-nav,
-  .post-area.standard-minimal.full-width-content .post .inner-wrap {
-    max-width: 300px;
-  }
-}
-
 
 
 @media only screen and (max-width: 479px) {
@@ -1570,20 +1565,9 @@ Description: Global responsive styles
 /* Phone Landscape */
 @media only screen and (min-width: 480px) and (max-width: 690px) {
 
-  body .container,
-  body .slider-nav,
-  .post-area.standard-minimal.full-width-content .post .inner-wrap {
-    max-width: 420px;
-  }
-
-  #ajax-content-wrap .project-title #all-items {
-    left: 194px;
-  }
-
   .iosSlider.product-thumbnails .thumb {
     width: 98px;
   }
-
 
 }
 

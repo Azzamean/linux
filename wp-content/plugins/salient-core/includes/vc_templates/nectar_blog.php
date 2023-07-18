@@ -25,6 +25,29 @@ extract(shortcode_atts(array(
   'blog_remove_post_nectar_love' => ''
 ), $atts));  
 
+if( strpos($layout, 'masonry') !== false ) { 
+  if( in_array($blog_masonry_style, array('classic', 'classic_enhanced', 'material', 'meta_overlaid'))  ) {
+    wp_enqueue_script('isotope');
+    wp_enqueue_script('nectar-masonry-blog');
+    wp_enqueue_style('nectar-blog-masonry-core');
+  }
+  if( $blog_masonry_style === 'classic_enhanced' ) {
+    wp_enqueue_style('nectar-blog-masonry-classic-enhanced');
+  }
+  if( $blog_masonry_style === 'meta_overlaid' ) {
+    wp_enqueue_style('nectar-blog-masonry-meta-overlaid');
+  }
+  if( $blog_masonry_style === 'auto_meta_overlaid_spaced' ) {
+    wp_enqueue_style('nectar-blog-auto-masonry-meta-overlaid-spaced');
+  }
+} else {
+  if ( $blog_standard_style === 'minimal' ) {
+    wp_enqueue_style('nectar-blog-standard-minimal');
+  }
+  if ( $blog_standard_style === 'featured_img_left' ) {
+    wp_enqueue_style( 'nectar-blog-standard-featured-left' );
+  }
+} 
 
 if( $blog_remove_post_date === 'true' ) { 
   $blog_remove_post_date = '1'; 
@@ -105,7 +128,7 @@ ob_start(); ?>
    
    
    if( $layout === 'std-blog-sidebar' || $layout === 'masonry-blog-sidebar' ) {
-     echo '<div class="post-area col '.$std_minimal_class.' span_9 '.$masonry_class.' '.$masonry_style.' '.$infinite_scroll_class.'" data-ams="'.esc_attr($auto_masonry_spacing).'" data-remove-post-date="'.esc_attr($blog_remove_post_date).'" data-remove-post-author="'.esc_attr($blog_remove_post_author).'" data-remove-post-comment-number="'.esc_attr($blog_remove_post_comment_number).'" data-remove-post-nectar-love="'.esc_attr($blog_remove_post_nectar_love).'"> <div class="posts-container" data-load-animation="'.esc_attr($load_in_animation).'">';
+     echo '<div class="post-area col '.$std_minimal_class.' span_9 '.$masonry_class.' '.esc_attr($masonry_style).' '.$infinite_scroll_class.'" data-ams="'.esc_attr($auto_masonry_spacing).'" data-remove-post-date="'.esc_attr($blog_remove_post_date).'" data-remove-post-author="'.esc_attr($blog_remove_post_author).'" data-remove-post-comment-number="'.esc_attr($blog_remove_post_comment_number).'" data-remove-post-nectar-love="'.esc_attr($blog_remove_post_nectar_love).'"> <div class="posts-container" data-load-animation="'.esc_attr($load_in_animation).'">';
    } else {
      
      if( $layout === 'masonry-blog-full-screen-width' && $blog_masonry_style === 'auto_meta_overlaid_spaced' || 
@@ -116,7 +139,7 @@ ob_start(); ?>
        echo '<div class="full-width-content blog-fullwidth-wrap">'; 
      }
      
-     echo '<div class="post-area col '.$std_minimal_class.' span_12 col_last '.$masonry_class.' '.$masonry_style.' '.$infinite_scroll_class.' '.$full_width_article.'" data-ams="'.esc_attr($auto_masonry_spacing).'" data-remove-post-date="'.esc_attr($blog_remove_post_date).'" data-remove-post-author="'.esc_attr($blog_remove_post_author).'" data-remove-post-comment-number="'.esc_attr($blog_remove_post_comment_number).'" data-remove-post-nectar-love="'.esc_attr($blog_remove_post_nectar_love).'"> <div class="posts-container" data-load-animation="'.esc_attr($load_in_animation).'">';
+     echo '<div class="post-area col '.$std_minimal_class.' span_12 col_last '.$masonry_class.' '.esc_attr($masonry_style).' '.$infinite_scroll_class.' '.$full_width_article.'" data-ams="'.esc_attr($auto_masonry_spacing).'" data-remove-post-date="'.esc_attr($blog_remove_post_date).'" data-remove-post-author="'.esc_attr($blog_remove_post_author).'" data-remove-post-comment-number="'.esc_attr($blog_remove_post_comment_number).'" data-remove-post-nectar-love="'.esc_attr($blog_remove_post_nectar_love).'"> <div class="posts-container" data-load-animation="'.esc_attr($load_in_animation).'">';
      
    }
    
@@ -232,21 +255,17 @@ ob_start(); ?>
             $format              = empty( $permalink_structure ) ? $query_type.'paged=%#%' : 'page/%#%/';  
             $current             = ( get_query_var('paged') ) ? max( 1, get_query_var( 'paged' ) ) : max( 1, get_query_var( 'page' ) );
             
-            if( defined('ICL_SITEPRESS_VERSION') ) { 
-              $format  = $query_type.'paged=%#%'; 
-              $current = max( 1, get_query_var( 'paged' ) );
-            }
-            
-            echo '<div id="pagination" data-is-text="'.esc_html__("All items loaded", 'salient').'">';
+            echo '<nav id="pagination" role="navigation" aria-label="'. esc_attr__("Pagination Navigation", 'salient-core') .'" data-is-text="'.esc_html__("All items loaded", 'salient').'">';
              
               echo paginate_links(array(  
                   'base'    => str_replace( 999999999, '%#%', esc_url( get_pagenum_link( 999999999 ) ) ),
                   'format'  => $format,  
+                  'type' => 'list',
                   'current' => $current,  
                   'total'   => $total_pages,  
                 )); 
             
-            echo  '</div>'; 
+            echo  '</nav>'; 
           
           }  
     }

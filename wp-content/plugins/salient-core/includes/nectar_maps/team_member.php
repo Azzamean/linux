@@ -46,7 +46,7 @@ return array(
 		),
 		array(
 			"type" => "dropdown",
-			"heading" => esc_html__("Team Member Stlye", "salient-core"),
+			"heading" => esc_html__("Team Member Style", "salient-core"),
 			"param_name" => "team_memeber_style",
 			"value" => array(
 				esc_html__("Meta Below", "salient-core") => "meta_below",

@@ -8,6 +8,7 @@
   font-display: swap;
 }
 
+
 :root {
   --nectar-blue: #3a67ff;
   --nectar-blue-h: #3057d8;
@@ -79,7 +80,6 @@ body .wpb_content_element>.wpb_element_wrapper {
 
 .wpb_bar .wpb_element_wrapper {
   min-height: 15px!important;
-  height: 15px!important;
 }
 
 .wpb_bar .wpb_element_wrapper  h4.wpb_element_title {
@@ -526,7 +526,6 @@ body .wpb_content_element>.wpb_element_wrapper .icon-wpb-morphing-outline:before
 
 .wpb_divider  .wpb_element_wrapper {
   min-height: 15px!important;
-  height: 15px!important;
   background-position: 15px 8px!important;
 }
 
@@ -588,6 +587,9 @@ body .wpb_content_element>.wpb_element_wrapper .icon-wpb-morphing-outline:before
 }
 
 .hidden-element {
+  display: none!important;
+}
+.hidden-device-group-element .device-selection {
   display: none!important;
 }
 
@@ -1341,6 +1343,17 @@ body .vc_add-element-container .wpb-content-layouts .vc_element-description {
   width: 100%;
 }
 
+.controls_row .vc_row-hash-id {
+  border-radius: 2px 2px 0 0;
+  padding: 7px 12px;
+  color: #888;
+  font-weight: 500;
+  line-height: 1;
+  font-size: 12px;
+  background-color: #e6e6e6;
+  margin: 0 10px;
+}
+
 /* VC generic styling */
 body .controls_row {
   z-index: 10;
@@ -1348,6 +1361,16 @@ body .controls_row {
 
 body .vc_row-fluid [class*="vc_span"] {
   margin-bottom: 20px;
+}
+.controls_row .vc_row-hash-id {
+  border-radius: 2px 2px 0 0;
+  padding: 7px 12px;
+  color: #888;
+  font-weight: 500;
+  line-height: 1;
+  font-size: 12px;
+  background-color: #e6e6e6;
+  margin: 0 10px;
 }
 
 .chzn-results [class^="active-result icon-"],
@@ -1984,6 +2007,13 @@ div[data-vc-shortcode] .nectar-one-fourth {
   padding: 0px 15px 0 15px;
   padding-top: 0px!important;
 }
+div[data-vc-shortcode] .nectar-one-third {
+  width: 33.3%;
+  box-sizing: border-box;
+  padding: 0px 15px 0 15px;
+  padding-top: 0px!important;
+  margin-top: 20px;
+}
 
 div[data-vc-shortcode] .movement-type.vc_col-xs-12 {
   width: 35%;
@@ -2090,7 +2120,8 @@ div[data-vc-shortcode*="vc_column"] .col-md-6-last,
 div[data-vc-shortcode="item"] .col-md-6-last,
 div[data-vc-shortcode="carousel"] .col-md-last,
 div[data-vc-shortcode] .nectar-one-half-last,
-div[data-vc-shortcode] .nectar-one-fourth-last {
+div[data-vc-shortcode] .nectar-one-fourth-last,
+div[data-vc-shortcode] .nectar-one-third-last {
   padding-right: 15px;
 }
 
@@ -2320,6 +2351,7 @@ div[data-vc-shortcode="item"] .flickity_specific_field {
   padding-top: 0;
 }
 
+.row-max-width-device-group-wrap,
 .row-min-width-device-group-wrap,
 .column-padding-device-group-wrap,
 .column-text-align-device-group,
@@ -2334,6 +2366,7 @@ div[data-vc-shortcode="item"] .flickity_specific_field {
 .row-bg-img-device-group-wrap,
 .column-bg-img-device-group-wrap,
 .font-size-device-group-wrap,
+.column-device-group-wrap,
 .row-position-display-device-group-wrap,
 .image-custom-width-device-group-wrap,
 .video-aspect-ratio-device-group-wrap,
@@ -2341,6 +2374,7 @@ div[data-vc-shortcode="item"] .flickity_specific_field {
 .mask-alignment-device-group-wrap,
 .clip-path-device-group-wrap,
 .clip-path-end-device-group-wrap,
+.padding-device-group-wrap,
 .circle-images-alignment-device-group-wrap {
   padding: 0 15px;
 }
@@ -2907,6 +2941,21 @@ body .vc_css-editor .vc_settings .wp-picker-container .wp-picker-clear,
   pointer-events: all;
   transition: transform .45s cubic-bezier(.05,0.2,.1,1), opacity .45s cubic-bezier(.05,0.2,.1,1);
 }
+
+.vc_edit_form_elements .no-alpha .vc_color-picker.wp-picker-active .wp-picker-holder .vc_alpha-container {
+  display: none;
+}
+
+.vc_edit_form_elements .no-alpha .vc_color-picker.wp-picker-active .wp-picker-holder:before,
+.vc_edit_form_elements .no-alpha .vc_color-picker.wp-picker-active .wp-picker-holder {
+  height: 300px;
+  min-height: 300px;
+}
+body .vc_edit_form_elements .no-alpha .wp-picker-open+.wp-picker-input-wrap {
+  top: 300px;
+}
+
+
 
 .vc_edit_form_elements .vc_color-picker.wp-picker-active .wp-picker-holder{
   min-height: 365px;
@@ -3702,6 +3751,11 @@ body .vc_css-editor .vc_settings select {
 
 .vc_edit_form_elements select { max-width: 100%; }
 
+.vc_edit_form_elements select[multiple] {
+  resize: vertical;
+  min-height: 130px;
+}
+
 body .vc_edit_form_elements .vc_column+.vc_column,
 body .vc_edit_form_elements .vc_column-with-padding {
     padding-top: 30px;
@@ -4141,6 +4195,8 @@ div[data-vc-shortcode="nectar_image_with_hotspots"] .vc_icon-remove {
 .wpb_el_type_nectar_range_slider .edit_form_line .slider {
   flex: 1;
   position: relative;
+  width: 70%;
+  margin-right: 5%;
 }
 .wpb_el_type_nectar_range_slider .edit_form_line output {
   margin-left: 20px;
@@ -4225,6 +4281,17 @@ div[data-vc-shortcode="nectar_image_with_hotspots"] .vc_icon-remove {
   margin-bottom: 0;
   padding-left: 0;
 }
+
+.vc_edit_form_elements .radio_tab_dep.dep-hidden {
+  opacity: 0;
+  visibility: hidden;
+  position: absolute;
+  z-index: -1;
+  pointer-events: none;
+}
+
+
+
 
 [data-vc-shortcode-param-name="advanced_gradient_display_type"] .nectar-radio-tab .nectar_radio_tab_list input:checked + .n_radio_image_title:hover,
 [data-vc-shortcode-param-name="advanced_gradient_display_type"] .nectar-radio-tab .nectar_radio_tab_list .n_radio_image_title {
@@ -5052,3 +5119,127 @@ creating excess space at the bottom*/
   border: 2px solid rgba(255,255,255,0.7);
 }
 
+
+
+
+/*nectar addition*/
+.wpb_el_type_fws_image .gallery_widget_add_images {
+  margin-top: 0;
+  display: block;
+  float: left;
+  height: 80px;
+  width: 80px;
+  background: url(icons/add.png) center center no-repeat #F5F5F5;
+  border: 1px solid #DFDFDF;
+  font-size: 0;
+  color: #F5F5F5;
+}
+.wpb_el_type_fws_image .vc_icon-remove .vc-composer-icon {
+  font-size: 18px;
+  color: #FF7877;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  -webkit-transform: translate(-50%,-50%);
+  -ms-transform: translate(-50%,-50%);
+  transform: translate(-50%,-50%);
+}
+.wpb_el_type_fws_image .vc_icon-remove {
+  width: 16px;
+  height: 16px;
+  display: block;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  -webkit-transform: translate(-50%,-50%);
+  -ms-transform: translate(-50%,-50%);
+  transform: translate(-50%,-50%);
+}
+
+
+.modal-backdrop, 
+.modal-backdrop.fade.in {
+opacity: 0.8!important;
+}
+
+.modal-backdrop.white {
+position: fixed;
+top: 0;
+left: 0;
+width: 100%;
+height: 100%;
+z-index: 9990;
+opacity: 0.8!important;
+background-color: #fff!important;
+}
+
+@media only screen and (min-width:960px) {
+body #vc_ui-panel-add-element, .modal-backdrop.white {
+  left: 160px;
+}
+
+body.compose-mode #vc_ui-panel-add-element {
+  left: 0;
+  top: calc(10vh + 56px);
+  max-height: calc(80vh - 56px);
+}
+}
+
+body .vc_ui-button.vc_ui-button-action:hover {
+background-color: #2e4ce8!important;
+}
+
+.compose-mode .modal-backdrop.white {
+left: 0;
+opacity: 0.87!important;
+}
+
+
+#post-body #wpb_wpbakery .vc_navbar .vc_icon-btn.vc_templates-button.salient-studio-templates,
+#post-body #wpb_wpbakery .vc_navbar .vc_icon-btn.vc_element-button {
+border: 2px #3a67ff solid;
+color: #4F5C64;
+transition: border-color 0.25s ease, box-shadow 0.25s ease;
+}
+
+#post-body #wpb_wpbakery .vc_navbar .vc_icon-btn.salient-studio-templates:hover,
+#post-body #wpb_wpbakery .vc_navbar .vc_icon-btn.vc_element-button:hover {
+background-color: transparent;
+border: 2px #3057d8 solid;
+box-shadow: 0px 3px 8px rgba(0,0,0,0.1);
+}
+
+
+#post-body #wpb_wpbakery .vc_navbar .vc_icon-btn.vc_templates-button.user-templates:hover{
+background-color: rgb(232, 232, 232);
+}
+
+#post-body #wpb_wpbakery .vc_navbar {
+background-color: #FCFCFC;
+border-bottom: 1px solid #F5F5F5;
+}
+
+#post-body #wpb_wpbakery .vc_navbar .vc_icon-btn:hover {
+background-color: #F5F5F5;
+}
+
+#post-body #wpb_wpbakery .vc_navbar .vc_icon-btn .vc-composer-icon,
+#post-body #wpb_wpbakery .vc_navbar .vc_icon-btn .vc_navbar-icon.fa-repeat,
+#post-body #wpb_wpbakery .vc_navbar .vc_icon-btn .vc_navbar-icon.fa-undo{
+color: #4F5C64;
+}
+
+#wpb_wpbakery .vc_element-icon[data-is-container=true] {
+background-image: none;
+}
+
+#wpb_wpbakery .wpb_content_element > .vc_controls {
+display: none;
+}
+
+#wpb_wpbakery .vc_row:hover  .wpb_content_element > .vc_controls,
+#wpb_wpbakery .wpb_content_element.wpb_vc_tabs > .vc_controls,
+#wpb_wpbakery .wpb_content_element.wpb_vc_accordion > .vc_controls  {
+display: block;
+}
+/*nectar addition end*/

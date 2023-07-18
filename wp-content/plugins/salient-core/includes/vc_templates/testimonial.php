@@ -44,11 +44,20 @@ if( $GLOBALS['nectar-testimonial-slider-style'] !== 'minimal' ) {
 $rating_markup = null;
 
 if( $star_rating !== 'none' ) {
-	$rating_markup = '<span class="star-rating-wrap"> <span class="star-rating"><span style="width: '.$star_rating.';" class="filled"></span></span></span>';
+	$rating_markup = '<span class="star-rating-wrap"> <span class="star-rating"><span style="width: '.esc_attr($star_rating).';" class="filled"></span></span></span>';
+}
+
+
+// no paragraphs in slider
+if( $GLOBALS['nectar-testimonial-slider-style'] === 'multiple_visible' ) {
+	$quote = strtr($quote, array(
+		'<p>' => '',
+		'</p>' => '<br />'
+	));
 }
 
 if( $GLOBALS['nectar-testimonial-slider-style'] !== 'multiple_visible_minimal' ) {
-	echo '<blockquote> '.$image_icon_markup.' <p>'. $open_quote . wp_kses_post($quote) . $close_quote. $rating_markup .' <span class="bottom-arrow"></span></p>'. '<span class="testimonial-name">'.wp_kses_post($name).'</span><span class="title">'.wp_kses_post($subtitle).'</span></blockquote>';
+	echo '<blockquote> '.$image_icon_markup.' <p>'. $open_quote . wp_kses_post($quote) . $close_quote. $rating_markup .' <span role="none" class="bottom-arrow"></span></p>'. '<span class="testimonial-name">'.wp_kses_post($name).'</span><span class="title">'.wp_kses_post($subtitle).'</span></blockquote>';
 } else {
 	echo '<blockquote> <div class="inner">'.$image_icon_markup.'<span class="wrap"><span class="testimonial-name">'.wp_kses_post($name).'</span><span class="title">'.wp_kses_post($subtitle).'</span></span> <p>'.$open_quote . wp_kses_post($quote) . $close_quote.' </p>'.$rating_markup.'</div></blockquote>';
 }

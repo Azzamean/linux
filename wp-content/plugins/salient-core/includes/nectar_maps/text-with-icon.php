@@ -901,7 +901,7 @@ $icon_arr = array_merge($fa_icons, $steadysets, $linecons);
 		),
 		array(
 	      "type" => "textarea_html",
-	      "holder" => "div",
+	      "admin_label" => true,
 	      "heading" => esc_html__("Text Content", "salient-core"),
 	      "param_name" => "content",
 	      "value" => ''

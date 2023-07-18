@@ -5,7 +5,7 @@
 * Description: Core functionality required by the Salient theme. Adds the Salient collection of WPBakery page builder elements, template library and page/post options.
 * Author: ThemeNectar
 * Author URI: https://themenectar.com
-* Version: 1.9.8
+* Version: 2.0.1
 * Text Domain: salient-core
 */
 
@@ -18,7 +18,7 @@ define( 'SALIENT_CORE_ROOT_DIR_PATH', plugin_dir_path( __FILE__ ) );
 define( 'SALIENT_CORE_PLUGIN_PATH', plugins_url( 'salient-core' ) );
 
 if ( ! defined( 'SALIENT_CORE_VERSION' ) ) {
-    define( 'SALIENT_CORE_VERSION', '1.9.8' );
+    define( 'SALIENT_CORE_VERSION', '2.0.1' );
 }
 
 class Salient_Core {
@@ -30,7 +30,7 @@ class Salient_Core {
     private function __construct() {
 
         // Front end assets.
-        add_action( 'wp_enqueue_scripts', array( $this, 'salient_core_enqueue_assets' ),    10 );
+        add_action( 'wp_enqueue_scripts', array( $this, 'salient_core_enqueue_assets' ), 10 );
 
         // Admin assets.
         add_action( 'admin_enqueue_scripts',  array( $this, 'salient_core_edit_scripts' ) );
@@ -136,6 +136,9 @@ class Salient_Core {
             //require_once( SALIENT_CORE_ROOT_DIR_PATH.'includes/widget-locations/class-nectar-widget-locations.php' );
         }
 
+        // Visual Hook Locations.
+        require_once( SALIENT_CORE_ROOT_DIR_PATH.'includes/admin/class-visual-hook-locations.php' );
+        
         // Menu Options.
         $nectar_menu_options = apply_filters( 'nectar_menu_options_enabled', true );
         if ( false !== $nectar_menu_options ) {

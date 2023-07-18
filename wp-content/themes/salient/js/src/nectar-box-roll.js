@@ -185,8 +185,8 @@
       $('body, html, #ajax-content-wrap, .container-wrap, .blurred-wrap').addClass('no-scroll');
       
       $(window).trigger('nectar-box-roll-scroll-disabled');
-      
-      $('body,html').stop().animate({
+  
+      $('body,html, #ajax-content-wrap, .container-wrap').stop().animate({
         scrollTop: 0
       }, 0);
       

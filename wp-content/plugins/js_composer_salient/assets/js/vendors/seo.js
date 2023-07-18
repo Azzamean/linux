@@ -16,11 +16,7 @@
 	function nectarAnalyzeContent(data) {
 
 		var content = data;
-
-
-			content = contentModification(data);
-			
-	
+		content = contentModification(data);
 		return content;
 		
 	}
@@ -31,6 +27,9 @@
 
 			if( value.html && value.append ) {
 				memo += value.html;
+			}
+			else if ( value.html && value.insertAtLocation ) {
+				memo = memo.replace( '"' + value.text + '"', '""]' + value.html + '[' );
 			}
 			else if ( value.html ) {
 				memo = memo.replace( '"' + value.text + '"', value.html );
@@ -117,12 +116,37 @@
 			if ( tagSearch[ 1 ] ) {
 				relevantData[ model.get( 'id' ) ] = {
 					html: '<' + tagSearch[ 1 ] + '>' + params.text + '</' + tagSearch[ 1 ] + '>',
-					text: params.text
+					text: params.text,
+					insertAtLocation: true
 				};
 			}
 		}
 	} );
 
+	/* nectar addition - split line heading */
+	vc.events.on( 'shortcodes:split_line_heading', function ( model, event ) {
+		var params, tagSearch;
+		params = model.get( 'params' );
+		params = _.extend( {}, vc.getDefaults( model.get( 'shortcode' ) ), params );
+
+		if ( 'destroy' === event ) {
+			delete relevantData[ model.get( 'id' ) ];
+		} else if ( params.animation_type && 
+							params.animation_type === 'line-reveal-by-space' && 
+							params.font_style && 
+							params.text_content ) {
+			
+			var headingTags = ['h1', 'h2', 'h3', 'h4', 'h5', 'h6'];
+
+			if ( headingTags.indexOf(params.font_style) >= 0 ) {
+				relevantData[ model.get( 'id' ) ] = {
+					html: '<' + params.font_style + '>' + params.text_content + '</' + params.font_style + '>',
+					text: params.text_content,
+					insertAtLocation: true
+				};
+			}
+		}
+	} );
 
 	/* nectar addition - custom elements */
 	// Button.

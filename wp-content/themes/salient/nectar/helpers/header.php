@@ -72,7 +72,7 @@ function nectar_get_header_variables() {
 
 	$using_page_header = nectar_using_page_header( $post->ID );
 	$using_fw_slider   = $parallax_nectar_slider;
-	$using_fw_slider   = ( ! empty( $nectar_options['transparent-header'] ) && $nectar_options['transparent-header'] == '1' ) ? $using_fw_slider : 0;
+	$using_fw_slider   = ( ! empty( $nectar_options['transparent-header'] ) && $nectar_options['transparent-header'] == '1' || nectar_is_contained_header() ) ? $using_fw_slider : 0;
 	if ( $force_effect === 'on' ) {
 		$using_fw_slider = '1';
 	}
@@ -82,7 +82,9 @@ function nectar_get_header_variables() {
 
 	$theme_skin = NectarThemeManager::$skin;
 
-	if ( ! empty( $nectar_options['transparent-header'] ) && $nectar_options['transparent-header'] === '1' && $header_format != 'left-header' ) {
+	if ( ! empty( $nectar_options['transparent-header'] ) && 
+		$nectar_options['transparent-header'] === '1' && 
+		$header_format != 'left-header' || nectar_is_contained_header() ) {
 
 		$starting_color                  = ( empty( $nectar_options['header-starting-color'] ) ) ? '#ffffff' : $nectar_options['header-starting-color'];
 		$activate_transparency           = $using_page_header;
@@ -94,7 +96,14 @@ function nectar_get_header_variables() {
 			$nectar_transparency_color_forced = 'dark';
 		}
 
-		$transparency_markup = ( $activate_transparency == 'true' ) ? 'data-transparent-header="true" data-transparent-shadow-helper="' . esc_attr( $transparent_header_shadow ) . '" data-remove-border="' . esc_attr( $remove_border ) . '" class="transparent' . esc_attr( $nectar_transparency_color_class ) . '"' : null;
+		if( nectar_is_contained_header() ) {
+			$activate_transparency = 'true';
+			$transparent_header_shadow = 'false';
+			$nectar_transparency_color_class = '';
+			$remove_border = 'false';
+		}
+
+		$transparency_markup = ( $activate_transparency == 'true' ) ? 'data-transparent-header="true" data-transparent-shadow-helper="' . esc_attr( $transparent_header_shadow ) . '" data-remove-border="' . esc_attr( $remove_border ) . '" class="'.apply_filters("nectar_header_outer_classes", 'transparent') . esc_attr( $nectar_transparency_color_class ) . '"' : null;
 
 	}
 
@@ -161,6 +170,10 @@ function nectar_get_header_variables() {
 	$form_style            = ( ! empty( $nectar_options['form-style'] ) ) ? $nectar_options['form-style'] : 'default';
 	$fancy_rcs             = ( ! empty( $nectar_options['form-fancy-select'] ) ) ? $nectar_options['form-fancy-select'] : 'default';
 	$footer_reveal         = ( ! empty( $nectar_options['footer-reveal'] ) ) ? $nectar_options['footer-reveal'] : 'false';
+	
+	if (has_action('nectar_hook_global_section_parallax_footer') || has_action('nectar_hook_global_section_footer')) {
+		$footer_reveal = 'false';
+	}
 	$footer_reveal_shadow  = ( ! empty( $nectar_options['footer-reveal-shadow'] ) && $footer_reveal === '1' ) ? $nectar_options['footer-reveal-shadow'] : 'none';
 
 	$has_main_menu     = ( has_nav_menu( 'top_nav' ) ) ? 'true' : 'false';
@@ -289,8 +302,8 @@ function nectar_get_header_variables() {
 		'user_account_btn'                 => $user_account_btn,
 		'header_search'                    => $header_search,
 		'using_mobile_logo'                => $using_mobile_logo,
-		'using_mobile_logo_starting' 			 => $using_mobile_logo_s,
-		'using_mobile_logo_starting_dark'	 => $using_mobile_logo_sd,
+		'using_mobile_logo_starting'       => $using_mobile_logo_s,
+		'using_mobile_logo_starting_dark'  => $using_mobile_logo_sd,
 		'logo_class'                       => $logo_class,
 		'transparency_markup'              => $transparency_markup,
 		'nectar_transparency_color_forced' => $nectar_transparency_color_forced,
@@ -306,7 +319,17 @@ function nectar_get_header_variables() {
 }
 
 
+add_filter('nectar_header_outer_classes', 'nectar_header_outer_classes_mod');
 
+if( !function_exists('nectar_header_outer_classes_mod') ) {
+	function nectar_header_outer_classes_mod($classes) {
+		if ( nectar_is_contained_header() ) {
+			$classes .= ' force-contained-rows';
+		}
+
+		return $classes;
+	}
+}
 
 
 /**
@@ -343,6 +366,9 @@ function nectar_body_attributes() {
 	echo 'data-is="minimal" ';
 	echo 'data-button-style="' . esc_attr( $button_styling ) . '" ';
 	echo 'data-user-account-button="' . esc_attr( $user_account_btn ) . '" ';
+	if ( nectar_is_contained_header() ) {
+		echo 'data-contained-header="true" ';
+	}
 
 	// Modern grid system.
 	if( function_exists('nectar_use_flexbox_grid') && true === nectar_use_flexbox_grid() ) {
@@ -548,9 +574,74 @@ function nectar_header_nav_attributes() {
 
 	echo 'data-full-width="' . esc_attr( $full_width_header ) . '" data-condense="' . esc_attr( $condense_header_on_scroll ) . '" ' . $transparency_markup;
 
+}
+
+if ( ! function_exists( 'nectar_get_mobile_header_height' ) ) {
+	function nectar_get_mobile_header_height() {
+
+		$nectar_options = get_nectar_theme_options();
+
+		// Using image based logo.
+		if( ! empty( $nectar_options['use-logo'] ) ) {
+			$mobile_logo_height = ( !empty($nectar_options['mobile-logo-height'])) ? intval($nectar_options['mobile-logo-height']) : 24;
+			$mobile_padding_mod = ( $mobile_logo_height < 38 ) ? 20 : 0;
+			$mobile_logo_height += $mobile_padding_mod;
+		}
+		// Using text logo.
+		else {
+			// Custom size from typography logo line height option.
+			if( !empty($nectar_options['logo_font_family']['line-height']) ) {
+				$mobile_logo_height = intval(substr($nectar_options['logo_font_family']['line-height'],0,-2));
+			}
+			// Custom size from typography logo font size option.
+			else if( !empty($nectar_options['logo_font_family']['font-size']) ) {
+				$mobile_logo_height = intval(substr($nectar_options['logo_font_family']['font-size'],0,-2));
+			}
+			// Default size.
+			else {
+				$mobile_logo_height = 22;
+			}
+
+			// Clamp.
+			if( $mobile_logo_height > 24 ) {
+				$mobile_logo_height = 24;
+			}	
+
+			// Add text logo margin.
+			$mobile_logo_height += 20;
+
+		}
+
+		$mobile_padding  = ( NectarThemeManager::$skin === 'material' ) ? 24 : 25;
+
+		return $mobile_logo_height + $mobile_padding;
+	}
 
 }
 
+
+if ( ! function_exists( 'nectar_is_contained_header' ) ) {
+	function nectar_is_contained_header() {
+		$nectar_options = get_nectar_theme_options();
+
+		$using_secondary = ( isset($nectar_options['header_layout']) ) ? $nectar_options['header_layout'] : 'default';
+		$boxed_layout    = ( isset($nectar_options['boxed_layout']) ) ? $nectar_options['boxed_layout'] : '0';
+		$header_format   = ( isset($nectar_options['header_format']) ) ? $nectar_options['header_format'] : 'default';
+		$header_size     = (isset($nectar_options['header-size'] ) ) ? $nectar_options['header-size'] : 'default';
+
+		// Options which disabled contained header.
+		if( 'header_with_secondary' === $using_secondary ||
+		    '1' === $boxed_layout ||
+		    'left-header' === $header_format ||
+		    'centered-menu-bottom-bar' === $header_format ||
+			'contained' !== $header_size ) {
+			return false;
+		} 
+
+		return true;
+		
+	}
+}
 
 
 if ( ! function_exists( 'nectar_logo_dimensions' ) ) {
@@ -608,7 +699,7 @@ if ( ! function_exists( 'nectar_logo_output' ) ) {
 			}
 
 			 // Starting logo.
-			if ( $activate_transparency == 'true' || $off_canvas_style === 'fullscreen-alt' || $force_transparent_header_color === 'dark' ) {
+			if ( $activate_transparency == 'true' || $off_canvas_style === 'fullscreen-alt' ||  $off_canvas_style === 'fullscreen-inline-images' || $force_transparent_header_color === 'dark' ) {
 
 				// Starting mobile only.
 				if( $nectar_options['use-logo'] === '1' && ! empty( $nectar_options['header-starting-mobile-only-logo'] ) && ! empty( $nectar_options['header-starting-mobile-only-logo']['url'] ) ) {
@@ -1302,7 +1393,7 @@ if( !function_exists('nectar_ocm_button_markup') ) {
 		}
 
 		echo '<li class="slide-out-widget-area-toggle" data-icon-animation="simple-transform" data-custom-color="'.esc_attr($ocm_menu_btn_bg_color) .'">';
-			echo '<div> <a href="#sidewidgetarea" aria-label="'. esc_attr__('Navigation Menu', 'salient') .'" aria-expanded="false" class="closed'.$menu_label_class.'"> '.$menu_label.'<span aria-hidden="true"> <i class="lines-button x2"> <i class="lines"></i> </i> </span> </a> </div>';
+			echo '<div> <a href="#sidewidgetarea" aria-label="'. esc_attr__('Navigation Menu', 'salient') .'" aria-expanded="false" role="button" class="closed'.$menu_label_class.'"> '.$menu_label.'<span aria-hidden="true"> <i class="lines-button x2"> <i class="lines"></i> </i> </span> </a> </div>';
 		echo '</li>';
 	}
 }

@@ -29,9 +29,9 @@ return array(
 	"params" => array(
 		array(
 			"type" => "textfield",
-			"holder" => "div",
 			"class" => "",
-			"heading" => '<span class="group-title">' . esc_html__("Dividing Height", "salient-core") . "</span>",
+			"admin_label" => true,
+			"heading" => '<span class="group-title">' . esc_html__("Height", "salient-core") . "</span>",
 			"param_name" => "custom_height",
 			"edit_field_class" => "desktop divider-height-device-group",
 			"description" => esc_html__("If you would like to control the specific number of pixels your divider is, enter it here.", "salient-core"),
@@ -54,7 +54,6 @@ return array(
 		),
 		array(
 			"type" => "dropdown",
-			"holder" => "div",
 			"class" => "",
 			"heading" => esc_html__("Line Type", "salient-core"),
 			'save_always' => true,
@@ -63,12 +62,11 @@ return array(
 				"No Line" => "No Line",
 				"Full Width Line" => "Full Width Line",
 				"Small Line" => "Small Line",
-        "Vertical Line" => "Vertical Line"
+        		"Vertical Line" => "Vertical Line"
 			)
 		),
 		array(
 			"type" => "dropdown",
-			"holder" => "div",
 			"class" => "",
 			"heading" => esc_html__("Line Alignment", "salient-core"),
 			'save_always' => true,
@@ -104,7 +102,6 @@ return array(
 		),
 		array(
 			"type" => "textfield",
-			"holder" => "div",
 			"admin_label" => false,
 			"class" => "",
 			"heading" => esc_html__("Custom Line Width", "salient-core"),

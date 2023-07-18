@@ -25,13 +25,17 @@
 
     // Don't duplicate me!
     if ( ! class_exists( 'ReduxFramework_color_rgba' ) ) {
-
+        
         /**
          * Main ReduxFramework_color_rgba class
          *
          * @since       1.0.0
          */
         class ReduxFramework_color_rgba {
+
+            public $field = array();
+            public $value = '';
+            public $parent = null;
 
             /**
              * Class Constructor. Defines the args for the extions class

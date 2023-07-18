@@ -249,13 +249,13 @@ for( $i = 1; $i < 5; $i++ ) {
 			$lazy_load_wrap_class = ' lazy-enabled';		
 			
 			$placeholder_img_src = "data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D'http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg'%20viewBox%3D'0%200%20".esc_attr($image_width).'%20'.esc_attr($image_height)."'%2F%3E";	
-      $img_el = '<img src="'.$placeholder_img_src.'" data-nectar-img-src="'.$image_url.'" '.$image_srcset.' height="'.esc_attr($image_height).'" width="'.esc_attr($image_width).'" class="skip-lazy nectar-lazy" alt="'.esc_attr($image_alt).'" />';
+      $img_el = '<img src="'.$placeholder_img_src.'" data-nectar-img-src="'.esc_attr($image_url).'" '.$image_srcset.' height="'.esc_attr($image_height).'" width="'.esc_attr($image_width).'" class="skip-lazy nectar-lazy" alt="'.esc_attr($image_alt).'" />';
     } else {
 			
 			if( true === $has_dimension_data ) {
-				$img_el = '<img src="'.$image_url.'" '.$image_srcset.' height="'.esc_attr($image_height).'" width="'.esc_attr($image_width).'" class="skip-lazy" alt="'.esc_attr($image_alt).'" />';
+				$img_el = '<img src="'.esc_attr($image_url).'" '.$image_srcset.' height="'.esc_attr($image_height).'" width="'.esc_attr($image_width).'" class="skip-lazy" alt="'.esc_attr($image_alt).'" />';
 			} else {
-				$img_el = '<img src="'.$image_url.'" '.$image_srcset.' class="skip-lazy" alt="'.esc_attr($image_alt).'" />';
+				$img_el = '<img src="'.esc_attr($image_url).'" '.$image_srcset.' class="skip-lazy" alt="'.esc_attr($image_alt).'" />';
 			}
     
     }

@@ -37,7 +37,7 @@ if ( ! empty( $nectar_options['display_tags'] ) &&
 	?>
 	<div id="author-info">
 
-	  <h3 class="nectar-link-underline-effect"><span><?php if ( $theme_skin === 'ascend' ) { _e( 'Author', 'salient' ); } elseif ( $theme_skin !== 'material' ) { _e( 'About', 'salient' ); } ?></span>
+	  <h3 class="nectar-link-underline-effect <?php echo apply_filters( 'nectar_author_info_class', 'nectar-author-info-title' ); ?>"><span><?php if ( $theme_skin === 'ascend' ) { _e( 'Author', 'salient' ); } elseif ( $theme_skin !== 'material' ) { _e( 'About', 'salient' ); } ?></span>
 
 		<?php
 		if ( $theme_skin === 'material' ) {

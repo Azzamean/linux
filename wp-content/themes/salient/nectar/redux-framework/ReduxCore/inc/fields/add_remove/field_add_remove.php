@@ -8,6 +8,10 @@ if ( ! defined( 'ABSPATH' ) ) {
   if ( ! class_exists( 'ReduxFramework_add_remove' ) ) {
         class ReduxFramework_add_remove {
 
+            public $field = array();
+            public $value = '';
+            public $parent = null;
+            public $args = array();
             /**
              * Field Constructor.
              *

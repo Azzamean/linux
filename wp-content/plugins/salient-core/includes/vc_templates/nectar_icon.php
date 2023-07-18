@@ -114,7 +114,7 @@ else if( $icon_family === 'iconsmind' ) {
 	// Custom size.
 	$icon_markup = preg_replace(
    array('/width="\d+"/i', '/height="\d+"/i'),
-   array('width="'.$icon_size.'"', 'height="'.$icon_size.'"'),
+   array('width="'.esc_attr($icon_size).'"', 'height="'.esc_attr($icon_size).'"'),
    $icon_markup);
 	
 	// Handle gradients.
@@ -138,8 +138,8 @@ else if( $icon_family === 'iconsmind' ) {
 			
 		  $icon_markup .= '<svg style="height:0;width:0;position:absolute;" aria-hidden="true" focusable="false">
 			  <linearGradient id="'.$icon_id.'" x2="1" y2="1">
-			    <stop offset="0%" stop-color="'.$accent_gradient_from.'" />
-			    <stop offset="100%" stop-color="'.$accent_gradient_to.'" />
+			    <stop offset="0%" stop-color="'.esc_attr($accent_gradient_from).'" />
+			    <stop offset="100%" stop-color="'.esc_attr($accent_gradient_to).'" />
 			  </linearGradient>
 			</svg>';
 	} 
@@ -171,7 +171,7 @@ if( !empty($margin_top) ) {
 if( !empty($margin_right) ) {
 	$wrapping_styles .= 'margin-right: '.intval($margin_right).'px; ';
 }
-if( !empty($margin_bottom) ) {
+if( !empty($margin_bottom) || $margin_bottom === '0' ) {
 	$wrapping_styles .= 'margin-bottom: '.intval($margin_bottom).'px; ';
 }
 if( !empty($margin_left) ) {

@@ -26,6 +26,7 @@ $side_widget_overlay_opacity = ( ! empty( $nectar_options['header-slide-out-widg
 $prepend_top_nav_mobile      = ( ! empty( $nectar_options['header-slide-out-widget-area-top-nav-in-mobile'] ) ) ? $nectar_options['header-slide-out-widget-area-top-nav-in-mobile'] : 'false';
 $dropdown_func               = ( ! empty( $nectar_options['header-slide-out-widget-area-dropdown-behavior'] ) ) ? $nectar_options['header-slide-out-widget-area-dropdown-behavior'] : 'default';
 $user_set_side_widget_area   = $side_widget_area;
+$separate_mobile_ocm         = ( isset( $nectar_options['header-slide-out-widget-area-separate-mobile'] ) && $side_widget_area != '1' ) ? $nectar_options['header-slide-out-widget-area-separate-mobile'] : '0'; 
 
 if ( $has_main_menu === 'true' ) {
 	$side_widget_area = '1';
@@ -77,7 +78,7 @@ if ( $side_widget_area === '1' && $side_widget_class !== 'simple' || true === $l
 			if ( $side_widget_class === 'fullscreen' ||
 			$side_widget_class === 'fullscreen-alt' ||
 			$side_widget_class === 'fullscreen-split' ||
-      $side_widget_class === 'fullscreen-inline-images' ||
+			$side_widget_class === 'fullscreen-inline-images' ||
 			( $theme_skin === 'material' && $side_widget_class === 'slide-out-from-right' ) ||
 			( $theme_skin === 'material' && $side_widget_class === 'slide-out-from-right-hover' ) ) {
 
@@ -104,7 +105,8 @@ if ( $side_widget_area === '1' && $side_widget_class !== 'simple' || true === $l
 
 				nectar_hook_ocm_before_menu();
 
-				if ( $user_set_side_widget_area === 'off' && true !== $legacy_double_menu || $prepend_top_nav_mobile === '1' && $has_main_menu === 'true' ) {
+				if ( $user_set_side_widget_area === 'off' && true !== $legacy_double_menu && $separate_mobile_ocm != '1' || 
+					$prepend_top_nav_mobile === '1' && $has_main_menu === 'true' && $separate_mobile_ocm != '1' ) {
 					?>
 					<div class="off-canvas-menu-container mobile-only" role="navigation">
 
@@ -209,7 +211,8 @@ if ( $side_widget_area === '1' && $side_widget_class !== 'simple' || true === $l
 					<?php
 				}
 
-				if ( has_nav_menu( 'off_canvas_nav' ) && $user_set_side_widget_area != 'off' ) {
+				if ( has_nav_menu( 'off_canvas_nav' ) && $user_set_side_widget_area != 'off' ||
+					has_nav_menu( 'off_canvas_nav' ) && $separate_mobile_ocm == '1' ) {
 					?>
 					<div class="off-canvas-menu-container" role="navigation">
 						<ul class="menu">

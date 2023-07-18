@@ -20,7 +20,7 @@ if( 'minimal_shadow' === $style ) {
 	$accordion_class .= ' toggles--minimal-shadow';
 }
 
-echo '<div class="toggles '.$accordion_class.'" data-br="'.esc_attr($border_radius).'" data-starting="'.esc_attr($accordion_starting_functionality).'" data-style="'.esc_attr($style).'">' . do_shortcode($content) . '</div>'; 
+echo '<div class="toggles '.$accordion_class.'" data-br="'.esc_attr($border_radius).'" data-starting="'.esc_attr($accordion_starting_functionality).'" data-style="'.esc_attr($style).'">' . do_shortcode(wp_kses_post($content)) . '</div>'; 
 
 ?>
 

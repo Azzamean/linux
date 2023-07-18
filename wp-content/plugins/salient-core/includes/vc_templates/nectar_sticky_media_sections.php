@@ -101,7 +101,7 @@ if (!empty($matches)) {
         }
 
         $active_class = ($count === 0) ? ' active' : '';
-        $featured_media .= '<div class="nectar-sticky-media-section__media-wrap'.$active_class.'"><div class="nectar-sticky-media-section__media"'.$media_asset.' data-type="'.$section_type.'">'.$video.'</div></div>';
+        $featured_media .= '<div class="nectar-sticky-media-section__media-wrap'.$active_class.'"><div class="nectar-sticky-media-section__media"'.$media_asset.' data-type="'.esc_attr($section_type).'">'.$video.'</div></div>';
         
        $count++;
 
@@ -120,5 +120,5 @@ if( function_exists('nectar_el_dynamic_classnames') ) {
 $GLOBALS['nectar-sticky-media-section-count'] = 0;
 echo '<div class="'.nectar_clean_classnames(implode(' ',$el_classes)).'">';
 echo '<div class="nectar-sticky-media-section__featured-media">'.$featured_media.'</div>';
-echo '<div class="nectar-sticky-media-section__content">' . do_shortcode($content) . '</div>';
+echo '<div class="nectar-sticky-media-section__content">' . do_shortcode(wp_kses_post($content)) . '</div>';
 echo '</div>';

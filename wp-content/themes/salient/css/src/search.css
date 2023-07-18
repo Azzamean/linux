@@ -45,6 +45,19 @@ body.search-results .container-wrap .main-content {
 body.search #page-header-bg {
   height: 250px;
 }
+
+body.search[data-contained-header="true"] #page-header-bg {
+  height: auto;
+}
+
+@media only screen and (min-width: 1000px) {
+  body.search[data-contained-header="true"] #page-header-bg .span_6 {
+    top: auto;
+    transform: none;
+    margin: 10vh 0;
+  }
+}
+
 body.search #page-header-bg h1 {
   font-size: 40px;
   line-height: 50px;

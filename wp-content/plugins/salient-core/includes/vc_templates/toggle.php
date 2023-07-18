@@ -22,9 +22,9 @@ if( 'change_html_tag' === $heading_tag_functionality &&
 
 echo '<div class="toggle '.esc_attr(strtolower($color)).'" data-inner-wrap="true">';
 echo '<'.$heading_tag_html.' class="toggle-title">';
-echo '<a href="#" class="'.$typography_class.'"><i class="fa fa-plus-circle"></i>'. wp_kses_post($title) .'</a>';
+echo '<a href="#" role="button" class="'.$typography_class.'"><i role="presentation" class="fa fa-plus-circle"></i>'. wp_kses_post($title) .'</a>';
 echo '</'.$heading_tag_html.'>';
-echo '<div><div class="inner-toggle-wrap">' . do_shortcode($content) . '</div></div>';
+echo '<div><div class="inner-toggle-wrap">' . do_shortcode(wp_kses_post($content)) . '</div></div>';
 echo '</div>';
 
 ?>

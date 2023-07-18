@@ -29,8 +29,9 @@
 .wpb_gallery_slidesflickity_style .nectar-flickity.flickity-enabled:not([data-wrap="wrap"]) .flickity-slider,
 .wpb_gallery_slidesflickity_static_height_style .nectar-flickity.flickity-enabled:not([data-wrap="wrap"]) .flickity-slider,
 .nectar-flickity:not([data-wrap="wrap"]) .cell > .nectar-el-parallax-scroll .img-wrap,
-.nectar-flickity.nectar-carousel[data-format="default"][data-wrap="no-wrap"] .flickity-slider,
-.nectar-flickity .nectar-fancy-box[data-n-parallax-bg="true"] .box-bg {
+.nectar-flickity.nectar-carousel[data-format="default"][data-wrap="no-wrap"].transition-enabled .flickity-slider,
+.nectar-flickity .nectar-fancy-box[data-n-parallax-bg="true"] .box-bg,
+.nectar-post-grid.nectar-flickity[data-wrap="no-wrap"].transition-enabled .flickity-slider {
   transition: transform 0.3s cubic-bezier(0.2, 0.6, 0.3, 1);
 }
 
@@ -70,6 +71,9 @@
 }
 .nectar-flickity[data-spacing="40px"]:not(.masonry) .flickity-slider .cell {
   margin: 0px 40px;
+}
+.nectar-flickity[data-wrap="no-wrap"]:not(.flickity-enabled) .flickity-slider .cell:first-child {
+  margin-left: 0;
 }
 
 
@@ -717,6 +721,9 @@
   top: 50%;
 }
 
+.nectar-flickity[data-controls*="arrows_overlaid"] .flickity-prev-next-button {
+  padding: 0;
+}
 
 
 @media only screen and (max-width: 1000px) {
@@ -724,10 +731,7 @@
   .nectar-flickity[data-controls*="arrows_overlaid"] .flickity-prev-next-button {
     transform: scale(0.75);
   }
-  .nectar-flickity[data-controls*="arrows_overlaid"] .flickity-prev-next-button {
-      padding: 0;
-  }
-
+  
   .nectar-flickity[data-controls*="arrows_overlaid"][data-overflow="visible"] .flickity-prev-next-button {
     opacity: 0;
     visibility: hidden;
@@ -985,6 +989,14 @@
 
 .full-width-content .vc_col-sm-12 .nectar-flickity:not(.masonry) .flickity-viewport {
   overflow: visible;
+}
+
+.nectar-post-grid.nectar-flickity[data-overflow="visible"] .flickity-viewport {
+  overflow: visible!important;
+}
+
+.nectar-post-grid.nectar-flickity[data-overflow="hidden"] .flickity-viewport {
+  overflow: hidden!important;
 }
 
 .post-area.span_9 .full-width-content .vc_col-sm-12 .nectar-flickity:not(.masonry) .flickity-viewport {

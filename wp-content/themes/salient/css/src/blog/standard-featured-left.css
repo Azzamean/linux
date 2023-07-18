@@ -301,6 +301,10 @@ body .post-area.featured_img_left .posts-container .article-content-wrap .video-
 	opacity: 1;
 }
 
+.post-area.featured_img_left .article-content-wrap .post-content-wrap .post-header {
+  color: inherit;
+}
+
 .post-area.featured_img_left .article-content-wrap .post-content-wrap {
   width: 66.6%;
 	position: relative;

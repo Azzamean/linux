@@ -50,6 +50,24 @@ $nectar_lottie_params = array(
         'std' => 'hover',
     ),
 
+    array(
+        "type" => "dropdown",
+        "class" => "",
+        'save_always' => true,
+        "heading" => esc_html__("Hover Trigger Element", "salient-core"),
+        "param_name" => "hover_trigger",
+        "value" => array(
+            esc_html__("Self", 'salient-core') => "default",
+            esc_html__("Parent Column", 'salient-core') => "parent_column",
+        ),
+        'dependency' => array(
+            'element' => 'trigger_type',
+            'value' => array('hover')
+        ),
+        "description" => '',
+        'std' => 'default',
+    ),
+
     
     array(
         "type" => "dropdown",

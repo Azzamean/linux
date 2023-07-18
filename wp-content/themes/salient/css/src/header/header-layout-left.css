@@ -301,11 +301,21 @@ Description: Header Layout set to "Left Header" in theme options
         height:100%
     }
      body[data-header-format="left-header"] #top .container .row,
-		 body[data-header-format="left-header"] #top .container{
+		 body[data-header-format="left-header"] #top .container,
+     body[data-header-format="left-header"] .nectar_hook_before_secondary_header .container {
         position:static
     }
-     body[data-header-format="left-header"] #top .container{
+     body[data-header-format="left-header"] #top .container,
+     body[data-header-format="left-header"] .nectar_hook_before_secondary_header .container {
         padding:0px 30px
+    }
+    body[data-header-format="left-header"] .nectar_hook_before_secondary_header {
+      overflow: hidden;
+    }
+    body[data-header-format="left-header"] .nectar_hook_before_secondary_header .full-width-content {
+      width: 100%!important;
+      left: 0!important;
+      margin: 0!important;
     }
      body[data-header-format="left-header"] #header-outer .nav-outer{
         display:table;
@@ -803,6 +813,7 @@ body[data-header-format="left-header"][class*="page-template-template-no-header"
   [data-header-format="left-header"][data-aie="long-zoom-out"] .top-level.full-width-section .row-bg-wrap,
   [data-header-format="left-header"] .full-width-section.parallax_section .row-bg-wrap,
   [data-header-format="left-header"] .nectar-slider-wrap[data-full-width="true"],
+  body[data-header-format="left-header"] .post-area.full-width-content.standard-minimal,
   body[data-header-format="left-header"] .wpb_row.full-width-section .templatera_shortcode > .wpb_row.full-width-section > .row-bg-wrap,
 	.single-product[data-header-format="left-header"] .product[data-gallery-style="left_thumb_sticky"][data-gallery-variant="fullwidth"] .single-product-wrap {
     margin-left: calc(-50vw + 135px);

@@ -24,11 +24,12 @@ $images = explode( ',', $images );
 $images_markup_arr = array();
 $i = 0;
 
+
 foreach ($images as $attach_id) {
-    
+ 
     $zindex = ( 'ltr' === $stacking_order ) ? 100 - $i : 'auto';
 
-    if ($attach_id > 0) {
+    if ($attach_id && strlen($attach_id) > 0) {
 
         if( 'lazy-load' === $image_loading && NectarLazyImages::activate_lazy() ||
             ( property_exists('NectarLazyImages', 'global_option_active') && true === NectarLazyImages::$global_option_active && 'skip-lazy-load' !== $image_loading ) ) {
@@ -47,6 +48,7 @@ foreach ($images as $attach_id) {
         } 
         
         else {
+         
             if(!preg_match('/^\d+$/',$attach_id)) {
               $image_src = array($attach_id);
             } else {
@@ -105,7 +107,7 @@ if( function_exists('nectar_el_dynamic_classnames') ) {
 }
 
 if(!empty($text_content)) {
-  $text_content = '<div class="nectar-circle-images__text nectar-circle-images__item">'.$text_content.'</div>';
+  $text_content = '<div class="nectar-circle-images__text nectar-circle-images__item">'.wp_kses_post($text_content).'</div>';
 }
 
 echo '<div class="'.nectar_clean_classnames(implode(' ',$el_classes)).'" '.implode(' ',$el_attrs).'><div class="nectar-circle-images__inner">' . $image_markup . '</div>'.$text_content.'</div>';

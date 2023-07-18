@@ -24,8 +24,10 @@ extract(shortcode_atts(array(
   'link_indicator' => '',
   'link_indicator_bg_color' => '#000',
   'link_indicator_icon_color' => '#fff',
+  'fit_text_to_container' => '',
 	'content_alignment' => 'default',
-	'mobile_content_alignment' => 'inherit'
+	'mobile_content_alignment' => 'inherit',
+  'el_class' => ''
 ), $atts));
 
 $array = preg_split("/\r\n|\n|\r/", $content);
@@ -87,6 +89,21 @@ $el_classnames = array('nectar-split-heading');
 if( function_exists('nectar_el_dynamic_classnames') ) {
 	$el_classnames[] = nectar_el_dynamic_classnames('split_line_heading', $atts);
 } 
+if( !empty($el_class) ) {
+  $el_classnames[] = $el_class;
+}
+if( $line_reveal_by_space_text_effect === 'scroll-opacity-reveal' && $animation_type === 'line-reveal-by-space' ) {
+  $el_classnames[] = 'custom-trigger';
+  $el_classnames[] = 'scroll-timeline';
+}
+
+$el_attrs = '';
+
+if( $fit_text_to_container === 'true' ) {
+  wp_enqueue_script('nectar-fit-text');
+  $el_attrs .= 'data-has-fit-text="true" ';
+}
+
 
 if( !empty($link_href) ) {
   $link_indicator_attrs = '';
@@ -96,17 +113,17 @@ if( !empty($link_href) ) {
   echo '<a href="'.esc_url($link_href).'" target="'.esc_attr($link_target).'"'.$link_indicator_attrs.'>';
 }
 
-echo '<div class="'. esc_attr(implode(' ', $el_classnames)).'" data-align="'.esc_attr($content_alignment).'" data-m-align="'.esc_attr($mobile_content_alignment).'" data-text-effect="'.esc_attr($line_reveal_by_space_text_effect).'" data-animation-type="'.esc_attr($animation_type).'" data-animation-delay="'.esc_attr($animation_delay).'" data-animation-offset="'.esc_attr($animation_offset).'" data-m-rm-animation="'.esc_attr($mobile_disable_animation).'" data-stagger="'.esc_attr($stagger_animation).'" data-custom-font-size="'.esc_attr($custom_font_size).'" '.$font_style_markup_escaped.'>';
+echo '<div class="'. esc_attr(implode(' ', $el_classnames)).'" data-align="'.esc_attr($content_alignment).'" data-m-align="'.esc_attr($mobile_content_alignment).'" data-text-effect="'.esc_attr($line_reveal_by_space_text_effect).'" data-animation-type="'.esc_attr($animation_type).'" data-animation-delay="'.esc_attr($animation_delay).'" data-animation-offset="'.esc_attr($animation_offset).'" data-m-rm-animation="'.esc_attr($mobile_disable_animation).'" data-stagger="'.esc_attr($stagger_animation).'" data-custom-font-size="'.esc_attr($custom_font_size).'" '.$el_attrs . $font_style_markup_escaped.'>';
 
 if( 'default' === $animation_type ) {
 	foreach($heading_lines as $k => $v) {
-		echo '<div class="heading-line" '. $style_markup_escaped .'> <div>' . do_shortcode($v) . ' </div> </div>';
+		echo '<div class="heading-line" '. $style_markup_escaped .'> <div>' . do_shortcode(wp_kses_post($v)) . ' </div> </div>';
 	}
 } else if( 'line-reveal-by-space' === $animation_type || 
       'letter-fade-reveal' === $animation_type || 
       'twist-in' === $animation_type  ) {
 
-      echo '<'.esc_html($font_style).' '. $style_markup_escaped .'>'.do_shortcode($text_content).'</'.esc_html($font_style).'>';
+      echo '<'.esc_html($font_style).' '. $style_markup_escaped .'>'.do_shortcode( wp_kses_post($text_content) ).'</'.esc_html($font_style).'>';
 
 }
 

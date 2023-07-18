@@ -388,6 +388,11 @@ body .nectar-fancy-box[data-style="parallax_hover"] .inner > .arrow {
 .material .full-width-content .nectar-fancy-box[data-style="color_box_hover"]:before {
   border-radius: 0;
 }
+#ajax-content-wrap .nectar-fancy-box[data-border-radius="10px"][data-style="color_box_hover"] .box-inner-wrap,
+#ajax-content-wrap .nectar-fancy-box[data-border-radius="10px"][data-style="color_box_hover"]:before,
+#ajax-content-wrap .nectar-fancy-box[data-border-radius="10px"][data-style="color_box_basic"] {
+  border-radius: 10px;
+}
 
 /* Border Radius option */
 .nectar-fancy-box[data-border-radius="5px"]:not([data-style="parallax_hover"]):not([data-style="color_box_hover"]),

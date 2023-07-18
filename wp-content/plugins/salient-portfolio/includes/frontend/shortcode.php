@@ -533,8 +533,13 @@ if( !function_exists('nectar_portfolio_processing') ) {
 													$image_src = wp_get_attachment_image_src( $featured_ID, $thumb_size);
 												}
 												
+												if( $bypass_image_cropping === 'true' && isset($image_src[1]) && isset($image_src[2]) ) {
+													$image_width  = $image_src[1];
+													$image_height = $image_src[2];
+												}
+
 												if(!empty($image_src)) $image_src = $image_src[0];
-												
+
 												$project_featured_img = '<img class="size-'. esc_attr( $masonry_item_sizing ) .' skip-lazy" src="'. esc_url( $image_src ) .'" alt="'. esc_attr( $wp_img_alt_tag ) .'" height="'. esc_attr( $image_height ).'" width="'. esc_attr( $image_width ).'" ' . $image_srcset.' '.$image_sizes.' />';
 												
 												echo $project_featured_img; 
@@ -576,7 +581,12 @@ if( !function_exists('nectar_portfolio_processing') ) {
 													
 													//image
 													else {
-														echo '<a href="'. esc_url( $featured_image[0] ) .'"'; 
+														if( isset($featured_image[0]) ) {
+															echo '<a href="'. esc_url( $featured_image[0] ) .'"'; 
+														} else {
+															echo '<a href="#"'; 
+														}
+														
 														
 														if(!empty($project_image_caption)) {
 															echo ' title="'. wp_kses_post( $project_image_caption ) .'"';
@@ -673,8 +683,13 @@ if( !function_exists('nectar_portfolio_processing') ) {
 													$image_src = wp_get_attachment_image_src( $featured_ID, $thumb_size);
 												}
 												
+												if( $bypass_image_cropping === 'true' && isset($image_src[1]) && isset($image_src[2]) ) {
+													$image_width  = $image_src[1];
+													$image_height = $image_src[2];
+												}
+
 												if(!empty($image_src)) $image_src = $image_src[0];
-												
+
 												$project_featured_img = '<img class="size-'. esc_attr( $masonry_item_sizing ) .' skip-lazy" src="'. esc_url( $image_src ) .'" alt="'. esc_attr( $wp_img_alt_tag ) .'" height="'. esc_attr( $image_height ).'" width="'. esc_attr( $image_width ).'" ' . $image_srcset.' '.$image_sizes.' />';
 												
 												echo $project_featured_img; 
@@ -805,6 +820,11 @@ if( !function_exists('nectar_portfolio_processing') ) {
 													$image_src = wp_get_attachment_image_src( $featured_ID, $thumb_size);
 												}
 												
+												if( $bypass_image_cropping === 'true' && isset($image_src[1]) && isset($image_src[2]) ) {
+													$image_width  = $image_src[1];
+													$image_height = $image_src[2];
+												}
+
 												if(!empty($image_src)) $image_src = $image_src[0];
 												
 												$project_featured_img = '<img class="size-'. esc_attr( $masonry_item_sizing ) .' skip-lazy" src="'. esc_url( $image_src ) .'" alt="'. esc_attr( $wp_img_alt_tag ) .'" height="'. esc_attr( $image_height ).'" width="'. esc_attr( $image_width ).'" ' . $image_srcset.' '.$image_sizes.' />';
@@ -936,6 +956,11 @@ if( !function_exists('nectar_portfolio_processing') ) {
 													$image_src = wp_get_attachment_image_src( $featured_ID, $thumb_size);
 												}
 												
+												if( $bypass_image_cropping === 'true' && isset($image_src[1]) && isset($image_src[2]) ) {
+													$image_width  = $image_src[1];
+													$image_height = $image_src[2];
+												}
+
 												if(!empty($image_src)) { 
 													$image_src = $image_src[0];
 												}
@@ -1073,6 +1098,12 @@ if( !function_exists('nectar_portfolio_processing') ) {
 												} else {
 													$image_src = wp_get_attachment_image_src( $featured_ID, $thumb_size);
 												}
+												
+												if( $bypass_image_cropping === 'true' && isset($image_src[1]) && isset($image_src[2]) ) {
+													$image_width  = $image_src[1];
+													$image_height = $image_src[2];
+												}
+
 												if(!empty($image_src)) {
 													$image_src = $image_src[0];
 												}
@@ -1203,13 +1234,18 @@ if( !function_exists('nectar_portfolio_processing') ) {
 												echo '<div class="parallaxImg">';
 												echo '<div class="parallaxImg-layer" data-img="'. esc_url( $custom_thumbnail ) .'"></div>';
 												echo '<div class="parallaxImg-layer"><div class="bg-overlay"></div> <div class="work-meta"><div class="inner">';
-												echo '	<h4 class="title"> '.get_the_title().'</h4>';
 												
-												if(!empty($project_excerpt)) {
-													echo '<p>'. wp_kses_post( $project_excerpt ) .'</p>'; 
-												}
-												elseif(!empty($nectar_options['portfolio_date']) && $nectar_options['portfolio_date'] == 1) {
-													echo '<p>' . get_the_date() . '</p>'; 
+												if(!empty($using_custom_content) && $using_custom_content === 'on') {
+													echo '<div class="custom-content">' . do_shortcode($custom_content) . '</div>';
+												} else {
+													echo '	<h4 class="title"> '.get_the_title().'</h4>';
+													
+													if(!empty($project_excerpt)) {
+														echo '<p>'. wp_kses_post( $project_excerpt ) .'</p>'; 
+													}
+													elseif(!empty($nectar_options['portfolio_date']) && $nectar_options['portfolio_date'] == 1) {
+														echo '<p>' . get_the_date() . '</p>'; 
+													}
 												}
 												
 												echo '</div></div></div></div>';
@@ -1262,13 +1298,18 @@ if( !function_exists('nectar_portfolio_processing') ) {
 												echo '<div class="parallaxImg">';
 												echo '<div class="parallaxImg-layer" data-img="'. esc_url( $thumbnail_url[0] ) .'"></div>';
 												echo '<div class="parallaxImg-layer"><div class="bg-overlay"></div> <div class="work-meta"><div class="inner">';
-												echo '	<h4 class="title"> '.get_the_title().'</h4>';
-												
-												if(!empty($project_excerpt)) {
-													echo '<p>'. wp_kses_post( do_shortcode($project_excerpt) ) .'</p>'; 
-												}
-												elseif(!empty($nectar_options['portfolio_date']) && $nectar_options['portfolio_date'] == 1) {
-													echo '<p>' . get_the_date() . '</p>'; 
+
+												if(!empty($using_custom_content) && $using_custom_content === 'on') {
+													echo '<div class="custom-content">' . do_shortcode($custom_content) . '</div>';
+												} else {
+													echo '	<h4 class="title"> '.get_the_title().'</h4>';
+													
+													if(!empty($project_excerpt)) {
+														echo '<p>'. wp_kses_post( do_shortcode($project_excerpt) ) .'</p>'; 
+													}
+													elseif(!empty($nectar_options['portfolio_date']) && $nectar_options['portfolio_date'] == 1) {
+														echo '<p>' . get_the_date() . '</p>'; 
+													}
 												}
 												
 												echo '</div></div></div></div>';
@@ -1415,6 +1456,11 @@ if( !function_exists('nectar_portfolio_processing') ) {
 													$image_src = wp_get_attachment_image_src( $featured_ID, $thumb_size);
 												}
 												
+												if( $bypass_image_cropping === 'true' && isset($image_src[1]) && isset($image_src[2]) ) {
+													$image_width  = $image_src[1];
+													$image_height = $image_src[2];
+												}
+
 												if(!empty($image_src)) $image_src = $image_src[0];
 												
 												$project_featured_img = '<img class="size-'. esc_attr( $masonry_item_sizing ) .' skip-lazy" src="'. esc_url( $image_src ) .'" alt="'. esc_attr( $wp_img_alt_tag ) .'" height="'. esc_attr( $image_height ).'" width="'. esc_attr( $image_width ).'" ' . $image_srcset.' '.$image_sizes.' />';
@@ -1552,6 +1598,12 @@ if( !function_exists('nectar_portfolio_processing') ) {
 													$image_src = wp_get_attachment_image_src( $featured_ID, $thumb_size);
 												}
 												
+												
+												if( $bypass_image_cropping === 'true' && isset($image_src[1]) && isset($image_src[2]) ) {
+													$image_width  = $image_src[1];
+													$image_height = $image_src[2];
+												}
+
 												if(!empty($image_src)) {
 													$image_src = $image_src[0];
 												}
@@ -1711,10 +1763,17 @@ if( !function_exists('nectar_portfolio_processing') ) {
 													$image_src = wp_get_attachment_image_src( $featured_ID, $thumb_size);
 												}
 												
+	
+												if( $bypass_image_cropping === 'true' && isset($image_src[1]) && isset($image_src[2]) ) {
+													$image_width  = $image_src[1];
+													$image_height = $image_src[2];
+												}
+
 												if(!empty($image_src)) {
 													$image_src = $image_src[0];
 												}
-												
+
+		
 												$project_featured_img = '<img class="size-'. esc_attr( $masonry_item_sizing ) .' skip-lazy" src="'. esc_url( $image_src ) .'" alt="'. esc_attr( $wp_img_alt_tag ) .'" height="'. esc_attr( $image_height ).'" width="'. esc_attr( $image_width ).'" ' . $image_srcset.' '.$image_sizes.' />';
 												
 												echo $project_featured_img; 

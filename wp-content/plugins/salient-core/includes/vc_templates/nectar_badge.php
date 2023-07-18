@@ -63,4 +63,4 @@ if(!empty($margins)) {
     $el_style = ' style="'.$margins.'"';
 }
 
-echo '<div class="'.nectar_clean_classnames(implode(' ',$classes)).'"'.$el_style . $el_atts.'><div class="'.nectar_clean_classnames(implode(' ',$inner_classes)).'">' . $text . '</div></div>';
+echo '<div class="'.nectar_clean_classnames(implode(' ',$classes)).'"'.$el_style . $el_atts.'><div class="'.nectar_clean_classnames(implode(' ',$inner_classes)).'">' . wp_kses_post($text) . '</div></div>';

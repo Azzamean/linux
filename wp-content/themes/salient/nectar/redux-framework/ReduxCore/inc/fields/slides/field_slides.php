@@ -35,6 +35,10 @@ if ( !class_exists ( 'ReduxFramework_slides' ) ) {
      */
     class ReduxFramework_slides {
 
+        public $field = array();
+        public $value = '';
+        public $parent = null;
+        
         /**
          * Field Constructor.
          * Required - must call the parent constructor, then assign field and value to vars, and obviously call the render field function

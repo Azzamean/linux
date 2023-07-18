@@ -469,6 +469,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 		// Animated gradient
 		if( 'true' === $animated_gradient_bg ) {
 
+			wp_enqueue_script('nectar-animated-gradient');
+
 			$gradient_color = $animated_gradient_bg_color_1;
 			if( empty( $animated_gradient_bg_color_1 ) && defined( 'NECTAR_THEME_NAME' ) ) {
 				$gradient_color = NectarThemeManager::$colors['accent-color']['value'];
@@ -729,44 +731,51 @@ if ( ! defined( 'ABSPATH' ) ) {
 		if( $video_bg ) {
 
 			// Parse video image.
+			$video_image_src = null;
+			$video_image_poster_attr = '';
+
 			if( strpos($video_image, "http") !== false ){
 				$video_image_src = $video_image;
 			} else if( preg_match('/^\d+$/', $video_image) ) {
-        
+
 				$video_image_src = wp_get_attachment_image_src($video_image, 'full');
-        if( isset($video_image_src[0]) ) {
-          $video_image_src = $video_image_src[0];
-        }
+				if( isset($video_image_src[0]) ) {
+					$video_image_src = $video_image_src[0];
+				}
 				
 			}
 
 			if( $enable_video_color_overlay !== 'true' ) {
-        $video_overlay_color = null;
-      }
-      ?>
+				$video_overlay_color = null;
+			}
+		?>
 
 			<div class="video-color-overlay row-bg-layer" data-color="<?php echo esc_attr( $video_overlay_color ); ?>"></div>
-      <?php if( isset($video_image_src) && !empty($video_image_src) ) : ?>
-			     <div class="mobile-video-image" style="background-image: url(<?php echo esc_url( $video_image_src ); ?>)"></div>
-      <?php endif; ?>
+			<?php if( isset($video_image_src) && !empty($video_image_src) ) : ?>
+				<div class="mobile-video-image" style="background-image: url(<?php echo esc_url( $video_image_src ); ?>)"></div>
+			<?php endif; ?>
 
 			<div class="nectar-video-wrap row-bg-layer" data-bg-alignment="<?php echo esc_attr( $bg_position ); ?>">
 				<div class="nectar-video-inner">
-        <?php
+				<?php
 				if( !empty($video_external) && vc_extract_youtube_id( $video_external ) ) {
 					wp_enqueue_script( 'vc_youtube_iframe_api_js' );
 					echo '<div class="nectar-youtube-bg"><span>'.$video_external.'</span></div>';
 				} else {
 
+					if( $video_image_src && !empty($video_image_src) ) {
+						$video_image_poster_attr = ' poster="'.esc_attr($video_image_src).'"';
+					}
+					
 					if( 'lazy-load' === $background_video_loading ) {
-						echo '<video class="nectar-video-bg nectar-lazy-video" width="1800" height="700" preload="auto" loop autoplay muted playsinline>';
+						echo '<video class="nectar-video-bg nectar-lazy-video" width="1800" height="700" preload="auto" loop autoplay muted playsinline'.$video_image_poster_attr.'>';
 						if(!empty($video_webm)) { echo '<source data-nectar-video-src="'. esc_url( $video_webm ) .'" type="video/webm">'; }
 						if(!empty($video_mp4)) { echo '<source data-nectar-video-src="'. esc_url( $video_mp4 ) .'"  type="video/mp4">'; }
 						if(!empty($video_ogv)) { echo '<source data-nectar-video-src="'. esc_url( $video_ogv ) .'" type="video/ogg">'; }
 						echo '</video>';
 					} 
 					else {
-						echo '<video class="nectar-video-bg" width="1800" height="700" preload="auto" loop autoplay muted playsinline>';
+						echo '<video class="nectar-video-bg" width="1800" height="700" preload="auto" loop autoplay muted playsinline'.$video_image_poster_attr.'>';
 						if(!empty($video_webm)) { echo '<source src="'. esc_url( $video_webm ) .'" type="video/webm">'; }
 						if(!empty($video_mp4)) { echo '<source src="'. esc_url( $video_mp4 ) .'"  type="video/mp4">'; }
 						if(!empty($video_ogv)) { echo '<source src="'. esc_url( $video_ogv ) .'" type="video/ogg">'; }
@@ -774,7 +783,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 					}
 					
 				}
-        ?>
+			?>
     		</div>
 			 </div>
 

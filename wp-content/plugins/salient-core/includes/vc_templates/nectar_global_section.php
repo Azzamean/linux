@@ -6,7 +6,8 @@ if (!defined('ABSPATH')) {
 }
 
 extract(shortcode_atts(array(
-	"id" => ""
+	"id" => "",
+	'enable_display_conditions' => ''
 ), $atts));
 
 if (!empty($id)) {
@@ -15,7 +16,15 @@ if (!empty($id)) {
 	$section_id = apply_filters('wpml_object_id', $section_id, 'post', true);
 
 	$section_status = get_post_status($section_id);
-	if ('publish' === $section_status) {
+	
+	
+	$allow_output = true;
+	
+	if ( $enable_display_conditions === 'yes' ) {
+		$allow_output = Nectar_Global_Sections_Render::get_instance()->verify_conditional_display( $section_id );
+	}
+
+	if ( 'publish' === $section_status && $allow_output ) {
 
 		$section_content = get_post_field('post_content', $section_id);
 

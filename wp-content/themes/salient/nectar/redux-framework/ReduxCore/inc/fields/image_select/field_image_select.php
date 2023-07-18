@@ -33,7 +33,11 @@ if ( ! class_exists( 'ReduxFramework_image_select' ) ) {
      * @since       1.0.0
      */
     class ReduxFramework_image_select {
-
+        
+        public $field = array();
+        public $value = '';
+        public $parent = null;
+        
         /**
          * Field Constructor.
          * Required - must call the parent constructor, then assign field and value to vars, and obviously call the render field function

@@ -10,7 +10,10 @@
  	exit;
  }
 
-
+ 
+ require_once SALIENT_CORE_ROOT_DIR_PATH.'includes/global-sections/display-options.php';
+ require_once SALIENT_CORE_ROOT_DIR_PATH.'includes/global-sections/class-global-sections-render.php';
+ 
  if( !class_exists('Nectar_Global_Sections') ) {
 
    class Nectar_Global_Sections {
@@ -25,11 +28,13 @@
        add_action( 'admin_init', array($this, 'admin_notification_manager') );
        add_action( 'wp_ajax_nectar_dismiss_global_sections_notice', array($this,'nectar_dismiss_global_sections_notice') );
 
+  
        // Frontend.
        add_action( 'wp_enqueue_scripts', array($this, 'enqueue_assets') );
        add_action( 'wp', array($this, 'salient_frontend_display') );
 
      }
+
 
      /**
       * Determines whether to show an admin notification.
@@ -118,6 +123,7 @@
          'public'              => $public_bool,
    			 'publicly_queryable'  => $public_bool,
          'rewrite'             => false,
+         'show_in_rest'       => true,
          'exclude_from_search' => true,
   			 'show_ui'             => true,
   			 'hierarchical'        => true,
@@ -199,7 +205,7 @@
         $nectar_options = NectarThemeManager::$options;
 
         $theme_hooks = array(
-          'global-section-after-header-navigation' => 'nectar_hook_after_outer_wrap_open',
+          'global-section-after-header-navigation' => 'nectar_hook_global_section_after_header_navigation',
           'global-section-above-footer'            => 'nectar_hook_before_container_wrap_close'
         );
 
@@ -212,14 +218,19 @@
             add_action( $hook, array($this, $hook .'_hook' ) );
 
             // After header section modifcations.
-            if( in_array($hook, array('nectar_hook_after_outer_wrap_open') ) ) {
+            if( in_array($hook, array('nectar_hook_global_section_after_header_navigation') ) ) {
 
               $section_status = get_post_status($section_id);
 
               if( 'publish' === $section_status ) {
 
                 // Deactivate the transparent header effect.
-                add_filter('nectar_activate_transparent_header', array($this,'after_header_navigation_remove_transparency'));
+                if( function_exists('nectar_is_contained_header') && nectar_is_contained_header() ) {
+                  //// check for contained header and skip if active.
+                } else {
+                  add_filter('nectar_activate_transparent_header', array($this,'after_header_navigation_remove_transparency'));
+                }
+                
 
                 // Add body class.
                 add_filter( 'body_class', array($this, 'after_header_navigation_body_class') );
@@ -259,7 +270,7 @@
 
      }
 
-     public function nectar_hook_after_outer_wrap_open_hook() {
+     public function nectar_hook_global_section_after_header_navigation_hook() {
 
         $nectar_options = NectarThemeManager::$options;
         $id = $nectar_options['global-section-after-header-navigation'];

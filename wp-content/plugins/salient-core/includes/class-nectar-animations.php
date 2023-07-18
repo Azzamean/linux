@@ -26,6 +26,7 @@ if (!class_exists('NectarAnimations')) {
         public $array_animations = array();
         public $config = array();
         public $json = array();
+        public $atts = array();
 
         /**
          * Constructor.
@@ -44,6 +45,8 @@ if (!class_exists('NectarAnimations')) {
             foreach (self::$devices as $device) {
                 $this->clip_path($device);
             }
+
+            $this->advanced_animations();
 
         }
 
@@ -74,8 +77,41 @@ if (!class_exists('NectarAnimations')) {
             }
         }
 
+        public function advanced_animations()
+        {
+            // Advanced animations.
+            if (isset($this->atts['animation_type']) && 'scroll_pos_advanced' === $this->atts['animation_type']) {
+
+                $devices = array('desktop');
+                if( isset($this->atts['persist_animation_on_mobile']) && 'true' === $this->atts['persist_animation_on_mobile'] ) {
+                    $devices = array('desktop','tablet','phone');
+                }
+
+                foreach( $devices as $device ) {
+                    $this->array_animations[$device]['translateX']['start'] = isset($this->atts['animation_start_translate_x']) ? $this->atts['animation_start_translate_x'] : '0';
+                    $this->array_animations[$device]['translateY']['start'] = isset($this->atts['animation_start_translate_y']) ? $this->atts['animation_start_translate_y'] : '0';
+                    $this->array_animations[$device]['scale']['start'] = isset($this->atts['animation_start_scale']) ? $this->atts['animation_start_scale'] : '1';
+                    $this->array_animations[$device]['opacity']['start'] = isset($this->atts['animation_start_opacity']) ? $this->atts['animation_start_opacity'] : '1';
+                    $this->array_animations[$device]['rotate']['start'] = isset($this->atts['animation_start_rotate']) ? $this->atts['animation_start_rotate'] : '0';
+
+                    $this->array_animations[$device]['translateX']['end'] = isset($this->atts['animation_end_translate_x']) ? $this->atts['animation_end_translate_x'] : '0';
+                    $this->array_animations[$device]['translateY']['end'] = isset($this->atts['animation_end_translate_y']) ? $this->atts['animation_end_translate_y'] : '0';
+                    $this->array_animations[$device]['scale']['end'] = isset($this->atts['animation_end_scale']) ? $this->atts['animation_end_scale'] : '1';
+                    $this->array_animations[$device]['opacity']['end'] = isset($this->atts['animation_end_opacity']) ? $this->atts['animation_end_opacity'] : '1';
+                    $this->array_animations[$device]['rotate']['end'] = isset($this->atts['animation_end_rotate']) ? $this->atts['animation_end_rotate'] : '0';
+                }
+                
+                
+            }
+                    
+        }
+
         public function clip_path($device)
         {
+            
+            if( !isset( $this->atts['clip_path_animation_type']) || 'scroll' !== $this->atts['clip_path_animation_type'] ) {
+                return;
+            } 
 
             // Clip path.
             $clip_params_start = array();

@@ -37,10 +37,10 @@ if( $nectar_using_VC_front_end_editor ) {
 }
 
 if( $nectar_carousel_script_store === 'carouFredSel' ) {
-	echo '<li class="col span_4">' . do_shortcode($content) . '</li>';
+	echo '<li class="col span_4">' . do_shortcode(wp_kses_post($content)) . '</li>';
 }
 else if( $nectar_carousel_script_store === 'owl_carousel' ) {
-	echo '<div class="carousel-item">' . do_shortcode($content) . '</div>';
+	echo '<div class="carousel-item">' . do_shortcode(wp_kses_post($content)) . '</div>';
 }
 else if( $nectar_carousel_script_store === 'flickity' && !$nectar_using_VC_front_end_editor ) {
 	$class_names = array('cell');
@@ -48,7 +48,7 @@ else if( $nectar_carousel_script_store === 'flickity' && !$nectar_using_VC_front
 		$class_names[] = nectar_el_dynamic_classnames('flickity_carousel_slide', $atts);
 	}
 	$column_bg_markup = (!empty($GLOBALS['nectar_carousel_column_color'])) ? 'style=" background-color: ' . sanitize_text_field($GLOBALS['nectar_carousel_column_color']) . ';"': '';
-	echo '<div class="'.esc_attr(implode(' ', $class_names)).'"><div class="inner-wrap-outer"><div class="inner-wrap" '.$column_bg_markup.'>' . do_shortcode($content) . '</div></div></div>';
+	echo '<div class="'.esc_attr(implode(' ', $class_names)).'"><div class="inner-wrap-outer"><div class="inner-wrap" '.$column_bg_markup.'>' . do_shortcode(wp_kses_post($content)) . '</div></div></div>';
 }
 else if( $nectar_carousel_script_store === 'simple_slider' || $nectar_using_VC_front_end_editor ) {
 
@@ -113,7 +113,7 @@ else if( $nectar_carousel_script_store === 'simple_slider' || $nectar_using_VC_f
 			echo '<div class="color-overlay" data-strength="'.esc_attr($simple_slider_overlay_strength).'"></div>';
 		}
 		echo '</div>
-		<div class="'.esc_attr(implode(" ", $inner_class_names)).'" '.$inner_attrs.'>'.do_shortcode($content).'</div>
+		<div class="'.esc_attr(implode(" ", $inner_class_names)).'" '.$inner_attrs.'>'.do_shortcode(wp_kses_post($content)).'</div>
 	</div>';
 }
 

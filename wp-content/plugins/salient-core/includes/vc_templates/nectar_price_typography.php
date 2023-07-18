@@ -39,14 +39,14 @@ if (!empty($styles)) {
 
 echo '<div class="' . nectar_clean_classnames(implode(' ', $classes)) . '"' . $styles . '>';
 if (!empty($before_text)) {
-    $before_text_scale = !empty($before_text_scale) ? ' style="font-size: ' . $before_text_scale . 'em;"' : '';
+    $before_text_scale = !empty($before_text_scale) ? ' style="font-size: ' . esc_attr($before_text_scale) . 'em;"' : '';
     echo '<span class="before-text"' . $before_text_scale . '>' . esc_html($before_text) . '</span>';
 }
 if (!empty($price_text) || '0' === $price_text) {
     echo '<span class="price-text">' . esc_html($price_text) . '</span>';
 }
 if (!empty($after_text)) {
-    $after_text_scale = !empty($after_text_scale) ? ' style="font-size: ' . $after_text_scale . 'em;"' : '';
+    $after_text_scale = !empty($after_text_scale) ? ' style="font-size: ' . esc_attr($after_text_scale) . 'em;"' : '';
     echo '<span class="after-text"' . $after_text_scale . '>' . esc_html($after_text) . '</span>';
 }
 echo '</div>';

@@ -131,21 +131,21 @@ if( 'vertical_scrolling' !== $style ) {
 				array_pop($tabbed_li_classes);
 			}
 
-	        $tabs_nav .= '<li class="'.implode(' ',$tabbed_li_classes).'"><a href="#tab-'. (isset($tab_matches[3][0]) ? $tab_matches[3][0] : sanitize_title( $tab_matches[1][0] ) ) .'" '.$active_class.'><span>' . $tab_matches[1][0] . '</span></a></li>';
+	        $tabs_nav .= '<li class="'.implode(' ',$tabbed_li_classes).'"><a role="button" href="#tab-'. (isset($tab_matches[3][0]) ? esc_attr($tab_matches[3][0]) : sanitize_title( $tab_matches[1][0] ) ) .'" '.$active_class.'><span>' . wp_kses_post($tab_matches[1][0]) . '</span></a></li>';
 
 	    }
 
 		$tab_index++;
 
 		if( $style === 'toggle_button' && $tab_index === 1) {
-			$tabs_nav .= '<li class="toggle-button"><span class="toggle-button-inner nectar-color-'.strtolower($tab_color).' nectar-bg-'.strtolower($tab_color).'"><span class="circle"></span></span></li>';
+			$tabs_nav .= '<li class="toggle-button"><span role="button" class="toggle-button-inner nectar-color-'.strtolower($tab_color).' nectar-bg-'.strtolower($tab_color).'"><span class="circle"></span></span></li>';
 		}
 
 	}
 
 	//cta button
 	if(strlen($cta_button_text) >= 1) {
-	     $tabs_nav .= '<li class="cta-button"><a class="nectar-button medium regular-button '.esc_attr($cta_button_style).'" data-color-override="false" href="'.esc_url($cta_button_link).'">' . wp_kses_post($cta_button_text) . '</a></li>';
+	     $tabs_nav .= '<li class="cta-button"><a class="nectar-button medium regular-button '.esc_attr($cta_button_style).'" role="button" data-color-override="false" href="'.esc_url($cta_button_link).'">' . wp_kses_post($cta_button_text) . '</a></li>';
 	}
 
 	$tabs_nav .= '</ul>'."\n";
@@ -173,6 +173,8 @@ else {
 
 	if ( isset($matches[0]) ) { $tab_titles = $matches[0]; }
 
+
+
 	$opening_tag = null;
 	$closing_tag = null;
 
@@ -190,7 +192,7 @@ else {
 		$current_selected_item = '<div class="scrolling-tab-nav-current-item"></div>';
 
     if( !empty($vs_text_content) ) {
-      $text_content = '<div class="tab-text-content">'.do_shortcode($vs_text_content).'</div>';
+      $text_content = '<div class="tab-text-content">'.do_shortcode(wp_kses_post($vs_text_content)).'</div>';
     }
     
 	} 
@@ -208,7 +210,7 @@ else {
 
 	  preg_match('/title="([^\"]+)"(\sid\=\"([^\"]+)\"){0,1}/i', $tab_titles[0][0], $tab_title_match, PREG_OFFSET_CAPTURE );
       if (isset($tab_title_match[1][0]) && !empty($vs_tab_tag) && in_array($vs_tab_tag, $acceptable_tags) ) {
-		$starting_tab_title = '<' . $vs_tab_tag . ' class="tab-nav-heading"><a href="#">' . $tab_title_match[1][0] . '</a></' . $vs_tab_tag . '>';
+		$starting_tab_title = '<' . $vs_tab_tag . ' class="tab-nav-heading"><a href="#">' . wp_kses_post($tab_title_match[1][0]) . '</a></' . $vs_tab_tag . '>';
       }
       $current_selected_item .= '<div class="scrolling-tab-nav-total nectar-inherit-label"><span class="current"><span class="inner">'.$total_list.'</span></span><span class="sep">/</span><span class="total">'.$total_count.'</span></div>';
       $current_selected_item .= '<div class="scrolling-tab-nav-current-item">'.$starting_tab_title.'</div>';
@@ -222,20 +224,27 @@ else {
   
 	foreach ( $tab_titles as $tab ) {
 
+
 	    preg_match('/title="([^\"]+)"(\sid\=\"([^\"]+)\"){0,1}/i', $tab[0], $tab_matches, PREG_OFFSET_CAPTURE );
-			preg_match('/sub_desc="([^\"]+)"/i', $tab[0], $tab_sub_desc_matches, PREG_OFFSET_CAPTURE );
+		preg_match('/sub_desc="([^\"]+)"/i', $tab[0], $tab_sub_desc_matches, PREG_OFFSET_CAPTURE );
 
 	    if(isset($tab_matches[1][0])) {
 
 					$tab_qid = uniqid("tab_");
 					$sub_desc = ( isset($tab_sub_desc_matches[1]) ) ? $tab_sub_desc_matches[1] : false;
+					
           $active_class = ( $tab_index === 0 ) ? ' active-tab' : '';
 
 	        $vs_navigation_escaped .= '<li class="menu-item'.$active_class.'"><div class="menu-content">';
 					$vs_navigation_escaped .= $opening_tag.'<a class="skip-hash" href="#'. esc_attr( $tab_qid ) .'"><span>' . $tab_matches[1][0] . '</span></a>'.$closing_tag;
 
 					if( $sub_desc ) {
-						$vs_navigation_escaped .= '<a class="sub-desc skip-hash" href="#'. esc_attr( $tab_qid ) .'">' . $sub_desc[0] . '</a>';
+						// convert all paragraph tags and line breaks into standard divs.
+						$sub_desc[0] = str_replace('<br />', '<div class="nectar-line-break"></div>', $sub_desc[0]);
+						$sub_desc[0] = str_replace('<p>', '', $sub_desc[0]);
+						$sub_desc[0] = str_replace('</p>', '<div class="nectar-line-break"></div>', $sub_desc[0]);
+						
+						$vs_navigation_escaped .= '<a class="sub-desc skip-hash" href="#'. esc_attr( $tab_qid ) .'">' . wp_kses_post($sub_desc[0]) . '</a>';
 					}
 
 					$vs_navigation_escaped .= '</div></li>';

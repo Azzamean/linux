@@ -3,7 +3,7 @@
 * The template for displaying pages.
 *
 * @package Salient WordPress Theme
-* @version 13.0
+* @version 15.5
 */
 
 // Exit if accessed directly.
@@ -18,7 +18,7 @@ $nectar_fp_options = nectar_get_full_page_options();
 ?>
 <div class="container-wrap">
 	<div class="<?php if ( $nectar_fp_options['page_full_screen_rows'] !== 'on' ) { echo 'container'; } ?> main-content" role="main">
-		<div class="row">
+		<div class="<?php echo apply_filters('nectar_main_container_row_class_name', 'row'); ?>">
 			<?php
 
 			nectar_hook_before_content();

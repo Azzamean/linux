@@ -36,7 +36,7 @@ function nectar_redux_deps( $hook_suffix ) {
 	global $using_nectar_redux_framework;
 	if ( strstr( $hook_suffix, 'Salient' ) || strstr( $hook_suffix, 'salient' ) ) {
 
-		wp_enqueue_style( 'nectar_redux_admin_style', get_template_directory_uri() . '/nectar/redux-framework/ReduxCore/assets/css/salient-redux-styling.css', array(), '14.5', 'all' );
+		wp_enqueue_style( 'nectar_redux_admin_style', get_template_directory_uri() . '/nectar/redux-framework/ReduxCore/assets/css/salient-redux-styling.css', array(), '16.0', 'all' );
 
 		if ( $using_nectar_redux_framework === false ) {
 			wp_enqueue_style( 'nectar_redux_select_2', get_template_directory_uri() . '/nectar/redux-framework/extensions/vendor_support/vendor/select2/select2.css', array(), time(), 'all' );

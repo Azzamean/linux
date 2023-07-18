@@ -169,7 +169,9 @@
     
     if( this.type == 'multiple_visible' || this.type == 'multiple_visible_minimal' ) {
 
-      if( !window.nectarDOMInfo.usingFrontEndEditor ) {
+      var usingFullScreenRows = $('#nectar_fullscreen_rows').length > 0 ? true : false;
+      
+      if( !window.nectarDOMInfo.usingFrontEndEditor && 'IntersectionObserver' in window && usingFullScreenRows === false ) {
         this.lazyFlickityInit();
       }
       else {
@@ -287,10 +289,9 @@
   };
 
   NectarTestimonialSlider.prototype.lazyFlickityInit = function() {
-
     var that = this;
     this.observer = new IntersectionObserver(function(entries) {
-
+     
       entries.forEach(function(entry){
         if (entry.isIntersecting) {
           that.flickityInit();

@@ -103,10 +103,12 @@ if ( !function_exists( 'nectar_shop_wrapper_start_sidebar_left' ) ) {
 				do_action('nectar_shop_above_loop');
 				echo '<div class="row"><div id="sidebar" class="col span_3 col">';
 				do_action('nectar_shop_sidebar_top');
+				do_action('nectar_hook_sidebar_top');
 				echo '<div class="inner">';
 				if ( function_exists( 'dynamic_sidebar' ) ) {
 					dynamic_sidebar( 'woocommerce-sidebar' );
 				}
+				do_action('nectar_hook_sidebar_bottom');
 		echo '</div></div><div class="post-area col span_9 col_last">';
 	}
 }
@@ -1448,6 +1450,7 @@ if( !function_exists('nectar_check_product_lazy_loading') ) {
 		'1' === $nectar_options['product_lazy_load_images'] ) {
 
 			add_filter('wp_get_attachment_image_attributes','nectar_lazyload_woocommerce_imgs', 10, 5 );
+			add_filter( 'wp_lazy_loading_enabled', '__return_false' );
 
 		}
 

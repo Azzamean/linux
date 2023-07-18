@@ -7,72 +7,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 wp_enqueue_style( 'nectar-element-post-grid' );
 
-extract( shortcode_atts( array(
-	'post_type' => 'post',
-	'cpt_name' => 'post',
-	'custom_query_tax' => '',
-	'cpt_all_filter' => '',
-	'portfolio_category' 	=> 'all',
-  'blog_category' 	=> 'all',
-  'text_content_layout' => 'top_left',
-  'subtext' => 'none',
-  'orderby' => 'date',
-	'order' 	=> 'DESC',
-  'posts_per_page' => '-1',
-  'post_offset' => '0',
-	'enable_gallery_lightbox' => '0',
-	'enable_sortable' => '',
-	'sortable_color' => 'default',
-	'sortable_alignment' => 'default',
-	'pagination' => 'none',
-  'display_categories' => '0',
-  'display_date' => '0',
-  'display_excerpt' => '0',
-  'ignore_sticky_posts' => '',
-	'category_functionality' => 'default',
-  'grid_item_height' => '30vh',
-  'grid_item_spacing' => '10px',
-  'columns' => '4',
-  'enable_masonry' => '',
-  'featured_top_item' => '',
-	'aspect_ratio_image_size' => '',
-  'custom_image_aspect_ratio' => 'default',
-	'image_size' => 'large',
-	'image_loading' => 'normal',
-	'button_color' => 'black',
-  'color_overlay' => '',
-  'color_overlay_opacity' => '',
-  'color_overlay_hover_opacity' => '',
-  'text_color' => 'dark',
-  'text_color_hover' => 'dark',
-  'shadow_on_hover' => '',
-	'enable_indicator' => '',
-	'mouse_indicator_style' => 'default',
-	'mouse_indicator_color' => '#000',
-	'mouse_indicator_text' => 'view',
-	'mouse_indicator_blurred_bg' => '',
-  'mouse_indicator_text_color' => '#fff',
-  'hover_effect' => '',
-  'border_radius' => 'none',
-  'text_style' => 'default',
-	'grid_style' => 'content_overlaid',
-	'opacity_hover_animation' => '',
-	'post_title_overlay' => '',
-	'mouse_follow_image_alignment' => '',
-	'mouse_follow_post_spacing' => '25px',
-	'heading_tag' => 'default',
-	'animation' => 'none',
-	'custom_font_size' => '',
-	'content_under_image_text_align' => 'left',
-  'overlay_secondary_project_image' => '',
-	'card_design' => '',
-	'card_bg_color' => '',
-	'card_bg_color_hover' => '',
-  'vertical_list_hover_effect' => 'none',
-  'vertical_list_read_more' => '',
-	'css_class_name' => ''
-), $atts ) );
-
+extract( shortcode_atts( NectarPostGrid::get_attributes(), $atts ) );
 
 if( 'yes' !== $card_design ) {
 	$card_bg_color = '';
@@ -88,10 +23,18 @@ $el_settings = array(
 	'post_type' => esc_attr($post_type),
 	'pagination' => esc_attr($pagination),
 	'image_size' => esc_attr($image_size),
+	'parallax_scrolling' => esc_attr($parallax_scrolling),
 	'aspect_ratio_image_size' => esc_attr($aspect_ratio_image_size),
+	'category_position' => esc_attr($category_position),
+	'category_display' => esc_attr($category_display),
 	'display_categories' => esc_attr($display_categories),
 	'display_excerpt' => esc_attr($display_excerpt),
+	'excerpt_length' => esc_attr($excerpt_length),
 	'display_date' => esc_attr($display_date),
+	'display_estimated_reading_time' => esc_attr($display_estimated_reading_time),
+	'display_author' => esc_attr($display_author),
+	'author_functionality' => esc_attr($author_functionality),
+	'author_position' => esc_attr($author_position),
 	'color_overlay' => esc_attr($color_overlay),
 	'color_overlay_opacity' => esc_attr($color_overlay_opacity),
 	'color_overlay_hover_opacity' => esc_attr($color_overlay_hover_opacity),
@@ -101,9 +44,12 @@ $el_settings = array(
 	'post_title_overlay' => esc_attr($post_title_overlay),
 	'heading_tag' => esc_attr($heading_tag),
 	'enable_gallery_lightbox' => esc_attr($enable_gallery_lightbox),
-  'overlay_secondary_project_image' => esc_attr($overlay_secondary_project_image),
-  'vertical_list_hover_effect' => esc_attr($vertical_list_hover_effect),
-  'vertical_list_read_more' => esc_attr($vertical_list_read_more)
+	'category_style' => esc_attr($category_style),
+	'overlay_secondary_project_image' => esc_attr($overlay_secondary_project_image),
+	'vertical_list_hover_effect' => esc_attr($vertical_list_hover_effect),
+	'vertical_list_read_more' => esc_attr($vertical_list_read_more),
+	'read_more_button' => esc_attr($read_more_button),
+	'animation' => esc_attr($animation),
 );
 
 $el_query = array(
@@ -114,7 +60,7 @@ $el_query = array(
 	'offset' => esc_attr($post_offset),
 	'cpt_name' => esc_attr($cpt_name),
 	'custom_query_tax' => esc_attr($custom_query_tax),
-  'ignore_sticky_posts' => esc_attr($ignore_sticky_posts),
+  	'ignore_sticky_posts' => esc_attr($ignore_sticky_posts),
 ); 
 
 $css_class_arr = array('nectar-post-grid-wrap');
@@ -126,6 +72,10 @@ if( !empty($css_class_name) ) {
 if( !empty($text_color) ) {
 	array_push($css_class_arr, 'text-color-'.$text_color);
 }
+
+if( !empty($additional_meta_size) && 'default' != $additional_meta_size ) {
+	array_push($css_class_arr, 'additional-meta-size-'.$additional_meta_size);
+} 
 
 if( !empty($grid_item_spacing) ) {
 	array_push($css_class_arr, 'spacing-'.$grid_item_spacing);
@@ -289,75 +239,8 @@ if( !empty($cat_links_escaped) ) {
 	
 
 
-
-if( 'view' === $mouse_indicator_text ) {
-	$indicator_text = esc_html__('View','salient-core');
-} else {
-	$indicator_text = esc_html__('Read','salient-core');
-}
-
-if( 'content_overlaid' !== $grid_style ) {
-	$text_color_hover = $text_color;
-}
-if( 'mouse_follow_image' === $grid_style ) {
-	$grid_item_spacing = 'none';
-}
-
-/* Locked aspect ratio disables masonry option. */
-if( 'content_under_image' === $grid_style ) {
-
-  if( 'yes' === $aspect_ratio_image_size || 
-      !empty($custom_image_aspect_ratio) && 'default' !== $custom_image_aspect_ratio )  {
-	    $enable_masonry = 'false';
-  }
-}
-if( $featured_top_item == 'yes' ) {
-  $enable_masonry = 'false';
-}
-
-
 // Grid output.
-$data_attrs_escaped = 'data-indicator="'.esc_attr($enable_indicator).'" '; 
-$data_attrs_escaped .= 'data-indicator-style="'.esc_attr($mouse_indicator_style).'" '; 
-if( $mouse_indicator_blurred_bg == 'yes' ) {
-	$data_attrs_escaped .= 'data-indicator-blur="true" '; 
-}
-$data_attrs_escaped .= 'data-indicator-text-color="'.esc_attr($mouse_indicator_text_color).'" '; 
-$data_attrs_escaped .= 'data-indicator-color="'.esc_attr($mouse_indicator_color).'" ';
-$data_attrs_escaped .= 'data-indicator-text="'. esc_html($indicator_text). '" ';
-if( 'vertical_list' === $grid_style ) {
-  $columns = '1';
-}
-$data_attrs_escaped .= 'data-columns="'. esc_attr($columns) .'" ';
-$data_attrs_escaped .= 'data-hover-effect="'.esc_attr($hover_effect).'" ';
-$data_attrs_escaped .= 'data-text-style="'.esc_attr($text_style).'" ';
-
-$data_attrs_escaped .= 'data-border-radius="'.esc_attr($border_radius).'" ';
-
-$data_attrs_escaped .= 'data-grid-item-height="'.esc_attr($grid_item_height).'" ';
-$data_attrs_escaped .= 'data-grid-spacing="'.esc_attr($grid_item_spacing).'" ';
-$data_attrs_escaped .= 'data-text-layout="'.esc_attr($text_content_layout).'" ';
-$data_attrs_escaped .= 'data-text-color="'.esc_attr($text_color).'" ';
-$data_attrs_escaped .= 'data-text-hover-color="'.esc_attr($text_color_hover).'" ';
-$data_attrs_escaped .= 'data-shadow-hover="'.esc_attr($shadow_on_hover).'" ';
-if( $enable_masonry ) {
-	$data_attrs_escaped .= 'data-masonry="'.esc_attr($enable_masonry).'" ';
-}
-$data_attrs_escaped .= 'data-animation="'.esc_attr($animation).'" ';
-$data_attrs_escaped .= 'data-cat-click="'.esc_attr($category_functionality).'"';
-
-if( 'content_under_image' === $grid_style) {
-	$data_attrs_escaped .= ' data-lock-aspect="'.esc_attr($aspect_ratio_image_size).'" ';
-	$data_attrs_escaped .= ' data-text-align="'.esc_attr($content_under_image_text_align).'" ';
-	$data_attrs_escaped .= 'data-card="'.esc_attr($card_design).'"';
-}
-
-if( 'mouse_follow_image' === $grid_style) {
-	$data_attrs_escaped .= ' data-opacity-hover="'. esc_attr($opacity_hover_animation).'" ';
-	$data_attrs_escaped .= 'data-post-title-overlay="'. esc_attr($post_title_overlay).'" ';
-	$data_attrs_escaped .= 'data-mouse-follow-image-alignment="'. esc_attr($mouse_follow_image_alignment).'" ';
-	$data_attrs_escaped .= 'data-mouse_follow_post_spacing="'. esc_attr($mouse_follow_post_spacing).'"';
-}
+$data_attrs_escaped = NectarPostGrid::get_data_attributes($atts);
 
 // Dynamic style classes.
 if( function_exists('nectar_el_dynamic_classnames') ) {
@@ -366,8 +249,16 @@ if( function_exists('nectar_el_dynamic_classnames') ) {
 	$dynamic_el_styles = '';
 }
 
-echo '<div class="nectar-post-grid'.$dynamic_el_styles.'" '.$data_attrs_escaped.'>';
+$nectar_post_grid_class = 'nectar-post-grid';
+if( 'carousel' === $display_type ) {
+	$nectar_post_grid_class .= ' nectar-flickity';
+}
 
+echo '<div class="'.$nectar_post_grid_class.$dynamic_el_styles.'" '.$data_attrs_escaped.'>';
+
+if( 'carousel' === $display_type ) {
+	echo '<div class="flickity-viewport"><div class="flickity-slider">';
+}
 // Posts.
 if( 'post' === $post_type ) {
   
@@ -394,8 +285,10 @@ if( 'post' === $post_type ) {
   $nectar_blog_el_query = new WP_Query( $nectar_blog_arr );
         
   if( $nectar_blog_el_query->have_posts() ) : while( $nectar_blog_el_query->have_posts() ) : $nectar_blog_el_query->the_post();
-        
-    echo nectar_post_grid_item_markup($atts);
+    
+  	do_action('nectar_blog_post_grid_item_start', $atts, $nectar_blog_el_query);
+    echo nectar_post_grid_item_markup($atts, $nectar_blog_el_query->current_post, 'regular');
+	do_action('nectar_blog_post_grid_item_end', $atts, $nectar_blog_el_query);
   
   endwhile; endif; 
   
@@ -416,7 +309,7 @@ else if( 'portfolio' === $post_type ) {
 		'post_type'      => 'portfolio',
 		'post_status'    => 'publish',
 		'order'          => $order,
-    'orderby'        => $orderby,
+		'orderby'        => $orderby,
 		'project-type'   => $portfolio_category,
 		'offset'         => $post_offset,
 	);
@@ -434,9 +327,11 @@ else if( 'portfolio' === $post_type ) {
 	$nectar_portfolio_el_query = new WP_Query( $portfolio_arr );
         
   if( $nectar_portfolio_el_query->have_posts() ) : while( $nectar_portfolio_el_query->have_posts() ) : $nectar_portfolio_el_query->the_post();
-        
-    echo nectar_post_grid_item_markup($atts);
-  
+    
+  	do_action('nectar_blog_post_grid_item_start', $atts, $nectar_portfolio_el_query);
+    echo nectar_post_grid_item_markup($atts, $nectar_portfolio_el_query->current_post, 'regular');
+	do_action('nectar_blog_post_grid_item_end', $atts, $nectar_portfolio_el_query);
+
   endwhile; endif; 
 	
 	wp_reset_query();
@@ -447,7 +342,7 @@ else if( 'portfolio' === $post_type ) {
 if( 'custom' === $post_type && !empty($cpt_name) ) {
 
   $nectar_custom_query_arr = array(
-		'post_type'      => $cpt_name,
+	'post_type'      => $cpt_name,
     'posts_per_page' => $posts_per_page,
     'order'          => $order,
     'orderby'        => $orderby,
@@ -470,9 +365,11 @@ if( 'custom' === $post_type && !empty($cpt_name) ) {
   $nectar_custom_query = new WP_Query( $nectar_custom_query_arr );
         
   if( $nectar_custom_query->have_posts() ) : while( $nectar_custom_query->have_posts() ) : $nectar_custom_query->the_post();
-        
-    echo nectar_post_grid_item_markup($atts);
-  
+  	
+ 	do_action('nectar_blog_post_grid_item_start', $atts, $nectar_custom_query);
+    echo nectar_post_grid_item_markup($atts, $nectar_custom_query->current_post, 'regular' );
+	do_action('nectar_blog_post_grid_item_end', $atts, $nectar_custom_query);
+
   endwhile; endif; 
   
 	wp_reset_query();
@@ -480,6 +377,9 @@ if( 'custom' === $post_type && !empty($cpt_name) ) {
 
 } //end custom
 
+if( 'carousel' === $display_type ) {
+	echo '</div></div>';
+}
 
 echo '</div></div>';
 

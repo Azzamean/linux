@@ -7,6 +7,62 @@ Description: CSS for the frontned editor
 }
 
 
+  /*nectar addition*/
+  /*front end editor loading icon*/
+  body #vc_preloader {
+    background-image: none;
+  }
+  
+  #vc_preloader .wpbakery-logo-and-salient {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    height: 120px;
+    width: 120px;
+    border-radius: 100px;
+    background-image: url(logo/wpb-logo.svg);
+    background-size: 80px 80px;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-color: #f5f5f5;
+    transform: translateX(-50%) translateY(-50%);
+  }
+  
+  #vc_preloader span {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    display: block;
+    width: 40px; height: 40px;
+    background-color: #3353fc;
+    border-radius: 50px;
+    line-height: 40px;
+    text-align: center;
+    box-shadow: 0px 9px 32px rgba(51,83,252,0.25);
+    animation: nectar_salient_logo_scale 0.6s 0s cubic-bezier(.2,.6,.2,.9) forwards;
+  }
+  @keyframes nectar_salient_logo_scale {
+     0% { transform: scale(0);}
+     100% { transform: scale(1);}
+  }
+  #vc_preloader span svg { display: inline-block; width: 20px; height: 20px; vertical-align: middle; margin-top: -5px; }
+  
+  .wpb_el_type_fws_image .vc_icon-remove {
+      width: 16px;
+      height: 16px;
+      display: block;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      color: #FF7877;
+      font-size: 18px;
+      line-height: 18px;
+      -webkit-transform: translate(-50%,-50%);
+      -ms-transform: translate(-50%,-50%);
+      transform: translate(-50%,-50%);
+  }
+  /*nectar addition end*/
+
 /************** List View **************/
 
 #nectar-list-view-content {

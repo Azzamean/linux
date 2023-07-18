@@ -90,7 +90,7 @@ body .nectar-milestone .subject {
     margin-bottom: 15px;
   }
 
-  .nectar-milestone:not(.animated-in) {
+  body:not([data-m-animate="1"]) .nectar-milestone:not(.animated-in) {
     opacity: 1;
   }
 

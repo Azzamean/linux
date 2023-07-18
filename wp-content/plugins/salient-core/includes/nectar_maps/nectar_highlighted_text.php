@@ -45,12 +45,11 @@ return array(
 		),
 		array(
 			"type" => "textarea_html",
-			"holder" => "div",
 			"heading" => esc_html__("Text Content", "salient-core"),
 			"param_name" => "content",
 			"value" => '',
 			"description" => esc_html__("Any text that is wrapped in italics will get an animated highlight. Use the \"I\" button on the editor above when highlighting text to toggle italics.", "salient-core"),
-			"admin_label" => false
+			"admin_label" => true
 		),
 		array(
 			"type" => "colorpicker",

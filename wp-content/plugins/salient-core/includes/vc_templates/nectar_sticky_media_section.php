@@ -88,8 +88,8 @@ else if( 'video' === $section_type  ) {
 	
 }
 
-$featured_media = '<div class="nectar-sticky-media-content__media-wrap"><div class="nectar-sticky-media-section__media"'.$media_asset.' data-type="'.$section_type.'">'.$video.'</div></div>';
+$featured_media = '<div class="nectar-sticky-media-content__media-wrap"><div class="nectar-sticky-media-section__media"'.$media_asset.' data-type="'.esc_attr($section_type).'">'.$video.'</div></div>';
 
 $GLOBALS['nectar-sticky-media-section-count'] = $count + 1;
 
-echo '<div class="nectar-sticky-media-section__content-section">' . $featured_media . do_shortcode($content) . '</div>';
+echo '<div class="nectar-sticky-media-section__content-section">' . $featured_media . do_shortcode(wp_kses_post($content)) . '</div>';

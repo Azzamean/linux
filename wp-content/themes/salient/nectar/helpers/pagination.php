@@ -177,7 +177,7 @@ if ( !function_exists( 'nectar_pagination' ) ) {
 			$query_type          = (count($_GET)) ? '&' : '?';
 			$format              = empty( $permalink_structure ) ? $query_type.'paged=%#%' : 'page/%#%/';
 
-			echo '<div id="pagination" data-is-text="'.esc_attr__("All items loaded", 'salient').'">';
+			echo '<nav id="pagination" role="navigation" aria-label="'. esc_attr__("Pagination Navigation", 'salient') .'" data-is-text="'.esc_attr__("All items loaded", 'salient').'">';
 
 			$big = 999999999; // need an unlikely integer
 
@@ -186,11 +186,12 @@ if ( !function_exists( 'nectar_pagination' ) ) {
 				'format' => $format,
 				'current' => $current,
 				'total' => $total_pages,
+				'type' => 'list',
 				'prev_text'    => esc_html__('Previous','salient'),
 				'next_text'    => esc_html__('Next','salient')
 			));
 
-			echo  '</div>';
+			echo  '</nav>';
 
 		}
 
