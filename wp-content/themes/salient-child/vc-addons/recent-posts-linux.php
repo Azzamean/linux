@@ -12,7 +12,7 @@ class RecentPostsLinux
             "taxonomy" => "category",
             "hide_empty" => true,
             "orderby" => "name",
-            "suppress_filters" => true,
+            "suppress_filters" => true
         ]);
 
         $single_category = ["All" => ""];
@@ -47,13 +47,13 @@ class RecentPostsLinux
                             esc_html__(
                                 "Grid Design",
                                 "salient-core"
-                            ) => "grid-design",
+                            ) => "grid-design"
                         ],
                         "save_always" => true,
                         "description" => esc_html__(
                             "Select the design you desire for your posts.",
                             "salient-core"
-                        ),
+                        )
                     ],
                     [
                         "type" => "dropdown",
@@ -64,17 +64,17 @@ class RecentPostsLinux
                             esc_html__("1 Column", "recent_posts") => "1",
                             esc_html__("2 Columns", "recent_posts") => "2",
                             esc_html__("3 Columns", "recent_posts") => "3",
-                            esc_html__("4 Columns", "recent_posts") => "4",
+                            esc_html__("4 Columns", "recent_posts") => "4"
                         ],
                         "dependency" => [
                             "element" => "design",
-                            "value" => ["grid-design"],
+                            "value" => ["grid-design"]
                         ],
                         "description" => esc_html__(
                             "Select the number of columns to be displayed.",
                             "salient-core"
                         ),
-                        "save_always" => true,
+                        "save_always" => true
                     ],
                     [
                         "type" => "textfield",
@@ -89,7 +89,7 @@ class RecentPostsLinux
                             "Enter number of people to be displayed. Enter -1 to display all.",
                             "recent_posts"
                         ),
-                        "save_always" => true,
+                        "save_always" => true
                     ],
                     [
                         "type" => "dropdown",
@@ -98,13 +98,13 @@ class RecentPostsLinux
                         "param_name" => "sort",
                         "value" => [
                             esc_html__("Descending", "recent_posts") => "DESC",
-                            esc_html__("Ascending", "recent_posts") => "ASC",
+                            esc_html__("Ascending", "recent_posts") => "ASC"
                         ],
                         "description" => esc_html__(
                             "Select the sorting direction to be displayed.",
                             "salient-core"
                         ),
-                        "save_always" => true,
+                        "save_always" => true
                     ],
                     [
                         "type" => "textfield",
@@ -116,7 +116,7 @@ class RecentPostsLinux
                             "Enter the number of posts you want to offset. Enter 1 to skip the first post.",
                             "recent_posts"
                         ),
-                        "save_always" => true,
+                        "save_always" => true
                     ],
                     [
                         "type" => "dropdown_multi",
@@ -128,7 +128,7 @@ class RecentPostsLinux
                             "Select the categories to display.",
                             "recent_posts"
                         ),
-                        "save_always" => true,
+                        "save_always" => true
                     ],
                     [
                         "type" => "dropdown",
@@ -142,13 +142,13 @@ class RecentPostsLinux
                             esc_html__("0", "salient-core") => "No Categories",
                             esc_html__("1", "salient-core") => "1",
                             esc_html__("2", "salient-core") => "2",
-                            esc_html__("3", "salient-core") => "3",
+                            esc_html__("3", "salient-core") => "3"
                         ],
                         "save_always" => true,
                         "description" => esc_html__(
                             "Select the number of categories to display.",
                             "salient-core"
-                        ),
+                        )
                     ],
                     [
                         "type" => "checkbox",
@@ -159,18 +159,18 @@ class RecentPostsLinux
                             esc_html__(
                                 "Show Tags",
                                 "recent_posts"
-                            ) => "show-tags",
+                            ) => "show-tags"
                         ],
                         "std" => "hide-tags",
                         "dependency" => [
                             "element" => "design",
-                            "value" => ["list-design"],
+                            "value" => ["list-design"]
                         ],
                         "description" => esc_html__(
                             "Check or uncheck the box if you want to show or hide tags",
                             "recent_posts"
                         ),
-                        "save_always" => true,
+                        "save_always" => true
                     ],
                     [
                         "type" => "checkbox",
@@ -181,18 +181,18 @@ class RecentPostsLinux
                             esc_html__(
                                 "Recent Posts are Videos",
                                 "recent_posts"
-                            ) => "show-embedded-code",
+                            ) => "show-embedded-code"
                         ],
                         "std" => "hide-embedded-code",
                         "dependency" => [
                             "element" => "design",
-                            "value" => ["grid-design"],
+                            "value" => ["grid-design"]
                         ],
                         "description" => esc_html__(
                             "Check or uncheck the box if these Recent Posts are Videos.",
                             "recent_posts"
                         ),
-                        "save_always" => true,
+                        "save_always" => true
                     ],
                     [
                         "type" => "checkbox",
@@ -206,18 +206,18 @@ class RecentPostsLinux
                             esc_html__(
                                 "Hide Featured Image",
                                 "recent_posts"
-                            ) => "hide-featured-image",
+                            ) => "hide-featured-image"
                         ],
                         "std" => "show-featured-image",
                         "dependency" => [
                             "element" => "design",
-                            "value" => ["list-design", "grid-design"],
+                            "value" => ["list-design", "grid-design"]
                         ],
                         "description" => esc_html__(
                             "Check or uncheck the box if you want to show or hide the featured image.",
                             "recent_posts"
                         ),
-                        "save_always" => true,
+                        "save_always" => true
                     ],
                     [
                         "type" => "checkbox",
@@ -228,18 +228,18 @@ class RecentPostsLinux
                             esc_html__(
                                 "Show Excerpt",
                                 "recent_posts"
-                            ) => "show-excerpt",
+                            ) => "show-excerpt"
                         ],
                         "std" => "hide-excerpt",
                         "dependency" => [
                             "element" => "design",
-                            "value" => ["list-design", "grid-design"],
+                            "value" => ["list-design", "grid-design"]
                         ],
                         "description" => esc_html__(
                             "Check or uncheck the box if you want to show or hide the excerpt.",
                             "recent_posts"
                         ),
-                        "save_always" => true,
+                        "save_always" => true
                     ],
                     [
                         "type" => "checkbox",
@@ -253,20 +253,20 @@ class RecentPostsLinux
                             esc_html__(
                                 "Show Read More Link",
                                 "recent_posts"
-                            ) => "show_read_link",
+                            ) => "show_read_link"
                         ],
                         "std" => "hide_read_link",
 
                         "dependency" => [
                             "element" => "excerpt",
-                            "value" => ["show-excerpt"],
+                            "value" => ["show-excerpt"]
                         ],
 
                         "description" => esc_html__(
                             "Check or uncheck the box if you want to append a link at the end of the excerpt.",
                             "recent_posts"
                         ),
-                        "save_always" => true,
+                        "save_always" => true
                     ],
 
                     [
@@ -282,14 +282,14 @@ class RecentPostsLinux
 
                         "dependency" => [
                             "element" => "excerpt",
-                            "value" => ["show-excerpt"],
+                            "value" => ["show-excerpt"]
                         ],
 
                         "description" => esc_html__(
                             "Enter the number of words for the excerpt length. The default is set to 50 words.",
                             "recent_posts"
                         ),
-                        "save_always" => true,
+                        "save_always" => true
                     ],
 
                     [
@@ -309,14 +309,14 @@ class RecentPostsLinux
                             esc_html__(
                                 "Arrow",
                                 "salient-core"
-                            ) => "show_navigation_arrow",
+                            ) => "show_navigation_arrow"
                         ],
                         "std" => "hide_navigation",
                         "save_always" => true,
                         "description" => esc_html__(
                             "Select the choices on displaying the publication date and author.",
                             "salient-core"
-                        ),
+                        )
                     ],
                     [
                         "type" => "textfield",
@@ -330,18 +330,18 @@ class RecentPostsLinux
                             esc_html__(
                                 "Enter text for the Navigation Link",
                                 "recent_posts"
-                            ) => "show_navigation_text",
+                            ) => "show_navigation_text"
                         ],
                         "std" => "",
                         "dependency" => [
                             "element" => "navigation",
-                            "value" => ["show_navigation_btn"],
+                            "value" => ["show_navigation_btn"]
                         ],
                         "description" => esc_html__(
                             "Enter the text for the navigation button.",
                             "recent_posts"
                         ),
-                        "save_always" => true,
+                        "save_always" => true
                     ],
                     [
                         "type" => "dropdown",
@@ -361,13 +361,13 @@ class RecentPostsLinux
                             esc_html__(
                                 "Date and Author",
                                 "salient-core"
-                            ) => "date-and-author",
+                            ) => "date-and-author"
                         ],
                         "save_always" => true,
                         "description" => esc_html__(
                             "Select the choices on displaying the publication date and author.",
                             "salient-core"
-                        ),
+                        )
                     ],
                     [
                         "type" => "checkbox",
@@ -379,20 +379,20 @@ class RecentPostsLinux
                         "param_name" => "dut",
                         "value" => [
                             esc_html__(
-                                "Put the data and author under the title",
+                                "Put the date and author under the title",
                                 "recent_posts"
-                            ) => "show-dut",
+                            ) => "show-dut"
                         ],
                         "std" => "hide-dut",
                         "dependency" => [
                             "element" => "date_author",
-                            "value" => "date-and-author",
+                            "value" => "date-and-author"
                         ],
                         "description" => esc_html__(
                             "Check or uncheck the box if you want the publication date and author under the heading title.",
                             "recent_posts"
                         ),
-                        "save_always" => true,
+                        "save_always" => true
                     ],
                     [
                         "type" => "checkbox",
@@ -404,16 +404,16 @@ class RecentPostsLinux
                             esc_html__(
                                 "Hide Pagination",
                                 "recent_posts"
-                            ) => "hide-pagination",
+                            ) => "hide-pagination"
                         ],
                         "std" => "show-pagination",
                         "description" => esc_html__(
                             "Check or uncheck the box if you want to show or hide pagination.",
                             "recent_posts"
                         ),
-                        "save_always" => true,
-                    ],
-                ],
+                        "save_always" => true
+                    ]
+                ]
             ]);
         endif;
     }
@@ -461,7 +461,7 @@ function recent_posts_linux($atts, $content)
                 "date_author" => "",
                 "dut" => "",
                 "pagination" => "",
-                "suppress_filters" => true,
+                "suppress_filters" => true
             ],
             $atts
         )
@@ -490,15 +490,14 @@ function recent_posts_linux($atts, $content)
     $dut = !empty($dut) ? $dut : "hide-dut";
     $pagination = !empty($pagination) ? $pagination : "show-pagination";
     $paged = get_query_var("paged") ? get_query_var("paged") : 1;
-	$paging;
-	
-	if( $limit == -1 ){
-		$paging = true;
-	}
-	else {
-		$paging = false;
-	}
-	
+    $paging;
+
+    if ($limit == -1) {
+        $paging = true;
+    } else {
+        $paging = false;
+    }
+
     $query_args = [
         "post_type" => "post",
         "post_status" => ["publish"],
@@ -507,7 +506,7 @@ function recent_posts_linux($atts, $content)
         "offset" => $offset,
         "ignore_sticky_posts" => true,
         "nopaging" => $paging,
-        "paged" => $paged,
+        "paged" => $paged
     ];
 
     // KEEP UNDER FIRST QUERY ARGS
@@ -516,8 +515,8 @@ function recent_posts_linux($atts, $content)
             [
                 "taxonomy" => "category",
                 "field" => "term_id",
-                "terms" => [$category_id],
-            ],
+                "terms" => [$category_id]
+            ]
         ];
     }
 
@@ -1186,7 +1185,7 @@ function recent_posts_linux($atts, $content)
                 "prev_text" =>
                     '<span style="background-color:' .
                     $accent_color .
-                    '">Prev ←</span>',
+                    '">Prev ←</span>'
             ]);
             $output .= "</div>";
             $output .= "</div>";

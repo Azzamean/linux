@@ -95,5 +95,5 @@ $projects_links = [
 //$webinarDescription = get_field("webinars_description");
 //$slides = get_field("webinars_slides");
 //$video = get_field("webinars_video");
-$banner = get_field("webinars_banner");
-$description = get_field("webinars_description");
+$webinars_banner = get_field("webinars_banner");
+$webinars_description = get_field("webinars_description");

@@ -32,7 +32,7 @@ get_header();
 		<div class="wpb_row vc_row-fluid vc_row top-level full-width-section first-section loaded webinars-banner" style="padding-top: 100px; padding-bottom: 200px; ">
 		   <div class="row-bg-wrap">
 			  <div class="inner-wrap row-bg-layer using-image">
-				 <div class="row-bg viewport-desktop using-image" style="background-image: url(<?php echo $banner; ?>); background-position: center bottom; background-repeat: no-repeat; "></div>
+				 <div class="row-bg viewport-desktop using-image" style="background-image: url(<?php echo $webinars_banner; ?>); background-position: center bottom; background-repeat: no-repeat; "></div>
 			  </div>
 		   </div>
 		   <div class="row_col_wrap_12 col span_12 dark left">
@@ -83,7 +83,7 @@ get_header();
 			<div class="col">
 				<div class="row webinars-description">
 				<h2>Description</h2>
-				<?php echo $description; ?>
+				<?php echo $webinars_description; ?>
 				</div>
 			</div>
 			<!--/post-area-->

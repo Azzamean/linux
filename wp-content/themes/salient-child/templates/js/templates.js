@@ -14,17 +14,12 @@ jQuery(document).ready(function ($) {
       $('[data-name="projects_header_excerpt"]').show();
       $('[data-name="projects_video"]').show();
       $('[data-name="projects_post_category"]').show();
-   }
+   } else if ($('#page_template :selected').text() == 'Template Style 1 (One)') {
+      //$('[data-name="webinars_banner"]').hide();
+      $('[data-name="webinars_speakers"]').hide();
+   } else if ($('#page_template :selected').text() == 'Template Style 2 (Two)') {
 
-   else if ($('#page_template :selected').text() == 'Template Style 1 (One)') {
-
-   }
-
-   else if ($('#page_template :selected').text() == 'Template Style 2 (Two)') {
-
-   }
-
-   else if ($('#page_template :selected').text() == 'Template Style 3 (Three)') {
+   } else if ($('#page_template :selected').text() == 'Template Style 3 (Three)') {
       $('[data-name="projects_category"]').show();
       $('[data-name="projects_case_studies"]').show();
    }

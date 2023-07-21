@@ -290,6 +290,16 @@ h1.projects-title-text.white {
 	padding-top: 30px;
 }
 
+.webinars-content {
+	max-width: 1000px;
+	margin: 0 auto;
+	padding-top: 40px;
+}
+
+.single-blog-bottom-navigation.webinars {
+	margin: 0;
+	padding: 53px 0 80px 0;
+}
 
 /* FONT AWESOME ICON FIXES FOR PROJECTS */
 
@@ -350,5 +360,13 @@ i.fa-solid.fa-file-pdf:before {
 
 	.projects-icons {
 		margin: 20px 0;
+	}
+
+	.projects-template .projects-case-studies-box {
+		flex-direction: column;
+	}
+
+	.projects-template .projects-case-studies-information {
+		width: 100%;
 	}
 }

@@ -12,7 +12,7 @@ class WebinarsLinux
             "taxonomy" => "webinars_category",
             "hide_empty" => true,
             "orderby" => "name",
-            "suppress_filters" => true,
+            "suppress_filters" => true
         ]);
 
         $single_category = ["All" => ""];
@@ -45,7 +45,126 @@ class WebinarsLinux
                             "Select the webinar categories to display.",
                             "webinars"
                         ),
-                        "save_always" => true,
+                        "save_always" => true
+                    ],
+                    [
+                        "type" => "textfield",
+                        "class" => "",
+                        "heading" => esc_html__("Post Per Page", "webinars"),
+                        "param_name" => "limit",
+                        "value" => "10",
+                        "description" => esc_html__(
+                            "Enter number of webinars to be displayed. Enter -1 to display all.",
+                            "webinars"
+                        ),
+                        "save_always" => true
+                    ],
+                    [
+                        "type" => "dropdown",
+                        "class" => "",
+                        "heading" => esc_html__("Sort", "webinars"),
+                        "param_name" => "sort",
+                        "value" => [
+                            esc_html__("Descending", "webinars") => "DESC",
+                            esc_html__("Ascending", "webinars") => "ASC"
+                        ],
+                        "description" => esc_html__(
+                            "Select the sorting direction to be displayed.",
+                            "salient-core"
+                        ),
+                        "save_always" => true
+                    ],
+                    [
+                        "type" => "dropdown",
+                        "class" => "",
+                        "heading" => esc_html__("Schedule", "webinars"),
+                        "param_name" => "schedule",
+                        "value" => [
+                            esc_html__("Published", "webinars") => "published",
+                            esc_html__("Scheduled", "webinars") => "scheduled"
+                        ],
+                        "description" => esc_html__(
+                            "Select the schedule of webinars to be displayed.",
+                            "salient-core"
+                        ),
+                        "save_always" => true
+                    ],
+                    [
+                        "type" => "checkbox",
+                        "class" => "",
+                        "heading" => esc_html__("Featured Image", "webinars"),
+                        "param_name" => "featured_image",
+                        "value" => [
+                            esc_html__(
+                                "Hide Featured Image",
+                                "webinars"
+                            ) => "hide-featured-image"
+                        ],
+                        "std" => "show-featured-image",
+                        "dependency" => [
+                            "element" => "design",
+                            "value" => ["list-design", "grid-design"]
+                        ],
+                        "description" => esc_html__(
+                            "Check or uncheck the box if you want to show or hide the featured image.",
+                            "webinars"
+                        ),
+                        "save_always" => true
+                    ],
+                    [
+                        "type" => "checkbox",
+                        "class" => "",
+                        "heading" => esc_html__("Date Under Title", "webinars"),
+                        "param_name" => "dut",
+                        "value" => [
+                            esc_html__(
+                                "Put the date under the title",
+                                "webinars"
+                            ) => "show-dut"
+                        ],
+                        "std" => "hide-dut",
+                        "description" => esc_html__(
+                            "Check or uncheck the box if you want the publication date under the title.",
+                            "webinars"
+                        ),
+                        "save_always" => true
+                    ],
+                    [
+                        "type" => "checkbox",
+                        "class" => "",
+                        "heading" => esc_html__("Excerpt", "webinars"),
+                        "param_name" => "excerpt",
+                        "value" => [
+                            esc_html__(
+                                "Show Excerpt",
+                                "webinars"
+                            ) => "show-excerpt"
+                        ],
+                        "std" => "hide-excerpt",
+                        "description" => esc_html__(
+                            "Check or uncheck the box if you want to show or hide the excerpt.",
+                            "webinars"
+                        ),
+                        "save_always" => true
+                    ],
+                    [
+                        "type" => "textfield",
+                        "class" => "",
+                        "heading" => esc_html__("Excerpt Length", "webinars"),
+                        "param_name" => "excerpt_length",
+                        "value" => "",
+                        "std" => "50",
+
+                        "dependency" => [
+                            "element" => "excerpt",
+                            "value" => ["show-excerpt"]
+                        ],
+
+                        "description" => esc_html__(
+                            "Enter the number of words for the excerpt length. The default is set to 50 words.",
+                            "webinars"
+                        ),
+                        "save_always" => true
                     ],
                     [
                         "type" => "textfield",
@@ -58,34 +177,7 @@ class WebinarsLinux
                             "Enter the text for the navigation button.",
                             "webinars"
                         ),
-                        "save_always" => true,
-                    ],
-                    [
-                        "type" => "textfield",
-                        "class" => "",
-                        "heading" => esc_html__("Post Per Page", "webinars"),
-                        "param_name" => "limit",
-                        "value" => "10",
-                        "description" => esc_html__(
-                            "Enter number of webinars to be displayed. Enter -1 to display all.",
-                            "webinars"
-                        ),
-                        "save_always" => true,
-                    ],
-                    [
-                        "type" => "dropdown",
-                        "class" => "",
-                        "heading" => esc_html__("Sort", "webinars"),
-                        "param_name" => "sort",
-                        "value" => [
-                            esc_html__("Descending", "webinars") => "DESC",
-                            esc_html__("Ascending", "webinars") => "ASC",
-                        ],
-                        "description" => esc_html__(
-                            "Select the sorting direction to be displayed.",
-                            "salient-core"
-                        ),
-                        "save_always" => true,
+                        "save_always" => true
                     ],
                     [
                         "type" => "checkbox",
@@ -96,16 +188,16 @@ class WebinarsLinux
                             esc_html__(
                                 "Hide Pagination",
                                 "webinars"
-                            ) => "hide-pagination",
+                            ) => "hide-pagination"
                         ],
                         "std" => "show-pagination",
                         "description" => esc_html__(
                             "Check or uncheck the box if you want to show or hide pagination.",
                             "webinars"
                         ),
-                        "save_always" => true,
-                    ],
-                ],
+                        "save_always" => true
+                    ]
+                ]
             ]);
         endif;
     }
@@ -138,9 +230,14 @@ function webinars_linux($atts, $content)
                 "limit" => "",
                 "sort" => "",
                 "category_id" => "",
+                "schedule" => "",
+                "featured_image" => "",
+                "dut" => "",
+                "excerpt" => "",
+                "excerpt_length" => "",
                 "navigation_text" => "",
                 "pagination" => "",
-                "suppress_filters" => true,
+                "suppress_filters" => true
             ],
             $atts
         )
@@ -148,21 +245,34 @@ function webinars_linux($atts, $content)
 
     $limit = !empty($limit) ? $limit : "4";
     $sort = !empty($sort) ? $sort : "ASC";
+    $schedule = !empty($schedule) ? $schedule : "";
+    $featured_image = !empty($featured_image)
+        ? $featured_image
+        : "show-featured-image";
+    $dut = !empty($dut) ? $dut : "hide-dut";
+    $excerpt = !empty($excerpt) ? $excerpt : "hide-excerpt";
+    $excerpt_length = !empty($excerpt_length) ? $excerpt_length : "50";
     $navigation_text = !empty($navigation_text)
         ? $navigation_text
         : "WATCH THE RECORDING";
     $pagination = !empty($pagination) ? $pagination : "show-pagination";
     $paged = get_query_var("paged") ? get_query_var("paged") : 1;
 
+    if ($schedule == "scheduled") {
+        $schedule_status = "future";
+    } elseif ($schedule = "published") {
+        $schedule_status == "publish";
+    }
+
     $query_args = [
         "post_type" => "webinars",
-        "post_status" => ["publish"],
+        "post_status" => $schedule_status,
         "posts_per_page" => $limit,
         "order" => $sort,
         "offset" => $offset,
         "ignore_sticky_posts" => true,
         "nopaging" => false,
-        "paged" => $paged,
+        "paged" => $paged
     ];
 
     // KEEP UNDER FIRST QUERY ARGS
@@ -171,8 +281,8 @@ function webinars_linux($atts, $content)
             [
                 "taxonomy" => "webinars_category",
                 "field" => "term_id",
-                "terms" => [$category_id],
-            ],
+                "terms" => [$category_id]
+            ]
         ];
     }
 
@@ -187,7 +297,39 @@ function webinars_linux($atts, $content)
             $pagination = true;
             break;
     }
-
+    switch ($featured_image) {
+        case "show-featured-image":
+            $featured_image = true;
+            break;
+        case "hide-featured-image":
+            $featured_image = false;
+            break;
+        default:
+            $featured_image = true;
+            break;
+    }
+    switch ($dut) {
+        case "show-dut":
+            $dut = true;
+            break;
+        case "hide-dut":
+            $dut = false;
+            break;
+        default:
+            $dut = true;
+            break;
+    }
+    switch ($excerpt) {
+        case "show-excerpt":
+            $excerpt = true;
+            break;
+        case "hide-excerpt":
+            $excerpt = false;
+            break;
+        default:
+            $excerpt = true;
+            break;
+    }
     $webinars_query = new WP_Query($query_args);
     $output = "";
     if ($webinars_query->have_posts()) {
@@ -215,20 +357,29 @@ function webinars_linux($atts, $content)
                 " " . $attributes . "></iframe>",
                 $iframe
             );
-            $output .= '<div class="webinars-inner">';
-            if ($matches[1]) {
-                $output .= $iframe;
-            } else {
-                $output .=
-                    '<div class="webinars-non-iframe">' .
-                    get_field("webinars_video_link") .
-                    "</div>";
+
+            if ($featured_image == true) {
+                $output .= '<div class="webinars-inner">';
+                if ($matches[1]) {
+                    $output .= $iframe;
+                } else {
+                    $output .=
+                        '<div class="webinars-non-iframe">' .
+                        get_field("webinars_video_link") .
+                        "</div>";
+                }
+                $output .= "</div>";
             }
-            $output .= "</div>";
 
             $output .= '<div class="webinars-inner">';
+            if ($dut == false) {
+                $output .=
+                    '<h4 class="webinars-date">' .
+                    get_the_date("M j, Y") .
+                    "</h4>";
+            }
             $output .=
-                '<h2 class="webinars-company">' .
+                '<h2 class="webinars-title">' .
                 '<a href="' .
                 get_the_permalink() .
                 '">' .
@@ -298,8 +449,24 @@ function webinars_linux($atts, $content)
                 endwhile;
             else:
             endif;
-            $output .=
-                '<h4 class="webinars-date">' . get_the_date("M j, Y") . "</h4>";
+
+            if ($dut == true) {
+                $output .=
+                    '<h4 class="webinars-date">' .
+                    get_the_date("M j, Y") .
+                    "</h4>";
+            }
+
+            if ($excerpt == true) {
+                $output .=
+                    "<p class='webinars-excerpt'>" .
+                    wp_trim_words(
+                        get_field("webinars_description"),
+                        $excerpt_length,
+                        '...'
+                    ) .
+                    "</p>";
+            }
             $output .=
                 '<div class="webinars-navigation-btn"><a href="' .
                 $link .
@@ -321,33 +488,40 @@ function webinars_linux($atts, $content)
         endwhile;
 
         // PAGINATION
-        $big = 999999999;
-        $output .=
-            '<div class="recent-posts-pagination" style="color:#ffffff">';
-        $output .= '<div class="links" style="color:' . $accent_color . '">';
-        $output .= paginate_links([
-            "base" => str_replace($big, "%#%", esc_url(get_pagenum_link($big))),
-            "format" => "?paged=%#%",
-            "current" => max(1, get_query_var("paged")),
-            "total" => $webinars_query->max_num_pages,
-            "before_page_number" =>
-                '<span style="background-color:' . $accent_color . '">',
-            "after_page_number" => "</span>",
-            "next_text" =>
-                '<span style="background-color:' .
-                $accent_color .
-                '">Next →</span>',
-            "prev_text" =>
-                '<span style="background-color:' .
-                $accent_color .
-                '">Prev ←</span>',
-        ]);
-        $output .= "</div>";
-        $output .= "</div>";
+        if ($pagination != false) {
+            $big = 999999999;
+            $output .=
+                '<div class="recent-posts-pagination" style="color:#ffffff">';
+            $output .=
+                '<div class="links" style="color:' . $accent_color . '">';
+            $output .= paginate_links([
+                "base" => str_replace(
+                    $big,
+                    "%#%",
+                    esc_url(get_pagenum_link($big))
+                ),
+                "format" => "?paged=%#%",
+                "current" => max(1, get_query_var("paged")),
+                "total" => $webinars_query->max_num_pages,
+                "before_page_number" =>
+                    '<span style="background-color:' . $accent_color . '">',
+                "after_page_number" => "</span>",
+                "next_text" =>
+                    '<span style="background-color:' .
+                    $accent_color .
+                    '">Next →</span>',
+                "prev_text" =>
+                    '<span style="background-color:' .
+                    $accent_color .
+                    '">Prev ←</span>'
+            ]);
+            $output .= "</div>";
+            $output .= "</div>";
+        }
 
         wp_reset_postdata();
     } else {
-        $output .= esc_html__("No recent posts listed", "webinars");
+        $output .= esc_html__("Coming soon!", "webinars");
     }
     return $output;
 }
