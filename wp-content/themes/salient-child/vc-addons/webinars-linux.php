@@ -273,7 +273,7 @@ function webinars_linux($atts, $content)
     $excerpt_length = !empty($excerpt_length) ? $excerpt_length : "50";
     $navigation_text = !empty($navigation_text)
         ? $navigation_text
-        : "WATCH THE RECORDING";
+        : "WATCH";
     $pagination = !empty($pagination) ? $pagination : "show-pagination";
     $paged = get_query_var("paged") ? get_query_var("paged") : 1;
 

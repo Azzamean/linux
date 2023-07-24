@@ -79,6 +79,7 @@ get_header();
 		</div>
 		<!--/row-->	
 
+		<?php if ($webinars_description != null || $webinars_description != "") { ?>
 		<div class="row">
 			<div class="col">
 				<div class="row webinars-description">
@@ -89,7 +90,10 @@ get_header();
 			<!--/post-area-->
 		</div>
 		<!--/row-->	
+		<?php } ?>
 
+
+		<?php if (have_rows("webinars_speakers")) { ?>	
 		<div class="row">
 			<div class="col">
 				<div class="row webinars-speakers">
@@ -155,6 +159,7 @@ get_header();
 			<!--/post-area-->
 		</div>
 		<!--/row-->	
+		<?php } ?>	
 		
 		<?php echo global_shortcode(); ?>
 			
