@@ -138,9 +138,9 @@ get_header();
 			
 	   <div class="single-blog-bottom-navigation webinars">
 			<a class="back-to-all" href="/webinars/">< Back To All Webinars</a>
-			<!-- <a class="view-next" href="<?php echo $next_post_link_url; ?>">View Next Blog Post ></a> -->
+			<!-- <a class="view-next" href="<?php echo $next_post_link_url; ?>">View Next Webinar Post ></a> -->
 				<?php if (get_adjacent_post(false, "", true)) {
-        previous_post_link("%link", "View Next Blog Post >");
+        previous_post_link("%link", "View Next Webinar>");
     } else {
         $last = new WP_Query("post_type=webinars&posts_per_page=1&order=DESC");
         $last->the_post();

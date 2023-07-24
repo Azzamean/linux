@@ -48,6 +48,23 @@ class WebinarsLinux
                         "save_always" => true
                     ],
                     [
+                        "type" => "dropdown",
+                        "class" => "",
+                        "heading" => esc_html__("Columns", "webinars"),
+                        "param_name" => "columns",
+                        "value" => [
+                            esc_html__("1 Column", "recent_posts") => "1",
+                            esc_html__("2 Columns", "recent_posts") => "2",
+                            esc_html__("3 Columns", "recent_posts") => "3",
+                            esc_html__("4 Columns", "recent_posts") => "4"
+                        ],
+                        "description" => esc_html__(
+                            "Select the number of columns to be displayed.",
+                            "salient-core"
+                        ),
+                        "save_always" => true
+                    ],
+                    [
                         "type" => "textfield",
                         "class" => "",
                         "heading" => esc_html__("Post Per Page", "webinars"),
@@ -227,6 +244,7 @@ function webinars_linux($atts, $content)
     extract(
         shortcode_atts(
             [
+                "columns" => "",
                 "limit" => "",
                 "sort" => "",
                 "category_id" => "",
@@ -243,6 +261,7 @@ function webinars_linux($atts, $content)
         )
     );
 
+    $columns = !empty($columns) ? $columns : "4";
     $limit = !empty($limit) ? $limit : "4";
     $sort = !empty($sort) ? $sort : "ASC";
     $schedule = !empty($schedule) ? $schedule : "";
@@ -286,6 +305,22 @@ function webinars_linux($atts, $content)
         ];
     }
 
+    switch ($columns) {
+        case "1":
+            $column_class = "col span_12";
+        case "2":
+            $column_class = "col span_6";
+            break;
+        case "3":
+            $column_class = "col span_4";
+            break;
+        case "4":
+            $column_class = "col span_3";
+            break;
+        default:
+            $column_class = "col span_6";
+            break;
+    }
     switch ($pagination) {
         case "show-pagination":
             $pagination = true;
