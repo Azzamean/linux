@@ -271,9 +271,7 @@ function webinars_linux($atts, $content)
     $dut = !empty($dut) ? $dut : "hide-dut";
     $excerpt = !empty($excerpt) ? $excerpt : "hide-excerpt";
     $excerpt_length = !empty($excerpt_length) ? $excerpt_length : "50";
-    $navigation_text = !empty($navigation_text)
-        ? $navigation_text
-        : "WATCH";
+    $navigation_text = !empty($navigation_text) ? $navigation_text : "WATCH";
     $pagination = !empty($pagination) ? $pagination : "show-pagination";
     $paged = get_query_var("paged") ? get_query_var("paged") : 1;
 
@@ -477,6 +475,70 @@ function webinars_linux($atts, $content)
                                 "<h3>" .
                                 '<span class="webinars-speaker">' .
                                 get_sub_field("webinars_speakers_name") .
+                                "</span>" .
+                                "</h3>";
+                        endif;
+                    endif;
+                endwhile;
+            else:
+            endif;
+
+            if (have_rows("webinars_moderators")):
+                while (have_rows("webinars_moderators")):
+                    the_row();
+                    if (get_row_layout() == "webinars_moderators_information"):
+                        if (
+                            get_sub_field("webinars_moderators_company") !=
+                                null &&
+                            get_sub_field("webinars_moderators_title") != null
+                        ):
+                            $output .=
+                                "<h3>" .
+                                '<span class="webinars-moderator">' .
+                                get_sub_field("webinars_moderators_name") .
+                                '<span class="webinars-comma">, </span>' .
+                                "</span>" .
+                                '<span class="webinars-moderator">' .
+                                get_sub_field("webinars_moderators_title") .
+                                "</span>" .
+                                '<span class="webinars-comma">, </span>' .
+                                '<span class="webinars-designation">' .
+                                get_sub_field("webinars_moderators_company") .
+                                "</span>" .
+                                "</h3>";
+                        elseif (
+                            get_sub_field("webinars_moderators_company") !=
+                                null &&
+                            get_sub_field("webinars_moderators_title") == null
+                        ):
+                            $output .=
+                                "<h3>" .
+                                '<span class="webinars-moderator">' .
+                                get_sub_field("webinars_moderators_name") .
+                                '<span class="webinars-comma">, </span>' .
+                                '<span class="webinars-designation">' .
+                                get_sub_field("webinars_moderators_company") .
+                                "</span>" .
+                                "</h3>";
+                        elseif (
+                            get_sub_field("webinars_moderators_company") ==
+                                null &&
+                            get_sub_field("webinars_moderators_title") != null
+                        ):
+                            $output .=
+                                "<h3>" .
+                                '<span class="webinars-moderator">' .
+                                get_sub_field("webinars_moderators_name") .
+                                '<span class="webinars-comma">, </span>' .
+                                '<span class="webinars-designation">' .
+                                get_sub_field("webinars_moderators_title") .
+                                "</span>" .
+                                "</h3>";
+                        else:
+                            $output .=
+                                "<h3>" .
+                                '<span class="webinars-moderator">' .
+                                get_sub_field("webinars_moderators_name") .
                                 "</span>" .
                                 "</h3>";
                         endif;

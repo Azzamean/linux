@@ -161,6 +161,76 @@ get_header();
 		<!--/row-->	
 		<?php } ?>	
 		
+		
+		<?php if (have_rows("webinars_moderators")) { ?>	
+		<div class="row">
+			<div class="col">
+				<div class="row webinars-moderators">
+				<h2>Moderators</h2>
+					<?php if (have_rows("webinars_moderators")):
+         while (have_rows("webinars_moderators")):
+             the_row();
+             if (get_row_layout() == "webinars_moderators_information"):
+                 if (
+                     get_sub_field("webinars_moderators_company") != null &&
+                     get_sub_field("webinars_moderators_title") != null
+                 ):
+                     echo "<h3>" .
+                         '<span class="webinars-moderator">' .
+                         get_sub_field("webinars_moderators_name") .
+                         '<span class="webinars-comma">, </span>' .
+                         "</span>" .
+                         '<span class="webinars-moderator">' .
+                         get_sub_field("webinars_moderators_title") .
+                         "</span>" .
+                         '<span class="webinars-comma">, </span>' .
+                         '<span class="webinars-designation">' .
+                         get_sub_field("webinars_moderators_company") .
+                         "</span>" .
+                         "</h3>";
+                 elseif (
+                     get_sub_field("webinars_moderators_company") != null &&
+                     get_sub_field("webinars_moderators_title") == null
+                 ):
+                     echo "<h3>" .
+                         '<span class="webinars-moderator">' .
+                         get_sub_field("webinars_moderators_name") .
+                         '<span class="webinars-comma">, </span>' .
+                         '<span class="webinars-designation">' .
+                         get_sub_field("webinars_moderators_company") .
+                         "</span>" .
+                         "</h3>";
+                 elseif (
+                     get_sub_field("webinars_moderators_company") == null &&
+                     get_sub_field("webinars_moderators_title") != null
+                 ):
+                     echo "<h3>" .
+                         '<span class="webinars-moderator">' .
+                         get_sub_field("webinars_moderators_name") .
+                         '<span class="webinars-comma">, </span>' .
+                         '<span class="webinars-designation">' .
+                         get_sub_field("webinars_moderators_title") .
+                         "</span>" .
+                         "</h3>";
+                 else:
+                     echo "<h3>" .
+                         '<span class="webinars-moderator">' .
+                         get_sub_field("webinars_moderators_name") .
+                         "</span>" .
+                         "</h3>";
+                 endif;
+             endif;
+         endwhile;
+     else:
+     endif; ?>
+				</div>
+			</div>
+			<!--/post-area-->
+		</div>
+		<!--/row-->	
+		<?php } ?>					
+		
+		
 		<?php echo global_shortcode(); ?>
 			
 	</div>
