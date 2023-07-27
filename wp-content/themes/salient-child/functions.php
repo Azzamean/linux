@@ -163,6 +163,8 @@ function lf_meta_header()
             '<div class="lfprojects white-background jdf"><div class="container"><a href="https://jointdevelopment.org/" target="_blank" rel="noopener noreferrer"><img src="/wp-content/uploads/banners/jdf_banner_color.svg" alt="The Linux Foundation Projects"></a></div></div>';
         $jdf_banner_dark =
             '<div class="lfprojects dark-background jdf"><div class="container"><a href="https://jointdevelopment.org/" target="_blank" rel="noopener noreferrer"><img src="/wp-content/uploads/banners/jdf_banner_light.svg" alt="The Linux Foundation Projects"></a></div></div>';
+        $jdf_banner_light_alternative =
+            '<div class="lfprojects dark-background jdf"><div class="container"><a href="https://jointdevelopment.org/" target="_blank" rel="noopener noreferrer"><img src="/wp-content/uploads/banners/jdf_banner_light_alternative.svg" alt="The Linux Foundation Projects"></a></div></div>';
         $linux_foundation_light =
             '<div class="lfprojects white-background"><div class="container"><a href="https://www.linuxfoundation.org/projects" target="_blank" rel="noopener noreferrer"><img src="/wp-content/uploads/banners/lfprojects_banner_color.svg" alt="The Linux Foundation Projects"></a></div></div>';
         $linux_foundation_dark =
@@ -191,6 +193,12 @@ function lf_meta_header()
 
             case "20":
                 echo $jdf_banner_dark;
+                break;
+
+            // AOUSD
+
+            case "28":
+                echo $jdf_banner_light_alternative;
                 break;
 
             default:
@@ -604,7 +612,7 @@ if (
             $std_retina_srcset .
             " />" .
             "</a>";
-    } 
+    }
     add_shortcode("uber_logo", "uber_salient_logo");
 
     function uber_search_icon()

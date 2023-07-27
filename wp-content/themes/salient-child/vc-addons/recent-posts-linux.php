@@ -769,7 +769,7 @@ function recent_posts_linux($atts, $content)
                         $i = 0;
                         $comma = "";
                         $output .= "<div class='in-category'>";
-                        $output .= " In ";
+                        $output .= "<span> In </span>";
                         foreach (get_the_category() as $cat) {
                             $output .=
                                 $comma .
@@ -789,7 +789,7 @@ function recent_posts_linux($atts, $content)
                         $i = 0;
                         $comma = "";
                         $output .= "<div class='in-category'>";
-                        $output .= " In ";
+                        $output .= "<span> In </span>";
                         foreach (get_the_category() as $cat) {
                             $output .=
                                 $comma .
@@ -864,7 +864,7 @@ function recent_posts_linux($atts, $content)
                         $i = 0;
                         $comma = "";
                         $output .= "<div class='in-category'>";
-                        $output .= " In ";
+                        $output .= "<span> In </span>";
                         foreach (get_the_category() as $cat) {
                             $output .=
                                 $comma .
@@ -884,7 +884,7 @@ function recent_posts_linux($atts, $content)
                         $i = 0;
                         $comma = "";
                         $output .= "<div class='in-category'>";
-                        $output .= " In ";
+                        $output .= "<span> In </span>";
                         foreach (get_the_category() as $cat) {
                             $output .=
                                 $comma .
