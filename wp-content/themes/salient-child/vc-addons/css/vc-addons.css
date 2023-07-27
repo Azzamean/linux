@@ -419,8 +419,10 @@ a.list-design.navigation-btn {
 	color: #ffffff;
 }
 
-.webinars-non-iframe {
-	word-break: break-all;
+.webinars-outer .webinars-non-iframe,
+.webinars-outer .webinars-non-iframe img {
+	width: 100%;
+	height: 100%;
 }
 
 .webinars-excerpt {

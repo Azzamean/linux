@@ -376,7 +376,8 @@ function webinars_linux($atts, $content)
 
             $speaker = get_field("webinars_speakers_name");
             $designation = get_field("webinars_speakers_company");
-            $link = get_field("webinars_video_link", false, false);
+            $video_link = get_field("webinars_video_link", false, false);
+            $register_link = get_field("webinars_register_link");
 
             $iframe = get_field("webinars_video_link");
             preg_match('/src="(.+?)"/', $iframe, $matches);
@@ -393,12 +394,14 @@ function webinars_linux($atts, $content)
 
             if ($featured_image == true) {
                 $output .= '<div class="webinars-inner">';
-                if ($matches[1]) {
+                if ($matches[1] && ($video_link != null || $video_link != "")) {
                     $output .= $iframe;
                 } else {
                     $output .=
                         '<div class="webinars-non-iframe">' .
-                        get_field("webinars_video_link") .
+                        '<img src="' .
+                        nectar_options_img($nectar_options["logo"]) .
+                        '">' .
                         "</div>";
                 }
                 $output .= "</div>";
@@ -564,18 +567,32 @@ function webinars_linux($atts, $content)
                     ) .
                     "</p>";
             }
-			
-			if($link != null || $link != "") {
-            $output .=
-                '<div class="webinars-navigation-btn"><a href="' .
-                $link .
-                '" target="_blank" style="background-color:' .
-                $accent_color .
-                '">' .
-                $navigation_text .
-                "</a></div>";
-			}
-			
+
+            if (
+                ($video_link != null || $video_link != "") &&
+                ($register_link == null || $register_link == "")
+            ) {
+                $output .=
+                    '<div class="webinars-navigation-btn"><a href="' .
+                    $video_link .
+                    '" target="_blank" style="background-color:' .
+                    $accent_color .
+                    '">' .
+                    $navigation_text .
+                    "</a></div>";
+            }
+
+            if ($register_link != null || $register_link != "") {
+                $output .=
+                    '<div class="webinars-navigation-btn"><a href="' .
+                    $register_link .
+                    '" target="_blank" style="background-color:' .
+                    $accent_color .
+                    '">' .
+                    $navigation_text .
+                    "</a></div>";
+            }
+
             $output .= "</div>";
 
             $count++;
@@ -622,7 +639,10 @@ function webinars_linux($atts, $content)
 
         wp_reset_postdata();
     } else {
-        $output .= esc_html__("Coming soon!", "webinars");
+        $output .=
+            '<h3 class="coming-soon">' .
+            esc_html__("Coming soon!", "webinars") .
+            '</h3>';
     }
     return $output;
 }

@@ -460,7 +460,6 @@ function acf_admin_head()
 		line-height: 20px;
 		margin: 0px 0 0;
 		font-weight: normal;
-		max-width: 200px;
 	}
 
 	.video-settings {

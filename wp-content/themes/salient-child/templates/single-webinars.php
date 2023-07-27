@@ -26,7 +26,7 @@ $accent_color = $nectar_options["accent-color"];
 get_header();
 ?>
 
-<div class="container-wrap">
+<div class="container-wrap" style="padding-top:0">
 	<div class="container main-content">
 
 		<div class="wpb_row vc_row-fluid vc_row top-level full-width-section first-section loaded webinars-banner" style="padding-top: 100px; padding-bottom: 200px; ">
@@ -49,6 +49,7 @@ get_header();
 		</div>
 		<!--/full-width-section-->	
 
+		<?php if ($webinars_video_link != null || $webinars_video_link != "") { ?>
 		<div class="row">
 			<div class="col">
 				<div class="row webinars-video-link">
@@ -78,6 +79,24 @@ get_header();
 			<!--/post-area-->
 		</div>
 		<!--/row-->	
+		<?php } ?>
+
+
+		<?php if ($webinars_register_link != null || $webinars_register_link != "") { ?>
+		<div class="row">
+			<div class="col">
+				<div class="row webinars-description">
+				<h2>Register</h2>
+				<?php echo '<a href="' .
+        $webinars_register_link .
+        '">Click here to register for the webinar.</a>'; ?>
+				</div>
+			</div> 
+			<!--/post-area-->
+		</div>
+		<!--/row-->	
+		<?php } ?>
+
 
 		<?php if ($webinars_description != null || $webinars_description != "") { ?>
 		<div class="row">
@@ -106,7 +125,7 @@ get_header();
                      get_sub_field("webinars_speakers_company") != null &&
                      get_sub_field("webinars_speakers_title") != null
                  ):
-                     echo "<h3>" .
+                     echo "<p>" .
                          '<span class="webinars-speaker">' .
                          get_sub_field("webinars_speakers_name") .
                          '<span class="webinars-comma">, </span>' .
@@ -118,37 +137,37 @@ get_header();
                          '<span class="webinars-designation">' .
                          get_sub_field("webinars_speakers_company") .
                          "</span>" .
-                         "</h3>";
+                         "</p>";
                  elseif (
                      get_sub_field("webinars_speakers_company") != null &&
                      get_sub_field("webinars_speakers_title") == null
                  ):
-                     echo "<h3>" .
+                     echo "<p>" .
                          '<span class="webinars-speaker">' .
                          get_sub_field("webinars_speakers_name") .
                          '<span class="webinars-comma">, </span>' .
                          '<span class="webinars-designation">' .
                          get_sub_field("webinars_speakers_company") .
                          "</span>" .
-                         "</h3>";
+                         "</p>";
                  elseif (
                      get_sub_field("webinars_speakers_company") == null &&
                      get_sub_field("webinars_speakers_title") != null
                  ):
-                     echo "<h3>" .
+                     echo "<p>" .
                          '<span class="webinars-speaker">' .
                          get_sub_field("webinars_speakers_name") .
                          '<span class="webinars-comma">, </span>' .
                          '<span class="webinars-designation">' .
                          get_sub_field("webinars_speakers_title") .
                          "</span>" .
-                         "</h3>";
+                         "</p>";
                  else:
-                     echo "<h3>" .
+                     echo "<p>" .
                          '<span class="webinars-speaker">' .
                          get_sub_field("webinars_speakers_name") .
                          "</span>" .
-                         "</h3>";
+                         "</p>";
                  endif;
              endif;
          endwhile;
@@ -175,7 +194,7 @@ get_header();
                      get_sub_field("webinars_moderators_company") != null &&
                      get_sub_field("webinars_moderators_title") != null
                  ):
-                     echo "<h3>" .
+                     echo "<p>" .
                          '<span class="webinars-moderator">' .
                          get_sub_field("webinars_moderators_name") .
                          '<span class="webinars-comma">, </span>' .
@@ -187,37 +206,37 @@ get_header();
                          '<span class="webinars-designation">' .
                          get_sub_field("webinars_moderators_company") .
                          "</span>" .
-                         "</h3>";
+                         "</p>";
                  elseif (
                      get_sub_field("webinars_moderators_company") != null &&
                      get_sub_field("webinars_moderators_title") == null
                  ):
-                     echo "<h3>" .
+                     echo "<p>" .
                          '<span class="webinars-moderator">' .
                          get_sub_field("webinars_moderators_name") .
                          '<span class="webinars-comma">, </span>' .
                          '<span class="webinars-designation">' .
                          get_sub_field("webinars_moderators_company") .
                          "</span>" .
-                         "</h3>";
+                         "</p>";
                  elseif (
                      get_sub_field("webinars_moderators_company") == null &&
                      get_sub_field("webinars_moderators_title") != null
                  ):
-                     echo "<h3>" .
+                     echo "<p>" .
                          '<span class="webinars-moderator">' .
                          get_sub_field("webinars_moderators_name") .
                          '<span class="webinars-comma">, </span>' .
                          '<span class="webinars-designation">' .
                          get_sub_field("webinars_moderators_title") .
                          "</span>" .
-                         "</h3>";
+                         "</p>";
                  else:
-                     echo "<h3>" .
+                     echo "<p>" .
                          '<span class="webinars-moderator">' .
                          get_sub_field("webinars_moderators_name") .
                          "</span>" .
-                         "</h3>";
+                         "</p>";
                  endif;
              endif;
          endwhile;

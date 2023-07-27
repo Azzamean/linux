@@ -96,4 +96,6 @@ $projects_links = [
 //$slides = get_field("webinars_slides");
 //$video = get_field("webinars_video");
 $webinars_banner = get_field("webinars_banner");
+$webinars_video_link = get_field("webinars_video_link");
+$webinars_register_link = get_field("webinars_register_link");
 $webinars_description = get_field("webinars_description");

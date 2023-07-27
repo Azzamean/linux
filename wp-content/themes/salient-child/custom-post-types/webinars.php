@@ -86,7 +86,7 @@ add_action('acf/include_fields', function () {
                 'aria-label' => '',
                 'type' => 'oembed',
                 'instructions' =>
-                    'Please enter the registration link or embedded video link. Please note, if the link does not have a video preview, then it will only display the URL link instead of the video preview image.',
+                    'Please enter the embedded video link. Please note, if the link does not have a video preview, then it will display the site logo as the video preview image.',
                 'required' => 0,
                 'conditional_logic' => 0,
                 'wrapper' => array(
@@ -96,6 +96,31 @@ add_action('acf/include_fields', function () {
                 ),
                 'width' => '',
                 'height' => ''
+            ),
+            array(
+                'key' => 'field_64c2daa0ca0c7',
+                'label' => 'Register Link',
+                'name' => 'webinars_register_link',
+                'aria-label' => '',
+                'type' => 'url',
+                'instructions' =>
+                    'Please enter the registration link. Please note, if you enter a registration link, the video link will not have a button appear until the registration link is deleted. You must delete the registration link if a user decides to switch to a video link later on.',
+                'required' => 0,
+                'conditional_logic' => array(
+                    array(
+                        array(
+                            'field' => 'field_6408cf3cf205a',
+                            'operator' => '==empty'
+                        )
+                    )
+                ),
+                'wrapper' => array(
+                    'width' => '',
+                    'class' => '',
+                    'id' => ''
+                ),
+                'default_value' => '',
+                'placeholder' => ''
             ),
             array(
                 'key' => 'field_6408cfbcf205b',
@@ -116,7 +141,7 @@ add_action('acf/include_fields', function () {
                     'layout_64346e5644055' => array(
                         'key' => 'layout_64346e5644055',
                         'name' => 'webinars_speakers_information',
-                        'label' => 'Speakers Information',
+                        'label' => 'Add Speakers Information',
                         'display' => 'block',
                         'sub_fields' => array(
                             array(
@@ -207,7 +232,7 @@ add_action('acf/include_fields', function () {
                     'layout_64346e5644055' => array(
                         'key' => 'layout_64346e5644055',
                         'name' => 'webinars_moderators_information',
-                        'label' => 'Moderators Information',
+                        'label' => 'Add Moderators Information',
                         'display' => 'block',
                         'sub_fields' => array(
                             array(
