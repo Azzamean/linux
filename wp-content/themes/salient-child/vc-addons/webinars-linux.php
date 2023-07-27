@@ -564,6 +564,8 @@ function webinars_linux($atts, $content)
                     ) .
                     "</p>";
             }
+			
+			if($link != null || $link != "") {
             $output .=
                 '<div class="webinars-navigation-btn"><a href="' .
                 $link .
@@ -572,6 +574,8 @@ function webinars_linux($atts, $content)
                 '">' .
                 $navigation_text .
                 "</a></div>";
+			}
+			
             $output .= "</div>";
 
             $count++;
