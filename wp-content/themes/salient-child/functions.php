@@ -638,3 +638,47 @@ function format_link_header()
     //}
 }
 add_action("wp_head", "format_link_header", 1);
+
+/* SALIENT CUSTOM IMAGE SIZES */
+/* FOR REFERENCE; VISIT 
+   wp-content\themes\salient\nectar\helpers\media.php
+   https://themenectar.com/docs/salient/modify-image-sizes/
+   https://rudrastyh.com/wordpress/image-sizes.html
+   https://bloggerpilot.com/en/disable-wordpress-image-sizes/ 
+*/
+function remove_salient_custom_image_sizes()
+{
+    remove_image_size('portfolio-thumb');
+    remove_image_size('nectar_small_square');
+    remove_image_size('portfolio-thumb_large');
+    remove_image_size('portfolio-thumb_small');
+    remove_image_size('portfolio-widget');
+    remove_image_size('wide');
+    remove_image_size('wide_photography');
+    remove_image_size('wide_small');
+    remove_image_size('regular');
+    remove_image_size('regular_small');
+    remove_image_size('tall');
+    remove_image_size('wide_tall');
+    remove_image_size('regular_photography');
+    remove_image_size('regular_photography_small');
+    remove_image_size('wide_tall_photography');
+    remove_image_size('wide_photography_small');
+    remove_image_size('large_featured');
+    remove_image_size('medium_featured');
+    remove_image_size('medium');
+}
+add_action('after_setup_theme', 'remove_salient_custom_image_sizes', 11);
+
+//print_r( get_intermediate_image_sizes() );
+add_filter('intermediate_image_sizes', function ($sizes) {
+    // return array_diff($sizes, ['thumbnail', 'medium', 'medium_large', 'large']);
+    return array_diff($sizes, ['medium_large']);
+});
+
+function remove_large_image_sizes()
+{
+    remove_image_size('1536x1536');
+    remove_image_size('2048x2048');
+}
+add_action('init', 'remove_large_image_sizes');
