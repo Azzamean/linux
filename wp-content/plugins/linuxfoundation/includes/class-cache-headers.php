@@ -4,7 +4,7 @@ class CacheHeaders
 {
     public function __construct()
     {
-        add_action("init", [$this, "add_header_cache"]);
+        add_action("send_headers", [$this, "add_header_cache"], 99);
     }
 
     public function add_header_cache()
@@ -16,3 +16,5 @@ class CacheHeaders
         }
     }
 }
+
+$cache_headers = new CacheHeaders();
