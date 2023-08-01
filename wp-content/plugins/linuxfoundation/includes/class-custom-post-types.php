@@ -156,15 +156,15 @@ $webinars_1 = $custom_post_types_options["webinars_1"];
 
 if ($projects_0) {
     require_once plugin_dir_path(__DIR__) .
-        "../themes/salient-child/custom-post-types/projects.php";
+        "../../themes/salient-child/custom-post-types/projects.php";
 }
 
 if ($webinars_1) {
     require_once plugin_dir_path(__DIR__) .
-        "../themes/salient-child/custom-post-types/webinars.php";
+        "../../themes/salient-child/custom-post-types/webinars.php";
 }
 
 if ($members_2) {
     require_once plugin_dir_path(__DIR__) .
-        "../themes/salient-child/custom-post-types/members.php";
+        "../../themes/salient-child/custom-post-types/members.php";
 }
