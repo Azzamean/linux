@@ -743,3 +743,23 @@ function ms_edit_permission_check()
     }
 }
 add_filter('admin_head', 'ms_edit_permission_check', 1, 4);
+
+/* REMOVE THE AVATAR PLUGIN FROM ADMIN MENU */
+function wpdocs_remove_edit_menu()
+{
+    if (!is_super_admin()) {
+        remove_menu_page('one-user-avatar');
+    }
+}
+
+if (is_plugin_active('one-user-avatar/one-user-avatar.php')) {
+    add_action('admin_init', 'wpdocs_remove_edit_menu');
+}
+
+/* GET DATA ON ADMIN MENU */
+/*
+function the_dramatist_debug_admin_menu() {
+    echo '<pre>' . print_r( $GLOBALS[ 'menu' ], TRUE) . '</pre>';
+}
+add_action( 'admin_init', 'the_dramatist_debug_admin_menu' );
+*/
