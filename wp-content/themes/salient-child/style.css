@@ -17,6 +17,19 @@ span.osano-cm-toggle__label.osano-cm-label {
 	color: #444 !important;
 }
 
+
+/* WP ADMIN HEADER */
+ul#wp-admin-bar-my-sites-list {
+	height: 500px !important;
+	display: flex !important;
+	flex-direction: column !important;
+	flex-wrap: wrap !important;
+}
+
+#wpadminbar .ab-top-menu>.menupop>.ab-sub-wrapper {
+	width: 700px;
+}
+
 /* HEADER */
 
 @media (min-width: 768px) {
