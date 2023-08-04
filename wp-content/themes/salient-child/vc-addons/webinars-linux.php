@@ -118,10 +118,6 @@ class WebinarsLinux
                             ) => "hide-featured-image"
                         ],
                         "std" => "show-featured-image",
-                        "dependency" => [
-                            "element" => "design",
-                            "value" => ["list-design", "grid-design"]
-                        ],
                         "description" => esc_html__(
                             "Check or uncheck the box if you want to show or hide the featured image.",
                             "webinars"
@@ -196,6 +192,24 @@ class WebinarsLinux
                         ),
                         "save_always" => true
                     ],
+					                    [
+                        "type" => "checkbox",
+                        "class" => "",
+                        "heading" => esc_html__("Remove Hyperlink from Title", "webinars"),
+                        "param_name" => "remove_hyperlink_title",
+                        "value" => [
+                            esc_html__(
+                                "Remove Hyperlink",
+                                "webinars"
+                            ) => "remove-hyperlink"
+                        ],
+                        "std" => "keep-hyperlink",
+                        "description" => esc_html__(
+                            "Check or uncheck the box if you want to keep or remove the hyperlink of the title.",
+                            "webinars"
+                        ),
+                        "save_always" => true
+                    ],
                     [
                         "type" => "checkbox",
                         "class" => "",
@@ -254,6 +268,7 @@ function webinars_linux($atts, $content)
                 "excerpt" => "",
                 "excerpt_length" => "",
                 "navigation_text" => "",
+				"remove_hyperlink_title" => "",
                 "pagination" => "",
                 "suppress_filters" => true
             ],
@@ -272,6 +287,7 @@ function webinars_linux($atts, $content)
     $excerpt = !empty($excerpt) ? $excerpt : "hide-excerpt";
     $excerpt_length = !empty($excerpt_length) ? $excerpt_length : "50";
     $navigation_text = !empty($navigation_text) ? $navigation_text : "WATCH";
+	$remove_hyperlink_title = !empty($remove_hyperlink_title) ? $remove_hyperlink_title : "keep-hyperlink";
     $pagination = !empty($pagination) ? $pagination : "show-pagination";
     $paged = get_query_var("paged") ? get_query_var("paged") : 1;
 
@@ -363,6 +379,19 @@ function webinars_linux($atts, $content)
             $excerpt = true;
             break;
     }
+	
+    switch ($remove_hyperlink_title) {
+        case "remove-hyperlink":
+            $remove_hyperlink_title = true;
+            break;
+        case "keep-hyperlink":
+            $remove_hyperlink_title = false;
+            break;
+        default:
+            $remove_hyperlink_title = true;
+            break;
+    }	
+	
     $webinars_query = new WP_Query($query_args);
     $output = "";
     if ($webinars_query->have_posts()) {
@@ -414,7 +443,15 @@ function webinars_linux($atts, $content)
                     get_the_date("M j, Y") .
                     "</h4>";
             }
+			
+			if($remove_hyperlink_title == true) {
             $output .=
+                '<h2 class="webinars-title">' .
+                get_the_title() .
+                "</h2>";
+			}
+			if($remove_hyperlink_title == false) {
+				            $output .=
                 '<h2 class="webinars-title">' .
                 '<a href="' .
                 get_the_permalink() .
@@ -422,6 +459,10 @@ function webinars_linux($atts, $content)
                 get_the_title() .
                 "</a>" .
                 "</h2>";
+			}
+				
+				
+				
             if (have_rows("webinars_speakers")):
                 while (have_rows("webinars_speakers")):
                     the_row();

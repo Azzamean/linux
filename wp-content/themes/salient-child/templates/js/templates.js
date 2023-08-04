@@ -8,6 +8,7 @@ jQuery(document).ready(function ($) {
    $('[data-name="projects_video"]').hide();
    $('[data-name="projects_post_category"]').hide();
    $('[data-name="projects_category"]').hide();
+   $('[data-name="projects_case_studies_title"]').hide();
    $('[data-name="projects_case_studies"]').hide();
 
    if ($('#page_template :selected').text() == 'Default template') {
@@ -21,7 +22,8 @@ jQuery(document).ready(function ($) {
 
    } else if ($('#page_template :selected').text() == 'Template Style 3 (Three)') {
       $('[data-name="projects_category"]').show();
-      $('[data-name="projects_case_studies"]').show();
+      $('[data-name="projects_case_studies_title"]').show();
+	  $('[data-name="projects_case_studies"]').show();
    }
 
 });

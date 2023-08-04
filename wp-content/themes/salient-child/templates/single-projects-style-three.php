@@ -147,7 +147,7 @@ get_header();
 	    <div class="vc_col-sm-12 wpb_column column_container vc_column_container col no-extra-padding inherit_tablet inherit_phone ">
 	      <div class="vc_column-inner">
 	        <div class="wpb_wrapper">
-	          <h2 class="case-studies-heading">Case Studies</h2>
+	          <h2 class="case-studies-heading"><?php echo get_field("projects_case_studies_title"); ?></h2>
 	          <div class="wpb_row vc_row-fluid vc_row inner_row">
 	            <div class="row-bg-wrap">
 	              <div class="row-bg">
