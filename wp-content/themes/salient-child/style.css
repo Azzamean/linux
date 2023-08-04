@@ -19,15 +19,25 @@ span.osano-cm-toggle__label.osano-cm-label {
 
 
 /* WP ADMIN HEADER */
-ul#wp-admin-bar-my-sites-list {
+li#wp-admin-bar-my-sites ul#wp-admin-bar-my-sites-list {
 	height: 500px !important;
 	display: flex !important;
 	flex-direction: column !important;
 	flex-wrap: wrap !important;
 }
 
-#wpadminbar .ab-top-menu>.menupop>.ab-sub-wrapper {
-	width: 700px;
+ul#wp-admin-bar-my-sites-list {
+	width: 700px !important;
+}
+
+#wpadminbar .menupop li.hover>.ab-sub-wrapper {
+	z-index: 9999 !important;
+}
+
+#wpadminbar .ab-sub-wrapper,
+#wpadminbar ul,
+#wpadminbar ul li {
+	z-index: inherit !important;
 }
 
 /* HEADER */

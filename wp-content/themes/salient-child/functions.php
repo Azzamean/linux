@@ -564,9 +564,9 @@ add_action("admin_enqueue_scripts", "turn_off_notifications");
 add_action("login_enqueue_scripts", "turn_off_notifications");
 function turn_off_notifications()
 {
-    echo "<style>.update-nag, .updated, .error, .is-dismissible, .setting-error-tgmpa { display: none !important; }</style>";	
-	echo "<style>ul#wp-admin-bar-my-sites-list, ul#wp-admin-bar-my-sites-list {height: 500px !important; display: flex !important;flex-direction: column !important;flex-wrap: wrap !important;}</style>";
-	echo "<style>#wpadminbar .ab-top-menu>.menupop>.ab-sub-wrapper {width: 700px;}</style>";
+    echo "<style>.update-nag, .updated, .error, .is-dismissible, .setting-error-tgmpa { display: none !important; }</style>";
+    echo "<style>ul#wp-admin-bar-my-sites-list, ul#wp-admin-bar-my-sites-list {height: 500px !important; display: flex !important;flex-direction: column !important;flex-wrap: wrap !important;}</style>";
+    echo "<style>#wpadminbar .ab-top-menu>.menupop>.ab-sub-wrapper {width: 700px;}</style>";
 }
 
 // SHORTCODE FOR UBER MENU LOGO
