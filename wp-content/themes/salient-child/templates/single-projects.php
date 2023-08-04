@@ -114,7 +114,7 @@ get_header();
 							<!-- <strong class="projects-small-title absolute">Blog</strong> -->
 							<h6 class='projects-description-title'>Project Updates</h6>
 							<?php echo do_shortcode(
-           '[recent_posts_linux_foundation design="grid-design" columns="1" limit="1" offset="" category_id="' .
+           '[recent_posts_linux_foundation design="grid-design" columns="1" limit="1" offset="" sort="DESC" category_id="' .
                $projects_post_category .
                '" categories="0" embedded_code="" featured_image="hide-featured-image" excerpt="" navigation="show_navigation_arrow" date_author="author" pagination="hide-pagination"]'
        ); ?>
