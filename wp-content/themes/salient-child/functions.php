@@ -35,13 +35,13 @@ function osano_script()
 <?php
 }
 
-// GET WP BAKERY CUSTOM MODULES
-require_once "vc-addons/projects-linux.php";
-require_once "vc-addons/webinars-linux.php";
-require_once "vc-addons/members-linux.php";
+// GET WP BAKERY CUSTOM MODULES; SOME MOVED TO LINUX FOUNDATION PLUGIN
 require_once "vc-addons/recent-posts-linux.php";
-require_once "vc-addons/members-api-linux.php";
-require_once "vc-addons/projects-api-linux.php";
+//require_once "vc-addons/projects-linux.php";
+//require_once "vc-addons/webinars-linux.php";
+//require_once "vc-addons/members-linux.php";
+//require_once "vc-addons/members-api-linux.php";
+//require_once "vc-addons/projects-api-linux.php";
 
 // GET WP BAKERY CUSTOM FIELDS
 require_once "vc-addons/custom-fields/custom-fields.php";

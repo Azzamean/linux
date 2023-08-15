@@ -1043,18 +1043,19 @@ if ( !function_exists( 'nectar_using_page_header' ) ) {
 				}
 				$disable_effect = get_post_meta(wc_get_page_id('shop'), '_disable_transparent_header', true);
 				$force_effect = null;
-			} else {
 
-				$header_title    = get_post_meta(woocommerce_get_page_id('shop'), '_nectar_header_title', true);
-				$header_bg       = get_post_meta(woocommerce_get_page_id('shop'), '_nectar_header_bg', true);
-				$header_bg_color = get_post_meta(woocommerce_get_page_id('shop'), '_nectar_header_bg_color', true);
-				$bg_type         = get_post_meta(woocommerce_get_page_id('shop'), '_nectar_slider_bg_type', true);
-				if(empty($bg_type)) {
-					$bg_type = 'image_bg';
+				// product category images.
+				$product_archive_header_size = ( isset($nectar_options['product_archive_header_size'] ) ) ? $nectar_options['product_archive_header_size'] : 'default';
+				if( is_product_category() && $product_archive_header_size !== 'contained') {
+					$cate          = get_queried_object();
+					$t_id          = ( property_exists( $cate, 'term_id' ) ) ? $cate->term_id : '';
+					$product_terms = get_option( "taxonomy_$t_id" );
+					if( ! empty( $product_terms['product_category_image'] ) ) {
+						$header_bg = $product_terms['product_category_image'];
+					}
 				}
-				$disable_effect = get_post_meta(woocommerce_get_page_id('shop'), '_disable_transparent_header', true);
-				$force_effect   = null;
-			}
+
+			} 
 
 		 }
 		 else if( is_home() ){
@@ -1209,7 +1210,7 @@ if ( !function_exists( 'nectar_using_page_header' ) ) {
 		if( has_filter('nectar_activate_transparent_header') ) {
 
 			$filtered_verdict = apply_filters('nectar_activate_transparent_header', $the_verdict);
-
+			
 			// Ensure a bool is being used.
 			if( $filtered_verdict === false || $filtered_verdict === true ) {
 				return $filtered_verdict;

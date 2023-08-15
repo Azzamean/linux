@@ -5,7 +5,7 @@
 * Description: Core functionality required by the Salient theme. Adds the Salient collection of WPBakery page builder elements, template library and page/post options.
 * Author: ThemeNectar
 * Author URI: https://themenectar.com
-* Version: 2.0.1
+* Version: 2.0.3
 * Text Domain: salient-core
 */
 
@@ -18,7 +18,7 @@ define( 'SALIENT_CORE_ROOT_DIR_PATH', plugin_dir_path( __FILE__ ) );
 define( 'SALIENT_CORE_PLUGIN_PATH', plugins_url( 'salient-core' ) );
 
 if ( ! defined( 'SALIENT_CORE_VERSION' ) ) {
-    define( 'SALIENT_CORE_VERSION', '2.0.1' );
+    define( 'SALIENT_CORE_VERSION', '2.0.3' );
 }
 
 class Salient_Core {

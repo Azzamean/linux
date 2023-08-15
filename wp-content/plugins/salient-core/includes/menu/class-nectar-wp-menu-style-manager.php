@@ -442,6 +442,10 @@
          #mobile-menu .nectar-ext-menu-item {
             display: block;
           }
+          #slide-out-widget-area .nectar-ext-menu-item .inner-content,
+          #mobile-menu .nectar-ext-menu-item .inner-content {
+              width: 100%;
+          }
          #slide-out-widget-area.fullscreen-alt .nectar-ext-menu-item,
          #slide-out-widget-area.fullscreen .nectar-ext-menu-item {
             text-align: center;
@@ -1318,7 +1322,7 @@
     				 	 }
 
     					 /// If there's no image, bail out.
-    					 if( false === $image_active ) {
+    					 if( false === $image_active && 'video' !== $image_type ) {
 
     							if( 'auto' === $menu_item_color_type ) {
     								$menu_item_css .= 'li.menu-item-'.esc_attr($item->ID) .' > a .menu-title-text,

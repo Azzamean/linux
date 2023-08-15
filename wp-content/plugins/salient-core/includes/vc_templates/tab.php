@@ -49,7 +49,7 @@ $nectar_using_VC_front_end_editor = ($nectar_using_VC_front_end_editor == 'true'
 // Check if iconsmind SVGs exist.
 $svg_iconsmind = ( defined('NECTAR_THEME_DIRECTORY') && file_exists( NECTAR_THEME_DIRECTORY . '/css/fonts/svg-iconsmind/Aa.svg.php' ) ) ? true : false;
 
-$icon_attr = ( $icon_family !== 'iconsmind' || $nectar_using_VC_front_end_editor || !$svg_iconsmind ) ? 'data-tab-icon="'.$icon.'"' : '';
+$icon_attr = ( $icon_family !== 'iconsmind' || $nectar_using_VC_front_end_editor || !$svg_iconsmind ) ? 'data-tab-icon="'.esc_attr($icon).'"' : '';
 
 $icon_markup = '';
 

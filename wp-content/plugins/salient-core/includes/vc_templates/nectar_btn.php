@@ -190,11 +190,11 @@ $target = ($open_new_tab == 'true') ? 'target="_blank"' : null;
 	// Custom Coloring.
 	$starting_custom_color = '';
 	if(!empty($solid_text_color_override) && $button_style === 'regular' || !empty($solid_text_color_override) && $button_style === 'regular-tilt') {
-		$starting_custom_color = 'color: '.$solid_text_color_override.'; ';
+		$starting_custom_color = 'color: '.esc_attr($solid_text_color_override).'; ';
 	}
 	
 	if(!empty($color_override)) {
-		$color_or = 'data-color-override="'. $color_override.'" ';	
+		$color_or = 'data-color-override="'. esc_attr($color_override).'" ';	
 		
 		if($button_style === 'see-through' || $button_style === 'see-through-2') {
 			$starting_custom_color .= 'border-color: '.esc_attr($color_override).'; color: '.esc_attr($color_override).';';

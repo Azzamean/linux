@@ -153,7 +153,7 @@ if( !empty($icon) ) {
 		// Custom size.
 		$icon_markup = preg_replace(
 	   array('/width="\d+"/i', '/height="\d+"/i'),
-	   array('width="'.$icon_size.'"', 'height="'.$icon_size.'"'),
+	   array('width="'.esc_attr($icon_size).'"', 'height="'.esc_attr($icon_size).'"'),
 	   $icon_markup);
 		
 		// Handle gradients.
@@ -190,7 +190,7 @@ if( !empty($icon) ) {
 	else {
 		
 		
-		$icon_markup = '<i class="icon-default-style '.$icon.'" data-color="'.esc_attr(strtolower($icon_color)).'" style="font-size: '.esc_attr($icon_size).'px!important; line-height: '.esc_attr($icon_size).'px!important;"></i>';
+		$icon_markup = '<i class="icon-default-style '.esc_attr($icon).'" data-color="'.esc_attr(strtolower($icon_color)).'" style="font-size: '.esc_attr($icon_size).'px!important; line-height: '.esc_attr($icon_size).'px!important;"></i>';
 	}
 	
 }

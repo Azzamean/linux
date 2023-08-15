@@ -5,7 +5,7 @@
  * Description: Adds the Salient collection of shortcodes with a convenient shortcode generator that is available on all instances of Tinymce editors.
  * Author: ThemeNectar
  * Author URI: http://themenectar.com
- * Version: 1.5.2
+ * Version: 1.5.3
  * Text Domain: salient-shortcodes
  */
 
@@ -28,7 +28,7 @@ class Salient_Shortcodes {
 	
 	static $instance = false;
 	
-	public $plugin_version = '1.5.2';
+	public $plugin_version = '1.5.3';
 		
 	private function __construct() {
 		

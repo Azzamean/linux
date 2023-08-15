@@ -254,7 +254,7 @@ if(!function_exists('nectar_post_grid_item_markup')) {
 
                   }
 
-                  $output .= '<a '.$link_style_attr.'class="' . esc_attr( $category->slug ) . ' style-'.$category_style.'" href="' . esc_url( get_category_link( $category->term_id ) ) . '">' . esc_html( $category->name ) . '</a>';
+                  $output .= '<a '.$link_style_attr.'class="' . esc_attr( $category->slug ) . ' style-'.esc_attr( $category_style ).'" href="' . esc_url( get_category_link( $category->term_id ) ) . '">' . esc_html( $category->name ) . '</a>';
                 }
                 $category_markup .=  trim( $output );
               }
@@ -438,7 +438,7 @@ if(!function_exists('nectar_post_grid_item_markup')) {
             // Excerpt.
             if( isset($atts['display_excerpt']) && 'yes' === $atts['display_excerpt'] ) {
               $project_excerpt = get_post_meta($post->ID, '_nectar_project_excerpt', true);
-              $excerpt_markup = (!empty($project_excerpt)) ? '<div class="nectar-post-grid-item__excerpt-wrap item-meta-extra"><span class="meta-excerpt">' . $project_excerpt . '</span></div>' : '';
+              $excerpt_markup = (!empty($project_excerpt)) ? '<div class="nectar-post-grid-item__excerpt-wrap item-meta-extra"><span class="meta-excerpt">' . wp_kses_post($project_excerpt) . '</span></div>' : '';
             }
 
             // Permalink.
@@ -486,7 +486,7 @@ if(!function_exists('nectar_post_grid_item_markup')) {
 
 
           /****************** Output Markup ******************/
-          $markup .= '<div class="nectar-post-grid-item'.esc_attr($custom_class_name).'"'.$card_color_style.' data-post-id="'.esc_attr($post->ID).'" data-has-img="'.$has_image.'"> <div class="inner">';
+          $markup .= '<div class="nectar-post-grid-item'.esc_attr($custom_class_name).'"'.$card_color_style.' data-post-id="'.esc_attr($post->ID).'" data-has-img="'.esc_attr($has_image).'"> <div class="inner">';
 
           // parallax bg.
           $parallax_el_markup_open = '';

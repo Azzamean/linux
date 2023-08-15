@@ -195,7 +195,9 @@ Class WPBakeryShortCode_Toggle extends WPBakeryShortCode_VC_Tab {
 		}
 		for ( $i = 0; $i < count( $width ); $i ++ ) {
 			$output .= '<div class="group wpb_sortable">';
-			$output .= '<h3><span class="tab-label"><%= params.title %></span></h3>';
+			// nectar addition -- added wp_strip_all_tags
+			$output .= '<h3><span class="tab-label">'. wp_strip_all_tags('<%= params.title %>').'</span></h3>';
+			// nectar addition end
 			$output .= '<div ' . $this->mainHtmlBlockParams( $width, $i ) . '>';
 			$output .= str_replace( "%column_size%", wpb_translateColumnWidthToFractional( $width[$i] ), $column_controls );
 			$output .= '<div class="wpb_element_wrapper">';

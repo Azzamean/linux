@@ -415,7 +415,7 @@ if ( ! defined( 'ABSPATH' ) ) {
     }
 
 		if ( ! empty( $content_placement ) ) {
-			$equal_height_class .= ' vc_row-o-content-' . $content_placement.' ';
+			$equal_height_class .= ' vc_row-o-content-' . esc_attr($content_placement).' ';
 		}
 
 		// Row full height option.
@@ -426,10 +426,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 				$equal_height_class = ' vc_row-o-equal-height vc_row-flex ';
 
 				if ( ! empty( $content_placement ) ) {
-					$equal_height_class .= ' vc_row-o-content-' . $content_placement.' ';
+					$equal_height_class .= ' vc_row-o-content-' . esc_attr($content_placement).' ';
 				}
 
-				$main_class .= 'vc_row-o-columns-' . $columns_placement . ' ';
+				$main_class .= 'vc_row-o-columns-' . esc_attr($columns_placement) . ' ';
 
 			}
 		}
@@ -581,6 +581,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 		}
 	  }
       else if( $enable_gradient === 'true' ) {
+		
+			 $color_overlay = esc_attr($color_overlay);
+     		 $color_overlay_2 = esc_attr($color_overlay_2);
 
     			if($color_overlay !== 'transparent' && $color_overlay_2 === 'transparent') {
             $color_overlay_2 = 'rgba(255,255,255,0.001)';
@@ -639,7 +642,7 @@ if ( ! defined( 'ABSPATH' ) ) {
       else {
 
     			if( !empty($color_overlay) ) {
-    				$row_overlay_style .= 'background-color:' . $color_overlay . ';  opacity: '.esc_attr($overlay_strength).'; ';
+    				$row_overlay_style .= 'background-color:' . esc_attr($color_overlay) . ';  opacity: '.esc_attr($overlay_strength).'; ';
     			}
 
   		}

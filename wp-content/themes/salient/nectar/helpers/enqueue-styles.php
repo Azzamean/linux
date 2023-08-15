@@ -963,6 +963,12 @@ function nectar_page_sepcific_styles() {
 		}
 		';
 
+		if( nectar_is_contained_header() ) {
+			$nectar_search_css .= '.search-no-results #search-results  {
+				padding-top: 8%;
+			}';
+		}
+
 		wp_add_inline_style( 'main-styles', $nectar_search_css );
 	}
 
@@ -1305,7 +1311,7 @@ if( !function_exists('nectar_preload_key_requests') ) {
 		if( isset($nectar_options['typography_font_swap']) && '1' === $nectar_options['typography_font_swap'] ) {
 
 			// Icomoon.
-			echo '<link rel="preload" href="'.esc_attr($nectar_get_template_directory_uri) . '/css/fonts/icomoon.woff?v=1.4" as="font" type="font/woff" crossorigin="anonymous">';
+			echo '<link rel="preload" href="'.esc_attr($nectar_get_template_directory_uri) . '/css/fonts/icomoon.woff?v=1.6" as="font" type="font/woff" crossorigin="anonymous">';
 		}
 	}
 

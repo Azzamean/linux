@@ -39,9 +39,9 @@ extract(shortcode_atts(array(
   'class' => '' ), $atts));
 
 $target                 = ($link_type == 'new_tab') ? 'target="_blank"' : null;
-$style                  = (!empty($text_color)) ? ' style="color: '.$text_color.';"' : '';
-$bg_style               = (!empty($text_color)) ? ' style="background-color: '.$text_color.';"' : null;
-$underline_border_color = $text_color;
+$style                  = (!empty($text_color)) ? ' style="color: '.esc_attr($text_color).';"' : '';
+$bg_style               = (!empty($text_color)) ? ' style="background-color: '.esc_attr($text_color).';"' : null;
+$underline_border_color = esc_attr($text_color);
 $text_color             = (!empty($text_color)) ? 'custom' : 'std';
 $nofollow_attr          = (!empty($nofollow) && 'true' === $nofollow) ? ' rel="nofollow"': '';
 
@@ -126,14 +126,14 @@ if( $btn_style === 'material' ) {
 } 
 // See through.
 else if( $btn_style === 'see-through' ) {
-  echo '<div class="nectar-cta '.$class . esc_attr($dynamic_el_styles).'" data-color="'. esc_attr($button_color) .'" data-using-bg="'.esc_attr($using_bg_color).'" data-style="'.esc_attr($btn_style).'" data-display="'. esc_attr($display) .'" data-alignment="'.esc_attr($alignment).'" data-text-color="'.esc_attr($text_color).'" '.$style_markup.'>';
+  echo '<div class="nectar-cta '.esc_attr($class) . esc_attr($dynamic_el_styles).'" data-color="'. esc_attr($button_color) .'" data-using-bg="'.esc_attr($using_bg_color).'" data-style="'.esc_attr($btn_style).'" data-display="'. esc_attr($display) .'" data-alignment="'.esc_attr($alignment).'" data-text-color="'.esc_attr($text_color).'" '.$style_markup.'>';
   echo '<'.esc_html($heading_tag). $style.'> <span class="text">'.wp_kses_post($text).' </span>';
   echo  '<span class="link_wrap" '.$style_padding_markup.'><'.$anchor_tag .' '.$target . $nofollow_attr .' class="link_text'.esc_attr($link_text_classes).'" role="button" href="'.esc_url($url).'">'.wp_kses_post($link_text).'<span class="arrow"></span></'.$anchor_tag .'></span>'; 
   echo '</'.esc_html($heading_tag).'></div>';
 } 
 // Arrow Animation.
 else if( $btn_style === 'arrow-animation' ) {
-  echo '<div class="nectar-cta '.$class .esc_attr($dynamic_el_styles) .'" data-color="'. esc_attr($button_color) .'" data-using-bg="'.esc_attr($using_bg_color).'" data-style="'.esc_attr($btn_style).'" data-display="'. esc_attr($display) .'" data-alignment="'.esc_attr($alignment).'" data-text-color="'.esc_attr($text_color).'" '.$style_markup.'>';
+  echo '<div class="nectar-cta '.esc_attr($class) .esc_attr($dynamic_el_styles) .'" data-color="'. esc_attr($button_color) .'" data-using-bg="'.esc_attr($using_bg_color).'" data-style="'.esc_attr($btn_style).'" data-display="'. esc_attr($display) .'" data-alignment="'.esc_attr($alignment).'" data-text-color="'.esc_attr($text_color).'" '.$style_markup.'>';
   echo '<'.esc_html($heading_tag). $style.'>';
   echo  '<span class="link_wrap" '.$style_padding_markup.'><'.$anchor_tag .' '.$target . $nofollow_attr .' class="link_text'.esc_attr($link_text_classes).'" role="button" href="'.esc_url($url).'"><span class="text">'.wp_kses_post($link_text) .'</span>'; 
   echo '<svg class="next-arrow" aria-hidden="true" width="20px" height="25px" viewBox="0 0 50 80" xml:space="preserve">
@@ -143,7 +143,7 @@ else if( $btn_style === 'arrow-animation' ) {
   echo '</'.esc_html($heading_tag).'></div>';
 } 
 else if( $btn_style === 'curved-arrow-animation' ) {
-  echo '<div class="nectar-cta '.$class .esc_attr($dynamic_el_styles) .'" data-color="'. esc_attr($button_color) .'" data-using-bg="'.esc_attr($using_bg_color).'" data-style="'.esc_attr($btn_style).'" data-display="'. esc_attr($display) .'" data-alignment="'.esc_attr($alignment).'" data-text-color="'.esc_attr($text_color).'" '.$style_markup.'>';
+  echo '<div class="nectar-cta '.esc_attr($class) .esc_attr($dynamic_el_styles) .'" data-color="'. esc_attr($button_color) .'" data-using-bg="'.esc_attr($using_bg_color).'" data-style="'.esc_attr($btn_style).'" data-display="'. esc_attr($display) .'" data-alignment="'.esc_attr($alignment).'" data-text-color="'.esc_attr($text_color).'" '.$style_markup.'>';
   echo '<'.esc_html($heading_tag). $style.'>';
   echo  '<span class="link_wrap" '.$style_padding_markup.'><'.$anchor_tag .' '.$target . $nofollow_attr .' class="link_text'.esc_attr($link_text_classes).'" role="button" href="'.esc_url($url).'"><span class="text">'.wp_kses_post($link_text) .'</span>'; 
   echo nectar_get_curved_arrow_markup();
@@ -156,7 +156,7 @@ else if( $btn_style === 'basic' || $btn_style === 'text-reveal-wave' ) {
     $link_text = preg_replace("/([^\\s>])(?!(?:[^<>]*)?>)/u","<span class=\"char\">$1</span>",$link_text);
   }
 
-	echo '<div class="nectar-cta '.$class .esc_attr($dynamic_el_styles) .'" data-color="'. esc_attr($button_color) .'" data-using-bg="'.esc_attr($using_bg_color).'" data-style="'.esc_attr($btn_style).'" data-display="'. esc_attr($display) .'" data-alignment="'.esc_attr($alignment).'" data-text-color="'.esc_attr($text_color).'" '.$style_markup.'>';
+	echo '<div class="nectar-cta '.esc_attr($class) .esc_attr($dynamic_el_styles) .'" data-color="'. esc_attr($button_color) .'" data-using-bg="'.esc_attr($using_bg_color).'" data-style="'.esc_attr($btn_style).'" data-display="'. esc_attr($display) .'" data-alignment="'.esc_attr($alignment).'" data-text-color="'.esc_attr($text_color).'" '.$style_markup.'>';
   echo '<'.esc_html($heading_tag). $style.'>';
   echo  '<span class="link_wrap" '.$style_padding_markup.'>'.$icon_output.'<'.$anchor_tag .' '.$target . $nofollow_attr .' class="link_text'.esc_attr($link_text_classes).'" role="button" href="'.esc_url($url).'"><span class="text">'.wp_kses_post($link_text) .'</span>'; 
   echo '</'.$anchor_tag .'></span></'.esc_html($heading_tag).'></div>';

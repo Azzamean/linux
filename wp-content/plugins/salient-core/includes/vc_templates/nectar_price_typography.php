@@ -30,7 +30,7 @@ if (function_exists('nectar_el_dynamic_classnames')) {
 
 // Custom coloring.
 if (!empty($text_color)) {
-    $styles .= 'color: ' . $text_color . ';';
+    $styles .= 'color: ' . esc_attr($text_color) . ';';
 }
 
 if (!empty($styles)) {

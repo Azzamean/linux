@@ -223,7 +223,7 @@ if( $style !== 'slider' &&
                         if(!empty($video_m4v)) { $video_output .= 'mp4="'. esc_attr($video_m4v) .'" '; }
                         if(!empty($video_ogv)) { $video_output .= 'ogv="'. esc_attr($video_ogv) .'"'; }
 
-                        $video_output .= ' poster="'.esc_attr($video_poster).'"]';
+                        $video_output .= ' poster="'.esc_attr($video_poster).'" preload="auto"]';
 
                           echo '<div class="video">' . do_shortcode($video_output) . '</div>';
                         }
@@ -586,7 +586,7 @@ else if( $style === 'single_large_featured' ) { //single_large_featured
                 $i = 0;
                 foreach( $categories as $category ) {
                    $i++;
-                   $cat_output .= '<a class="'.$category->slug.'" href="' . esc_url( get_category_link( $category->term_id ) ) . '"><span class="'.esc_attr($category->slug).'">'.esc_html( $category->name ) .'</span></a>';
+                   $cat_output .= '<a class="'.esc_attr($category->slug).'" href="' . esc_url( get_category_link( $category->term_id ) ) . '"><span class="'.esc_attr($category->slug).'">'.esc_html( $category->name ) .'</span></a>';
                    if($i > 0) break;
                 }
 
@@ -623,7 +623,7 @@ else if( $style === 'single_large_featured' ) { //single_large_featured
 
           $has_icon_class = ( $button_arrow_style === 'default' || $button_arrow_style === 'curved' ) ? ' has-icon' : null;
           ?>
-          <a class="nectar-button large regular <?php echo esc_attr( $button_color ) .  esc_attr( $regular_btn_class ) . $has_icon_class; ?>" data-arrow-style="<?php echo $button_arrow_style; ?>" href="<?php echo esc_url(get_permalink()); ?>" data-color-override="false" data-hover-color-override="false" data-hover-text-color-override="#fff" >
+          <a class="nectar-button large regular <?php echo esc_attr( $button_color ) .  esc_attr( $regular_btn_class ) . $has_icon_class; ?>" data-arrow-style="<?php echo esc_attr($button_arrow_style); ?>" href="<?php echo esc_url(get_permalink()); ?>" data-color-override="false" data-hover-color-override="false" data-hover-text-color-override="#fff" >
             <span><?php echo esc_html__( 'Read More', 'salient'); ?></span>
             <?php if( $button_arrow_style === 'default' ) {
               echo '<i class="icon-button-arrow"></i>';
@@ -798,7 +798,7 @@ else if( $style === 'multiple_large_featured' ) { //multiple_large_featured
             $button_color = 'm-extra-color-gradient-2';
           }
           ?>
-          <a class="nectar-button large regular <?php echo esc_attr( $button_color ) .  esc_attr( $regular_btn_class ); ?> has-icon" data-arrow-style="<?php echo $button_arrow_style; ?>" href="<?php echo esc_url(get_permalink()); ?>" data-color-override="false" data-hover-color-override="false" data-hover-text-color-override="#fff" >
+          <a class="nectar-button large regular <?php echo esc_attr( $button_color ) .  esc_attr( $regular_btn_class ); ?> has-icon" data-arrow-style="<?php echo esc_attr( $button_arrow_style ); ?>" href="<?php echo esc_url(get_permalink()); ?>" data-color-override="false" data-hover-color-override="false" data-hover-text-color-override="#fff" >
             <span><?php echo esc_html__( 'Read Article', 'salient-core'); ?></span>
             <?php if( $button_arrow_style === 'default' ) {
               echo '<i class="icon-button-arrow"></i>';

@@ -66,23 +66,23 @@ $el_query = array(
 $css_class_arr = array('nectar-post-grid-wrap');
 
 if( !empty($css_class_name) ) {
-	array_push($css_class_arr, $css_class_name);
+	array_push($css_class_arr, esc_attr($css_class_name));
 }
 
 if( !empty($text_color) ) {
-	array_push($css_class_arr, 'text-color-'.$text_color);
+	array_push($css_class_arr, 'text-color-'.esc_attr($text_color));
 }
 
 if( !empty($additional_meta_size) && 'default' != $additional_meta_size ) {
-	array_push($css_class_arr, 'additional-meta-size-'.$additional_meta_size);
+	array_push($css_class_arr, 'additional-meta-size-'.esc_attr($additional_meta_size));
 } 
 
 if( !empty($grid_item_spacing) ) {
-	array_push($css_class_arr, 'spacing-'.$grid_item_spacing);
+	array_push($css_class_arr, 'spacing-'.esc_attr($grid_item_spacing));
 }
 
 if( 'yes' === $enable_sortable && $sortable_alignment !== 'default' ) {
-	array_push($css_class_arr, 'nectar-post-grid-wrap--fl-'.$sortable_alignment);
+	array_push($css_class_arr, 'nectar-post-grid-wrap--fl-'.esc_attr($sortable_alignment));
 }
 
 $el_css_class = implode(" ", $css_class_arr);
@@ -148,7 +148,7 @@ if( 'post' === $post_type ) {
 			$all_filters = $portfolio_category;
 		}
 		
-		$cat_links_escaped .= '<a href="#" class="active all-filter" data-filter="'.$all_filters.'" data-total-count="'.esc_attr(nectar_post_grid_get_category_total($all_filters, 'portfolio')).'">'.esc_html__('All', 'salient-core').'</a>';
+		$cat_links_escaped .= '<a href="#" class="active all-filter" data-filter="'.esc_attr($all_filters).'" data-total-count="'.esc_attr(nectar_post_grid_get_category_total($all_filters, 'portfolio')).'">'.esc_html__('All', 'salient-core').'</a>';
 	} else {
 		// Only query for the first category to start.
 		if( 'yes' === $enable_sortable) {
@@ -209,7 +209,7 @@ else if( 'custom' === $post_type && !empty($cpt_name) && !empty($custom_query_ta
 	// Create filter HTML.
 	//// All link for total count.
 	if( 'yes' !== $enable_sortable || ('yes' === $enable_sortable && 'yes' === $cpt_all_filter) ) {
-		$cat_links_escaped .= '<a href="#" class="active all-filter" data-filter="'.$custom_query_tax.'" data-total-count="'.esc_attr(nectar_post_grid_get_category_total($custom_query_tax, esc_attr($cpt_name), $cpt_tax_query)).'">'.esc_html__('All', 'salient-core').'</a>';
+		$cat_links_escaped .= '<a href="#" class="active all-filter" data-filter="'.esc_attr($custom_query_tax).'" data-total-count="'.esc_attr(nectar_post_grid_get_category_total($custom_query_tax, esc_attr($cpt_name), $cpt_tax_query)).'">'.esc_html__('All', 'salient-core').'</a>';
 	}
 	//// Individual Tax links.
 	$cat_links_escaped .= $tax_links_escaped;

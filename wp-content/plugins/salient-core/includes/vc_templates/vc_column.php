@@ -251,7 +251,7 @@ foreach( $bg_img_arr as $viewport => $image ) {
 
 $using_custom_font_color = '';
 if( !empty($font_color) ) {
-  $style .= ' color: '.$font_color.';';
+  $style .= ' color: '.esc_attr($font_color).';';
   $using_custom_font_color = 'data-cfc="true" ';
 }
 
@@ -458,6 +458,9 @@ if( !empty($color_overlay) ||
 	}
   else if( $enable_gradient === 'true' ) {
 
+      $color_overlay = esc_attr($color_overlay);
+      $color_overlay_2 = esc_attr($color_overlay_2);
+
       if($color_overlay !== 'transparent' && $color_overlay_2 === 'transparent') {
         $color_overlay_2 = 'rgba(255,255,255,0.001)';
       }
@@ -515,7 +518,7 @@ if( !empty($color_overlay) ||
   else {
 
       if( !empty($color_overlay) ) {
-        $column_overlay_layer_style .= 'background-color:' . $color_overlay . ';  opacity: '.esc_attr($overlay_strength).'; ';
+        $column_overlay_layer_style .= 'background-color:' . esc_attr($color_overlay) . ';  opacity: '.esc_attr($overlay_strength).'; ';
       }
 
   }

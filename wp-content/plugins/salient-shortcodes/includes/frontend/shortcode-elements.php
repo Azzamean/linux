@@ -27,7 +27,7 @@ function nectar_full_width_section($atts, $content = null) {
 	if(!empty($image_url)) {
     
 		$bg_props .= 'background-image: url('. esc_url($image_url) . '); ';
-		$bg_props .= 'background-position: '. $bg_pos .'; ';
+		$bg_props .= 'background-position: '. esc_attr($bg_pos) .'; ';
 		
 		//for pattern bgs
 		if(strtolower($bg_repeat) === 'repeat'){
@@ -42,7 +42,7 @@ function nectar_full_width_section($atts, $content = null) {
 	}
 	
 	if(!empty($background_color)) {
-		$bg_props .= 'background-color: '. $background_color.'; ';
+		$bg_props .= 'background-color: '. esc_attr($background_color).'; ';
 		$using_bg_color_class = 'using-bg-color';
 	}
 	
@@ -52,13 +52,13 @@ function nectar_full_width_section($atts, $content = null) {
 		$parallax_class = 'standard_section';
 	}
 	
-	$style .= 'padding-top: '. $top_padding .'px; ';
-	$style .= 'padding-bottom: '. $bottom_padding .'px; ';
+	$style .= 'padding-top: '. esc_attr($top_padding) .'px; ';
+	$style .= 'padding-bottom: '. esc_attr($bottom_padding) .'px; ';
 	 
   return'
-	<div id="'.uniqid("fws_").'" class="full-width-section wpb_row legacy vc_row-fluid '.$parallax_class . ' ' . $class . ' " style="'.$style.'"> 
+	<div id="'.uniqid("fws_").'" class="full-width-section wpb_row legacy vc_row-fluid '.$parallax_class . ' ' . esc_attr($class) . ' " style="'.$style.'"> 
 
-	<div class="row-bg-wrap"> <div class="row-bg '.$using_image_class . ' ' . $using_bg_color_class . ' '. $etxra_class.'" style="'.$bg_props.'"></div> </div>
+	<div class="row-bg-wrap"> <div class="row-bg '.$using_image_class . ' ' . $using_bg_color_class . ' '. esc_attr($etxra_class).'" style="'.$bg_props.'"></div> </div>
 
     <div class="col span_12 '.esc_attr(strtolower($text_color)).'">'.do_shortcode($content).'</div></div>';
 }
@@ -604,7 +604,7 @@ function nectar_team_member($atts, $content = null) {
 			else {
 				//image link
 				if(!empty($link_url_2)){
-					$html .= '<a href="'.$link_url_2.'" '.$link_new_tab_markup.'></a><div class="team-member-image" style="background-image: url('. NECTAR_FRAMEWORK_DIRECTORY . 'assets/img/team-member-default.jpg);"></div>';
+					$html .= '<a href="'.esc_attr($link_url_2).'" '.$link_new_tab_markup.'></a><div class="team-member-image" style="background-image: url('. NECTAR_FRAMEWORK_DIRECTORY . 'assets/img/team-member-default.jpg);"></div>';
 				} else {
 					$html .= '<div class="team-member-image" style="background-image: url('. NECTAR_FRAMEWORK_DIRECTORY . 'assets/img/team-member-default.jpg);"></div>';
 				}
@@ -885,7 +885,7 @@ function nectar_pricing_column($atts, $content = null) {
 	$hightlight_reason_html = null;
 	
 	if($highlight === 'true') {
-		$highlight_class        = 'highlight ' . strtolower($color); 
+		$highlight_class        = 'highlight ' . esc_attr(strtolower($color)); 
 		$hightlight_reason_html = '<span class="highlight-reason">'.wp_kses_post($highlight_reason).'</span>';
 	}
 	
@@ -915,7 +915,7 @@ function nectar_tabs($atts, $content = null) {
 	if( is_array( $GLOBALS['tabs'] ) ){
 		
 		foreach( $GLOBALS['tabs'] as $tab ){
-			$tabs[]  = '<li><a href="#'.$tab['id'].'">'.wp_kses_post($tab['title']).'</a></li>';
+			$tabs[]  = '<li><a href="#'.esc_attr($tab['id']).'">'.wp_kses_post($tab['title']).'</a></li>';
 			$panes[] = '<div id="'.esc_attr($tab['id']).'">'.$tab['content'].'</div>';
 		}
 		
@@ -1105,7 +1105,7 @@ function nectar_blog_processing($atts, $content = null) {
      
      
      if( $layout === 'std-blog-sidebar' || $layout === 'masonry-blog-sidebar' ) {
-       echo '<div class="post-area col '.$std_minimal_class.' span_9 '.$masonry_class.' '.$masonry_style.' '.$infinite_scroll_class.'" data-ams="'.esc_attr($auto_masonry_spacing).'" data-remove-post-date="'.esc_attr($blog_remove_post_date).'" data-remove-post-author="'.esc_attr($blog_remove_post_author).'" data-remove-post-comment-number="'.esc_attr($blog_remove_post_comment_number).'" data-remove-post-nectar-love="'.esc_attr($blog_remove_post_nectar_love).'"> <div class="posts-container" data-load-animation="'.esc_attr($load_in_animation).'">';
+       echo '<div class="post-area col '.$std_minimal_class.' span_9 '.esc_attr($masonry_class).' '.esc_attr($masonry_style).' '.$infinite_scroll_class.'" data-ams="'.esc_attr($auto_masonry_spacing).'" data-remove-post-date="'.esc_attr($blog_remove_post_date).'" data-remove-post-author="'.esc_attr($blog_remove_post_author).'" data-remove-post-comment-number="'.esc_attr($blog_remove_post_comment_number).'" data-remove-post-nectar-love="'.esc_attr($blog_remove_post_nectar_love).'"> <div class="posts-container" data-load-animation="'.esc_attr($load_in_animation).'">';
      } else {
        
        if( $layout === 'masonry-blog-full-screen-width' && 
@@ -1118,7 +1118,7 @@ function nectar_blog_processing($atts, $content = null) {
          echo '<div class="full-width-content blog-fullwidth-wrap">'; 
        }
        
-       echo '<div class="post-area col '.$std_minimal_class.' span_12 col_last '.$masonry_class.' '.$masonry_style.' '.$infinite_scroll_class.' '.$full_width_article.'" data-ams="'.esc_attr($auto_masonry_spacing).'" data-remove-post-date="'.esc_attr($blog_remove_post_date).'" data-remove-post-author="'.esc_attr($blog_remove_post_author).'" data-remove-post-comment-number="'.esc_attr($blog_remove_post_comment_number).'" data-remove-post-nectar-love="'.esc_attr($blog_remove_post_nectar_love).'"> <div class="posts-container" data-load-animation="'.esc_attr($load_in_animation).'">';
+       echo '<div class="post-area col '.$std_minimal_class.' span_12 col_last '.$masonry_class.' '.esc_attr($masonry_style).' '.$infinite_scroll_class.' '.$full_width_article.'" data-ams="'.esc_attr($auto_masonry_spacing).'" data-remove-post-date="'.esc_attr($blog_remove_post_date).'" data-remove-post-author="'.esc_attr($blog_remove_post_author).'" data-remove-post-comment-number="'.esc_attr($blog_remove_post_comment_number).'" data-remove-post-nectar-love="'.esc_attr($blog_remove_post_nectar_love).'"> <div class="posts-container" data-load-animation="'.esc_attr($load_in_animation).'">';
        
      }
      
@@ -2027,7 +2027,7 @@ function nectar_recent_posts($atts, $content = null) {
  
  
     $animate_in_effect = (!empty($nectar_options['header-animate-in-effect'])) ? $nectar_options['header-animate-in-effect'] : 'none';
-    echo '<div class="nectar-recent-posts-slider_multiple_visible" data-columns="'.$columns.'" data-height="'.$slider_size.'" data-shadow-hover-type="'.$hover_shadow_type.'" data-animate-in-effect="'.$animate_in_effect.'" data-remove-post-date="'.$blog_remove_post_date.'" data-remove-post-author="'.$blog_remove_post_author.'" data-remove-post-comment-number="'.$blog_remove_post_comment_number.'" data-remove-post-nectar-love="'.$blog_remove_post_nectar_love.'">';
+    echo '<div class="nectar-recent-posts-slider_multiple_visible" data-columns="'.esc_attr($columns).'" data-height="'.esc_attr($slider_size).'" data-shadow-hover-type="'.esc_attr($hover_shadow_type).'" data-animate-in-effect="'.esc_attr($animate_in_effect).'" data-remove-post-date="'.esc_attr($blog_remove_post_date).'" data-remove-post-author="'.esc_attr($blog_remove_post_author).'" data-remove-post-comment-number="'.esc_attr($blog_remove_post_comment_number).'" data-remove-post-nectar-love="'.esc_attr($blog_remove_post_nectar_love).'">';
 
     echo '<div class="nectar-recent-posts-slider-inner"><div class="flickity-viewport"><div class="flickity-slider">'; 
     $i = 0;

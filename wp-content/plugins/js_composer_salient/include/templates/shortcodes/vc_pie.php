@@ -64,7 +64,14 @@ $wrapper_attributes = array();
 if ( ! empty( $el_id ) ) {
 	$wrapper_attributes[] = 'id="' . esc_attr( $el_id ) . '"';
 }
-$output = '<div ' . implode( ' ', $wrapper_attributes ) . ' class= "' . esc_attr( $css_class ) . '" data-pie-value="' . esc_attr( $value ) . '" data-pie-label-value="' . esc_attr( $label_value ) . '" data-pie-units="' . esc_attr( $units ) . '" data-pie-color="' . esc_attr( $color ) . '">';
+
+/* nectar addition */
+$pie_value = strip_tags(htmlspecialchars_decode($value));
+$pie_label_value = strip_tags(htmlspecialchars_decode($label_value));
+$pie_units = strip_tags(htmlspecialchars_decode($units));
+
+$output = '<div ' . implode( ' ', $wrapper_attributes ) . ' class= "' . esc_attr( $css_class ) . '" data-pie-value="' . esc_attr( $pie_value) . '" data-pie-label-value="' . esc_attr( $pie_label_value ) . '" data-pie-units="' . esc_attr( $pie_units ) . '" data-pie-color="' . esc_attr( $color ) . '">';
+/* nectar addition end */
 $output .= '<div class="wpb_wrapper">';
 $output .= '<div class="vc_pie_wrapper">';
 $output .= '<span class="vc_pie_chart_back" style="border-color: ' . esc_attr( $color ) . '"></span>';

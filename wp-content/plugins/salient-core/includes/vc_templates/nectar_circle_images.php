@@ -76,7 +76,7 @@ if( count($images) == 1 && $images[0] == '-1' ) {
 
 // Numerical last image
 if( $numerical_circle === 'true' ) {
-  $images_markup_arr[] = '<div class="nectar-circle-images__image nectar-circle-images__item nectar-circle-images--text nectar-inherit-h5" style="background-color: '.esc_attr($numerical_circle_color).'; color: '.esc_attr($numerical_circle_text_color).';"><span>'.$numerical_circle_number.'</span></div>';
+  $images_markup_arr[] = '<div class="nectar-circle-images__image nectar-circle-images__item nectar-circle-images--text nectar-inherit-h5" style="background-color: '.esc_attr($numerical_circle_color).'; color: '.esc_attr($numerical_circle_text_color).';"><span>'.wp_kses_post($numerical_circle_number).'</span></div>';
 }
 
 

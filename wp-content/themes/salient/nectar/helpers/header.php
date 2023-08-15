@@ -977,6 +977,11 @@ if( !function_exists('nectar_get_social_media_list') ) {
 				'icon_code'  => '\e60c',
 				'icon_type'  => 'font-awesome',
 			),
+			'x-twitter'       => array(
+				'icon_class' => 'icon-salient-x-twitter',
+				'icon_code'  => '\e918',
+				'icon_type'  => 'salient',
+			),
 			'facebook'      => array(
 				'icon_class' => 'fa-facebook',
 				'icon_code'  => '\e60d',
@@ -1162,6 +1167,11 @@ if( !function_exists('nectar_get_social_media_list') ) {
 				'icon_code'  => '\e917',
 				'icon_type'  => 'salient',
 			),
+			'threads'       => array(
+				'icon_class' => 'icon-salient-threads',
+				'icon_code'  => '\e913',
+				'icon_type'  => 'salient',
+			),
 			'trustpilot'       => array(
 				'icon_class' => 'icon-salient-trustpilot',
 				'icon_code'  => '\e916',
@@ -1262,6 +1272,7 @@ if ( ! function_exists( 'nectar_ocm_add_social' ) ) {
 
 		$social_link_arr = array(
 			'twitter-url',
+			'x-twitter-url',
 			'facebook-url',
 			'vimeo-url',
 			'pinterest-url',
@@ -1292,6 +1303,7 @@ if ( ! function_exists( 'nectar_ocm_add_social' ) ) {
 			'artstation-url',
 			'discord-url',
 			'mastodon-url',
+			'threads-url',
 			'trustpilot-url',
 			'whatsapp-url',
 			'messenger-url',
@@ -1305,6 +1317,7 @@ if ( ! function_exists( 'nectar_ocm_add_social' ) ) {
 		);
 		$social_icon_arr = array(
 			'fa fa-twitter',
+			'icon-salient-x-twitter',
 			'fa fa-facebook',
 			'fa fa-vimeo',
 			'fa fa-pinterest',
@@ -1335,6 +1348,7 @@ if ( ! function_exists( 'nectar_ocm_add_social' ) ) {
 			'icon-salient-artstation',
 			'icon-salient-discord',
 			'icon-salient-mastodon',
+			'icon-salient-threads',
 			'icon-salient-trustpilot',
 			'fa fa-whatsapp',
 			'icon-salient-facebook-messenger',

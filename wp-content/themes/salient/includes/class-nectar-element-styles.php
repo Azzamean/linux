@@ -127,7 +127,9 @@ class NectarElDynamicStyles {
     if( is_array($rules) ) {
 
       $rules = array_unique($rules);
+  
       usort($rules, array( 'NectarElDynamicStyles', 'order_media_queries' ));
+ 
       $css_rules = '';
 
       foreach($rules as $rule) {
@@ -148,19 +150,21 @@ class NectarElDynamicStyles {
   *
   */
   public static function order_media_queries($a, $b) {
-    if ($a == $b) {
-        return 0;
+
+    $media690 = '@media only screen and (max-width: 690px)';
+    $media999 = '@media only screen and (max-width: 999px)';
+
+    if (strpos( substr($a,0,41), $media690) !== false) {
+        return 1; // Put $a after $b since $a starts with "@media only screen and (max-width: 690px)"
+    } elseif (strpos( substr($b,0,41), $media690) !== false) {
+        return -1; // Put $a before $b since $b starts with "@media only screen and (max-width: 690px)"
+    } elseif (strpos( substr($a,0,41), $media999) !== false) {
+        return 1; // Put $a after $b since $a starts with "@media only screen and (max-width: 999px)"
+    } elseif (strpos( substr($b,0,41), $media999) !== false) {
+        return -1; // Put $a before $b since $b starts with "@media only screen and (max-width: 999px)"
+    } else {
+        return 0; // Preserve original order for all other cases
     }
-    
-    if( substr($a,0,41) == '@media only screen and (max-width: 690px)') {
-      return 1;
-    }
-    
-    if( substr($b,0,41) == '@media only screen and (max-width: 690px)') {
-      return -1;
-    }
-    
-    return 0;
 
   }
 
@@ -2312,17 +2316,22 @@ class NectarElDynamicStyles {
     }
 
 
-    else if( false !== strpos($shortcode[0],'[nectar_responsive_text ') ) {
+    else if( false !== strpos($shortcode[0],'[nectar_responsive_text') ) {
       $atts = shortcode_parse_atts($shortcode_inner);
-
       // Core.
       self::$element_css[] = '
       #ajax-content-wrap .nectar-responsive-text * {
         margin-bottom: 0;
+        color: inherit;
+      }
+      #ajax-content-wrap .nectar-responsive-text[class*="font_size"] * {
         font-size: inherit; 
         line-height: inherit;
-        color: inherit;
-      }';
+      }
+      .nectar-responsive-text.nectar-link-underline-effect a {
+        text-decoration: none;
+      }
+      ';
 
       // Custom font size.
       self::$element_css[] = self::font_size_group_styles('nectar-responsive-text', false, false, '', $atts);
@@ -14979,13 +14988,16 @@ class NectarElDynamicStyles {
         'height'
       );
 
+      $body_selector = ($device !== 'desktop') ? 'body ' : '';
+      $html_selector = ($device === 'phone') ? 'html ' : '';
+
       foreach ($device_group_params as $param) {
         
         if( isset($atts[$param.'_'.$device]) && 
         strlen($atts[$param.'_'.$device]) > 0) {
          
           $css .= '@media only screen '.$media_query_size.' { 
-            .'.$element_name.'.'.$param.'_'.$device.'_'. self::percent_unit_type_class(esc_attr($atts[$param.'_'.$device])) .$inner_selector.' {
+            '. $html_selector . $body_selector . ' .'.$element_name.'.'.$param.'_'.$device.'_'. self::percent_unit_type_class(esc_attr($atts[$param.'_'.$device])) .$inner_selector.' {
               '.$param.': '.esc_attr(self::percent_unit_type($atts[$param.'_'.$device])).';
           }
         }';
@@ -17140,6 +17152,10 @@ if (!function_exists('nectar_font_param_group_classes')) {
 
       // Custom font size.
       $classnames .= nectar_font_param_group_classes($atts);
+
+      // animated links.
+      $classnames .= 'nectar-link-underline-effect ';
+      
 
      }
 

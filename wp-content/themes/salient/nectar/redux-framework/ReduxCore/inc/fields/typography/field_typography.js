@@ -401,6 +401,7 @@
                 '300': 'Book 300',
                 '400': 'Normal 400',
                 '500': 'Medium 500',
+                '600': 'Semi-Bold 600',
                 '700': 'Bold 700',
                 '800': 'Extra-Bold 800',
                 '900': 'Ultra-Bold 900',

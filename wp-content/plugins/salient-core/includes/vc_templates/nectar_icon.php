@@ -96,10 +96,10 @@ else if( $icon_family === 'iconsmind' ) {
 	$icon_id = 'nectar-iconsmind-icon-'.uniqid();
 	$converted_icon_name = str_replace('iconsmind-', '', $icon);
   if( strlen($grad_dimensions) > 2 ) {
-    $icon_markup = '<span class="im-icon-wrap" data-color="'.strtolower($icon_color) .'"><span>';
+    $icon_markup = '<span class="im-icon-wrap" data-color="'.esc_attr(strtolower($icon_color)) .'"><span>';
   }
   else {
-    $icon_markup = '<span class="im-icon-wrap" data-color="'.strtolower($icon_color) .'" style="height: '. esc_attr($icon_size_val) .'px; width: '. esc_attr($icon_size_val) .'px;"><span>';
+    $icon_markup = '<span class="im-icon-wrap" data-color="'.esc_attr(strtolower($icon_color)) .'" style="height: '. esc_attr($icon_size_val) .'px; width: '. esc_attr($icon_size_val) .'px;"><span>';
   }
 	
   require_once( SALIENT_CORE_ROOT_DIR_PATH.'includes/icons/class-nectar-icon.php' );

@@ -1516,7 +1516,7 @@ function nectar_custom_maps() {
 					"group" => "Background",
 					"heading" => esc_html__("Animated Color", "salient-core"),
 					"param_name" => "animated_gradient_bg_color_1",
-					'edit_field_class' => 'nectar-one-half nectar-fee-full',
+					'edit_field_class' => 'nectar-one-half nectar-fee-full no-alpha',
 					"value" => "",
 					"description" => "",
 					"dependency" => Array('element' => "animated_gradient_bg", 'not_empty' => true)
@@ -1528,7 +1528,7 @@ function nectar_custom_maps() {
 					"group" => "Background",
 					"heading" => esc_html__("Animated Color 2 (Optional)", "salient-core"),
 					"param_name" => "animated_gradient_bg_color_2",
-					'edit_field_class' => 'nectar-one-half nectar-one-half-last nectar-fee-full',
+					'edit_field_class' => 'nectar-one-half nectar-one-half-last no-alpha nectar-fee-full',
 					"value" => "",
 					"description" => '',
 					"dependency" => Array('element' => "animated_gradient_bg", 'not_empty' => true)
@@ -8098,7 +8098,7 @@ function nectar_custom_maps() {
 	  	$bar = '
 	  	<div class="nectar-progress-bar">
 	  		<p>' . wp_kses_post($title) . '</p>
-	  		<div class="bar-wrap"><span class="'.strtolower($color).'" data-width="' . esc_attr($percent) . '"> <strong><i>' . wp_kses_post($percent) . '</i>%</strong> </span></div>
+	  		<div class="bar-wrap"><span class="'.esc_attr(strtolower($color)).'" data-width="' . esc_attr($percent) . '"> <strong><i>' . wp_kses_post($percent) . '</i>%</strong> </span></div>
 	  	</div>';
 	    return $bar;
 	  }
@@ -8305,7 +8305,7 @@ function nectar_custom_maps() {
 
 		        $markup .= '<div class="nectar-category-grid-item"> <div class="inner"> <a class="nectar-category-grid-link" href="'. get_term_link($temp_cat_obj_holder->term_id) .'" aria-label="'.esc_attr($temp_cat_obj_holder->name).'"></a>';
 		        $markup .= '<div class="nectar-category-grid-item-bg" '.$bg_style_markup.'></div>';
-		        $markup .= '<div class="bg-overlay" '.$bg_overlay_markup.' data-opacity="'. $atts['color_overlay_opacity'] .'" data-hover-opacity="'. $atts['color_overlay_hover_opacity'] .'"></div>';
+		        $markup .= '<div class="bg-overlay" '.$bg_overlay_markup.' data-opacity="'. esc_attr($atts['color_overlay_opacity']) .'" data-hover-opacity="'. esc_attr($atts['color_overlay_hover_opacity']) .'"></div>';
 		        $markup .= '<div class="content" data-subtext-vis="'. esc_attr($atts['subtext_visibility']) .'" data-subtext="'. esc_attr($atts['subtext']) .'" >';
 
 						$heading_tag = 'h3';
@@ -9302,14 +9302,14 @@ function nectar_custom_maps() {
 			if( false !== strpos($icon, 'icon-') && false == strpos($icon, '-icon-')) {
 				$icon = str_replace('icon-', 'fa fa-', $icon);
 			}
-			$icon_markup = '<i class="icon-default-style '.$icon.' '. strtolower($color).'"></i>';
+			$icon_markup = '<i class="icon-default-style '.esc_attr( $icon ).' '. esc_attr( strtolower($color) ).'"></i>';
 		} else {
 			$icon_markup = wp_get_attachment_image_src($icon_image, 'medium');
 			if(!empty($icon_markup)) {
 
 				$icon_alt = get_post_meta($icon_image, '_wp_attachment_image_alt', true);
 
-				$icon_markup = '<img src="'.$icon_markup[0].'" alt="'.$icon_alt.'" />';
+				$icon_markup = '<img src="'.$icon_markup[0].'" alt="'.esc_attr( $icon_alt ).'" />';
 			} else {
 				$icon_markup = null;
 			}
@@ -9364,19 +9364,19 @@ function nectar_custom_maps() {
 			if( false !== strpos($icon, 'icon-') && false == strpos($icon, '-icon-')) {
 				$icon = str_replace('icon-', 'fa fa-', $icon);
 			}
-			$icon_markup = 'data-list-icon="'.$icon.'" data-animation="'.$enable_animation.'" data-animation-delay="'.$delay.'" data-color="'. strtolower($color).'"';
+			$icon_markup = 'data-list-icon="'.esc_attr($icon).'" data-animation="'.esc_attr($enable_animation).'" data-animation-delay="'.esc_attr($delay).'" data-color="'. esc_attr(strtolower($color)).'"';
 		} 
 		else if($icon_type === 'none') {
-			$icon_markup = 'data-list-icon="none" data-animation="'.$enable_animation.'" data-animation-delay="'.$delay.'" data-color="'. strtolower($color).'"';
+			$icon_markup = 'data-list-icon="none" data-animation="'.esc_attr($enable_animation).'" data-animation-delay="'.esc_attr($delay).'" data-color="'. esc_attr(strtolower($color)).'"';
 		} 
 		else if($icon_type === 'standard_dot') {
-			$icon_markup = 'data-list-icon="dot" data-animation="'.$enable_animation.'" data-animation-delay="'.$delay.'"';
+			$icon_markup = 'data-list-icon="dot" data-animation="'.esc_attr($enable_animation).'" data-animation-delay="'.esc_attr($delay).'"';
 		} 
 		else if($icon_type === 'standard_check') {
-			$icon_markup = 'data-list-icon="icon-salient-check" data-animation="'.$enable_animation.'" data-animation-delay="'.$delay.'" data-color="'. strtolower($color).'"';
+			$icon_markup = 'data-list-icon="icon-salient-check" data-animation="'.esc_attr($enable_animation).'" data-animation-delay="'.esc_attr($delay).'" data-color="'. esc_attr(strtolower($color)).'"';
 		} 
 		else {
-			$icon_markup = 'data-list-icon="icon-salient-thin-line" data-animation="'.$enable_animation.'" data-animation-delay="'.$delay.'" data-color="'. strtolower($color).'"';
+			$icon_markup = 'data-list-icon="icon-salient-thin-line" data-animation="'.esc_attr($enable_animation).'" data-animation-delay="'.esc_attr($delay).'" data-color="'. esc_attr(strtolower($color)).'"';
 		}
 
 		$el_classes = array('nectar-fancy-ul');

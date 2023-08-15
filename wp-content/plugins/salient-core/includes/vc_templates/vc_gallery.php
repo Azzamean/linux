@@ -455,7 +455,7 @@ foreach ( $images as $attach_id ) {
 			$image = esc_attr( $attach_id );
 			$dimensions = vc_extract_dimensions( $external_img_size );
 			$hwstring = $dimensions ? image_hwstring( $dimensions[0], $dimensions[1] ) : '';
-			$post_thumbnail['thumbnail'] = '<img ' . $hwstring . ' src="' . $image . '" />';
+			$post_thumbnail['thumbnail'] = '<img ' . $hwstring . ' src="' . esc_attr($image) . '" />';
 			$post_thumbnail['p_img_large'][0] = $image;
 			$post_thumbnail['p_img_fullsize'] = $image;
 			break;
@@ -496,9 +496,9 @@ foreach ( $images as $attach_id ) {
 		}
 
     if( 'lazy-load' === $image_loading && NectarLazyImages::activate_lazy() ) {
-      $thumbnail = '<div class="swiper-slide" data-bg-alignment="center" data-color-scheme="light" data-x-pos="centered" data-y-pos="middle"><div class="image-bg" data-nectar-img-src="'. $img[0].'">  &nbsp; </div>';
+      $thumbnail = '<div class="swiper-slide" data-bg-alignment="center" data-color-scheme="light" data-x-pos="centered" data-y-pos="middle"><div class="image-bg" data-nectar-img-src="'. esc_attr($img[0]).'">  &nbsp; </div>';
     } else {
-      $thumbnail = '<div class="swiper-slide" data-bg-alignment="center" data-color-scheme="light" data-x-pos="centered" data-y-pos="middle"><div class="image-bg" style="background-image: url('. $img[0].');">  &nbsp; </div>';
+      $thumbnail = '<div class="swiper-slide" data-bg-alignment="center" data-color-scheme="light" data-x-pos="centered" data-y-pos="middle"><div class="image-bg" style="background-image: url('.esc_attr($img[0]).');">  &nbsp; </div>';
     }
 
 
@@ -612,7 +612,7 @@ foreach ( $images as $attach_id ) {
 				$image = esc_attr( $attach_id );
 				$dimensions = vc_extract_dimensions( $external_img_size );
 				$hwstring = $dimensions ? image_hwstring( $dimensions[0], $dimensions[1] ) : '';
-				$post_thumbnail['thumbnail'] = '<img ' . $hwstring . ' src="' . $image . '" />';
+				$post_thumbnail['thumbnail'] = '<img ' . $hwstring . ' src="' . esc_attr($image) . '" />';
 				$post_thumbnail['p_img_large'][0] = $image;
 				break;
 		}
@@ -695,7 +695,7 @@ foreach ( $images as $attach_id ) {
 				$image = esc_attr( $attach_id );
 				$dimensions = vc_extract_dimensions( $external_img_size );
 				$hwstring = $dimensions ? image_hwstring( $dimensions[0], $dimensions[1] ) : '';
-				$post_thumbnail['thumbnail'] = '<img ' . $hwstring . ' src="' . $image . '" />';
+				$post_thumbnail['thumbnail'] = '<img ' . $hwstring . ' src="' . esc_attr($image) . '" />';
 				$post_thumbnail['p_img_large'][0] = $image;
 				break;
 		}
@@ -1058,7 +1058,7 @@ foreach ( $images as $attach_id ) {
 									$image = esc_attr( $attach_id );
 									$dimensions = vc_extract_dimensions( $external_img_size );
 									$hwstring = $dimensions ? image_hwstring( $dimensions[0], $dimensions[1] ) : '';
-									$post_thumbnail['thumbnail'] = '<img ' . $hwstring . ' src="' . $image . '" />';
+									$post_thumbnail['thumbnail'] = '<img ' . $hwstring . ' src="' . esc_attr($image) . '" />';
 									$post_thumbnail['p_img_large'][0] = $image;
 									break;
 							}

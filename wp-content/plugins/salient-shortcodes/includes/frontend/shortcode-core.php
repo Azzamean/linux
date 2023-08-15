@@ -65,7 +65,7 @@ function nectar_icon($atts, $content = null) {
 		if(strtolower($color) === 'extra-color-gradient-1' || strtolower($color) === 'extra-color-gradient-2') {
 			$converted_class = str_replace('_', '-', $image);
 			$converted_class = str_replace('.svg', '', $converted_class);
-			return '<i class="icon-'.$converted_class.'" data-color="'.esc_attr(strtolower($color)).'" style="font-size: '.esc_attr($icon_size).'px;"></i>';
+			return '<i class="icon-'.esc_attr($converted_class).'" data-color="'.esc_attr(strtolower($color)).'" style="font-size: '.esc_attr($icon_size).'px;"></i>';
 		}
 		//non gradient uses svg
 		else {
@@ -126,7 +126,7 @@ function nectar_icon($atts, $content = null) {
   	// custom size
   	$icon_markup = preg_replace(
      array('/width="\d+"/i', '/height="\d+"/i'),
-     array('width="'.$size_px.'"', 'height="'. $size_px.'"'),
+     array('width="'.esc_attr($size_px).'"', 'height="'. esc_attr($size_px).'"'),
      $icon_markup);
   	
   	// handle gradients
@@ -178,7 +178,7 @@ function nectar_icon($atts, $content = null) {
 		if( strpos($image, 'fa-') !== false ) {
 			$fontawesome_extra = ' fa';
 		}
-		return '<i class="'. $size_class . $fontawesome_extra . ' ' . $image . ' ' . esc_attr(strtolower($color)) .'">' . $border . '</i>';
+		return '<i class="'. esc_attr($size_class) . $fontawesome_extra . ' ' . $image . ' ' . esc_attr(strtolower($color)) .'">' . $border . '</i>';
 	}
     
 }
@@ -266,7 +266,7 @@ function nectar_button($atts, $content = null) {
   			if(strpos($image, 'fa-') !== false) {
 					$fontawesome_extra = 'fa '; 
 				}
-  			$button_icon = '<i class="' . $fontawesome_extra . $image .'"></i>'; 
+  			$button_icon = '<i class="' . $fontawesome_extra . esc_attr($image) .'"></i>'; 
 				$has_icon = ' has-icon'; 
   		} 
   		else { 

@@ -64,7 +64,7 @@ if( $nectar_using_VC_front_end_editor && 'vertical_scrolling' === $style ) {
 		$true_style .= ' data-stored-style-aspect="content"';
 		$true_style .= ' data-tab-align="'.esc_attr($vs_navigation_alignment).'" data-navigation-width="'.esc_attr($vs_navigation_width_2).'"';
 		$front_end_editor_classes = '';
-		$tabbed_li_classes[] = 'nectar-inherit-'.$vs_tab_tag.'';
+		$tabbed_li_classes[] = 'nectar-inherit-'.esc_attr($vs_tab_tag).'';
 		if( function_exists('nectar_el_dynamic_classnames') ) {
 			$front_end_editor_classes = nectar_el_dynamic_classnames('tabbed_section', $atts);
 		}
@@ -75,7 +75,7 @@ if( $nectar_using_VC_front_end_editor && 'vertical_scrolling' === $style ) {
 
 		if( 'active_link_only' === $vs_navigation_func ) {
 
-			$tabbed_li_classes[] = 'nectar-inherit-'.$vs_tab_tag.'';
+			$tabbed_li_classes[] = 'nectar-inherit-'.esc_attr($vs_tab_tag).'';
       
 			$true_style .= ' data-stored-style-aspect="active_link_only" data-navigation-width="'.esc_attr($vs_navigation_width).'"';
 		}
@@ -152,7 +152,7 @@ if( 'vertical_scrolling' !== $style ) {
 
 	$css_class = apply_filters(VC_SHORTCODE_CUSTOM_CSS_FILTER_TAG, trim('wpb_content_element '.$el_class), $this->settings['base'], $atts);
 
-	$output .= "\n\t".'<div class="'.$css_class.$front_end_editor_classes.'"'.$true_style.' data-interval="'.$interval.'">';
+	$output .= "\n\t".'<div class="'.esc_attr($css_class).$front_end_editor_classes.'"'.$true_style.' data-interval="'.esc_attr($interval).'">';
 	$output .= "\n\t\t".'<div class="wpb_wrapper tabbed clearfix" data-style="'.esc_attr($style).'" data-animation="'.esc_attr($tab_change_animation).'" data-spacing="'.esc_attr($spacing).'" data-icon-size="'.esc_attr($icon_size).'" data-full-width-line="'.esc_attr($full_width_line).'" data-color-scheme="'.esc_attr(strtolower($tab_color)).'" data-alignment="'.esc_attr($alignment).'">';
 	$output .= wpb_widget_title(array('title' => $title, 'extraclass' => $element.'_heading'));
 	$output .= "\n\t\t\t".$tabs_nav;

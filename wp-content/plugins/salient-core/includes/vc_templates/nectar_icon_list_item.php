@@ -106,7 +106,7 @@ if( !empty($icon) ) {
 	
 	else {
 		
-		$icon_markup = '<i class="icon-default-style '.$icon.'" data-color="'.$icon_color.'"></i>';
+		$icon_markup = '<i class="icon-default-style '.esc_attr($icon).'" data-color="'.esc_attr($icon_color).'"></i>';
 	}
 	
 	

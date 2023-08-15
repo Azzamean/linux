@@ -17,7 +17,7 @@ class WebinarsLinux
 
         $single_category = ["All" => ""];
         foreach ($types as $type) {
-            $single_category[$type->name] = $type->term_id;
+            
         }
 
         if (function_exists("vc_map")):

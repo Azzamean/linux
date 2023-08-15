@@ -1979,11 +1979,11 @@ if( !function_exists('nectar_portfolio_processing') ) {
 				
 				if(!empty($heading)) {
 					if($full_width_carousel === 'true'){
-						$title_label_output = '<h2>'.$heading.'</h2>';
+						$title_label_output = '<h2>'.wp_kses_post($heading).'</h2>';
 					} else {
-						$title_label_output = '<h2>'.$heading;
+						$title_label_output = '<h2>'.wp_kses_post($heading);
 						if(!empty($page_link_text)) {
-							$title_label_output .= '<a href="'. $page_link_url.'" class="button"> / '. $page_link_text .'</a>';
+							$title_label_output .= '<a href="'. esc_attr($page_link_url).'" class="button"> / '. wp_kses_post($page_link_text) .'</a>';
 						}
 						$title_label_output .= '</h2>';
 					}
@@ -1991,9 +1991,9 @@ if( !function_exists('nectar_portfolio_processing') ) {
 				
 				//keep old label option to not break legacy users
 				if($title_labels === 'true') { 
-					$title_label_output = '<h2>'.$recent_projects_title_text;
+					$title_label_output = '<h2>'.wp_kses_post($recent_projects_title_text);
 					if(!empty($recent_projects_link_text) && strlen($recent_projects_link_text) > 2) {
-						$title_label_output .= '<a href="'. $portfolio_link.'" class="button"> / '. $recent_projects_link_text .'</a>';
+						$title_label_output .= '<a href="'. esc_attr($portfolio_link).'" class="button"> / '. wp_kses_post($recent_projects_link_text) .'</a>';
 					}
 					$title_label_output .= '</h2>';
 				}
@@ -2010,7 +2010,7 @@ if( !function_exists('nectar_portfolio_processing') ) {
 				if(	$project_style !== 'fullscreen_zoom_slider') {
 					
 					if($full_width_carousel === 'true'){
-						$arrow_markup = '<div class="controls"><a class="portfolio-page-link" href="'.$page_link_url.'"><i class="icon-salient-back-to-all"></i></a>
+						$arrow_markup = '<div class="controls"><a class="portfolio-page-link" href="'.esc_attr($page_link_url).'"><i class="icon-salient-back-to-all"></i></a>
 						<a class="carousel-prev" href="#"><i class="icon-salient-left-arrow-thin"></i></a>
 						<a class="carousel-next" href="#"><i class="icon-salient-right-arrow-thin"></i></a></div>';
 					} else {
@@ -2027,7 +2027,7 @@ if( !function_exists('nectar_portfolio_processing') ) {
 					
 					$default_style = ($project_style == '1') ? 'default-style' : null;
 					
-					$recent_projects_content = '<div class="carousel-wrap recent-work-carousel '.$default_style.'" data-ctc="'.$control_text_color.'" data-full-width="'.$full_width_carousel.'">
+					$recent_projects_content = '<div class="carousel-wrap recent-work-carousel '.$default_style.'" data-ctc="'.esc_attr($control_text_color).'" data-full-width="'.esc_attr($full_width_carousel).'">
 					
 					<div class="carousel-heading"><div class="container">'.$title_label_output . $arrow_markup .'</div></div>
 					
@@ -2068,7 +2068,7 @@ if( !function_exists('nectar_portfolio_processing') ) {
 							
 							//image
 							else {
-								$media .= '<a href="'. $featured_image[0].'" class="pretty_photo default-link">'.esc_html__("View Larger", 'salient-portfolio').'</a> ';
+								$media .= '<a href="'. esc_attr($featured_image[0]).'" class="pretty_photo default-link">'.esc_html__("View Larger", 'salient-portfolio').'</a> ';
 							}
 							
 							$project_excerpt = get_post_meta($post->ID, '_nectar_project_excerpt', true);
@@ -2091,11 +2091,11 @@ if( !function_exists('nectar_portfolio_processing') ) {
 								$project_img = '<img class="custom-thumbnail skip-lazy" src="'.nectar_ssl_check($custom_thumbnail).'" alt="'. get_the_title() .'" />';
 							}
 							
-							$more_details_html = ($lightbox_only !== 'true') ? '<a class="default-link" href="' . $the_project_link . '">'.esc_html__("More Details", 'salient-portfolio').'</a>' : null; 
+							$more_details_html = ($lightbox_only !== 'true') ? '<a class="default-link" href="' . esc_attr($the_project_link) . '">'.esc_html__("More Details", 'salient-portfolio').'</a>' : null; 
 							
 							$project_accent_color = get_post_meta($post->ID, '_nectar_project_accent_color', true);	 
 							if(!empty($project_accent_color)) { 
-								$project_accent_color_markup = 'data-project-color="' . $project_accent_color .'"'; 
+								$project_accent_color_markup = 'data-project-color="' . esc_attr($project_accent_color) .'"'; 
 							} else { 
 								$project_accent_color_markup = 'data-default-color="true"';
 							} 
@@ -2105,16 +2105,16 @@ if( !function_exists('nectar_portfolio_processing') ) {
 							$using_custom_content   = get_post_meta($post->ID, '_nectar_portfolio_custom_grid_item', true); 
 							$custom_content         = get_post_meta($post->ID, '_nectar_portfolio_custom_grid_item_content', true);
 							
-							$recent_projects_content .='<li class="col span_4" '.$project_accent_color_markup.' data-title-color="'.$project_title_color.'" data-subtitle-color="'.$project_subtitle_color.'">
+							$recent_projects_content .='<li class="col span_4" '.$project_accent_color_markup.' data-title-color="'.esc_attr($project_title_color).'" data-subtitle-color="'.esc_attr($project_subtitle_color).'">
 							<div class="inner-wrap animated" data-animation="none">
-							<div class="work-item" data-custom-content="'.$using_custom_content.'">' . $project_img . '
+							<div class="work-item" data-custom-content="'.esc_attr($using_custom_content).'">' . $project_img . '
 							
 							<div class="work-info-bg"></div>
 							<div class="work-info">';
 							
 							if($using_custom_content === 'on') {
 								if(!empty($custom_project_link)) {
-									echo '<a href="'.$the_project_link.'"></a>';
+									echo '<a href="'.esc_attr($the_project_link).'"></a>';
 								}
 								$recent_projects_content .= '<div class="vert-center"><div class="custom-content">' . do_shortcode($custom_content) . '</div></div>';
 								//default
@@ -2188,7 +2188,7 @@ if( !function_exists('nectar_portfolio_processing') ) {
 							}
 							
 							if($lightbox_only !== 'true') {
-								$link_markup = '<a href="' . $the_project_link . '"></a>';
+								$link_markup = '<a href="' . esc_attr($the_project_link) . '"></a>';
 							} else {
 								
 								//video 
@@ -2200,14 +2200,14 @@ if( !function_exists('nectar_portfolio_processing') ) {
 								
 								//image
 								else {
-									$link_markup = '<a href="'. $featured_image[0].'" '.$project_image_caption_markup.' class="pretty_photo"></a>';
+									$link_markup = '<a href="'. esc_attr($featured_image[0]).'" '.$project_image_caption_markup.' class="pretty_photo"></a>';
 								}
 								
 							}
 							
 							$project_accent_color = get_post_meta($post->ID, '_nectar_project_accent_color', true);	 
 							if(!empty($project_accent_color)) { 
-								$project_accent_color_markup = 'data-project-color="' . $project_accent_color .'"'; 
+								$project_accent_color_markup = 'data-project-color="' . esc_attr($project_accent_color) .'"'; 
 							} else { 
 								$project_accent_color_markup = 'data-default-color="true"';
 							} 
@@ -2216,9 +2216,9 @@ if( !function_exists('nectar_portfolio_processing') ) {
 							$using_custom_content   = get_post_meta($post->ID, '_nectar_portfolio_custom_grid_item', true); 
 							$custom_content         = get_post_meta($post->ID, '_nectar_portfolio_custom_grid_item_content', true);
 							
-							$recent_projects_content .='<li class="col span_4 '.$margin.'" '.$project_accent_color_markup.' data-title-color="'.$project_title_color.'" data-subtitle-color="'.$project_subtitle_color.'">
+							$recent_projects_content .='<li class="col span_4 '.$margin.'" '.$project_accent_color_markup.' data-title-color="'.esc_attr($project_title_color).'" data-subtitle-color="'.esc_attr($project_subtitle_color).'">
 							
-							<div class="work-item style-2" data-custom-content="'.$using_custom_content.'">' . $project_img . '
+							<div class="work-item style-2" data-custom-content="'.esc_attr($using_custom_content).'">' . $project_img . '
 							
 							<div class="work-info-bg"></div>
 							<div class="work-info">
@@ -2292,7 +2292,7 @@ if( !function_exists('nectar_portfolio_processing') ) {
 							}
 							
 							if($lightbox_only !== 'true') {
-								$link_markup = '<a href="' . $the_project_link . '"></a>';
+								$link_markup = '<a href="' . esc_attr($the_project_link) . '"></a>';
 							} else {
 								
 								//video 
@@ -2303,14 +2303,14 @@ if( !function_exists('nectar_portfolio_processing') ) {
 								
 								//image
 								else {
-									$link_markup = '<a href="'. $featured_image[0].'" '.$project_image_caption_markup.' class="pretty_photo"></a>';
+									$link_markup = '<a href="'. esc_attr($featured_image[0]).'" '.$project_image_caption_markup.' class="pretty_photo"></a>';
 								}
 								
 							}
 							
 							$project_accent_color = get_post_meta($post->ID, '_nectar_project_accent_color', true);	 
 							if(!empty($project_accent_color)) { 
-								$project_accent_color_markup = 'data-project-color="' . $project_accent_color .'"'; 
+								$project_accent_color_markup = 'data-project-color="' . esc_attr($project_accent_color) .'"'; 
 							} else { 
 								$project_accent_color_markup = 'data-default-color="true"';
 							} 
@@ -2319,9 +2319,9 @@ if( !function_exists('nectar_portfolio_processing') ) {
 							$using_custom_content   = get_post_meta($post->ID, '_nectar_portfolio_custom_grid_item', true); 
 							$custom_content         = get_post_meta($post->ID, '_nectar_portfolio_custom_grid_item_content', true);
 							
-							$recent_projects_content .='<li class="col span_4 '.$margin.'" '.$project_accent_color_markup.' data-title-color="'.$project_title_color.'" data-subtitle-color="'.$project_subtitle_color.'">
+							$recent_projects_content .='<li class="col span_4 '.$margin.'" '.$project_accent_color_markup.' data-title-color="'.esc_attr($project_title_color).'" data-subtitle-color="'.esc_attr($project_subtitle_color).'">
 							
-							<div class="work-item style-3" data-custom-content="'.$using_custom_content.'">' . $project_img . '
+							<div class="work-item style-3" data-custom-content="'.esc_attr($using_custom_content).'">' . $project_img . '
 							
 							<div class="work-info-bg"></div>
 							<div class="work-info">
@@ -2330,7 +2330,7 @@ if( !function_exists('nectar_portfolio_processing') ) {
 							
 							if(!empty($using_custom_content) && $using_custom_content === 'on') {
 								if(!empty($custom_project_link)) {
-									echo '<a href="'.$the_project_link.'"></a>';
+									echo '<a href="'.esc_attr($the_project_link).'"></a>';
 								}
 								$recent_projects_content .= '<div class="vert-center"><div class="custom-content">' . do_shortcode($custom_content) . '</div></div>';
 								//default
@@ -2391,11 +2391,11 @@ if( !function_exists('nectar_portfolio_processing') ) {
 							$custom_thumbnail = get_post_meta($post->ID, '_nectar_portfolio_custom_thumbnail', true); 
 							
 							if( !empty($custom_thumbnail) ){
-								$project_img = '<img class="custom-thumbnail skip-lazy" src="'.nectar_ssl_check($custom_thumbnail).'" alt="'. get_the_title() .'" />';
+								$project_img = '<img class="custom-thumbnail skip-lazy" src="'.esc_attr(nectar_ssl_check($custom_thumbnail)).'" alt="'. get_the_title() .'" />';
 							}
 							
 							if($lightbox_only !== 'true') {
-								$link_markup = '<a href="' . $the_project_link . '"></a>';
+								$link_markup = '<a href="' . esc_attr($the_project_link) . '"></a>';
 							} else {
 								
 								//video 
@@ -2407,14 +2407,14 @@ if( !function_exists('nectar_portfolio_processing') ) {
 								
 								//image
 								else {
-									$link_markup = '<a href="'. $featured_image[0].'" '.$project_image_caption_markup.' class="pretty_photo"></a>';
+									$link_markup = '<a href="'. esc_attr($featured_image[0]).'" '.$project_image_caption_markup.' class="pretty_photo"></a>';
 								}
 								
 							}
 							
 							$project_accent_color = get_post_meta($post->ID, '_nectar_project_accent_color', true);	 
 							if(!empty($project_accent_color)) { 
-								$project_accent_color_markup = 'data-project-color="' . $project_accent_color .'"'; 
+								$project_accent_color_markup = 'data-project-color="' . esc_attr($project_accent_color) .'"'; 
 							} else { 
 								$project_accent_color_markup = 'data-default-color="true"';
 							} 
@@ -2424,9 +2424,9 @@ if( !function_exists('nectar_portfolio_processing') ) {
 							$using_custom_content   = get_post_meta($post->ID, '_nectar_portfolio_custom_grid_item', true); 
 							$custom_content         = get_post_meta($post->ID, '_nectar_portfolio_custom_grid_item_content', true);
 							
-							$recent_projects_content .='<li class="col span_4 '.$margin.'" '.$project_accent_color_markup.' data-title-color="'.$project_title_color.'" data-subtitle-color="'.$project_subtitle_color.'">
+							$recent_projects_content .='<li class="col span_4 '.$margin.'" '.$project_accent_color_markup.' data-title-color="'.esc_attr($project_title_color).'" data-subtitle-color="'.esc_attr($project_subtitle_color).'">
 							
-							<div class="work-item style-4" data-custom-content="'.$using_custom_content.'">' . $project_img . '
+							<div class="work-item style-4" data-custom-content="'.esc_attr($using_custom_content).'">' . $project_img . '
 							
 							<div class="work-info">
 							
@@ -2462,7 +2462,7 @@ if( !function_exists('nectar_portfolio_processing') ) {
 				//fullscreen
 				if($project_style === 'fullscreen_zoom_slider') {
 					
-					$recent_projects_content = '<div class="nectar_fullscreen_zoom_recent_projects" data-autorotate="'.$autorotate.'" data-slider-text-color="'.$slider_text_color.'" data-slider-controls="'.$slider_controls.'" data-overlay-opacity="'.$overlay_strength.'"><div class="project-slides">';
+					$recent_projects_content = '<div class="nectar_fullscreen_zoom_recent_projects" data-autorotate="'.esc_attr($autorotate).'" data-slider-text-color="'.esc_attr($slider_text_color).'" data-slider-controls="'.esc_attr($slider_controls).'" data-overlay-opacity="'.esc_attr($overlay_strength).'"><div class="project-slides">';
 					
 					$projcount = 0;
 					
@@ -2526,8 +2526,8 @@ if( !function_exists('nectar_portfolio_processing') ) {
 							}
 							
 							$recent_projects_content .='<div class="project-slide '.$active_class.'">';
-							$recent_projects_content .= '<div class="bg-outer-wrap"><div class="bg-outer"><div class="bg-inner-wrap" style="background-color: '.$project_accent_color.';"><div class="slide-bg" style="background-image:url('.$project_img.')"></div></div></div></div>';
-							$recent_projects_content .= '<div class="project-info"><div class="container normal-container"><h1>'. get_the_title(). '</h1> '.$fullscreen_slider_excerpt.' <a href="'.$the_project_link.'">' . $fullscreen_slider_link_text . '</a></div></div>';
+							$recent_projects_content .= '<div class="bg-outer-wrap"><div class="bg-outer"><div class="bg-inner-wrap" style="background-color: '.esc_attr($project_accent_color).';"><div class="slide-bg" style="background-image:url('.esc_attr($project_img).')"></div></div></div></div>';
+							$recent_projects_content .= '<div class="project-info"><div class="container normal-container"><h1>'. get_the_title(). '</h1> '.$fullscreen_slider_excerpt.' <a href="'.esc_attr($the_project_link).'">' . $fullscreen_slider_link_text . '</a></div></div>';
 							$recent_projects_content .= '</div><!--project slide-->';
 							
 							$projcount++;

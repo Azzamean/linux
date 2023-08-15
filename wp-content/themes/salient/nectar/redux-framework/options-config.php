@@ -2259,6 +2259,14 @@
            'required' => array( 'enable_social_in_header', '=', '1' ),
          ),
          array(
+          'id' => 'use-x-twitter-icon-header',
+          'type' => 'checkbox',
+          'title' => esc_html__('Use X-Twitter Icon', 'salient'),
+          'subtitle' => '',
+          'desc' => '',
+          'required' => array( 'enable_social_in_header', '=', '1' ),
+        ),
+         array(
            'id' => 'use-google-plus-icon-header',
            'type' => 'checkbox',
            'title' => esc_html__('Use Google Icon', 'salient'),
@@ -2543,6 +2551,14 @@
           'type' => 'checkbox',
           'required' => array( 'enable_social_in_header', '=', '1' ),
           'title' => esc_html__('Use Mastodon Icon', 'salient'),
+          'subtitle' => '',
+          'desc' => ''
+        ),
+        array(
+          'id' => 'use-threads-icon-header',
+          'type' => 'checkbox',
+          'required' => array( 'enable_social_in_header', '=', '1' ),
+          'title' => esc_html__('Use Threads Icon', 'salient'),
           'subtitle' => '',
           'desc' => ''
         ),
@@ -4011,6 +4027,13 @@
            'desc' => ''
          ),
          array(
+          'id' => 'use-x-twitter-icon',
+          'type' => 'checkbox',
+          'title' => esc_html__('Use X-Twitter Icon', 'salient'),
+          'subtitle' => '',
+          'desc' => ''
+        ),
+         array(
            'id' => 'use-google-plus-icon',
            'type' => 'checkbox',
            'title' => esc_html__('Use Google Icon', 'salient'),
@@ -4259,6 +4282,13 @@
           'id' => 'use-mastodon-icon',
           'type' => 'checkbox',
           'title' => esc_html__('Use Mastodon Icon', 'salient'),
+          'subtitle' => '',
+          'desc' => ''
+        ),
+        array(
+          'id' => 'use-threads-icon',
+          'type' => 'checkbox',
+          'title' => esc_html__('Use Threads Icon', 'salient'),
           'subtitle' => '',
           'desc' => ''
         ),
@@ -6728,6 +6758,13 @@
              'desc' => ''
            ),
            array(
+            'id' => 'x-twitter-url',
+            'type' => 'text',
+            'title' => esc_html__('X-Twitter URL', 'salient'),
+            'subtitle' => esc_html__('Please enter in your X-Twitter URL.', 'salient'),
+            'desc' => ''
+          ),
+           array(
              'id' => 'google-plus-url',
              'type' => 'text',
              'title' => esc_html__('Google URL', 'salient'),
@@ -6991,6 +7028,13 @@
             'type' => 'text',
             'title' => esc_html__('Mastodon URL', 'salient'),
             'subtitle' => esc_html__('Please enter in your Mastodon URL.', 'salient'),
+            'desc' => ''
+          ),
+          array(
+            'id' => 'threads-url',
+            'type' => 'text',
+            'title' => esc_html__('Threads URL', 'salient'),
+            'subtitle' => esc_html__('Please enter in your Threads URL.', 'salient'),
             'desc' => ''
           ),
            array(

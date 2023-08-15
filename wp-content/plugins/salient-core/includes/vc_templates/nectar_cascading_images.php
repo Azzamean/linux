@@ -224,13 +224,13 @@ for( $i = 1; $i < 5; $i++ ) {
 	$parsed_animation        = ( 'yes' !== $cascading_attrs['parallax_scrolling'] ) ? str_replace(" ","-",$cascading_attrs['image_'.$i.'_animation']) : 'none';
 
 	if(!empty($cascading_attrs['image_'.$i.'_offset_x'])) {
-    $transform_string .='translateX('.$transform_x_sign_string . $cascading_attrs['image_'.$i.'_offset_x'].') '; 
+    $transform_string .='translateX('.esc_attr($transform_x_sign_string) . esc_attr($cascading_attrs['image_'.$i.'_offset_x']).') '; 
   }
 	if(!empty($cascading_attrs['image_'.$i.'_offset_y'])) {
-    $transform_string .= 'translateY('.$transform_y_sign_string . $cascading_attrs['image_'.$i.'_offset_y'].') '; 
+    $transform_string .= 'translateY('.esc_attr($transform_y_sign_string) . esc_attr($cascading_attrs['image_'.$i.'_offset_y']).') '; 
   }
 	if(!empty($cascading_attrs['image_'.$i.'_rotate']) && $cascading_attrs['image_'.$i.'_rotate'] != 'none') {
-    $transform_string .= 'rotate('.$rotate_sign_string . $cascading_attrs['image_'.$i.'_rotate'].'deg) ';
+    $transform_string .= 'rotate('.esc_attr($rotate_sign_string) . esc_attr($cascading_attrs['image_'.$i.'_rotate']).'deg) ';
   }
   if(!empty($cascading_attrs['image_'.$i.'_scale']) && $cascading_attrs['image_'.$i.'_scale'] != '100%') {
     $scale_string_escaped = 'style="transform: scale('. esc_attr($cascading_attrs['image_'.$i.'_scale']).')"';
@@ -280,7 +280,7 @@ for( $i = 1; $i < 5; $i++ ) {
 	
 	$data_has_bg_img   = (!empty($image_url)) ? 'true': 'false';
 	$data_has_bg_color = (!empty($cascading_attrs['image_'.$i.'_bg_color'])) ? 'true' : 'false';
-	$bg_color_markup   = ($data_has_bg_color == 'true') ? '<div class="bg-color" style=" -webkit-transform:'.$transform_string.'; -ms-transform:'.$transform_string.'; transform: '.$transform_string.'; background-color: '.$cascading_attrs['image_'.$i.'_bg_color'].';" data-has-bg-color="'.esc_attr($data_has_bg_color).'"></div>' : null;
+	$bg_color_markup   = ($data_has_bg_color == 'true') ? '<div class="bg-color" style=" -webkit-transform:'.$transform_string.'; -ms-transform:'.$transform_string.'; transform: '.$transform_string.'; background-color: '.esc_attr($cascading_attrs['image_'.$i.'_bg_color']).';" data-has-bg-color="'.esc_attr($data_has_bg_color).'"></div>' : null;
 	
 	if( !empty($image_url) || $data_has_bg_color === 'true' ) {
     

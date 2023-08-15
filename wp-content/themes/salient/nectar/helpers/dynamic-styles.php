@@ -1885,6 +1885,7 @@ if (!function_exists('nectar_page_specific_dynamic')) {
 
 		if( $body_border === '1' ) {
 
+			$using_boxed           = (!empty($nectar_options['boxed_layout']) && $nectar_options['boxed_layout'] === '1') ? true : false;
 			$headerFormat          = (!empty($nectar_options['header_format'])) ? $nectar_options['header_format'] : 'default';
 			$headerColorScheme     = (!empty($nectar_options['header-color'])) ? $nectar_options['header-color'] : 'light';
 			$userSetBG             = (!empty($nectar_options['header-background-color']) && $headerColorScheme === 'custom') ? $nectar_options['header-background-color'] : '#ffffff';
@@ -1909,9 +1910,9 @@ if (!function_exists('nectar_page_specific_dynamic')) {
 				body .full-width-section.parallax_section .row-bg-wrap {
 					margin-left: calc(-50vw + '. intval($body_border_size*2) .'px);
 					margin-left: calc(-50vw + var(--scroll-bar-w)/2 + '. intval($body_border_size*2) .'px);
-			    left: calc(50% - '.intval($body_border_size).'px);
+					left: calc(50% - '.intval($body_border_size).'px);
 					width: calc(100vw - '. intval($body_border_size)*2 .'px);
-			    width: calc(100vw - var(--scroll-bar-w) - '. intval($body_border_size)*2 .'px);
+					width: calc(100vw - var(--scroll-bar-w) - '. intval($body_border_size)*2 .'px);
 				}';
 
 				if( $headerFormat === 'left-header' ) {
@@ -1928,25 +1929,41 @@ if (!function_exists('nectar_page_specific_dynamic')) {
 				  [data-header-format="left-header"][data-aie="long-zoom-out"] .top-level.full-width-section .row-bg-wrap,
 				  [data-header-format="left-header"] .full-width-section.parallax_section .row-bg-wrap,
 				  [data-header-format="left-header"] .nectar-slider-wrap[data-full-width="true"] {
-				    margin-left: -'. (61 + intval($body_border_size)) .'px;
-				    width: calc(100% + '. (122 + intval($body_border_size)) .'px);
-				    left: 0;
+					width: calc(100vw - 272px - '. intval($body_border_size) .'px);
+					width: calc(100vw - 272px - var(--scroll-bar-w) - '. intval($body_border_size) .'px);
+					margin-left: calc(-50vw + 135px + '. intval($body_border_size) .'px/2 + var(--scroll-bar-w)/2);
 				  }
 				  [data-header-format="left-header"] .full-width-section > .nectar-video-wrap {
-						margin-left: -'. (61 + intval($body_border_size)) .'px;
-				    width: calc(100% + '. (122 + intval($body_border_size)) .'px)!important;
-				    left: 0;
-				  }';
+				    width: calc(100vw - 272px - var(--scroll-bar-w) - '. intval($body_border_size) .'px)!important;
+					margin-left: calc(-50vw + 135px + '. intval($body_border_size) .'px/2 + var(--scroll-bar-w)/2)!important;
+				  }
+				  
+				  [data-header-format="left-header"] .container-wrap {
+					padding-right: '.esc_attr($body_border_size).'px;
+					padding-left: 0
+				}
+				#ajax-content-wrap > .nectar-global-section {
+					padding-right: '.esc_attr($body_border_size).'px;
+				}
+				body {
+					padding-top: '.esc_attr($body_border_size).'px;
+				}';
+			}
+
+			if ( $using_boxed ) {
+				echo '.container-wrap {
+					padding-bottom: '.esc_attr($body_border_size).'px;
+				}';
+			} else {
+				echo '.container-wrap {
+					padding-right: '.esc_attr($body_border_size).'px;
+					padding-left: '.esc_attr($body_border_size).'px;
+					padding-bottom: '.esc_attr($body_border_size).'px;
+				}';
 			}
 
 			echo '
 			body {
-				padding-bottom: '.esc_attr($body_border_size).'px;
-			}
-
-			.container-wrap {
-				padding-right: '.esc_attr($body_border_size).'px;
-				padding-left: '.esc_attr($body_border_size).'px;
 				padding-bottom: '.esc_attr($body_border_size).'px;
 			}
 

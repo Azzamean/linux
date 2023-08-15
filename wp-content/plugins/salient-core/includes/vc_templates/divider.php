@@ -37,14 +37,14 @@ extract(shortcode_atts(array(
 		$calculated_height_half = intval($custom_height)/2 . 'px';
 	}
 
-  if( strpos($custom_line_width, 'px') ) {
-    $custom_line_width = intval($custom_line_width) . 'px';
-  } else if( strpos($custom_line_width, '%') ) {
+  if( strpos($custom_line_width, '%') ) {
     $custom_line_width = intval($custom_line_width) . '%';
   } else if( strpos($custom_line_width, 'vw') ) {
     $custom_line_width = intval($custom_line_width) . 'vw';
   } else if( strpos($custom_line_width, 'vh') ) {
     $custom_line_width = intval($custom_line_width) . 'vh';
+  } else {
+    $custom_line_width = intval($custom_line_width) . 'px';
   }
 	
   if ($line_type === 'Small Thick Line' || $line_type === 'Small Line' ) {

@@ -150,21 +150,37 @@ if (is_admin()) {
  */
 
 $custom_post_types_options = get_option("custom_post_types_option_name");
-$projects_0 = $custom_post_types_options["projects_0"];
-$members_2 = $custom_post_types_options["members_2"];
-$webinars_1 = $custom_post_types_options["webinars_1"];
-
-if ($projects_0) {
-    require_once plugin_dir_path(__DIR__) .
-        "../../themes/salient-child/custom-post-types/projects.php";
+if (
+    is_array($custom_post_types_options) &&
+    array_key_exists("projects_0", $custom_post_types_options)
+) {
+    $projects_0 = $custom_post_types_options["projects_0"];
+    if ($projects_0) {
+        require_once plugin_dir_path(__DIR__) . "../../themes/salient-child/custom-post-types/projects.php";
+		require_once plugin_dir_path(__DIR__) . "../../themes/salient-child/vc-addons/projects-linux.php";
+		require_once plugin_dir_path(__DIR__) . "../../themes/salient-child/vc-addons/projects-api-linux.php";
+    }
 }
 
-if ($webinars_1) {
-    require_once plugin_dir_path(__DIR__) .
-        "../../themes/salient-child/custom-post-types/webinars.php";
+if (
+    is_array($custom_post_types_options) &&
+    array_key_exists("webinars_1", $custom_post_types_options)
+) {
+    $webinars_1 = $custom_post_types_options["webinars_1"];
+    if ($webinars_1) {
+        require_once plugin_dir_path(__DIR__) . "../../themes/salient-child/custom-post-types/webinars.php";
+		require_once plugin_dir_path(__DIR__) . "../../themes/salient-child/vc-addons/webinars-linux.php";
+    }
 }
 
-if ($members_2) {
-    require_once plugin_dir_path(__DIR__) .
-        "../../themes/salient-child/custom-post-types/members.php";
+if (
+    is_array($custom_post_types_options) &&
+    array_key_exists("members_2", $custom_post_types_options)
+) {
+    $members_2 = $custom_post_types_options["members_2"];
+    if ($members_2) {
+        require_once plugin_dir_path(__DIR__) . "../../themes/salient-child/custom-post-types/members.php";
+		require_once plugin_dir_path(__DIR__) . "../../themes/salient-child/vc-addons/members-linux.php";
+		require_once plugin_dir_path(__DIR__) . "../../themes/salient-child/vc-addons/members-api-linux.php";
+    }
 }

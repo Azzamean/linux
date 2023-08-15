@@ -172,6 +172,10 @@ echo '<div class="nectar-hor-list-item '.$hasbtn_class.'" data-hover-effect="'.e
 		$closing_tag = null;
 		
 		if( !empty($atts['col_'.$index_to_grab.'_text_element']) && $atts['col_'.$index_to_grab.'_text_element'] !== 'p' ) {
+			
+			if (!in_array($atts['col_'.$index_to_grab.'_text_element'], array('h1', 'h2', 'h3', 'h4', 'h5', 'h6','p','span'))) {
+				$atts['col_'.$index_to_grab.'_text_element'] = 'p';
+			}
 			$opening_tag = '<' . $atts['col_'.$index_to_grab.'_text_element'] . '>';
 			$closing_tag = '</' . $atts['col_'.$index_to_grab.'_text_element'] . '>';
 		}

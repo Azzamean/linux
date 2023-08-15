@@ -55,7 +55,7 @@ if( !empty($margin_left) ) {
 $el_atts = '';
 
 if( 'custom' === $bg_color_type ) {
-  $el_atts .= ' data-bg-color-custom="'.$bg_color_custom.'"';
+  $el_atts .= ' data-bg-color-custom="'.esc_attr($bg_color_custom).'"';
 }
 
 $el_style = '';

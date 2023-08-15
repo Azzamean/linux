@@ -95,7 +95,7 @@
     
           $shadow_method = isset($atts['box_shadow_method']) ? $atts['box_shadow_method'] : 'default';
 
-          // Detemerine shadow type.
+          // Determine shadow type.
          if( 'default' === $shadow_method ) {
           $shadow_base = 'box-shadow: $;';
          } else {
@@ -120,10 +120,10 @@
         // Build shadow.
         foreach($parsed_values as $key => $value) {
           if( 'opacity' !== $key ) {
-            $style .= $value . 'px ';
+            $style .= esc_attr($value) . 'px ';
           }
           else {
-            $style .= 'rgba(0,0,0,'.$value.')';
+            $style .= 'rgba(0,0,0,'.esc_attr($value).')';
           }
         }
 

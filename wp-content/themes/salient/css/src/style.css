@@ -2452,7 +2452,7 @@ body .full-width-section {
   width:100%;
   height:100%;
   content:' ';
-  z-index:2;
+  z-index: 3;
   backface-visibility: hidden;
 }
 .row.right-align-text{
@@ -2591,6 +2591,10 @@ body[data-ajax-transitions="false"] .nectar-parallax-enabled .parallax-layer.col
 .wpb_row.parallax_section .row-bg-wrap,
 .wpb_row .row-bg-wrap[data-bg-animation="zoom-out-reveal"] {
 	z-index: 2;
+}
+
+.wpb_row.parallax_section .nectar-parallax-scene {
+  z-index: 1;
 }
 
 .wpb_row .row-bg-wrap,
@@ -6036,8 +6040,9 @@ body .related-posts[data-style="material"] .inner-wrap {
   background-position: left bottom;
 }
 .nectar-link-underline-effect a {
+  background-image: linear-gradient(to right, currentColor 0%, currentColor 100%);
   background-size: 100% 2px;
-  background-position: left 94%;
+  background-position: left 96%;
 }
 
 @keyframes nectar_ltr_line_animation {
@@ -6061,7 +6066,7 @@ body .related-posts[data-style="material"] .inner-wrap {
   animation: nectar_ltr_line_animation_start 0.55s ease forwards;
 }
 .nectar-link-underline-effect a:hover {
-  background-position: right 94%;
+  background-position: right 96%;
   animation: nectar_ltr_line_animation 0.55s ease forwards;
 }
 
@@ -7986,11 +7991,11 @@ body .wpb_row .column-image-bg-wrap {
 
 @font-face{
   font-family:'icomoon';
-  src:url('../fonts/icomoon.eot?v=1.4');
-  src:url('../fonts/icomoon.eot?#iefix&v=1.4') format('embedded-opentype'),
-      url('../fonts/icomoon.woff?v=1.4') format('woff'),
-      url('../fonts/icomoon.ttf?v=1.4') format('truetype'),
-      url('../fonts/icomoon.svg#icomoon?v=1.4') format('svg');
+  src:url('../fonts/icomoon.eot?v=1.6');
+  src:url('../fonts/icomoon.eot?#iefix&v=1.6') format('embedded-opentype'),
+      url('../fonts/icomoon.woff?v=1.6') format('woff'),
+      url('../fonts/icomoon.ttf?v=1.6') format('truetype'),
+      url('../fonts/icomoon.svg#icomoon?v=1.6') format('svg');
   font-weight:normal;
 	font-display:block;
   font-style:normal
@@ -8037,6 +8042,7 @@ body .wpb_row .column-image-bg-wrap {
 .icon-salient-tiktok,
 .icon-salient-twitch,
 .icon-salient-houzz,
+.icon-salient-threads,
 .icon-salient-m-user,
 .icon-salient-facebook-messenger,
 .icon-salient-apple-music,
@@ -8045,6 +8051,7 @@ body .wpb_row .column-image-bg-wrap {
 .icon-salient-check,
 .icon-salient-medium,
 .icon-salient-mastodon,
+.icon-salient-x-twitter,
 .video-play-button,
 .fa.fa-angle-down,
 .fa.fa-angle-up,
@@ -8128,6 +8135,8 @@ i.fa.fa-houzz {
 .icon-salient-medium:before{content:"\e914"}
 .icon-salient-trustpilot:before{content:"\e916"}
 .icon-salient-mastodon:before{content:"\e917"}
+.icon-salient-threads:before{content:"\e913"}
+.icon-salient-x-twitter:before{content:"\e918"}
 
 body .fa.fa-angle-down:before{content:"\e60a"}
 body .fa.fa-angle-up:before{content:"\e609"}

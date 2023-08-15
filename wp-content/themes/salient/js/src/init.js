@@ -4749,11 +4749,11 @@
 						if ($(this).attr('data-symbol-pos') == 'before') {
 							$(this)
 								.find('.number')
-								.prepend('<div class="symbol-wrap"><span class="symbol">' + $(this).attr('data-symbol') + '</span></div>');
+								.prepend('<div class="symbol-wrap"><span class="symbol">' + wlEls($(this).attr('data-symbol')) + '</span></div>');
 						} else {
 							$(this)
 								.find('.number')
-								.append('<div class="symbol-wrap"><span class="symbol">' + $(this).attr('data-symbol') + '</span></div>');
+								.append('<div class="symbol-wrap"><span class="symbol">' + wlEls($(this).attr('data-symbol')) + '</span></div>');
 						}
 					}
 
@@ -7343,6 +7343,7 @@
 
 					// Takes mobile percentage max width into calcs.
 					var mainContentWidthNormalized = $('.main-content').css('max-width');
+
 					if ( mainContentWidthNormalized.indexOf('%') > -1 ) {
 						var scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
 						mainContentWidthNormalized = parseInt(mainContentWidthNormalized) / 100 * (nectarDOMInfo.winW - scrollbarWidth);
@@ -7384,10 +7385,11 @@
 						var $leftHeaderSize = ($('#header-outer[data-format="left-header"]').length > 0 && $windowInnerWidth >= 1000) ? parseInt($('#header-outer[data-format="left-header"]').width()) : 0;
 						var $bodyBorderWidth = ($('.body-border-right').length > 0 && $windowInnerWidth > 1000) ? (parseInt($('.body-border-right').width()) * 2) - 2 : 0;
 
-						// Single post fullwidth.
+						// Boxed.
 						if ($('#boxed').length == 1) {
 
-							$mainContentWidth = ($('#nectar_fullscreen_rows').length == 0) ? mainContentWidthNormalized : parseInt($(this).parents('.container').width());
+							var mainContentBoxed = ( $windowInnerWidth >= 690 ) ? parseInt($('.main-content').width()) :  mainContentWidthNormalized;
+							$mainContentWidth = ($('#nectar_fullscreen_rows').length == 0) ? mainContentBoxed : parseInt($(this).parents('.container').width());
 
 							if ($('body.single-post[data-ext-responsive="true"]').length > 0 && $('.container-wrap.no-sidebar').length > 0 && $(this).parents('.post-area').length > 0) {
 								$contentWidth         = $('.post-area').width();
@@ -10771,11 +10773,36 @@
 					*
 					* @since 11.0
 					*/
+
+				function nectarLazyVideoCallback(video, lazyVideoObserver) {
+					if (video.isIntersecting) {
+						
+						// Already triggered
+						if( video.target.classList.contains('loaded') ) {
+							lazyVideoObserver.unobserve(video.target);
+							return;
+						}
+
+						for (var source in video.target.children) {
+							var videoSource = video.target.children[source];
+							if (typeof videoSource.tagName === "string" && videoSource.tagName === "SOURCE") {
+								videoSource.src = videoSource.dataset.nectarVideoSrc;
+							}
+						}
+
+						video.target.load();
+						video.target.classList.remove("lazy")
+						video.target.classList.add('loaded');
+						lazyVideoObserver.unobserve(video.target);
+					}
+				}
+
 				function nectarLazyImageLoading() {
 
 					var lazyItems = [].slice.call(document.querySelectorAll('[data-nectar-img-src]'));
 					var lazyVideoItems = [].slice.call(document.querySelectorAll('.nectar-lazy-video'));
-					
+					var lazyMenuVideoItems = [].slice.call(document.querySelectorAll('#header-outer .nectar-lazy-video'));
+
 					if ('IntersectionObserver' in window) {
 
 						var options = {
@@ -10811,23 +10838,23 @@
 						// Videos.
 						var lazyVideoObserver = new IntersectionObserver(function (entries, observer) {
 							entries.forEach(function (video) {
-								if (video.isIntersecting) {
-									for (var source in video.target.children) {
-										var videoSource = video.target.children[source];
-										if (typeof videoSource.tagName === "string" && videoSource.tagName === "SOURCE") {
-											videoSource.src = videoSource.dataset.nectarVideoSrc;
-										}
-									}
-
-									video.target.load();
-									video.target.classList.remove("lazy")
-									video.target.classList.add('loaded');
-									lazyVideoObserver.unobserve(video.target);
-								}
+								nectarLazyVideoCallback(video, lazyVideoObserver);
 							});
 						}, {
 							root: (isSafari()) ? null : document,
 							rootMargin: '125px'
+						});
+
+						var lazyVideoObserverNoRoot = new IntersectionObserver(function (entries, observer) {
+							entries.forEach(function (video) {
+								nectarLazyVideoCallback(video, lazyVideoObserverNoRoot);
+							});
+						}, {
+							rootMargin: '125px'
+						});
+
+						lazyMenuVideoItems.forEach(function (lazyVideo) {
+							lazyVideoObserverNoRoot.observe(lazyVideo);
 						});
 
 						lazyVideoItems.forEach(function (lazyVideo) {
@@ -22257,8 +22284,11 @@
 	 								};
 
 							}
-
-							$(this).select2(select2OptionsObj);
+							
+							if (typeof $().select2 != 'undefined') {
+								$(this).select2(select2OptionsObj);
+							}
+							
 
 						}
 

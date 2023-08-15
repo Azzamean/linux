@@ -20,12 +20,12 @@ $el_classes = array('nectar-responsive-text');
 
 // Custom class.
 if( !empty($class_name) ) {
-    $el_classes[] = $class_name;
+    $el_classes[] = esc_attr($class_name);
 }
 
 // Custom coloring.
 if( !empty($text_color )) {
-    $styles .= 'color: ' . $text_color . ';';
+    $styles .= 'color: ' . esc_attr($text_color) . ';';
 }
 
 // Max width  
@@ -53,7 +53,7 @@ if(!empty($styles)) {
 
 // Dyanmic classes.
 if( function_exists('nectar_el_dynamic_classnames') ) {
-	$el_classes[] = nectar_el_dynamic_classnames('nectar-fancy-ul', $atts);
+	$el_classes[] = nectar_el_dynamic_classnames('nectar_responsive_text', $atts);
 } else {
 	$el_classes[] = '';
 }

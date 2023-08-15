@@ -15,6 +15,10 @@ if (!empty($id)) {
 	$section_id = intval($id);
 	$section_id = apply_filters('wpml_object_id', $section_id, 'post', true);
 
+	if( $section_id === 0 ) {
+		return;
+	}
+	
 	$section_status = get_post_status($section_id);
 	
 	
