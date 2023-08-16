@@ -3,16 +3,16 @@
  * Plugin Name: Simple Banner
  * Plugin URI: https://github.com/rpetersen29/simple-banner
  * Description: Display a simple banner at the top or bottom of your website.
- * Version: 2.15.2
+ * Version: 2.15.3
  * Author: Ryan Petersen
  * Author URI: http://rpetersen29.github.io/
  * License: GPL2
  *
  * @package Simple Banner
- * @version 2.15.2
+ * @version 2.15.3
  * @author Ryan Petersen <rpetersen.dev@gmail.com>
  */
-define ('SB_VERSION', '2.15.2');
+define ('SB_VERSION', '2.15.3');
 
 register_activation_hook( __FILE__, 'simple_banner_activate' );
 function simple_banner_activate() {
@@ -32,23 +32,37 @@ function get_is_current_page_a_post() {
 function get_disabled_on_posts() {
 	return get_option('disabled_on_posts');
 }
+function get_is_removed_before_date() {
+	$start_after_date = get_option('simple_banner_start_after_date');
+	
+	if (!$start_after_date) return false;
+
+	$curr_date = new DateTime('now', new DateTimeZone('UTC'));
+	$start_date = new DateTime($start_after_date);
+
+	// Compare the dates
+	if ($curr_date < $start_date) {
+		return true;
+	}
+	return false;
+}
 function get_is_removed_after_date() {
 	$remove_after_date = get_option('simple_banner_remove_after_date');
 	
 	if (!$remove_after_date) return false;
 
-	$curr_date = new DateTime('now');
-	$cancelled_date = new DateTime($remove_after_date);
+	$curr_date = new DateTime('now', new DateTimeZone('UTC'));
+	$end_date = new DateTime($remove_after_date);
 
 	// Compare the dates
-	if ($curr_date > $cancelled_date) {
+	if ($curr_date > $end_date) {
 		return true;
 	}
 	return false;
 }
 function get_disabled_on_current_page() {
 	$disabled_on_current_page = (!empty(get_disabled_pages_array()) && in_array(get_the_ID(), get_disabled_pages_array()))
-								|| (get_disabled_on_posts() && get_is_current_page_a_post()) || get_is_removed_after_date();
+								|| (get_disabled_on_posts() && get_is_current_page_a_post()) || get_is_removed_before_date() || get_is_removed_after_date();
 	return $disabled_on_current_page;
 }
 
@@ -97,6 +111,10 @@ function simple_banner() {
 		'close_button_enabled' => get_option('close_button_enabled'),
 		'close_button_expiration' => get_option('close_button_expiration'),
 		'close_button_cookie_set' => isset($_COOKIE['simplebannerclosed']),
+		'current_date' => new DateTime('now', new DateTimeZone('UTC')),
+		'start_date' => new DateTime(get_option('simple_banner_start_after_date')),
+		'end_date' => new DateTime(get_option('simple_banner_remove_after_date')),
+		'simple_banner_start_after_date' => get_option('simple_banner_start_after_date'),
 		'simple_banner_remove_after_date' => get_option('simple_banner_remove_after_date'),
 		'simple_banner_insert_inside_element' => get_option('simple_banner_insert_inside_element'),
 	);
@@ -414,6 +432,11 @@ function simple_banner_settings() {
 	    	'sanitize_callback' => 'wp_filter_nohtml_kses'
 		)
     );
+	register_setting( 'simple-banner-settings-group', 'simple_banner_start_after_date',
+		array(
+	    	'sanitize_callback' => 'wp_filter_nohtml_kses'
+		)
+    );
 	register_setting( 'simple-banner-settings-group', 'simple_banner_remove_after_date',
 		array(
 	    	'sanitize_callback' => 'wp_filter_nohtml_kses'
@@ -544,7 +567,7 @@ function simple_banner_settings_page() {
 
 			<?php include 'free_features.php';?>
 
-			<div id="mobile-alert" style="">
+			<div id="mobile-alert">
 				Always make sure you test your banner in mobile views, theme headers often change their css for mobile.
 			</div>
 
@@ -580,7 +603,7 @@ function simple_banner_settings_page() {
 			var elementTarget = document.getElementById('preview_banner_inner_container');
 			if (window.scrollY > (elementContainer.offsetTop)) {
 				elementTarget.style.position = 'fixed';
-				elementTarget.style.width = '83.671%';
+				elementTarget.style.width = '83.111%';
 				elementTarget.style.top = '40px';
 			} else {
 				elementTarget.style.position = 'relative';

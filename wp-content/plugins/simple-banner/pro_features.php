@@ -1,4 +1,4 @@
-<div style="padding: 0 10px;border: 1px solid #24282e;border-radius: 10px;background-color: #fafafa;">
+<div style="padding: 0 10px;border: 1px solid gold;border-radius: 10px;background-color: #fafafa;">
 
     <h2><span style="padding-right:10px">Pro Features<span>
         <?php
@@ -58,7 +58,6 @@
         <!-- Insert After Element -->
         <tr valign="top">
             <th scope="row">
-                <span style="color: limegreen;">NEW</span>
                 Insert Inside Element
                 <div>
                     Insert the banner inside a specific element on your page.
@@ -81,13 +80,31 @@
                 ?>
             </td>
         </tr>
-        <!-- Remove After Date -->
+        <!-- Start After Date -->
         <tr valign="top">
             <th scope="row">
                 <span style="color: limegreen;">NEW</span>
+                Start After Date
+                <div>
+                    This can start showing the banner after a given date. Use UTC time to avoid daylight savings time issues (e.g. <code>21 Feb 2022 15:53:22 UTC</code>).
+                </div>
+            </th>
+            <td style="vertical-align:top;">
+                <?php
+                    if (get_option('pro_version_enabled')) {
+                        echo '<input id="simple_banner_start_after_date" name="simple_banner_start_after_date" style="width:60%;" value="'. esc_attr(get_option('simple_banner_start_after_date')) . '" />';
+                    } else {
+                        echo '<input style="width:60%;" disabled />';
+                    }
+                ?>
+            </td>
+        </tr>
+        <!-- Remove After Date -->
+        <tr valign="top">
+            <th scope="row">
                 Remove After Date
                 <div>
-                    This can remove the banner after a given date. Enter the exact day and time (e.g. <code>21 Feb 2022 15:53:22 GMT</code>).
+                    This can stop showing the banner after a given date. Use UTC time to avoid daylight savings time issues (e.g. <code>21 Feb 2022 15:53:22 UTC</code>).
                 </div>
             </th>
             <td style="vertical-align:top;">

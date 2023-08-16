@@ -829,8 +829,13 @@ class WP_Optimization_images extends WP_Optimization {
 
 		// use different functions to get images info from the posts.
 		$images_ids = $this->get_posts_content_images($posts, $blog_id);
-		$images_ids = array_merge($images_ids, $this->get_posts_wc_galleries_and_thumbnails($posts));
+		$site_logo = get_option('site_logo', false);
+		if (!empty($site_logo)) {
+			$images_ids[] = $site_logo;
+		}
 
+		$images_ids = array_merge($images_ids, $this->get_posts_wc_galleries_and_thumbnails($posts));
+		
 		$this->restore_current_blog();
 
 		return array(
@@ -905,7 +910,7 @@ class WP_Optimization_images extends WP_Optimization {
 			if ($this->is_plugin_acf_active()) {
 				$acf_images = array_merge($acf_images, $this->get_image_ids_from_acf_blocks($post_content, $acf_block_field_names));
 			}
-			$plugin_images = array_merge($plugin_images, apply_filters('wpo_get_posts_content_images_from_plugins', $plugin_images, $post->ID));
+			$plugin_images = array_unique(array_merge($plugin_images, apply_filters('wpo_get_posts_content_images_from_plugins', $plugin_images, $post->ID)));
 		}
 
 		ob_end_clean();
@@ -2336,7 +2341,8 @@ class WP_Optimization_images extends WP_Optimization {
 		$thumb_size = 0;
 
 		// get info about original image.
-		if ($meta) {
+		// isset($meta['file']) check is necessary for SVG files
+		if (isset($meta) && isset($meta['file'])) {
 			$pinfo = pathinfo($meta['file']);
 			$sub_dir = $pinfo['dirname'];
 			$file_sub_dir = $base_upload_dir . '/' . $sub_dir;

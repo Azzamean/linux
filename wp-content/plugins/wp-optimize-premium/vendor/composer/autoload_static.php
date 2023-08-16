@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInitec31532c5b2a876a7a8e613082b26069
+class ComposerStaticInitcf0a7322f7169327982629dd95601536
 {
     public static $files = array (
         '7166494aeff09009178f278afd86c83f' => __DIR__ . '/..' . '/yahnis-elsts/plugin-update-checker/load-v4p13.php',
@@ -39,10 +39,6 @@ class ComposerStaticInitec31532c5b2a876a7a8e613082b26069
             'Intervention\\HttpAuth\\' => 22,
             'ImageMimeTypeSniffer\\' => 21,
             'ImageMimeTypeGuesser\\' => 21,
-        ),
-        'H' => 
-        array (
-            'HtaccessCapabilityTester\\' => 25,
         ),
         'F' => 
         array (
@@ -98,10 +94,6 @@ class ComposerStaticInitec31532c5b2a876a7a8e613082b26069
         'ImageMimeTypeGuesser\\' => 
         array (
             0 => __DIR__ . '/..' . '/rosell-dk/image-mime-type-guesser/src',
-        ),
-        'HtaccessCapabilityTester\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/rosell-dk/htaccess-capability-tester/src',
         ),
         'FileUtil\\' => 
         array (
@@ -202,10 +194,10 @@ class ComposerStaticInitec31532c5b2a876a7a8e613082b26069
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInitec31532c5b2a876a7a8e613082b26069::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInitec31532c5b2a876a7a8e613082b26069::$prefixDirsPsr4;
-            $loader->prefixesPsr0 = ComposerStaticInitec31532c5b2a876a7a8e613082b26069::$prefixesPsr0;
-            $loader->classMap = ComposerStaticInitec31532c5b2a876a7a8e613082b26069::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInitcf0a7322f7169327982629dd95601536::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInitcf0a7322f7169327982629dd95601536::$prefixDirsPsr4;
+            $loader->prefixesPsr0 = ComposerStaticInitcf0a7322f7169327982629dd95601536::$prefixesPsr0;
+            $loader->classMap = ComposerStaticInitcf0a7322f7169327982629dd95601536::$classMap;
 
         }, null, ClassLoader::class);
     }
