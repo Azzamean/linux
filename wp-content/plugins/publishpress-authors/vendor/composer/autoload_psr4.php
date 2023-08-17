@@ -6,10 +6,4 @@ $vendorDir = dirname(__DIR__);
 $baseDir = dirname($vendorDir);
 
 return array(
-    'Symfony\\Polyfill\\Ctype\\' => array($vendorDir . '/symfony/polyfill-ctype'),
-    'Psr\\Container\\' => array($vendorDir . '/psr/container/src'),
-    'PPVersionNotices\\' => array($vendorDir . '/publishpress/wordpress-version-notices/src'),
-    'PPAuthors\\YoastSEO\\' => array($baseDir . '/src/modules/yoast-seo-integration/src'),
-    'MultipleAuthors\\' => array($baseDir . '/src/core'),
-    'MultipleAuthorBoxes\\' => array($baseDir . '/src/modules/author-boxes/classes'),
 );

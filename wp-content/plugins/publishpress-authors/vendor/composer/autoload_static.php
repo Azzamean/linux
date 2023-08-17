@@ -4,69 +4,8 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInitfb07bb9264769ffde65f0d0660926dcf
+class ComposerStaticInit11275fc3fd965faefaa414520172c32e
 {
-    public static $files = array (
-        '0078757fbd019a5f202f2be6585c3626' => __DIR__ . '/..' . '/publishpress/wordpress-banners/BannersMain.php',
-        '41c664bd04a95c2d6a2f2a3e00f06593' => __DIR__ . '/..' . '/publishpress/wordpress-reviews/ReviewsController.php',
-        '320cde22f66dd4f5d3fd621d3e88b98f' => __DIR__ . '/..' . '/symfony/polyfill-ctype/bootstrap.php',
-    );
-
-    public static $prefixLengthsPsr4 = array (
-        'S' => 
-        array (
-            'Symfony\\Polyfill\\Ctype\\' => 23,
-        ),
-        'P' => 
-        array (
-            'Psr\\Container\\' => 14,
-            'PPVersionNotices\\' => 17,
-            'PPAuthors\\YoastSEO\\' => 19,
-        ),
-        'M' => 
-        array (
-            'MultipleAuthors\\' => 16,
-            'MultipleAuthorBoxes\\' => 20,
-        ),
-    );
-
-    public static $prefixDirsPsr4 = array (
-        'Symfony\\Polyfill\\Ctype\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/symfony/polyfill-ctype',
-        ),
-        'Psr\\Container\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/psr/container/src',
-        ),
-        'PPVersionNotices\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/publishpress/wordpress-version-notices/src',
-        ),
-        'PPAuthors\\YoastSEO\\' => 
-        array (
-            0 => __DIR__ . '/../..' . '/src/modules/yoast-seo-integration/src',
-        ),
-        'MultipleAuthors\\' => 
-        array (
-            0 => __DIR__ . '/../..' . '/src/core',
-        ),
-        'MultipleAuthorBoxes\\' => 
-        array (
-            0 => __DIR__ . '/../..' . '/src/modules/author-boxes/classes',
-        ),
-    );
-
-    public static $prefixesPsr0 = array (
-        'P' => 
-        array (
-            'Pimple' => 
-            array (
-                0 => __DIR__ . '/..' . '/pimple/pimple/src',
-            ),
-        ),
-    );
-
     public static $classMap = array (
         'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
     );
@@ -74,10 +13,7 @@ class ComposerStaticInitfb07bb9264769ffde65f0d0660926dcf
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInitfb07bb9264769ffde65f0d0660926dcf::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInitfb07bb9264769ffde65f0d0660926dcf::$prefixDirsPsr4;
-            $loader->prefixesPsr0 = ComposerStaticInitfb07bb9264769ffde65f0d0660926dcf::$prefixesPsr0;
-            $loader->classMap = ComposerStaticInitfb07bb9264769ffde65f0d0660926dcf::$classMap;
+            $loader->classMap = ComposerStaticInit11275fc3fd965faefaa414520172c32e::$classMap;
 
         }, null, ClassLoader::class);
     }
