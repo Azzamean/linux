@@ -55,7 +55,11 @@ ul#wp-admin-bar-my-sites-list {
 	.lfprojects.white-background {
 		background: #ffffff;
 	}
-
+	
+	.lfprojects.blue-background {
+		background: #2A7DE1;
+	}
+	
 	.lfprojects img {
 		max-width: 270px;
 		vertical-align: middle;
@@ -108,6 +112,7 @@ ul#wp-admin-bar-my-sites-list {
 }
 
 .external .menu-title-text:after {
+	display: inline-block !important;
 	font-family: 'FontAwesome';
 	content: "\f08e" !important;
 	font-weight: 600;

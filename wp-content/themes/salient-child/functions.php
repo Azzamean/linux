@@ -166,6 +166,8 @@ function lf_meta_header()
         $jdf_banner_light_alternative =
             '<div class="lfprojects dark-background jdf"><div class="container"><a href="https://jointdevelopment.org/" target="_blank" rel="noopener noreferrer"><img src="/wp-content/uploads/banners/jdf_banner_light_alternative.svg" alt="The Linux Foundation Projects"></a></div></div>';
         $linux_foundation_light =
+            '<div class="lfprojects blue-background"><div class="container"><a href="https://www.linuxfoundation.org/projects" target="_blank" rel="noopener noreferrer"><img src="/wp-content/uploads/banners/lfprojects_banner_light.svg" alt="The Linux Foundation Projects"></a></div></div>';
+		$linux_foundation_light_background =
             '<div class="lfprojects white-background"><div class="container"><a href="https://www.linuxfoundation.org/projects" target="_blank" rel="noopener noreferrer"><img src="/wp-content/uploads/banners/lfprojects_banner_color.svg" alt="The Linux Foundation Projects"></a></div></div>';
         $linux_foundation_dark =
             '<div class="lfprojects"><div class="container"><a href="https://www.linuxfoundation.org/projects" target="_blank" rel="noopener noreferrer"><img src="/wp-content/uploads/banners/lfprojects_banner_other.svg" alt="The Linux Foundation Projects"></a></div></div>';
@@ -180,7 +182,7 @@ function lf_meta_header()
             // OMPF
 
             case "14":
-                echo $linux_foundation_light;
+                echo $linux_foundation_light_background;
                 break;
 
             // OVERTURE MAPS FOUNDATION
@@ -199,6 +201,12 @@ function lf_meta_header()
 
             case "28":
                 echo $jdf_banner_light_alternative;
+                break;
+
+            // SPDX
+
+            case "31":
+                echo $linux_foundation_light;
                 break;
 
             default:
