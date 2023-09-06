@@ -79,8 +79,8 @@ if (have_posts()):
                     "includes/partials/single-post/post-header-style-one"
                 );
             }
-            // LF Energy || Alpha Omega || LF Edge
-            elseif ($site_id == "18" || $site_id == "22" || $site_id == "24") {
+            // LF Energy || LF Edge
+            elseif ($site_id == "18" || $site_id == "24") {
                 get_template_part(
                     "includes/partials/single-post/post-header-style-three"
                 );
@@ -128,8 +128,8 @@ if ($blog_type === "std-blog-fullwidth" || $hide_sidebar === "1") {
   elseif ($site_id == "14") {
       get_template_part("includes/partials/single-post/post-header-style-two");
   }
-  // LF Energy || Alpha Omega || LF Edge
-  elseif ($site_id == "18" || $site_id == "22" || $site_id == "24") {
+  // LF Energy || LF Edge
+  elseif ($site_id == "18" || $site_id == "24") {
       // DO NOTHING
   } else {
       get_template_part(
