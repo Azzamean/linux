@@ -996,6 +996,9 @@ function recent_posts_linux($atts, $content)
                     }
                 }
 
+				$output .= "<div class='category-time-wrapper'>";
+				
+
                 if ($categories == true) {
                     $i = 0;
                     $comma = "";
@@ -1054,7 +1057,9 @@ function recent_posts_linux($atts, $content)
                         }
                     }
                 }
-
+				
+				$output .= "</div>";
+				
                 $output .=
                     '<a class="grid-design title" href="' .
                     get_permalink() .

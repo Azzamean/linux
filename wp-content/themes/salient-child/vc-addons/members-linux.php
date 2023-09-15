@@ -11,7 +11,7 @@ class Members
         $types = get_terms([
             "taxonomy" => "members_category",
             "hide_empty" => false,
-            "orderby" => "name",
+            "orderby" => "name"
         ]);
 
         $all_members_category = ["All Members Categories" => ""];
@@ -41,15 +41,17 @@ class Members
                             esc_html__("3 columns", "members") => "3",
                             esc_html__("4 columns", "members") => "4",
                             esc_html__("5 columns", "members") => "5",
-							esc_html__("6 columns", "members") => "6",
-							esc_html__("8 columns", "members") => "8",
-							esc_html__("10 columns", "members") => "10",
+                            esc_html__("6 columns", "members") => "6",
+                            esc_html__("7 columns", "members") => "7",
+                            esc_html__("8 columns", "members") => "8",
+                            esc_html__("9 columns", "members") => "9",
+                            esc_html__("10 columns", "members") => "10"
                         ],
                         "description" => esc_html__(
                             "Please select the number of columns you want displayed",
                             "members"
                         ),
-                        "save_always" => true,
+                        "save_always" => true
                     ],
                     [
                         "type" => "dropdown",
@@ -57,7 +59,7 @@ class Members
                         "heading" => __("Category", "members"),
                         "param_name" => "members_category_id",
                         "value" => $all_members_category,
-                        "description" => __("", "members"),
+                        "description" => __("", "members")
                     ],
                     [
                         "type" => "dropdown",
@@ -66,11 +68,11 @@ class Members
                         "param_name" => "order",
                         "value" => [
                             __("Ascending", "members") => "ASC",
-                            __("Descending", "members") => "DESC",
+                            __("Descending", "members") => "DESC"
                         ],
-                        "description" => __("Select sorting order.", "members"),
-                    ],
-                ],
+                        "description" => __("Select sorting order.", "members")
+                    ]
+                ]
             ]);
         endif;
     }
@@ -84,7 +86,7 @@ function members_linux($atts, $content)
             [
                 "columns" => "",
                 "members_category_id" => "",
-                "order" => "",
+                "order" => ""
             ],
             $atts
         )
@@ -99,7 +101,7 @@ function members_linux($atts, $content)
         "posts_per_page" => -1,
         "order" => $order,
         "orderby" => "title",
-        "ignore_sticky_posts" => true,
+        "ignore_sticky_posts" => true
     ];
 
     switch ($columns) {
@@ -115,13 +117,19 @@ function members_linux($atts, $content)
         case "5":
             $column_class = "vc_col-sm-1/5";
             break;
-		case "6":
+        case "6":
             $column_class = "vc_col-sm-1/6";
             break;
-		case "8":
+        case "7":
+            $column_class = "vc_col-sm-1/7";
+            break;
+        case "8":
             $column_class = "vc_col-sm-1/8";
             break;
-		case "10":
+        case "9":
+            $column_class = "vc_col-sm-1/9";
+            break;
+        case "10":
             $column_class = "vc_col-sm-1/10";
             break;
         default:
@@ -133,8 +141,8 @@ function members_linux($atts, $content)
             [
                 "taxonomy" => "members_category",
                 "field" => "term_id",
-                "terms" => $members_category_id,
-            ],
+                "terms" => $members_category_id
+            ]
         ];
     }
     $projects_query = new WP_Query($query_args);
