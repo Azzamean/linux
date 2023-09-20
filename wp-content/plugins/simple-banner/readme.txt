@@ -3,8 +3,8 @@ Contributors: rpetersen29
 Donate link: https://www.paypal.me/rpetersenDev
 Tags: banner, bar, top, announcement, notification, simple, bulletin, notice, cta, free
 Requires at least: 3.0.1
-Tested up to: 6.3.0
-Stable tag: 2.15.3
+Tested up to: 6.3.1
+Stable tag: 2.15.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -119,6 +119,9 @@ Set your banner position to <code>relative</code> and try this in 'Website Custo
 4. This is the settings page... and the fourth screen shot.
 
 == Changelog ==
+
+= 2.15.4 =
+* Bug fixes
 
 = 2.15.3 =
 * New start after date feature
@@ -341,6 +344,9 @@ Set your banner position to <code>relative</code> and try this in 'Website Custo
 * First Version.
 
 == Upgrade Notice ==
+
+= 2.15.4 =
+* Bug fixes
 
 = 2.15.3 =
 * New start after date feature

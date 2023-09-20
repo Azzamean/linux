@@ -535,7 +535,7 @@ class WP_Optimize_Premium {
 			'note_save_settings' => __('Note: Your settings have changed; remember to save them.', 'wp-optimize'),
 			'time' => __('Time', 'wp-optimize'),
 			'date' => __('Date', 'wp-optimize'),
-			'day' => __('Day', 'wp-optmize'),
+			'day' => __('Day', 'wp-optimize'),
 			'day_number' => __('Day Number', 'wp-optimize'),
 			'inactive' => __('Inactive', 'wp-optimize'),
 			'active' => __('Active', 'wp-optimize'),
@@ -758,14 +758,22 @@ class WP_Optimize_Premium {
 	 * @return Array - list of existing components
 	 */
 	public function lazyload_already_provided_by() {
-	
 		$provided_by = array();
-	
-		global $shortname;
+		$plugins = array(
+			'AUTOPTIMIZE_PLUGIN_VERSION' => 'Autoptimize',
+			'ET_CORE' => 'Divi',
+			'JETPACK__VERSION' => 'Jetpack',
+			'OPTML_VERSION' => 'Optimole',
+			'ROCKET_LL_VERSION' => 'Rocket Lazy Load',
+			'WP_SMUSH_VERSION' => 'Smush WPMU Dev',
+		);
 
-		if (function_exists('et_setup_theme') && 'divi' == $shortname) $provided_by[] = 'Divi';
-		if (defined('AUTOPTIMIZE_PLUGIN_VERSION')) $provided_by[] = 'Autoptimize';
-		
+		foreach ($plugins as $constant => $name) {
+			if (defined($constant)) {
+					$provided_by[] = $name;
+			}
+		}
+
 		return $provided_by;
 	}
 }

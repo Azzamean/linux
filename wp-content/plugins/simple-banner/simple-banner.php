@@ -3,16 +3,16 @@
  * Plugin Name: Simple Banner
  * Plugin URI: https://github.com/rpetersen29/simple-banner
  * Description: Display a simple banner at the top or bottom of your website.
- * Version: 2.15.3
+ * Version: 2.15.4
  * Author: Ryan Petersen
  * Author URI: http://rpetersen29.github.io/
  * License: GPL2
  *
  * @package Simple Banner
- * @version 2.15.3
+ * @version 2.15.4
  * @author Ryan Petersen <rpetersen.dev@gmail.com>
  */
-define ('SB_VERSION', '2.15.3');
+define ('SB_VERSION', '2.15.4');
 
 register_activation_hook( __FILE__, 'simple_banner_activate' );
 function simple_banner_activate() {
@@ -492,14 +492,33 @@ function is_license_verified(){
 	// check if license is active
 	// if error or unknown response return current value
 	if ($success === true) {
-		// now check if cancelled
+		// now check if cancelled, failed, or ended
 		$subscription_cancelled_at = $json->{'purchase'}->{'subscription_cancelled_at'};
+		$subscription_failed_at = $json->{'purchase'}->{'subscription_failed_at'};
+		$subscription_ended_at = $json->{'purchase'}->{'subscription_ended_at'};
+		$curr_date = new DateTime('now');
+
 		if ($subscription_cancelled_at) {
-			$curr_date = new DateTime('now');
 			$cancelled_date = new DateTime($subscription_cancelled_at);
 
 			// Compare the dates
 			if ($curr_date > $cancelled_date) {
+			    return false;
+			}
+		}
+		if ($subscription_failed_at) {
+			$failed_date = new DateTime($subscription_failed_at);
+
+			// Compare the dates
+			if ($curr_date > $failed_date) {
+			    return false;
+			}
+		}
+		if ($subscription_ended_at) {
+			$ended_date = new DateTime($subscription_ended_at);
+
+			// Compare the dates
+			if ($curr_date > $ended_date) {
 			    return false;
 			}
 		}

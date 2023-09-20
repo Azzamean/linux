@@ -246,7 +246,7 @@ class WPO_Cache_Premium {
 			 */
 			if (apply_filters('wpo_add_woocommerce_default_currency_to_cache_config', true)) {
 				// Save the default WC currency in our config.
-				// Note: We use get_option('woocommerce_currency') as get_woocommerce_currency() is overriden by the currency selector plugin.
+				// Note: We use get_option('woocommerce_currency') as get_woocommerce_currency() is overridden by the currency selector plugin.
 				$config['default_values']['woocommerce_currency'] = get_option('woocommerce_currency');
 			}
 		}
@@ -376,7 +376,7 @@ class WPO_Cache_Premium {
 			$_COOKIE['woocommerce_tax_country'] = $_POST['billing_country'];
 			return;
 		} elseif (isset($_REQUEST['wc_country_preselect'])) {
-			// Value from VAT complience form
+			// Value from VAT compliance form
 			setcookie('woocommerce_tax_country', $_REQUEST['wc_country_preselect'], (time() + 30 * 86400), '/');
 			$_COOKIE['woocommerce_tax_country'] = $_REQUEST['wc_country_preselect'];
 			return;
@@ -455,7 +455,7 @@ class WPO_Cache_Premium {
 	}
 
 	/**
-	 * Ouptut user specific cache option.
+	 * Output user specific cache option.
 	 */
 	public function output_user_specific_cache_option() {
 		global $is_nginx;
