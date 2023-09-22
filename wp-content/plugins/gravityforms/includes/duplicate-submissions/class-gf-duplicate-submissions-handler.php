@@ -117,16 +117,13 @@ class GF_Duplicate_Submissions_Handler {
 	 * Redirect to a $_GET request if we detect a dupe submission from Safari.
 	 */
 	public function maybe_handle_safari_redirect() {
-
-		$needs_protection = filter_input( INPUT_GET, self::SAFARI_REDIRECT_PARAM, FILTER_SANITIZE_STRING );
-
-		if ( empty( $needs_protection ) || ! $this->is_enabled() ) {
+		if ( rgget( self::SAFARI_REDIRECT_PARAM ) != '1' || ! $this->is_enabled() ) {
 			return;
 		}
 
 		// Get the submission URL from the $_SERVER, and strip out our redirect param.
 		$submission_url = filter_input( INPUT_SERVER, 'HTTP_REFERER', FILTER_SANITIZE_URL );
-		$base_url       = remove_query_arg( self::SAFARI_REDIRECT_PARAM, $submission_url );
+		$base_url       = esc_url( remove_query_arg( self::SAFARI_REDIRECT_PARAM, $submission_url ) );
 
 		// Redirect to the form's page URL as a GET request.
 		wp_safe_redirect( $base_url, 303 );
