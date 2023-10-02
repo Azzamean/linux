@@ -763,7 +763,7 @@ function wpdocs_remove_edit_menu()
     }
 }
 
-if (is_plugin_active('one-user-avatar/one-user-avatar.php')) {
+if (function_exists('is_plugin_active') && is_plugin_active('one-user-avatar/one-user-avatar.php')) {
     add_action('admin_init', 'wpdocs_remove_edit_menu');
 }
 
