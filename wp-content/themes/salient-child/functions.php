@@ -167,7 +167,7 @@ function lf_meta_header()
             '<div class="lfprojects dark-background jdf"><div class="container"><a href="https://jointdevelopment.org/" target="_blank" rel="noopener noreferrer"><img src="/wp-content/uploads/banners/jdf_banner_light_alternative.svg" alt="The Linux Foundation Projects"></a></div></div>';
         $linux_foundation_light =
             '<div class="lfprojects blue-background"><div class="container"><a href="https://www.linuxfoundation.org/projects" target="_blank" rel="noopener noreferrer"><img src="/wp-content/uploads/banners/lfprojects_banner_light.svg" alt="The Linux Foundation Projects"></a></div></div>';
-		$linux_foundation_light_background =
+        $linux_foundation_light_background =
             '<div class="lfprojects white-background"><div class="container"><a href="https://www.linuxfoundation.org/projects" target="_blank" rel="noopener noreferrer"><img src="/wp-content/uploads/banners/lfprojects_banner_color.svg" alt="The Linux Foundation Projects"></a></div></div>';
         $linux_foundation_dark =
             '<div class="lfprojects"><div class="container"><a href="https://www.linuxfoundation.org/projects" target="_blank" rel="noopener noreferrer"><img src="/wp-content/uploads/banners/lfprojects_banner_other.svg" alt="The Linux Foundation Projects"></a></div></div>';
@@ -206,6 +206,12 @@ function lf_meta_header()
             // SPDX
 
             case "31":
+                echo $linux_foundation_light;
+                break;
+
+            // YOCTO
+
+            case "32":
                 echo $linux_foundation_light;
                 break;
 
@@ -575,7 +581,7 @@ function turn_off_notifications()
     echo "<style>.update-nag, .updated, .error, .is-dismissible, .setting-error-tgmpa { display: none !important; }</style>";
     echo "<style>li#wp-admin-bar-my-sites ul#wp-admin-bar-my-sites-list {height: 500px !important; display: flex !important;flex-direction: column !important;flex-wrap: wrap !important;}</style>";
     echo "<style>ul#wp-admin-bar-my-sites-list {width: 700px;}</style>";
-	echo "<style>#wpadminbar .menupop li.hover>.ab-sub-wrapper {z-index: 9999 !important;}#wpadminbar .ab-sub-wrapper,#wpadminbar ul,#wpadminbar ul li {z-index: inherit !important;}</style>";
+    echo "<style>#wpadminbar .menupop li.hover>.ab-sub-wrapper {z-index: 9999 !important;}#wpadminbar .ab-sub-wrapper,#wpadminbar ul,#wpadminbar ul li {z-index: inherit !important;}</style>";
 }
 
 // SHORTCODE FOR UBER MENU LOGO
@@ -763,7 +769,10 @@ function wpdocs_remove_edit_menu()
     }
 }
 
-if (function_exists('is_plugin_active') && is_plugin_active('one-user-avatar/one-user-avatar.php')) {
+if (
+    function_exists('is_plugin_active') &&
+    is_plugin_active('one-user-avatar/one-user-avatar.php')
+) {
     add_action('admin_init', 'wpdocs_remove_edit_menu');
 }
 
