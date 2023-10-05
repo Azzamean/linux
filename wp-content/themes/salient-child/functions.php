@@ -149,6 +149,11 @@ if (is_multisite()) {
         case "15":
             require_once "sites/nextarch/functions.php";
             break;
+
+        case "32":
+            require_once "sites/yocto/functions.php";
+            break;
+    
     }
 }
 
