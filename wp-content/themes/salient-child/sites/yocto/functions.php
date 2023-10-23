@@ -1,5 +1,16 @@
 <?php
 
+function yocto_enqueue_styles() {
+    wp_enqueue_style(
+        "yocto-style",
+        get_stylesheet_directory_uri() . "/sites/yocto/yocto.css",
+        "",
+        nectar_get_theme_version()
+    );        
+}
+add_action("wp_enqueue_scripts", "yocto_enqueue_styles", 100);
+
+
 /* PARSE GRAVITY FORM SUBMISSION TO POPULATE METADATA FOR ORGANIZATION */
 add_action( 'gform_advancedpostcreation_post_after_creation_2', 'apc_serialize_checkboxes', 10, 4 );
 function apc_serialize_checkboxes( $post_id, $feed, $entry, $form ) {
@@ -95,7 +106,7 @@ function list_jobs() {
     
     $query = new WP_Query($queryArgs);
     if ( ! $query->have_posts() ) {
-        return;
+        return '<p>🪄This looks like the perfect spot for your job listing. Add one today! We wish you the best of luck in your search!</p>';
     }
 
     ob_start();
