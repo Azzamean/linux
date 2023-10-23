@@ -21,3 +21,122 @@ function apc_serialize_checkboxes( $post_id, $feed, $entry, $form ) {
   
     update_post_meta( $post_id, 'services_provided', $values );
 }
+
+
+function list_consultants() {
+
+    $queryArgs = [
+        'post_type' => 'consultant',
+        'post_status' => 'publish',
+        'posts_per_page' => 999,
+        'order' => 'DESC',
+        'orderby' => 'title',
+    ];
+    
+    $query = new WP_Query($queryArgs);
+    if ( ! $query->have_posts() ) {
+        return;
+    }
+
+    ob_start();
+?>
+    <table class="consultants">
+        <thead>
+            <tr>
+                <th>Consultant</th>
+                <th>Location</th>
+                <th>Organization</th>
+                <th>Services</th>
+            </tr>
+        </thead>
+<?php
+    while ( $query->have_posts() ) {
+        $query->the_post();
+        $country = wp_get_post_terms( get_the_ID(), 'country' );
+        $country_name = '';
+        if ( $country ) {
+            $country_name = $country[0]->name;
+        }
+        $services = get_field( 'services_provided' );
+        ?>
+        <tr>
+            <td><?php echo get_field( 'contact_name' ) ?></td>
+            <td><?php echo $country_name; ?></td>
+            <td><?php echo the_title(); ?></td>
+            <td>
+                <ul class="consultant-services">
+                <?php 
+                foreach( $services as $s ) {
+                    echo '<li>' . $s . '</li>';
+                }
+                ?>
+                </ul>
+            </td>
+        </tr>
+        <?php
+    }
+    echo "</table>";
+    wp_reset_query();
+    $block_content = ob_get_clean();
+	return $block_content;
+}
+add_shortcode('list-consultants', 'list_consultants');
+
+
+function list_jobs() {
+
+    $queryArgs = [
+        'post_type' => 'job',
+        'post_status' => 'publish',
+        'posts_per_page' => 999,
+        'order' => 'DESC',
+        'orderby' => 'date',
+    ];
+    
+    $query = new WP_Query($queryArgs);
+    if ( ! $query->have_posts() ) {
+        return;
+    }
+
+    ob_start();
+?>
+    <div class="jobs">
+<?php
+    while ( $query->have_posts() ) {
+        $query->the_post();
+        $country = wp_get_post_terms( get_the_ID(), 'country' );
+        $country_name = '';
+        if ( $country ) {
+            $country_name = $country[0]->name;
+        }
+        ?>
+        <div id="fws_65361d118561f" data-midnight="" data-column-margin="default" class="job wpb_row vc_row-fluid vc_row inner_row  vc_custom_1698045001143" style=""><div class="row-bg-wrap"> <div class="row-bg"></div> </div><div class="row_col_wrap_12_inner col span_12  left">
+            <div class="vc_col-sm-3 wpb_column column_container vc_column_container col child_column no-extra-padding inherit_tablet inherit_phone " data-padding-pos="all" data-has-bg-color="false" data-bg-color="" data-bg-opacity="1" data-animation="" data-delay="0">
+            <div class="vc_column-inner"><div class="wpb_wrapper"><div class="img-with-aniamtion-wrap " data-max-width="100%" data-max-width-mobile="default" data-shadow="none" data-animation="none">
+            <div class="inner"><div class="hover-wrap"><div class="hover-wrap-inner">
+                <?php the_post_thumbnail() ?>
+            </div></div></div></div></div></div></div> 
+
+            <div class="vc_col-sm-6 wpb_column column_container vc_column_container col child_column no-extra-padding inherit_tablet inherit_phone " data-padding-pos="all" data-has-bg-color="false" data-bg-color="" data-bg-opacity="1" data-animation="" data-delay="0">
+            <div class="vc_column-inner"><div class="wpb_wrapper"><div class="wpb_text_column wpb_content_element "><div class="wpb_wrapper">
+                <h4><a href="<?php get_field( 'job_url' ); ?>"><?php the_title(); ?></a></h4>
+                <p><span class="job-company"><?php echo get_field( 'company' ); ?></span> <span class="job-country"><?php echo $country_name ?><span></p>
+            </div></div></div></div></div> 
+
+            <div class="vc_col-sm-3 wpb_column column_container vc_column_container col child_column no-extra-padding inherit_tablet inherit_phone " data-padding-pos="all" data-has-bg-color="false" data-bg-color="" data-bg-opacity="1" data-animation="" data-delay="0">
+            <div class="vc_column-inner"><div class="wpb_wrapper"><div class="wpb_text_column wpb_content_element ">
+            <div class="wpb_wrapper">
+                <p><?php echo get_the_date( 'F j' ); ?></p>
+            </div></div></div> </div></div> 
+        </div></div>
+
+
+
+        <?php
+    }
+    echo "</div>";
+    wp_reset_query();
+    $block_content = ob_get_clean();
+	return $block_content;
+}
+add_shortcode('list-jobs', 'list_jobs');
