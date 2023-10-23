@@ -70,18 +70,18 @@ class Provider extends Service_Provider {
 	 * Filters the HTTP request arguments for TEC telemetry to add the tribe-common integration ID and version.
 	 * For versioning purposes.
 	 *
-	 * @since TBD
+	 * @since 5.1.8.1
 	 *
 	 * @param array  $parsed_args An array of HTTP request arguments.
 	 * @param string $url         The request URL.
 	 */
-	function filter_telemetry_http_request_args( $parsed_args, $url ) {
-		if ( false === stripos( $url, 'stellarwp.com/api/v1/telemetry' ) ) {
+	public function filter_telemetry_http_request_args( $parsed_args, $url ) {
+		if ( false === stripos( $url, 'telemetry.stellarwp.com/api/v1/opt-in' ) ) {
 			return $parsed_args;
 		}
 
-		$parsed_args['integration_id']      = 'tec_common';
-		$parsed_args['integration_version'] = Tribe__Main::VERSION;
+		$parsed_args['body']['integration_id']      = 'tec_common';
+		$parsed_args['body']['integration_version'] = Tribe__Main::VERSION;
 
 		return $parsed_args;
 	}
