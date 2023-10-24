@@ -40,7 +40,7 @@ function list_consultants() {
         'post_type' => 'consultant',
         'post_status' => 'publish',
         'posts_per_page' => 999,
-        'order' => 'DESC',
+        'order' => 'ASC',
         'orderby' => 'title',
     ];
     
@@ -73,7 +73,7 @@ function list_consultants() {
         <tr>
             <td><?php echo get_field( 'contact_name' ) ?></td>
             <td><?php echo $country_name; ?></td>
-            <td><?php echo the_title(); ?></td>
+            <td><a class="external" target="_blank" href="<?php echo get_field( 'company_website' ) ?>"><?php echo the_title(); ?></a></td>
             <td>
                 <ul class="consultant-services">
                 <?php 
@@ -121,6 +121,7 @@ function list_jobs() {
             $country_name = $country[0]->name;
         }
         ?>
+        <a target="_blank" href="<?php echo get_field( 'job_url' ); ?>">
         <div id="fws_65361d118561f" data-midnight="" data-column-margin="default" class="job wpb_row vc_row-fluid vc_row inner_row  vc_custom_1698045001143" style=""><div class="row-bg-wrap"> <div class="row-bg"></div> </div><div class="row_col_wrap_12_inner col span_12  left">
             <div class="vc_col-sm-3 wpb_column column_container vc_column_container col child_column no-extra-padding inherit_tablet inherit_phone " data-padding-pos="all" data-has-bg-color="false" data-bg-color="" data-bg-opacity="1" data-animation="" data-delay="0">
             <div class="vc_column-inner"><div class="wpb_wrapper"><div class="img-with-aniamtion-wrap " data-max-width="100%" data-max-width-mobile="default" data-shadow="none" data-animation="none">
@@ -130,7 +131,7 @@ function list_jobs() {
 
             <div class="vc_col-sm-6 wpb_column column_container vc_column_container col child_column no-extra-padding inherit_tablet inherit_phone " data-padding-pos="all" data-has-bg-color="false" data-bg-color="" data-bg-opacity="1" data-animation="" data-delay="0">
             <div class="vc_column-inner"><div class="wpb_wrapper"><div class="wpb_text_column wpb_content_element "><div class="wpb_wrapper">
-                <h4><a href="<?php get_field( 'job_url' ); ?>"><?php the_title(); ?></a></h4>
+                <h4><?php the_title(); ?></h4>
                 <p><span class="job-company"><?php echo get_field( 'company' ); ?></span> <span class="job-country"><?php echo $country_name ?><span></p>
             </div></div></div></div></div> 
 
@@ -140,6 +141,7 @@ function list_jobs() {
                 <p><?php echo get_the_date( 'F j' ); ?></p>
             </div></div></div> </div></div> 
         </div></div>
+        </a>
 
 
 

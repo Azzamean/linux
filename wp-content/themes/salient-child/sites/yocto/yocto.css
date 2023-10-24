@@ -230,6 +230,7 @@ h2 {
 }
 
 .page-id-458 #alert-bar,
+.page-id-1469 #alert-bar,
 .page-id-15 #alert-bar {
     display: none;
 }
@@ -276,8 +277,8 @@ div.jobs div.job {
     border: 1px solid #E0E0E0;
     box-shadow: 0px 4px 4px 0px #00000040;
     border-radius: 10px;
-    padding: 20px;
-
+    padding: 30px;
+	color: black;
 }
 
 div.jobs .col img {
@@ -306,4 +307,12 @@ span.job-country:before {
     margin-right: 5px;
     margin-left: 15px;
     color: #888
+}
+
+.row .col img.icon {
+	max-height: 150px;
+}
+
+.row .col img.sm-icon {
+	max-height: 125px;
 }
