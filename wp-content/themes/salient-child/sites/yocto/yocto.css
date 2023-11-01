@@ -206,17 +206,20 @@ h2 {
     margin-bottom: 18px;
 }
 
-.external span:after {
-    display: inline-block !important;
-    font-family: 'FontAwesome';
-    content: "\f08e" !important;
-    font-weight: 600;
-    margin-left: 5px;
-}
-
 .jump {
     width: 100%;
 }
+@media only screen and (min-width: 1374px) {
+	.jump {
+		width: 390px;
+	}
+}
+@media only screen and (min-width: 900px) and (max-width:1373px) {
+	.jump {
+		width: 350px;
+	}
+}
+	
 
 #more-technical-articles,
 #more-community-talks,
@@ -229,8 +232,10 @@ h2 {
     display: none;
 }
 
+#alert-bar,
 .page-id-458 #alert-bar,
 .page-id-1469 #alert-bar,
+.page-id-46312 #alert-bar,
 .page-id-15 #alert-bar {
     display: none;
 }
@@ -315,4 +320,29 @@ span.job-country:before {
 
 .row .col img.sm-icon {
 	max-height: 125px;
+}
+
+#to-top {
+	height: 40px;
+	width: 40px;
+}
+#to-top i {
+	font-size: 33px;
+	line-height: 33px;
+}
+
+body p a {
+	text-decoration: underline;
+	color: unset;
+}
+
+#footer-outer #footer-widgets .col ul li {
+	border-bottom: none;
+}
+
+a.nectar-button.large {
+	margin-top: 25px;
+}
+a.nectar-button.large.no-margin {
+	margin-top: 0;
 }

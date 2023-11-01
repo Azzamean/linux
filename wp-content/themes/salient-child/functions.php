@@ -153,7 +153,6 @@ if (is_multisite()) {
         case "32":
             require_once "sites/yocto/functions.php";
             break;
-    
     }
 }
 
