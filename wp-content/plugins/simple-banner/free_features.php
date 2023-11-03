@@ -10,9 +10,26 @@
                 <!-- -->
                 <input type="radio" id="yes" name="hide_simple_banner" value="yes" <?php echo ((get_option('hide_simple_banner') == 'yes') ? 'checked' : '' ); ?>>
                 <label for="yes">yes</label>
-                <!-- -->
+                <br>
                 <input type="radio" id="no" name="hide_simple_banner" value="no" <?php echo ((get_option('hide_simple_banner') == 'yes') ? '' : 'checked' ); ?>>
                 <label for="no">no</label>
+                <!-- -->
+            </td>
+        </tr>
+        <!-- Prepend element -->
+        <tr valign="top">
+            <th scope="row">
+                <span style="color: limegreen;">NEW</span>
+                Prepend element
+                <div>This inserts the banner HTML at the top of the <code>&#60;body&#62;</code> element or the <code>&#60;header&#62;</code> element. Default is <code>&#60;body&#62;</code>.</div>
+            </th>
+            <td>
+                <!-- -->
+                <input type="radio" id="body" name="simple_banner_prepend_element" value="body" <?php echo ((get_option('simple_banner_prepend_element') == 'header') ? '' : 'checked' ); ?>>
+                <label for="body"><code>&#60;body&#62;</code></label>
+                <br>
+                <input type="radio" id="header" name="simple_banner_prepend_element" value="header" <?php echo ((get_option('simple_banner_prepend_element') == 'header') ? 'checked' : '' ); ?>>
+                <label for="header"><code>&#60;header&#62;</code></label>
                 <!-- -->
             </td>
         </tr>
@@ -223,7 +240,6 @@
         <!-- Z-Index -->
         <tr valign="top">
             <th scope="row">
-                <span style="color: limegreen;">NEW</span>
                 z-index
                 <div>
                     CSS property sets the z-order of the banner

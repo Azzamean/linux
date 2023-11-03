@@ -7,7 +7,7 @@ jQuery(document).ready(function ($) {
     if (isSimpleBannerVisible) {
         if (!simpleBannerScriptParams.wp_body_open || !simpleBannerScriptParams.wp_body_open_enabled) {
             var closeButton = simpleBannerScriptParams.close_button_enabled ? '<button aria-label="Close" id="simple-banner-close-button" class="simple-banner-button">&#x2715;</button>' : '';
-            var prependElement = document.querySelector(simpleBannerScriptParams.simple_banner_insert_inside_element || 'body');
+            var prependElement = document.querySelector(simpleBannerScriptParams.simple_banner_insert_inside_element || simpleBannerScriptParams.simple_banner_prepend_element || 'body');
             $('<div id="simple-banner" class="simple-banner"><div class="simple-banner-text"><span>' 
                 + simpleBannerScriptParams.simple_banner_text 
                 + '</span></div>' + closeButton + '</div>')

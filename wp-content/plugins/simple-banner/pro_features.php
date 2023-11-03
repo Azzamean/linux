@@ -61,7 +61,7 @@
                 Insert Inside Element
                 <div>
                     Insert the banner inside a specific element on your page.
-                    (e.g. <code>header</code> for the header element or <code>#main-navigation</code> for an id attribute). Default is <code>body</code>.
+                    (e.g. <code>header</code> for the header element or <code>#main-navigation</code> for an id attribute). This will override the <code>Prepend element</code> setting.
                 </div>
             </th>
             <td style="vertical-align:top;">
@@ -83,7 +83,6 @@
         <!-- Start After Date -->
         <tr valign="top">
             <th scope="row">
-                <span style="color: limegreen;">NEW</span>
                 Start After Date
                 <div>
                     This can start showing the banner after a given date. Use UTC time to avoid daylight savings time issues (e.g. <code>21 Feb 2022 15:53:22 UTC</code>).

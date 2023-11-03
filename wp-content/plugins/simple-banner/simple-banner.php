@@ -3,16 +3,16 @@
  * Plugin Name: Simple Banner
  * Plugin URI: https://github.com/rpetersen29/simple-banner
  * Description: Display a simple banner at the top or bottom of your website.
- * Version: 2.15.4
+ * Version: 2.16.0
  * Author: Ryan Petersen
  * Author URI: http://rpetersen29.github.io/
  * License: GPL2
  *
  * @package Simple Banner
- * @version 2.15.4
+ * @version 2.16.0
  * @author Ryan Petersen <rpetersen.dev@gmail.com>
  */
-define ('SB_VERSION', '2.15.4');
+define ('SB_VERSION', '2.16.0');
 
 register_activation_hook( __FILE__, 'simple_banner_activate' );
 function simple_banner_activate() {
@@ -78,6 +78,7 @@ function simple_banner() {
 		// script specific parameters
 		'version' => SB_VERSION,
 		'hide_simple_banner' => get_option('hide_simple_banner'),
+		'simple_banner_prepend_element' => get_option('simple_banner_prepend_element'),
 		'simple_banner_position' => get_option('simple_banner_position'),
 		'header_margin' => get_option('header_margin'),
 		'header_padding' => get_option('header_padding'),
@@ -292,6 +293,11 @@ function theme_slug_escape_js_output($input){
 add_action( 'admin_init', 'simple_banner_settings' );
 function simple_banner_settings() {
 	register_setting( 'simple-banner-settings-group', 'hide_simple_banner',
+		array(
+	    	'sanitize_callback' => 'wp_filter_nohtml_kses'
+		)
+    );
+	register_setting( 'simple-banner-settings-group', 'simple_banner_prepend_element',
 		array(
 	    	'sanitize_callback' => 'wp_filter_nohtml_kses'
 		)

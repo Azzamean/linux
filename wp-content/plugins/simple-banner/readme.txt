@@ -3,8 +3,8 @@ Contributors: rpetersen29
 Donate link: https://www.paypal.me/rpetersenDev
 Tags: banner, bar, top, announcement, notification, simple, bulletin, notice, cta, free
 Requires at least: 3.0.1
-Tested up to: 6.3.1
-Stable tag: 2.15.4
+Tested up to: 6.3.2
+Stable tag: 2.16.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -102,7 +102,7 @@ This feature is being actively developed, in the meantime you can use this custo
 `
 = I have the Divi theme and the banner isn't showing. =
 
-Set your banner position to <code>relative</code> and try this in 'Website Custom CSS':
+Try setting the "Prepend element" setting to <code>header</code>. If that doesn't work, set your banner position to <code>relative</code> and try this in 'Website Custom CSS':
 
 `#main-header:not(.et-fixed-header) {
   position: relative;
@@ -119,6 +119,9 @@ Set your banner position to <code>relative</code> and try this in 'Website Custo
 4. This is the settings page... and the fourth screen shot.
 
 == Changelog ==
+
+= 2.16.0 =
+* New prepend element feature
 
 = 2.15.4 =
 * Bug fixes
@@ -344,6 +347,9 @@ Set your banner position to <code>relative</code> and try this in 'Website Custo
 * First Version.
 
 == Upgrade Notice ==
+
+= 2.16.0 =
+* New prepend element feature
 
 = 2.15.4 =
 * Bug fixes
