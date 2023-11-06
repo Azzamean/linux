@@ -24,6 +24,20 @@ if (isset($_SERVER['PANTHEON_ENVIRONMENT']) &&
   }
 }
 
+
+// REQUIRE WWW FOR YOCTOPROJECT.ORG
+if (isset($_SERVER['PANTHEON_ENVIRONMENT']) &&
+  $_SERVER['PANTHEON_ENVIRONMENT'] === 'live') {
+  if ($_SERVER['HTTP_HOST'] == 'yoctoproject.org' ||
+	  $_SERVER['HTTP_HOST'] == 'http://yoctoproject.org/' ||
+	  $_SERVER['HTTP_HOST'] == 'https://yoctoproject.org/' {
+    header('HTTP/1.0 301 Moved Permanently');
+    header('Location: https://www.yoctoproject.org'. $_SERVER['REQUEST_URI']);
+    exit();
+  }
+}
+
+
 if (file_exists(dirname(__FILE__) . '/wp-config-pantheon.php') && isset($_ENV['PANTHEON_ENVIRONMENT'])) {
 	define('DISABLE_WP_CRON', false);
 	require_once(dirname(__FILE__) . '/wp-config-pantheon.php');
