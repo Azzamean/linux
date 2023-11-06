@@ -10,68 +10,65 @@
 /**
  * Pantheon platform settings. Everything you need should already be set.
  */
- 
+
 // REQUIRE WWW FOR OPENMV.ORG
-if (isset($_SERVER['PANTHEON_ENVIRONMENT']) &&
-  $_SERVER['PANTHEON_ENVIRONMENT'] === 'live') {
-  if ($_SERVER['HTTP_HOST'] == 'openmv.org' ||
-	  $_SERVER['HTTP_HOST'] == 'http://openmv.org/' ||
-	  $_SERVER['HTTP_HOST'] == 'https://openmv.org/' ||
-      $_SERVER['HTTP_HOST'] == 'http://metaverse.live-lfprojects3.linuxfoundation.org/') {
-    header('HTTP/1.0 301 Moved Permanently');
-    header('Location: https://www.openmv.org'. $_SERVER['REQUEST_URI']);
-    exit();
-  }
+if (
+    isset($_SERVER['PANTHEON_ENVIRONMENT']) &&
+    $_SERVER['PANTHEON_ENVIRONMENT'] === 'live'
+) {
+    if (
+        $_SERVER['HTTP_HOST'] == 'openmv.org' ||
+        $_SERVER['HTTP_HOST'] == 'http://openmv.org/' ||
+        $_SERVER['HTTP_HOST'] == 'https://openmv.org/' ||
+        $_SERVER['HTTP_HOST'] ==
+            'http://metaverse.live-lfprojects3.linuxfoundation.org/'
+    ) {
+        header('HTTP/1.0 301 Moved Permanently');
+        header('Location: https://www.openmv.org' . $_SERVER['REQUEST_URI']);
+        exit();
+    }
 }
 
-
-// REQUIRE WWW FOR YOCTOPROJECT.ORG
-/*if (isset($_SERVER['PANTHEON_ENVIRONMENT']) &&
-  $_SERVER['PANTHEON_ENVIRONMENT'] === 'live') {
-  if ($_SERVER['HTTP_HOST'] == 'yoctoproject.org' ||
-	  $_SERVER['HTTP_HOST'] == 'http://yoctoproject.org/' ||
-	  $_SERVER['HTTP_HOST'] == 'https://yoctoproject.org/' {
-    header('HTTP/1.0 301 Moved Permanently');
-    header('Location: https://www.yoctoproject.org'. $_SERVER['REQUEST_URI']);
-    exit();
-  }
-}*/
-
-
-if (file_exists(dirname(__FILE__) . '/wp-config-pantheon.php') && isset($_ENV['PANTHEON_ENVIRONMENT'])) {
-	define('DISABLE_WP_CRON', false);
-	require_once(dirname(__FILE__) . '/wp-config-pantheon.php');
-/**
- * Local configuration information.
- *
- * If you are working in a local/desktop development environment and want to
- * keep your config separate, we recommend using a 'wp-config-local.php' file,
- * which you should also make sure you .gitignore.
- */
-} elseif (file_exists(dirname(__FILE__) . '/wp-config-local.php') && !isset($_ENV['PANTHEON_ENVIRONMENT'])){
-	# IMPORTANT: ensure your local config does not include wp-settings.php
-	require_once(dirname(__FILE__) . '/wp-config-local.php');
-/**
- * This block will be executed if you are NOT running on Pantheon and have NO
- * wp-config-local.php. Insert alternate config here if necessary.
- *
- * If you are only running on Pantheon, you can ignore this block.
- */
+if (
+    file_exists(dirname(__FILE__) . '/wp-config-pantheon.php') &&
+    isset($_ENV['PANTHEON_ENVIRONMENT'])
+) {
+    define('DISABLE_WP_CRON', false);
+    require_once dirname(__FILE__) . '/wp-config-pantheon.php';
+    /**
+     * Local configuration information.
+     *
+     * If you are working in a local/desktop development environment and want to
+     * keep your config separate, we recommend using a 'wp-config-local.php' file,
+     * which you should also make sure you .gitignore.
+     */
+} elseif (
+    file_exists(dirname(__FILE__) . '/wp-config-local.php') &&
+    !isset($_ENV['PANTHEON_ENVIRONMENT'])
+) {
+    # IMPORTANT: ensure your local config does not include wp-settings.php
+    require_once dirname(__FILE__) . '/wp-config-local.php';
+    /**
+     * This block will be executed if you are NOT running on Pantheon and have NO
+     * wp-config-local.php. Insert alternate config here if necessary.
+     *
+     * If you are only running on Pantheon, you can ignore this block.
+     */
 } else {
-	define('DB_NAME',          'database_name');
-	define('DB_USER',          'database_username');
-	define('DB_PASSWORD',      'database_password');
-	define('DB_HOST',          'database_host');
-	define('DB_CHARSET',       'utf8');
-	define('DB_COLLATE',       '');
-	define('AUTH_KEY',         'put your unique phrase here');
-	define('SECURE_AUTH_KEY',  'put your unique phrase here');
-	define('LOGGED_IN_KEY',    'put your unique phrase here');
-	define('NONCE_KEY',        'put your unique phrase here');
-	define('AUTH_SALT',        'put your unique phrase here');
-	define('SECURE_AUTH_SALT', 'put your unique phrase here');
-	define('LOGGED_IN_SALT',   'put your unique phrase here');
-	define('NONCE_SALT',       'put your unique phrase here');
+    define('DB_NAME', 'database_name');
+    define('DB_USER', 'database_username');
+    define('DB_PASSWORD', 'database_password');
+    define('DB_HOST', 'database_host');
+    define('DB_CHARSET', 'utf8');
+    define('DB_COLLATE', '');
+    define('AUTH_KEY', 'put your unique phrase here');
+    define('SECURE_AUTH_KEY', 'put your unique phrase here');
+    define('LOGGED_IN_KEY', 'put your unique phrase here');
+    define('NONCE_KEY', 'put your unique phrase here');
+    define('AUTH_SALT', 'put your unique phrase here');
+    define('SECURE_AUTH_SALT', 'put your unique phrase here');
+    define('LOGGED_IN_SALT', 'put your unique phrase here');
+    define('NONCE_SALT', 'put your unique phrase here');
 }
 /** Standard wp-config.php stuff from here on down. **/
 /**
@@ -91,53 +88,66 @@ $table_prefix = 'wp_';
  * You may want to examine $_ENV['PANTHEON_ENVIRONMENT'] to set this to be
  * "true" in dev, but false in test and live.
  */
-if ( ! defined( 'WP_DEBUG' ) ) {
-	define('WP_DEBUG', false);
+if (!defined('WP_DEBUG')) {
+    define('WP_DEBUG', false);
 }
 /* That's all, stop editing! Happy Pressing. */
 /**** MULTISITE INFORMATION ****/
-define( 'WP_ALLOW_MULTISITE', true );
-define( 'MULTISITE', true );
-define( 'SUBDOMAIN_INSTALL', true );
+define('WP_ALLOW_MULTISITE', true);
+define('MULTISITE', true);
+define('SUBDOMAIN_INSTALL', true);
 $base = '/';
 #define( 'DOMAIN_CURRENT_SITE', 'example.com' );
-define( 'PATH_CURRENT_SITE', '/' );
-define( 'SITE_ID_CURRENT_SITE', 1 );
-define( 'BLOG_ID_CURRENT_SITE', 1 );
+define('PATH_CURRENT_SITE', '/');
+define('SITE_ID_CURRENT_SITE', 1);
+define('BLOG_ID_CURRENT_SITE', 1);
 define('COOKIE_DOMAIN', $_SERVER['HTTP_HOST']);
 define('ADMIN_COOKIE_PATH', '/');
 define('COOKIEPATH', '');
-define('SITECOOKIEPATH', ''); 
+define('SITECOOKIEPATH', '');
 /**
  * Define DOMAIN_CURRENT_SITE conditionally.
  */
-if ( ! empty( $_ENV['PANTHEON_ENVIRONMENT'] ) ) {
-  switch( $_ENV['PANTHEON_ENVIRONMENT'] ) {
-    case 'live':
-      // Value should be the primary domain for the Site Network.
-      define( 'DOMAIN_CURRENT_SITE', 'live-lfprojects3.linuxfoundation.org' );
-      // Once you map a domain to Live, you can change DOMAIN_CURRENT_SITE
-      // define( 'DOMAIN_CURRENT_SITE', 'example-network.com' );
-      break;
-    case 'test':
-      define( 'DOMAIN_CURRENT_SITE', 'test-lfprojects3.pantheonsite.io' );
-      break;
-    case 'dev':
-      //define( 'DOMAIN_CURRENT_SITE', 'dev-lfprojects3.pantheonsite.io' );
-	  define( 'DOMAIN_CURRENT_SITE', 'dev-lfprojects3.linuxfoundation.org' );
-      break;
-    default:
-      # Catch-all to accommodate default naming for multi-dev environments.
-      define( 'DOMAIN_CURRENT_SITE', $_ENV['PANTHEON_ENVIRONMENT'] . '-' . $_ENV['PANTHEON_SITE_NAME'] . '.pantheonsite.io' );
-      break;
+if (!empty($_ENV['PANTHEON_ENVIRONMENT'])) {
+    switch ($_ENV['PANTHEON_ENVIRONMENT']) {
+        case 'live':
+            // Value should be the primary domain for the Site Network.
+            define(
+                'DOMAIN_CURRENT_SITE',
+                'live-lfprojects3.linuxfoundation.org'
+            );
+            // Once you map a domain to Live, you can change DOMAIN_CURRENT_SITE
+            // define( 'DOMAIN_CURRENT_SITE', 'example-network.com' );
+            break;
+        case 'test':
+            define('DOMAIN_CURRENT_SITE', 'test-lfprojects3.pantheonsite.io');
+            break;
+        case 'dev':
+            //define( 'DOMAIN_CURRENT_SITE', 'dev-lfprojects3.pantheonsite.io' );
+            define(
+                'DOMAIN_CURRENT_SITE',
+                'dev-lfprojects3.linuxfoundation.org'
+            );
+            break;
+        default:
+            # Catch-all to accommodate default naming for multi-dev environments.
+            define(
+                'DOMAIN_CURRENT_SITE',
+                $_ENV['PANTHEON_ENVIRONMENT'] .
+                    '-' .
+                    $_ENV['PANTHEON_SITE_NAME'] .
+                    '.pantheonsite.io'
+            );
+            break;
     }
 }
 /** Absolute path to the WordPress directory. */
-if ( !defined('ABSPATH') )
-	define('ABSPATH', dirname(__FILE__) . '/');
+if (!defined('ABSPATH')) {
+    define('ABSPATH', dirname(__FILE__) . '/');
+}
 
 /** Sets up WordPress vars and included files. */
-require_once(ABSPATH . 'wp-settings.php');
+require_once ABSPATH . 'wp-settings.php';
 
 /* ALLOW ALL FILE TYPES; EXAMPLE: SVG's */
 define('ALLOW_UNFILTERED_UPLOADS', true);
