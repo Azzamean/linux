@@ -26,7 +26,7 @@ if (isset($_SERVER['PANTHEON_ENVIRONMENT']) &&
 
 
 // REQUIRE WWW FOR YOCTOPROJECT.ORG
-if (isset($_SERVER['PANTHEON_ENVIRONMENT']) &&
+/*if (isset($_SERVER['PANTHEON_ENVIRONMENT']) &&
   $_SERVER['PANTHEON_ENVIRONMENT'] === 'live') {
   if ($_SERVER['HTTP_HOST'] == 'yoctoproject.org' ||
 	  $_SERVER['HTTP_HOST'] == 'http://yoctoproject.org/' ||
@@ -35,7 +35,7 @@ if (isset($_SERVER['PANTHEON_ENVIRONMENT']) &&
     header('Location: https://www.yoctoproject.org'. $_SERVER['REQUEST_URI']);
     exit();
   }
-}
+}*/
 
 
 if (file_exists(dirname(__FILE__) . '/wp-config-pantheon.php') && isset($_ENV['PANTHEON_ENVIRONMENT'])) {
