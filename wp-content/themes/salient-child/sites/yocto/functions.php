@@ -159,17 +159,3 @@ $block_content = ob_get_clean();
 return $block_content;
 }
 add_shortcode('list-jobs', 'list_jobs');
-
-function default_blog_featured_image_id(
-    $value,
-    $object_id,
-    $meta_key,
-    $single,
-    $meta_type
-) {
-    if ('_thumbnail_id' == $meta_key) {
-        $value = 46527; // the ID for the default image
-    }
-    return $value;
-}
-add_filter('default_post_metadata', 'default_blog_featured_image_id', 10, 5);
