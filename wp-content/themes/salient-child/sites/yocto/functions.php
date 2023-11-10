@@ -13,7 +13,7 @@ add_action("wp_enqueue_scripts", "yocto_enqueue_styles", 100);
 
 /* PARSE GRAVITY FORM SUBMISSION TO POPULATE METADATA FOR ORGANIZATION */
 add_action(
-    'gform_advancedpostcreation_post_after_creation_2',
+    'gform_advancedpostcreation_post_after_creation_1',
     'apc_serialize_checkboxes',
     10,
     4
