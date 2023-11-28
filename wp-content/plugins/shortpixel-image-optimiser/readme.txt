@@ -4,7 +4,7 @@ Tags: convert webp, optimize images, image optimization, resize, compressor, ima
 Requires at least: 4.8.0
 Tested up to: 6.4
 Requires PHP: 5.6
-Stable tag: 5.5.0
+Stable tag: 5.5.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -303,6 +303,9 @@ This action can be used to cleanup the meta data from the database, regenerate t
 `apply_filters('shortpixel/settings/image_sizes', $sizes);`
 filters the array (`$sizes`) of image sizes that can be excluded from processing (displayed in the plugin Advanced settings);
 
+`apply_filters('shortpixel/image/imageparamlist', $result, $this->id, $this);`
+filters the list of parameters sent to the API so that resizing can be performed more granularly;
+
 `apply_filters('shortpixel/api/request', $requestParameters, $item_id);`
 filters the parameters sent to the optimization API (through `$requestParameters`), described in detail here: <a href="https://shortpixel.com/api-docs" target="_blank">ShortPixel Reducer API</a>; `$item_id` contains the ID of the Media Library item, or the ID of the Custom Media item (when used). In short, this filter can be used to alter any parameters sent to the API, depending on the needs. For example, you can set different resize parameters for different post types, different compression levels, remove EXIF or not, covert WebP/AVIF, and basically any other parameter that is sent to the API for a specific image (together with all its thumbnails).
 
@@ -383,6 +386,25 @@ Add HTTP basic authentication credentials by defining these constants in wp-conf
 8. Check other optimized images' status - themes or other plugins' images. (Media>Other Media)
 
 == Changelog ==
+
+= 5.5.2 =
+Release date: November 24, 2023
+* Fix: The excluded thumbnails are no longer checked out when saving the settings;
+* Fix: Adding new exclusions is now fixed;
+* Fix: Updated the wording of exclusions to make them consistent;
+* Fix: An error was displayed in the logs if an image could not be loaded at all;
+* Fix: An error is now displayed when a Custom Media folder cannot be added instead of silently crashing the page;
+* Fix: If WP_CONTENT_DIR does not contain wp-content, adding a Custom Media folder failed;
+* Language: 8 new strings added, 2 updated, 0 fuzzed and 7 deprecated.
+
+= 5.5.1 =
+Release date: November 17, 2023
+* New: Added a filter to change the parameters sent to the API (e.g. for granular resizing);
+* Fix: Some PHP notices were displayed in the logs when no exclusions were set;
+* Fix: when using the Media Library Grid view, a request for a non-existent image resulted in an Ajax error;
+* Fix: Add checks to prevent errors when WebP files cannot be copied to their destination;
+* Tweak: Removed notification about HEIC files;
+* Language: 0 new strings added, 0 updated, 0 fuzzed and 2 deprecated.
 
 = 5.5.0 =
 Release date: November 8, 2023
