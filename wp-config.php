@@ -154,3 +154,7 @@ define('ALLOW_UNFILTERED_UPLOADS', true);
 
 /* ShortPixel API Key for all sites */
 define('SHORTPIXEL_API_KEY', '9ZXJJsineYr76JNEt2JZ');
+
+/* POST REVISIONS */
+define ( 'WP_POST_REVISIONS', TRUE );
+define( 'WP_POST_REVISIONS', 5 );
