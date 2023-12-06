@@ -126,3 +126,14 @@ ul#wp-admin-bar-my-sites-list {
 .join-btn a span:after {
 	/* display: none !important; */
 } 
+
+
+/* FORCE TWITTER BIRD INTO THE X ICON */
+body .fa.fa-twitter:before,
+body .fa.fa-twitter:after {
+    content: "\e918" !important;
+} 
+
+nav i.fa.fa-twitter {
+    margin-top: 4px;
+}
