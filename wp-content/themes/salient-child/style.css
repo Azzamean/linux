@@ -137,3 +137,7 @@ body .fa.fa-twitter:after {
 nav i.fa.fa-twitter {
     margin-top: 4px;
 }
+
+.footer-social .fa.fa-twitter:after {
+    display: none !important;
+}
