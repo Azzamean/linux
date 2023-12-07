@@ -133,14 +133,9 @@ body .fa.fa-twitter:before {
     content: "\e918" !important;
 } 
 
-nav .fa.fa-twitter:before,
-nav .fa.fa-twitter:after {
+header nav .fa.fa-twitter:before,
+header nav .fa.fa-twitter:after {
 	    content: "\e918" !important;
-}
-
-
-nav i.fa.fa-twitter {
-    margin-top: 4px;
 }
 
 .footer-social .fa.fa-twitter:after {
