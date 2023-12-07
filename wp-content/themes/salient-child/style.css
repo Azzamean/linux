@@ -129,10 +129,15 @@ ul#wp-admin-bar-my-sites-list {
 
 
 /* FORCE TWITTER BIRD INTO THE X ICON */
-body .fa.fa-twitter:before,
-body .fa.fa-twitter:after {
+body .fa.fa-twitter:before {
     content: "\e918" !important;
 } 
+
+nav .fa.fa-twitter:before,
+nav .fa.fa-twitter:after {
+	    content: "\e918" !important;
+}
+
 
 nav i.fa.fa-twitter {
     margin-top: 4px;
