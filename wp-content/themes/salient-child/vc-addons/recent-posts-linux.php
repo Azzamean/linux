@@ -506,11 +506,13 @@ function recent_posts_linux($atts, $content)
         "offset" => $offset,
         "ignore_sticky_posts" => true,
         "nopaging" => $paging,
-        "paged" => $paged
+        "paged" => $paged,
+        "cat" => $category_id
     ];
 
-    // KEEP UNDER FIRST QUERY ARGS
-    if (!empty($category_id)) {
+    // KEEP UNDER FIRST QUERY ARGS => REMOVED IN ORDER TO ALLOW MULTIPLE CATEGORIES TO BE SELECTED
+    /*
+	if (!empty($category_id)) {
         $query_args["tax_query"] = [
             [
                 "taxonomy" => "category",
@@ -519,6 +521,7 @@ function recent_posts_linux($atts, $content)
             ]
         ];
     }
+	*/
 
     switch ($design) {
         case "list-design":
@@ -996,8 +999,7 @@ function recent_posts_linux($atts, $content)
                     }
                 }
 
-				$output .= "<div class='category-time-wrapper'>";
-				
+                $output .= "<div class='category-time-wrapper'>";
 
                 if ($categories == true) {
                     $i = 0;
@@ -1057,9 +1059,9 @@ function recent_posts_linux($atts, $content)
                         }
                     }
                 }
-				
-				$output .= "</div>";
-				
+
+                $output .= "</div>";
+
                 $output .=
                     '<a class="grid-design title" href="' .
                     get_permalink() .

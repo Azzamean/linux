@@ -308,7 +308,7 @@ function webinars_linux($atts, $content)
         "paged" => $paged
     ];
 
-    // KEEP UNDER FIRST QUERY ARGS
+    // KEEP UNDER FIRST QUERY ARGS => REMOVE THIS AND ADD INTO QUERY ARGS FOR MULTIPLE CATEGORY SELECTION
     if (!empty($category_id)) {
         $query_args["tax_query"] = [
             [
