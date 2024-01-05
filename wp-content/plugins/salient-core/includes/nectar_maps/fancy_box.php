@@ -49,6 +49,7 @@ return array(
 				esc_html__( 'Linea', 'js_composer' ) => 'linea',
 				esc_html__( 'Steadysets', 'js_composer' ) => 'steadysets',
 				esc_html__( 'Linecons', 'js_composer' ) => 'linecons',
+				esc_html__( 'Additional Brands', 'salient-core' ) => 'nectarbrands',
 				esc_html__( 'Custom', 'js_composer' ) => 'custom',
 			),
 			'save_always' => true,
@@ -63,6 +64,14 @@ return array(
 			"value" => "",
 			"dependency" => array('element' => "icon_family", 'emptyIcon' => false, 'value' => 'custom'),
 			"description" => esc_html__("Select a custom image to use as your icon from the media library.", "salient-core")
+		),
+		array(
+			'type' => 'iconpicker',
+			'heading' => esc_html__( 'Icon', 'salient-core' ),
+			'param_name' => 'icon_nectarbrands',
+			'settings' => array( 'type' => 'nectarbrands', 'emptyIcon' => true, 'iconsPerPage' => 240 ),
+			'dependency' => Array( 'element' => 'icon_family', 'value' => 'nectarbrands' ),
+			'description' => esc_html__( 'Select icon from library.', 'salient-core' )
 		),
 		array(
 			"type" => "iconpicker",

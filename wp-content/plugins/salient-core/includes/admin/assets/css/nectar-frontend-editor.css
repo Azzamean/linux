@@ -556,3 +556,13 @@ Description: CSS for the frontned editor
   overflow: hidden;
 }
 /* end Woocommerce front-end editor */
+
+/* RTL */
+.rtl.compose-mode #wpcontent {
+  margin-right: 0;
+  padding-right: 0;
+}
+.rtl #vc_navbar[class*="-frontend"] .vc_icon-btn.vc_templates-button.salient-studio-templates{
+  padding: 6px 36px 6px 15px;
+  background-position: 92%;
+}

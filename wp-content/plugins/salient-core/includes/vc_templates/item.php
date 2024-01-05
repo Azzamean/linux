@@ -33,7 +33,7 @@ if( $nectar_using_VC_front_end_editor ) {
 		$nectar_carousel_script_store = 'simple_slider';
 	}
 } else {
-	$nectar_carousel_script_store = $GLOBALS['nectar-carousel-script'];
+	$nectar_carousel_script_store = isset($GLOBALS['nectar-carousel-script']) ? $GLOBALS['nectar-carousel-script'] : 'flickity';
 }
 
 if( $nectar_carousel_script_store === 'carouFredSel' ) {

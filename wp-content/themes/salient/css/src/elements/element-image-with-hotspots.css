@@ -25,7 +25,7 @@ Description: Styles for the "Image with Hotspots" page builder element.
    width:30px;
    height:30px
 }
-@media only screen and (min-width: 690px) {
+@media only screen and (min-width: 691px) {
   .nectar_image_with_hotspots[data-tooltip-func="click"] .nectar_hotspot_wrap {
     pointer-events: none;
   }

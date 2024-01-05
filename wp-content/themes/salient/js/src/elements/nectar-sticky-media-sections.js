@@ -34,6 +34,8 @@
 
     if (this.usingFrontEndEditor) {
       this.rebuildMedia();
+      setTimeout(this.verticallyCenter.bind(this), 1500);
+      setTimeout(this.verticallyCenter.bind(this), 3000);
     }
 
     this.observe();
@@ -69,7 +71,6 @@
     if( window.nectarDOMInfo.adminBarHeight > 0 ) {
       navHeight += window.nectarDOMInfo.adminBarHeight;
     }
-
 
     var vertCenter = (window.nectarDOMInfo.winH - this.$mediaSections.height())/2 + navHeight/2;
     this.$el[0].style.setProperty('--nectar-sticky-media-sections-vert-y', vertCenter + "px");

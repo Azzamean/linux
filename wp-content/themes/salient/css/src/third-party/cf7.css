@@ -73,7 +73,7 @@ div.wpcf7 img.ajax-loader {
   width: 100%;
 }
 
-@media only screen and (max-width: 1000px) {
+@media only screen and (max-width: 999px) {
   .wpcf7-form .nectar-wpcf7-inline-form.mobile-1-col,
   .wpcf7-form .nectar-wpcf7-inline-form.mobile-2-col {
     flex-wrap: wrap;
@@ -120,7 +120,7 @@ div.wpcf7 img.ajax-loader {
   clip-path: inset(6px round var(--nectar-border-radius));
 }
 
-@media only screen and (max-width: 1000px) {
+@media only screen and (max-width: 999px) {
   .nectar-wpcf7-inline-subscribe-form .wpcf7-submit {
     min-width: 35%;
   }

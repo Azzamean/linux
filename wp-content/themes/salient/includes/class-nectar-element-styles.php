@@ -509,7 +509,7 @@ class NectarElDynamicStyles {
           padding-right: '.($column_margin_amt/2).'px;
         }
         
-        @media only screen and (max-width: 999px) and (min-width: 690px) {
+        @media only screen and (max-width: 999px) and (min-width: 691px) {
           .vc_row-fluid[data-column-margin="'.$column_margin_amt.'px"] > .span_12 > .one-fourths:not([class*="vc_col-xs-"]),
           .vc_row-fluid .vc_row-fluid.inner_row[data-column-margin="'.$column_margin_amt.'px"] > .span_12 > .one-fourths:not([class*="vc_col-xs-"]) {
             margin-bottom: '.$column_margin_amt.'px;
@@ -861,21 +861,35 @@ class NectarElDynamicStyles {
         if( isset($atts['row_border_radius']) && !empty($atts['row_border_radius']) && 'none' !== $atts['row_border_radius'] ) {
 
           $br_applies_to = ( isset($atts['row_border_radius_applies']) && !empty($atts['row_border_radius_applies']) ) ? $atts['row_border_radius_applies'] : 'bg';
+          $row_border_radius = esc_attr($atts['row_border_radius']);
 
           // Applies to Row.
           if( 'inner' === $br_applies_to || 'both' === $br_applies_to ) {
-            self::$element_css[] = '.wpb_row[data-br="'.esc_attr($atts['row_border_radius']).'"][data-br-applies="'.esc_attr($br_applies_to).'"] .row_col_wrap_12 {
-              border-radius: '.esc_attr($atts['row_border_radius']).';
-            }';
+            if ( $row_border_radius !== 'custom' ) {
+              self::$element_css[] = '.wpb_row[data-br="'.esc_attr($atts['row_border_radius']).'"][data-br-applies="'.esc_attr($br_applies_to).'"] .row_col_wrap_12 {
+                border-radius: '.esc_attr($atts['row_border_radius']).';
+              }';
+            } else {
+              self::$element_css[] = self::custom_border_radius_styles($atts, '[data-br-applies="'.esc_attr($br_applies_to).'"] .row_col_wrap_12'); 
+            }
+            
           }
 
           // Applies to BG.
           if( 'bg' === $br_applies_to || 'both' === $br_applies_to ) {
-            self::$element_css[] = '.wpb_row[data-br="'.esc_attr($atts['row_border_radius']).'"][data-br-applies="'.esc_attr($br_applies_to).'"] > .row-bg-wrap,
-            .wpb_row[data-br="'.esc_attr($atts['row_border_radius']).'"][data-br-applies="'.esc_attr($br_applies_to).'"] > .nectar-video-wrap,
-            .wpb_row[data-br="'.esc_attr($atts['row_border_radius']).'"][data-br-applies="'.esc_attr($br_applies_to).'"] > .nectar-parallax-scene {
-              border-radius: '.esc_attr($atts['row_border_radius']).';
-            }';
+            if ( $row_border_radius !== 'custom' ) {
+              self::$element_css[] = '.wpb_row[data-br="'.esc_attr($atts['row_border_radius']).'"][data-br-applies="'.esc_attr($br_applies_to).'"] > .row-bg-wrap,
+              .wpb_row[data-br="'.esc_attr($atts['row_border_radius']).'"][data-br-applies="'.esc_attr($br_applies_to).'"] > .nectar-video-wrap,
+              .wpb_row[data-br="'.esc_attr($atts['row_border_radius']).'"][data-br-applies="'.esc_attr($br_applies_to).'"] > .nectar-parallax-scene {
+                border-radius: '.esc_attr($atts['row_border_radius']).';
+              }';
+            } else {
+              
+              self::$element_css[] = self::custom_border_radius_styles($atts, '[data-br-applies="'.esc_attr($br_applies_to).'"] > .row-bg-wrap'); 
+              self::$element_css[] = self::custom_border_radius_styles($atts, '[data-br-applies="'.esc_attr($br_applies_to).'"] > .nectar-video-wrap'); 
+              self::$element_css[] = self::custom_border_radius_styles($atts, '[data-br-applies="'.esc_attr($br_applies_to).'"] > .nectar-parallax-scene'); 
+
+            }
           }
 
         } // End Border Radius.
@@ -1979,7 +1993,8 @@ class NectarElDynamicStyles {
 
       // Column BG Position
       if( isset($atts['background_image_position']) && !empty($atts['background_image_position']) ) {
-        self::$element_css[] = '.container-wrap .main-content .column-image-bg-wrap[data-bg-pos="'.esc_attr($atts['background_image_position']).'"] .column-image-bg {
+        self::$element_css[] = '.column-image-bg-wrap[data-bg-pos="'.esc_attr($atts['background_image_position']).'"] .column-image-bg,
+        .container-wrap .main-content .column-image-bg-wrap[data-bg-pos="'.esc_attr($atts['background_image_position']).'"] .column-image-bg {
           background-position: '.esc_attr($atts['background_image_position']).';
         }';
       }
@@ -2006,7 +2021,7 @@ class NectarElDynamicStyles {
           }
         }
 
-        @media only screen and (min-width : 690px) and (max-width : 999px) {
+        @media only screen and (min-width : 691px) and (max-width : 999px) {
           body .vc_col-sm-2 {
             width: 31.2%;
             margin-left: 3.1%;
@@ -2141,7 +2156,7 @@ class NectarElDynamicStyles {
             justify-content: center;
           }
 
-          @media only screen and (max-width: 1000px) {
+          @media only screen and (max-width: 999px) {
             .column_element_direction_desktop_horizontal.force-tablet-text-align-right > .vc_column-inner > .wpb_wrapper {
               justify-content: flex-end;
             }
@@ -2168,7 +2183,7 @@ class NectarElDynamicStyles {
 
         //// Tablet
         if( isset($atts['column_element_direction_tablet']) && $atts['column_element_direction_tablet'] === 'horizontal' ) {
-          self::$element_css[] = '@media only screen and (min-width: 690px) and (max-width: 999px) {
+          self::$element_css[] = '@media only screen and (min-width: 691px) and (max-width: 999px) {
             .column_element_direction_tablet_horizontal > .vc_column-inner > .wpb_wrapper {
               display: flex; 
               align-items: center;
@@ -2178,7 +2193,7 @@ class NectarElDynamicStyles {
             }
           }';
 
-          self::$element_css[] = '@media only screen and (min-width: 690px) and (max-width: 999px) {
+          self::$element_css[] = '@media only screen and (min-width: 691px) and (max-width: 999px) {
             '.$gap_css.'
           }';
 
@@ -2332,6 +2347,12 @@ class NectarElDynamicStyles {
         text-decoration: none;
       }
       ';
+
+      // Text Direction.
+      $text_direction = self::text_direction_styles($atts, '.nectar-responsive-text');
+      if ( !empty($text_direction) ) {
+        self::$element_css[] = $text_direction;
+      }
 
       // Custom font size.
       self::$element_css[] = self::font_size_group_styles('nectar-responsive-text', false, false, '', $atts);
@@ -3368,6 +3389,14 @@ class NectarElDynamicStyles {
         /* Icon */
         if( isset($atts['icon_family']) && $atts['icon_family'] !== 'none' ) {
 
+          if( isset($atts['alignment']) && 'center' === $atts['alignment'] ) {
+            self::$element_css[] = '.nectar-cta.has-icon[data-alignment="center"][data-style="underline"] .link_wrap, 
+              .nectar-cta.has-icon[data-alignment="center"][data-style="text-reveal-wave"] .link_wrap,
+              .nectar-cta.has-icon[data-alignment="center"][data-style="basic"] .link_wrap {
+                justify-content: center;
+            }';
+          }
+
           if( 'underline' === $button_style ) {
             self::$element_css[] = '
             .nectar-cta.has-icon[data-style="underline"] .link_wrap .link_text {
@@ -3698,7 +3727,7 @@ class NectarElDynamicStyles {
 
           }
 
-          @media only screen and (min-width : 690px) and (max-width : 999px) {
+          @media only screen and (min-width : 691px) and (max-width : 999px) {
             .nectar-button.extra_jumbo {
               font-size: 32px;
               line-height: 60px;
@@ -4068,7 +4097,7 @@ class NectarElDynamicStyles {
         ';
         if (isset($atts['excerpt_display']) && 'desktop_only' === $atts['excerpt_display']) {
           self::$element_css[] = '
-          @media only screen and (max-width: 1000px) {
+          @media only screen and (max-width: 999px) {
             .nectar-post-grid.excerpt-desktop_only .meta-excerpt {
               display: none;
             }
@@ -4106,7 +4135,7 @@ class NectarElDynamicStyles {
                 width: 50%;
               }
               
-              @media only screen and (max-width: 999px) and (min-width: 690px) {
+              @media only screen and (max-width: 999px) and (min-width: 691px) {
                 .nectar-post-grid[data-columns="4"][data-grid-spacing="none"]:not([data-masonry="yes"]) .nectar-post-grid-item {
                   width: 50%;
                   padding-bottom: 50%;
@@ -4127,7 +4156,7 @@ class NectarElDynamicStyles {
               margin: 5px;
             }
 
-            @media only screen and (min-width: 1001px) {
+            @media only screen and (min-width: 1000px) {
               body[data-body-border="1"] .wpb_row.full-width-content .vc_col-sm-12 .nectar-post-grid[data-grid-spacing="5px"]{
                 margin: 5px -4px;
               }
@@ -4146,7 +4175,7 @@ class NectarElDynamicStyles {
               width: calc(50% - 10px);
             }
             
-            @media only screen and (max-width: 999px) and (min-width: 690px) {
+            @media only screen and (max-width: 999px) and (min-width: 691px) {
 
               body .nectar-post-grid[data-columns][data-grid-spacing="5px"]:not([data-columns="1"]):not([data-masonry="yes"]) .nectar-post-grid-item {
                 width: calc(50% - 10px);
@@ -4167,7 +4196,7 @@ class NectarElDynamicStyles {
               margin-right: -10px;
             }
 
-            @media only screen and (min-width: 1001px) {
+            @media only screen and (min-width: 1000px) {
               body[data-body-border="1"] .wpb_row.full-width-content .vc_col-sm-12 .nectar-post-grid[data-grid-spacing="10px"]{
                 margin: 10px -9px;
               }
@@ -4187,7 +4216,7 @@ class NectarElDynamicStyles {
               width: calc(50% - 20px);
             }
 
-            @media only screen and (max-width: 999px) and (min-width: 690px) {
+            @media only screen and (max-width: 999px) and (min-width: 691px) {
               body .nectar-post-grid[data-columns][data-grid-spacing="10px"]:not([data-columns="1"]):not([data-masonry="yes"]) .nectar-post-grid-item {
                 width: calc(50% - 20px);
               }
@@ -4212,7 +4241,7 @@ class NectarElDynamicStyles {
             margin: 15px;
             }
 
-            @media only screen and (min-width: 1001px) {
+            @media only screen and (min-width: 1000px) {
               body[data-body-border="1"] .wpb_row.full-width-content .vc_col-sm-12 .nectar-post-grid[data-grid-spacing="15px"]{
                 margin: 15px -14px;
               }
@@ -4228,7 +4257,7 @@ class NectarElDynamicStyles {
               width: calc(50% - 30px);
             }
 
-            @media only screen and (max-width: 999px) and (min-width: 690px) {
+            @media only screen and (max-width: 999px) and (min-width: 691px) {
               body .nectar-post-grid[data-columns][data-grid-spacing="15px"]:not([data-columns="1"]):not([data-masonry="yes"]) .nectar-post-grid-item {
                 width: calc(50% - 30px);
               }
@@ -4252,7 +4281,7 @@ class NectarElDynamicStyles {
             margin: 25px;
             }
 
-            @media only screen and (min-width: 1001px) {
+            @media only screen and (min-width: 1000px) {
               body[data-body-border="1"] .wpb_row.full-width-content .vc_col-sm-12 .nectar-post-grid[data-grid-spacing="25px"]{
                 margin: 25px -24px;
               }
@@ -4272,7 +4301,7 @@ class NectarElDynamicStyles {
               padding-bottom: 0;
             }
 
-            @media only screen and (max-width: 999px) and (min-width: 690px) {
+            @media only screen and (max-width: 999px) and (min-width: 691px) {
               body .nectar-post-grid[data-columns][data-grid-spacing="25px"]:not([data-columns="1"]):not([data-masonry="yes"]) .nectar-post-grid-item {
                 width: calc(50% - 50px);
               }
@@ -4286,7 +4315,7 @@ class NectarElDynamicStyles {
               .wpb_row.full-width-content .vc_col-sm-12 .nectar-post-grid[data-grid-spacing="35px"] {
                 margin: 35px;
               }
-              @media only screen and (min-width: 1001px) {
+              @media only screen and (min-width: 1000px) {
                 body[data-body-border="1"] .wpb_row.full-width-content .vc_col-sm-12 .nectar-post-grid[data-grid-spacing="35px"]{
                   margin: 35px -34px;
                 }
@@ -4332,7 +4361,7 @@ class NectarElDynamicStyles {
                 padding-bottom: 0;
               }
 
-              @media only screen and (max-width: 999px) and (min-width: 690px) {
+              @media only screen and (max-width: 999px) and (min-width: 691px) {
                 body .nectar-post-grid[data-columns][data-grid-spacing="35px"]:not([data-columns="1"]):not([data-masonry="yes"]) .nectar-post-grid-item {
                   width: calc(50% - 70px);
                 }
@@ -4346,7 +4375,7 @@ class NectarElDynamicStyles {
               .wpb_row.full-width-content .vc_col-sm-12 .nectar-post-grid[data-grid-spacing="40px"] {
                 margin: 40px;
               }
-              @media only screen and (min-width: 1001px) {
+              @media only screen and (min-width: 1000px) {
                 body[data-body-border="1"] .wpb_row.full-width-content .vc_col-sm-12 .nectar-post-grid[data-grid-spacing="40px"]{
                   margin: 40px -39px;
                 }
@@ -4382,7 +4411,7 @@ class NectarElDynamicStyles {
                 padding-bottom: 0;
               }
 
-              @media only screen and (max-width: 999px) and (min-width: 690px) {
+              @media only screen and (max-width: 999px) and (min-width: 691px) {
                 body .nectar-post-grid[data-columns][data-grid-spacing="40px"]:not([data-columns="1"]):not([data-masonry="yes"]) .nectar-post-grid-item {
                   width: calc(50% - 80px);
                 }
@@ -4396,7 +4425,7 @@ class NectarElDynamicStyles {
               .wpb_row.full-width-content .vc_col-sm-12 .nectar-post-grid[data-grid-spacing="45px"] {
                 margin: 45px;
               }
-              @media only screen and (min-width: 1001px) {
+              @media only screen and (min-width: 1000px) {
                 body[data-body-border="1"] .wpb_row.full-width-content .vc_col-sm-12 .nectar-post-grid[data-grid-spacing="45px"]{
                   margin: 45px -44px;
                 }
@@ -4432,7 +4461,7 @@ class NectarElDynamicStyles {
                 padding-bottom: 0;
               }
               
-              @media only screen and (max-width: 999px) and (min-width: 690px) {
+              @media only screen and (max-width: 999px) and (min-width: 691px) {
                 body .nectar-post-grid[data-columns][data-grid-spacing="45px"]:not([data-columns="1"]):not([data-masonry="yes"]) .nectar-post-grid-item {
                   width: calc(50% - 90px);
                 }
@@ -4446,7 +4475,7 @@ class NectarElDynamicStyles {
               .wpb_row.full-width-content .vc_col-sm-12 .nectar-post-grid[data-grid-spacing="'.esc_attr($post_grid_spacing).'"] {
                 margin: '.esc_attr($post_grid_spacing).';
               }
-              @media only screen and (min-width: 1001px) {
+              @media only screen and (min-width: 1000px) {
                 body[data-body-border="1"] .wpb_row.full-width-content .vc_col-sm-12 .nectar-post-grid[data-grid-spacing="'.esc_attr($post_grid_spacing).'"]{
                   margin: '.esc_attr($post_grid_spacing).' -'.esc_attr($post_grid_spacing).';
                 }
@@ -4487,7 +4516,7 @@ class NectarElDynamicStyles {
                 padding-bottom: 0;
               }
               
-              @media only screen and (max-width: 999px) and (min-width: 690px) {
+              @media only screen and (max-width: 999px) and (min-width: 691px) {
                 body .nectar-post-grid[data-columns][data-grid-spacing="'.esc_attr($post_grid_spacing).'"]:not([data-columns="1"]):not([data-masonry="yes"]) .nectar-post-grid-item {
                   width: calc(50% - '.(floatval($post_grid_spacing)*2).'vw);
                 }
@@ -5078,7 +5107,7 @@ class NectarElDynamicStyles {
                     background: radial-gradient(circle at 0 0, rgba(0,0,0,0.75) 0, transparent 70%);
                   }
 
-                  @media only screen and (max-width: 1000px) {
+                  @media only screen and (max-width: 999px) {
                     [data-style="content_overlaid"] [data-text-layout*="left"][data-columns="3"].layout-vert_staggered > div:nth-child(6n + 1) .content {
                       padding: 35px;
                     }
@@ -5199,7 +5228,7 @@ class NectarElDynamicStyles {
                   padding: min( max(35px, 3.5vw), 50px);
                 }
 
-                @media only screen and (min-width: 690px) {
+                @media only screen and (min-width: 691px) {
                   .nectar-post-grid-wrap[data-style="content_under_image"] [data-columns="3"].layout-vert_staggered > div:nth-child(6n + 1) .content {
                     max-width: 70%;
                   }
@@ -5303,7 +5332,7 @@ class NectarElDynamicStyles {
   
               }
 
-              @media only screen and (max-width: 1000px) {
+              @media only screen and (max-width: 999px) {
                 [data-columns="4"].layout-mixed > div:nth-child(10n + 1) .post-heading a {
                   font-size: 1.4em;
                   line-height: 1.3em;
@@ -5552,7 +5581,7 @@ class NectarElDynamicStyles {
               }
 
 
-              @media only screen and (max-width: 1000px) {
+              @media only screen and (max-width: 999px) {
                 #ajax-content-wrap .nectar-post-grid[data-columns="4"].layout-mixed > div:nth-child(10n + 8) {
                   grid-column-end: span 1;
                   grid-row-end: span 1;
@@ -5654,7 +5683,7 @@ class NectarElDynamicStyles {
               }
 
 
-              @media only screen and (min-width: 690px) {
+              @media only screen and (min-width: 691px) {
                 .nectar-post-grid-wrap[data-style="content_under_image"] [data-columns="4"].layout-vert_staggered > div:nth-child(6n + 1) .content {
                   max-width: 80%;
                 }
@@ -5893,7 +5922,7 @@ class NectarElDynamicStyles {
 
 
 
-              @media only screen and (max-width: 1000px) {
+              @media only screen and (max-width: 999px) {
                 #ajax-content-wrap .nectar-post-grid[data-columns="4"].layout-vert_staggered > div:nth-child(6n + 6) {
                   grid-column-end: span 1;
                   grid-row-end: span 1;
@@ -5999,7 +6028,7 @@ class NectarElDynamicStyles {
               }
 
 
-              @media only screen and (min-width: 690px) {
+              @media only screen and (min-width: 691px) {
                 .nectar-post-grid-wrap[data-style="content_under_image"] [data-columns="4"].layout-vert_staggered_middle > div:nth-child(7n + 2) .content {
                   max-width: 80%;
                 }
@@ -6106,7 +6135,7 @@ class NectarElDynamicStyles {
 
 
 
-              @media only screen and (max-width: 1000px) {
+              @media only screen and (max-width: 999px) {
   
                 #ajax-content-wrap .nectar-post-grid[data-columns="4"].layout-vert_staggered_middle > div:nth-child(7n + 2) .content {
                   padding-bottom: 20vw;
@@ -6403,7 +6432,7 @@ class NectarElDynamicStyles {
               0px 13px 13px -10px rgba(0,0,0,0.06),
               0px 25px 40px rgba(0,0,0,0.24);
           }
-          @media only screen and (min-width: 1001px) {
+          @media only screen and (min-width: 1000px) {
             .nectar-post-grid.featured-first-item > .nectar-post-grid-item:first-child .nectar-post-grid-item__overlaid-img.nectar-lazy.loaded,
             .nectar-post-grid.featured-first-item > .nectar-post-grid-item:first-child .nectar-post-grid-item__overlaid-img:not(.nectar-lazy) {
               box-shadow: 
@@ -6424,7 +6453,7 @@ class NectarElDynamicStyles {
             }';
 
             if('15px' === $post_grid_br) {
-              self::$element_css[] = '@media only screen and (max-width: 1000px) { 
+              self::$element_css[] = '@media only screen and (max-width: 999px) { 
                 .nectar-post-grid-item__overlaid-img {
                   border-radius: 10px;
                 }
@@ -7114,7 +7143,7 @@ class NectarElDynamicStyles {
           }
 
           self::$element_css[] = '
-          @media only screen and (min-width: 1001px) {
+          @media only screen and (min-width: 1000px) {
             .spacing-'.$grid_spacing.' .nectar-post-grid-filters {
               padding-bottom: 0;
               padding-top: '.$grid_spacing.';
@@ -7123,7 +7152,7 @@ class NectarElDynamicStyles {
               padding-top: '.(intval($grid_spacing) * 2 ).'px;
             }
           }
-          @media only screen and (max-width: 1000px) {
+          @media only screen and (max-width: 999px) {
             .spacing-'.$grid_spacing.' .nectar-post-grid-filters {
               padding-bottom: 0;
             }
@@ -7141,7 +7170,7 @@ class NectarElDynamicStyles {
           }
 
           self::$element_css[] = '
-          @media only screen and (min-width: 1001px) {
+          @media only screen and (min-width: 1000px) {
             .spacing-'.$grid_spacing.' .nectar-post-grid-filters {
               padding-bottom: 0;
               padding-top: '.$grid_spacing.';
@@ -7153,7 +7182,7 @@ class NectarElDynamicStyles {
               padding-bottom: '.(floatval($grid_spacing) * 2 ).'vw;
             }
           }
-          @media only screen and (max-width: 1000px) {
+          @media only screen and (max-width: 999px) {
             .spacing-'.$grid_spacing.' .nectar-post-grid-filters {
               padding-bottom: 0;
             }
@@ -7189,7 +7218,7 @@ class NectarElDynamicStyles {
             .full-width-content .span_12 .nectar-post-grid-wrap--fl-'.$sortable_alignment.'.spacing-'.$grid_spacing.' .nectar-post-grid-filters {
               padding-'.$left_or_right_layout.': '.(floatval($grid_spacing) * 2).$spacing_unit.';
             }
-            @media only screen and (max-width: 1000px) {
+            @media only screen and (max-width: 999px) {
               .full-width-content .span_12 .nectar-post-grid-wrap--fl-'.$sortable_alignment.'.spacing-'.$grid_spacing.' .nectar-post-grid-filters {
                 padding-left: '.(floatval($grid_spacing) * 2).$spacing_unit.';
                 padding-right: '.(floatval($grid_spacing) * 2).$spacing_unit.';
@@ -7207,12 +7236,12 @@ class NectarElDynamicStyles {
             .full-width-content .span_12 .nectar-post-grid-wrap--fl-'.$sortable_alignment.'.spacing-'.$grid_spacing.' .nectar-post-grid-filters {
               padding-'.$left_or_right_layout.': 40px;
             }
-            @media only screen and (min-width: 1001px) {
+            @media only screen and (min-width: 1000px) {
               .full-width-content .span_12 .nectar-post-grid-wrap--fl-'.$sortable_alignment.'.spacing-'.$grid_spacing.' .nectar-post-grid-filters {
                 padding-top: 0;
               }
             }
-            @media only screen and (max-width: 1000px) {
+            @media only screen and (max-width: 999px) {
               .full-width-content .span_12 .nectar-post-grid-wrap--fl-'.$sortable_alignment.'.spacing-'.$grid_spacing.' .nectar-post-grid-filters {
                 padding-left: 40px;
                 padding-right: 40px;
@@ -7221,7 +7250,7 @@ class NectarElDynamicStyles {
           }
 
           self::$element_css[] = '
-          @media only screen and (min-width: 1001px) {
+          @media only screen and (min-width: 1000px) {
               .nectar-post-grid-wrap--fl-'.$sortable_alignment.' {
                 display: flex;
                 flex-direction: row;
@@ -7278,7 +7307,7 @@ class NectarElDynamicStyles {
             
           
           }
-          @media only screen and (max-width: 1000px) {
+          @media only screen and (max-width: 999px) {
             .nectar-post-grid-wrap--fl-'.$sortable_alignment.' .nectar-post-grid-filters {
               max-width: none;
             }
@@ -7296,7 +7325,7 @@ class NectarElDynamicStyles {
 
             if( in_array($grid_spacing,array( '2vw', '3vw', '4vw' )) ) {
 
-              self::$element_css[] = '@media only screen and (min-width: 1001px) {
+              self::$element_css[] = '@media only screen and (min-width: 1000px) {
                 .wpb_row.full-width-content .vc_col-sm-12 .nectar-post-grid-wrap--fl-'.$sortable_alignment.'[data-style="content_under_image"]:not(.all-loaded) .nectar-post-grid {
                   margin-bottom: 0;
                 }
@@ -7311,7 +7340,7 @@ class NectarElDynamicStyles {
             } 
             else if( in_array($grid_spacing,array('25px','35px','40px','45px')) ) {
 
-              self::$element_css[] = '@media only screen and (min-width: 1001px) {
+              self::$element_css[] = '@media only screen and (min-width: 1000px) {
                 .wpb_row.full-width-content .vc_col-sm-12 .nectar-post-grid-wrap--fl-'.$sortable_alignment.'[data-style="content_under_image"] .nectar-post-grid {
                   margin-bottom: 0;
                 }
@@ -7324,7 +7353,7 @@ class NectarElDynamicStyles {
                 }
               }';
             } else {
-              self::$element_css[] = '@media only screen and (min-width: 1001px) {
+              self::$element_css[] = '@media only screen and (min-width: 1000px) {
                 .nectar-post-grid-wrap--fl-'.$sortable_alignment.':not(.all-loaded) {
                   padding-bottom: 140px;
                 }
@@ -7475,7 +7504,8 @@ class NectarElDynamicStyles {
             .nectar-highlighted-text.font_size_'.esc_attr($font_size).' h3,
             .nectar-highlighted-text.font_size_'.esc_attr($font_size).' h4,
             .nectar-highlighted-text.font_size_'.esc_attr($font_size).' h5,
-            .nectar-highlighted-text.font_size_'.esc_attr($font_size).' h6 {
+            .nectar-highlighted-text.font_size_'.esc_attr($font_size).' h6,
+            .nectar-highlighted-text.font_size_'.esc_attr($font_size).' p {
             font-size: '.esc_attr($font_size).';
             line-height: 1.1em;
           }}
@@ -7491,6 +7521,13 @@ class NectarElDynamicStyles {
         if ( !empty($custom_font_sizing) ) {
           self::$element_css[] = $custom_font_sizing;
         }
+
+        // Text Direction.
+        $text_direction = self::text_direction_styles($atts, '.nectar-highlighted-text');
+        if ( !empty($text_direction) ) {
+          self::$element_css[] = $text_direction;
+        }
+         
 
         // Coloring.
         if( isset($atts['highlight_color']) && !empty($atts['highlight_color']) ) {
@@ -7982,6 +8019,12 @@ class NectarElDynamicStyles {
         
         ';
 
+        // Text Direction.
+        $text_direction = self::text_direction_styles($atts, '.nectar-text-inline-images');
+        if ( !empty($text_direction) ) {
+          self::$element_css[] = $text_direction;
+        }
+
         // Image Animation.
         $nectar_text_inline_images_image_animation = (isset($atts['image_effect'])) ? $atts['image_effect'] : 'none';
  
@@ -8145,7 +8188,7 @@ class NectarElDynamicStyles {
         }
 
         if( isset($atts['font_size_min']) && !empty($atts['font_size_min']) ) {
-          self::$element_css[] = '@media only screen and (max-width: 1000px) {
+          self::$element_css[] = '@media only screen and (max-width: 999px) {
             .nectar-split-heading[class*="font_size_min"] > * {
               font-size: inherit;
               line-height: inherit;
@@ -8405,7 +8448,7 @@ class NectarElDynamicStyles {
           }
           
           if( isset($atts['mobile_disable_animation']) && 'true' === $atts['mobile_disable_animation']  ) {
-            self::$element_css[] = '@media only screen and ( max-width: 1000px ) {
+            self::$element_css[] = '@media only screen and ( max-width: 999px ) {
               .nectar-split-heading[data-animation-type="line-reveal-by-space"][data-m-rm-animation="true"] span .inner {
                 -webkit-transform: none;
                 transform: none!important;
@@ -8426,7 +8469,7 @@ class NectarElDynamicStyles {
             display: flex;
             justify-content: flex-end;
           }
-          @media only screen and (max-width: 1000px) {
+          @media only screen and (max-width: 999px) {
             .nectar-split-heading[data-animation-type="line-reveal-by-space"][data-m-align="left"] {
               display: flex;
               justify-content: flex-start;
@@ -8454,7 +8497,7 @@ class NectarElDynamicStyles {
             display: flex;
             justify-content: flex-end;
           }
-          @media only screen and (max-width: 1000px) {
+          @media only screen and (max-width: 999px) {
             .nectar-split-heading[data-animation-type="twist-in"][data-m-align="left"] {
               display: flex;
               justify-content: flex-start;
@@ -8480,6 +8523,12 @@ class NectarElDynamicStyles {
           }';
         }
         
+
+        // Text Direction.
+        $text_direction = self::text_direction_styles($atts, '.nectar-split-heading');
+        if ( !empty($text_direction) ) {
+          self::$element_css[] = $text_direction;
+        }
         
 
       }
@@ -8908,6 +8957,12 @@ class NectarElDynamicStyles {
           }';
         }
 
+        // Text Direction.
+        $text_direction = self::text_direction_styles($atts, '.nectar-rotating-words-title');
+        if ( !empty($text_direction) ) {
+          self::$element_css[] = $text_direction;
+        }
+
       }
 
       // Nectar Scrolling Text
@@ -9080,7 +9135,7 @@ class NectarElDynamicStyles {
 
           $font_size = self::font_sizing_format($atts['custom_font_size_mobile']);
 
-          self::$element_css[] = '@media only screen and (max-width: 1000px) {
+          self::$element_css[] = '@media only screen and (max-width: 999px) {
             .nectar-scrolling-text.font_size_mobile_'.esc_attr($font_size).' .nectar-scrolling-text-inner * {
             font-size: '.esc_attr($font_size).';
             line-height: 1.1em;
@@ -10244,7 +10299,7 @@ class NectarElDynamicStyles {
           }
           
           
-          @media only screen and (min-width: 690px) {
+          @media only screen and (min-width: 691px) {
             .nectar-recent-posts-slider_multiple_visible[data-columns="2"] .nectar-recent-post-slide,
             .nectar-recent-posts-slider_multiple_visible[data-columns="3"] .nectar-recent-post-slide,
             .nectar-recent-posts-slider_multiple_visible[data-columns="4"] .nectar-recent-post-slide {
@@ -11200,10 +11255,12 @@ class NectarElDynamicStyles {
                      isset($atts['style']) && 'vertical_modern' === $atts['style'] ||
                      isset($atts['style']) && 'vertical' === $atts['style'] ) {
 
-                self::$element_css[] = '.tabbed[data-style*="vertical"][data-color-scheme="'.esc_attr($color['name']).'"] ul li a:before {
+                self::$element_css[] = '.tabbed[data-style*="vertical"][data-color-scheme="'.esc_attr($color['name']).'"] ul li a:before,
+                .tabbed[data-style="vertical"][data-color-scheme="'.esc_attr($color['name']).'"] > ul li .active-tab {
                   background: '.esc_attr($color['gradient']['from']).';
            		    background: linear-gradient(to bottom right, '.esc_attr($color['gradient']['to']).', '.esc_attr($color['gradient']['from']).');
-                }';
+                }
+                ';
             }
 
             // All Minimal.
@@ -11215,6 +11272,13 @@ class NectarElDynamicStyles {
                   background: '.esc_attr($color['gradient']['from']).';
                   background: linear-gradient(to right, '.esc_attr($color['gradient']['to']).', '.esc_attr($color['gradient']['from']).');
                 }';
+            }
+
+            // Toggle button
+            if( isset($atts['style']) && 'toggle_button' === $atts['style'] ) {
+              self::$element_css[] = '.tabbed[data-style="toggle_button"][data-color-scheme="'.esc_attr($color['name']).'"] > ul .toggle-button-inner {
+                background-clip: inherit;
+              }';
             }
 
           }
@@ -11255,9 +11319,11 @@ class NectarElDynamicStyles {
             }
 
             // Vertical Modern.
-            else if( isset($atts['style']) && 'vertical_modern' === $atts['style'] ) {
+            else if( isset($atts['style']) && 'vertical_modern' === $atts['style'] || 
+                    isset($atts['style']) && 'vertical' === $atts['style'] ) {
 
-                self::$element_css[] = '.tabbed[data-style="vertical_modern"][data-color-scheme="'.esc_attr($color['name']).'"] .wpb_tabs_nav li .active-tab {
+                self::$element_css[] = '.tabbed[data-style="vertical_modern"][data-color-scheme="'.esc_attr($color['name']).'"] .wpb_tabs_nav li .active-tab,
+                .tabbed[data-style="vertical"][data-color-scheme="'.esc_attr($color['name']).'"] > ul li .active-tab {
                   background-color: '.esc_attr($color['color']).';
                 }';
             }
@@ -13270,7 +13336,7 @@ class NectarElDynamicStyles {
               width: 100%;
             }
 
-            @media only screen and (min-width: 1001px) {
+            @media only screen and (min-width: 1000px) {
               .nectar-carousel-flickity-fixed-content[data-alignment="right"] .nectar-flickity {
                 margin-left: -34%;
               }
@@ -13380,7 +13446,7 @@ class NectarElDynamicStyles {
           }
           if( in_array( $flickity_tablet_cols, array('4', '5', '6') ) ) {
             self::$element_css[] = '
-            @media only screen and (min-width: 690px) and (max-width: 1000px) { 
+            @media only screen and (min-width: 691px) and (max-width: 999px) { 
               .nectar-flickity[data-tablet-columns="'.$flickity_tablet_cols.'"]:not(.masonry) .flickity-slider .cell {
                 width: calc(100% / '.$flickity_tablet_cols.');
               }
@@ -13403,7 +13469,7 @@ class NectarElDynamicStyles {
               margin-bottom: '.esc_attr($atts['flickity_element_spacing']).';
             }';
             if( in_array( $atts['flickity_element_spacing'], array('0','10px','20px','30px','40px','50px') ) ) {
-              self::$element_css[] = '@media only screen and (max-width: 1000px) {
+              self::$element_css[] = '@media only screen and (max-width: 999px) {
                 .nectar-flickity.nectar-carousel:not(.masonry).tb-spacing-'.esc_attr($atts['flickity_element_spacing']).' .flickity-page-dots {
                   bottom: -50px;
                 }
@@ -14703,6 +14769,17 @@ class NectarElDynamicStyles {
     }
   }
 
+   /**
+  * Generates text direction styles.
+  */
+  public static function text_direction_styles($atts, $selector) {
+    if( isset($atts['text_direction']) && in_array($atts['text_direction'], array('rtl','ltr')) ) {
+      return $selector.'.text_direction_'.esc_attr($atts['text_direction']).' { direction:'.esc_attr($atts['text_direction']).'; }';
+    }
+    return '';
+  }
+
+
   /**
   * Generates the padding for a specific aspect ratio.
   */
@@ -14974,6 +15051,40 @@ class NectarElDynamicStyles {
 
     return $styles;
 
+  }
+
+  public static function custom_border_radius_styles($atts, $selector) {
+    $styles = '';
+    if( isset($atts['top_left_border_radius']) && strlen($atts['top_left_border_radius']) > 0 ) {
+      $styles .= '.tl_br_'. self::percent_unit_type(esc_attr( $atts['top_left_border_radius'])) . $selector . ',
+      .tl_br_'. self::percent_unit_type(esc_attr( $atts['top_left_border_radius'])) . $selector . ' {
+        border-top-left-radius: '.self::percent_unit_type(esc_attr( $atts['top_left_border_radius'] )).';
+        overflow: hidden;
+      }';
+      
+    }
+    if( isset($atts['top_right_border_radius']) && strlen($atts['top_right_border_radius']) > 0 ) {
+      $styles .= '.tr_br_'. self::percent_unit_type(esc_attr( $atts['top_right_border_radius'])) . $selector . ',
+      .tr_br_'. self::percent_unit_type(esc_attr( $atts['top_right_border_radius'])) . $selector . ' {
+        border-top-right-radius: '.self::percent_unit_type(esc_attr( $atts['top_right_border_radius'] )).';
+        overflow: hidden;
+      }';
+    }
+    if( isset($atts['bottom_left_border_radius']) && strlen($atts['bottom_left_border_radius']) > 0 ) {
+      $styles .= '.bl_br_'. self::percent_unit_type(esc_attr( $atts['bottom_left_border_radius'])) . $selector . ',
+      .bl_br_'. self::percent_unit_type(esc_attr( $atts['bottom_left_border_radius'])) . $selector . ' {
+        border-bottom-left-radius: '.self::percent_unit_type(esc_attr( $atts['bottom_left_border_radius'] )).';
+        overflow: hidden;
+      }';
+    }
+    if( isset($atts['bottom_right_border_radius']) && strlen($atts['bottom_right_border_radius']) > 0 ) {
+      $styles .= '.br_br_'. self::percent_unit_type(esc_attr( $atts['bottom_right_border_radius'])) . $selector . ',
+      .br_br_'. self::percent_unit_type(esc_attr( $atts['bottom_right_border_radius'])) . $selector . ' {
+        border-bottom-right-radius: '.self::percent_unit_type(esc_attr( $atts['bottom_right_border_radius'] )).';
+        overflow: hidden;
+      }';
+    }
+    return $styles;
   }
 
   public static function width_height_group_styles( $element_name, $inner_selector, $atts ) {
@@ -15355,10 +15466,11 @@ class NectarElDynamicStyles {
 
         foreach($spacing_arr as $spacing) {
 
+          $html_selector = ( 'phone' === $device ) ? 'html ' : '';
           $body_selector = ('desktop' !== $device) ? 'body ' : '';
 
           if(isset($atts[$spacing.'_'.$type.'_'.$device])) {
-            $css .= $body_selector.'.'.$element_name.'.'.$spacing.'_'.$type.'_'.$device.'_'.esc_attr(self::percent_unit_type_class($atts[$spacing.'_'.$type.'_'.$device])) . $inner_selector.' {
+            $css .= $html_selector . $body_selector.'.'.$element_name.'.'.$spacing.'_'.$type.'_'.$device.'_'.esc_attr(self::percent_unit_type_class($atts[$spacing.'_'.$type.'_'.$device])) . $inner_selector.' {
               '.$type.'-'.$spacing.': '.esc_attr(self::percent_unit_type($atts[$spacing.'_'.$type.'_'.$device])).';
             }';
           }
@@ -15415,12 +15527,22 @@ class NectarElDynamicStyles {
           $media_query_size = $desktop_media_query_size;
         }
         
+        // One version without .container-wrap for global sections.
+        $css .= '@media only screen '.$media_query_size.' {
+          '.$html_selector.$body_selector.'#ajax-content-wrap '.'.'.$device_param.'_'.esc_attr(self::decimal_unit_type_class($atts[$device_param])).$minmax_classes.'.'.$element_name .',
+          '.$html_selector.$body_selector.'.'.$device_param.'_'.esc_attr(self::decimal_unit_type_class($atts[$device_param])).$minmax_classes.'.'.$element_name .' {
+            font-size: '.$computed_size.$important.';
+          }
+        }';
+
         $css .= '@media only screen '.$media_query_size.' {
           '.$html_selector.$body_selector.'#ajax-content-wrap '.$container_selector.'.'.$device_param.'_'.esc_attr(self::decimal_unit_type_class($atts[$device_param])).$minmax_classes.'.'.$element_name .',
           '.$html_selector.$body_selector.$container_selector.'.'.$device_param.'_'.esc_attr(self::decimal_unit_type_class($atts[$device_param])).$minmax_classes.'.'.$element_name .' {
             font-size: '.$computed_size.$important.';
           }
         }';
+
+        
 
       }
 
@@ -15760,6 +15882,34 @@ if ( !function_exists('nectar_spacing_param_group_classes') ) {
   }
 
 }
+
+
+
+/**
+* Nectar text direction param group classes
+*
+* @param array $atts - the attributes
+* @return string - the text direction param group classes
+*
+* @since 14.1
+*/
+if ( !function_exists('nectar_text_direction_param_group_classes') ) {
+
+  function nectar_text_direction_param_group_classes($atts) {
+      
+      $classnames = '';
+  
+      if( isset($atts['text_direction']) && in_array($atts['text_direction'], array('ltr','rtl')) ) {
+        $classnames .= 'text_direction_'. esc_attr($atts['text_direction']) . ' ';
+      }
+  
+      return $classnames;
+
+  }
+
+}
+
+
 /**
 * Nectar font size param group classes
 *
@@ -15898,6 +16048,22 @@ if (!function_exists('nectar_font_param_group_classes')) {
          if( isset($atts['shape_divider_height_phone']) && strlen($atts['shape_divider_height_phone']) > 0 ) {
 				   $classnames .= 'shape_divider_phone_'. nectar_el_percent_unit_type_class(esc_attr($atts['shape_divider_height_phone'])) . ' ';
 			   }
+
+          // Custom border radius.
+        if( isset($atts['row_border_radius']) && 'custom' === $atts['row_border_radius'] ) {
+          if( isset($atts['top_left_border_radius']) && strlen($atts['top_left_border_radius']) > 0 ) {
+            $classnames .= 'tl_br_'. nectar_el_percent_unit_type_class(esc_attr($atts['top_left_border_radius'])) . ' ';
+          }
+          if( isset($atts['top_right_border_radius']) && strlen($atts['top_right_border_radius']) > 0 ) {
+            $classnames .= 'tr_br_'. nectar_el_percent_unit_type_class(esc_attr($atts['top_right_border_radius'])) . ' ';
+          }
+          if( isset($atts['bottom_left_border_radius']) && strlen($atts['bottom_left_border_radius']) > 0 ) {
+            $classnames .= 'bl_br_'. nectar_el_percent_unit_type_class(esc_attr($atts['bottom_left_border_radius'])) . ' ';
+          }
+          if( isset($atts['bottom_right_border_radius']) && strlen($atts['bottom_right_border_radius']) > 0 ) {
+            $classnames .= 'br_br_'. nectar_el_percent_unit_type_class(esc_attr($atts['bottom_right_border_radius'])) . ' ';
+          }
+        }
 
          $row_params[] = 'top_margin';
          $row_params[] = 'right_margin';
@@ -16357,6 +16523,9 @@ if (!function_exists('nectar_font_param_group_classes')) {
         $classnames .= $atts['scribble_easing'] . ' ';
        }
 
+      // Text direction.
+      $classnames .= nectar_text_direction_param_group_classes($atts);
+
 		 }
 
      else if( 'nectar_scrolling_text' === $el ) {
@@ -16400,8 +16569,11 @@ if (!function_exists('nectar_font_param_group_classes')) {
       }
       // Animation.
       if( isset($atts['element_animation']) && 'none' !== $atts['element_animation'] ) {
-        $classnames .= 'element_'. esc_attr($atts['element_animation']);
+        $classnames .= 'element_'. esc_attr($atts['element_animation']) . ' ';
       }
+
+      // Text direction.
+      $classnames .= nectar_text_direction_param_group_classes($atts);
 
     }
 
@@ -16565,6 +16737,9 @@ if (!function_exists('nectar_font_param_group_classes')) {
        // Margins.
        $classnames .= nectar_spacing_param_group_classes('margin', $atts);
 
+       // Text direction.
+      $classnames .= nectar_text_direction_param_group_classes($atts);
+      
      }
 
      else if( 'split_line_heading' === $el ) {
@@ -16578,6 +16753,9 @@ if (!function_exists('nectar_font_param_group_classes')) {
         }
         $classnames .= nectar_font_param_group_classes($atts);
       }
+
+      // Text direction.
+      $classnames .= nectar_text_direction_param_group_classes($atts);
 
     }
 
@@ -17152,6 +17330,9 @@ if (!function_exists('nectar_font_param_group_classes')) {
 
       // Custom font size.
       $classnames .= nectar_font_param_group_classes($atts);
+
+      // Text direction.
+      $classnames .= nectar_text_direction_param_group_classes($atts);
 
       // animated links.
       $classnames .= 'nectar-link-underline-effect ';

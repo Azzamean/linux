@@ -18,7 +18,7 @@ define( 'NECTAR_THEME_NAME', 'salient' );
 
 if ( ! function_exists( 'get_nectar_theme_version' ) ) {
 	function nectar_get_theme_version() {
-		return '16.0.5';
+		return '16.1.3';
 	}
 }
 

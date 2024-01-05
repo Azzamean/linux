@@ -338,10 +338,11 @@ class Vc_Vendor_Qtranslate {
 		if ( ! is_string( $q_lang ) ) {
 			$q_lang = $q_config['language'];
 		}
-		$output .= '<input type="hidden" id="vc_vendor_qtranslate_postcontent" value="' . esc_attr( vc_frontend_editor()->post()->post_content ) . '" data-lang="' . $q_lang . '"/>';
+		// nectar addition esc attr
+		$output .= '<input type="hidden" id="vc_vendor_qtranslate_postcontent" value="' . esc_attr( vc_frontend_editor()->post()->post_content ) . '" data-lang="' . esc_attr($q_lang) . '"/>';
 
-		$output .= '<input type="hidden" id="vc_vendor_qtranslate_posttitle" value="' . esc_attr( vc_frontend_editor()->post()->post_title ) . '" data-lang="' . $q_lang . '"/>';
-
+		$output .= '<input type="hidden" id="vc_vendor_qtranslate_posttitle" value="' . esc_attr( vc_frontend_editor()->post()->post_title ) . '" data-lang="' . esc_attr($q_lang) . '"/>';
+		// nectar addition end
 		echo $output;
 	}
 

@@ -83,6 +83,15 @@ if (!class_exists('Nectar_Global_Sections_Render')) {
                     $display = false;
                 }
             }
+            else if( strpos($conditional, 'single__pt__') !== false ) {
+
+                $post_type = str_replace('single__pt__', '', $conditional);
+                if ( self::$post_type === $post_type && is_single() ) {
+                    $display = true;
+                } else {
+                    $display = false;
+                }
+            }
             else if( strpos($conditional, 'role__') !== false ) {
                 $role = str_replace('role__', '', $conditional);
        
@@ -467,9 +476,21 @@ if (!class_exists('Nectar_Global_Sections_Render')) {
                     .nectar-archive-blog-wrap .post-area {
                         margin-top: 0;
                     }
-                    .nectar-archive-blog-wrap #sidebar {
+                    body .nectar-archive-blog-wrap #sidebar {
                         padding-left: 4%;
-                        width: 30%;
+                        width: 33%;
+                    }
+                    @media only screen and (max-width: 999px) {
+                        .nectar-archive-blog-wrap {
+                            flex-wrap: wrap;
+                            gap: 30px;
+                        }
+
+                        body .nectar-archive-blog-wrap .post-area,
+                        body .nectar-archive-blog-wrap #sidebar {
+                            width: 100%;
+                            padding-left: 0;
+                        }
                     }
                     .post-area #pagination {
                         padding-left: 0;

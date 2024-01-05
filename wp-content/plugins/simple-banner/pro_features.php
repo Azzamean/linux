@@ -1,3 +1,4 @@
+<!-- <span style="color: limegreen;">NEW</span> -->
 <div style="padding: 0 10px;border: 1px solid gold;border-radius: 10px;background-color: #fafafa;">
 
     <h2><span style="padding-right:10px">Pro Features<span>
@@ -131,6 +132,40 @@
                         echo '<input type="checkbox" id="disabled_on_posts" '. $checked . ' name="disabled_on_posts" />';
                     } else {
                         echo '<input type="checkbox" disabled />';
+                    }
+                ?>
+            </td>
+        </tr>
+        <!-- Disable Page Paths -->
+        <tr valign="top">
+            <th scope="row">
+                <span style="color: limegreen;">NEW</span>
+                Disable Page Paths
+                <div>
+                    Disable Simple Banner on pages by path, comma separated. Paths match <code>window.location.pathname</code>. Use wildcard <code>*</code> to match multiple paths. e.g.
+                    <li>
+                        disable on www.test.com/shop and www.test.com/cart: <code>/shop,/cart</code>
+                    </li>
+                    <li>
+                        disable on all www.test.com/shop paths: <code>/shop*</code>
+                    </li>
+                    <li>
+                        disable on paths ending with /shop: <code>*/shop</code>
+                    </li>
+                    <li>
+                        disable on paths containing shop: <code>*shop*</code>
+                    </li>
+                </div>
+                <div style="color:red;">
+                    Will not work with wp_body_open enabled
+                </div>
+            </th>
+            <td style="vertical-align:top;">
+                <?php
+                    if (get_option('pro_version_enabled')) {
+                        echo '<input id="simple_banner_disabled_page_paths" name="simple_banner_disabled_page_paths" style="width:60%;" value="'. esc_attr(get_option('simple_banner_disabled_page_paths')) . '" />';
+                    } else {
+                        echo '<input style="width:60%;" disabled />';
                     }
                 ?>
             </td>

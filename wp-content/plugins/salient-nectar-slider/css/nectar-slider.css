@@ -564,7 +564,7 @@ body[data-ajax-transitions="true"] .nectar-slider-loading {
 
 .swiper-slide .button {
 	display: inline-block;
-	padding: 8px;
+	padding: 0;
 	margin: 0 0 0 0;
 	border-radius: 2px;
 	-moz-border-radius: 2px;
@@ -575,14 +575,6 @@ body[data-ajax-transitions="true"] .nectar-slider-loading {
 }
 .swiper-slide .button:hover {
 	background-color: transparent;
-}
-
-.swiper-slide .buttons > div:last-child {
-	padding-right: 0!important;
-}
-
-.swiper-slide .buttons > div:first-child {
-	padding-left: 0;
 }
 
 .swiper-slide .button a {
@@ -712,6 +704,9 @@ div[data-button-sizing="jumbo"] .swiper-slide .button.transparent_2 a {
 
 .swiper-slide[data-x-pos="centered"] .content {
 	text-align: center;
+}
+.swiper-slide[data-x-pos="centered"] .buttons {
+	justify-content: center; 
 }
 
 .swiper-slide[data-x-pos="right"] .content {
@@ -1074,6 +1069,10 @@ body .parallax_slider_outer.first-section .nectar-slider-wrap[data-full-width="b
 
 .swiper-slide .content .buttons {
 	position: relative;
+	gap: 16px;
+	display: flex;
+	margin-top: 8px;
+	flex-wrap: wrap;
 }
 
 .nectar-slider-wrap.first-section[data-full-width="true"] .swiper-container .slider-prev, 
@@ -2050,8 +2049,8 @@ body[data-smooth-scrolling="1"] .swiper-wrapper .slider-down-arrow {
 		padding: 0 5px;
 	}
 
-	.swiper-slide .buttons > div {
-		padding-left: 0!important;
+	.swiper-slide .content .buttons {
+		gap: 8px;
 	}
 
 	.swiper-slide .content h2 {

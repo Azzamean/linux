@@ -777,8 +777,9 @@ if ( !function_exists( 'nectar_mobile_woocommerce_header_add_to_cart_fragment' )
 
 		ob_start();
 		$nav_cart_style = ( isset( $nectar_options['ajax-cart-style'] ) ) ? $nectar_options['ajax-cart-style'] : 'default';
+		$first_load_class = ( intval($woocommerce->cart->cart_contents_count) > 0 ) ? ' class="first-load"' : '';
 		?>
-		<a id="mobile-cart-link" data-cart-style="<?php echo esc_attr($nav_cart_style); ?>" href="<?php echo wc_get_cart_url(); ?>"><i class="icon-salient-cart"></i><div class="cart-wrap"><span><?php echo esc_html( $woocommerce->cart->cart_contents_count ); ?> </span></div></a>
+		<a id="mobile-cart-link" <?php echo ''.$first_load_class; ?> aria-label="<?php echo esc_attr__('Cart','salient'); ?>" data-cart-style="<?php echo esc_attr($nav_cart_style); ?>" href="<?php echo wc_get_cart_url(); ?>"><i class="icon-salient-cart"></i><div class="cart-wrap"><span><?php echo esc_html( $woocommerce->cart->cart_contents_count ); ?> </span></div></a>
 		<?php
 
 		$fragments['a#mobile-cart-link'] = ob_get_clean();

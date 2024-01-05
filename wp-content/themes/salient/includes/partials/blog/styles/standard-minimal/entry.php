@@ -16,6 +16,7 @@ global $post;
 global $nectar_options;
 
 $use_excerpt = ( ! empty( $nectar_options['blog_auto_excerpt'] ) && $nectar_options['blog_auto_excerpt'] === '1' ) ? 'true' : 'false';
+$excerpt_length = ( ! empty( $nectar_options['blog_excerpt_length'] ) ) ? intval( $nectar_options['blog_excerpt_length'] ) : 30;
 
 ?>
 
@@ -43,7 +44,7 @@ $use_excerpt = ( ! empty( $nectar_options['blog_auto_excerpt'] ) && $nectar_opti
           else {
             
             echo '<div class="excerpt">';
-            the_excerpt();
+            echo nectar_excerpt( $excerpt_length );
             echo '</div>';
 
             do_action('nectar_after_archive_post_item_content');

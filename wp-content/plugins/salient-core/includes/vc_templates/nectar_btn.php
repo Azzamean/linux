@@ -21,6 +21,7 @@ extract(shortcode_atts(array(
 	'icon_linecons' => '', 
 	'icon_iconsmind' => '', 
 	'icon_steadysets' => '', 
+	'icon_nectarbrands' => '',
 	'open_new_tab' => '0', 
 	'margin_top' => '',
 	'margin_right' => '',
@@ -56,6 +57,9 @@ $target = ($open_new_tab == 'true') ? 'target="_blank"' : null;
 			break;
 		case 'iconsmind':
 			$icon = $icon_iconsmind;
+			break;
+		case 'nectarbrands':
+			$icon = $icon_nectarbrands;
 			break;
 		case 'default_arrow':
 			$icon = 'icon-button-arrow';
@@ -232,7 +236,7 @@ $target = ($open_new_tab == 'true') ? 'target="_blank"' : null;
 	// Regular Button Markup
 	if( $button_style !== 'see-through-3d' ) {
 		
-		echo $button_open_tag_escaped . ' href="' . esc_attr($url) . '" '.$color_or.$hover_color_override.$hover_text_color_override.'>';
+		echo $button_open_tag_escaped . ' href="' . esc_attr(do_shortcode($url)) . '" '.$color_or.$hover_color_override.$hover_text_color_override.'>';
 		
 		if( $color === 'extra-color-gradient-1' || $color === 'extra-color-gradient-2' ) {
 			echo '<span class="start loading">' . wp_kses_post($text) . $button_icon_escaped. '</span><span class="hover">' . wp_kses_post($text) . $button_icon_escaped. '</span></a>'. $button_close_tag;

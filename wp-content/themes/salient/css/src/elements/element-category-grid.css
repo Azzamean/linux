@@ -49,7 +49,7 @@ Description: Styles for the "Category Grid" page builder element.
   margin: 25px; 
 }
 
-@media only screen and (min-width: 1001px) {
+@media only screen and (min-width: 1000px) {
  body[data-body-border="1"] .wpb_row.full-width-content .vc_col-sm-12 .nectar-category-grid[data-grid-spacing="5px"]{ 
    margin: 5px -4px; 
  }
@@ -148,7 +148,7 @@ margin: 25px;
 } 
 
 
-@media only screen and (max-width: 999px) and (min-width: 690px) {
+@media only screen and (max-width: 999px) and (min-width: 691px) {
  
  .nectar-category-grid[data-columns="4"][data-grid-spacing="none"]:not([data-masonry="yes"]) .nectar-category-grid-item {
    width: 50%;
@@ -485,7 +485,7 @@ body.material .nectar-category-grid[data-grid-spacing="none"] .bg-overlay {
   
 }  
   
-@media only screen and (max-width: 999px) and (min-width: 690px) {
+@media only screen and (max-width: 999px) and (min-width: 691px) {
     .nectar-category-grid[data-columns][data-masonry="yes"] {
         grid-template-columns: 1fr 1fr;
     }

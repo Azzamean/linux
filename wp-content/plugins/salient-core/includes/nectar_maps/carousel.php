@@ -943,9 +943,9 @@ return array(
 		</div>'
 		,
 		'default_content' => '
-		[item id="'.$tab_id_1.'"] Add Content Here [/item]
-		[item id="'.$tab_id_2.'"] Add Content Here [/item]
-		[item id="'.$tab_id_3.'"] Add Content Here [/item]
+		[item id="'.$tab_id_1.'"] [/item]
+		[item id="'.$tab_id_2.'"] [/item]
+		[item id="'.$tab_id_3.'"] [/item]
 		',
 		"js_view" => ($vc_is_wp_version_3_6_more ? 'VcTabsView' : 'VcTabsView35')
 	);

@@ -12,6 +12,7 @@ extract(shortcode_atts(array(
 	'icon_linea' => '',
 	'icon_iconsmind' => '',
 	'icon_steadysets' => '',
+	'icon_nectarbrands' => '',
 	'icon_color' => 'accent-color',
 	'icon_color_type' => 'color_scheme',
 	'icon_color_custom' => '',
@@ -29,6 +30,7 @@ extract(shortcode_atts(array(
 	'margin_bottom' => '',
 	'margin_left' => '',
 	'zindex' => '',
+	'screen_reader_text' => '',
 	'pointer_events' => ''
 ), $atts));
 
@@ -40,6 +42,9 @@ switch($icon_family) {
 		break;
 	case 'steadysets':
 		$icon = $icon_steadysets;
+		break;
+	case 'nectarbrands':
+		$icon = $icon_nectarbrands;
 		break;
 	case 'linea':
 		$icon = $icon_linea;
@@ -184,8 +189,9 @@ if( !empty($zindex) ) {
 
 // Link.
 if( !empty($url) ) {
+	$sr_text  = (!empty($screen_reader_text)) ? '<span class="screen-reader-text">'.esc_html($screen_reader_text).'</span>' : '';
 	$target    = ($open_new_tab === 'true') ? 'target="_blank"' : null;
-	$icon_link = '<a href="'.esc_attr($url).'" '.$target.'></a>';
+	$icon_link = '<a href="'.esc_attr($url).'" '.$target.'>'.$sr_text.'</a>';
 } else {
 	$icon_link = null;
 }

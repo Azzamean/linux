@@ -159,7 +159,7 @@
 	 $t_id = $term->term_id;
 
 	 // Retrieve the existing value(s) for this meta field. This returns an array.
-	 $term_meta = get_option( "taxonomy_$t_id" );
+	 $term_meta = get_option( "taxonomy_$t_id", array() );
 	 ob_start(); ?>
 	 <table class="form-table">
 

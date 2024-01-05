@@ -200,7 +200,7 @@ extract(shortcode_atts(array(
         if(preg_match('/^\d+$/',$image_url)){
 					$wp_image_size = ( !empty($image_size) ) ? esc_attr($image_size) : 'portfolio-thumb';
           $image_src = wp_get_attachment_image_src($image_url, $wp_image_size);
-          $image_url = $image_src[0];
+          $image_url = ( isset($image_src[0]) ) ? $image_src[0] : '';
         }
         
         //Lazy load.

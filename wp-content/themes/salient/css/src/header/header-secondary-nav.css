@@ -397,7 +397,7 @@ body[data-header-color="dark"] #header-secondary-outer nav >ul >li >a .sf-sub-in
 }
 
 
-@media only screen and (min-width : 690px) and (max-width : 999px) {
+@media only screen and (min-width : 691px) and (max-width : 999px) {
 
   body:not(.material) #header-secondary-outer[data-mobile="display_full"] nav > #social > li:last-child {
     border: none;

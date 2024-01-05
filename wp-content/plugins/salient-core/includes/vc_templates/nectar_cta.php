@@ -35,6 +35,7 @@ extract(shortcode_atts(array(
 	'icon_linecons' => '', 
 	'icon_iconsmind' => '', 
 	'icon_steadysets' => '', 
+  'icon_nectarbrands' => '',
   'bypass_link' => 'false',
   'class' => '' ), $atts));
 

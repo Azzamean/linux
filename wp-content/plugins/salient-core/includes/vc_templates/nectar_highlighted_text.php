@@ -88,4 +88,4 @@ if( 'scribble' === $style ) {
 }
 
 
-echo '<div class="nectar-highlighted-text'.esc_attr($dynamic_el_styles).'" data-style="'.esc_attr($style).'" '.$style_specific_attrs_escaped.'data-using-custom-color="'.esc_attr($using_custom_color).'" data-animation-delay="'.esc_attr($delay).'" data-color="'.esc_attr($highlight_color).'" data-color-gradient="'.esc_attr($secondary_color).'" style="">'.do_shortcode($content).'</div>';
+echo '<div class="nectar-highlighted-text'.esc_attr($dynamic_el_styles).'" data-style="'.esc_attr($style).'" '.$style_specific_attrs_escaped.'data-using-custom-color="'.esc_attr($using_custom_color).'" data-animation-delay="'.esc_attr($delay).'" data-color="'.esc_attr($highlight_color).'" data-color-gradient="'.esc_attr($secondary_color).'" style="">'.wpb_js_remove_wpautop( $content, true ).'</div>';

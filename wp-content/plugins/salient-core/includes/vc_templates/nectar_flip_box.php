@@ -27,6 +27,7 @@ extract(shortcode_atts(array(
 	'icon_fontawesome' => '',
 	'icon_linea' => '',
 	'icon_iconsmind' => '',
+	'icon_nectarbrands' => '',
 	'icon_steadysets' => '',
 	'icon_color' => 'accent-color',
 	'icon_size' => '60',
@@ -116,6 +117,9 @@ switch( $icon_family ) {
 		break;
 	case 'steadysets':
 		$icon = $icon_steadysets;
+		break;
+	case 'nectarbrands':
+		$icon = $icon_nectarbrands;
 		break;
 	case 'linea':
 		$icon = $icon_linea;

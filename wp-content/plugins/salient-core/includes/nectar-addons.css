@@ -1111,11 +1111,19 @@ body .vc_panel-tabs > ul, body .vc_panel-footer {
 #vc_navbar-redo, #vc_navbar-undo {
   text-decoration: none;
 }
+#wpb_wpbakery .vc_navbar.vc_not-empty a.vc_undo-redo[disabled],
+#wpb_wpbakery .vc_navbar.vc_not-empty a.vc_undo-redo[disabled] {
+  opacity: 0.2;
+}
 
 body .vc_navbar .vc_icon-btn {
   font-size: 22px;
   width: 40px;
   padding: 28px 25px;
+}
+#vc_navbar[class*="-frontend"] #vc_screen-size-control > a > .vc_icon-btn {
+  padding: 0;
+  width: auto;
 }
 
 #vc_navbar[class*="-frontend"] .vc_icon-btn:not(.vc_element-button):not(.vc_templates-button):not([disabled]):hover,
@@ -1123,11 +1131,15 @@ body .vc_navbar .vc_icon-btn {
 #vc_navbar[class*="-frontend"] .vc_dropdown .vc_dropdown-list {
   background-color: #2d57e8;
 }
+#vc_navbar[class*="-frontend"] .vc_dropdown-list .vc_icon-btn:not(.vc_element-button):not(.vc_templates-button):not([disabled]):hover {
+  background-color: #2047d4;
+}
 #vc_navbar[class*="-frontend"] .vc_dropdown .vc_dropdown-list a.active {
   background-color: #3a67ff;
 }
 #vc_navbar[class*="-frontend"] button.vc_btn-primary.vc_btn-save {
   background-color: #6185ff;
+  color: #fff;
 }
 #vc_navbar[class*="-frontend"] button.vc_btn-sm {
   font-size: 13px;
@@ -1194,6 +1206,14 @@ body .vc_navbar .vc_post-settings {
   border-radius: 5px;
   text-decoration: none;
   margin: 11px 7px;
+}
+
+#wpb_wpbakery .vc_navbar .vc_icon-btn.vc_templates-button i,
+#wpb_wpbakery .vc_navbar .vc_icon-btn.vc_element-button i {
+  position: relative;
+  top: 0;
+  left: 0;
+  transform: none;
 }
 
 .vc_navbar .vc_icon-btn.vc_templates-button.salient-studio-templates,
@@ -1921,10 +1941,17 @@ body .vc_general.vc_ui-tabs-line .vc_ui-tabs-line-trigger {
 }
 
 
-.vc_navbar.vc_navgar-frontend .vc_icon-btn:not([disabled]):hover,
- .vc_navbar.vc_navgar-frontend .vc_dropdown:hover .vc_dropdown-toggle,
- .vc_navbar.vc_navgar-frontend .vc_dropdown .vc_dropdown-list {
+.vc_navbar.vc_navbar-frontend .vc_icon-btn:not([disabled]):hover,
+ .vc_navbar.vc_navbar-frontend .vc_dropdown:hover .vc_dropdown-toggle,
+ .vc_navbar.vc_navbar-frontend .vc_dropdown .vc_dropdown-list {
   background-color: #2a51d6;
+}
+
+.vc_navbar.vc_navbar-frontend .vc_dropdown {
+  margin-right: 21px;
+}
+.vc_navbar.vc_navbar-frontend .vc_dropdown .vc_dropdown-toggle {
+  width: 56px;
 }
 
 body .vc_add-element-container .wpb-elements-list {
@@ -5040,6 +5067,13 @@ div[data-vc-shortcode="nectar_cta"] .vc_edit-form-tab .vc_shortcode-param[data-p
   right: 100%;
 }
 
+.wp-admin.rtl .vc_edit_form_elements .wpb_vc_param_value.dropdown {
+  text-align-last: right;
+}
+.wp-admin.rtl .vc_edit_form_elements .wpb_vc_param_value.dropdown option {
+  direction: rtl;
+}
+
 /*when editor gets disabled by vc, the width doesnt stretch across the screen
 which makes the editor height calcs much higher than they are,
 creating excess space at the bottom*/
@@ -5197,9 +5231,23 @@ opacity: 0.87!important;
 
 #post-body #wpb_wpbakery .vc_navbar .vc_icon-btn.vc_templates-button.salient-studio-templates,
 #post-body #wpb_wpbakery .vc_navbar .vc_icon-btn.vc_element-button {
-border: 2px #3a67ff solid;
+border: 2px var(--nectar-blue) solid;
 color: #4F5C64;
 transition: border-color 0.25s ease, box-shadow 0.25s ease;
+}
+#post-body #wpb_wpbakery .vc_navbar .vc_save-backend .vc_control-preview {
+  background-color: rgb(240, 240, 240);
+  color: #000!important;
+}
+#post-body #wpb_wpbakery .vc_navbar .vc_save-backend .vc_control-preview:hover {
+  background-color: rgb(230, 230, 230);
+}
+#wpb_wpbakery .vc_navbar .vc_save-backend .vc_control-save {
+  background-color: var(--nectar-blue);
+  color: #fff;
+}
+#wpb_wpbakery .vc_navbar .vc_save-backend .vc_control-save:hover {
+  background-color: var(--nectar-blue-h);
 }
 
 #post-body #wpb_wpbakery .vc_navbar .vc_icon-btn.salient-studio-templates:hover,

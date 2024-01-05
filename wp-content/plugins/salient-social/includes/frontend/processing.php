@@ -137,6 +137,7 @@ function nectar_social_sharing_shortcode( $atts, $content = null ) {
   ob_start();
 
   wp_enqueue_style( 'salient-social' );
+  wp_enqueue_script( 'salient-social' );
   
   echo '<div class="nectar-social '.esc_attr($style).'" data-position="left" data-color-override="'. esc_attr($color_override) .'">';
     

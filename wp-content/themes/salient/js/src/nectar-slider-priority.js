@@ -29,7 +29,7 @@ jQuery(function($) {
 				// Tablets Viewport.
 				if( $tho != 'auto' || $tco != 'auto' ) {
 
-					$overrideCSS += '@media only screen and (max-width: 1000px) and (min-width: 690px) {';
+					$overrideCSS += '@media only screen and (max-width: 999px) and (min-width: 690px) {';
 					if($tho != 'auto')
 					$overrideCSS += '#'+$(this).attr('id')+ '.nectar-slider-wrap[data-full-width="false"] .swiper-slide .content .ns-heading-el, #boxed .nectar-slider-wrap#'+$(this).attr('id')+ ' .swiper-slide .content .ns-heading-el, body .nectar-slider-wrap#'+$(this).attr('id')+ '[data-full-width="true"] .swiper-slide .content .ns-heading-el, body .nectar-slider-wrap#'+$(this).attr('id')+ '[data-full-width="boxed-full-width"] .swiper-slide .content .ns-heading-el, body .full-width-content .vc_span12 .nectar-slider-wrap#'+$(this).attr('id')+ ' .swiper-slide .content .ns-heading-el { font-size:' + $tho + 'px!important; line-height:' + (parseInt($tho) + 10) + 'px!important;  }';
 					if($pho != 'auto')

@@ -1,7 +1,22 @@
 jQuery(document).ready(function ($) {
     var isSimpleBannerTextSet = simpleBannerScriptParams.simple_banner_text != "";
+    var isDisabledByPagePath = simpleBannerScriptParams.simple_banner_disabled_page_paths ? simpleBannerScriptParams.simple_banner_disabled_page_paths.split(',')
+        .filter(Boolean)
+        .some(path => {
+            var pathname = path.trim();
+            if (pathname.at(0) === '*' && pathname.at(-1) === '*') {
+                return window.location.pathname.includes(pathname.slice(1, -1));
+            }
+            if (pathname.at(0) === '*') {
+                return window.location.pathname.endsWith(pathname.slice(1));
+            }
+            if (pathname.at(-1) === '*') {
+                return window.location.pathname.startsWith(pathname.slice(0, -1));
+            }
+            return window.location.pathname === pathname;
+        }) : false;
     var isSimpleBannerEnabledOnPage = !simpleBannerScriptParams.pro_version_enabled || 
-        (simpleBannerScriptParams.pro_version_enabled && !simpleBannerScriptParams.disabled_on_current_page);
+        (simpleBannerScriptParams.pro_version_enabled && !simpleBannerScriptParams.disabled_on_current_page && !isDisabledByPagePath);
     var isSimpleBannerVisible = isSimpleBannerTextSet && isSimpleBannerEnabledOnPage;
 
     if (isSimpleBannerVisible) {

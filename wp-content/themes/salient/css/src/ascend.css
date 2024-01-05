@@ -355,7 +355,7 @@ body.ascend #header-outer[data-full-width="true"][data-format="centered-logo-bet
 }
 
 
-@media only screen and (max-width: 999px) and (min-width: 690px) {
+@media only screen and (max-width: 999px) and (min-width: 691px) {
     body.ascend #slide-out-widget-area .inner .off-canvas-menu-container.mobile-only .menu.secondary-header-items {
         display: none;
    }
@@ -374,7 +374,7 @@ body.ascend #header-outer[data-full-width="true"][data-format="centered-logo-bet
    margin:0 30px 0 30px
 }
 
-@media only screen and (min-width:1001px) {
+@media only screen and (min-width:1000px) {
 
   .ascend #header-outer.transparent[data-transparent-header="true"][data-full-width="true"] #top nav ul #search-btn a,
   .ascend #header-outer.transparent[data-transparent-header="true"][data-full-width="true"] #top nav ul #nectar-user-account a,

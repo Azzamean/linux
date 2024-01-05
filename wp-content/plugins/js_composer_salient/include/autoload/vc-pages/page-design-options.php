@@ -20,7 +20,7 @@ function vc_check_for_custom_css_build() {
 	$version = vc_settings()->getCustomCssVersion();
 	if ( vc_user_access()->wpAny( 'manage_options' )->part( 'settings' )->can( 'vc-color-tab' )
 			->get() && vc_settings()->useCustomCss() && ( ! $version || version_compare( WPB_VC_VERSION, $version, '<>' ) ) ) {
-		/* nectar addition */ 
+			/* nectar addition */ 
 				//add_action( 'admin_notices', 'vc_custom_css_admin_notice' );
 				/* nectar addition end */ 
 	}

@@ -20,6 +20,7 @@ class WPBakeryShortCode_VC_Accordion_Tab extends WPBakeryShortCode_VC_Tab {
 		'add',
 		'edit',
 		'clone',
+		'copy',
 		'delete',
 	);
 
@@ -149,6 +150,7 @@ class WPBakeryShortCode_VC_Accordion_Tab extends WPBakeryShortCode_VC_Tab {
 		return '';
 	}
 }
+
 
 
 /* nectar addition */ 

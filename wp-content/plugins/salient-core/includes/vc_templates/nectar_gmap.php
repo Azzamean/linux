@@ -54,7 +54,7 @@ wp_enqueue_style( 'nectar-element-interactive-map' );
 	    $explodedBySep = explode('|', $brExplode);
 	  
 	    foreach ($explodedBySep as $sepExploded) {
-	        $markersArr[$count][] = $sepExploded;
+	        $markersArr[$count][] = do_shortcode($sepExploded);
 	    }
 	  
 	    $count++;
@@ -80,7 +80,7 @@ wp_enqueue_style( 'nectar-element-interactive-map' );
 
 
   
-	echo '<div id="'.$unique_id.'" style="height: '.nectar_css_sizing_units($size).';" class="'.esc_attr($map_class).'" data-infowindow-start-open="'. esc_attr($infowindow_start_open) .'" data-dark-color-scheme="'. esc_attr($dark_color_scheme) .'" data-marker-style="'.esc_attr($marker_style).'" data-nectar-marker-color="'.esc_attr($nectar_marker_color).'" data-ultra-flat="'.esc_attr($ultra_flat).'" data-greyscale="'.esc_attr($map_greyscale).'" data-extra-color="'.esc_attr($map_color).'" data-enable-animation="'.esc_attr($marker_animation).'" data-enable-zoom="'.esc_attr($enable_zoom).'" data-zoom-level="'.esc_attr($zoom).'" data-center-lat="'.esc_attr($map_center_lat).'" data-center-lng="'.esc_attr($map_center_lng).'" data-marker-img="'.$marker_image_src.'"></div>';
+	echo '<div id="'.$unique_id.'" style="height: '.nectar_css_sizing_units($size).';" class="'.esc_attr($map_class).'" data-infowindow-start-open="'. esc_attr($infowindow_start_open) .'" data-dark-color-scheme="'. esc_attr($dark_color_scheme) .'" data-marker-style="'.esc_attr($marker_style).'" data-nectar-marker-color="'.esc_attr($nectar_marker_color).'" data-ultra-flat="'.esc_attr($ultra_flat).'" data-greyscale="'.esc_attr($map_greyscale).'" data-extra-color="'.esc_attr($map_color).'" data-enable-animation="'.esc_attr($marker_animation).'" data-enable-zoom="'.esc_attr($enable_zoom).'" data-zoom-level="'.esc_attr($zoom).'" data-center-lat="'.esc_attr(do_shortcode($map_center_lat)).'" data-center-lng="'.esc_attr(do_shortcode($map_center_lng)).'" data-marker-img="'.$marker_image_src.'"></div>';
 	echo '<div class="'.$unique_id.' map-marker-list">';
   
 		$count = 0;

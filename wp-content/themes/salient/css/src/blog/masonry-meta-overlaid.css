@@ -162,7 +162,7 @@ body .post-area.masonry.meta_overlaid .masonry-blog-item.large_featured {
   width: 100%!important;
 }
 
-@media only screen and (min-width: 690px) {
+@media only screen and (min-width: 691px) {
    body .masonry.meta_overlaid .masonry-blog-item.wide_tall h3.title, 
    body .masonry.meta_overlaid .masonry-blog-item.large_featured h3.title{
       font-size:30px;

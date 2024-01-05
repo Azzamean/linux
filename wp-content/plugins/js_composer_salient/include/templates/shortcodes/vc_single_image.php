@@ -177,7 +177,7 @@ switch ( $onclick ) {
 			}
 		}
 
-		$img['thumbnail'] = str_replace( '<img ', '<img data-vc-zoom="' . esc_attr( $large_img_src ) . '" ', $img['thumbnail'] );
+		$img['thumbnail'] = str_replace( '<img ', '<img data-vc-zoom="' . esc_url( $large_img_src ) . '" ', $img['thumbnail'] );
 
 		break;
 }

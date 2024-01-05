@@ -12,6 +12,7 @@ extract(shortcode_atts(array(
 	'icon_linea' => '', 
 	'icon_iconsmind' => '', 
 	'icon_steadysets' => '', 
+	'icon_nectarbrands' => '',
 	"header" => "", 
 	"text_full_html" => 'simple',
 	"text" => ""), $atts));
@@ -38,6 +39,9 @@ switch($icon_family) {
 		break;
 	case 'iconsmind':
 		$icon = $icon_iconsmind;
+		break;
+	case 'nectarbrands':
+		$icon = $icon_nectarbrands;
 		break;
 	default:
 		$icon = '';

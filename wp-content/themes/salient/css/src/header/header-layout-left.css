@@ -37,7 +37,7 @@ Description: Header Layout set to "Left Header" in theme options
 
 
 
-@media only screen and (min-width:1001px) {
+@media only screen and (min-width:1000px) {
 
      #header-outer[data-format="left-header"] {
          width:275px;
@@ -522,7 +522,7 @@ Description: Header Layout set to "Left Header" in theme options
     }
 }
 
- @media only screen and (min-width:1001px) and (max-width:1300px){
+ @media only screen and (min-width:1000px) and (max-width:1300px){
      body[data-header-format="left-header"] .post-area.span_9.col_last{
         padding-left:35px
     }
@@ -530,19 +530,19 @@ Description: Header Layout set to "Left Header" in theme options
         padding-right:35px
     }
 }
- @media only screen and (max-width:1450px) and (min-width:1001px){
+ @media only screen and (max-width:1450px) and (min-width:1000px){
      body[data-header-format="left-header"].single #page-header-bg .blog-title .meta-comment-count,
 		 body[data-header-format="left-header"].single #page-header-bg .blog-title #single-below-header .meta-comment-count{
          display:none
     }
 }
- @media only screen and (max-width:1150px) and (min-width:1001px){
+ @media only screen and (max-width:1150px) and (min-width:1000px){
     body[data-header-format="left-header"].single .section-title h1,
 		body[data-header-format="left-header"][data-ext-responsive="true"].single-post #page-header-bg[data-post-hs="default_minimal"] h1 {
          max-width:400px
     }
 }
- @media only screen and (max-width:1001px){
+ @media only screen and (max-width:1000px){
     body[data-header-format="left-header"] #header-outer #social-in-menu{
         display:none
     }
@@ -658,7 +658,7 @@ body[data-header-format="left-header"].admin-bar #search-outer #search #close {
     color:rgba(0,0,0,0.4);
     margin-top:15px
 }
-@media only screen and (max-width: 1000px) {
+@media only screen and (max-width: 999px) {
   body[data-header-format="left-header"].material #search-outer #search .span_12 span {
     display: none;
   }
@@ -684,7 +684,7 @@ body[data-header-format="left-header"].material #search-outer #search #close a {
 	right: 54px;
 }
 
-@media only screen and (max-width: 1000px) {
+@media only screen and (max-width: 999px) {
 	body[data-header-format="left-header"].admin-bar.material #search-outer #search #close,
 	body[data-header-format="left-header"].material #search-outer #search #close {
 			top: 12px;

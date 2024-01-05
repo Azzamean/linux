@@ -183,7 +183,7 @@ div.clear {
 }
 
 /* Column width on displays +690px */
-@media (min-width: 690px) {
+@media (min-width: 691px) {
 
 	.span_1 {
 		width: 6.5%;
@@ -2012,6 +2012,7 @@ body.material #header-outer:not([data-format="left-header"]) #top > .container >
   height:22px;
   width:36px;
 	position: relative;
+  top: 0;
 }
 
 #header-outer #social-in-menu a {
@@ -2908,6 +2909,12 @@ body .wpb_column.centered-text img,
 body .wpb_text_column{
   margin-bottom:0
 }
+.wpb_text_column.text_direction_rtl {
+  direction: rtl;
+}
+.wpb_text_column.text_direction_ltr {
+  direction: ltr;
+}
 .wpb_animate_when_almost_visible {
   opacity: 0;
 }
@@ -3417,6 +3424,10 @@ h2 .nectar-button {
 }
 body.material .nectar-button[class*="m-extra-color-gradient-"][class*="see-through"] {
   visibility: hidden;
+}
+
+.swiper-slide[data-x-pos="centered"] .buttons {
+	justify-content: center; 
 }
 
 .swiper-slide .button.solid_color_2,
@@ -4673,7 +4684,7 @@ img.img-with-animation.nectar-lazy {
   transform:none;
   -webkit-transform:none
 }
-@media only screen and (min-width: 690px) {
+@media only screen and (min-width: 691px) {
   .vc_row-o-equal-height .wpb_column.has-animation[data-animation*="reveal"] > .column-inner-wrap {
     -webkit-flex-grow: 1;
     -ms-flex-positive: 1;
@@ -7263,8 +7274,7 @@ body.search-no-results .search-form {
 }
 .widget_search .search-form button[type=submit],
 .widget_search .search-form input[type=submit],
-.newsletter-widget form input[type=submit],
-body[data-form-style="minimal"] .main-content .post-password-form input[type=submit]{
+.newsletter-widget form input[type=submit] {
   position:absolute;
   right:0;
   top:0;
@@ -7272,10 +7282,7 @@ body[data-form-style="minimal"] .main-content .post-password-form input[type=sub
   line-height:22px;
   padding:10px 11px
 }
-body[data-form-style="minimal"] .main-content .post-password-form input[type=submit]{
-  top:auto;
-  bottom:35px
-}
+
 .main-content > .row > form.post-password-form > p:first-child {
 	font-size: 1.5em;
 	line-height: 1.5em;
@@ -7287,6 +7294,25 @@ body[data-form-style="minimal"] .main-content .post-password-form input[type=sub
 	max-width: 600px;
 	margin: 0 auto;
 }
+
+.single-portfolio .main-content form.post-password-form > p:first-child,
+.post-password-required form.post-password-form > p:first-child {
+	font-size: 1.5em;
+	line-height: 1.5em;
+	text-align: center;
+}
+
+.single-portfolio .main-content form.post-password-form,
+.post-password-required form.post-password-form {
+  padding: 5% 0;
+	max-width: 600px;
+	margin: 0 auto;
+}
+
+.single-portfolio #regular_portfolio[data-password-protected="true"] #sidebar {
+  width: 100%;
+}
+
 .post-password-form input[type="submit"] {
 	margin-top: 20px;
 	display: block;

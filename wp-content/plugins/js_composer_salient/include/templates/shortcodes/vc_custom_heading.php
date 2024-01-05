@@ -65,12 +65,12 @@ $output = '';
 if ( apply_filters( 'vc_custom_heading_template_use_wrapper', false ) ) {
 	$output .= '<div class="' . esc_attr( $css_class ) . '" ' . implode( ' ', $wrapper_attributes ) . '>';
 	$output .= '<' . $font_container_data['values']['tag'] . ' ' . $style . ' >';
-	$output .= wp_kses_post($text);
+	$output .= $text;
 	$output .= '</' . $font_container_data['values']['tag'] . '>';
 	$output .= '</div>';
 } else {
 	$output .= '<' . $font_container_data['values']['tag'] . ' ' . $style . ' class="' . esc_attr( $css_class ) . '" ' . implode( ' ', $wrapper_attributes ) . '>';
-	$output .= wp_kses_post($text);
+	$output .= $text;
 	$output .= '</' . $font_container_data['values']['tag'] . '>';
 }
 

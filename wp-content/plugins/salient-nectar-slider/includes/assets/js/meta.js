@@ -286,21 +286,23 @@ jQuery(document).ready(function($){
 	$('label[for=_nectar_slider_bg_type]').parents('tr').find('.buttonset label').on('click', function(){ setTimeout(backgroundType,60); });
 	
 	
-	////link tpye
-	$('td.inline, label[for=_nectar_slider_entire_link], label[for=_nectar_slider_video_popup]').parents('tr').hide();
+	////link type
+	$('td.inline, label[for=_nectar_slider_entire_link], label[for=_nectar_slider_link_sr_text], label[for=_nectar_slider_video_popup]').parents('tr').hide();
 	
 	function linkType(){
 		var $active = $('label[for=_nectar_slider_link_type]').parents('tr').find('.buttonset .ui-state-active').attr('for');
 		if($active == 'nectar_meta_button_links'){
 			$('td.inline').parents('tr').fadeIn();
-			$('label[for=_nectar_slider_entire_link], label[for=_nectar_slider_video_popup]').parents('tr').hide();
+			$('label[for=_nectar_slider_entire_link], label[for=_nectar_slider_link_sr_text], label[for=_nectar_slider_video_popup]').parents('tr').hide();
 		}
 		else if($active == 'nectar_meta_full_slide_link'){
 			$('label[for=_nectar_slider_entire_link]').parents('tr').fadeIn();
+			$('label[for=_nectar_slider_link_sr_text]').parents('tr').fadeIn();
 			$('td.inline, label[for=_nectar_slider_video_popup]').parents('tr').hide();
 		} else {
 			$('label[for=_nectar_slider_video_popup]').parents('tr').fadeIn();
 			$('td.inline, label[for=_nectar_slider_entire_link]').parents('tr').hide();
+			$('label[for=_nectar_slider_link_sr_text]').parents('tr').hide();
 		}
 	}
 	

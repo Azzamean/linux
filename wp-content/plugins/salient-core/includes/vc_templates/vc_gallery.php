@@ -466,7 +466,9 @@ foreach ( $images as $attach_id ) {
 
     $thumbnail = $post_thumbnail['thumbnail'];
 
- 		$post_thumbnail['p_img_large'][0] = $post_thumbnail['p_img_fullsize'];
+	if( $post_thumbnail['p_img_large'] ) {
+		$post_thumbnail['p_img_large'][0] = $post_thumbnail['p_img_fullsize'];
+	}
 
     $p_img_large = $post_thumbnail['p_img_large'];
     $link_start = $link_end = '';

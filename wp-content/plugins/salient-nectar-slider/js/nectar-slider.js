@@ -2669,18 +2669,20 @@ NectarSwiper.prototype.plugins.progress=function(a){function b(){for(var b=0;b<a
  
 
 jQuery(document).ready(function($){ 
-  
+    
   "use strict";
-  
-  Array.prototype.nectarGetKeyByValue = function( value ) {
-    for( var prop in this ) {
-      if( this.hasOwnProperty( prop ) ) {
-        if( this[ prop ] === value )
-        return prop;
+
+  function nectarGetKeyByValue(arr, value) {
+    for (let i = 0; i < arr.length; i++) {
+      if (arr[i] === value) {
+        return i;
       }
     }
+    return 0; // Not found
   }
-  
+
+
+
   var doneVideoInit = false;
   var $captionTrans = 0;
   var $loading_bg_storage = $('.first-section .nectar-slider-loading').css('background-image');
@@ -4115,7 +4117,7 @@ if ('IntersectionObserver' in window) {
         
         $minHeight = $('.swiper-container').attr('data-min-height');
         
-        var currentKey = $existingSliders.nectarGetKeyByValue($(this).attr('id')); 
+        var currentKey = nectarGetKeyByValue($existingSliders,$(this).attr('id')); 
         var $definedHeight = $sliderHeights[currentKey];
         
         var dif = $(window).width() / 1600;
@@ -4324,13 +4326,13 @@ if ('IntersectionObserver' in window) {
       
       //fullwidth sliders
       $('.nectar-slider-wrap[data-full-width="true"]:not([data-fullscreen="true"],[data-flexible-height="true"])').each(function(){
-        currentKey = $existingSliders.nectarGetKeyByValue($(this).attr('id')); 
+        currentKey = nectarGetKeyByValue($existingSliders, $(this).attr('id')); 
         $(this).find('.swiper-container').attr('data-height',$sliderHeights[currentKey]/1.4 )	
       });
       
       //column sliders
       $('.nectar-slider-wrap[data-full-width="false"]:not([data-fullscreen="true"]):not([data-flexible-height="true"])').each(function(){
-        currentKey = $existingSliders.nectarGetKeyByValue($(this).attr('id')); 
+        currentKey = nectarGetKeyByValue($existingSliders, $(this).attr('id')); 
         
         var $currentSliderHeight = $sliderHeights[currentKey];
         var $parentCol = ($(this).parents('.wpb_column').length > 0) ? $(this).parents('.wpb_column') : $(this).parents('.col');
@@ -4352,7 +4354,7 @@ if ('IntersectionObserver' in window) {
       
       //boxed sliders
       $('.nectar-slider-wrap[data-full-width="boxed-full-width"]:not([data-flexible-height="true"]):not([data-fullscreen="true"])').each(function(){
-        currentKey = $existingSliders.nectarGetKeyByValue($(this).attr('id')); 
+        currentKey = nectarGetKeyByValue($existingSliders, $(this).attr('id')); 
         $(this).find('.swiper-container').attr('data-height',$sliderHeights[currentKey]/1.9 )	
       });
     } 
@@ -4361,7 +4363,7 @@ if ('IntersectionObserver' in window) {
       
       //fullwidth sliders		
       $('.nectar-slider-wrap[data-full-width="true"]:not([data-fullscreen="true"],[data-flexible-height="true"])').each(function(){
-        currentKey = $existingSliders.nectarGetKeyByValue($(this).attr('id')); 
+        currentKey = nectarGetKeyByValue($existingSliders, $(this).attr('id')); 
         //mobile transparent.
         if($(this).parents('.full-width-ns').length > 0 && $('#header-outer[data-transparent-header="true"]').length > 0 ) {
           $(this).find('.swiper-container').attr('data-height',($sliderHeights[currentKey]/2.7) + 50);
@@ -4373,7 +4375,7 @@ if ('IntersectionObserver' in window) {
       
       //column sliders
       $('.nectar-slider-wrap[data-full-width="false"]:not([data-fullscreen="true"]):not([data-flexible-height="true"])').each(function(){
-        currentKey = $existingSliders.nectarGetKeyByValue($(this).attr('id')); 
+        currentKey = nectarGetKeyByValue($existingSliders, $(this).attr('id'));  
         
         var $currentSliderHeight = $sliderHeights[currentKey];
         var $parentCol = ($(this).parents('.wpb_column').length > 0) ? $(this).parents('.wpb_column') : $(this).parents('.col');
@@ -4397,7 +4399,7 @@ if ('IntersectionObserver' in window) {
       
       //boxed sliders		
       $('.nectar-slider-wrap[data-full-width="boxed-full-width"]:not([data-flexible-height="true"]):not([data-fullscreen="true"])').each(function(){
-        currentKey = $existingSliders.nectarGetKeyByValue($(this).attr('id')); 
+        currentKey = nectarGetKeyByValue($existingSliders, $(this).attr('id')); 
         //mobile transparent.
         if($(this).parents('.full-width-ns').length > 0 && $('#header-outer[data-transparent-header="true"]').length > 0 ) {
             $(this).find('.swiper-container').attr('data-height', ($sliderHeights[currentKey]/2.9) + 50 );
@@ -4414,13 +4416,13 @@ if ('IntersectionObserver' in window) {
       
       //fullwidth sliders		
       $('.nectar-slider-wrap[data-full-width="true"]:not([data-fullscreen="true"],[data-flexible-height="true"])').each(function(){
-        currentKey = $existingSliders.nectarGetKeyByValue($(this).attr('id')); 
+        currentKey = nectarGetKeyByValue($existingSliders, $(this).attr('id')); 
         $(this).find('.swiper-container').attr('data-height',$sliderHeights[currentKey]/1.2 )	
       });
       
       //column sliders
       $('.nectar-slider-wrap[data-full-width="false"]:not([data-fullscreen="true"]):not([data-flexible-height="true"])').each(function(){
-        currentKey = $existingSliders.nectarGetKeyByValue($(this).attr('id')); 
+        currentKey = nectarGetKeyByValue($existingSliders, $(this).attr('id')); 
         
         var $currentSliderHeight = $sliderHeights[currentKey];
         var $parentCol = ($(this).parents('.wpb_column').length > 0) ? $(this).parents('.wpb_column') : $(this).parents('.col') ;
@@ -4443,7 +4445,7 @@ if ('IntersectionObserver' in window) {
       
       //boxed sliders		
       $('.nectar-slider-wrap[data-full-width="boxed-full-width"]:not([data-flexible-height="true"]):not([data-fullscreen="true"])').each(function(){
-        currentKey = $existingSliders.nectarGetKeyByValue($(this).attr('id')); 
+        currentKey = nectarGetKeyByValue($existingSliders, $(this).attr('id'));  
         $(this).find('.swiper-container').attr('data-height',$sliderHeights[currentKey]/1.2 )	
       });
       
@@ -4453,13 +4455,13 @@ if ('IntersectionObserver' in window) {
       
       //fullwidth sliders
       $('.nectar-slider-wrap[data-full-width="true"]:not([data-fullscreen="true"],[data-flexible-height="true"])').each(function(){
-        currentKey = $existingSliders.nectarGetKeyByValue($(this).attr('id'));
+        currentKey = nectarGetKeyByValue($existingSliders, $(this).attr('id')); 
         if($(this).attr('data-flexible-height') != 'true') $(this).find('.swiper-container').attr('data-height',$sliderHeights[currentKey])	
       });
       
       //boxed sliders
       $('.nectar-slider-wrap[data-full-width="false"]:not([data-fullscreen="true"]), .nectar-slider-wrap[data-full-width="boxed-full-width"]:not([data-flexible-height="true"]):not([data-fullscreen="true"])').each(function(){
-        currentKey = $existingSliders.nectarGetKeyByValue($(this).attr('id')); 
+        currentKey = nectarGetKeyByValue($existingSliders, $(this).attr('id'));
         if($(this).attr('data-flexible-height') != 'true') $(this).find('.swiper-container').attr('data-height',$sliderHeights[currentKey] )	
       });
     }

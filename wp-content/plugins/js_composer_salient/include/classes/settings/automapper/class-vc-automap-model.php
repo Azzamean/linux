@@ -40,6 +40,11 @@ if ( ! class_exists( 'Vc_Automap_Model' ) ) {
 		);
 		public $name;
 
+		/* nectar addition - php 8.2 compat, removes dynamically created props */
+		public $category;
+		public $description;
+		public $params;
+		/* nectar addition end  */
 		/**
 		 * @param $data
 		 */
@@ -49,6 +54,7 @@ if ( ! class_exists( 'Vc_Automap_Model' ) ) {
 			if ( is_array( $data ) ) {
 				$this->data = stripslashes_deep( $data );
 			}
+	
 			foreach ( $this->vars as $var ) {
 				$this->{$var} = $this->get( $var );
 			}
@@ -162,7 +168,7 @@ if ( ! class_exists( 'Vc_Automap_Model' ) ) {
 		protected function deleteOption() {
 			unset( self::$option_data[ $this->id ] );
 
-			return delete_option( self::$option_name );
+			return update_option( self::$option_name, self::$option_data );
 		}
 	}
 }

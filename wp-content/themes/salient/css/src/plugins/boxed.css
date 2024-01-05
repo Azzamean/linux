@@ -402,7 +402,7 @@ body.material #boxed #header-outer .cart-menu {
   }
 }
 
-@media only screen and (min-width : 690px) and (max-width : 999px) {
+@media only screen and (min-width : 691px) and (max-width : 999px) {
 
   body #boxed {
     width: 679px;

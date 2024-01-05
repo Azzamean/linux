@@ -137,7 +137,7 @@ Description: Styles for the "Cascading Images" page builder element.
 }
 
 
-@media only screen and (max-width: 1000px) {
+@media only screen and (max-width: 999px) {
 
 	.nectar_cascading_images .cascading-image[data-max-width-mobile="100%"] img {
 		max-width: 100%;

@@ -265,7 +265,7 @@ if (!class_exists('NectarDelayJS')) {
             // Post grid animation.
             // Should be disabled on mobile devices for performance reasons.
             $critical_css .= '
-            @media only screen and (max-width: 1000px) {
+            @media only screen and (max-width: 999px) {
                 #ajax-content-wrap .top-level .nectar-post-grid[data-animation*="fade"] .nectar-post-grid-item,
                 #ajax-content-wrap .top-level .nectar-post-grid[data-animation="zoom-out-reveal"] .nectar-post-grid-item *:not(.content),
                 #ajax-content-wrap .top-level .nectar-post-grid[data-animation="zoom-out-reveal"] .nectar-post-grid-item *:before {
@@ -334,7 +334,17 @@ if (!class_exists('NectarDelayJS')) {
                 background-attachment: scroll;   
             }';
 
-
+            // Iframe video post format
+            if ( is_single() && get_post_format() === 'video' ) {
+                $critical_css .= '
+                .featured-media-under-header__featured-media iframe,
+                .post_format-post-format-video .post-content > .video iframe {
+                    width: 100%;
+                    height: 100%;
+                    aspect-ratio: 16/9;
+                }
+                ';
+            }
             // Fullscreen page header.
             $critical_css .= '.scroll-down-wrap.hidden {
                 transform: none;
@@ -350,6 +360,7 @@ if (!class_exists('NectarDelayJS')) {
             $critical_css .= 'body[data-slide-out-widget-area-style="slide-out-from-right"].material .slide_out_area_close.hide_until_rendered {
                 opacity: 0;   
             }';
+            
 
 
             // Masonry Blog/Portfolio.

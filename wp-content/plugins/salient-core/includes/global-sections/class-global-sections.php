@@ -113,6 +113,7 @@
   			 'edit_item'     => esc_html__( 'Edit Global Section', 'salient-core' ),
   			 'update_item'   => esc_html__( 'Update Global Section', 'salient-core' ),
   			 'add_new_item'  => esc_html__( 'Add New Global Section', 'salient-core' ),
+         'add_new'  => esc_html__( 'Add New Global Section', 'salient-core' ),
   		 );
 
        $public_bool = (is_user_logged_in()) ? true : false;

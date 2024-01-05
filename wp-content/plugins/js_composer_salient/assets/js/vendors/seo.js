@@ -2,6 +2,8 @@
 (function ( $ ) {
 	'use strict';
 	var imageEventString, vcYoast, relevantData, eventsList;
+	var initialLoad = true;
+	var allImageIds = [];
 
 	relevantData = {};
 	eventsList = [
@@ -65,7 +67,14 @@
 	vc.events.on( imageEventString, function ( model, param, settings ) {
     
 		// nectar addition.
-		if ( param && param.length > 0 && param.indexOf('http') == -1) {
+		if (initialLoad && param && param.length > 0 && param.indexOf('http') == -1 ) {
+			allImageIds.push({
+				id: model.get( 'id' ) + settings.param_name,
+				param: param
+			});
+			return;
+		}
+		if ( param && param.length > 0 && param.indexOf('http') == -1 ) {
 
       $.ajax({
         type: "POST",
@@ -85,12 +94,7 @@
             append: true
           };
 
-          if ( window.YoastSEO && typeof YoastSEO.app.refresh != 'undefined' ) {
-            YoastSEO.app.refresh();
-          }
-          if( window.rankMathEditor && typeof rankMathEditor.refresh != 'undefined' ) {
-            rankMathEditor.refresh( 'content' );
-          }
+         	refreshSEOPlugins();
           
         }
       });
@@ -99,8 +103,71 @@
 		}
 	} );
 
+	// Bulk load all images for first load.
+	vc.events.once('shortcodeView:ready', function() {
+		initialLoad = false;
+		if ( allImageIds.length > 0 ) {
+
+			const imageIds = allImageIds.map( image => image.param );
+
+			$.ajax({
+				type: "POST",
+				url: window.ajaxurl,
+				data: {
+						action: "wpb_gallery_html",
+						content: imageIds.join(','),
+						_vcnonce: window.vcAdminNonce
+				},
+				dataType: "json",
+				context: this,
+				success: function (html) {
+
+					if( !html.data ) {
+						return;
+					}
+
+					// Regular expression to match image tags
+					const imgTagRegex = /<img[^>]*>/g;
+
+					// Extract image tags
+					const imageTagArray = [];
+					let match;
+					while ((match = imgTagRegex.exec(html.data)) !== null) {
+							const imgTag = match[0];
+							imageTagArray.push(imgTag);
+					}
+					
+					// replace param inside of each allImageIds with html.
+					allImageIds.forEach( image => {
+						if ( imageTagArray.length > 0 ) {
+							relevantData[image.id] = {
+								html: imageTagArray.shift(),
+								append: true
+							};
+						}
+					});
+
+					refreshSEOPlugins();
+
+				}});
+			}
+	});
+
+	function refreshSEOPlugins() {
+		if ( window.YoastSEO && typeof YoastSEO.app.refresh != 'undefined' ) {
+			YoastSEO.app.refresh();
+		}
+		if( window.rankMathEditor && typeof rankMathEditor.refresh != 'undefined' ) {
+			rankMathEditor.refresh( 'content' );
+		}
+	}
+	
+
+
 	vc.events.on( getImageEventString( 'destroy' ), function ( model, param, settings ) {
-		delete relevantData[ model.get( 'id' ) + settings.param_name ];
+		if ( typeof relevantData[ model.get( 'id' ) + settings.param_name ] !== 'undefined') {
+			delete relevantData[ model.get( 'id' ) + settings.param_name ];
+		}
 	} );
 	
 	// Add relevant data to headings

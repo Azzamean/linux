@@ -15,7 +15,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 		"interval" => 'Per Month'), $atts));
 	
 	$highlight_class        = null;
-	$hightlight_reason_html = null;
+	$hightlight_reason_html = '';
 	
 	if( $highlight === 'true' ) {
 		$highlight_class = 'highlight ' . esc_attr(strtolower($color)); 

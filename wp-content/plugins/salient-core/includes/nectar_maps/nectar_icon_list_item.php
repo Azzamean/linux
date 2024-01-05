@@ -35,6 +35,7 @@ return array(
 				esc_html__( 'Iconsmind', 'salient-core' ) => 'iconsmind',
 				esc_html__( 'Linea', 'salient-core' ) => 'linea',
 				esc_html__( 'Steadysets', 'salient-core' ) => 'steadysets',
+				esc_html__( 'Additional Brands', 'salient-core' ) => 'nectarbrands',
 			),
 			"dependency" => array('element' => "icon_type", 'value' => 'icon'),
 			'param_name' => 'icon_family',
@@ -47,6 +48,14 @@ return array(
 			"settings" => array( "emptyIcon" => true, "iconsPerPage" => 240),
 			"dependency" => Array('element' => "icon_family", 'value' => 'fontawesome'),
 			"description" => esc_html__("Select icon from library.", "salient-core")
+		),
+		array(
+			'type' => 'iconpicker',
+			'heading' => esc_html__( 'Icon', 'salient-core' ),
+			'param_name' => 'icon_nectarbrands',
+			'settings' => array( 'type' => 'nectarbrands', 'emptyIcon' => true, 'iconsPerPage' => 240 ),
+			'dependency' => Array( 'element' => 'icon_family', 'value' => 'nectarbrands' ),
+			'description' => esc_html__( 'Select icon from library.', 'salient-core' )
 		),
 		array(
 			"type" => "iconpicker",

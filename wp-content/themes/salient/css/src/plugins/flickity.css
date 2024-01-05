@@ -726,7 +726,7 @@
 }
 
 
-@media only screen and (max-width: 1000px) {
+@media only screen and (max-width: 999px) {
 
   .nectar-flickity[data-controls*="arrows_overlaid"] .flickity-prev-next-button {
     transform: scale(0.75);
@@ -786,7 +786,7 @@
   margin-bottom: 60px;
 }
 
-@media only screen and (max-width: 1000px) {
+@media only screen and (max-width: 999px) {
   .nectar-flickity[data-controls="touch_total"]:not(.masonry) .flickity-viewport,
   .nectar-flickity[data-controls="touch_total"].nectar-carousel:not(.masonry) .flickity-viewport {
     margin-bottom: 45px;

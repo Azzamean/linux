@@ -99,8 +99,8 @@ if ( class_exists( 'WPBakeryVisualComposerAbstract' ) && defined( 'SALIENT_VC_AC
 
         // When Salient is not in use.
         if ( ! defined( 'NECTAR_THEME_NAME' ) ) {
-            wp_register_script( 'isotope', SALIENT_CORE_PLUGIN_PATH . '/js/fallback/isotope.js', '', $Salient_Core->plugin_version );
-            wp_register_script( 'salient-portfolio-waypoints', SALIENT_CORE_PLUGIN_PATH . '/js/fallback/waypoints.js', '', $Salient_Core->plugin_version );
+            wp_register_script( 'isotope', SALIENT_CORE_PLUGIN_PATH . '/js/fallback/isotope.js', array( 'jquery' ), $Salient_Core->plugin_version, true  );
+            wp_register_script( 'salient-portfolio-waypoints', SALIENT_CORE_PLUGIN_PATH . '/js/fallback/waypoints.js', array( 'jquery' ), $Salient_Core->plugin_version, true );
         }
 
         // Salient Portfolio styles.
@@ -120,7 +120,7 @@ if ( class_exists( 'WPBakeryVisualComposerAbstract' ) && defined( 'SALIENT_VC_AC
         }
 
         // Salient Portfolio scripts.
-        wp_register_script( 'salient-portfolio-js', SALIENT_CORE_PLUGIN_PATH . '/js/fallback/salient-portfolio.js', '', $Salient_Core->plugin_version );
+        wp_register_script( 'salient-portfolio-js', SALIENT_CORE_PLUGIN_PATH . '/js/fallback/salient-portfolio.js', array( 'jquery' ), $Salient_Core->plugin_version, true  );
         wp_localize_script( 'salient-portfolio-js', 'nectar_theme_info', array(
             'using_salient' => ( defined( 'NECTAR_THEME_NAME' ) ) ? 'true' : 'false'
         ) );
@@ -181,6 +181,7 @@ if ( class_exists( 'WPBakeryVisualComposerAbstract' ) && defined( 'SALIENT_VC_AC
             wp_enqueue_style( 'linecon', get_template_directory_uri() . '/css/linecon.css' );
             wp_enqueue_style( 'linea', get_template_directory_uri() . '/css/fonts/svg/font/style.css' );
             wp_enqueue_style( 'iconsmind', get_template_directory_uri() . '/css/iconsmind.css' );
+            wp_enqueue_style( 'nectar-brands', get_template_directory_uri() . '/css/nectar-brands.css' );
 
             // Page Builder Deps.
             wp_enqueue_style( 'spectrum', SALIENT_CORE_PLUGIN_PATH.'/includes/admin/assets/css/spectrum.css', array(), $Salient_Core->plugin_version );

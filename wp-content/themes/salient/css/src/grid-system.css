@@ -15,7 +15,7 @@ html body .vc_row-fluid > .span_12,
   float: none;
 }
 
-@media (min-width: 690px) {
+@media (min-width: 691px) {
   .col {
     margin-right: 2%;
    }
@@ -1278,7 +1278,7 @@ body[data-col-gap] .vc_row-fluid .span_12.post-area {
 
 
 /* Tablet width override */
-@media only screen and (min-width : 690px) and (max-width : 999px) {
+@media only screen and (min-width : 691px) and (max-width : 999px) {
 
   .vc_col-sm-1[data-t-w-inherits="small_desktop"]:not([class*="vc_col-md-"]),
   body .vc_row-fluid .wpb_column[data-t-w-inherits="small_desktop"].vc_col-md-1 {

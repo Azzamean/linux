@@ -22,7 +22,8 @@
     if( $(this.el).parents('.tabbed').length == 0 && 
         !this.isInstagram() && 
         $('#nectar_fullscreen_rows').length == 0 &&
-        'IntersectionObserver' in window ) {
+        'IntersectionObserver' in window && 
+        typeof window.vc_iframe === 'undefined') {
       this.inViewLoad(); 
     } else {
       this.init();

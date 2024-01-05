@@ -128,7 +128,7 @@ body[data-header-format="left-header"] #header-outer .cart-menu-wrap .cart-menu 
     direction: rtl;
 }
 
-@media only screen and (min-width: 1001px) {
+@media only screen and (min-width: 1000px) {
   .nectar-post-grid-filters[data-align="default"] > div {
     display: flex;
     flex-wrap: wrap;
@@ -522,6 +522,15 @@ body .nectar-cta[data-style="arrow-animation"] .link_wrap:hover .link_text > .te
   left: auto;
 }
 
+.nectar-badge {
+  direction: rtl;
+}
+.badge-style-line .nectar-badge__inner:before {
+  margin-left: 10px;
+  margin-right: 0;
+}
+
+
 .single #single-meta {
   left: 0;
   right: auto;
@@ -530,6 +539,7 @@ body .nectar-cta[data-style="arrow-animation"] .link_wrap:hover .link_text > .te
 .single #single-meta ul li {
   float: right;
 }
+
 
 
 .single-portfolio #project-meta .sharing li:last-child,
@@ -2058,7 +2068,7 @@ h1 .nectar-button, h2 .nectar-button, h3 .nectar-button, h4 .nectar-button {
     }
 }
 
-@media only screen and (max-width: 1000px) and (min-width: 690px) {
+@media only screen and (max-width: 999px) and (min-width: 691px) {
     .rtl .full-width-content .page-title,
     .woocommerce .full-width-content .woocommerce-result-count {
         padding-right: 4%;
@@ -2153,6 +2163,18 @@ h1 .nectar-button, h2 .nectar-button, h3 .nectar-button, h4 .nectar-button {
     padding: 6% 6% 6% 0;
 }
 
+.rtl .nectar-post-grid-item .item-main > .meta-author img {
+  margin-right: 0;
+  margin-left: 15px;
+}
+.rtl .nectar-post-grid-item .meta-author img {
+  margin-right: 0;
+  margin-left: 8px;
+}
+.rtl .nectar-post-grid .meta-category a {
+  margin: 0 0 10px 10px;
+}
+
 
 .rtl .nectar-post-grid-wrap[data-style="mouse_follow_image"] .nectar-post-grid .content,
 .rtl .centered-text .nectar-post-grid-wrap[data-style="mouse_follow_image"] .nectar-post-grid .content,
@@ -2209,7 +2231,7 @@ h1 .nectar-button, h2 .nectar-button, h3 .nectar-button, h4 .nectar-button {
 
 }
 
-@media only screen and (max-width: 1000px) and (min-width: 1px) {
+@media only screen and (max-width: 999px) and (min-width: 1px) {
 
     .nectar-recent-posts-single_featured.multiple_featured > .container .controls {
         margin-right: 0;
@@ -2260,13 +2282,13 @@ h1 .nectar-button, h2 .nectar-button, h3 .nectar-button, h4 .nectar-button {
     }
 }
 
-@media only screen and (max-width: 1000px) {
+@media only screen and (max-width: 999px) {
     .row .blog-recent[data-style="list_featured_first_row"] .col {
       margin-left: 0;
     }
 }
 
-@media only screen and (max-width: 1000px) and (min-width: 690px) {
+@media only screen and (max-width: 999px) and (min-width: 691px) {
 
     .row .blog-recent[data-style="list_featured_first_row"].columns-3 .col:not(:first-child),
     .row .blog-recent[data-style="list_featured_first_row"].columns-2 .col {
@@ -2371,7 +2393,7 @@ div.widget .nectar_widget[class*="nectar_blog_posts_"][data-style="hover-feature
     }
 }
 
-@media (min-width: 690px) {
+@media (min-width: 691px) {
 
     #commentform .col {
         margin-left: 2%;
@@ -2444,7 +2466,7 @@ div.widget .nectar_widget[class*="nectar_blog_posts_"][data-style="hover-feature
     }
 }
 
-@media only screen and (max-width: 1000px) and (min-width: 1px) {
+@media only screen and (max-width: 999px) and (min-width: 1px) {
     a > .sf-sub-indicator {
         left: 0 !important;
         right: auto !important;
@@ -2941,7 +2963,7 @@ body.search-results #search-results[data-layout="list-no-sidebar"] article:befor
     margin-left: 15px;
     margin-right: 0;
 }
-@media only screen and (max-width: 1000px) {
+@media only screen and (max-width: 999px) {
     body.woocommerce .span_9 ul.products[data-product-style="minimal"] li.product.minimal,
     body.woocommerce-page .span_9 ul.products[data-product-style="minimal"] li.product.minimal,
     body.woocommerce ul.products[data-product-style="minimal"] li.product.minimal,
@@ -3189,7 +3211,7 @@ body:not([data-header-format="left-header"]) #top nav > ul > .megamenu > ul > li
     right: .5em;
 }
 
-@media only screen and (min-width: 1001px) {
+@media only screen and (min-width: 1000px) {
 
     body[data-header-format="left-header"] #header-outer[data-lhe="animated_underline"] #top nav > ul > li:not([class*="button_"]) > a > span:after {
         right: 0;

@@ -29,7 +29,8 @@
     this.$fpAnimation             = $('#nectar_fullscreen_rows').attr('data-animation');
     this.$svgResizeTimeout        = null;
     this.$disableFPonMobile       = ($('#nectar_fullscreen_rows[data-mobile-disable]').length > 0) ? $('#nectar_fullscreen_rows').attr('data-mobile-disable') : 'off';
-    this.$onMobileBrowser         = navigator.userAgent.match(/(Android|iPod|iPhone|iPad|BlackBerry|IEMobile|Opera Mini)/);
+    this.onIOS                    = (navigator.userAgent.match(/Mac/) && navigator.maxTouchPoints && navigator.maxTouchPoints > 2) ? true : false,
+    this.$onMobileBrowser         = (navigator.userAgent.match(/(Android|iPod|iPhone|iPad|BlackBerry|IEMobile|Opera Mini)/) || this.onIOS) ? true : false;
     this.activeIndex              = 0;
     this.prevIndex                = 0;
 

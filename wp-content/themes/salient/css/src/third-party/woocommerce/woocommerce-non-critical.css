@@ -514,7 +514,8 @@ body:not([data-header-color="custom"]) #header-outer .cart-notification .item-na
 	background-size: 100% 2px;
 }
 
-.woocommerce .button .loading:after {
+.woocommerce .button .loading:after,
+.nectar-quick-view-box .button .loading:after {
 	font-family: WooCommerce;
   color: inherit;
   content: "\e01c";
@@ -528,12 +529,14 @@ body:not([data-header-color="custom"]) #header-outer .cart-notification .item-na
 	-webkit-animation: spin 2s linear infinite;
   animation: spin 2s linear infinite;
 }
-.woocommerce .single_add_to_cart_button_wrap .button .loading {
+.woocommerce .single_add_to_cart_button_wrap .button .loading,
+.nectar-quick-view-box .single_add_to_cart_button_wrap .button .loading  {
 	top: 4px;
 	position: relative;
 }
 
-.woocommerce .button .loading-wrap {
+.woocommerce .button .loading-wrap,
+.nectar-quick-view-box .button .loading-wrap {
 	display: inline-block;
 	margin-right: 0;
 	max-width: 0;
@@ -542,7 +545,8 @@ body:not([data-header-color="custom"]) #header-outer .cart-notification .item-na
 	vertical-align: middle;
 }
 
-.woocommerce .button.processing .loading-wrap {
+.woocommerce .button.processing .loading-wrap,
+.nectar-quick-view-box .button.processing .loading-wrap {
 	margin-right: 10px;
 	max-width: 16px;
 }
@@ -1054,7 +1058,7 @@ body .nectar-quick-view-box .nectar-full-product-link a {
 	margin: -17px 0 0 -17px;
 }
 
-@media only screen and ( max-width: 1000px ) {
+@media only screen and ( max-width: 999px ) {
 	.style_slide_in_click .close-cart .close-wrap {
 		height: 14px;
 	}

@@ -190,6 +190,8 @@
             public $field_types = array();
             public $field_head = array();
             public $googleArray = array();
+
+            public $validation_ran; // nectar addition - missing in < v4 redux
             
             /**
              * Class Constructor. Defines the args for the theme options class
@@ -2119,9 +2121,19 @@
                             if ( isset ( $field['permissions'] ) ) {
 
                                 if ( ! self::current_user_can( $field['permissions'] ) ) {
-                                    $data = isset ( $this->options[ $field['id'] ] ) ? $this->options[ $field['id'] ] : $this->options_defaults[ $field['id'] ];
 
-                                    $this->hidden_perm_fields[ $field['id'] ] = $data;
+                                    // nectar addition - fixes core issue that caused warnings
+                                    $data = false;
+                                    if ( isset ( $this->options[ $field['id'] ] ) ) {
+                                        $data = $this->options[ $field['id'] ];
+                                    } else if ( isset( $this->options_defaults[ $field['id'] ] ) ) {
+                                        $data = $this->options_defaults[ $field['id'] ];
+                                    }
+
+                                    if ( $data ) {
+                                        $this->hidden_perm_fields[ $field['id'] ] = $data;
+                                    }
+                                    // nectar addition end
 
                                     continue;
                                 }
@@ -4080,8 +4092,8 @@
 
                 $name_arr = func_get_args();
                 $args = array_merge( array( $current_user ), $name_arr );
-
-                return call_user_func_array( array( 'self', 'user_can' ), $args );
+                
+                return call_user_func_array( array( __CLASS__, 'user_can' ), $args );
             }
 
 

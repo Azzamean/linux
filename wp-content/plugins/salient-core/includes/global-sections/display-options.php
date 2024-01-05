@@ -51,7 +51,8 @@ if (!class_exists('Nectar_Global_Sections_Display_Options')) {
             add_action('add_meta_boxes', array($this, 'add_display_options_meta_box'), 90);
             add_action('admin_enqueue_scripts', array($this, 'admin_enqueue_assets'));
 
-            add_action('save_post', array($this, 'save_display_conditions'));
+            add_action('save_post', array($this, 'save_display_conditions'), 10, 3);
+            add_action('before_delete_post', array($this, 'on_delete_post'));
         }
 
         /**
@@ -91,8 +92,6 @@ if (!class_exists('Nectar_Global_Sections_Display_Options')) {
                     $modified_locations[] = $location;
 
                 }
-
-                
 
                 return $modified_locations;
             });
@@ -235,18 +234,31 @@ if (!class_exists('Nectar_Global_Sections_Display_Options')) {
                     'label' => $post_type,
                 );
             }
+            // Single post types
+            foreach ($post_types as $post_type) {
+                if (in_array($post_type, $exlcude_post_types) || in_array($post_type, array('attachment'))) {
+                    continue;
+                }
 
-            // User Roles.
-            $user_roles = array();
-            $roles = get_editable_roles();
-            foreach ($roles as $role => $details) {
-                $user_roles[] = array(
-                    'value' => 'role__'.$role,
-                    'label' => $details['name'],
+                $formatted_post_types[] = array(
+                    'value' => 'single__pt__'.$post_type,
+                    'label' => 'Single: '.$post_type,
                 );
             }
 
-            // Speical locations
+            // User Roles.
+            $user_roles = array();
+            if ( is_admin() ) {
+                $roles = get_editable_roles();
+                foreach ($roles as $role => $details) {
+                    $user_roles[] = array(
+                        'value' => 'role__'.$role,
+                        'label' => $details['name'],
+                    );
+                }
+            }
+
+            // Special locations
             $this->special_locations = array(
                 array(
                     'value' => 'nectar_special_location__blog_loop',
@@ -694,7 +706,7 @@ if (!class_exists('Nectar_Global_Sections_Display_Options')) {
             return $current_post_type;
         }
 
-        function save_display_conditions($post_id)
+        public function save_display_conditions($post_id, $post, $update)
         {
 
             // Autosave.
@@ -722,11 +734,32 @@ if (!class_exists('Nectar_Global_Sections_Display_Options')) {
             foreach ($_POST[self::$post_meta_key] as $key => $val) {
 
                 // Track active special locations.
-                $this->update_special_locations($key, $val, $post_id);
+                if ( 'revision' !== $post->post_type ) {
+                    $this->update_special_locations($key, $val, $post_id);
+                } 
 
                 // Save field.
                 update_post_meta($post_id, $key, json_decode(html_entity_decode(stripslashes($val))));
             }
+        }
+
+        function on_delete_post($post_id) 
+        {
+            //remove any special locations.
+            $special_locations = array(
+                'nectar_special_location__blog_loop'
+            );
+
+            $saved_special_locations = self::get_active_special_locations();
+
+            foreach($special_locations as $location) {
+                
+                if ( isset($saved_special_locations[ $location ]) && $saved_special_locations[ $location ] == strval($post_id) ) {
+                    unset($saved_special_locations[ $location ]);
+                    update_option( 'salient_global_section_special_locations', $saved_special_locations );
+                }
+            }
+
         }
     }
 

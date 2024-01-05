@@ -1,3 +1,4 @@
+<!-- <span style="color: limegreen;">NEW</span> -->
 <div style="padding: 0 10px;border: 1px solid #24282e;border-radius: 10px;background-color: #fafafa;">
     <table class="form-table">
         <!-- Hide -->

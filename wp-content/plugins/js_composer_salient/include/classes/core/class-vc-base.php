@@ -134,6 +134,22 @@ class Vc_Base {
 			$this,
 			'fixPContent',
 		), 11 );
+		add_filter( 'print_head_scripts', array(
+			$this,
+			'outputPostHeaderCustomJs',
+		), 90 );
+		add_filter( 'wp_print_footer_scripts', array(
+			$this,
+			'outputPostFooterCustomJs',
+		), 90 );
+		add_filter( 'print_head_scripts', array(
+			$this,
+			'outputGlobalHeaderCustomHtml',
+		), 100 );
+		add_filter( 'wp_print_footer_scripts', array(
+			$this,
+			'outputGlobalFooterCustomHtml',
+		), 100 );
 	}
 
 	/**
@@ -290,7 +306,6 @@ class Vc_Base {
 		 * vc_filter: vc_base_build_shortcodes_custom_css
 		 * @since 4.4
 		 */
-
 		 /* nectar addition */ 
 		 $portfolio_extra_content = (isset($post->ID)) ? get_post_meta($post->ID, '_nectar_portfolio_extra_content', true) : '';
 		
@@ -300,11 +315,11 @@ class Vc_Base {
 			 $css = apply_filters( 'vc_base_build_shortcodes_custom_css', $this->parseShortcodesCustomCss( $post->post_content ), $id  );
 		 }
 		 /* nectar addition end */ 
-
 		if ( empty( $css ) ) {
 			delete_metadata( 'post', $id, '_wpb_shortcodes_custom_css' );
 		} else {
 			update_metadata( 'post', $id, '_wpb_shortcodes_custom_css', $css );
+			update_metadata( 'post', $id, '_wpb_shortcodes_custom_css_updated', true );
 		}
 	}
 
@@ -340,11 +355,38 @@ class Vc_Base {
 				}
 			}
 		}
+
+		$css_lib = [];
 		foreach ( $shortcodes[5] as $shortcode_content ) {
-			$css .= $this->parseShortcodesCustomCss( $shortcode_content );
+			$shortcode_css = $this->parseShortcodesCustomCss( $shortcode_content );
+
+			if ( in_array( $shortcode_css, $css_lib ) ) {
+				continue;
+			}
+
+			$css .= $shortcode_css;
+
+			$css_lib[] = $shortcode_css;
 		}
 
 		return $css;
+	}
+
+	/**
+	 * Get current post id.
+	 *
+	 * @since  7.0
+	 * @return false|int
+	 */
+	public function get_post_id() {
+		$id = false;
+		if ( is_front_page() || is_home() ) {
+			$id = get_queried_object_id();
+		} elseif ( is_singular() ) {
+			$id = get_the_ID();
+		}
+
+		return $id;
 	}
 
 	/**
@@ -359,30 +401,26 @@ class Vc_Base {
 	 *
 	 */
 	public function addPageCustomCss( $id = null ) {
-		if ( is_front_page() || is_home() ) {
-			$id = get_queried_object_id();
-		} elseif ( is_singular() ) {
-			if ( ! $id ) {
-				$id = get_the_ID();
-			}
+		$id = $id ?: $this->get_post_id();
+
+		if ( ! $id ) {
+			return;
 		}
 
-		if ( $id ) {
-			if ( 'true' === vc_get_param( 'preview' ) && wp_revisions_enabled( get_post( $id ) ) ) {
-				$latest_revision = wp_get_post_revisions( $id );
-				if ( ! empty( $latest_revision ) ) {
-					$array_values = array_values( $latest_revision );
-					$id = $array_values[0]->ID;
-				}
+		if ( 'true' === vc_get_param( 'preview' ) && wp_revisions_enabled( get_post( $id ) ) ) {
+			$latest_revision = wp_get_post_revisions( $id );
+			if ( ! empty( $latest_revision ) ) {
+				$array_values = array_values( $latest_revision );
+				$id = $array_values[0]->ID;
 			}
-			$post_custom_css = get_metadata( 'post', $id, '_wpb_post_custom_css', true );
-			$post_custom_css = apply_filters( 'vc_post_custom_css', $post_custom_css, $id );
-			if ( ! empty( $post_custom_css ) ) {
-				$post_custom_css = wp_strip_all_tags( $post_custom_css );
-				echo '<style type="text/css" data-type="vc_custom-css">';
-				echo $post_custom_css;
-				echo '</style>';
-			}
+		}
+		$post_custom_css = get_metadata( 'post', $id, '_wpb_post_custom_css', true );
+		$post_custom_css = apply_filters( 'vc_post_custom_css', $post_custom_css, $id );
+		if ( ! empty( $post_custom_css ) ) {
+			$post_custom_css = wp_strip_all_tags( $post_custom_css );
+			echo '<style type="text/css" data-type="vc_custom-css">';
+			echo $post_custom_css;
+			echo '</style>';
 		}
 	}
 
@@ -402,24 +440,51 @@ class Vc_Base {
 		if ( ! $id && is_singular() ) {
 			$id = get_the_ID();
 		}
+		// if is woocommerce shop page
+		if ( ! $id && function_exists( 'is_shop' ) && is_shop() ) {
+			$id = get_option( 'woocommerce_shop_page_id' );
+		}
 
-		if ( $id ) {
-			if ( 'true' === vc_get_param( 'preview' ) && wp_revisions_enabled( get_post( $id ) ) ) {
-				$latest_revision = wp_get_post_revisions( $id );
-				if ( ! empty( $latest_revision ) ) {
-					$array_values = array_values( $latest_revision );
-					$id = $array_values[0]->ID;
-				}
-			}
-			$shortcodes_custom_css = get_metadata( 'post', $id, '_wpb_shortcodes_custom_css', true );
-			$shortcodes_custom_css = apply_filters( 'vc_shortcodes_custom_css', $shortcodes_custom_css, $id );
-			if ( ! empty( $shortcodes_custom_css ) ) {
-				$shortcodes_custom_css = wp_strip_all_tags( $shortcodes_custom_css );
-				echo '<style type="text/css" data-type="vc_shortcodes-custom-css">';
-				echo $shortcodes_custom_css;
-				echo '</style>';
+		if ( ! $id ) {
+			return;
+		}
+
+		if ( 'true' === vc_get_param( 'preview' ) && wp_revisions_enabled( get_post( $id ) ) ) {
+			$latest_revision = wp_get_post_revisions( $id );
+			if ( ! empty( $latest_revision ) ) {
+				$array_values = array_values( $latest_revision );
+				$id = $array_values[0]->ID;
 			}
 		}
+
+		$shortcodes_custom_css = $this->get_shortcodes_custom_css( $id );
+		if ( ! empty( $shortcodes_custom_css ) ) {
+			$shortcodes_custom_css = wp_strip_all_tags( $shortcodes_custom_css );
+			echo '<style type="text/css" data-type="vc_shortcodes-custom-css">';
+			echo $shortcodes_custom_css;
+			echo '</style>';
+		}
+	}
+
+	/**
+	 * Get custom css of all shortcodes for particular post.
+	 *
+	 * @param int $id
+	 * @return mixed
+	 *
+	 * @since  6.2
+	 * @access public
+	 */
+	public function get_shortcodes_custom_css( $id ) {
+		$is_updated = get_metadata( 'post', $id, '_wpb_shortcodes_custom_css_updated', true );
+
+		if ( empty( $is_updated ) ) {
+			$this->buildShortcodesCustomCss( $id );
+		}
+
+		$shortcodes_custom_css = get_metadata( 'post', $id, '_wpb_shortcodes_custom_css', true );
+
+		return apply_filters( 'vc_shortcodes_custom_css', $shortcodes_custom_css, $id );
 	}
 
 	/**
@@ -528,11 +593,6 @@ class Vc_Base {
 		wp_register_script( 'nivo-slider', vc_asset_url( 'lib/bower/nivoslider/jquery.nivo.slider.pack.js' ), array( 'jquery-core' ), WPB_VC_VERSION, true );
 		wp_register_script( 'flexslider', vc_asset_url( 'lib/flexslider/jquery.flexslider.min.js' ), array( 'jquery-core' ), WPB_VC_VERSION, true );
 		wp_register_script( 'wpb_composer_front_js', vc_asset_url( 'js/dist/js_composer_front.min.js' ), array( 'jquery-core' ), WPB_VC_VERSION, true );
-		wp_localize_script( 'wpb_composer_front_js', 'vcData', array(
-			'currentTheme' => array(
-				'slug' => wpb_get_current_theme_slug(),
-			),
-		) );
 
 		/**
 		 * @since 4.4
@@ -694,6 +754,15 @@ class Vc_Base {
 			);
 			$content = preg_replace( $s, $r, $content );
 
+			// if content contains vc_row for a page view or
+			// vc_welcome for a frontend editor
+			// then wrap with '<div>'
+			// nectar addition - remove extra wrapping added in 7.1
+			// if ( preg_match( '/vc_row/', $content ) || preg_match( '/vc_welcome/', $content ) ) {
+			// 	$content = '<div class="wpb-content-wrapper">' . $content . '</div>';
+			// }
+			// nectar addition end
+
 			return $content;
 		}
 
@@ -770,7 +839,8 @@ class Vc_Base {
 			'confirm_to_leave' => esc_html__( 'The changes you made will be lost if you navigate away from this page.', 'js_composer' ),
 			'inline_element_saved' => esc_html__( '%s saved!', 'js_composer' ),
 			'inline_element_deleted' => esc_html__( '%s deleted!', 'js_composer' ),
-			'inline_element_cloned' => sprintf( __( '%%s cloned. %sEdit now?%s', 'js_composer' ), '<a href="#" class="vc_edit-cloned" data-model-id="%s">', '</a>' ),
+            // phpcs:ignore
+			'inline_element_cloned' => sprintf( __( '%%1$s cloned. %2$sEdit now?%s', 'js_composer' ), '<a href="#" class="vc_edit-cloned" data-model-id="%s">', '</a>' ),
 			'gfonts_loading_google_font_failed' => esc_html__( 'Loading Google Font failed', 'js_composer' ),
 			'gfonts_loading_google_font' => esc_html__( 'Loading Font...', 'js_composer' ),
 			'gfonts_unable_to_load_google_fonts' => esc_html__( 'Unable to load Google Fonts', 'js_composer' ),
@@ -786,6 +856,95 @@ class Vc_Base {
 			'vc_successfully_updated' => esc_html__( 'Successfully updated!', 'js_composer' ),
 			'gutenbergDoesntWorkProperly' => esc_html__( 'Gutenberg plugin doesn\'t work properly. Please check Gutenberg plugin.', 'js_composer' ),
 			'unfiltered_html_access' => esc_html__( 'Custom HTML is disabled for your user role. Please contact your site Administrator to change your capabilities.', 'js_composer' ),
+			'not_editable_post' => sprintf( '%s %s %s', esc_html__( 'This', 'js_composer' ), get_post_type() ? get_post_type() : 'post', esc_html__( 'can not be edited with WPBakery since it is missing a WordPress default content area.', 'js_composer' ) ),
 		);
+	}
+
+	/**
+	 * Add custom html to the header tag of the page.
+	 *
+	 * @since 7.0
+	 */
+	public function outputGlobalHeaderCustomHtml() {
+		$global_header_html = get_option( Vc_Settings::$field_prefix . 'custom_js_header' );
+
+		echo '<script>';
+		echo wp_unslash( $global_header_html );
+		echo '</script>';
+	}
+
+	/**
+	 * Add custom html to the footer tag of the page.
+	 *
+	 * @since 7.0
+	 */
+	public function outputGlobalFooterCustomHtml() {
+		$global_footer_html = get_option( Vc_Settings::$field_prefix . 'custom_js_footer' );
+
+		echo '<script>';
+		echo wp_unslash( $global_footer_html );
+		echo '</script>';
+	}
+
+	/**
+	 * Add post custom html to the header tag of the page.
+	 *
+	 * @since 7.0
+	 */
+	public function outputPostHeaderCustomJs() {
+		$id = $this->get_post_id();
+
+		if ( ! $id ) {
+			return;
+		}
+
+		$post_header_html = get_post_meta( $id, '_wpb_post_custom_js_header', true );
+
+		if ( empty( $post_header_html ) ) {
+			return;
+		}
+
+		$this->outputCustomJs( $post_header_html, 'header' );
+	}
+
+	/**
+	 * Add post custom html to the footer tag of the page.
+	 *
+	 * @since 7.0
+	 */
+	public function outputPostFooterCustomJs() {
+		$id = $this->get_post_id();
+
+		if ( ! $id ) {
+			return;
+		}
+
+		$post_footer_html = get_post_meta( $id, '_wpb_post_custom_js_footer', true );
+
+		if ( empty( $post_footer_html ) ) {
+			return;
+		}
+
+		$this->outputCustomJs( $post_footer_html, 'footer' );
+	}
+
+	/**
+	 * Output custom on a page.
+	 *
+	 * @since 7.0
+	 * @param string $js
+	 * @param string $area
+	 */
+	public function outputCustomJs( $js, $area ) {
+		echo '<script data-type="vc_custom-js-"' . $area . '>';
+		// we need to wait for iframe load on frontend editor side.
+		if ( vc_is_page_editable() ) {
+			echo 'setTimeout(() => {';
+			echo wp_unslash( $js );
+			echo '}, 2000);';
+		} else {
+			echo wp_unslash( $js );
+		}
+		echo '</script>';
 	}
 }

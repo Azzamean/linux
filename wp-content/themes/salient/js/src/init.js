@@ -1112,8 +1112,8 @@
 				 this.$el.parents('.wpb_column:not(.vc_col-sm-12)').length == 0 ) {
 
 					// Regular non full width rows
-					if( this.$el.parents('.wpb_row:not(.nectar-overflow-hidden):not(.full-width-content):not(.inner_row)').length > 0 ) {
-						this.$el.wrap('<div class="wpb_row vc_row-fluid vc_row full-width-content nectar-overflow-hidden"><div class="normal-container container"></div></div>');
+					if( this.$el.parents('.wpb_row:not(.nectar-overflow-hidden):not(.full-width-content):not(.inner_row):not(.has-global-section)').length > 0 ) {
+						this.$el.wrap('<div class="wpb_row vc_row-fluid vc_row full-width-content nectar-overflow-hidden carousel-dynamic-wrapper"><div class="normal-container container"></div></div>');
 					} else if( this.$el.parents('.wpb_row.full-width-content:not(.nectar-overflow-hidden)').length > 0 ) {
 						// parent is already full width and just needs a hidden overflow
 						this.$el.parents('.wpb_row.full-width-content:not(.nectar-overflow-hidden)').addClass('nectar-overflow-hidden');
@@ -1736,9 +1736,18 @@
 		* @since 7.0
 		*/
 		function setNectarCarouselFlkEH() {
-			$('.nectar-carousel.nectar-flickity:not(.masonry):not([data-adaptive-height="true"])').each(function () {
-				nectarCarouselFlkEH($(this));
-			});
+
+			var timeoutDur = ( nectarDOMInfo.usingMobileBrowser ) ? 200 : 0;
+			setTimeout(function () {
+				$('.nectar-carousel.nectar-flickity:not(.masonry):not([data-adaptive-height="true"])').each(function () {
+					nectarCarouselFlkEH($(this));
+					var instance = Flickity.data($(this)[0]);
+					if ( instance ) {
+						instance.resize();
+					}
+				});
+			}, timeoutDur);
+			
 		}
 
 	
@@ -4123,12 +4132,21 @@
 					}
 				});
 
+				$('.wp-block-gallery').each(function() {
+					var $unique_id = uniqueIdGenerate();
+					$(this).find('.wp-block-image a[href*=".jpg"], .wp-block-image a[href*=".png"], .wp-block-image a[href*=".gif"], .wp-block-image a[href*=".jpeg"], .wp-block-image a[href*=".webp"]')
+						.attr('data-fancybox', 'group_' + $unique_id)
+						.removeClass('pretty_photo');
+				});
+
 				$('.main-content img').each(function() {
 
 					if ($(this).parent().is("[href]") &&
 					!$(this).parent().is(".magnific-popup") &&
 					$(this).parents('.tiled-gallery').length == 0 &&
 					$(this).parents('.product-image').length == 0 &&
+					$(this).parents('.gallery-icon').length == 0 &&
+					$(this).parents('.wp-block-gallery').length == 0 &&
 					$(this).parents('.woocommerce-product-gallery').length == 0 &&
 					$(this).parents('.wpb_gallery_slides.wpb_flexslider').length == 0 &&
 					$(this).parents('.iosSlider.product-slider').length == 0) {
@@ -5135,9 +5153,12 @@
 				}
 
 				if ($currentVisTab.find('.nectar-woo-flickity').length > 0 && typeof Flickity != 'undefined') {
-					var wootabbedFlkty = Flickity.data(clickedTab.parents('.tabbed').find('> div:nth-of-type(' + $id + ')').find('.nectar-woo-flickity > ul')[0]);
-					wootabbedFlkty.resize();
-					$(window).trigger('nectar-product-filters-layout');
+					
+					setTimeout(function(){
+						var wootabbedFlkty = Flickity.data(clickedTab.parents('.tabbed').find('> div:nth-of-type(' + $id + ')').find('.nectar-woo-flickity > ul')[0]);
+						wootabbedFlkty.resize();
+						$(window).trigger('nectar-product-filters-layout');
+					}, 100);
 				}
 
 			}
@@ -5305,7 +5326,11 @@
 				tabbedChangeSection($(this));
 
 				// Mobile scroll to.
-				if (e.originalEvent !== undefined && nectarDOMInfo.winW < 1000 && $nectarFullPage.$usingFullScreenRows == false) {
+				if (e.originalEvent !== undefined &&
+						nectarDOMInfo.winW < 1000 &&
+						$nectarFullPage.$usingFullScreenRows == false &&
+						!$(this).parents('.disable-mobile-tab-scroll')
+					) {
 
 					// Ensure that it would be needed.
 					var $tabbedNav = $(this).closest('.tabbed').find('> ul');
@@ -5390,6 +5415,13 @@
 							.find('.wpb_tabs_nav li:nth-child(' + (i + 1) + ') > a')
 							.prepend('<i class="' + $(this).attr("data-tab-icon") + '"></i>');
 
+							// Toggle style 2nd item.
+							if( $(this).closest('.tabbed').is('[data-style="toggle_button"]') && i === 1) {
+								$(this)
+								.closest('.tabbed')
+								.find('.wpb_tabs_nav li:nth-child(' + (i + 2) + ') > a')
+								.prepend('<i class="' + $(this).attr("data-tab-icon") + '"></i>');
+							}
 					}
 
 					// SVG icons
@@ -8067,6 +8099,13 @@
 						this.topLevel = true;
 					} 
 
+					// portfolio items.
+					if ( $body.hasClass('single-portfolio') && 
+							this.$el.parents('#portfolio-extra').length > 0 && 
+							this.$el.parents('.first-section').length > 0 ) {
+								this.topLevel = true;
+					}
+
 
 				};
 
@@ -9985,6 +10024,7 @@
 						});
 
 					});
+					
 
 					// Scroll based timeline animations.
 					$($fullscreenSelector + '.nectar-split-heading.scroll-timeline').each(function (i) {
@@ -10542,7 +10582,7 @@
 								$(this).find('.nectar_hotspot').addClass('click');
 
 								if ($(this).find('.nttip a.tipclose').length == 0) {
-									$(this).find('.nttip .inner').append('<a href="#" class="tipclose"><span></span></a>');
+									$(this).find('.nttip .inner').append('<a href="#" class="tipclose"><span><i class="screen-reader-text">'+nectar_front_i18n.close+'</i></span></a>');
 								}
 
 								// Change height of fixed
@@ -16098,6 +16138,50 @@
 					return ( el.parents('.woocommerce-mini-cart').length > 0 ) ? true : false;
 				};
 
+				NectarWooCommerceQuantity.prototype.updateQuantityCallback = function(response, that) {
+					$(window).trigger( 'nectar_woo_mini_cart_updated' );
+
+					
+					that.$qty.closest( '.widget_shopping_cart_content' ).removeClass('loading');
+					that.$qty.closest( '.woocommerce-mini-cart-item' ).removeClass('blockUI').removeClass('blockOverlay');
+				
+
+					// Update subtotal.
+					var $subtotal = that.$qty.closest( '.widget_shopping_cart_content' ).find('.woocommerce-mini-cart__total');
+					$subtotal.find('.woocommerce-Price-amount, .tax_label').remove();
+					$subtotal.append(response.subtotal);
+					
+					// Update price for compatibility with Woo plugins which change price based on quantity.
+					if ( window.nectarOptions && window.nectarOptions.woo_using_cart_addons && window.nectarOptions.woo_using_cart_addons === 'true' ) {
+						if ( response.item_price && response.item_price.length > 0 ) {
+
+							var $responsePrice = $(response.item_price);
+							var $price = that.$qty.closest( '.woocommerce-mini-cart-item' ).find('.product-price');
+
+							if ( $responsePrice.text() !== $price.find('.woocommerce-Price-amossunt').text() ) {
+								$price.find('.woocommerce-Price-amount, > del, > ins').remove();
+								$price.prepend(response.item_price);
+							}
+						}
+					}
+
+					// Does the item need to be removed?
+					if( that.state.removeFlag === true ) {
+						that.$qty.closest( '.woocommerce-mini-cart-item' ).remove();
+						that.state.removeFlag = false;
+						$( document.body ).trigger( 'updated_wc_div' );
+					}
+
+					// Update cart count.
+					if( $('#header-outer a.cart-contents .cart-wrap span').length > 0 ) {
+						$('#header-outer a.cart-contents .cart-wrap span').text(response.item_count);
+					}
+					if( $('#header-outer #mobile-cart-link .cart-wrap span').length > 0 ) {
+						$('#header-outer #mobile-cart-link .cart-wrap span').text(response.item_count);
+					}
+
+				}
+
 				NectarWooCommerceQuantity.prototype.updateCart = function(val) {
 
 					var that = this;
@@ -16110,50 +16194,35 @@
 					  that.$qty.closest( '.widget_shopping_cart_content' ).addClass('loading');
 						that.$qty.closest( '.woocommerce-mini-cart-item' ).addClass('blockUI').addClass('blockOverlay');
 
-						$.ajax({
-			          type: 'POST',
-			          url: window.nectarLove.ajaxurl,
-			          data: {
-		              action: "nectar_minicart_update_quantity",
-		              quantity: val,
-		              item_key: that.state.key
-			          },
-			          cache: false,
-			          success: function (response) {
-									if( response ) {
-
-										$(window).trigger( 'nectar_woo_mini_cart_updated' );
-
-										that.$qty.closest( '.widget_shopping_cart_content' ).removeClass('loading');
-										that.$qty.closest( '.woocommerce-mini-cart-item' ).removeClass('blockUI').removeClass('blockOverlay');
-
-										// Update subtotal.
-										var $subtotal = that.$qty.closest( '.widget_shopping_cart_content' ).find('.woocommerce-mini-cart__total');
-										$subtotal.find('.woocommerce-Price-amount, .tax_label').remove();
-										$subtotal.append(response.subtotal);
-                
-										// Does the item need to be removed?
-										if( that.state.removeFlag === true ) {
-											that.$qty.closest( '.woocommerce-mini-cart-item' ).remove();
-											that.state.removeFlag = false;
-											$( document.body ).trigger( 'updated_wc_div' );
-										}
-
-										// Update cart count.
-										if( $('#header-outer a.cart-contents .cart-wrap span').length > 0 ) {
-											$('#header-outer a.cart-contents .cart-wrap span').text(response.item_count);
-										}
-
-									}
-
-
-			          }
-
-			      });
+						var ajaxData = {
+							type: 'POST',
+							url: window.nectarLove.ajaxurl,
+							data: {
+								action: "nectar_minicart_update_quantity",
+								quantity: val,
+								item_key: that.state.key
+							},
+							cache: false,
+							success: function (response) {
+								if( response ) {
+									that.updateQuantityCallback(response, that);
+								}
+							}
+						};
+						
+						$.ajax(ajaxData);
+						if ( window.nectarOptions && window.nectarOptions.woo_using_cart_addons && window.nectarOptions.woo_using_cart_addons === 'true' ) {
+							// Workaround for quantity / subtotal not updating until after the next ajax request.
+							setTimeout(function(){
+								$.ajax(ajaxData);
+							}, 1000);
+						}
 
 					}, this.ajaxTimeoutDur);
 
 				};
+
+				
 
 
 				/**
@@ -16390,9 +16459,12 @@
 
 					if ($('#header-outer[data-cart="false"]').length == 0) {
 
-						$body.on('added_to_cart', shopping_cart_dropdown_show);
-						$body.on('added_to_cart', shopping_cart_dropdown);
-
+						$body.on('added_to_cart', function(e){
+							setTimeout(function(){
+								shopping_cart_dropdown_show(e);
+								shopping_cart_dropdown();
+							}, 150);
+						});
 					}
 
 					function shopping_cart_dropdown() {
@@ -16474,12 +16546,14 @@
 						}
 
 						// Create HTML.
-						$('.woocommerce-account .woocommerce > #customer_login').prepend('<div class="nectar-form-controls" />');
+						if( $('#customer_login .nectar-form-controls').length === 0 ) {
+							$('.woocommerce-account .woocommerce > #customer_login').prepend('<div class="nectar-form-controls" />');
 
-						$('.woocommerce-account .woocommerce > #customer_login > div:not(.nectar-form-controls)').each(function () {
-							var $title = $(this).find('> h2').text();
-							$('#customer_login .nectar-form-controls').append('<div class="control">' + $title + '</div>');
-						});
+							$('.woocommerce-account .woocommerce > #customer_login > div:not(.nectar-form-controls)').each(function () {
+								var $title = $(this).find('> h2').text();
+								$('#customer_login .nectar-form-controls').append('<div class="control">' + $title + '</div>');
+							});
+						}
 
 						// Click event.
 						$('.woocommerce-account .woocommerce > #customer_login .nectar-form-controls .control').on('click', function () {
@@ -17079,7 +17153,10 @@
 						}, 300);
 
 
-						$(this).toggleClass('open-search');
+						if ( !$(this).hasClass('nectar-search-open-trigger')) {
+							$(this).toggleClass('open-search');
+						}
+						
 
 						// Close slide out widget area.
 						$('.slide-out-widget-area-toggle a:not(#toggle-nav).open:not(.animating)').trigger('click');
@@ -22643,6 +22720,11 @@
 						fwsClasses();
 						recentPostsInit();
 					
+						
+						// reset split line heading timeline animations.
+						if ( $('.wpb_row.nectar-split-heading-merged').length > 0 ) {
+							$('.wpb_row.nectar-split-heading-merged').removeClass('nectar-split-heading-merged');
+						}
 
 						/*flickity carousels*/
 						if ($flickitySliders.length > 0) {
@@ -23088,8 +23170,8 @@
 				columnBGColors();
 
 				// Off canvas menu
-				OCM_init();
 				mobileNavMegamenuCorrect();
+				OCM_init();
 				materialSkinOCM_Init();
 				OCM_dropdownMarkup();
 				clickToggleSubmenus();

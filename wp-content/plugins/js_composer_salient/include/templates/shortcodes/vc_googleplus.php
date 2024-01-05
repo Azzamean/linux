@@ -24,7 +24,7 @@ if ( empty( $annotation ) ) {
 	$annotation = 'bubble';
 }
 $params = '';
-$params .= ( '' !== $type ) ? ' size="' . esc_attr($type) . '"' : '';
+$params .= ( '' !== $type ) ? ' size="' . esc_attr( $type ) . '"' : '';
 $params .= ( '' !== $annotation ) ? ' annotation="' . esc_attr( $annotation ) . '"' : '';
 
 if ( empty( $type ) ) {

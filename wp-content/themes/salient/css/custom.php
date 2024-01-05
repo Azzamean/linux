@@ -227,7 +227,8 @@
 		  echo '
 		  @media only screen and (min-width: 1000px) {
 
-				#header-outer[data-format="centered-menu-bottom-bar"] #top .span_9 #logo {
+        #header-outer[data-format="centered-menu-bottom-bar"] #top .span_9 #logo,
+				#header-outer[data-format="centered-menu-bottom-bar"] #top .span_9 .logo-clone {
 					margin-top: -'. $header_padding/2 .'px;
 				}
 
@@ -236,6 +237,7 @@
 				}
 
 				#header-outer #logo,
+        #header-outer .logo-clone,
 				#header-outer .logo-spacing {
 					margin-top: '.$header_padding.'px;
 					margin-bottom: '.$header_padding.'px;
@@ -243,12 +245,14 @@
 				}
 
 				 #header-outer.small-nav #logo,
+         #header-outer.small-nav .logo-clone,
 				 #header-outer.small-nav .logo-spacing {
 						margin-top: '. ($header_padding/1.8) .'px;
 						margin-bottom: '. ($header_padding/1.8) .'px;
 
 				}
 
+        #header-outer.small-nav .logo-clone img,
 				#header-outer.small-nav #logo img,
 				#header-outer.small-nav .logo-spacing img {
 						height: '. ($logo_height - $shrinkNum) .'px;
@@ -279,6 +283,7 @@
       }
 
 		  echo '#header-outer #logo img,
+      #header-outer .logo-clone img,
 			#header-outer .logo-spacing img {
 				height: ' . $logo_height .'px;
 			}';
@@ -807,7 +812,7 @@
    /*-------------------------------------------------------------------------*/
 	 echo '
 	 #header-outer #logo .mobile-only-logo,
-	 #header-outer[data-format="centered-menu-bottom-bar"][data-condense="true"] .span_9 #logo img {
+   #header-outer[data-format="centered-menu-bottom-bar"][data-condense="true"] .span_9 .logo-clone img {
 		 height: '.esc_attr($mobile_logo_height).'px;
 	 }
 
@@ -2784,7 +2789,7 @@
         color:rgba(0,0,0,0.4);
         margin-top:15px
       }
-      @media only screen and (max-width: 1000px) {
+      @media only screen and (max-width: 999px) {
         #search-outer #search .span_12 span {
           display: none;
         }
@@ -2808,7 +2813,7 @@
         display:flex;
         align-items: center;
       }
-      @media only screen and (max-width: 1000px) {
+      @media only screen and (max-width: 999px) {
         #search-outer {
           height: '. (intval($mobile_logo_height) + 24) .'px;
           bottom: 0;
@@ -2838,7 +2843,7 @@
           transition: all 0.32s ease;
       }
       
-      @media only screen and (min-width: 690px) {
+      @media only screen and (min-width: 691px) {
         body.ascend.admin-bar #search-outer {
           top: 32px;
         }
@@ -2916,7 +2921,7 @@
           left:auto
       }
       
-      @media only screen and (max-width: 1000px) {
+      @media only screen and (max-width: 999px) {
         body.ascend #boxed #search-outer {
             min-width:680px;
         }
@@ -2934,7 +2939,7 @@
           top:90px!important
       }
 
-      @media only screen and (max-width: 1000px) {
+      @media only screen and (max-width: 999px) {
         #search-box {
           -webkit-transform: none;
           transform: none;
@@ -3475,6 +3480,12 @@
           top: 50%;
           margin-top: -28px;
         }';
+        if ( is_rtl() ) {
+          echo '
+          #search-outer #search .span_12 form > span {
+            right: 0;
+          }';
+        }
       }
       else if( 'original' === $theme_skin ) {
         echo '#search-outer #search #close a {
@@ -4107,7 +4118,7 @@
         height: '.$search_height.';
       }
 
-      @media only screen and (max-width: 1000px) {
+      @media only screen and (max-width: 999px) {
         .material #header-outer:not(.transparent) #top + .bg-color-stripe,
         .material #header-outer.transparent #top + .bg-color-stripe,
          body.material #search-outer #search, 
@@ -4123,12 +4134,12 @@
         overflow: hidden;
         top: 50%;
       }
-      @media only screen and (min-width: 1001px) {
+      @media only screen and (min-width: 1000px) {
         html body.material #search-outer #search #close {
             right: max(calc(var(--container-padding)/3), 25px);
         }
       }
-      @media only screen and (max-width: 1000px) {
+      @media only screen and (max-width: 999px) {
         html body.material #header-outer #search-outer #search #close {
           right: 20px;
         }
@@ -4304,6 +4315,7 @@
       font-weight: 600;
       padding: 15px 23px 14px;
       background: #f1f1f1;
+      color: #000;
       z-index: 100000;
       line-height: normal;
       text-decoration: none;
@@ -4520,6 +4532,7 @@
      [data-style="list_featured_first_row"] .meta-category a:before,
      body #header-outer[data-lhe="animated_underline"] .nectar-header-text-content a:after,
      .sf-menu li ul li a .menu-title-text:after,
+     #ajax-content-wrap .portfolio-filters-inline[data-color-scheme*="-underline"] ul li a:after,
      .nectar-post-grid-filters a:after,
      .nectar-post-grid .meta-category a:before {
        transform-origin: '. esc_attr($starting_origin) .';
@@ -4550,6 +4563,7 @@
      body #header-outer[data-lhe="animated_underline"] .nectar-header-text-content a:hover:after,
      .sf-menu li ul li a:hover .menu-title-text:after,
      .sf-menu li ul li.sfHover > a .menu-title-text:after,
+     #ajax-content-wrap .portfolio-filters-inline[data-color-scheme*="-underline"] ul li a:hover:after,
      .nectar-post-grid-filters a:hover:after,
      .nectar-post-grid-filters a.active:after,
      .nectar-post-grid .meta-category a:hover:before  {
@@ -4681,6 +4695,7 @@
   [data-style="list_featured_first_row"] .meta-category a:before,
   #header-outer[data-lhe="animated_underline"] .nectar-header-text-content a:after,
   .sf-menu li ul li a .menu-title-text:after,
+  #ajax-content-wrap .portfolio-filters-inline[data-color-scheme*="-underline"] ul li a:after,
   .nectar-post-grid-filters a:after,
   .nectar-post-grid .meta-category a:before {
       height: '.esc_attr($nectar_options['animated-underline-thickness']).'px;
@@ -4859,7 +4874,7 @@
 		}
 	}
 
-	@media only screen and (min-width : 690px) and (max-width : 999px) {
+	@media only screen and (min-width : 691px) and (max-width : 999px) {
 		.nectar-slider-wrap[data-full-width="true"] .swiper-slide .content h2,
 		.nectar-slider-wrap[data-full-width="boxed-full-width"] .swiper-slide .content h2,
 	    .full-width-content .vc_span12 .swiper-slide .content h2 {
@@ -5142,6 +5157,7 @@
 
 		echo '
 				#header-outer.transparent #top #logo,
+        #header-outer.transparent #top .logo-clone,
 				#header-outer.transparent #top #logo:hover {
 				 	color: '.esc_attr($starting_color).';
 				 }
@@ -5337,6 +5353,7 @@
 		#header-outer.transparent.dark-slide  > #top .cart-outer:hover .icon-salient-cart,
 		body.ascend[data-header-color="custom"] #boxed #header-outer.transparent.dark-slide > #top .cart-outer:hover .cart-menu .cart-icon-wrap i,
 		#header-outer.transparent.dark-slide > #top #logo,
+    #header-outer.transparent.dark-slide > #top .logo-clone,
 		#header-outer.transparent[data-lhe="default"].dark-slide #top nav .sf-menu > .current_page_item > a,
 		#header-outer.transparent[data-lhe="default"].dark-slide #top nav .sf-menu > .current-menu-ancestor > a,
 		#header-outer.transparent[data-lhe="default"].dark-slide #top nav > ul > li > a:hover,
@@ -6497,7 +6514,7 @@
           padding: 0 22%;
         }
       }
-      @media only screen and (max-width: 999px) and (min-width: 690px) {
+      @media only screen and (max-width: 999px) and (min-width: 691px) {
         .blog-archive-header .col.section-title p,
         .blog-archive-header .inner-wrap p{
           padding: 0 15%;
@@ -8016,7 +8033,7 @@
         margin-bottom:0;
       }';
 
-      echo '@media only screen and (min-width : 690px) and (max-width : 999px) {
+      echo '@media only screen and (min-width : 691px) and (max-width : 999px) {
         #footer-outer .one-fourths.span_3,
         #footer-outer .one-fourths.vc_span3,
         #footer-outer .one-fourths.vc_col-sm-3:not([class*="vc_col-xs-"]) {
@@ -8247,7 +8264,7 @@
         margin: 20px 0;
       }';
 
-      echo '@media only screen and (min-width : 690px) and (max-width : 999px) {
+      echo '@media only screen and (min-width : 691px) and (max-width : 999px) {
   
         #footer-outer #copyright .col {
           width: 49%;
@@ -8765,7 +8782,7 @@
 
       /* One fourths */
       echo '
-      @media only screen and (max-width: 999px) and (min-width: 690px) {
+      @media only screen and (max-width: 999px) and (min-width: 691px) {
 
         body[data-col-gap="'.$column_spacing.'px"] .vc_row-fluid:not(.inner_row):not(.full-width-content) > .span_12 > .one-fourths:not([class*="vc_col-xs-"]),
         body[data-col-gap="'.$column_spacing.'px"] .vc_row-fluid:not(.full-width-content) .vc_row-fluid.inner_row > .span_12 > .one-fourths:not([class*="vc_col-xs-"]) {
@@ -8981,7 +8998,7 @@
       flex-direction: column;
   }
 
-    @media only screen and (min-width: 690px) {
+    @media only screen and (min-width: 691px) {
      
       #slide-out-widget-area .off-canvas-menu-container .menu, #slide-out-widget-area .off-canvas-menu-container .menu ul {
         flex-wrap: wrap;
@@ -10214,7 +10231,7 @@
   if( function_exists( 'is_woocommerce' ) && true === $salient_woo_sidebar_toggles) {
 
     echo '
-    @media only screen and (min-width: 1001px) {
+    @media only screen and (min-width: 1000px) {
     	.woocommerce #sidebar .widget.woocommerce > ul,
     	.woocommerce #sidebar .widget.widget_product_tag_cloud > div,
       .woocommerce #sidebar .widget.woocommerce-widget-layered-nav > .woocommerce-widget-layered-nav-dropdown {
@@ -10526,7 +10543,7 @@
 
       }
 
-      @media only screen and (max-width: 1000px) {
+      @media only screen and (max-width: 999px) {
         .single-product-main-image {
             flex-direction: column;
             margin-right: 0;
@@ -11482,7 +11499,7 @@
               width: calc(20% - 20px)!important;
           }
         }
-        @media only screen and (max-width: 999px) and (min-width: 690px) {
+        @media only screen and (max-width: 999px) and (min-width: 691px) {
           .nectar-woo-flickity > ul.products[data-product-style].columns-dynamic > li.product {
               width: calc(33% - 20px)!important;
           }
@@ -11495,12 +11512,12 @@
               width: calc(33.3% - 20px)!important;
           }
         }
-        @media only screen and (min-width: 690px) and (max-width: 999px){
+        @media only screen and (min-width: 691px) and (max-width: 999px){
           .nectar-woo-flickity > ul.products[data-product-style].columns-3 > li.product {
               width: calc(50% - 20px)!important;
           }
         }
-        @media only screen and (min-width: 690px) {
+        @media only screen and (min-width: 691px) {
           .nectar-woo-flickity > ul.products[data-product-style].columns-2 > li.product {
               width: calc(50% - 20px)!important;
           }
@@ -11861,7 +11878,7 @@
         body.admin-bar > #review_form_wrapper.modal .nectar-close-btn-wrap {
           top: 78px;
         }
-        @media only screen and (min-width: 690px) {
+        @media only screen and (min-width: 691px) {
           body > #review_form_wrapper.modal #respond .comment-form > .comment-form-author {
             padding-right: 20px;
             width: 50%;

@@ -131,6 +131,18 @@ return array(
 				"param_name" => "element_animation_delay",
 				"description" => esc_html__("Enter delay (in milliseconds) if needed e.g. 150. This parameter comes in handy when creating the animate in \"one by one\" effect.", "salient-core")
 			),
+			array(
+				"type" => "nectar_radio_tab_selection",
+				"class" => "",
+				'save_always' => true,
+				"heading" => esc_html__("Text Direction", "salient-core"),
+				"param_name" => "text_direction",
+				"options" => array(
+					esc_html__("Auto", "salient-core") => "default",
+					esc_html__("Left", "salient-core") => "ltr",
+					esc_html__("Right", "salient-core") => "rtl",
+				),
+			)
 
 	)
 );

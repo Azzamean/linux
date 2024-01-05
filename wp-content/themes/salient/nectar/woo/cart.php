@@ -46,18 +46,22 @@ if( !class_exists('Nectar_Woo_Cart') ) {
 	      add_action( 'woocommerce_after_mini_cart', array($this, 'empty_minicart_buttons'), 10);
 	    }
 
-
-			// Mini Cart QTY AJAX.
+		// Mini Cart QTY AJAX.
 	    add_action( 'wp_ajax_nectar_minicart_update_quantity', array($this, 'update_cart_quantity' ) );
 	    add_action( 'wp_ajax_nopriv_nectar_minicart_update_quantity', array($this, 'update_cart_quantity' ) );
 
-			// Single Product AJAX Add to Cart
-			if( isset($nectar_options['ajax-add-to-cart']) && '1' === $nectar_options['ajax-add-to-cart']) {
 
+		// Single Product AJAX Add to Cart
+		if( isset($nectar_options['ajax-add-to-cart']) && 
+			'1' === $nectar_options['ajax-add-to-cart']) {
+			
+			$editing_subscription = isset($_GET['switch-subscription']) ? true : false;
+			if ( !$editing_subscription ) { 
 				add_action( 'wp_ajax_nectar_ajax_add_to_cart', array($this, 'add_to_cart' ) );
-		    add_action( 'wp_ajax_nopriv_nectar_ajax_add_to_cart', array($this, 'add_to_cart' ) );
-
+				add_action( 'wp_ajax_nopriv_nectar_ajax_add_to_cart', array($this, 'add_to_cart' ) );
 			}
+
+		}
 
 	  }
 
@@ -80,10 +84,57 @@ if( !class_exists('Nectar_Woo_Cart') ) {
 
 		}
 
-	  /**
+		/**
+		 * Compatibility for WooCommerce Min/Max Quantities plugin.
+		 */
+		public static function get_minmax_quantities($item_key) {
+
+			$minimum_quantity = 0;
+			$maximum_quantity = 0;
+			
+			// Check for WooCommerce min/max variation quantity.
+			if( class_exists('WC_Min_Max_Quantities') ) {
+				$product = WC()->cart->get_cart_item($item_key);
+				if( $product && isset( $product['variation_id'] ) ) {
+					$variation_id = $product['variation_id'];
+					$product_id = $product['product_id'];
+					$min_max_rules = get_post_meta( $variation_id, 'min_max_rules', true );
+					
+					if ( 'yes' === $min_max_rules ) {
+						
+						$maximum_quantity = absint( get_post_meta( $variation_id, 'variation_maximum_allowed_quantity', true ) );
+						$minimum_quantity = absint( get_post_meta( $variation_id, 'variation_minimum_allowed_quantity', true ) );
+
+						// If the Minimum Quantity is not set on variation level, fall back to the parent's.
+						if ( 0 === $maximum_quantity ) {
+							$maximum_quantity = absint( get_post_meta( $product_id, 'maximum_allowed_quantity', true ) );
+						}
+
+						// If the Maximum Quantity is not set on variation level, fall back to the parent's.
+						if ( 0 === $minimum_quantity ) {
+							$minimum_quantity = absint( get_post_meta( $product_id, 'minimum_allowed_quantity', true ) );
+						}
+
+					} else {
+						// default to product min/max
+						$maximum_quantity  = absint( get_post_meta( $product_id, 'maximum_allowed_quantity', true ) );
+						$minimum_quantity  = absint( get_post_meta( $product_id, 'minimum_allowed_quantity', true ) );
+					}
+
+
+				} // endif $product has variation_id
+			} // endif WC_Min_Max_Quantities is active
+
+			return [
+				'min' => $minimum_quantity,
+				'max' => $maximum_quantity
+			];
+		}
+
+		/**
 		 * AJAX callback to update the minicart quantity.
 		 */
-	  public static function update_cart_quantity() {
+		public static function update_cart_quantity() {
 
 			if( !isset($_POST['quantity']) || !isset($_POST['item_key']) || !function_exists('WC') ) {
 				wp_die();
@@ -92,17 +143,33 @@ if( !class_exists('Nectar_Woo_Cart') ) {
 			$quantity = absint( $_POST['quantity'] );
 			$item_key = sanitize_text_field( $_POST['item_key'] );
 
-	    WC()->cart->set_quantity( $item_key, $quantity );
+			// Check for WooCommerce min/max variation quantity.
+			$min_max_quantities = self::get_minmax_quantities($item_key);
+			$maximum_quantity = $min_max_quantities['max'];
+			$minimum_quantity = $min_max_quantities['min'];
+			if ( $maximum_quantity && $quantity > $maximum_quantity ) {
+				$quantity = $maximum_quantity;
+			}
+			if ( $minimum_quantity && $quantity < $minimum_quantity ) {
+				$quantity = $minimum_quantity;
+			}
+			
+			WC()->cart->set_quantity( $item_key, $quantity, true );
+			WC()->cart->calculate_totals();
 
+			$cart_item = WC()->cart->get_cart_item($item_key);
+			$item_price = WC()->cart->get_product_price( $cart_item['data'] );
+			
 			wp_send_json( array(
-	      'item' => WC()->cart->get_cart_item($item_key),
-	      'subtotal' => WC()->cart->get_cart_subtotal(),
-	      'item_count' => WC()->cart->get_cart_contents_count()
-	    ) );
+				'item' => $cart_item,
+				'item_price' => apply_filters( 'woocommerce_cart_item_price', $item_price, $cart_item, $item_key ), 
+				'subtotal' => WC()->cart->get_cart_subtotal(),
+				'item_count' => WC()->cart->get_cart_contents_count()
+			) );
 
-	    wp_die();
+			wp_die();
 
-	  }
+		}
 
 		/**
 		 * AJAX callback for add to cart.

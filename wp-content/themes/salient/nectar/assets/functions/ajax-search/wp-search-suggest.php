@@ -121,7 +121,7 @@ function nectar_autocomplete_suggestions() {
 		endforeach;
 
 	// JSON encode and echo.
-	echo htmlentities( $_GET['callback'], ENT_QUOTES, 'UTF-8' ) . '(' . wp_json_encode( $suggestions ) . ')';
+	echo htmlentities( sanitize_text_field($_GET['callback']), ENT_QUOTES, 'UTF-8' ) . '(' . wp_json_encode( $suggestions ) . ')';
 
 	exit;
 }

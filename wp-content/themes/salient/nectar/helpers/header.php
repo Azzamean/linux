@@ -108,7 +108,7 @@ function nectar_get_header_variables() {
 	}
 
 	// header vars
-	$logo_class           = ( ! empty( $nectar_options['use-logo'] ) && $nectar_options['use-logo'] === '1' ) ? null : 'class="no-image"';
+	$logo_class           = ( ! empty( $nectar_options['use-logo'] ) && $nectar_options['use-logo'] === '1' ) ? '' : 'class="no-image"';
 	$using_mobile_logo    = ( ! empty( $nectar_options['use-logo'] ) && $nectar_options['use-logo'] === '1' && ! empty( $nectar_options['mobile-logo'] ) && ! empty( $nectar_options['mobile-logo']['url'] ) ) ? 'true' : 'false';
 	$using_mobile_logo_s  = ( ! empty( $nectar_options['use-logo'] ) && $nectar_options['use-logo'] === '1' && ! empty( $nectar_options['header-starting-mobile-only-logo'] ) && ! empty( $nectar_options['header-starting-mobile-only-logo']['url'] ) ) ? 'true' : 'false';
 	$using_mobile_logo_sd = ( ! empty( $nectar_options['use-logo'] ) && $nectar_options['use-logo'] === '1' && ! empty( $nectar_options['header-starting-mobile-only-logo-dark'] ) && ! empty( $nectar_options['header-starting-mobile-only-logo-dark']['url'] ) ) ? 'true' : 'false';
@@ -788,6 +788,9 @@ if ( ! function_exists( 'nectar_essential_js' ) ) {
 		 if(navigator.userAgent.match(/(Android|iPod|iPhone|iPad|BlackBerry|IEMobile|Opera Mini)/)) {
 			 document.body.className += " using-mobile-browser mobile ";
 		 }
+		 if(navigator.userAgent.match(/Mac/) && navigator.maxTouchPoints && navigator.maxTouchPoints > 2) {
+			document.body.className += " using-ios-device ";
+		}
 
 		 if( !("ontouchstart" in window) ) {
 

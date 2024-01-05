@@ -3,8 +3,8 @@ Contributors: rpetersen29
 Donate link: https://www.paypal.me/rpetersenDev
 Tags: banner, bar, top, announcement, notification, simple, bulletin, notice, cta, free
 Requires at least: 3.0.1
-Tested up to: 6.3.2
-Stable tag: 2.16.0
+Tested up to: 6.4.2
+Stable tag: 2.17.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -119,6 +119,9 @@ Try setting the "Prepend element" setting to <code>header</code>. If that doesn'
 4. This is the settings page... and the fourth screen shot.
 
 == Changelog ==
+
+= 2.17.0 =
+* New disabled page paths feature
 
 = 2.16.0 =
 * New prepend element feature
@@ -347,6 +350,9 @@ Try setting the "Prepend element" setting to <code>header</code>. If that doesn'
 * First Version.
 
 == Upgrade Notice ==
+
+= 2.17.0 =
+* New disabled page paths feature
 
 = 2.16.0 =
 * New prepend element feature

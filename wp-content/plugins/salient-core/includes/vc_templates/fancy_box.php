@@ -27,6 +27,7 @@ extract(shortcode_atts(array(
 	'icon_linea' => '',
 	'icon_iconsmind' => '',
 	'icon_steadysets' => '',
+	'icon_nectarbrands' => '',
   'icon_position' => 'bottom',
 	'custom_icon_image' => '',
 	'icon_size' => '50',
@@ -69,6 +70,9 @@ switch($icon_family) {
 	case 'linea':
 	$icon = $icon_linea;
 	break;
+	case 'nectarbrands':
+		$icon = $icon_nectarbrands;
+		break;
 	case 'linecons':
 	$icon = $icon_linecons;
 	break;

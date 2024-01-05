@@ -32,7 +32,7 @@ Description: Styles for the "Clients" page builder element.
     clear: both;
   }
 }
-@media only screen and (min-width: 690px) {
+@media only screen and (min-width: 691px) {
   .clients.no-carousel.four-cols > div:nth-child(4n+5) {
     clear: both;
   }
@@ -171,7 +171,7 @@ Description: Styles for the "Clients" page builder element.
 	opacity: 1;
 }
 
-@media only screen and (min-width : 690px) and (max-width : 999px) {
+@media only screen and (min-width : 691px) and (max-width : 999px) {
   body .clients.no-carousel > div,
   body .clients.four-cols.no-carousel >div {
     width: 24.2%;

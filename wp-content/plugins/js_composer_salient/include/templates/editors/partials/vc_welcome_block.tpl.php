@@ -3,6 +3,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 	die( '-1' );
 }
 
+// nectar addition -- entire file
+
 $total_templates = wpbakery()->templatesPanelEditor()->loadDefaultTemplates();
 $templates_total_count = ($total_templates) ? count( $total_templates ) : 0; // nectar addition
 ?>

@@ -162,6 +162,9 @@
           $icon = $atts['icon_linecons'];
           wp_enqueue_style( 'vc_linecons' );
           break;
+        case 'nectarbrands':
+          $icon = $atts['icon_nectarbrands'];
+          break;
         case 'iconsmind':
           $icon = $atts['icon_iconsmind'];
           break;

@@ -401,7 +401,7 @@ body .meta_overlaid .post.link .post-content h3 {
 }
 
 
-@media only screen and (min-width : 690px) and (max-width : 999px) {
+@media only screen and (min-width : 691px) and (max-width : 999px) {
   .masonry-blog-item {
     width: 47.7%;
   }

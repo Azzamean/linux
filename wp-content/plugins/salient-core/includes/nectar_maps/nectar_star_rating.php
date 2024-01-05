@@ -36,7 +36,7 @@ return array(
 				"5 Stars" => "5",
 				"4.5 Stars" => "4-5",
 				"4 Stars" => "4",
-				"3.5 Stars" => "3-5%",
+				"3.5 Stars" => "3-5",
 				"3 Stars" => "3",
 				"2.5 Stars" => "2-5",
 				"2 Stars" => "2",

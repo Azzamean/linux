@@ -56,7 +56,6 @@ function vc_iconpicker_base_register_css() {
 	wp_register_style( 'vc_material', vc_asset_url( 'css/lib/vc-material/vc_material.min.css' ), false, WPB_VC_VERSION );
 	*/
 	/* nectar addition end */
-
 	// Theme
 	wp_register_style( 'vc-icon-picker-main-css', vc_asset_url( 'lib/bower/vcIconPicker/css/jquery.fonticonpicker.min.css' ), false, WPB_VC_VERSION );
 	wp_register_style( 'vc-icon-picker-main-css-theme', vc_asset_url( 'lib/bower/vcIconPicker/themes/grey-theme/jquery.fonticonpicker.vcgrey.min.css' ), false, WPB_VC_VERSION );

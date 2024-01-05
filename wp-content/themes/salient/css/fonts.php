@@ -57,15 +57,15 @@ if( !empty($current_options) ) {
 		$nectar_options[str_replace('_family', '', $v) . '_transform'] = (empty($nectar_options[$v]['text-transform'])) ? '-' : $nectar_options[$v]['text-transform'];
 		$nectar_options[str_replace('_family', '', $v) . '_style'] = (empty($nectar_options[$v]['font-weight'])) ? '-' : $nectar_options[$v]['font-weight'];
 
-    $nectar_options[str_replace('_family', '', $v) . '_spacing_units'] = (isset($nectar_options[$v]['letter-spacing-units']) && !empty($nectar_options[$v]['letter-spacing-units'])) ? $nectar_options[$v]['letter-spacing-units'] : 'px';
+		$nectar_options[str_replace('_family', '', $v) . '_spacing_units'] = (isset($nectar_options[$v]['letter-spacing-units']) && !empty($nectar_options[$v]['letter-spacing-units'])) ? $nectar_options[$v]['letter-spacing-units'] : 'px';
 
-		if( is_array($nectar_options[$v]) ) {
+		if( isset($nectar_options[$v]) && is_array($nectar_options[$v]) ) {
 			$nectar_options[$v]['attrs_in_use'] = false;
 		}
 		
 		if(!empty( $nectar_options[str_replace('_family', '', $v)] ) && $nectar_options[str_replace('_family', '', $v)] != '-' ||
-			 !empty( $nectar_options[str_replace('_family', '', $v) . '_size'] ) && $nectar_options[str_replace('_family', '', $v) . '_size'] != '-' ||
-		 	 !empty( $nectar_options[str_replace('_family', '', $v) . '_line_height'] ) && $nectar_options[str_replace('_family', '', $v) . '_line_height'] != '-' ||
+		   !empty( $nectar_options[str_replace('_family', '', $v) . '_size'] ) && $nectar_options[str_replace('_family', '', $v) . '_size'] != '-' ||
+		   !empty( $nectar_options[str_replace('_family', '', $v) . '_line_height'] ) && $nectar_options[str_replace('_family', '', $v) . '_line_height'] != '-' ||
 		   !empty( $nectar_options[str_replace('_family', '', $v) . '_spacing'] ) && $nectar_options[str_replace('_family', '', $v) . '_spacing'] != '-' ||
 		   !empty( $nectar_options[str_replace('_family', '', $v) . '_weight'] ) && $nectar_options[str_replace('_family', '', $v) . '_weight'] != '-' ||
 		   !empty( $nectar_options[str_replace('_family', '', $v) . '_transform'] ) && $nectar_options[str_replace('_family', '', $v) . '_transform'] != '-' ||
@@ -235,7 +235,7 @@ $header_search_font = (isset($nectar_options['header-search-type'])) ? $nectar_o
 				 line-height: <?php echo esc_html( ceil($defined_line_height*$nectar_body_small_desktop) ) . 'px'; ?>;
 			 }
 		 }
-		 @media only screen and (max-width: 999px) and (min-width: 690px) {
+		 @media only screen and (max-width: 999px) and (min-width: 691px) {
 			 body {
 				 font-size: <?php echo esc_html( ceil($defined_font_size*$nectar_body_tablet) ) . 'px'; ?>;
 				 line-height: <?php echo esc_html( ceil($defined_line_height*$nectar_body_tablet) ) . 'px'; ?>;
@@ -263,9 +263,12 @@ $header_search_font = (isset($nectar_options['header-search-type'])) ? $nectar_o
 
  ( intval( substr($nectar_options['logo_font_size'],0,-2) ) > 8 ) ? $line_height = intval(substr($nectar_options['logo_font_size'],0,-2)) .'px' : $line_height = null ;
 
- if( is_array($nectar_options['logo_font_family']) && $nectar_options['logo_font_family']['attrs_in_use'] ) {
+ if( isset($nectar_options['logo_font_family']) &&
+ 	is_array($nectar_options['logo_font_family']) &&
+	$nectar_options['logo_font_family']['attrs_in_use'] ) {
 
 	 echo '#header-outer #logo.no-image,
+	 #header-outer .logo-clone.no-image,
    #header-outer[data-format="centered-menu"] .logo-spacing[data-using-image="false"],
    #header-outer[data-format="centered-logo-between-menu"] .logo-spacing[data-using-image="false"] {';
 
@@ -285,10 +288,12 @@ $header_search_font = (isset($nectar_options['header-search-type'])) ? $nectar_o
    } else if($nectar_options['logo_font_size'] !== '-') {
 		   $logo_font_size = intval( substr($nectar_options['logo_font_size'],0,-2) );
 			 echo '
-				 #header-outer[data-format="centered-menu-bottom-bar"] #top .span_9 #logo.no-image {
+				 #header-outer[data-format="centered-menu-bottom-bar"] #top .span_9 #logo.no-image,
+				 #header-outer[data-format="centered-menu-bottom-bar"] #top .span_9 .logo-clone.no-image {
 				 font-size: '.esc_attr( ceil($logo_font_size*0.8) ).'px;
 			  }
 				@media only screen and (max-width: 999px) {
+					#header-outer[data-format="centered-menu-bottom-bar"] .logo-clone.no-image,
 					#header-outer[data-format="centered-menu-bottom-bar"] #logo.no-image {
  				   font-size: '.esc_attr( ceil($logo_font_size*0.8) ).'px;
  			   }
@@ -425,7 +430,7 @@ $header_search_font = (isset($nectar_options['header-search-type'])) ? $nectar_o
 					line-height: <?php echo esc_html( $defined_line_height*$nectar_h1_small_desktop ) . 'px'; ?>;
 				}
 			}
-			@media only screen and (max-width: 999px) and (min-width: 690px) {
+			@media only screen and (max-width: 999px) and (min-width: 691px) {
 				body .row .col.section-title h1,
         body h1,
         html body .row .col.section-title.span_12 h1,
@@ -530,14 +535,10 @@ $header_search_font = (isset($nectar_options['header-search-type'])) ? $nectar_o
 		 		font-size: <?php echo esc_html( $defined_font_size*$nectar_h2_small_desktop ) . 'px'; ?>;
 				line-height: <?php echo esc_html( $defined_line_height*$nectar_h2_small_desktop ) . 'px'; ?>;
 			}
-			.row .span_2 h2, .row .span_3 h2, .row .span_4 h2, .row .vc_col-sm-2 h2, .row .vc_col-sm-3 h2, .row .vc_col-sm-4 h2 {
-				font-size: <?php echo esc_html( $defined_font_size*0.7 ) . 'px'; ?>;
-				line-height: <?php echo esc_html( $defined_line_height*0.7 ) . 'px'; ?>;
-			}
 
 		}
 
-		@media only screen and (max-width: 999px) and (min-width: 690px) {
+		@media only screen and (max-width: 999px) and (min-width: 691px) {
 		.col h2, body h2, .single-product div.product h1.product_title, .nectar-shop-header .page-title, .woocommerce-account .woocommerce > #customer_login .nectar-form-controls .control,
     .nectar_single_testimonial[data-style="bold"] p, #slide-out-widget-area .nectar-ext-menu-item .inherit-h2, #mobile-menu .nectar-ext-menu-item .inherit-h2, #ajax-content-wrap .nectar-inherit-h2,
 		.nectar-category-grid[data-style="mouse_follow_image"][data-h-tag="h2"] .content {
@@ -584,7 +585,7 @@ $header_search_font = (isset($nectar_options['header-search-type'])) ? $nectar_o
 
 		echo ' }
 
-		@media only screen and (max-width: 999px) and (min-width: 690px) {
+		@media only screen and (max-width: 999px) and (min-width: 691px) {
 			#ajax-content-wrap .related.products > h2,
 			#ajax-content-wrap .upsells.products > h2,
 			#ajax-content-wrap #tab-reviews #reviews #comments h2,
@@ -692,7 +693,7 @@ $header_search_font = (isset($nectar_options['header-search-type'])) ? $nectar_o
 		}
 	}
 
-	@media only screen and (max-width: 999px) and (min-width: 690px) {
+	@media only screen and (max-width: 999px) and (min-width: 691px) {
 		.row .span_2 h3, .row .span_3 h3, .row .span_4 h3, .row .vc_col-sm-2 h3, .row .vc_col-sm-3 h3, .row .vc_col-sm-4 h3, .row .col h3, body h3, #slide-out-widget-area .nectar-ext-menu-item .inherit-h3,
 		#ajax-content-wrap .nectar-inherit-h3,
 		.nectar-category-grid[data-style="mouse_follow_image"][data-h-tag="h3"] .content {
@@ -729,7 +730,7 @@ $header_search_font = (isset($nectar_options['header-search-type'])) ? $nectar_o
       font-size: <?php echo esc_html( $defined_font_size*$nectar_h3_small_desktop*1.4 ) . 'px'; ?>;
     }
   }
-  @media only screen and (max-width: 999px) and (min-width: 690px) {
+  @media only screen and (max-width: 999px) and (min-width: 691px) {
     .nectar-post-grid[data-columns="2"][data-masonry="yes"] > div:nth-of-type(3n + 1) h3 {
       font-size: <?php echo esc_html( $defined_font_size*$nectar_h3_tablet*1.4 ) . 'px'; ?>;
     }
@@ -754,7 +755,7 @@ if( $woocommerce && 'h3' === $product_tab_heading_typography ) {
 
 	echo ' }
 
-	@media only screen and (max-width: 999px) and (min-width: 690px) {
+	@media only screen and (max-width: 999px) and (min-width: 691px) {
 		#ajax-content-wrap .related.products > h2,
 		#ajax-content-wrap .upsells.products > h2,
 		#ajax-content-wrap #tab-reviews #reviews #comments h2,
@@ -833,7 +834,7 @@ if( $woocommerce && 'h3' === $product_tab_heading_typography ) {
 
 		?>
 
-		@media only screen and (min-width: 690px) {
+		@media only screen and (min-width: 691px) {
 			.portfolio-items[data-ps="6"] .wide_tall .work-meta h4 {
 				font-size: <?php if(!empty($nectar_options['h4_font_size']) && $nectar_options['h4_font_size'] != '-') echo intval($nectar_options['h4_font_size'])*1.7 . 'px!important' ?>;
 				line-height: <?php if(!empty($nectar_options['h4_font_size']) && $nectar_options['h4_font_size'] != '-') echo (intval($nectar_options['h4_font_size'])*1.7) +8 . 'px!important' ?>;
@@ -864,7 +865,7 @@ if( $woocommerce && 'h3' === $product_tab_heading_typography ) {
 			}
 		}
 
-		@media only screen and (max-width: 999px) and (min-width: 690px) {
+		@media only screen and (max-width: 999px) and (min-width: 691px) {
 			.row .col h4, body h4, #slide-out-widget-area .nectar-ext-menu-item .inherit-h4,
 			.nectar-slide-in-cart.style_slide_in_click .widget_shopping_cart .cart_list .product-meta a:not(.remove),
 			.woocommerce-cart .product-name a,
@@ -905,7 +906,7 @@ if( $woocommerce && 'h3' === $product_tab_heading_typography ) {
 
 		echo ' }
 
-		@media only screen and (max-width: 999px) and (min-width: 690px) {
+		@media only screen and (max-width: 999px) and (min-width: 691px) {
 			#ajax-content-wrap .related.products > h2,
 			#ajax-content-wrap .upsells.products > h2,
 			#ajax-content-wrap #tab-reviews #reviews #comments h2,
@@ -983,7 +984,7 @@ if( $woocommerce && 'h3' === $product_tab_heading_typography ) {
 			}
 		}
 
-		@media only screen and (max-width: 999px) and (min-width: 690px) {
+		@media only screen and (max-width: 999px) and (min-width: 691px) {
 			.row .col h5, body h5, #ajax-content-wrap .nectar-inherit-h5 {
 				font-size: <?php echo esc_html( $defined_font_size*$nectar_h5_tablet ) . 'px'; ?>;
 				line-height: <?php echo esc_html( $defined_line_height*$nectar_h5_tablet ) . 'px'; ?>;
@@ -1015,7 +1016,7 @@ if( $woocommerce && 'h3' === $product_tab_heading_typography ) {
 
 		echo ' }
 
-		@media only screen and (max-width: 999px) and (min-width: 690px) {
+		@media only screen and (max-width: 999px) and (min-width: 691px) {
 			#ajax-content-wrap .related.products > h2,
 			#ajax-content-wrap .upsells.products > h2,
 			.woocommerce .woocommerce-tabs #tab-additional_information h2,
@@ -1085,7 +1086,7 @@ if( $woocommerce && 'h3' === $product_tab_heading_typography ) {
 			}
 		}
 
-		@media only screen and (max-width: 999px) and (min-width: 690px) {
+		@media only screen and (max-width: 999px) and (min-width: 691px) {
 			.row .col h6, body h6, #ajax-content-wrap .nectar-inherit-h6 {
 				font-size: <?php echo esc_html( $defined_font_size*$nectar_h6_tablet ) . 'px'; ?>;
 				line-height: <?php echo esc_html( $defined_line_height*$nectar_h6_tablet ) . 'px'; ?>;
@@ -1265,7 +1266,9 @@ if( $woocommerce && 'h3' === $product_tab_heading_typography ) {
 
 	( intval( substr($nectar_options['blog_single_post_content_font_size'],0,-2) ) > 8 ) ? $line_height = intval(substr($nectar_options['blog_single_post_content_font_size'],0,-2)) +10 .'px' : $line_height = null;
 
-	if( is_array($nectar_options['blog_single_post_content_font_family']) && $nectar_options['blog_single_post_content_font_family']['attrs_in_use'] ) {
+	if( isset($nectar_options['blog_single_post_content_font_family']) && 
+		is_array($nectar_options['blog_single_post_content_font_family']) && 
+		$nectar_options['blog_single_post_content_font_family']['attrs_in_use'] ) {
 
 		echo '.single-post .post-area .post-content { ';
 
@@ -1298,7 +1301,9 @@ if( $woocommerce && 'h3' === $product_tab_heading_typography ) {
 
 	( intval( substr($nectar_options['portfolio_filters_font_size'],0,-2) ) > 8 ) ? $line_height = intval(substr($nectar_options['portfolio_filters_font_size'],0,-2)) +10 .'px' : $line_height = null;
 
-	if( is_array($nectar_options['portfolio_filters_font_family']) && $nectar_options['portfolio_filters_font_family']['attrs_in_use'] ) {
+	if( isset($nectar_options['portfolio_filters_font_family']) &&
+		is_array($nectar_options['portfolio_filters_font_family']) &&
+		$nectar_options['portfolio_filters_font_family']['attrs_in_use'] ) {
 
 		echo '.portfolio-filters-inline .container > ul a,
     .portfolio-filters > ul a,
@@ -1325,7 +1330,9 @@ if( $woocommerce && 'h3' === $product_tab_heading_typography ) {
 
 	( intval( substr($nectar_options['portfolio_caption_font_size'],0,-2) ) > 8 ) ? $line_height = intval(substr($nectar_options['portfolio_caption_font_size'],0,-2)) +10 .'px' : $line_height = null;
 
-	if( is_array($nectar_options['portfolio_caption_font_family']) && $nectar_options['portfolio_caption_font_family']['attrs_in_use'] ) {
+	if( isset($nectar_options['portfolio_caption_font_family']) &&
+		is_array($nectar_options['portfolio_caption_font_family']) &&
+		$nectar_options['portfolio_caption_font_family']['attrs_in_use'] ) {
 
 		echo '.portfolio-items .col p, .container-wrap[data-nav-pos="after_project_2"] .bottom_controls li span:not(.text) { ';
 
@@ -1363,7 +1370,8 @@ if( $woocommerce && 'h3' === $product_tab_heading_typography ) {
 
 	( intval( substr($nectar_options['nectar_sidebar_footer_headers_font_size'],0,-2) ) > 8 ) ? $line_height = intval(substr($nectar_options['nectar_sidebar_footer_headers_font_size'],0,-2)) +10 .'px' : $line_height = null;
 
-	if( is_array($nectar_options['nectar_sidebar_footer_headers_font_family']) && 
+	if( isset($nectar_options['nectar_sidebar_footer_headers_font_family']) &&
+		is_array($nectar_options['nectar_sidebar_footer_headers_font_family']) && 
 	   $nectar_options['nectar_sidebar_footer_headers_font_family']['attrs_in_use'] ) {
 
 		echo 'body #sidebar h4, body .widget h4, body #footer-outer .widget h4
@@ -1400,7 +1408,7 @@ if( $woocommerce && 'h3' === $product_tab_heading_typography ) {
 
 			?>
 
-			@media only screen and (min-width: 690px) and (max-width: 999px) {
+			@media only screen and (min-width: 691px) and (max-width: 999px) {
 				.overlaid-content h1 {
 					font-size: <?php if(!empty($nectar_options['page_heading_font_size']) && $nectar_options['page_heading_font_size'] != '-') echo intval($nectar_options['page_heading_font_size'])*0.7 . 'px!important' ?>;
 					line-height: <?php if(!empty($nectar_options['page_heading_font_size']) && $nectar_options['page_heading_font_size'] != '-') echo (intval($nectar_options['page_heading_font_size'])*0.7) + 4 . 'px!important' ?>;
@@ -1464,7 +1472,7 @@ if( $woocommerce && 'h3' === $product_tab_heading_typography ) {
 				}
 			}
 
-			@media only screen and (min-width: 690px) and (max-width: 999px) {
+			@media only screen and (min-width: 691px) and (max-width: 999px) {
 				body #page-header-bg.fullscreen-header .span_6 span.subheader, .overlaid-content .subheader {
 					font-size: <?php if(!empty($nectar_options['page_heading_subtitle_font_size']) && $nectar_options['page_heading_subtitle_font_size'] != '-') echo intval($nectar_options['page_heading_subtitle_font_size'])*0.8 . 'px!important' ?>;
 					line-height: <?php if($the_line_height) echo (intval($the_line_height)*0.8) . 'px!important' ?>;
@@ -1531,7 +1539,7 @@ if( $woocommerce && 'h3' === $product_tab_heading_typography ) {
 
 			?>
 
-			@media only screen and (min-width: 690px) and (max-width: 999px) {
+			@media only screen and (min-width: 691px) and (max-width: 999px) {
 				body #slide-out-widget-area.fullscreen .inner .off-canvas-menu-container li a,
         #slide-out-widget-area.fullscreen-split .off-canvas-menu-container > ul > li > a,
 				body #slide-out-widget-area.fullscreen-alt .inner .off-canvas-menu-container li a  {
@@ -1588,7 +1596,7 @@ if( $woocommerce && 'h3' === $product_tab_heading_typography ) {
 
 			?>
 
-			@media only screen and (min-width: 690px) and (max-width: 999px) {
+			@media only screen and (min-width: 691px) and (max-width: 999px) {
 				#slide-out-widget-area .menuwrapper li small {
 					font-size: <?php if(!empty($nectar_options['off_canvas_nav_subtext_font_size']) && $nectar_options['off_canvas_nav_subtext_font_size'] != '-') echo intval($nectar_options['off_canvas_nav_subtext_font_size'])*0.9 . 'px' ?>;
 					line-height: <?php if($the_line_height) echo intval($the_line_height)*0.9 . 'px' ?>;
@@ -1636,7 +1644,7 @@ if( $woocommerce && 'h3' === $product_tab_heading_typography ) {
 				}
 			}
 
-			@media only screen and (min-width: 690px) and (max-width: 999px) {
+			@media only screen and (min-width: 691px) and (max-width: 999px) {
 				body .nectar-slider-wrap[data-full-width="true"] .swiper-slide .content h2,
         body .full-width-content .vc_col-sm-12 .nectar-slider-wrap .swiper-slide .content h2,
 				body .nectar-slider-wrap[data-full-width="boxed-full-width"] .swiper-slide .content h2,
@@ -1698,7 +1706,7 @@ if( $woocommerce && 'h3' === $product_tab_heading_typography ) {
 				}
 			}
 
-			@media only screen and (min-width: 690px) and (max-width: 999px) {
+			@media only screen and (min-width: 691px) and (max-width: 999px) {
 				.nectar-slider-wrap[data-full-width="true"] .swiper-slide .content p,
 				.nectar-slider-wrap[data-full-width="boxed-full-width"] .swiper-slide .content p,
 				.full-width-content .vc_span12 .swiper-slide .content p {
@@ -1762,7 +1770,7 @@ if( $woocommerce && 'h3' === $product_tab_heading_typography ) {
     			}
     		}
 
-    		@media only screen and (max-width: 999px) and (min-width: 690px) {
+    		@media only screen and (max-width: 999px) and (min-width: 691px) {
           blockquote,
           .testimonial_slider blockquote,
           .testimonial_slider blockquote span,
@@ -1797,7 +1805,8 @@ if( $woocommerce && 'h3' === $product_tab_heading_typography ) {
 	$styles = explode('-', $nectar_options['nectar_woo_shop_product_title_font_style']);
 	( intval( substr($nectar_options['nectar_woo_shop_product_title_font_size'],0,-2) ) > 8 ) ? $line_height = intval(substr($nectar_options['nectar_woo_shop_product_title_font_size'],0,-2)) + 10 .'px!important' : $line_height = null;
 
-	if( is_array($nectar_options['nectar_woo_shop_product_title_font_family']) && 
+	if( isset($nectar_options['nectar_woo_shop_product_title_font_family']) &&
+		is_array($nectar_options['nectar_woo_shop_product_title_font_family']) && 
 		$nectar_options['nectar_woo_shop_product_title_font_family']['attrs_in_use'] ) {
 
 			echo '.woocommerce ul.products li.product .woocommerce-loop-product__title,
@@ -1819,7 +1828,8 @@ if( $woocommerce && 'h3' === $product_tab_heading_typography ) {
 	$styles = explode('-', $nectar_options['nectar_woo_shop_product_secondary_font_style']);
 	( intval( substr($nectar_options['nectar_woo_shop_product_secondary_font_size'],0,-2) ) > 8 ) ? $line_height = intval(substr($nectar_options['nectar_woo_shop_product_secondary_font_size'],0,-2)) + 10 .'px!important' : $line_height = null;
 
-	if( is_array($nectar_options['nectar_woo_shop_product_secondary_font_family']) && 
+	if( isset($nectar_options['nectar_woo_shop_product_secondary_font_family']) &&
+		is_array($nectar_options['nectar_woo_shop_product_secondary_font_family']) && 
 		$nectar_options['nectar_woo_shop_product_secondary_font_family']['attrs_in_use'] ) {
 
 			echo '.woocommerce .material.product .product-wrap .product-add-to-cart .price .amount,

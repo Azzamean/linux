@@ -12,6 +12,7 @@ class WPBakeryShortCode_Vc_Tabs extends WPBakeryShortCode {
 	protected $controls_list = array(
 		'edit',
 		'clone',
+		'copy',
 		'delete',
 	);
 
@@ -118,6 +119,7 @@ class WPBakeryShortCode_Vc_Tabs extends WPBakeryShortCode {
 
 
 
+
 /*nectar addition*/
 require_once vc_path_dir('SHORTCODES_DIR', 'vc-column.php');
 
@@ -126,7 +128,12 @@ class WPBakeryShortCode_Tabbed_Section extends WPBakeryShortCode {
 
     static $filter_added = false;
     protected $controls_css_settings = 'out-tc vc_controls-content-widget';
-    protected $controls_list = array( 'edit', 'clone', 'delete' );
+    protected $controls_list = array(
+		'edit',
+		'clone',
+		'copy',
+		'delete',
+	);
 
     public function __construct( $settings ) {
         parent::__construct( $settings );

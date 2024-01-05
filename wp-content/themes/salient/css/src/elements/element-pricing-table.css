@@ -299,7 +299,7 @@ body .pricing-table[data-style="flat-alternative"] .pricing-column h3{
          margin-right: 0!important;
     }
 }
- @media only screen and (min-width : 690px) and (max-width : 999px) {
+ @media only screen and (min-width : 691px) and (max-width : 999px) {
      .pricing-table[data-style="flat-alternative"].two-cols > div, 
      .pricing-table[data-style="flat-alternative"].three-cols > div, 
      .pricing-table[data-style="flat-alternative"].four-cols > div, 

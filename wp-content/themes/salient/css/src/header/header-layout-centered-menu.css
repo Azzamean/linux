@@ -33,7 +33,7 @@
   z-index: -100;
 }
 
-@media only screen and (max-width: 1000px) {
+@media only screen and (max-width: 999px) {
   #header-outer[data-format="centered-menu"] .logo-spacing  {
     display: none;
   }

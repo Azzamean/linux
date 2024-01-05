@@ -54,6 +54,9 @@ if( !function_exists('nectar_slider_processing') ) {
 	  if($overall_style === 'directional') {
 	    $desktop_swipe = 'false';
 	  }
+
+	  wp_enqueue_script('nectar-slider');
+	  wp_enqueue_style('nectar-slider');
 	    
 	  if( isset($_GET['vc_editable']) ) {
 	  	$nectar_using_VC_front_end_editor = sanitize_text_field($_GET['vc_editable']);

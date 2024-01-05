@@ -1214,6 +1214,7 @@ if( !empty($nectar_options['header-color']) && $nectar_options['header-color'] =
 		#header-outer #top nav > ul > li > a,
     #header-outer .slide-out-widget-area-toggle a i.label,
 		#header-outer:not(.transparent) #top #logo,
+		#header-outer:not(.transparent) #top .logo-clone,
 		#header-outer #top .span_9 > .slide-out-widget-area-toggle i,
 		#header-outer #top .sf-sub-indicator i,
 		body[data-header-color="custom"].ascend #boxed #header-outer .cart-menu .cart-icon-wrap i,

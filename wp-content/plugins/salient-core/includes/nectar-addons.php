@@ -30,6 +30,7 @@ if( !function_exists('nectar_wpbakery_element_list') ) {
 			'item',
 			'milestone',
 			'morphing_outline',
+			'nectar_global_section',
 			'nectar_animated_title',
 			'nectar_animated_shape',
 			'nectar_lottie',
@@ -107,6 +108,11 @@ if( ! function_exists('nectar_set_vc_as_theme') ) {
 
 		    $parent_dir = $template_directory . 'includes/vc_templates';
 		    vc_set_shortcodes_templates_dir($parent_dir);
+
+			// Remove WPBakery custom layout modes (option for blank template)
+			add_filter('vc_post_custom_layout_name', function() {
+				return 'default';
+			});
 
 		}
 		// Raw WPBakery is active.
@@ -2273,7 +2279,9 @@ function nectar_custom_maps() {
 							esc_html__("5px", "salient-core") => "5px",
 							esc_html__("10px", "salient-core") => "10px",
 							esc_html__("15px", "salient-core") => "15px",
-							esc_html__("20px", "salient-core") => "20px"),
+							esc_html__("20px", "salient-core") => "20px",
+							esc_html__("Custom", "salient-core") => "custom",
+						),
 						"description" => ''
 					),
 					array(
@@ -2285,9 +2293,56 @@ function nectar_custom_maps() {
 						"value" => array(
 							esc_html__("Row Background", "salient-core") => "bg",
 							esc_html__("Inner Content", "salient-core") => "inner",
-              esc_html__("Both", "salient-core") => "both"),
+							esc_html__("Both", "salient-core") => "both"),
 						"description" => ''
 					),
+
+					array(
+						"type" => "nectar_numerical",
+						"class" => "",
+						"edit_field_class" => "nectar-one-fourth",
+						"heading" => '',
+						"value" => "",
+						"placeholder" => esc_html__("Top Left",'salient-core'),
+						"param_name" => "top_left_border_radius",
+						"description" => "",
+						"dependency" => Array('element' => "row_border_radius", 'value' => array('custom'))
+					  ),
+					  array(
+						"type" => "nectar_numerical",
+						"class" => "",
+						"placeholder" => esc_html__("Top Right",'salient-core'),
+						"edit_field_class" => "nectar-one-fourth",
+						"heading" => "<span class='attr-title'>" . esc_html__("Top Right", "salient-core") . "</span>",
+						"value" => "",
+						"param_name" => "top_right_border_radius",
+						"description" => "",
+						"dependency" => Array('element' => "row_border_radius", 'value' => array('custom'))
+					  ),
+					  array(
+						"type" => "nectar_numerical",
+						"class" => "",
+						"placeholder" => esc_html__("Bottom Right",'salient-core'),
+						"edit_field_class" => "nectar-one-fourth",
+						"heading" => "<span class='attr-title'>" . esc_html__("Bottom Right", "salient-core") . "</span>",
+						"value" => "",
+						"param_name" => "bottom_right_border_radius",
+						"description" => "",
+						"dependency" => Array('element' => "row_border_radius", 'value' => array('custom'))
+					  ),
+			  
+					  array(
+						"type" => "nectar_numerical",
+						"class" => "",
+						"placeholder" => esc_html__("Bottom Left",'salient-core'),
+						"edit_field_class" => "nectar-one-fourth nectar-one-fourth-last",
+						"heading" => "<span class='attr-title'>" . esc_html__("Bottom Left", "salient-core") . "</span>",
+						"value" => "",
+						"param_name" => "bottom_left_border_radius",
+						"description" => "",
+						"dependency" => Array('element' => "row_border_radius", 'value' => array('custom'))
+					  ),
+
 				array(
 				 "type" => "nectar_group_header",
 				 "class" => "",
@@ -3125,6 +3180,19 @@ function nectar_custom_maps() {
 	      "admin_label" => false,
 	      "description" => esc_html__("Optionally enter your desired max width in pixels without the \"px\", e.g. 200", "salient-core")
 	    ));
+
+		vc_add_param("vc_column_text", array(
+			"type" => "nectar_radio_tab_selection",
+			"class" => "",
+			'save_always' => true,
+			"heading" => esc_html__("Text Direction", "salient-core"),
+			"param_name" => "text_direction",
+			"options" => array(
+				esc_html__("Auto", "salient-core") => "default",
+				esc_html__("Left", "salient-core") => "ltr",
+				esc_html__("Right", "salient-core") => "rtl",
+			)
+		));
 
 
 		global $vc_column_width_list;
@@ -4415,7 +4483,6 @@ function nectar_custom_maps() {
 						esc_html__("Advanced", "salient-core") => "advanced",
 					),
 				),
-
 				array(
 					"type" => "checkbox",
 					"class" => "",
@@ -4424,7 +4491,7 @@ function nectar_custom_maps() {
 					"value" => array("Yes, please" => "true" ),
 					'edit_field_class' => 'vc_col-xs-12 salient-fancy-checkbox',
 					"param_name" => "enable_gradient",
-          "dependency" => Array('element' => "gradient_type", 'value' => array('default')),
+					"dependency" => Array('element' => "gradient_type", 'value' => array('default')),
 					"description" => ""
 				),
 				array(
@@ -4435,7 +4502,7 @@ function nectar_custom_maps() {
 					"value" => "",
 					"edit_field_class" => "col-md-6",
 					"group" => "Color Overlay",
-          "dependency" => Array('element' => "gradient_type", 'value' => array('default')),
+					"dependency" => Array('element' => "gradient_type", 'value' => array('default')),
 					"description" => ""
 				),
 				array(
@@ -12283,6 +12350,36 @@ function vc_iconpicker_type_iconsmind( $icons ) {
 }
 
 
+
+
+
+
+add_filter( 'vc_iconpicker-type-nectarbrands', 'vc_iconpicker_type_nectar_brands' );
+
+/**
+ * Add additional brands icon family into page builder.
+ *
+ * @since 1.0
+ */
+function vc_iconpicker_type_nectar_brands( $icons ) {
+	$brand_icons = array(
+	  array('nectar-brands-applemusic' => 'nectar-brands-applemusic'),
+	  array('nectar-brands-houzz' => 'nectar-brands-houzz'),
+	  array('nectar-brands-twitch' => 'nectar-brands-twitch'),
+	  array('nectar-brands-artstation' => 'nectar-brands-artstation'),
+	  array('nectar-brands-discord' => 'nectar-brands-discord'),
+	  array('nectar-brands-messenger' => 'nectar-brands-messenger'),
+	  array('nectar-brands-tiktok' => 'nectar-brands-tiktok'),
+	  array('nectar-brands-patreon' => 'nectar-brands-patreon'),
+	  array('nectar-brands-threads' => 'nectar-brands-threads'),
+	  array('nectar-brands-medium' => 'nectar-brands-medium'),
+	  array('nectar-brands-trustpilot' => 'nectar-brands-trustpilot'),
+	  array('nectar-brands-mastodon' => 'nectar-brands-mastodon'),
+	  array('nectar-brands-x-twitter' => 'nectar-brands-x-twitter'),
+	);
+
+	return array_merge( $icons, $brand_icons );
+}
 
 
 

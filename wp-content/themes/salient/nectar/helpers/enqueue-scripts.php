@@ -422,6 +422,17 @@ function nectar_register_js() {
 		}
 	}
 
+	$ajax_add_to_cart = ( isset( $nectar_options['ajax-add-to-cart'] ) ) ? esc_html($nectar_options['ajax-add-to-cart']) : '0';
+	$editing_subscription = isset($_GET['switch-subscription']) ? true : false;
+	if ( $editing_subscription ) { 
+		$ajax_add_to_cart = '0';
+	}
+
+	$woo_using_cart_addons = 'false';
+	if( class_exists('WC_Dynamic_Pricing') ) {
+		$woo_using_cart_addons = 'true';
+	}
+
 	wp_localize_script(
 		'nectar-frontend',
 		'nectarOptions',
@@ -434,7 +445,7 @@ function nectar_register_js() {
 			'mobile_header_format'        => ( isset( $nectar_options['mobile-menu-layout'] ) ) ? esc_html($nectar_options['mobile-menu-layout']) : 'default',
 			'ocm_btn_position'            => ( isset( $nectar_options['ocm_btn_position'] ) ) ? esc_html($nectar_options['ocm_btn_position']) : 'default',
 			'left_header_dropdown_func'   => ( isset( $nectar_options['left-header-dropdown-func'] ) ) ? esc_html($nectar_options['left-header-dropdown-func']) : 'default',
-			'ajax_add_to_cart'            => ( isset( $nectar_options['ajax-add-to-cart'] ) ) ? esc_html($nectar_options['ajax-add-to-cart']) : '0',
+			'ajax_add_to_cart'            => $ajax_add_to_cart,
 			'ocm_remove_ext_menu_items'   => ( isset( $nectar_options['header-slide-out-widget-area-image-display'] ) ) ? esc_html($nectar_options['header-slide-out-widget-area-image-display']) : 'default',
 			'woo_product_filter_toggle'   => ( isset( $nectar_options['product_filter_area'] ) ) ? esc_html($nectar_options['product_filter_area']) : '0',
 			'woo_sidebar_toggles'         => ( false === $woo_toggle_sidebar ) ? 'false' : 'true',
@@ -443,6 +454,7 @@ function nectar_register_js() {
 			'woo_minimal_product_effect'  => ( isset( $nectar_options['product_minimal_hover_effect'] ) ) ? esc_html($nectar_options['product_minimal_hover_effect']) : 'default',
 			'woo_related_upsell_carousel' => ( isset( $nectar_options['single_product_related_upsell_carousel'] ) && '1' === $nectar_options['single_product_related_upsell_carousel'] ) ? 'true' : 'false',
 			'woo_product_variable_select' => ( isset( $nectar_options['product_variable_select_style'] ) ) ? esc_html($nectar_options['product_variable_select_style']) : 'default',
+			'woo_using_cart_addons'       => $woo_using_cart_addons
 		)
 	);
 
@@ -453,6 +465,7 @@ function nectar_register_js() {
 			'menu'     => esc_html__('Menu', 'salient'),
 			'next'     => esc_html__('Next', 'salient'),
 			'previous' => esc_html__('Previous', 'salient'),
+			'close' => esc_html__('Close', 'salient'),
 		)
 	);
 

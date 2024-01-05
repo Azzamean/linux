@@ -283,6 +283,14 @@ if( !function_exists('nectar_metabox_nectar_slider') ) {
   					'type' => 'text',
   					'std' => ''
   				),
+
+			array( 
+				'name' => esc_html__('Slide Link Screen Reader Text', 'salient-nectar-slider'),
+				'desc' => esc_html__('Please enter the text you would like to describe your slide link with.', 'salient-nectar-slider'),
+				'id' => '_nectar_slider_link_sr_text',
+				'type' => 'text',
+				'std' => ''
+			),
   				
   			array( 
   					'name' => esc_html__('Slide Video Popup', 'salient-nectar-slider'),

@@ -497,7 +497,7 @@ if ( ! function_exists( 'nectar_options_img' ) ) {
 	function nectar_options_img( $image_arr_or_str ) {
 
 		// dummy data import from external
-		if ( isset( $image_arr_or_str['thumbnail'] ) && strpos( $image_arr_or_str['thumbnail'], 'http://themenectar.com' ) !== false && strpos( get_site_url(), 'themenectar.com' ) === false ) {
+		if ( isset( $image_arr_or_str['thumbnail'] ) && strpos( $image_arr_or_str['thumbnail'], '://themenectar.com' ) !== false && strpos( get_site_url(), 'themenectar.com' ) === false ) {
 			return $image_arr_or_str['thumbnail'];
 		}
 		if ( isset( $image_arr_or_str['thumbnail'] ) && strpos( $image_arr_or_str['thumbnail'], 'https://source.unsplash.com' ) !== false ) {

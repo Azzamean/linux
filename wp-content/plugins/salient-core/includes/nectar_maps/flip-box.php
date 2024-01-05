@@ -78,9 +78,19 @@ return array(
 				__( 'Iconsmind', 'js_composer' ) => 'iconsmind',
 				__( 'Linea', 'js_composer' ) => 'linea',
 				__( 'Steadysets', 'js_composer' ) => 'steadysets',
+				esc_html__( 'Additional Brands', 'salient-core' ) => 'nectarbrands',
 			),
 			'param_name' => 'icon_family',
 			'description' => __( 'Select icon library.', 'js_composer' ),
+		),
+		array(
+			'type' => 'iconpicker',
+			'heading' => esc_html__( 'Icon', 'salient-core' ),
+			'param_name' => 'icon_nectarbrands',
+			"group" => esc_html__('Front Side', 'salient-core'),
+			'settings' => array( 'type' => 'nectarbrands', 'emptyIcon' => true, 'iconsPerPage' => 240 ),
+			'dependency' => Array( 'element' => 'icon_family', 'value' => 'nectarbrands' ),
+			'description' => esc_html__( 'Select icon from library.', 'salient-core' )
 		),
 		array(
 			"type" => "iconpicker",

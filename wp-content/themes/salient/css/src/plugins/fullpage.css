@@ -914,7 +914,8 @@ body:not(.mobile) .fp-scroller {
         justify-content: flex-end;
     }
 
-    .using-mobile-browser #nectar_fullscreen_rows[data-mobile-disable="on"] > div {
+    .using-mobile-browser #nectar_fullscreen_rows[data-mobile-disable="on"] > div,
+    .using-ios-device #nectar_fullscreen_rows[data-mobile-disable="on"] > div {
       height: auto;
     }
 
@@ -922,13 +923,14 @@ body:not(.mobile) .fp-scroller {
 
 
 @media only screen and (min-width: 1000px) and (orientation:landscape) {
-  .using-mobile-browser #nectar_fullscreen_rows > .wpb_row.extra-top-padding {
+  .using-mobile-browser #nectar_fullscreen_rows > .wpb_row.extra-top-padding,
+  .using-ios-device #nectar_fullscreen_rows > .wpb_row.extra-top-padding {
     padding-top: 80px;
   }
 }
 
 
-@media only screen and (min-width : 690px) and (max-width : 999px) {
+@media only screen and (min-width : 691px) and (max-width : 999px) {
   body #nectar_fullscreen_rows .vc_row-fluid .vc_col-sm-7,
   body #nectar_fullscreen_rows .vc_row-fluid .vc_col-sm-5 {
     width: 100%;
@@ -938,11 +940,13 @@ body:not(.mobile) .fp-scroller {
 
 @media only screen and (max-width : 690px) {
   
-  .using-mobile-browser #nectar_fullscreen_rows[data-mobile-disable="on"] {
+  .using-mobile-browser #nectar_fullscreen_rows[data-mobile-disable="on"],
+  .using-ios-device #nectar_fullscreen_rows[data-mobile-disable="on"] {
     height: auto!important;
   }
 
-  .using-mobile-browser #nectar_fullscreen_rows[data-mobile-disable="on"] > div {
+  .using-mobile-browser #nectar_fullscreen_rows[data-mobile-disable="on"] > div,
+  .using-ios-device #nectar_fullscreen_rows[data-mobile-disable="on"] > div {
     position: relative!important;
     left: 0!important;
   }
@@ -962,16 +966,19 @@ body:not(.mobile) .fp-scroller {
 
 @media only screen and (max-device-width: 2600px) {
   
-    .using-mobile-browser #nectar_fullscreen_rows[data-mobile-disable="on"] {
+    .using-mobile-browser #nectar_fullscreen_rows[data-mobile-disable="on"],
+    .using-ios-device #nectar_fullscreen_rows[data-mobile-disable="on"] {
       height: auto!important;
     }
   
-    .using-mobile-browser #nectar_fullscreen_rows[data-mobile-disable="on"] > div {
+    .using-mobile-browser #nectar_fullscreen_rows[data-mobile-disable="on"] > div,
+    .using-ios-device #nectar_fullscreen_rows[data-mobile-disable="on"] > div {
       position: relative!important;
       left: 0!important;
     }
   
-    .using-mobile-browser #nectar_fullscreen_rows[data-mobile-disable="on"] > div:not(.full-width-content) .full-page-inner-wrap-outer > .full-page-inner-wrap > .full-page-inner > .container {
+    .using-mobile-browser #nectar_fullscreen_rows[data-mobile-disable="on"] > div:not(.full-width-content) .full-page-inner-wrap-outer > .full-page-inner-wrap > .full-page-inner > .container,
+    .using-ios-device #nectar_fullscreen_rows[data-mobile-disable="on"] > div:not(.full-width-content) .full-page-inner-wrap-outer > .full-page-inner-wrap > .full-page-inner > .container {
       padding-top: 8%;
       padding-bottom: 8%;
     }

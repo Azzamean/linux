@@ -28,6 +28,10 @@
                     'link' => esc_url('http://www.facebook.com/ThemeNectar-488077244574702/')
                   ),
                   array(
+                    'text' => esc_html__('Instagram','salient'),
+                    'link' => esc_url('https://www.instagram.com/theme_nectar/')
+                  ),
+                  array(
                     'text' => esc_html__('Support Forum','salient'),
                     'link' => esc_url('https://themenectar.ticksy.com/')
                   ),

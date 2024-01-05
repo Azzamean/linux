@@ -976,8 +976,11 @@ html .compose-mode .page-submenu .vc_control-btn-switcher,
 .compose-mode .vc_carousel .vc_item .vc_controls-column>div>.vc_active.vc_parent .vc_advanced,
 .compose-mode .vc_pricing_table .vc_pricing_column .vc_controls-column>div>.vc_active.vc_parent .vc_advanced,
 .compose-mode .nectar-icon-list .vc_nectar_icon_list_item .vc_controls-column>div>.vc_active.vc_parent .vc_advanced {
-  width: 113px!important;
+  width: 119px!important;
 }
+
+.compose-mode .vc_tabbed_section .vc_controls-column > div > .vc_active.vc_parent .vc_advanced,
+.compose-mode .vc_tabbed_section .vc_tab .vc_controls-column > div > .vc_active.vc_element .vc_advanced,
 .compose-mode .vc_carousel .vc_item .vc_controls-column>.vc_controls-out-tr>.vc_active.vc_parent .vc_advanced {
   width: 120px!important;
 }
@@ -998,7 +1001,7 @@ html .compose-mode .page-submenu .vc_control-btn-switcher,
 .compose-mode .vc_carousel .vc_item .vc_controls-column>div>.vc_active.vc_element .vc_advanced,
 .compose-mode .vc_pricing_table .vc_pricing_column .vc_controls-column>div>.vc_active.vc_element .vc_advanced,
 .compose-mode .nectar-icon-list .vc_nectar_icon_list_item .vc_controls-column>div>.vc_active.vc_element .vc_advanced {
-  width: 84px!important;
+  width: 90px!important;
 }
 
 .compose-mode .vc_controls-column>div>.vc_active.element-vc_column .vc_advanced + .vc_control-btn-switcher, 
@@ -1025,6 +1028,13 @@ body.compose-mode .vc_control-btn-switcher {
 .compose-mode .vc_nectar_sticky_media_sections .vc_controls-container > .vc_controls-bc  .vc_btn-content:before{
   background-color: #333!important;
 }
+
+
+.compose-mode .vc_nectar_sticky_media_sections .vc_control-btn-copy,
+.compose-mode .vc_nectar_sticky_media_sections .vc_control-btn-paste {
+  display: none!important;
+}
+
 .compose-mode .vc_nectar_sticky_media_sections .vc_controls-container > .vc_controls-bc  .vc_btn-content:before {
   box-shadow: 0px 10px 20px rgba(0,0,0,0.2);
 }

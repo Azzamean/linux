@@ -81,6 +81,10 @@ if ( ! function_exists( 'nectar_excerpt' ) ) {
 
 	function nectar_excerpt( $limit ) {
 
+		if ( post_password_required() ) {
+			return;
+		}
+
 		if ( has_excerpt() ) {
 			$the_excerpt = get_the_excerpt();
 			$the_excerpt = preg_replace( '/\[[^\]]+\]/', '', $the_excerpt );  // strip shortcodes, keep shortcode content
@@ -886,15 +890,16 @@ if( !function_exists('nectar_get_category_list') ) {
 	function nectar_get_category_list($separator = false, $classes = false, $display_type = false) {
 
 		$output = null;
-
-    // Try and default from theme options.
-		$category_display = ( class_exists('NectarThemeManager') && isset(NectarThemeManager::$options['blog_header_category_display'])) ? NectarThemeManager::$options['blog_header_category_display'] : 'default';
+		$class_names = '';
 		
-    if ( $display_type ) {
-      $category_display = $display_type;
-    }
+		// Try and default from theme options.
+		$category_display = ( class_exists('NectarThemeManager') && isset(NectarThemeManager::$options['blog_header_category_display'])) ? NectarThemeManager::$options['blog_header_category_display'] : 'default';
+			
+		if ( $display_type ) {
+		$category_display = $display_type;
+		}
 
-    $categories = get_the_category();
+		$categories = get_the_category();
 
 		$filtered_categories = array();
 		if ( $category_display === 'parent_only' ) {
@@ -911,8 +916,8 @@ if( !function_exists('nectar_get_category_list') ) {
 			foreach( $filtered_categories as $category ) {
 				
 				// Classes.
-				$classes = ( $classes ) ? esc_attr($classes) . ' '. esc_attr($category->slug) : esc_attr($category->slug);
-				$output .= '<a class="'. esc_attr($classes) .'" href="' . esc_url( get_category_link( $category->term_id ) ) . '">' . esc_html( $category->name ) . '</a>';
+				$class_names = ( $classes ) ? esc_attr($classes) . ' '. esc_attr($category->slug) : esc_attr($category->slug);
+				$output .= '<a class="'. esc_attr($class_names) .'" href="' . esc_url( get_category_link( $category->term_id ) ) . '">' . esc_html( $category->name ) . '</a>';
 				
 				// Separator.
 				if ( next( $filtered_categories ) && $separator) {

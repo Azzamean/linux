@@ -625,6 +625,8 @@
        )
      ) );
 
+     $css_js_permission_cap = ( is_multisite() && apply_filters('nectar_multisite_options_allow_admin_edit_code', true) ) ? 'manage_sites' : 'manage_options';
+
      Redux::setSection( $opt_name, array(
        'title'            => esc_html__( 'CSS/Script Related', 'salient' ),
        'id'               => 'general-settings-extra',
@@ -655,6 +657,7 @@
            'theme' => 'monokai',
            'hint' => array('content' => esc_html__('Note - if you\'ve pasted CSS in here from an external source, ensure no accidental', 'salient'). ' <b>pre</b> ' . esc_html__('tags pasted in with the snippet. If unintentional tags like that are present, it will prevent the css from parsing correctly.', 'salient'), 'title' => ''),
            'desc' => '',
+           'permissions' => $css_js_permission_cap,
            'options' => array('minLines' => 20)
          ),
          array(
@@ -662,6 +665,7 @@
            'type' => 'textarea',
            'title' => esc_html__('Custom JS Code (Head)', 'salient'),
            'subtitle' => esc_html__('Please enter in any custom javascript you wish to add to the head of your pages. Requires opening and closing script tags.', 'salient'),
+           'permissions' => $css_js_permission_cap,
            'desc' => ''
          ),
          array(
@@ -669,6 +673,7 @@
           'type' => 'textarea',
           'title' => esc_html__('Custom JS Code (After Body Open)', 'salient'),
           'subtitle' => esc_html__('Useful for third party integrations which require code to be placed after the opening <body> tag, such as Google Tag Manager. Requires opening and closing script tags.', 'salient'),
+          'permissions' => $css_js_permission_cap,
           'desc' => ''
         )
        )
@@ -1077,13 +1082,13 @@
        "Georgia, serif"                                       => "Georgia",
        "Impact, Charcoal, sans-serif"                         => "Impact, Charcoal, sans-serif",
        'Helvetica, sans-serif'                                => 'Sans Serif',
-       "'Lucida Console', Monaco, monospace"                  => "'Lucida Console', Monaco, monospace",
-       "'Lucida Sans Unicode', 'Lucida Grande', sans-serif"   => "'Lucida Sans Unicode', 'Lucida Grande', sans-serif",
-       "'MS Sans Serif', Geneva, sans-serif"                  => "'MS Sans Serif', Geneva, sans-serif",
-       "'MS Serif', 'New York', sans-serif"                   => "'MS Serif', 'New York', sans-serif",
-       "'Palatino Linotype', 'Book Antiqua', Palatino, serif" => "'Palatino Linotype', 'Book Antiqua', Palatino, serif",
+       "Lucida Console, Monaco, monospace"                    => "Lucida Console, Monaco, monospace",
+       "Lucida Sans Unicode, Lucida Grande, sans-serif"       => "Lucida Sans Unicode, Lucida Grande, sans-serif",
+       "MS Sans Serif, Geneva, sans-serif"                    => "MS Sans Serif, Geneva, sans-serif",
+       "MS Serif, New York, sans-serif"                       => "MS Serif, New York, sans-serif",
+       "Palatino Linotype, Book Antiqua, Palatino, serif"     => "Palatino Linotype, Book Antiqua, Palatino, serif",
        "Tahoma,Geneva, sans-serif"                            => "Tahoma",
-       "'Times New Roman', Times,serif"                       => "'Times New Roman', Times, serif",
+       "Times New Roman, Times, serif"                        => "Times New Roman, Times, serif",
        "Verdana, Geneva, sans-serif"                          => "Verdana, Geneva, sans-serif",
        'Lovelo, sans-serif' => 'Lovelo'
      );
@@ -1908,7 +1913,7 @@
            'id' => 'logo',
            'type' => 'media',
            'title' => esc_html__('Logo Upload', 'salient'),
-           'subtitle' => esc_html__('Upload your logo here and enter the height of it below.','salient') . '<br/><br/>' .  esc_html__('Note: there are additional logo upload fields in the transparent header effect tab.', 'salient'),
+           'subtitle' => esc_html__('Upload your logo here and enter the height of it below.','salient'),
            'required' => array( 'use-logo', '=', '1' ),
            'desc' => ''
          ),
@@ -1916,10 +1921,21 @@
            'id' => 'retina-logo',
            'type' => 'media',
            'title' => esc_html__('Retina Logo Upload', 'salient'),
-           'subtitle' => esc_html__('Upload at exactly 2x the size of your standard logo. Supplying this will keep your logo crisp on screens with a higher pixel density.', 'salient'),
+           'subtitle' => esc_html__('Upload at exactly 2x the size of your standard logo to keep the display crisp on screens with a higher pixel density.', 'salient'),
            'desc' => '' ,
            'required' => array( 'use-logo', '=', '1' )
          ),
+
+         array(
+          'id'    => 'info-use-responsive-heading-typography',
+          'type'  => 'info',
+          'style' => 'success',
+          'title' => esc_html__('Logo not changing after saving?',  'salient'),
+          'icon'  => 'el el-info-circle',
+          'required' => array( 'use-logo', '=', '1' ),
+          'desc'  => esc_html__( 'If you\'re using a transparent header, the logos displayed while that effect is active are specified in the',  'salient') . ' <strong>' . esc_html__( 'Transparent Header Effect',  'salient') . '</strong> tab.'
+        ),
+
          array(
            'id' => 'logo-height',
            'type' => 'text',
@@ -2818,7 +2834,7 @@
           'id' => 'header-hover-effect-button-bg-size',
           'type' => 'select',
           'title' => esc_html__('Button Background Size', 'salient'),
-          'subtitle' => esc_html__('Alters the button background size releative to link tett.', 'salient'),
+          'subtitle' => esc_html__('Alters the button background size relative to link text.', 'salient'),
           'desc' => '',
           'options' => array(
             'small' => esc_html__('Small', 'salient'),
@@ -5137,8 +5153,10 @@
 
 
       $using_post_grid_archive = false;
+      $post_grid_special_id = '';
       if ( NectarThemeManager::is_special_location_active('nectar_special_location__blog_loop') ) {
         $using_post_grid_archive = true;
+        $post_grid_special_id = NectarThemeManager::is_special_location_active('nectar_special_location__blog_loop');
       }
 
       $blog_layout_options = array(
@@ -5147,7 +5165,7 @@
           'class' => $using_post_grid_archive ? '' : 'hidden-theme-option',
           'type' => 'select',
           'title' => esc_html__('Blog Format', 'salient'),
-          'subtitle' => esc_html__('Please select your blog format here.', 'salient') . '<br/><br/><strong>' . esc_html__('Note: Your blog archive design is currently being handled through a', 'salient') .' <a target="_blank" href="'.esc_url( admin_url( 'post.php?post='.$using_post_grid_archive.'&action=edit' ) ).'">'.esc_html__('global section.', 'salient').'</a></strong>',
+          'subtitle' => esc_html__('Please select your blog format here.', 'salient') . '<br/><br/><strong>' . esc_html__('Note: Your blog archive design is currently being handled through a', 'salient') .' <a target="_blank" href="'.esc_url( admin_url( 'post.php?post='.$post_grid_special_id.'&action=edit' ) ).'">'.esc_html__('global section.', 'salient').'</a></strong>',
           'desc' => '',
           'options' => array(
             'contained' => esc_html__('Contained', 'salient'),
@@ -5837,6 +5855,7 @@
            array(
              'id' => 'blog_pagination_type',
              'type' => 'select',
+             'class' => $using_post_grid_archive ? 'hidden-theme-option' : '',
              'title' => esc_html__('Pagination Type', 'salient'),
              'subtitle' => esc_html__('Please select your pagination type here.', 'salient'),
              'desc' => '',
@@ -6641,7 +6660,7 @@
              'id' => 'search-results-layout',
              'type' => 'select',
              'title' => esc_html__('Layout', 'salient'),
-             'subtitle' => esc_html__('This will alter the overall styling of various theme elements', 'salient'),
+             'subtitle' => esc_html__('The layout for your search results.', 'salient'),
              'options' => array(
                "default" => esc_html__("Masonry Grid & Sidebar", 'salient'),
                "masonry-no-sidebar" => esc_html__("Masonry Grid No Sidebar", 'salient'),

@@ -109,6 +109,7 @@ jQuery(function($) {
 			$secondaryHeader.addClass('centered-menu-bottom-bar');
 		}
 
+		$logoLinkClone.removeAttr('id').addClass('logo-clone');
 
 		if($('#header-outer[data-condense="true"]').length > 0 && $('#header-outer[data-menu-bottom-bar-align="left"]').length == 0 ) {
 			$headerSpan9.prepend($logoLinkClone);

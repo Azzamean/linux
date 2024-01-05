@@ -82,9 +82,25 @@ $mini_cart_style = ( isset($nectar_options['ajax-cart-style']) && 'slide_in_clic
           if( 'slide_in_click' === $mini_cart_style ) {
 
            // Create quantity markup.
+		    $max_quantity = $_product->get_max_purchase_quantity();
+			$min_quantity = $_product->get_min_purchase_quantity();
+
+			// min/max from plugin.
+		   	$min_max_quantities = Nectar_Woo_Cart::get_minmax_quantities($cart_item_key);
+			$constrained_maximum_quantity = $min_max_quantities['max'];
+			$constrained_minimum_quantity = $min_max_quantities['min'];
+
+			if ( $constrained_maximum_quantity ) {
+				$max_quantity = $constrained_maximum_quantity;
+			}
+			if ( $constrained_minimum_quantity ) {
+				$min_quantity = $constrained_minimum_quantity;
+			}
+
+			// output quantity.
             $quantity_markup = woocommerce_quantity_input( array(
-            'min_value' => apply_filters( 'woocommerce_quantity_input_min', $_product->get_min_purchase_quantity(), $_product ),
-            'max_value' => apply_filters( 'woocommerce_quantity_input_max', $_product->get_max_purchase_quantity(), $_product ),
+            'min_value' => apply_filters( 'woocommerce_quantity_input_min', $min_quantity, $_product ),
+            'max_value' => apply_filters( 'woocommerce_quantity_input_max', $max_quantity, $_product ),
             'input_value' => $cart_item['quantity'],
             'input_name' => 'cart['.$cart_item_key.'][qty]'), $_product, false );
 

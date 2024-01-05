@@ -50,6 +50,20 @@ $responsive_text_params[] = array(
     "param_name" => "link_href",
     "description" => esc_html__("The URL that will be used for the link", "salient-core")
 );
+
+$responsive_text_params[] = array(
+    "type" => "nectar_radio_tab_selection",
+    "class" => "",
+    'save_always' => true,
+    "heading" => esc_html__("Text Direction", "salient-core"),
+    "param_name" => "text_direction",
+    "options" => array(
+        esc_html__("Auto", "salient-core") => "default",
+        esc_html__("Left", "salient-core") => "ltr",
+		esc_html__("Right", "salient-core") => "rtl",
+    ),
+);
+
 $responsive_text_params[] = array(
     'type' => 'textfield',
     'heading' => esc_html__('CSS Class Name', 'salient-core'),

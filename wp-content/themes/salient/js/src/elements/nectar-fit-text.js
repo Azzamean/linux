@@ -35,6 +35,12 @@ NectarFitText.prototype.bindEvents = function() {
       self.resizeFitties();
     });
   }
+
+  window.addEventListener('load', function () {
+    this.setTimeout(function () {
+      self.resizeFitties();
+    }, 100);
+  });
 };
 
 NectarFitText.prototype.resizeFitties = function() {

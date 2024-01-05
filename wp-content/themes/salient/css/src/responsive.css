@@ -78,7 +78,7 @@ Description: Global responsive styles
 
 
 /* Tablet Portrait */
-@media only screen and (min-width : 690px) and (max-width : 999px) {
+@media only screen and (min-width : 691px) and (max-width : 999px) {
 
   .span_1, .span_2, .span_3, .span_4, .span_5, .span_6,
   .span_7, .span_8, .span_9, .span_10, .span_11, .span_12 {
@@ -761,6 +761,7 @@ Description: Global responsive styles
     pointer-events: auto!important;
   }
 
+  #header-outer[data-format="centered-menu-bottom-bar"] #top .span_9 .logo-clone,
   #header-outer[data-format="centered-menu-bottom-bar"] #top .span_9 #logo {
     display: none;
   }

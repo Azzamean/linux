@@ -485,7 +485,6 @@ jQuery(document).ready(function($){
         resize: true,
         groupCells: true,
         draggable: true,
-        percentPosition: true,
         adaptiveHeight: true,
         imagesLoaded: true,
         prevNextButtons: true,
@@ -792,12 +791,20 @@ jQuery(document).ready(function($){
   function nectarWooSliderInit() {
 
     if($('[data-gallery-style="left_thumb_sticky"]').length > 0) {
-      nectarWooProdSliderLiveOrDie();
-      leftAlignedRelationsInit();
-      $(window).on('resize', nectarWooProdSliderLiveOrDie);
-      $(window).on('smartresize', leftAlignedGalleryZoom);
-      $(window).on('wc_additional_variation_images_frontend_lightbox_done', leftThumbStickyRebuild);
-      leftAlignedZoomIcon();
+
+      if( window.innerWidth < 690 &&
+          navigator.userAgent.match(/(Android|iPod|iPhone|iPad|BlackBerry|IEMobile|Opera Mini)/) ) { 
+            nectarWooProdSliderInit();
+      } else {
+        nectarWooProdSliderLiveOrDie();
+        leftAlignedRelationsInit();
+        $(window).on('resize', nectarWooProdSliderLiveOrDie);
+        $(window).on('smartresize', leftAlignedGalleryZoom);
+        $(window).on('wc_additional_variation_images_frontend_lightbox_done', leftThumbStickyRebuild);
+        leftAlignedZoomIcon();
+      }
+
+      
     }
     else if($('[data-gallery-style="ios_slider"]').length > 0 ) {
       nectarWooProdSliderInit();

@@ -3,12 +3,12 @@ Theme Name:  Salient
 Description: Off canvas menu core
 */
 
-@media only screen and (min-width: 690px) {
+@media only screen and (min-width: 691px) {
   #slide-out-widget-area .secondary-header-text {
     display: none;
   }
 }
-@media only screen and (max-width: 999px) and (min-width: 690px) {
+@media only screen and (max-width: 999px) and (min-width: 691px) {
   body.original #slide-out-widget-area .inner .off-canvas-menu-container.mobile-only .menu.secondary-header-items {
     display: none;
   }
@@ -219,7 +219,8 @@ body #slide-out-widget-area .secondary-header-text {
 #slide-out-widget-area .off-canvas-social-links li i{
   background-color:transparent;
   font-size:18px;
-  line-height:22px
+  line-height:22px;
+  top: 0;
 }
 
 body:not(.material) #slide-out-widget-area .off-canvas-social-links li a,

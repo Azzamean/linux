@@ -21,13 +21,25 @@ if ( ! defined( 'ABSPATH' ) ) {
 class Vc_Backend_Editor {
 
 	/**
-	 * @var
+	 * Post custom layout
+	 * @since 7.0
+	 *
+	 * @var string
 	 */
-	protected $layout;
+	public $post_custom_layout;
 	/**
-	 * @var
+	 * @var string
 	 */
 	public $post_custom_css;
+	/**
+	 * @var string
+	 */
+	public $post_custom_js_header;
+	/**
+	 * @var string
+	 */
+	public $post_custom_js_footer;
+
 	/**
 	 * @var bool|string $post - stores data about post.
 	 */
@@ -108,8 +120,10 @@ class Vc_Backend_Editor {
 			return false;
 		}
 		$this->post = $post;
-		$post_custom_css = wp_strip_all_tags( get_post_meta( $post->ID, '_wpb_post_custom_css', true ) );
-		$this->post_custom_css = $post_custom_css;
+		$this->post_custom_css = wp_strip_all_tags( get_post_meta( $post->ID, '_wpb_post_custom_css', true ) );
+		$this->post_custom_js_header = get_post_meta( $post->ID, '_wpb_post_custom_js_header', true );
+		$this->post_custom_js_footer = get_post_meta( $post->ID, '_wpb_post_custom_js_footer', true );
+		$this->post_custom_layout = get_post_meta( $post->ID, '_wpb_post_custom_layout', true );
 		vc_include_template( 'editors/backend_editor.tpl.php', array(
 			'editor' => $this,
 			'post' => $this->post,
@@ -129,6 +143,9 @@ class Vc_Backend_Editor {
 	 * Here comes panels, modals and js objects with data for mapped shortcodes.
 	 */
 	public function renderEditorFooter() {
+		if ( vc_is_gutenberg_editor() ) {
+			return;
+		}
 		vc_include_template( 'editors/partials/backend_editor_footer.tpl.php', array(
 			'editor' => $this,
 			'post' => $this->post,
@@ -224,9 +241,9 @@ class Vc_Backend_Editor {
 			 * also used in vc_icon shortcode
 			 */
 			 /* nectar addition */ 
-  //wp_register_style( 'vc_font_awesome_5_shims', vc_asset_url( 'lib/bower/font-awesome/css/v4-shims.min.css' ), array(), WPB_VC_VERSION );
-  //wp_register_style( 'vc_font_awesome_5', vc_asset_url( 'lib/bower/font-awesome/css/all.min.css' ), array( 'vc_font_awesome_5_shims' ), WPB_VC_VERSION );
-  /* nectar addition end */ 
+			//wp_register_style( 'vc_font_awesome_5_shims', vc_asset_url( 'lib/bower/font-awesome/css/v4-shims.min.css' ), array(), WPB_VC_VERSION );
+			//wp_register_style( 'vc_font_awesome_5', vc_asset_url( 'lib/bower/font-awesome/css/all.min.css' ), array( 'vc_font_awesome_5_shims' ), WPB_VC_VERSION );
+			/* nectar addition end */ 
 			/**
 			 * @todo check for usages
 			 * definetelly used in edit form param: css_animation, but curreny vc_add_shortcode_param doesn't accept css [ @todo refactor that ]
@@ -281,7 +298,7 @@ class Vc_Backend_Editor {
 			// deprecated for tabs/accordion
 			'ui-custom-theme',
 			// used in deprecated message and also in vc-icon shortcode
-			'font-awesome',
+			'font_awesome',
 			// used in css_animation edit form param
 			'vc_animate-css',
 		);

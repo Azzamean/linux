@@ -596,7 +596,7 @@ if(!function_exists('nectar_post_grid_item_markup')) {
 
            // Author.
            $meta_author = '';
-           $author_position = ( isset($atts['author_position']) ) ? $atts['author_position'] : 'default';
+           $author_position = ( isset($atts['author_position']) && !empty($atts['author_position']) ) ? $atts['author_position'] : 'default';
  
            if ($has_author) {
 

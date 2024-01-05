@@ -204,6 +204,19 @@ $split_line_heading_params = array_merge(
 				esc_html__("Right", 'salient-core') => 'right'
 			)
 		),
+		
+		array(
+			"type" => "nectar_radio_tab_selection",
+			"class" => "",
+			'save_always' => true,
+			"heading" => esc_html__("Text Direction", "salient-core"),
+			"param_name" => "text_direction",
+			"options" => array(
+				esc_html__("Auto", "salient-core") => "default",
+				esc_html__("Left", "salient-core") => "ltr",
+				esc_html__("Right", "salient-core") => "rtl",
+			),
+		),
 
 		array(
 			"type" => "textfield",

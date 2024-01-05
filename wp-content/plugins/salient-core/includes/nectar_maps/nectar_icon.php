@@ -30,6 +30,7 @@ $icon_params = array(
             esc_html__( 'Linea', 'salient-core' ) => 'linea',
             esc_html__( 'Steadysets', 'salient-core' ) => 'steadysets',
             esc_html__( 'Linecons', 'salient-core' ) => 'linecons',
+            esc_html__( 'Additional Brands', 'salient-core' ) => 'nectarbrands',
         ),
         'save_always' => true,
         'param_name' => 'icon_family',
@@ -75,6 +76,15 @@ $icon_params = array(
         'dependency' => array( 'element' => 'icon_family', 'value' => 'steadysets' ),
         'description' => esc_html__( 'Select icon from library.', 'salient-core' )
     ),
+    array(
+        'type' => 'iconpicker',
+        'heading' => esc_html__( 'Icon', 'salient-core' ),
+        'param_name' => 'icon_nectarbrands',
+        'settings' => array( 'type' => 'nectarbrands', 'emptyIcon' => true, 'iconsPerPage' => 240 ),
+        'dependency' => Array( 'element' => 'icon_family', 'value' => 'nectarbrands' ),
+        'description' => esc_html__( 'Select icon from library.', 'salient-core' )
+    ),
+
     array(
         'type' => 'textfield',
         'heading' => esc_html__( 'Icon Size', 'salient-core' ),
@@ -176,6 +186,14 @@ $icon_params = array(
         'heading' => esc_html__( 'Link URL', 'salient-core' ),
         'param_name' => 'url',
         'description' => esc_html__( 'The link for your button.', 'salient-core' )
+    ),
+    array(
+        "type" => "textfield",
+        "class" => "",
+        "heading" => esc_html__("Screen Reader Text", "salient-core"),
+        "param_name" => "screen_reader_text",
+        "admin_label" => false,
+        "description" => 'Text to describe the icon link that will be used for screen reader accessibility.',
     ),
 
     array(

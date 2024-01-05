@@ -240,7 +240,7 @@ body .portfolio-items.carousel .span_4{
 }
 
 
-@media only screen and (min-width : 690px) and (max-width : 999px) {
+@media only screen and (min-width : 691px) and (max-width : 999px) {
   .carousel-next {
     right: 1px;
     padding-left: 1px;

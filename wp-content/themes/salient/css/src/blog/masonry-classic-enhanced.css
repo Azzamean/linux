@@ -764,7 +764,7 @@ body .blog-recent[data-style="classic_enhanced_alt"][data-color-scheme="light"] 
   }
 }
 
-@media only screen and (min-width : 690px) and (max-width : 999px) {
+@media only screen and (min-width : 691px) and (max-width : 999px) {
   body .post-area.masonry.classic_enhanced.span_9 .masonry-blog-item.large_featured {
     width: 99%;
   }

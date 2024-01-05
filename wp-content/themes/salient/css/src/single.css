@@ -824,7 +824,7 @@ div[data-style="parallax_next_only"].blog_next_prev_buttons h3 {
 .related-post-wrap [data-style="content_next_to_image"] .nectar-post-grid > div:nth-child(4) {
   display: block;
 }
-@media only screen and (max-width: 999px) and (min-width: 690px) {
+@media only screen and (max-width: 999px) and (min-width: 691px) {
   .related-post-wrap [data-style="content_under_image"] .nectar-post-grid > div:nth-child(4),
   .related-post-wrap [data-style="content_overlaid"] .nectar-post-grid > div:nth-child(4) {
     display: block;
@@ -857,7 +857,7 @@ div[data-style="parallax_next_only"].blog_next_prev_buttons h3 {
   }
 }
 
-@media only screen and (max-width: 999px) and (min-width: 690px) {
+@media only screen and (max-width: 999px) and (min-width: 691px) {
   .single .related-post-wrap.post-loop-builder .nectar-post-grid[data-columns]:not([data-columns="1"]) > div:nth-child(3) {
     width: 100%;
   }
@@ -1240,7 +1240,7 @@ body.single-post .container-wrap[data-remove-post-comment-number="1"] .related-p
 }
 
 /* TABLET */
-@media only screen and (min-width : 690px) and (max-width : 1000px) {
+@media only screen and (min-width : 691px) and (max-width : 1000px) {
 
   body.single-portfolio .row .col.section-title h1 {
     width: 450px;
@@ -1506,7 +1506,7 @@ body.single-post .container-wrap[data-remove-post-comment-number="1"] .related-p
   }
 }
 
-@media only screen and ( min-width: 1001px ) {
+@media only screen and ( min-width: 1000px ) {
   .single-post #page-header-wrap[data-responsive="true"],
   .single-post #page-header-wrap[data-responsive="true"] #page-header-bg {
       min-height: 550px;

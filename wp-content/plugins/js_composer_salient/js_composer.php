@@ -1,11 +1,14 @@
 <?php
 /**
  * Plugin Name: Salient WPBakery Page Builder
- * Plugin URI: http://wpbakery.com
+ * Plugin URI: https://wpbakery.com
  * Description: Drag and drop page builder for WordPress. Take full control over your WordPress site, build any layout you can imagine – no programming knowledge required.
- * Version: 6.13.1
+ * Version: 7.1
  * Author: Michael M - WPBakery.com | Modified by ThemeNectar
- * Author URI: http://wpbakery.com
+ * Author URI: https://wpbakery.com
+ * Text Domain: js_composer
+ * Domain Path: /locale/
+ * Requires at least: 4.9
  *
  * @package WPBakery Page Builder
  */
@@ -21,7 +24,7 @@ if ( ! defined( 'WPB_VC_VERSION' ) ) {
 	/**
 	 *
 	 */
-	define( 'WPB_VC_VERSION', '6.13.1' );
+	define( 'WPB_VC_VERSION', '7.1' );
 }
 
 /*nectar addition*/
