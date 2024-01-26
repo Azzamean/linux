@@ -126,8 +126,30 @@ class MA_Author_Custom_Fields extends Module
         add_action('admin_enqueue_scripts', [$this, 'enqueueAdminScripts']);
         add_action('wp_ajax_author_custom_fields_save_order', [$this, 'handle_ajax_update_field_order']);
         add_action('pre_get_posts', [$this, 'author_custom_fields_default_sort']);
+        add_filter('parent_file', [$this, 'setParentFile']);
 
         $this->registerPostType();
+    }
+
+    /**
+     * Set authors menu as parent for post type so menu is shown 
+     * as active when on post type edit screen.
+     *
+     * @param string $parent_file
+     * 
+     * @return string
+     */
+    public function setParentFile($parent_file)
+    {
+        global $submenu_file, $current_screen;
+        
+        // Check if the current screen is the User Code page
+       if (!empty($current_screen->post_type) && $current_screen->post_type == self::POST_TYPE_CUSTOM_FIELDS) {
+            $parent_file = \MA_Multiple_Authors::MENU_SLUG;
+            $submenu_file = 'edit.php?post_type=' . self::POST_TYPE_CUSTOM_FIELDS;
+        }
+
+        return $parent_file;
     }
 
     /**
@@ -352,7 +374,7 @@ class MA_Author_Custom_Fields extends Module
                 'id' => self::META_PREFIX . 'slug',
                 'type' => 'text',
                 'desc' => __(
-                    'The slug allows only lowercase letters, numbers and underscore. It is used as an attribute when referencing the author field.',
+                    'The slug is used in code to reference this author field. It is all lowercase and contains only letters, numbers, and hyphens.',
                     'publishpress-authors'
                 ),
             ]
@@ -377,6 +399,28 @@ class MA_Author_Custom_Fields extends Module
                     'This feature will add the SameAs property to this link so that search engines realize that the social profile is connected to this author.',
                     'publishpress-authors'
                 ),
+            ]
+        );
+
+        $metabox->add_field(
+            [
+                'name' => __('Open Link in New Tab', 'publishpress-authors'),
+                'id' => self::META_PREFIX . 'target',
+                'type' => 'checkbox',
+                'desc' => __(
+                    'This feature will add the target=”_blank” attribute to your link.',
+                    'publishpress-authors'
+                ),
+            ]
+        );
+
+        $metabox->add_field(
+            [
+                'name' => __('Link Rel', 'publishpress-authors'),
+                'id' => self::META_PREFIX . 'rel',
+                'type' => 'select',
+                'options' => CustomFieldsModel::getFieldRelOptions(),
+                'desc' => '',
             ]
         );
 
@@ -462,6 +506,8 @@ class MA_Author_Custom_Fields extends Module
                         'label'       => $post->post_title,
                         'type'        => $this->getFieldMeta($post->ID, 'type'),
                         'social_profile' => $this->getFieldMeta($post->ID, 'social_profile'),
+                        'rel'           => $this->getFieldMeta($post->ID, 'rel'),
+                        'target'        => $this->getFieldMeta($post->ID, 'target'),
                         'field_status' => $this->getFieldMeta($post->ID, 'field_status'),
                         'requirement' => $this->getFieldMeta($post->ID, 'requirement'),
                         'description' => $this->getFieldMeta($post->ID, 'description'),
@@ -661,12 +707,12 @@ class MA_Author_Custom_Fields extends Module
     {
         if (!Utils::isAuthorsProActive()) {
             add_meta_box(
-                self::META_PREFIX . 'banner',
+                self::META_PREFIX . 'sidebar_banner',
                 __('Banner', 'publishpress-authors'),
                 [$this, 'renderBannerMetabox'],
                 self::POST_TYPE_CUSTOM_FIELDS,
                 'side',
-                'high'
+                'low'
             );
         }
     }
@@ -764,7 +810,7 @@ class MA_Author_Custom_Fields extends Module
      */
     public static function createDefaultCustomFields()
     {
-        $defaultCustomFields = array_reverse(self::getDefaultCustomFields());
+        $defaultCustomFields = self::getDefaultCustomFields();
 
         foreach ($defaultCustomFields as $name => $data) {
             self::creatCustomFieldsPost($name, $data);
@@ -800,6 +846,8 @@ class MA_Author_Custom_Fields extends Module
         update_post_meta($post_id, self::META_PREFIX . 'field_status', $data['field_status']);
         update_post_meta($post_id, self::META_PREFIX . 'requirement', isset($data['requirement']) ? $data['requirement'] : '' );
         update_post_meta($post_id, self::META_PREFIX . 'social_profile', isset($data['social_profile']) ? $data['social_profile'] : '' );
+        update_post_meta($post_id, self::META_PREFIX . 'rel', isset($data['rel']) ? $data['rel'] : '' );
+        update_post_meta($post_id, self::META_PREFIX . 'target', !empty($data['target']) ? 1 : '' );
         update_post_meta($post_id, self::META_PREFIX . 'description', $data['description']);
         update_post_meta($post_id, self::META_PREFIX . 'inbuilt', 1);
     }
@@ -818,7 +866,7 @@ class MA_Author_Custom_Fields extends Module
             'field_status'  => 'on',
             'description'  => '',
         ];
-        //add first name
+        //add last name
         $defaultCustomFields['last_name'] = [
             'post_title'   => __('Last Name', 'publishpress-authors'),
             'post_name'    => 'last_name',
@@ -826,7 +874,7 @@ class MA_Author_Custom_Fields extends Module
             'field_status'  => 'on',
             'description'  => '',
         ];
-        //add first name
+        //add user email
         $defaultCustomFields['user_email'] = [
             'post_title'   => __('Email', 'publishpress-authors'),
             'post_name'    => 'user_email',

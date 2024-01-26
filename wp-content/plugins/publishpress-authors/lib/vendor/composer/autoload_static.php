@@ -22,6 +22,7 @@ class ComposerStaticInitPPAuthors
         'M' => 
         array (
             'MultipleAuthors\\' => 16,
+            'MultipleAuthorCategories\\' => 25,
             'MultipleAuthorBoxes\\' => 20,
         ),
     );
@@ -35,6 +36,10 @@ class ComposerStaticInitPPAuthors
         array (
             0 => __DIR__ . '/../..' . '/../src/core',
         ),
+        'MultipleAuthorCategories\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/../src/modules/author-categories/classes',
+        ),
         'MultipleAuthorBoxes\\' => 
         array (
             0 => __DIR__ . '/../..' . '/../src/modules/author-boxes/classes',
@@ -47,6 +52,8 @@ class ComposerStaticInitPPAuthors
         'MultipleAuthorBoxes\\AuthorBoxesDefault' => __DIR__ . '/../..' . '/../src/modules/author-boxes/classes/AuthorBoxesDefault.php',
         'MultipleAuthorBoxes\\AuthorBoxesEditorFields' => __DIR__ . '/../..' . '/../src/modules/author-boxes/classes/AuthorBoxesEditorFields.php',
         'MultipleAuthorBoxes\\AuthorBoxesStyles' => __DIR__ . '/../..' . '/../src/modules/author-boxes/classes/AuthorBoxesStyles.php',
+        'MultipleAuthorCategories\\AuthorCategoriesSchema' => __DIR__ . '/../..' . '/../src/modules/author-categories/classes/AuthorCategoriesSchema.php',
+        'MultipleAuthorCategories\\AuthorCategoriesTable' => __DIR__ . '/../..' . '/../src/modules/author-categories/classes/AuthorCategoriesTable.php',
         'MultipleAuthors\\Authors_Widget' => __DIR__ . '/../..' . '/../src/core/Authors_Widget.php',
         'MultipleAuthors\\Capability' => __DIR__ . '/../..' . '/../src/core/Capability.php',
         'MultipleAuthors\\Classes\\Admin_Ajax' => __DIR__ . '/../..' . '/../src/core/Classes/Admin_Ajax.php',
