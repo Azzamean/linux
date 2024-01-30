@@ -1,0 +1,19 @@
+/* NOTIFICATIONS BAR DESKTOP */
+@media (min-width: 999px) {
+	.notifications-bar .container {
+		padding: 10px 0;
+		font-size: 16px;
+	}
+}
+
+/* NOTIFICATIONS BAR MOBILE */
+@media (min-width: 1px) and (max-width: 998px) {
+	body #header-outer {
+		margin-bottom: 0;
+		padding: 0 0 12px 0 !important;
+	}
+
+	body #header-outer #top {
+		padding: 12px 0 0 0;
+	}
+}

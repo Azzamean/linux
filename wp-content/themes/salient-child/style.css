@@ -55,11 +55,11 @@ ul#wp-admin-bar-my-sites-list {
 	.lfprojects.white-background {
 		background: #ffffff;
 	}
-	
+
 	.lfprojects.blue-background {
 		background: #2A7DE1;
 	}
-	
+
 	.lfprojects img {
 		max-width: 270px;
 		vertical-align: middle;
@@ -125,19 +125,19 @@ ul#wp-admin-bar-my-sites-list {
 
 .join-btn a span:after {
 	/* display: none !important; */
-} 
+}
 
 
 /* FORCE TWITTER BIRD INTO THE X ICON */
 body .fa.fa-twitter:before {
-    content: "\e918" !important;
-} 
+	content: "\e918" !important;
+}
 
 header nav .fa.fa-twitter:before,
 header nav .fa.fa-twitter:after {
-	    content: "\e918" !important;
+	content: "\e918" !important;
 }
 
 .footer-social .fa.fa-twitter:after {
-    display: none !important;
+	display: none !important;
 }

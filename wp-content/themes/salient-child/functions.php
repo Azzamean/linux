@@ -787,3 +787,17 @@ function the_dramatist_debug_admin_menu() {
 }
 add_action( 'admin_init', 'the_dramatist_debug_admin_menu' );
 */
+
+/* GET PLUGIN BEING USED SITE ON A MULTISITE */
+/*
+$sites = get_sites();
+foreach( $sites as $site ) {
+    switch_to_blog( $site->blog_id );
+    
+    if( in_array( 'simple-banner/simple-banner.php', (array) get_option( 'active_plugins', array() ) ) ) {
+        	echo "Plugin is active on {$site->blogname}";
+    }
+    
+    restore_current_blog();
+}
+*/
