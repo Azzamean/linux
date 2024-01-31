@@ -10,9 +10,7 @@
 	.notifications-bar p {
 		padding-bottom: 0;
 	}
-	body.material #header-outer[data-using-secondary="1"] #search-outer {
-		top: 0 !important;
-	}
+
 }
 
 /* NOTIFICATIONS BAR MOBILE */
@@ -36,4 +34,7 @@
 		padding-bottom: 0;
 	}
 
+	body.material #header-outer[data-using-secondary="1"] #search-outer {
+		top: 0 !important;
+	}
 }
