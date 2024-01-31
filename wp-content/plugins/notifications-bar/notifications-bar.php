@@ -1,11 +1,11 @@
 <?php
 /*
 Plugin Name: Notifications Bar
-Description: A customizable notifications bar for Linux Foundation Project Sites
-Version: 1.0
+Description: A customizable notifications bar for Linux Foundation Project Sites using the Salient theme
+Version: 1.3
 Author: Andrew Bringaze
 Author URI: https://www.linuxfoundation.org/
-License: GPL2
+License: GPLv2
 */
 
 // Enqueue the necessary CSS and JavaScript files
@@ -38,9 +38,7 @@ add_action("admin_menu", "notification_bar_admin_menu");
 function notification_bar_display()
 {
     // Get the user-defined settings from the database
-    $notification_bar_text =
-        get_option("notification_bar_text") ?:
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.";
+    $notification_bar_text = get_option("notification_bar_text") ?: "";
     $notification_background_color =
         get_option("notification_background_color") ?: "#ffffff";
     $notification_text_color =
@@ -48,21 +46,25 @@ function notification_bar_display()
     $notification_link_color =
         get_option("notification_link_color") ?: "inherit";
 
-    // Output the HTML for the notifications bar
-    echo '<div class="notifications-bar">';
-    echo '<div class="container">';
-    echo "<div>" . $notification_bar_text . "</div>";
-    echo "</div>";
-    echo "</div>";
+    // Output the HTML for the notifications bar if it is not empty
+    if ($notification_bar_text != "") {
+        echo '<div class="notifications-bar">';
+        echo '<div class="container">';
+        echo "<div>" . $notification_bar_text . "</div>";
+        echo "</div>";
+        echo "</div>";
 
-    // Styles pulled
-    echo "<style>";
-    echo ".notifications-bar { background-color: " .
-        $notification_background_color .
-        "; }";
-    echo ".notifications-bar { color: " . $notification_text_color . "; }";
-    echo ".notifications-bar a { color: " . $notification_link_color . "; }";
-    echo "</style>";
+        // Styles pulled
+        echo "<style>";
+        echo ".notifications-bar { background-color: " .
+            $notification_background_color .
+            "; }";
+        echo ".notifications-bar { color: " . $notification_text_color . "; }";
+        echo ".notifications-bar a { color: " .
+            $notification_link_color .
+            "; }";
+        echo "</style>";
+    }
 }
 // THIS METHOD IS BEING MOVED INTO THE SALIENT HEADER FILE IN THE CHILD THEME
 //add_action("wp_head", "notification_bar_display");
