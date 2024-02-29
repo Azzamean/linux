@@ -3,7 +3,7 @@
 // STYLE SIMPLE BANNER
 function simple_banner_head()
 {
-?>
+    ?>
 	<style type="text/css">
 		@media only screen and (min-width: 768px) {
 			#header-outer {
@@ -48,17 +48,28 @@ if (
 }
 
 // COMMENTS SENT TO HELEN LAU USER INSTEAD OF ADMIN
-function se_comment_moderation_recipients( $emails, $comment_id ) {
-    $comment = get_comment( $comment_id );
-    $post = get_post( $comment->comment_post_ID );
-    $user = get_user_by( 'id', '47' );
+function se_comment_moderation_recipients($emails, $comment_id)
+{
+    $comment = get_comment($comment_id);
+    $post = get_post($comment->comment_post_ID);
+    $user = get_user_by('id', '47');
 
     // Return only the post author if the author can modify.
     //if ( user_can( $user->ID, 'edit_published_posts' ) && ! empty( $user->user_email ) ) {
-        $emails = array( $user->user_email );
+    $emails = array($user->user_email);
     //}
 
     return $emails;
 }
-add_filter( 'comment_moderation_recipients', 'se_comment_moderation_recipients', 11, 2 );
-add_filter( 'comment_notification_recipients', 'se_comment_moderation_recipients', 11, 2 );
+add_filter(
+    'comment_moderation_recipients',
+    'se_comment_moderation_recipients',
+    11,
+    2
+);
+add_filter(
+    'comment_notification_recipients',
+    'se_comment_moderation_recipients',
+    11,
+    2
+);
