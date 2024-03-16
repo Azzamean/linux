@@ -7,7 +7,7 @@ Tags: multiple authors, authors, guest authors, author fields, author layouts
 Requires at least: 5.5
 Requires PHP: 7.2.5
 Tested up to: 6.4
-Stable tag: 4.3.2
+Stable tag: 4.4.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -19,15 +19,22 @@ PublishPress Authors is the best plugin for adding authors, co-authors, multiple
 
 Here are the some most important features of PublishPress Authors:
 
-* **Author Box**. As soon as you install PublishPress Authors, you’ll see an author box under every post. You can add all the profile details you need for each author.
 * **Multiple Authors**. By default, WordPress only allows one author per post. PublishPress Authors allows you to add an unlimited number of authors to each post. This is very useful if you have a busy site and need to manage and give credit to coauthors.
-* **Guest Authors**. You can create Guest Authors who don’t have an account on your site. This is important because not all writers need a username and password.
+* **Author Box**. As soon as you install PublishPress Authors, you’ll see an author box under every post. You can add all the profile details you need for each author.
+* **Guest Authors**. You can create two types of Guest Authors. You can add authors to a new "Guest Author" user role, or add them without a connected account.
 * **Author Pages**. PublishPress Authors allows you to showcase the work of each individual author with customizable author pages where you decide which post information is displayed. 
+* **Author Categories**. You can use PublishPress Authors to categorize your authors as Coauthors, Reviews, Editors, Photographers, and more.
 
 ## PublishPress Authors Pro ##
 
 > <strong>Upgrade to Authors Pro</strong><br />
 > This plugin is the free version of the PublishPress Authors plugin. The Pro version comes with all the features you need to create beautiful and useful author profiles. <a href="https://publishpress.com/authors"  title="Authors Pro">Click here to purchase the best premium WordPress author box plugin now!</a>
+
+## Multiple Authors for One Post##
+
+With PublishPress Authors, you can set multiple authors for each post. When you write a post, you’ll see a box in the right sidebar. Here you can choose from all the users on your site, and assign them as coauthors.
+
+[Click here to get started with PublishPress Authors](https://publishpress.com/knowledge-base/authors-getting-started/).
 
 ## Author Boxes ##
 
@@ -47,15 +54,13 @@ On the frontend of your site. PublishPress Authors gives you several different o
 
 [Click here to read about displaying authors](https://publishpress.com/knowledge-base/display-multiple-authors/).
 
-## Multiple Authors ##
-
-With PublishPress Authors, you can set multiple authors for each post. When you write a post, you’ll see a box in the right sidebar. Here you can choose from all the users on your site, and assign them as coauthors.
-
 ## Guest Authors ##
 
 Using PublishPress Authors, you can create Guest Authors who don’t need an account on your site. PublishPress will treat Guest Authors identically to Authors who are linked users.
 
 You will be able to select and display Guest Authors in exactly the same way as for registered users. Each Guest Author can have a full profile, plus an avatar, and their own archive page for blog posts.
+
+You can create two types of Guest Authors. You can add authors to a new "Guest Author" user role, or add them without a connected account.
 
 [Click here to see how to create Guest Authors](https://publishpress.com/knowledge-base/add-guest-authors-wordpress/).
 
@@ -66,6 +71,14 @@ PublishPress Authors can replace the default WordPress author pages. The URLs of
 Your author page will appear with an author box on the top of the screen and the author's posts underneath. You can choose a “List” or a "Grid" option and you're also free to create your own layouts.
 
 [Click here to see how to use Author Pages](https://publishpress.com/knowledge-base/author-pages/).
+
+## Author Categories ##
+
+Author Categories is a feature that allows you to have different types of authors for WordPress post. For example, you can label one user as an "Author", one as “Contributor” and one as an “Editor”. This enables you to give different types of credit to the all the people who work on your content.
+
+PublishPress Authors Pro has a feature that allows you do more with Author Categories. You can create an “Author Categories Box”. This is a display format for your images that is specifically designed to group authors together in their categories.
+
+[Click here to see how to use Author Categorie](https://publishpress.com/knowledge-base/introduction-to-author-categories/).
 
 ## Custom Fields for Author Profiles (Pro version) ##
 
@@ -90,22 +103,21 @@ Join PublishPress and you'll get access to these Pro plugins:
 
 Together, these plugins are a suite of powerful publishing tools for WordPress. If you need to create a professional workflow in WordPress, with moderation, revisions, permissions and more... then you should try PublishPress.
 
-
 =  Bug Reports =
 Bug reports for PublishPress Authors are welcomed in our [repository on GitHub](https://github.com/publishpress/publishpress-authors). Please note that GitHub is not a support forum, and that issues that aren’t properly qualified as bugs will be closed.
-= Follow the PublishPress team =
-Follow PublishPress on [Facebook](https://www.facebook.com/publishpress), [Twitter](https://www.twitter.com/publishpresscom) and [YouTube](https://www.youtube.com/publishpress).
 
 = Thank You =
 This plugin is partly based on Co-Authors Plus, which includes the work of batmoo, danielbachhuber and automattic. This plugin also uses work from the Bylines plugin by danielbachhuber.
 
 == Screenshots ==
 
-1. Add multiple authors: With PublishPress Authors, you can choose multiple authors for each post.
-2. Show your author profiles: PublishPress Authors gives you multiple ways to show author profiles. You can display authors under your content, in a widget, using shortcodes and more.
-3. Add guest authors: Using PublishPress Authors, you can create Guest Authors who don’t need an account on your site.
-4. Custom fields for author profiles: PublishPress Authors Pro enables you to create custom fields for your author profiles.
-5. Custom layouts for author profiles: PublishPress Authors Pro enables you to build custom layouts for authors.
+1. With PublishPress Authors, you can choose multiple authors for each post. When you write a post, you’ll see the Authors box in the right sidebar. You can choose from all the users on your site, and assign them as authors.
+2. PublishPress Authors gives you multiple ways to show author profiles. You can display authors under your content, in a widget, using shortcodes and more.
+3. Using PublishPress Authors, you can create Guest Authors who don’t need an account on your site. PublishPress will treat Guest Authors identically to Authors who have WordPress accounts.
+4. PublishPress Authors allows you to showcase the work of each individual author with customizable author pages where you decide which post information is displayed including tags, read more links, excerpts, and more.
+5. PublishPress Authors Pro enables you to create custom fields for your author profiles. You can add Text, WYSIWYG, Links, email fields and more.
+6. PublishPress Authors Pro enables you to build custom layouts for authors. Using all your author information and custom fields, you can design beautiful layouts for your authors.
+7. PublishPress Authors allows you to organize your authors by categories. You can organize your authors into groups such as “Authors”, “Coauthors”, “Reviews”, “Editors”, and more.
 
 
 == Frequently Asked Questions ==
@@ -213,6 +225,15 @@ There are two ways to install the PublishPress Authors plugin:
 5. Activate the PublishPress Authors plugin.
 
 == Changelog ==
+
+= [4.4.0] - 6 Mar 2024 =
+
+* Update: Add User Account option for Guest Authors, #1287
+* Update: Add Schema option for Author Categories, #1642
+* Update: Add Schema Property Options for Author Fields, #1641
+* Fixed: Attempt to read property "user_nicename", #1675
+* Fixed: Fatal error: Uncaught TypeError: Illegal offset type in isset or empty, #1644
+* Update: Translation Updates for Authors FREE v. 4.3.2, #1673
 
 = [4.3.2] - 22 Feb 2024 =
 
