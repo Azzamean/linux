@@ -495,6 +495,8 @@ function comments_logic() {
     global $current_multisite;
     global $multisite_three_dev;
     global $multisite_three_live;
+	global $multisite_five_dev;
+    global $multisite_five_live;
     if ((is_multisite() && $current_multisite == $multisite_three_dev) || (is_multisite() && $current_multisite == $multisite_three_live)) {
         $site_id = get_current_blog_id();
         // CCC
@@ -505,6 +507,9 @@ function comments_logic() {
             enable_comments_posts();
         }
     }
+	else if ((is_multisite() && $current_multisite == $multisite_five_dev) || (is_multisite() && $current_multisite == $multisite_five_live)) {
+            remove_comments();
+	}
 }
 /* CAPABILITY FOR MULTISITE ADMIN USERS */
 function ms_admin_users_caps($caps, $cap, $user_id, $args) {
