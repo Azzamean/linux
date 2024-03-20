@@ -589,6 +589,7 @@ if (is_multisite()) {
         add_action("admin_init", "wpdocs_remove_edit_menu");
     }
     add_action("wp_enqueue_scripts", "enqueue_styles_projects_banner", 101);
+	/* SKIP EMAIL CONFIRMATION FOR NEW USERS */
 	add_filter( 'wpmu_welcome_user_notification', '__return_false');
 }
 if (!is_multisite()) {
