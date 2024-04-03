@@ -43,7 +43,7 @@ class Vc_License {
 	public $error = null;
 
 	public function init() {
-
+		
 		if ( 'vc-updater' === vc_get_param( 'page' ) ) {
 			// clear transient for check the license
 			$site_url = self::getSiteUrl();
@@ -468,10 +468,10 @@ class Vc_License {
 
 		if ( ! $this->isActivated() && ( empty( $version1 ) || version_compare( $version1, WPB_VC_VERSION, '<' ) ) && ! ( vc_is_network_plugin() && is_network_admin() ) ) {
 			/*nectar addition*/
-			/*add_action( 'admin_notices', array(
-				$this,
-				'adminNoticeLicenseActivation',
-			) );*/
+			// add_action( 'admin_notices', array(
+			// 	$this,
+			// 	'adminNoticeLicenseActivation',
+			// ) );
 		}
 	}
 

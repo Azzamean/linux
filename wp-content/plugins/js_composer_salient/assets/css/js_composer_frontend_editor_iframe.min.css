@@ -1,6 +1,6 @@
 /*!
  * WPBakery Page Builder v6.0.0 (https://wpbakery.com)
- * Copyright 2011-2023 Michael M, WPBakery
+ * Copyright 2011-2024 Michael M, WPBakery
  * License: Commercial. More details: http://go.wpbakery.com/licensing
  */
 
@@ -473,6 +473,8 @@
   #vc_post-settings-button,
 .vc_navbar.vc_navbar-frontend:not(.vc_post-custom-layout-selected)
   #vc_screen-size-control,
+.vc_navbar.vc_navbar-frontend:not(.vc_post-custom-layout-selected)
+  #vc_seo-button,
 .vc_navbar.vc_navbar-frontend:not(.vc_post-custom-layout-selected)
   #vc_templates-editor-button {
   pointer-events: none;
@@ -1429,7 +1431,7 @@ a.vc-active-post-custom-layout:where(:not(.wp-element-button)) {
   bottom: 0;
   left: 50%;
   transform: translate(-50%, 0);
-  z-index: 1;
+  z-index: 5;
 }
 .compose-mode .vc_controls > .vc_controls-br {
   bottom: 0;
@@ -1530,6 +1532,10 @@ a.vc-active-post-custom-layout:where(:not(.wp-element-button)) {
   ~ .vc_controls
   > .vc_controls-out-tl {
   top: -29px;
+}
+.compose-mode .vc_controls-parent.vc_controls > .vc_controls-out-tl {
+  left: initial;
+  right: -1px;
 }
 .compose-mode .element-vc_section .vc_control-btn .vc-composer-icon {
   width: 15px;
@@ -1983,6 +1989,14 @@ a.vc-active-post-custom-layout:where(:not(.wp-element-button)) {
   .vc_btn-content {
   background-image: none;
   padding-right: 6px;
+}
+.compose-mode .vc_controls-parent .vc_control-btn .vc_btn-content {
+  background-color: #0772ce;
+  border-color: #0772ce;
+}
+.compose-mode .vc_controls-parent .vc_control-btn .vc_btn-content:hover {
+  background-color: #00447f;
+  border-color: #00447f;
 }
 .compose-mode
   .vc_vc_tta_toggle_section
@@ -2837,6 +2851,7 @@ a.vc-active-post-custom-layout:where(:not(.wp-element-button)) {
 .vc_tta-tabs-list.ui-sortable .vc_tta-tab.ui-sortable-helper a:before {
   display: none !important;
 }
+
 
 /* nectar addition - missing icons */
 @font-face{

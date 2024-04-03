@@ -604,3 +604,20 @@ if( isset($nectar_options['defer-javascript']) &&
     }
 }
 
+add_action( 'admin_enqueue_scripts', 'salient_script_overrides', 90 );
+function salient_script_overrides() {
+	
+	$use_ace_cdn = apply_filters('nectar_use_ace_editor_cdn', false);
+
+	if ( $use_ace_cdn && wp_script_is( 'ace-editor-js' ) ) {
+		wp_deregister_script( 'ace-editor-js' );
+
+		wp_enqueue_script(
+			'ace-editor-js',
+			'https://cdnjs.cloudflare.com/ajax/libs/ace/1.23.0/ace.min.js',
+			array( 'jquery' ),
+			'1.1.9',
+			true
+		);
+	}
+}

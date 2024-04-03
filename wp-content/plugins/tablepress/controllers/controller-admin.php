@@ -379,6 +379,9 @@ JS;
 		// Add additional links on Plugins page.
 		add_filter( 'plugin_action_links_' . TABLEPRESS_BASENAME, array( $this, 'add_plugin_action_links' ) );
 		add_filter( 'plugin_row_meta', array( $this, 'add_plugin_row_meta' ), 10, 2 );
+		if ( tb_tp_fs()->is_plan_or_trial__premium_only( 'pro' ) && ! tb_tp_fs()->is_paying_or_trial__premium_only() ) {
+			add_action( 'after_plugin_row_' . TABLEPRESS_BASENAME, array( $this, 'add_plugin_expiration_meta_row__premium_only' ), 10, 3 );
+		}
 	}
 
 	/**
@@ -415,6 +418,38 @@ JS;
 			}
 		}
 		return $links;
+	}
+
+	/**
+	 * Prints a license expiration notice below the plugin's meta row on the "Plugins" screen.
+	 *
+	 * @since 2.2.0
+	 *
+	 * @param string                           $plugin_file Path to the plugin file relative to the plugins directory.
+	 * @param array<int, string|string[]|bool> $plugin_data An array of plugin data.
+	 * @param string                           $status      Status filter currently applied to the plugin list.
+	 */
+	public function add_plugin_expiration_meta_row__premium_only( string $plugin_file, array $plugin_data, string $status ): void {
+		?>
+		<tr class="plugin-update-tr active">
+			<td colspan="<?php echo esc_attr( $GLOBALS['wp_list_table']->get_column_count() ); ?>" class="plugin-update colspanchange">
+				<div class="update-message notice inline notice-error notice-alt">
+					<p style="font-size:14px;">
+						<strong><?php printf( __( 'Your TablePress %s premium license has expired!', 'tablepress' ), tb_tp_fs()->is_plan_or_trial( 'max', true ) ? 'Max' : 'Pro' ); ?></strong>
+						<?php printf( __( 'To again receive feature, maintenance, or security updates and support, <a href="%1$s"><strong>renew your license now</strong></a>!', 'tablepress' ), esc_url( tb_tp_fs()->checkout_url( WP_FS__PERIOD_ANNUALLY, false ) ) ); ?>
+						</a>
+					</p>
+					<style>
+						/* Remove the separator line between the plugin's and the notice's table row. */
+						.plugins .active[data-plugin="<?php echo TABLEPRESS_BASENAME; ?>"] th,
+						.plugins .active[data-plugin="<?php echo TABLEPRESS_BASENAME; ?>"] td {
+							box-shadow: none;
+						}
+					</style>
+				</div>
+			</td>
+		</tr>
+		<?php
 	}
 
 	/**
@@ -475,8 +510,6 @@ JS;
 				break;
 			case 'about':
 				$data['first_activation'] = TablePress::$model_options->get( 'first_activation' );
-				$exporter = TablePress::load_class( 'TablePress_Export', 'class-export.php', 'classes' );
-				$data['zip_support_available'] = $exporter->zip_support_available;
 				break;
 			case 'options':
 				/*
@@ -556,10 +589,9 @@ JS;
 					$table = TablePress::$model_table->load( $table_id, false, false );
 					$data['tables'][ $table['id'] ] = $table['name']; // @phpstan-ignore-line
 				}
-				$data['table_ids'] = $table_ids; // Backwards compatibility for the retired "Table Auto Update" Extension, which still relies on this variable name.
+				$data['table_ids'] = $table_ids; // Backward compatibility for the retired "Table Auto Update" Extension, which still relies on this variable name.
 				$data['tables_count'] = TablePress::$model_table->count_tables();
 				$importer = TablePress::load_class( 'TablePress_Import', 'class-import.php', 'classes' );
-				$data['zip_support_available'] = $importer->zip_support_available;
 				$data['import_type'] = ( ! empty( $_GET['import_type'] ) ) ? $_GET['import_type'] : 'add';
 				$data['import_existing_table'] = ( ! empty( $_GET['import_existing_table'] ) ) ? $_GET['import_existing_table'] : '';
 				$data['import_source'] = ( ! empty( $_GET['import_source'] ) ) ? $_GET['import_source'] : 'file-upload';
@@ -601,6 +633,11 @@ JS;
 	 * @return bool Whether the message shall be shown on the "All Tables" screen.
 	 */
 	protected function maybe_show_donation_message(): bool {
+		// Only show the donation message to users of the Free version.
+		if ( tb_tp_fs()->is_plan_or_trial__premium_only( 'pro' ) ) {
+			return false;
+		}
+
 		// Only show the message to plugin admins.
 		if ( ! current_user_can( 'tablepress_edit_options' ) ) {
 			return false;
@@ -1133,7 +1170,7 @@ JS;
 			} elseif ( 0 < count( $import['errors'] ) ) {
 				$wp_error_strings = array();
 				foreach ( $import['errors'] as $file ) {
-					$wp_error_strings[] = TablePress::get_wp_error_string( $file['error'] );
+					$wp_error_strings[] = TablePress::get_wp_error_string( $file->error );
 				}
 				$redirect_parameters['error_details'] = implode( ', ', $wp_error_strings );
 			}
@@ -1299,7 +1336,7 @@ JS;
 		$view_data = array(
 			'table_id'               => $table_id,
 			'head_html'              => $_render->get_preview_css(),
-			'body_html'              => $_render->get_output(),
+			'body_html'              => $_render->get_output( 'html' ),
 			'site_uses_block_editor' => TablePress::site_uses_block_editor(),
 		);
 

@@ -97,7 +97,11 @@ $custom_tag = 'script';
 			<?php else : ?>
 
 				<p>
-					<?php echo sprintf( esc_html__( 'In order to receive all benefits of WPBakery Page Builder, you need to activate your copy of the plugin. By activating WPBakery Page Builder license you will unlock premium options - %1$sdirect plugin updates%2$s, access to %1$stemplate library%2$s and %1$sofficial support.%2$s', 'js_composer' ), '<strong>', '</strong>' ); ?>
+					<?php 
+					// nectar addition.
+					echo esc_html__( 'When using the Salient WPBakery page builder, a direct license is not required for WPBakery. However, in order to utilize the WPBakery Page Builder AI functionality, you\'ll need an active license of the core plugin.', 'js_composer' ); 
+					// nectar addition end.
+					?>
 				</p>
 
 				<br/>
@@ -124,3 +128,9 @@ $custom_tag = 'script';
 
 	<?php endif ?>
 </form>
+
+
+<?php
+// [modal ai render]
+vc_include_template( 'editors/popups/ai/modal.tpl.php' );
+?>

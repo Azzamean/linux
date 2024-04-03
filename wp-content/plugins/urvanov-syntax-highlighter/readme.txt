@@ -1,11 +1,11 @@
 === Urvanov Syntax Highlighter ===
 Contributors: urvanov
-Donate link: https://money.yandex.ru/to/41001288941320
+Donate link: https://yoomoney.ru/to/41001288941320
 License: GPLv3 or later
 Tags: syntax highlighter, syntax, highlighter, highlighting, crayon, code highlighter, bbpress
 Requires at least: 6.3
-Tested up to: 6.3
-Stable tag: trunk
+Tested up to: 6.4.3
+Stable tag: 2.8.36
 
 Reincarnation of Crayon Syntax Highlighter. Syntax Highlighter supporting multiple languages, themes, fonts, highlighting from a URL, or post text.
 
@@ -72,7 +72,7 @@ There are many ways you can help!
 * Make a Theme and share
 * Add support for your favourite <a href="http://aramk.com/blog/2011/09/23/crayon-language-file-specification/" target="_blank">Language</a>
 * Write a post about your pastel experiences and share
-* <a href="https://money.yandex.ru/to/41001288941320" target="_blank">Donate</a> to the project
+* <a href="https://yoomoney.ru/to/41001288941320" target="_blank">Donate</a> to the project
 
 **Supported Languages**
 
@@ -333,11 +333,21 @@ Contact me at http://twitter.com/crayonsyntax or crayon.syntax@gmail.com.
 
 == Changelog ==
 
+= 2.8.36 =
+* FIXED
+    * Bug in processing comments.
+    
+= 2.8.35 =
+* FIXED
+    * Added interpolated expressions highlighting to JavaScript language.
+    * Warnings about global comment variable in comment highlighting.
+    * Minified min.js files.
 = 2.8.34 =
+* ADDED
+    * Added "Highlight code" setting in "Code" section of plugin settings.
 * FIXED
     * CSRF vulnerability in the theme editor and the tag editor. Added nonces.
     * Replaced deprecated jQuery "live" to jQuery "on"
-    * Added "Highlight code" setting in "Code" section of plugin settings.
 
 = 2.8.33 =
 * FIXED

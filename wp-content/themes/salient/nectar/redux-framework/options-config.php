@@ -445,7 +445,6 @@
        'id'               => 'general-settings-functionality',
        'subsection'       => true,
        'fields'           => array(
-      
          array(
            'id' => 'one-page-scrolling',
            'type' => 'switch',
@@ -620,6 +619,14 @@
           'subtitle' => esc_html__('Toggle whether or not to show or hide the back to top button when viewing on a mobile device.', 'salient'),
           'desc' => '',
           'required' => array( 'back-to-top', '=', '1' ),
+          'default' => '0'
+        ),
+        array(
+          'id' => 'wpbakery-ai',
+          'type' => 'switch',
+          'title' => esc_html__('Enable WPBakery AI Functionality', 'salient'),
+          'subtitle' => esc_html__('Enables various text fields in the Salient WPBakery page builder to utilize AI for generation. Requires a separate, active support subscription to the core WPBakery page builder plugin.', 'salient'),
+          'desc' => '',
           'default' => '0'
         ),
        )

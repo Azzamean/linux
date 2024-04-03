@@ -102,6 +102,16 @@ abstract class TablePress_View {
 		$common_content = '<p>' . sprintf( __( 'More information about TablePress can be found on the <a href="%1$s">plugin website</a> or on its page in the <a href="%2$s">WordPress Plugin Directory</a>.', 'tablepress' ), 'https://tablepress.org/', 'https://wordpress.org/plugins/tablepress/' ) . '</p>';
 		$common_content .= '<p>' . sprintf( __( 'For technical information, please see the <a href="%s">Documentation</a>.', 'tablepress' ), 'https://tablepress.org/documentation/' ) . ' ' . sprintf( __( 'Common questions are answered in the <a href="%s">FAQ</a>.', 'tablepress' ), 'https://tablepress.org/faq/' ) . '</p>';
 
+		if ( tb_tp_fs()->is_plan_or_trial__premium_only( 'pro' ) ) {
+			if ( tb_tp_fs()->is_paying_or_trial() ) {
+				$common_content .= '<p>' . __( 'Your site has an active TablePress Premium license, which makes you eligible for Priority Email Support.', 'tablepress' ) . ' ' . sprintf( __( 'If you need assistance, <a href="%s">please get in touch!</a>', 'tablepress' ), 'mailto:premium-support@tablepress.org' );
+			} else {
+				$common_content .= '<p>' . __( 'Users with a valid TablePress Premium license plan are eligible for Priority Email Support, directly from the plugin developer!', 'tablepress' ) . '</p>';
+				$common_content .= '<p><strong>' . sprintf( __( 'Your TablePress %s premium license has expired!', 'tablepress' ), tb_tp_fs()->is_plan_or_trial( 'max', true ) ? 'Max' : 'Pro' ) . '</strong><br />';
+				$common_content .= sprintf( __( 'To again receive feature, maintenance, or security updates and support, <a href="%1$s"><strong>renew your license now</strong></a>!', 'tablepress' ), esc_url( tb_tp_fs()->checkout_url( WP_FS__PERIOD_ANNUALLY, false ) ) ) . '</p>';
+			}
+		}
+
 		if ( tb_tp_fs()->is_free_plan() ) {
 			$common_content .= '<p>'
 				. sprintf( __( '<a href="%1$s">Support</a> is provided through the <a href="%2$s">WordPress Support Forums</a>.', 'tablepress' ), 'https://tablepress.org/support/', 'https://wordpress.org/tags/tablepress' )
@@ -367,7 +377,7 @@ abstract class TablePress_View {
 		// "Import" screen has file upload.
 		$enctype = ( 'import' === $this->action ) ? ' enctype="multipart/form-data"' : '';
 		?>
-		<form action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>" method="post"<?php echo $enctype; ?>>
+		<form action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>" method="post"<?php echo $enctype; ?> id="tablepress-page-form">
 			<?php
 				$this->do_text_boxes( 'header' );
 				$hide_if_no_js = ( in_array( $this->action, array( 'export', 'import' ), true ) ) ? ' class="hide-if-no-js"' : '';
@@ -410,13 +420,25 @@ abstract class TablePress_View {
 	protected function print_nav_tab_menu(): void {
 		?>
 		<div id="tablepress-header" class="header">
-			<h1 class="name"><img src="<?php echo plugins_url( 'admin/img/tablepress-icon.png', TABLEPRESS__FILE__ ); ?>" class="tablepress-icon" alt="<?php esc_attr_e( 'TablePress plugin logo', 'tablepress' ); ?>" /><?php _e( 'TablePress', 'tablepress' ); ?></h1>
+			<h1 class="name"><img src="<?php echo plugins_url( 'admin/img/tablepress-icon.png', TABLEPRESS__FILE__ ); ?>" class="tablepress-icon" alt="<?php esc_attr_e( 'TablePress plugin logo', 'tablepress' ); ?>" /><?php _e( 'TablePress', 'tablepress' ); ?><?php echo tb_tp_fs()->is_plan_or_trial( 'pro', true ) ? ' Pro' : ( tb_tp_fs()->is_plan_or_trial( 'max', true ) ? ' Max' : '' ); ?></h1>
 			<?php if ( ! TABLEPRESS_IS_PLAYGROUND_PREVIEW && tb_tp_fs()->is_free_plan() ) : ?>
 				<div class="buttons">
 					<a href="https://tablepress.org/premium/?utm_source=plugin&utm_medium=button&utm_content=upgrade-button" class="tablepress-button">
 						<span><?php _e( 'Upgrade to Premium', 'tablepress' ); ?></span>
 						<span class="dashicons dashicons-arrow-right-alt" />
 					</a>
+				</div>
+			<?php elseif ( tb_tp_fs()->is_plan_or_trial__premium_only( 'pro' ) && ! tb_tp_fs()->is_paying_or_trial__premium_only() ) : ?>
+				<div class="buttons">
+					<a href="<?php echo esc_url( tb_tp_fs()->checkout_url( WP_FS__PERIOD_ANNUALLY, false ) ); ?>" class="tablepress-button renew">
+						<span><?php _e( 'Renew your Premium license', 'tablepress' ); ?></span>
+						<span class="dashicons dashicons-arrow-right-alt" />
+					</a>
+					<span
+						class="dashicons dashicons-info-outline"
+						style="vertical-align:middle;margin-bottom:2px;"
+						title="<?php echo esc_attr( sprintf( __( 'Your TablePress %s premium license has expired!', 'tablepress' ), tb_tp_fs()->is_plan_or_trial( 'max', true ) ? 'Max' : 'Pro' ) . ' ' . __( 'To again receive feature, maintenance, or security updates, renew your license now!', 'tablepress' ) ); ?>"
+					/>
 				</div>
 			<?php endif; ?>
 		</div>

@@ -1970,6 +1970,11 @@
                 }
 
                 window.vc.frame_window.jQuery("body").append(style);
+               
+                setTimeout(function() {
+                  window.vc.frame_window.jQuery("body").trigger("vc_reload");
+                  window.vc.frame_window.jQuery("body").trigger("resize");
+                }, 10);
 
               } // success
 

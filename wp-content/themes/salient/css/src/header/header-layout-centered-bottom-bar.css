@@ -75,6 +75,9 @@ body #header-outer[data-format="centered-menu-bottom-bar"] .span_3 {
 #header-outer[data-format="centered-menu-bottom-bar"] #top .logo-clone img {
   margin: 0 auto;
 }
+#header-outer[data-format="centered-menu-bottom-bar"] #top .logo-clone img {
+  width: auto;
+}
 
 #header-outer[data-format="centered-menu-bottom-bar"] #top #logo .starting-logo {
   position: absolute;

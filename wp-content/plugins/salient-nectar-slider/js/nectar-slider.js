@@ -4705,10 +4705,10 @@ if ('IntersectionObserver' in window) {
       if(captionTransString === 'fade_in_from_bottom') {
         
         if( $($containerClass).parents('.wpb_gallery').length == 0 ) {
-          anime.remove($containerClass+' .swiper-slide .content p, '+$containerClass+' .swiper-slide .content h2, '+$containerClass+' .swiper-slide .content h1, '+$containerClass+' .swiper-slide .content h3, '+$containerClass+' .swiper-slide .content .buttons');
+          anime.remove($containerClass+' .swiper-slide .content p, '+$containerClass+' .swiper-slide .content h2, '+$containerClass+' .swiper-slide .content h1, '+$containerClass+' .swiper-slide .content .ns-heading-el, '+$containerClass+' .swiper-slide .content .buttons');
         }
         
-        $($containerClass+' .swiper-slide .content p, '+$containerClass+' .swiper-slide .content h2, '+$containerClass+' .swiper-slide .content h1, '+$containerClass+' .swiper-slide .content h3, '+$containerClass+' .swiper-slide .content .buttons').stop(true,true).css({'opacity':0, 'transform' : 'translateZ(0) translateY(40px)'});
+        $($containerClass+' .swiper-slide .content p, '+$containerClass+' .swiper-slide .content h2, '+$containerClass+' .swiper-slide .content h1, '+$containerClass+' .swiper-slide .content .ns-heading-el, '+$containerClass+' .swiper-slide .content .buttons').stop(true,true).css({'opacity':0, 'transform' : 'translateZ(0) translateY(40px)'});
       } else if(captionTransString === 'reveal_title') {
         
         //$($containerClass+' .swiper-slide .content > h1').stop(true,true).css({'opacity': '0'});

@@ -608,9 +608,10 @@
 			}
 			else if( this.iconType === 'view-indicator' ) {
 
-        		var $text_color = ( that.$el.is('[data-indicator-text-color]') ) ? that.$el.attr('data-indicator-text-color') : '#fff';
+        var $text_color = ( that.$el.is('[data-indicator-text-color]') ) ? that.$el.attr('data-indicator-text-color') : '#fff';
 				var $color = that.$el.attr('data-indicator-color');
 				var $style = that.$el.attr('data-indicator-style');
+				var $text = that.$el.attr('data-indicator-text');
 
 				// unbind first.
 				that.$el.find('.nectar-post-grid-item').off();
@@ -618,7 +619,7 @@
 				that.$el.find('.nectar-post-grid-item').on('mouseenter', function() {
 					that.activeViewRAF = true;
 					that.$viewEl.addClass('visible');
-					that.$viewEl.find('span').text( $('.nectar-post-grid').attr('data-indicator-text') );
+					that.$viewEl.find('span').text( $text );
 
 					// Handle style class.
 					that.$viewEl.attr('class', function(i, c){
@@ -1020,8 +1021,14 @@
 			}
 
 
+			var inHiddenSection = ( this.$el.parents('.toggle').length > 0 ) ? true : false;
+			
 			// Init.
-			if( !nectarDOMInfo.usingFrontEndEditor && !isInstagram() && 'IntersectionObserver' in window && $nectarFullPage.$usingFullScreenRows === false) {
+			if( !nectarDOMInfo.usingFrontEndEditor && 
+				!isInstagram() && 
+				'IntersectionObserver' in window && 
+				!inHiddenSection &&
+				$nectarFullPage.$usingFullScreenRows === false) {
 				this.lazyInit();
 			}
 			else {
@@ -4531,9 +4538,9 @@
 
 			// In View.
 			this.viewportTracking();
-
+			
 			// Waypoint.
-			if( this.$el.hasClass('element_stagger_words') ) {
+			if( this.$el.hasClass('element_stagger_words') && !this.$el.hasClass('delay-js-loaded') ) {
 				this.staggerWaypoint();
 				$(window).on('nectar-waypoints-reinit nectar-tab-changed', this.staggerWaypoint.bind(this));
 			}
@@ -7997,11 +8004,11 @@
 					for(var i = 0; i < this.$parallaxEl.length; i++) {
 
 						if( this.firstSection === true ) {
-							this.$parallaxEl[i].style.transform = 'translate3d(0, ' + parseInt(nectarDOMInfo.scrollTop * this.speed) + 'px, 0)';
+							this.$parallaxEl[i].style.transform = 'translate3d(0, ' + nectarDOMInfo.scrollTop * this.speed + 'px, 0)';
 						}
 						else {
 							
-							this.$parallaxEl[i].style.transform = 'translate3d(0, ' + parseInt(((this.storedWinH + nectarDOMInfo.scrollTop - this.offsetTop) * this.speed)) + 'px, 0) scale(1.005)';
+							this.$parallaxEl[i].style.transform = 'translate3d(0, ' + ((this.storedWinH + nectarDOMInfo.scrollTop - this.offsetTop) * this.speed) + 'px, 0) scale(1.005)';
 						}
 						this.$parallaxEl[i].style.willChange = 'transform';
 					}
@@ -15235,6 +15242,7 @@
 								"attempted to call method '" + options + "'");
 								return;
 							}
+							// TODO: isFunction is dep - also in hoverIntent
 							if (!$.isFunction(instance[options]) || options.charAt(0) === "_") {
 								logError("no such method '" + options + "' for menu instance");
 								return;
@@ -15949,11 +15957,19 @@
 						'display':'block'
 					});
 
+					// tag cloud
 					this.$sidebar.find('.widget.woocommerce.widget_product_tag_cloud')
 					.find('div.tagcloud').css({
 						'display':'block'
 					});
 
+					// layered nav
+					if( this.$sidebar.find('.widget.woocommerce.widget_layered_nav > .woocommerce-widget-layered-nav-dropdown').length > 0) {
+						this.$sidebar.find('.widget.woocommerce.widget_layered_nav > .woocommerce-widget-layered-nav-dropdown').css({
+							'display':'block'
+						});
+					}
+					
 					// Mobile active filters.
 					if( $('.nectar-active-product-filters').length > 0 ) {
 						var $filtersHTML = $('.nectar-active-product-filters').clone();
@@ -19461,7 +19477,7 @@
 					$('.nectar-recent-posts-single_featured.multiple_featured').each(function () {
 
 						var $slideClass = ($(this).find('.project-slides').length > 0) ? '.project-slide' : '.nectar-recent-post-slide',
-						$slideInfoClass = ($(this).find('.project-slides').length > 0) ? '.project-info h1' : '.inner-wrap h2 a';
+						$slideInfoClass = ($(this).find('.project-slides').length > 0) ? '.project-info h1' : '.inner-wrap .large-featured-post-title a';
 
 						$(this).find($slideClass).each(function () {
 
@@ -19692,7 +19708,7 @@
 								}
 
 								var $activeClass = (i == 0 && $(this).parents('.nectar-recent-posts-single_featured.multiple_featured[data-autorotate="none"]').length > 0) ? 'class="active"' : '';
-								$that.find('.controls').append('<li ' + $activeClass + '><span class="title">' + $(this).find('h2').text() + '</span></li>');
+								$that.find('.controls').append('<li ' + $activeClass + '><span class="title">' + $(this).find('.large-featured-post-title').text() + '</span></li>');
 							});
 
 							$(this).addClass('js-loaded');
@@ -19856,7 +19872,13 @@
 				function recentPostsInit() {
 
 					// Start flickity based sliders.
-					recentPostsFlickityInit();
+					if( $().flickity ) {
+						recentPostsFlickityInit();
+					} else {
+						setTimeout(function(){
+							recentPostsFlickityInit();
+						}, 200 );
+					}
 
 
 					// Classic enhanced specific
@@ -22330,7 +22352,7 @@
 				*/
 				function select2Init() {
 
-					$('select:not(.state_select):not(.country_select):not(.comment-form-rating #rating):not(#tribe-bar-form select):not(.woocommerce-currency-switcher):not(.nectar-custom-product-attr select)').each(function () {
+					$('select:not(.state_select):not(.country_select):not(.comment-form-rating #rating):not(#tribe-bar-form select):not(.woocommerce-currency-switcher):not(.nectar-custom-product-attr select):not(.flatpickr-calendar select)').each(function () {
 
 						// Prevent search from triggering on small devices.
 						var $minimumToSearch = ( nectarDOMInfo.winW > 690 ) ? 7 : 200;
@@ -22531,10 +22553,13 @@
 
 						if ($(this).find('> .vc_element-container > div').length > 0) {
 
-							if ($(this).find('> .vc_element-container > div:first-child').is('.vc_vc_row_inner')) {
-								$(this).find('> .vc_element-container > div:first-child').addClass('first-inner-row-el');
+							var firstColumn = $(this).find('> .vc_element-container');
+							var firstColumnElement = firstColumn.find('> div:first-child');
+
+							if (firstColumnElement.is('.vc_vc_row_inner') ) {
+								firstColumnElement.addClass('first-inner-row-el');
 							} else {
-								$(this).find('> .vc_element-container > div:first-child').removeClass('first-inner-row-el');
+								firstColumn.find('> div').removeClass('first-inner-row-el');
 							}
 
 						}

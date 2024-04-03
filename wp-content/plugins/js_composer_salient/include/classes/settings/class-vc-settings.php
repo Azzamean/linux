@@ -11,10 +11,12 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * List of tabs
  * 1. General Settings - set access rules and allowed content types for editors.
- * 2. Design Options - custom color and spacing editor for VC shortcodes elements.
- * 3. Custom CSS - add custom css to your WP pages.
- * 4. Product License - license key activation for automatic VC updates.
- * 5. My Shortcodes - automated mapping tool for shortcodes.
+ * 2. Role Manager - set access rules and allowed content types for editors.
+ * 3. Design Options - custom color and spacing editor for VC shortcodes elements.
+ * 4. Custom CSS - add custom css to your WP pages.
+ * 5. Custom JS - add custom css to your WP pages.
+ * 6. Product License - license key activation for automatic VC updates.
+ * 7. My Shortcodes - automated mapping tool for shortcodes.
  *
  * @link http://codex.wordpress.org/Settings_API WordPress settings API
  * @since 3.4
@@ -125,10 +127,15 @@ class Vc_Settings {
 		}
 
 		if ( ! vc_is_network_plugin() || ( vc_is_network_plugin() && is_network_admin() ) ) {
-			if ( ! vc_is_updater_disabled() && ! wpb_check_wordpress_com_env() ) {
-				/* nectar addition */ 
-				//$this->tabs['vc-updater'] = __( 'Product License', 'js_composer' );
-				/* nectar addition end*/ 
+			// nectar addition - removed vc_is_updater_disabled() from check
+			// The updater is disabled, but we still want to show the license tab for ai
+			if ( ! wpb_check_wordpress_com_env() ) {
+			// nectar addition end
+				// nectar addition
+				if ( apply_filters('nectar_wpbakery_ai_enabled', false) === true ) {
+					$this->tabs['vc-updater'] = __( 'Product License', 'js_composer' );
+				}
+				// nectar addition end
 			}
 		}
 		// TODO: may allow to disable automapper
@@ -526,9 +533,13 @@ class Vc_Settings {
 			$value = '';
 		}
 
-		echo '<textarea name="' . esc_attr( self::$field_prefix ) . 'custom_css' . '" class="wpb_code_editor custom_code" style="display:none">' . esc_textarea( $value ) . '</textarea>';
-		echo '<pre id="wpb_css_editor" class="wpb_content_element custom_code" >' . esc_textarea( $value ) . '</pre>';
-		echo '<p class="description indicator-hint">' . esc_html__( 'Add custom CSS code to the plugin without modifying files.', 'js_composer' ) . '</p>';
+		vc_include_template(
+			'editors/vc-settings/custom-css.tpl.php',
+			[
+				'value' => $value,
+				'field_prefix' => self::$field_prefix,
+			]
+		);
 	}
 
 	/**
@@ -540,10 +551,14 @@ class Vc_Settings {
 			$value = '';
 		}
 
-		echo '<p>' . esc_html( '<script>' ) . '</p>';
-		echo '<textarea name="' . esc_attr( self::$field_prefix ) . 'custom_js_header' . '" class="wpb_code_editor custom_code" data-code-type="html" style="display:none">' . esc_textarea( $value ) . '</textarea>';
-		echo '<pre id="wpb_js_header_editor" class="wpb_content_element custom_code">' . esc_textarea( $value ) . '</pre>';
-		echo '<p>' . esc_html( '</script>' ) . '</p>';
+		vc_include_template(
+			'editors/vc-settings/custom-js.tpl.php',
+			[
+				'value' => $value,
+				'field_prefix' => self::$field_prefix,
+				'area' => 'header',
+			]
+		);
 	}
 
 	/**
@@ -555,10 +570,14 @@ class Vc_Settings {
 			$value = '';
 		}
 
-		echo '<p>' . esc_html( '<script>' ) . '</p>';
-		echo '<textarea name="' . esc_attr( self::$field_prefix ) . 'custom_js_footer' . '" class="wpb_code_editor custom_code" data-code-type="html" style="display:none">' . esc_textarea( $value ) . '</textarea>';
-		echo '<pre id="wpb_js_footer_editor" class="wpb_content_element custom_code">' . esc_textarea( $value ) . '</pre>';
-		echo '<p>' . esc_html( '</script>' ) . '</p>';
+		vc_include_template(
+			'editors/vc-settings/custom-js.tpl.php',
+			[
+				'value' => $value,
+				'field_prefix' => self::$field_prefix,
+				'area' => 'footer',
+			]
+		);
 	}
 
 	/**

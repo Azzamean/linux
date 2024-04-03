@@ -297,6 +297,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 		
 		
 	$page_full_screen_rows = (isset($post->ID)) ? get_post_meta($post->ID, '_nectar_full_screen_rows', true) : '';
+	$page_full_screen_rows = apply_filters('nectar_full_screen_rows_row_markup_enabled', $page_full_screen_rows);
 	$page_full_screen_rows_animation = (isset($post->ID)) ? get_post_meta($post->ID, '_nectar_full_screen_rows_animation', true) : '';
 
     // Disable unneeded BG animations.

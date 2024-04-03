@@ -726,10 +726,31 @@ body .container-wrap [class*="wp-block"].alignfull {
   width: 100vw;
   position: relative;
 }
+
+/* prevent nested full width blocks from breaking layout */
+body .container-wrap [class*="wp-block"].alignfull  [class*="wp-block"].alignfull  {
+  margin-left: 0!important;
+  left: 0;
+  max-width: 100%;
+  width: 100%;
+  position: relative;
+}
+
+@media only screen and (max-width: 999px) {
+  body .nectar-blocks-row__inner.is-contained-content {
+    max-width: var(--mobile-container-width);
+    padding-left: 0;
+    padding-right: 0;
+  }
+}
+
 body .container-wrap [class*="wp-block"].alignfull img,
 body .container-wrap [class*="wp-block"].alignwide img {
   max-width: none;
   width: 100%;
+}
+.nectar-block [class*=" icon-"] {
+  background-color: transparent;
 }
 
 
@@ -3219,6 +3240,9 @@ html:not(.js) .main-content iframe[src],
   line-height:20px;
   background-color:#000;
   display:inline-block
+}
+.nectar-button.n-sc-button {
+  color:#FFF;
 }
 
 .nectar-button.large{
@@ -6647,6 +6671,7 @@ body[data-button-style*="slightly_rounded"] .post .more-link span {
 
 /* remove archive meta date */
 .hentry .updated.rich-snippet-hidden,
+body .updated.rich-snippet-hidden,
 #page-header-bg[data-post-hs="default_minimal"] #single-below-header .updated.rich-snippet-hidden,
 .post-area[data-remove-post-date="1"] article .date,
 .post-area[data-remove-post-date="1"].featured_img_left .grav-wrap .text span {

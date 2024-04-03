@@ -109,8 +109,10 @@ if ( class_exists('Salient_Portfolio_Single_Layout') && Salient_Portfolio_Single
 			}
 			
 		} // end preview
-		
-		if ( ! empty( $portfolio_extra_content ) ) {
+
+		$nectar_using_VC_front_end_editor = (isset($_GET['vc_editable'])) ? sanitize_text_field($_GET['vc_editable']) : '';
+		$nectar_using_VC_front_end_editor = ($nectar_using_VC_front_end_editor == 'true') ? true : false;
+		if ( ! empty( $portfolio_extra_content ) || $nectar_using_VC_front_end_editor ) {
 			echo '<div id="portfolio-extra">';
 
 			$extra_content = nectar_shortcode_empty_paragraph_fix( apply_filters( 'the_content', $portfolio_extra_content ) );

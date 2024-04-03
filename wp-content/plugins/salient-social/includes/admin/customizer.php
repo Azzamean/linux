@@ -84,7 +84,7 @@ function salient_social_register_theme_customizer( $wp_customize ) {
 	);
 	$wp_customize->add_control( 'salient_social_use_twitter', array(
 			'section'     => 'salient_social_options',
-			'label'       => esc_html__( 'Use Twitter Button', 'salient-social' ),
+			'label'       => esc_html__( 'Use X (Twitter) Button', 'salient-social' ),
 			'type'        => 'checkbox'
 		)
 	);

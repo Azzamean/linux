@@ -167,7 +167,8 @@
 
 /*flickity responsive columns*/
 @media only screen and (max-width: 690px) {
-  .nectar-flickity[data-tablet-columns="1"]:not(.masonry) .flickity-slider .cell {
+  .nectar-flickity[data-tablet-columns="1"]:not(.masonry) .flickity-slider .cell,
+  .nectar-flickity[data-phone-columns="1"]:not(.masonry) .flickity-slider .cell {
     width: 100%;
   }
 

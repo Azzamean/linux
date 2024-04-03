@@ -1,1 +1,1 @@
-# js_composer_salient
+# js_composer

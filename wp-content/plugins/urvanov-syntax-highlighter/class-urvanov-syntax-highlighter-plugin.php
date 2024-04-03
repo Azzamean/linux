@@ -3,7 +3,7 @@
 Plugin Name: Urvanov Syntax Highlighter
 Plugin URI: https://github.com/urvanov-ru/crayon-syntax-highlighter
 Description: Supports multiple languages, themes, highlighting from a URL, local file or post text.
-Version: 2.8.34
+Version: 2.8.36
 Author: Fedor Urvanov, Aram Kocharyan
 Author URI: https://urvanov.ru
 Text Domain: urvanov-syntax-highlighter
@@ -34,8 +34,8 @@ if (URVANOV_SYNTAX_HIGHLIGHTER_THEME_EDITOR) {
 require_once('class-urvanov-syntax-highlighter-wp.php');
 
 Urvanov_Syntax_Highlighter_Global::set_info(array(
-	'Version' => '2.8.34',
-	'Date' => '21th October 2023',
+	'Version' => '2.8.36',
+	'Date' => '31th March 2024',
 	'AuthorName' => 'Fedor Urvanov & Aram Kocharyan',
 	'PluginURI' => 'https://github.com/urvanov-ru/crayon-syntax-highlighter',
 ));
@@ -739,8 +739,7 @@ class Urvanov_Syntax_Highlighter_Plugin {
         return $the_content;
     }
 
-    public static function pre_comment_text($text) {
-        global $comment;
+    public static function pre_comment_text($text, $comment, $args ) {
         $comment_id = strval($comment->comment_ID);
         if (array_key_exists($comment_id, self::$comment_captures)) {
             // Replace with IDs now that we need to
@@ -1345,7 +1344,7 @@ if (defined('ABSPATH')) {
         if (Urvanov_Syntax_Highlighter_Global_Settings::val(Urvanov_Syntax_Highlighter_Settings::COMMENTS)) {
             /* XXX This is called first to match Crayons, then higher priority replaces after other filters.
              Prevents Crayon from being formatted by the filters, and also keeps original comment formatting. */
-            add_filter('comment_text', 'Urvanov_Syntax_Highlighter_Plugin::pre_comment_text', 1);
+            add_filter('comment_text', 'Urvanov_Syntax_Highlighter_Plugin::pre_comment_text', 1, 3);
             add_filter('comment_text', 'Urvanov_Syntax_Highlighter_Plugin::comment_text', 100);
         }
 

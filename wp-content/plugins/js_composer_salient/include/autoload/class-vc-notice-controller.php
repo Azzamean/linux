@@ -25,10 +25,12 @@ class Vc_Notice_Controller {
 	 * @since 7.0
 	 */
 	public function __construct() {
-		add_action( 'admin_init', [
-			$this,
-			'init',
-		] );
+		// nectar addition
+		// add_action( 'admin_init', [
+		// 	$this,
+		// 	'init',
+		// ] );
+		// nectar addition end
 	}
 
 	/**

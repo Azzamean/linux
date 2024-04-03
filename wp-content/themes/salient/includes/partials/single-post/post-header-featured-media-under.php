@@ -26,7 +26,7 @@ $hide_featrued  = (isset($nectar_options['blog_hide_featured_image'] ) ) ? $nect
 $show_excerpt   = (isset($nectar_options['blog_header_image_under_excerpt'] ) ) ? $nectar_options['blog_header_image_under_excerpt'] : false;
 ?>
 
-<div class="row hentry featured-media-under-header" data-animate="<?php echo esc_attr($load_animation); ?>">
+<div class="row featured-media-under-header" data-animate="<?php echo esc_attr($load_animation); ?>">
   <div class="featured-media-under-header__content">
     <div class="featured-media-under-header__cat-wrap">
     <?php get_template_part( 'includes/partials/single-post/post-categories' ); ?>

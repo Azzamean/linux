@@ -122,15 +122,15 @@ return array(
 			"dependency" => Array('element' => "map_type", 'value' => array('leaflet')),
 			"description" => esc_html__("Please enter the height in px that you would like your custom marker image to display as", "salient-core")
 		),
-		array(
-			"type" => 'checkbox',
-			"heading" => esc_html__("Marker Animation", "salient-core"),
-			"param_name" => "marker_animation",
-			'edit_field_class' => 'vc_col-xs-12 salient-fancy-checkbox',
-			"dependency" => Array('element' => "map_type", 'value' => array('google')),
-			"description" => esc_html__("This will cause your markers to do a quick bounce as they load in.", "salient-core"),
-			"value" => Array(esc_html__("Yes, please", "salient-core") => true),
-		),
+		// array(
+		// 	"type" => 'checkbox',
+		// 	"heading" => esc_html__("Marker Animation", "salient-core"),
+		// 	"param_name" => "marker_animation",
+		// 	'edit_field_class' => 'vc_col-xs-12 salient-fancy-checkbox',
+		// 	"dependency" => Array('element' => "map_type", 'value' => array('google')),
+		// 	"description" => esc_html__("This will cause your markers to do a quick bounce as they load in.", "salient-core"),
+		// 	"value" => Array(esc_html__("Yes, please", "salient-core") => true),
+		// ),
 		
 		array(
 			"type" => 'checkbox',

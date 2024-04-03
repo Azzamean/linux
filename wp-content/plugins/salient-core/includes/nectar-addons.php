@@ -42,6 +42,7 @@ if( !function_exists('nectar_wpbakery_element_list') ) {
 			'nectar_cta',
 			'nectar_flip_box',
 			'nectar_food_menu_item',
+			'nectar_badge',
 			'nectar_gmap',
 			'nectar_gradient_text',
 			'nectar_highlighted_text',
@@ -56,6 +57,8 @@ if( !function_exists('nectar_wpbakery_element_list') ) {
 			'nectar_single_testimonial',
 			'nectar_video_lightbox',
 			'nectar_video_player_self_hosted',
+			'nectar_rotating_words_title',
+			'nectar_price_typography',
 			'nectar_woo_products',
 			'page_link',
 			'page_submenu',
@@ -8223,7 +8226,71 @@ function nectar_custom_maps() {
 
 
 	// Single image
-	class WPBakeryShortCode_Image_With_Animation extends WPBakeryShortCode { }
+	class WPBakeryShortCode_Image_With_Animation extends WPBakeryShortCode { 
+		public function __construct( $settings ) {
+			parent::__construct( $settings );
+		}
+		public function singleParamHtmlHolder( $param, $value ) {
+			$output = '';
+	
+			$param_name = isset( $param['param_name'] ) ? $param['param_name'] : '';
+			$type = isset( $param['type'] ) ? $param['type'] : '';
+			$class = isset( $param['class'] ) ? $param['class'] : '';
+	
+			if ( 'fws_image' === $param['type'] && 'image_url' === $param_name ) {
+				
+				$output .= '<input type="hidden" class="wpb_vc_param_value ' . $param_name . ' ' . $type . ' ' . $class . '" name="' . $param_name . '" value="' . $value . '" />';
+				$element_icon = $this->settings( 'icon' );
+				$img = wpb_getImageBySize( array(
+					'attach_id' => (int) preg_replace( '/[^\d]/', '', $value ),
+					'thumb_size' => 'thumbnail',
+				) );
+				$this->setSettings( 'logo', ( $img ? $img['thumbnail'] : '<img width="150" height="150" src="' . esc_url( vc_asset_url( 'vc/blank.gif' ) ) . '" class="attachment-thumbnail vc_general vc_element-icon nectar-preview-image"  data-name="' . $param_name . '" alt="" title="" style="display: none;" />' ) . '<span class="no_image_image vc_element-icon' . ( ! empty( $element_icon ) ? ' ' . $element_icon : '' ) . ( $img && ! empty( $img['p_img_large'][0] ) ? ' image-exists' : '' ) . '"></span><a href="#" class="column_edit_trigger' . ( $img && ! empty( $img['p_img_large'][0] ) ? ' image-exists' : '' ) . '">' . esc_html__( 'Add image', 'js_composer' ) . '</a>' );
+				$output .= $this->outputTitleTrue( $this->settings['name'] );
+			} 
+	
+			if ( ! empty( $param['admin_label'] ) && true === $param['admin_label'] ) {
+				$output .= '<span class="vc_admin_label admin_label_' . $param['param_name'] . ( empty( $value ) ? ' hidden-label' : '' ) . '"><label>' . $param['heading'] . '</label>: ' . $value . '</span>';
+			}
+	
+			return $output;
+		}
+
+		public function getImageSquareSize( $img_id, $img_size ) {
+			if ( preg_match_all( '/(\d+)x(\d+)/', $img_size, $sizes ) ) {
+				$exact_size = array(
+					'width' => isset( $sizes[1][0] ) ? $sizes[1][0] : '0',
+					'height' => isset( $sizes[2][0] ) ? $sizes[2][0] : '0',
+				);
+			} else {
+				$image_downsize = image_downsize( $img_id, $img_size );
+				$exact_size = array(
+					'width' => $image_downsize[1],
+					'height' => $image_downsize[2],
+				);
+			}
+			$exact_size_int_w = (int) $exact_size['width'];
+			$exact_size_int_h = (int) $exact_size['height'];
+			if ( isset( $exact_size['width'] ) && $exact_size_int_w !== $exact_size_int_h ) {
+				$img_size = $exact_size_int_w > $exact_size_int_h ? $exact_size['height'] . 'x' . $exact_size['height'] : $exact_size['width'] . 'x' . $exact_size['width'];
+			}
+	
+			return $img_size;
+		}
+	
+		/**
+		 * @param $title
+		 * @return string
+		 */
+		protected function outputTitle( $title ) {
+			return '';
+		}
+	
+		
+		protected function outputTitleTrue( $title ) {
+			return '<h4 class="wpb_element_title">' . $title . ' ' . $this->settings( 'logo' ) . '</h4>';
+		}
+	}
 	vc_lean_map('image_with_animation', null, SALIENT_CORE_ROOT_DIR_PATH . 'includes/nectar_maps/image_with_animation.php');
 
 
@@ -9148,6 +9215,41 @@ function nectar_custom_maps() {
 	"dependency" => Array('element' => "image_grid_loading", 'value' => array('lazy-load'))
 ));
 
+	vc_add_param("vc_gallery",array(
+		"type" => "dropdown",
+		"class" => "",
+		'save_always' => true,
+		"heading" => esc_html__("Image Rendering", "salient-core"),
+		"param_name" => "ns_image_rendering",
+		"value" => array(
+		"Cover" => "default",
+		'Contain' => 'contain',
+		),
+			"dependency" => Array('element' => "type", 'value' => array('nectarslider_style')),
+			"description" => esc_html__("Determines how the image will be rendered. To ensure no cropping of your images, using \"Contain\" is reccomended.", "salient-core"),
+		'std' => 'default',
+	));
+	vc_add_param("vc_gallery",array(
+		"type" => "dropdown",
+		"class" => "",
+		'save_always' => true,
+		"heading" => esc_html__("Image Aspect Ratio", "salient-core"),
+		"param_name" => "ns_image_aspect_ratio",
+		"value" => array(
+			"Determined by Image Size field" => "default",	
+			"16:9" => "16-9",
+			"4:3" => "4-3",
+			"3:2" => "3-2",
+			"3:4" => "3-4",
+			"2:1" => "2-1",
+			"2:3" => "2-3",
+			"1:1" => "1-1",
+			"4:5" => "4-5"
+		),
+		"dependency" => Array('element' => "type", 'value' => array('nectarslider_style')),
+		"description" => '',
+		'std' => 'default',
+	));
 	 vc_add_param("vc_gallery",array(
 	      "type" => 'checkbox',
 	      "heading" => esc_html__("Flexible Slider Height", "salient-core"),
@@ -9155,7 +9257,7 @@ function nectar_custom_maps() {
 	      "description" => esc_html__("Would you like the height of your slider to constantly scale in proportion to the screen size?", "salient-core"),
 	      "value" => Array(esc_html__("Yes, please", "salient-core") => 'true'),
 				'edit_field_class' => 'vc_col-xs-12 salient-fancy-checkbox',
-	      "dependency" => Array('element' => "type", 'value' => array('nectarslider_style'))
+	      "dependency" => Array('element' => "ns_image_aspect_ratio", 'value' => array('default'))
 	  ));
 		vc_add_param("vc_gallery",array(
 	      "type" => 'checkbox',

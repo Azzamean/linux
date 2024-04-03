@@ -33,6 +33,8 @@
        add_action( 'wp_enqueue_scripts', array($this, 'enqueue_assets') );
        add_action( 'wp', array($this, 'salient_frontend_display') );
 
+       // Shortcode.
+       add_action( 'init', array($this, 'salient_global_section_shortcode') );
      }
 
 
@@ -311,6 +313,84 @@
         return $current_post_type;
       }
 
+      public function salient_global_section_shortcode() {
+        // When WPBakery is not being used.
+        if ( !defined( 'SALIENT_VC_ACTIVE' ) ) {
+          add_shortcode('nectar_global_section', array($this, 'salient_global_section_shortcode_callback') );
+        }
+      }
+
+      public function salient_global_section_shortcode_callback($atts) {
+
+        extract(shortcode_atts(array(
+          "id" => "",
+          'enable_display_conditions' => ''
+        ), $atts));
+
+        if (!empty($id)) {
+
+          $section_id = intval($id);
+          $section_id = apply_filters('wpml_object_id', $section_id, 'post', true);
+
+          if( $section_id === 0 ) {
+            return;
+          }
+          
+          $section_status = get_post_status($section_id);
+          
+          
+          $allow_output = true;
+          
+          if ( $enable_display_conditions === 'yes' ) {
+            $allow_output = Nectar_Global_Sections_Render::get_instance()->verify_conditional_display( $section_id );
+          }
+
+          if ( 'publish' === $section_status && $allow_output ) {
+
+            $section_content = get_post_field('post_content', $section_id);
+
+            if ($section_content) {
+
+              $unneeded_tags = array(
+                '<p>['    => '[',
+                ']</p>'   => ']',
+                ']<br />' => ']',
+                ']<br>'   => ']',
+              );
+
+              
+              if( function_exists('do_blocks')) {
+                $section_content = do_blocks($section_content);
+              }
+              $section_content = wptexturize( $section_content);
+              $section_content = convert_smilies( $section_content );
+              $section_content = wpautop( $section_content );
+              $section_content = shortcode_unautop( $section_content );
+              $section_content = wp_filter_content_tags( $section_content );
+              $section_content = strtr($section_content, $unneeded_tags);
+
+              $section_content = apply_filters('nectar_global_section_content_output', $section_content);
+
+              ob_start();
+              // Look for dynamic CSS from blocks.
+              $dynamic_css = get_post_meta( $section_id, '_nectar_blocks_css', true );
+              if ( ! empty( $dynamic_css ) ) {
+                echo '<style type="text/css" data-type="nectar-global-section-dynamic-css">'. $dynamic_css .'</style>';
+              }
+              // TODO: loop through blocks and enqueue core style for each block found.
+                // Output section.
+              echo do_shortcode($section_content);
+              
+              $global_section_markup .=  ob_get_contents();
+              ob_end_clean();
+              
+              return $global_section_markup;
+
+
+            }
+          }
+        }
+      }
 
      /**
       * Initiator.

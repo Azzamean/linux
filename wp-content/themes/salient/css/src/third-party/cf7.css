@@ -73,6 +73,16 @@ div.wpcf7 img.ajax-loader {
   width: 100%;
 }
 
+.nectar-wpcf7-inline-field > p:has(.wpcf7-spinner):has(.wpcf7-submit) {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+.nectar-wpcf7-inline-field > p:has(.wpcf7-spinner):has(.wpcf7-submit) .wpcf7-spinner {
+  min-width: 24px;
+  margin-right: 0;
+}
+
 @media only screen and (max-width: 999px) {
   .wpcf7-form .nectar-wpcf7-inline-form.mobile-1-col,
   .wpcf7-form .nectar-wpcf7-inline-form.mobile-2-col {

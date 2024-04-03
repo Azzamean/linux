@@ -56,6 +56,9 @@ body .wpb_content_element>.wpb_element_wrapper {
 .wpb_content_element>.wpb_element_wrapper>.wpb_element_title .vc_element-icon {
   color: #3a67ff!important;
 }
+.wpb_content_element>.wpb_element_wrapper .nectar-preview-image.vc_element-icon {
+  height: auto;
+}
 
 /* Nectar Slider */
 .wpb-layout-element-button .icon-wpb-nectar-slider:before,
@@ -1475,7 +1478,7 @@ body .wpb-edit-form  .chzn-container .chzn-results li:hover {
 
 
 /* main VC styles */
-.modal-backdrop,
+.modal-backdrop:not(.vc_modal-popup-container),
 .modal-backdrop.fade.in {
   opacity: 0.8!important;
 }
@@ -5190,11 +5193,6 @@ creating excess space at the bottom*/
   transform: translate(-50%,-50%);
 }
 
-
-.modal-backdrop, 
-.modal-backdrop.fade.in {
-opacity: 0.8!important;
-}
 
 .modal-backdrop.white {
 position: fixed;

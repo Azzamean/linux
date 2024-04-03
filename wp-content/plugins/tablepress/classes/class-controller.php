@@ -123,6 +123,11 @@ abstract class TablePress_Controller {
 					TablePress::$model_table->add_mime_type_to_posts();
 				}
 			}
+
+			// Trigger update of the table options as premium modules might have new table options, when updating from a version older than TablePress 2.3.0.
+			if ( $current_plugin_options_db_version < 75 ) {
+				$_GET['refresh_table_options'] = 'true';
+			}
 		}
 
 		// Maybe update the table scheme in each existing table, independently from updating the plugin options.

@@ -96,7 +96,7 @@
   SalientPortfolio.prototype.imageLoadLayout = function() {
     this.totalLoaded = this.totalLoaded + 1;
 
-    if( this.initialized == true && this.totalLoaded % 4 == 0 ) {
+    if( this.initialized == true  ) {
       this.$el.isotope('layout');
     } 
   };

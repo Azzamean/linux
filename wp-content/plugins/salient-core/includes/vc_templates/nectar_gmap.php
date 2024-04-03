@@ -37,7 +37,7 @@ wp_enqueue_style( 'nectar-element-interactive-map' );
   }
   
   if( $map_type === 'google' ) {
-  	wp_enqueue_script('nectarMap', get_template_directory_uri() . '/js/build/map.js', array('jquery'), '8.5.4', TRUE);
+  	wp_enqueue_script('nectarMap', get_template_directory_uri() . '/js/build/map.js', array('jquery'), '16.2.0', TRUE);
   } else if( $map_type === 'leaflet' ) {
     wp_enqueue_script('leaflet'); 
     wp_enqueue_script('nectar-leaflet-map'); 

@@ -28,7 +28,7 @@ Description: Styles for the "Cascading Images" page builder element.
   position: absolute;
 }
 
-.nectar_cascading_images .cascading-image img,
+body .nectar_cascading_images .cascading-image img,
 .nectar_cascading_images .cascading-image .img-wrap{
   display:block;
   margin-bottom:0;

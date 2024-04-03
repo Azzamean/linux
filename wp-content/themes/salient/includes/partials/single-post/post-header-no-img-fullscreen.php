@@ -40,9 +40,11 @@ if( $single_post_header_inherit_fi === '1' && isset( $post->ID ) && has_post_thu
 	$inherit_and_has_featured_img = true;
 }
 
+$hentry_class = apply_filters('nectar_post_header_hentry_class', ' hentry');
+
 if ( empty( $bg ) && empty( $bg_color ) && $inherit_and_has_featured_img !== true ) { ?>
   <div id="page-header-wrap" data-animate-in-effect="none" data-midnight="light" class="fullscreen-header">
-  <div class="default-blog-title fullscreen-header hentry" id="page-header-bg" data-midnight="light" data-alignment-v="middle" data-alignment="center" data-parallax="0" data-height="450" data-remove-post-date="<?php echo esc_attr( $remove_single_post_date ); ?>" data-remove-post-author="<?php echo esc_attr( $remove_single_post_author ); ?>" data-remove-post-comment-number="<?php echo esc_attr( $remove_single_post_comment_number ); ?>">
+  <div class="default-blog-title fullscreen-header<?php echo esc_attr($hentry_class); ?>" id="page-header-bg" data-midnight="light" data-alignment-v="middle" data-alignment="center" data-parallax="0" data-height="450" data-remove-post-date="<?php echo esc_attr( $remove_single_post_date ); ?>" data-remove-post-author="<?php echo esc_attr( $remove_single_post_author ); ?>" data-remove-post-comment-number="<?php echo esc_attr( $remove_single_post_comment_number ); ?>">
 		<div class="container">
 			<div class="row">
 				<div class="col span_6 section-title blog-title">

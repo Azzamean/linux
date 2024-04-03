@@ -2103,10 +2103,12 @@ body .portfolio-items[data-ps="9"] .col {
 body.material .portfolio-items[data-ps="9"] .col img { 
 	border-radius: 5px; 
 }
-.portfolio-items[data-ps="9"] .col .work-meta { 
+
+#ajax-content-wrap .portfolio-items[data-ps="9"] .col .work-meta { 
 	float: none; 
 	width: 100%; 
 }
+
 .portfolio-items[data-ps="9"] .col p { 
 	text-transform: none; 
 }

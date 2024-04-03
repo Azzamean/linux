@@ -22,7 +22,8 @@ if ( ! function_exists( 'nectar_portfolio_register' ) ) {
 			 'parent_item'   => esc_html__( 'Parent Portfolio Item', 'salient-portfolio' ),
 			 'edit_item'     => esc_html__( 'Edit Portfolio Item', 'salient-portfolio' ),
 			 'update_item'   => esc_html__( 'Update Portfolio Item', 'salient-portfolio' ),
-			 'add_new_item'  => esc_html__( 'Add New Portfolio Item', 'salient-portfolio' ),
+			 'add_new_item'  => esc_html__( 'Add New Project', 'salient-portfolio' ),
+			 'add_new'       => esc_html__( 'Add New Project', 'salient-portfolio' ),
 		 );
 
 		global $nectar_options;

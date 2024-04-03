@@ -415,6 +415,7 @@ if(!function_exists('nectar_post_grid_item_markup')) {
 
             if( isset($atts['display_categories']) && 'yes' === $atts['display_categories'] ) {
 
+              $category_style = (isset($atts['category_style'])) ? $atts['category_style'] : 'underline';
               $category_markup .= '<span class="meta-category">';
 
               $project_categories = get_the_terms($post->id,"project-type");
@@ -423,8 +424,14 @@ if(!function_exists('nectar_post_grid_item_markup')) {
                 $output = null;
                 foreach ( $project_categories as $term ) {
 
+                   // Category display type
+                   if ( $atts['category_display'] === 'parent_only' && $term->parent !== 0 ) {
+                    continue;
+                  }
+
+
                   if( isset($term->slug) ) {
-                    $output .= '<a class="' . esc_attr( $term->slug ) . '" href="' . esc_url( get_category_link( $term->term_id ) ) . '">' . esc_html( $term->name ) . '</a>';
+                    $output .= '<a class="' . esc_attr( $term->slug ) . ' style-'.esc_attr( $category_style ).'" href="' . esc_url( get_category_link( $term->term_id ) ) . '">' . esc_html( $term->name ) . '</a>';
                   }
 
                 }

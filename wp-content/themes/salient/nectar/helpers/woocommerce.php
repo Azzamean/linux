@@ -900,7 +900,7 @@ if ( ! function_exists( 'nectar_product_thumbnail_with_cart' ) ) {
 		global $nectar_quick_view_in_use;
 		?>
 	   <div class="product-wrap">
-			<a href="<?php the_permalink(); ?>"><?php
+			<a href="<?php the_permalink(); ?>" aria-label="<?php echo esc_attr($product->get_name()); ?>"><?php
 
 							$product_second_image = null;
 							if ( $product_hover_alt_image == '1' ) {

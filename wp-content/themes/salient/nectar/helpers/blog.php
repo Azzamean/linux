@@ -580,11 +580,13 @@ function nectar_blog_social_sharing() {
 			 $span_num = ( $related_post_count == 2 ) ? 'span_6' : 'span_4';
 
 			 $related_title_text        = nectar_get_related_post_title();
-			 $related_post_title_option = ( ! empty( $nectar_options['blog_related_posts_title_text'] ) ) ? wp_kses_post( $nectar_options['blog_related_posts_title_text'] ) : 'Related Posts';
+			 $related_post_title_option = ( ! empty( $nectar_options['blog_related_posts_title_text'] ) ) ? wp_kses_post( $nectar_options['blog_related_posts_title_text'] ) : __('Related Posts','salient');
 
 			 $hidden_title_class = null;
+
 			 if ( $related_post_title_option === 'hidden' ) {
 				 $hidden_title_class = 'hidden';
+				 $related_title_text = esc_html__( 'Related Posts', 'salient' );
 			 }
 
 			 $using_post_pag       = ( ! empty( $nectar_options['blog_next_post_link'] ) && $nectar_options['blog_next_post_link'] === '1' ) ? 'true' : 'false';

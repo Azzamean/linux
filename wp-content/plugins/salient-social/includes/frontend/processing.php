@@ -47,7 +47,7 @@ function nectar_social_sharing_output($style = 'default', $position = '') {
       
       // twitter
       if( $use_twitter === '1' ) {
-        echo "<a class='twitter-share nectar-sharing' href='#' title='" . esc_attr__( 'Tweet this', 'salient-social' ) . "'> <i class='fa fa-twitter'></i> <span class='social-text'>" . esc_attr__( 'Tweet', 'salient-social' ) . "</span> </a>";
+        echo "<a class='twitter-share nectar-sharing' href='#' title='" . esc_attr__( 'Share this', 'salient-social' ) . "'> <i class='fa icon-salient-x-twitter'></i> <span class='social-text'>" . esc_attr__( 'Share', 'salient-social' ) . "</span> </a>";
       }
       
       // linkedIn
@@ -159,7 +159,7 @@ function nectar_social_sharing_shortcode( $atts, $content = null ) {
       }
       // twitter
       if( $twitter === 'true' ) {
-        echo "<a class='twitter-share nectar-sharing' href='#' title='" . esc_attr__( 'Tweet this', 'salient-social' ) . "'> <i class='fa fa-twitter'></i> <span class='social-text'>" . esc_attr__( 'Tweet', 'salient-social' ) . "</span> </a>";
+        echo "<a class='twitter-share nectar-sharing' href='#' title='" . esc_attr__( 'Share this', 'salient-social' ) . "'> <i class='fa icon-salient-x-twitter'></i> <span class='social-text'>" . esc_attr__( 'Share', 'salient-social' ) . "</span> </a>";
       }
       
       // linkedIn

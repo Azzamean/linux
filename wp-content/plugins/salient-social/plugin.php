@@ -5,7 +5,7 @@
  * Description: Add beautiful social sharing buttons for posts. Also includes a reusable WPBakery page builder element.
  * Author: ThemeNectar
  * Author URI: https://themenectar.com
- * Version: 1.2.4
+ * Version: 1.2.5
  * Text Domain: salient-social
  */
 
@@ -21,7 +21,7 @@ class Salient_Social {
 	
 	static $instance = false;
 	
-	public $plugin_version = '1.2.4';
+	public $plugin_version = '1.2.5';
 		
 	private function __construct() {
 		

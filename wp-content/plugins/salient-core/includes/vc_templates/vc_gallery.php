@@ -28,6 +28,8 @@ extract(shortcode_atts(array(
     'display_title_caption' => '',
     'gallery_style' => '',
     'constrain_max_cols' => '',
+	'ns_image_rendering' => 'default',
+	'ns_image_aspect_ratio' => 'default',
     'flexible_slider_height' => '',
     'disable_auto_rotate' => '',
     'hide_arrow_navigation' => '',
@@ -73,6 +75,13 @@ if( property_exists('NectarLazyImages', 'global_option_active') && true === Nect
 	$image_loading = 'lazy-load';
 	//$image_grid_loading = 'lazy-load';
 }
+
+$skip_lazy_class_name = '';
+$disable_third_party_lazy_loading = apply_filters('nectar_disable_third_party_lazy_loading', true);
+if ( $disable_third_party_lazy_loading ) {
+	$skip_lazy_class_name = 'skip-lazy';
+}
+
 
 if( !class_exists('Salient_Portfolio') && $type == 'image_grid' ) {
   // Enqueue fallbacks.
@@ -208,9 +217,13 @@ if ( $type === 'flexslider_style' ) {
   if($nectar_using_VC_front_end_editor) {
     $autorotation_attr = '';
   }
-
-	$slides_wrap_start .= '<div class="nectar-slider-wrap" style="height: '.esc_attr($slide_height).'px" data-flexible-height="'.esc_attr($flexible_slider_height).'" data-overall_style="classic" data-button-styling="btn_with_count" data-fullscreen="false"  data-full-width="false" data-parallax="false" '.$autorotation_attr.' id="ns-id-'.uniqid().'">';
-	$slides_wrap_start .=	'<div class="swiper-container" style="height: '.esc_attr($slide_height).'px"  data-loop="'.esc_attr($bulk_param).'" data-height="'.esc_attr($slide_height).'" data-bullets="'.esc_attr($bullet_navigation).'" data-bullet_style="'.esc_attr($bullet_navigation_style).'" '.$arrow_markup.' data-desktop-swipe="'.esc_attr($bulk_param).'" data-settings="">';
+  	
+	$aspect_ratio_attr = '';
+	if ( $ns_image_aspect_ratio !== 'default' && !empty($ns_image_aspect_ratio) ) {
+		$aspect_ratio_attr = 'data-aspect-ratio="'.esc_attr($ns_image_aspect_ratio).'" ';
+	}
+	$slides_wrap_start .= '<div class="nectar-slider-wrap" style="height: '.esc_attr($slide_height).'px" '.$aspect_ratio_attr.'data-image-rendering="'.esc_html($ns_image_rendering).'" data-flexible-height="'.esc_attr($flexible_slider_height).'" data-overall_style="classic" data-button-styling="btn_with_count" data-fullscreen="false"  data-full-width="false" data-parallax="false" '.$autorotation_attr.' id="ns-id-'.uniqid().'">';
+	$slides_wrap_start .=	'<div class="swiper-container" style="height: '.esc_attr($slide_height).'px" data-loop="'.esc_attr($bulk_param).'" data-height="'.esc_attr($slide_height).'" data-bullets="'.esc_attr($bullet_navigation).'" data-bullet_style="'.esc_attr($bullet_navigation_style).'" '.$arrow_markup.' data-desktop-swipe="'.esc_attr($bulk_param).'" data-settings="">';
 	$slides_wrap_start .=	'<div class="swiper-wrapper">';
 
 
@@ -433,7 +446,7 @@ foreach ( $images as $attach_id ) {
     switch ( $source ) {
 		case 'media_library':
 			 if ($attach_id > 0) {
-		        $post_thumbnail = wpb_getImageBySize(array( 'attach_id' => $attach_id, 'thumb_size' => $img_size, 'class' => 'skip-lazy' ));
+		        $post_thumbnail = wpb_getImageBySize(array( 'attach_id' => $attach_id, 'thumb_size' => $img_size, 'class' => $skip_lazy_class_name ));
 		        $fullsize_image = wp_get_attachment_image_src($attach_id, 'full');
 						if( isset($fullsize_image[0]) ) {
 							$post_thumbnail['p_img_fullsize'] = $fullsize_image[0];
@@ -682,7 +695,7 @@ foreach ( $images as $attach_id ) {
 		switch ( $source ) {
 			case 'media_library':
 				if ($attach_id > 0) {
-			        $post_thumbnail = wpb_getImageBySize(array( 'attach_id' => (int) $attach_id, 'thumb_size' => $img_size, 'class' => 'skip-lazy' ));
+			        $post_thumbnail = wpb_getImageBySize(array( 'attach_id' => (int) $attach_id, 'thumb_size' => $img_size, 'class' => $skip_lazy_class_name ));
 			    }
 			    else {
 			        $post_thumbnail = array();

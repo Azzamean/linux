@@ -56,9 +56,13 @@ if( isset($options['portfolio_remove_single_header']) &&
 	$remove_single_header = 'true';
 } 
 
+$password_protected_attr = '';
+if ( post_password_required() ) {
+	$password_protected_attr = 'data-password-protected="true"';
+}
 ?>
 
-<div id="<?php echo esc_attr( $full_width_portfolio ); ?>" <?php if ( ! empty( $bg ) && $fwp !== 'enabled' || ! empty( $bg_color ) && $fwp !== 'enabled' ) { echo ' data-project-header-bg="true"'; } ?> data-featured-img="<?php echo esc_attr( $featured_src[0] ); ?>">
+<div id="<?php echo esc_attr( $full_width_portfolio ); ?>" <?php echo $password_protected_attr; ?><?php if ( ! empty( $bg ) && $fwp !== 'enabled' || ! empty( $bg_color ) && $fwp !== 'enabled' ) { echo ' data-project-header-bg="true"'; } ?> data-featured-img="<?php echo esc_attr( $featured_src[0] ); ?>">
 			
 		<?php
 		if( function_exists('nectar_page_header') && 'true' !== $remove_single_header ) {

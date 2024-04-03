@@ -8223,6 +8223,9 @@ class NectarElDynamicStyles {
 
         foreach( $devices as $device => $media_query ) {
 
+          $body_selector = ($device !== 'desktop') ? 'body ' : '';
+          $html_selector = ($device === 'phone') ? 'html ' : '';
+
           if( isset($atts['font_size_'.$device]) && strlen($atts['font_size_'.$device]) > 0 ) {
 
             $font_size = esc_attr( self::percent_unit_type_class($atts['font_size_'.$device]) );
@@ -8256,15 +8259,24 @@ class NectarElDynamicStyles {
             }
 
             self::$element_css[] = '@media only screen and (max-width: '.$media_query.') { 
-              .nectar-split-heading.font_size_'.$device.'_'. $font_size .' {
-                line-height: '. $line_height . esc_attr( $override ).';
-              } 
-    
               .nectar-split-heading.font_size_'.$device.'_'. $font_size .' * {
                 font-size: inherit'. esc_attr( $override ).';
-                line-height: inherit'. esc_attr( $override ).';
               }
             }';
+
+            // auto line height.
+            if ( !$split_heading_line_height ) {
+              self::$element_css[] = '@media only screen and (max-width: '.$media_query.') { 
+                '. $html_selector . $body_selector . '.nectar-split-heading.font_size_'.$device.'_'. $font_size .' {
+                  line-height: '. $line_height .';
+                } 
+      
+                '. $html_selector . $body_selector . '.nectar-split-heading.font_size_'.$device.'_'. $font_size .' * {
+                  line-height: inherit;
+                }
+              }';
+            }
+
           }
 
         }

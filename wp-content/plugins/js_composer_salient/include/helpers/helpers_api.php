@@ -149,8 +149,10 @@ if ( ! function_exists( 'vc_is_updater_disabled' ) ) {
 	 * @since 4.2
 	 */
 	function vc_is_updater_disabled() {
-		return vc_manager()->isUpdaterDisabled();
-
+		// nectar addition
+		return true;
+		// nectar addition end
+		//return vc_manager()->isUpdaterDisabled();
 	}
 }
 if ( ! function_exists( 'vc_default_editor_post_types' ) ) {

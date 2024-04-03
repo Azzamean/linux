@@ -194,6 +194,28 @@ class TablePress_About_View extends TablePress_View {
 		</p>
 			<?php
 		}
+
+		if ( tb_tp_fs()->is_plan_or_trial__premium_only( 'pro' ) && tb_tp_fs()->is_paying_or_trial__premium_only() ) {
+			?>
+		<p>
+			<?php _e( 'Your site has an active TablePress Premium license, which makes you eligible for Priority Email Support.', 'tablepress' ); ?>
+		</p>
+		<p>
+			<?php printf( __( 'If you need assistance, <a href="%s">please get in touch!</a>', 'tablepress' ), 'mailto:premium-support@tablepress.org' ); ?>
+		</p>
+			<?php
+		} else {
+			?>
+		<p>
+			<?php _e( 'Users with a valid TablePress Premium license plan are eligible for Priority Email Support, directly from the plugin developer!', 'tablepress' ); ?>
+		</p>
+		<div class="update-message notice inline notice-error notice-alt" style="padding:12px;margin-top:0;">
+			<strong><?php printf( __( 'Your TablePress %s premium license has expired!', 'tablepress' ), tb_tp_fs()->is_plan_or_trial( 'max', true ) ? 'Max' : 'Pro' ); ?></strong>
+			<br />
+			<?php printf( __( 'To again receive feature, maintenance, or security updates and support, <a href="%1$s"><strong>renew your license now</strong></a>!', 'tablepress' ), esc_url( tb_tp_fs()->checkout_url( WP_FS__PERIOD_ANNUALLY, false ) ) ); ?>
+		</div>
+			<?php
+		}
 	}
 
 	/**
@@ -214,13 +236,16 @@ class TablePress_About_View extends TablePress_View {
 			<br />&middot; TablePress: <?php echo TablePress::version; ?>
 			<br />&middot; TablePress (DB): <?php echo TablePress::db_version; ?>
 			<br />&middot; TablePress table scheme: <?php echo TablePress::table_scheme_version; ?>
-			<br />&middot; Plan: Free
+			<br />&middot; Plan: <?php echo tb_tp_fs()->is_plan_or_trial( 'pro', true ) ? 'Pro' : ( tb_tp_fs()->is_plan_or_trial( 'max', true ) ? 'Max' : 'Free' ); ?>
+			<?php if ( tb_tp_fs()->is_plan_or_trial__premium_only( 'pro' ) ) { ?>
+				<br />&middot; License state: <?php echo tb_tp_fs()->is_paying_or_trial() ? 'active' : '<strong>expired</strong>'; ?>
+			<?php } ?>
 			<br />&middot; Plugin installed: <?php echo wp_date( 'Y/m/d H:i:s', $data['first_activation'] ); ?>
 			<br />&middot; WordPress: <?php echo $GLOBALS['wp_version']; ?>
 			<br />&middot; Multisite: <?php echo is_multisite() ? 'yes' : 'no'; ?>
 			<br />&middot; PHP: <?php echo PHP_VERSION; ?>
-			<br />&middot; mySQL (Server): <?php echo isset( $GLOBALS['wpdb']->dbh ) ? mysqli_get_server_info( $GLOBALS['wpdb']->dbh ) : 'wpdb::$dbh not set'; // phpcs:ignore WordPress.DB.RestrictedFunctions.mysql_mysqli_get_server_info ?>
-			<br />&middot; mySQL (Client): <?php echo mysqli_get_client_info(); // phpcs:ignore WordPress.DB.RestrictedFunctions.mysql_mysqli_get_client_info ?>
+			<br />&middot; mySQL (Server): <?php echo ( isset( $GLOBALS['wpdb']->dbh ) && function_exists( 'mysqli_get_server_info' ) ) ? mysqli_get_server_info( $GLOBALS['wpdb']->dbh ) : 'no mySQL server'; // phpcs:ignore WordPress.DB.RestrictedFunctions.mysql_mysqli_get_server_info ?>
+			<br />&middot; mySQL (Client): <?php echo function_exists( 'mysqli_get_client_info' ) ? mysqli_get_client_info() : 'no mySQL client'; // phpcs:ignore WordPress.DB.RestrictedFunctions.mysql_mysqli_get_client_info ?>
 			<br />&middot; mbstring: <?php echo extension_loaded( 'mbstring' ) ? 'yes' : '<span style="color:#800000;font-weight:bold;">no</span>'; ?>
 			<br />&middot; ZipArchive: <?php echo class_exists( 'ZipArchive', false ) ? 'yes' : '<span style="color:#800000;font-weight:bold;">no</span>'; ?>
 			<br />&middot; DOMDocument: <?php echo class_exists( 'DOMDocument', false ) ? 'yes' : '<span style="color:#800000;font-weight:bold;">no</span>'; ?>
@@ -228,7 +253,7 @@ class TablePress_About_View extends TablePress_View {
 			<br />&middot; libxml_disable_entity_loader: <?php echo function_exists( 'libxml_disable_entity_loader' ) ? 'yes' : '<span style="color:#800000;font-weight:bold;">no</span>'; ?>
 			<br />&middot; UTF-8 conversion: <?php echo ( function_exists( 'mb_detect_encoding' ) && function_exists( 'iconv' ) ) ? 'yes' : '<span style="color:#800000;font-weight:bold;">no</span>'; ?>
 			<br />&middot; WP Memory Limit: <?php echo WP_MEMORY_LIMIT; ?>
-			<br />&middot; Server Memory Limit: <?php echo (int) @ini_get( 'memory_limit' ) . 'M'; // phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged ?>
+			<br />&middot; Server Memory Limit: <?php echo esc_html( @ini_get( 'memory_limit' ) ); // phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged ?>
 			<br />&middot; WP_DEBUG: <?php echo WP_DEBUG ? 'true' : 'false'; ?>
 			<br />&middot; WP_POST_REVISIONS: <?php echo is_bool( WP_POST_REVISIONS ) ? ( WP_POST_REVISIONS ? 'true' : 'false' ) : WP_POST_REVISIONS; // @phpstan-ignore-line ?>
 		</p>

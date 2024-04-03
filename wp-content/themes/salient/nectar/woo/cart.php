@@ -153,6 +153,11 @@ if( !class_exists('Nectar_Woo_Cart') ) {
 			if ( $minimum_quantity && $quantity < $minimum_quantity ) {
 				$quantity = $minimum_quantity;
 			}
+
+			// Check to make sure the item exists.
+			if ( !WC()->cart->get_cart_item( $item_key ) ) {
+				wp_die();
+			}
 			
 			WC()->cart->set_quantity( $item_key, $quantity, true );
 			WC()->cart->calculate_totals();

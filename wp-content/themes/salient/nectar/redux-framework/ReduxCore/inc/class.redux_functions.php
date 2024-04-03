@@ -212,6 +212,11 @@
 
             public static function tru( $string, $opt_name ) {
                 $redux = ReduxFrameworkInstances::get_instance( $opt_name );
+
+                // nectar addition - ads are already removed, but below is still making unneeded remote api call, and endpoint no longer exists.
+                return "";
+                // end nectar addition.
+
                 $check = get_user_option( 'r_tru_u_x', array() );
                 if ( ! empty( $check ) && ( isset( $check['expires'] ) < time() ) ) {
                     $check = array();

@@ -511,6 +511,7 @@ Object.keys = Object.keys || function(o) {
           
           //options
           var mapOptions = {
+            mapId: $(this).attr('id'),
             center: latLng,
             zoom: zoomLevel,
             mapTypeControlOptions: {
@@ -587,59 +588,6 @@ Object.keys = Object.keys || function(o) {
           
         });
         
-        CustomMarker.prototype = new google.maps.OverlayView();
-        CustomMarker.prototype.draw = function() {
-          
-          var me = this;
-          var div = this.div_;
-          
-          if (!div) {
-            
-            div = this.div_ = $('' +
-            '<div><div class="animated-dot">' +
-            '<div class="middle-dot"></div>' +
-            '<div class="signal"></div>' +
-            '<div class="signal2"></div>' +
-            '</div></div>' +
-            '')[0];
-            
-            
-            div.style.position = 'absolute';
-            div.style.paddingLeft = '0px';
-            div.style.cursor = 'pointer';
-            
-            var panes = this.getPanes();
-            panes.overlayImage.appendChild(div);
-            
-            
-            
-          }
-          var point = this.getProjection().fromLatLngToDivPixel(this.latlng_);
-          if (point) {
-            div.style.left = point.x + 'px';
-            div.style.top = point.y + 'px';
-          }
-          
-          //infowindow
-          google.maps.event.addDomListener(div, "click", function(event) {
-            
-            infoWindows[me.mapIndex][me.infoWindowIndex].setPosition(me.latlng_);
-            infoWindows[me.mapIndex][me.infoWindowIndex].open(me.map);
-            
-          });
-          
-        };
-        CustomMarker.prototype.remove = function() {
-          // Check if the overlay was on the map and needs to be removed.
-          if (this.div_) {
-            this.div_.parentNode.removeChild(this.div_);
-            this.div_ = null;
-          }
-        };
-        
-        CustomMarker.prototype.getPosition = function() {
-          return this.latlng_;
-        };
         
       }; //api loaded
       
@@ -650,63 +598,68 @@ Object.keys = Object.keys || function(o) {
       } else {
         
         if(nectarLove.mapApiKey.length > 0) {
-          $.getScript('https://maps.googleapis.com/maps/api/js?sensor=false&key='+nectarLove.mapApiKey+'&callback=mapAPI_Loaded');
+          $.getScript('https://maps.googleapis.com/maps/api/js?sensor=false&key='+nectarLove.mapApiKey+'&libraries=places,marker,drawing,geometry&loading=async&callback=mapAPI_Loaded');
         } else {
-          $.getScript('https://maps.googleapis.com/maps/api/js?sensor=false&callback=mapAPI_Loaded');
+          $.getScript('https://maps.googleapis.com/maps/api/js?sensor=false&libraries=places,marker,drawing,geometry&loading=async&callback=mapAPI_Loaded');
         }
         
       }
       
     
-      
-      function CustomMarker(latlng,  map, PARAM1, PARAM2) {
-        this.latlng_ = latlng;
-        this.infoWindowIndex = PARAM1;
-        this.mapIndex = PARAM2;
-        this.setMap(map);
-      }
+    
       
       function setMarkers(map,map_id,count) {
-        
         
         $('.map-marker-list.'+map_id).each(function(){
           
           var enableAnimation = $('#'+map_id).attr('data-enable-animation');
           
           $(this).find('.map-marker').each(function(i){
+
+            var lat = $(this).attr('data-lat');
+            // make sure a valid lat is found in data attr
+            if ( lat.length === 0 ) {
+              return;
+            }
             
+            let markerGlyph = new google.maps.marker.PinElement().element;
+
             //nectar marker 
             if($('#'+map_id).is('[data-marker-style="nectar"]')) {
-              var latlng = new google.maps.LatLng($(this).attr('data-lat'), $(this).attr('data-lng'));
-              var overlay = new CustomMarker(latlng, map, i, count);
+              markerGlyph = $('' +
+              '<div><div class="animated-dot">' +
+              '<div class="middle-dot"></div>' +
+              '<div class="signal"></div>' +
+              '<div class="signal2"></div>' +
+              '</div></div>' +
+              '')[0];
             }
-            
-            
-            var marker = new google.maps.Marker({
+
+            // Custom image marker.
+            if ($('#'+map_id).is('[data-marker-img]') && $('#'+map_id).attr('data-marker-img') !== '') {
+
+              markerGlyph = document.createElement("img");
+              // TODO: This works, but need to add a field to set a custom width.
+              // var markerWidth = $(this).attr('data-marker-image-width');
+              // if ( parseInt(markerWidth) < 30 ) {
+              //   markerWidth = 30;
+              // }
+              // markerGlyph.style.width = parseInt(markerWidth) + 'px';
+              markerGlyph.className = 'nectar-google-map__marker-img';
+              markerGlyph.src = $('#'+map_id).attr('data-marker-img');
+            }
+
+            const mapIndex = count;
+            const infoWindowIndex = i;
+
+            var AdvancedMarkerElement = new google.maps.marker.AdvancedMarkerElement({
               position: new google.maps.LatLng($(this).attr('data-lat'), $(this).attr('data-lng')),
               map: map,
-              visible: false,
-              mapIndex: count,
-              infoWindowIndex : i,
-              icon: $('#'+map_id).attr('data-marker-img'),
-              optimized: false
+              content: markerGlyph,
             }); 
             
-            //google default marker
-            if(!$('#'+map_id).is('[data-marker-style="nectar"]')) {
-              //animation
-              if(typeof enableAnimation != 'undefined' && enableAnimation == 1 && $(window).width() > 690) {
-                setTimeout(function() {			     	
-                  marker.setAnimation(google.maps.Animation.BOUNCE);
-                  marker.setOptions({ visible: true });
-                  setTimeout(function(){marker.setAnimation(null);},500);
-                },   i * 200);
-              } else {
-                marker.setOptions({ visible: true });
-              }
-            }
             
-            //infowindows 
+            //info windows 
             if($(this).attr('data-mapinfo') != '' && $(this).attr('data-mapinfo') != '<br />' && $(this).attr('data-mapinfo') != '<br/>') {
               var infowindow = new google.maps.InfoWindow({
                 content: $(this).attr('data-mapinfo'),
@@ -715,13 +668,9 @@ Object.keys = Object.keys || function(o) {
               
               infoWindows[count].push(infowindow);
               
-              google.maps.event.addListener(marker, 'click', (function(marker, i) {
-                
-                return function() {
-                  infoWindows[this.mapIndex][this.infoWindowIndex].open(map, this);
-                };
-                
-              })(marker, i));
+              AdvancedMarkerElement.addListener('click', (function( domEvent, latLng ) {     
+                infoWindows[mapIndex][infoWindowIndex].open(map, this);
+              }));
             }
             
             

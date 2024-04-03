@@ -55,22 +55,24 @@ class Vc_Updating_Manager {
 		$t = explode( '/', $plugin_slug );
 		$this->slug = str_replace( '.php', '', $t[1] );
 
+		// nectar addition
 		// define the alternative API for updating checking
-		add_filter( 'pre_set_site_transient_update_plugins', array(
-			$this,
-			'check_update',
-		) );
+		// add_filter( 'pre_set_site_transient_update_plugins', array(
+		// 	$this,
+		// 	'check_update',
+		// ) );
 
-		// Define the alternative response for information checking
-		add_filter( 'plugins_api', array(
-			$this,
-			'check_info',
-		), 10, 3 );
+		// // Define the alternative response for information checking
+		// add_filter( 'plugins_api', array(
+		// 	$this,
+		// 	'check_info',
+		// ), 10, 3 );
 
-		add_action( 'in_plugin_update_message-' . vc_plugin_name(), array(
-			$this,
-			'addUpgradeMessageLink',
-		) );
+		// add_action( 'in_plugin_update_message-' . vc_plugin_name(), array(
+		// 	$this,
+		// 	'addUpgradeMessageLink',
+		// ) );
+		// nectar addition end
 	}
 
 	/**

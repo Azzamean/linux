@@ -485,6 +485,14 @@ $image_with_animation_params = array(
         'dependency' => Array( 'element' => 'img_link_large', 'is_empty' => true )
     ),
     array(
+        "type" => "textfield",
+        "class" => "",
+        "heading" => esc_html__("Screen Reader Text", "salient-core"),
+        "param_name" => "screen_reader_text",
+        "admin_label" => false,
+        "description" => 'Text to describe the image link that will be used for screen reader accessibility.',
+    ),
+    array(
         'type' => 'dropdown',
         'heading' => esc_html__( 'Link Target', 'salient-core' ),
         'param_name' => 'img_link_target',
@@ -698,6 +706,14 @@ $image_with_animation_params = array(
             'heading' => esc_html__( 'Custom', 'salient-core' ) . ' "' . esc_html__( 'sizes', 'salient-core' )  . '" ' . esc_html__( 'Attribute', 'salient-core' ),
             'param_name' => 'custom_sizes_attr',
             'description' => esc_html__( 'Optionally define a set of media conditions (e.g. screen widths) to hint to the browser which size to download. e.g. (min-width: 400px) 400px, 100vw', 'salient-core' )
+        ),
+        array(
+            'type' => 'checkbox',
+            'heading' => esc_html__( 'Display Image Title', 'salient-core' ),
+            'param_name' => 'display_title',
+            'edit_field_class' => 'vc_col-xs-12 salient-fancy-checkbox',
+            'description' => esc_html__( 'Renders the title, which will be displayed when hovering over the image.', 'salient-core' ),
+            'value' => Array( esc_html__( 'Yes, please', 'salient-core' ) => '1' )
         ),
         array(
             "type" => "dropdown",

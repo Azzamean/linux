@@ -2065,6 +2065,8 @@ body.material #slide-out-widget-area[class*="slide-out-from-right"] .off-canvas-
 body.material #slide-out-widget-area[class*="slide-out-from-right"] .off-canvas-menu-container .sub-menu {
   display: flex;
   flex-direction: column;
+}
+body.material #slide-out-widget-area[class*="slide-out-from-right"] .open-submenu .sub-menu { 
   transform: translateZ(0);
 }
 body.material #slide-out-widget-area.slide-out-from-right .off-canvas-menu-container li a {

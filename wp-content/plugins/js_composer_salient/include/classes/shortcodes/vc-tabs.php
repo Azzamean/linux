@@ -119,7 +119,6 @@ class WPBakeryShortCode_Vc_Tabs extends WPBakeryShortCode {
 
 
 
-
 /*nectar addition*/
 require_once vc_path_dir('SHORTCODES_DIR', 'vc-column.php');
 

@@ -801,6 +801,15 @@ if ( ! function_exists( 'nectar_slider_display' ) ) {
 								else if( 'h3' === $config_arr['heading_tag'] ) {
 									$heading_tag = 'h3';
 								}
+								else if( 'h4' === $config_arr['heading_tag'] ) {
+									$heading_tag = 'h4';
+								}
+								else if( 'h5' === $config_arr['heading_tag'] ) {
+									$heading_tag = 'h5';
+								}
+								else if( 'div' === $config_arr['heading_tag'] ) {
+									$heading_tag = 'div';
+								}
 							}
 							
 							$slider .= '<'. esc_html($heading_tag) .' class="ns-heading-el">' . wp_kses_post($slide_title) . '</'.esc_html($heading_tag).'>'; }
@@ -813,6 +822,10 @@ if ( ! function_exists( 'nectar_slider_display' ) ) {
 									
 									if ( ! empty( $button_1_text ) ) {
 										
+										if (class_exists('Sitepress') && ! empty( $button_1_link ) ) {
+											$current_lang = apply_filters( 'wpml_current_language', NULL );
+											$button_1_link = apply_filters( 'wpml_permalink', $button_1_link, $current_lang, true );
+										}
 										$button_1_link = ! empty( $button_1_link ) ? $button_1_link : '#';
 										
 										// check button link to see if it's a video or googlemap
@@ -840,6 +853,11 @@ if ( ! function_exists( 'nectar_slider_display' ) ) {
 									
 									if ( ! empty( $button_2_text ) ) {
 										
+										if (class_exists('Sitepress') && ! empty( $button_2_link ) ) {
+											$current_lang = apply_filters( 'wpml_current_language', NULL );
+											$button_2_link = apply_filters( 'wpml_permalink', $button_2_link, $current_lang, true );
+										}
+
 										$button_2_link = ! empty( $button_2_link ) ? $button_2_link : '#';
 										
 										// check button link to see if it's a video or googlemap
@@ -963,16 +981,16 @@ if ( ! function_exists( 'nectar_slider_display' ) ) {
 					$config_arr['slider_button_styling'] !== 'btn_with_preview' &&
 					$config_arr['overall_style'] !== 'directional' ) {
 						
-						$slider .= '<a href="#" class="slider-prev"><i class="icon-salient-left-arrow"></i> <div class="slide-count"> <span class="slide-current">1</span> <i class="icon-salient-right-line"></i> <span class="slide-total"></span> </div> </a>
-						<a href="#" class="slider-next"><i class="icon-salient-right-arrow"></i> <div class="slide-count"> <span class="slide-current">1</span> <i class="icon-salient-right-line"></i> <span class="slide-total"></span> </div> </a>';
+						$slider .= '<a href="#" aria-label="'.esc_attr__( 'Previous', 'salient-nectar-slider').'" class="slider-prev"><i class="icon-salient-left-arrow"></i> <div class="slide-count"> <span class="slide-current">1</span> <i class="icon-salient-right-line"></i> <span class="slide-total"></span> </div> </a>
+						<a href="#" aria-label="'.esc_attr__( 'Next', 'salient-nectar-slider').'" class="slider-next"><i class="icon-salient-right-arrow"></i> <div class="slide-count"> <span class="slide-current">1</span> <i class="icon-salient-right-line"></i> <span class="slide-total"></span> </div> </a>';
 					} 
 					elseif ( $config_arr['arrow_navigation'] === 'true' && 
 					$slide_count > 1 && 
 					$config_arr['slider_button_styling'] === 'btn_with_preview' || 
 					$config_arr['overall_style'] === 'directional' ) {
 						
-						$slider .= '<a href="#" class="slider-prev"><i class="fa fa-angle-left"></i> </a>
-						<a href="#" class="slider-next"><i class="fa fa-angle-right"></i> </a>';
+						$slider .= '<a href="#" aria-label="'.esc_attr__( 'Previous', 'salient-nectar-slider').'" class="slider-prev"><i class="fa fa-angle-left"></i> </a>
+						<a href="#" aria-label="'.esc_attr__( 'Next', 'salient-nectar-slider').'" class="slider-next"><i class="fa fa-angle-right"></i> </a>';
 					}
 					
 					if ( $config_arr['bullet_navigation'] === 'true' && $slide_count > 1 ) {

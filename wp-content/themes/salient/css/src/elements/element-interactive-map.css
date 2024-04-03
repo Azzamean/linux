@@ -30,6 +30,9 @@ body.page-template-template-contact[data-header-resize="1"] .container-wrap {
 .nectar-google-map{
   margin-bottom:0
 }
+.row .col .nectar-google-map__marker-img {
+  margin-bottom: 0;
+}
 .nectar-google-map img{
   max-width:none!important
 }
@@ -57,7 +60,14 @@ body.page-template-template-contact-php #page-header-bg{
   letter-spacing:0;
   line-height:20px
 }
-.nectar-google-map .animated-dot,
+.nectar-google-map .animated-dot  {
+  width:20px;
+  height:20px;
+  left: 0;
+  top:-2px;
+  position:relative
+}
+
 .nectar-leaflet-map .animated-dot {
   width:20px;
   height:20px;

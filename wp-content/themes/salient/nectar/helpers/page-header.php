@@ -312,7 +312,7 @@ if ( !function_exists( 'nectar_page_header' ) ) {
 			$bg_overlay_class       = ($bg_overlay === 'on') ? " bg-overlay": null;
 			$ajax_page_loading      = (!empty($nectar_options['ajax-page-loading']) && $nectar_options['ajax-page-loading'] === '1') ? true : false;
 
-			$hentry_post_class = ( isset($post->post_type) && $post->post_type === 'post' && is_single() ) ? ' hentry' : '';
+			$hentry_post_class = ( isset($post->post_type) && $post->post_type === 'post' && is_single() ) ? apply_filters('nectar_post_header_hentry_class', ' hentry') : '';
 
 			if($animate_in_effect === 'slide-down' && true !== $responsive_sizing_bool ) {
 				$wrapper_height_style = null;

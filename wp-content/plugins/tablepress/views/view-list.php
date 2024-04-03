@@ -40,6 +40,12 @@ class TablePress_List_View extends TablePress_View {
 	#[\Override]
 	public function setup( /* string */ $action, array $data ) /* : void */ {
 		// Don't use type hints in the method declaration to prevent PHP errors, as the method is inherited.
+
+		if ( tb_tp_fs()->is__premium_only() ) {
+			// Register the feature pointer for the "Modules" nav tab, before running `parent::setup();`. This is done here as the inherited class property can not be excluded from the premium version.
+			$this->wp_pointers[] = 'tp20_modules_nav_tab__premium_only';
+		}
+
 		parent::setup( $action, $data );
 
 		add_thickbox(); // For the table preview.
@@ -248,6 +254,32 @@ class TablePress_List_View extends TablePress_View {
 		$item = esc_attr( $params['item'] );
 		$target = esc_attr( $params['target'] ?? '' );
 		return "<a class=\"{$class}\" href=\"{$url}\" data-action=\"{$action}\" data-item=\"{$item}\" data-target=\"{$target}\">{$text}</a>";
+	}
+
+	/**
+	 * Sets the content for the WP feature pointer that pointer to the "Modules" nav tab (visible for premium users only).
+	 *
+	 * @since 2.0.0
+	 */
+	public function wp_pointer_tp20_modules_nav_tab__premium_only(): void {
+		$plan = tb_tp_fs()->is_plan_or_trial( 'pro', true ) ? 'Pro' : ( tb_tp_fs()->is_plan_or_trial( 'max', true ) ? 'Max' : '' );
+
+		if ( '' !== $plan ) {
+			$content  = '<h3>' . sprintf( __( 'Welcome to TablePress %s!', 'tablepress' ), $plan ) . '</h3>';
+			$content .= '<p>' . __( 'Thank you for upgrading!', 'tablepress' ) . ' ' . sprintf( __( 'To activate the desired premium feature modules, please go to the “%s” screen.', 'tablepress' ), __( 'Modules', 'tablepress' ) ) . '</p>';
+		} else {
+			$content  = '<h3>' . sprintf( __( 'Welcome to TablePress!', 'tablepress' ), $plan ) . '</h3>';
+			$content .= '<p>' . __( 'TablePress has more to offer!', 'tablepress' ) . ' ' . sprintf( __( 'To see the available premium feature modules, please go to the “%s” screen.', 'tablepress' ), __( 'Modules', 'tablepress' ) ) . '</p>';
+		}
+
+		$this->admin_page->print_wp_pointer_js(
+			'tp20_modules_nav_tab__premium_only',
+			'#tablepress-nav-item-modules',
+			array(
+				'content'  => $content,
+				'position' => array( 'edge' => 'top', 'align' => 'left' ),
+			)
+		);
 	}
 
 } // class TablePress_List_View

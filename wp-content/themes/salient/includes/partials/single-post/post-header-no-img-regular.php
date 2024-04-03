@@ -46,10 +46,12 @@ if ( get_post_format() !== 'status' && get_post_format() !== 'aside' && 'image_u
 			if( $single_post_header_inherit_fi === '1' && has_post_thumbnail() ) {
 				$inherit_and_has_featured_img = true;
 			}
+			
+			$hentry_class = apply_filters('nectar_post_header_hentry_class', ' hentry');
 
 			if ( ( empty( $bg ) && empty( $bg_color ) ) && $fullscreen_header != true && $inherit_and_has_featured_img !== true ) { ?>
 
-	  <div class="row heading-title hentry" data-header-style="<?php echo esc_attr( $blog_header_type ); ?>">
+	  <div class="row heading-title<?php echo esc_attr($hentry_class); ?>" data-header-style="<?php echo esc_attr( $blog_header_type ); ?>">
 		<div class="col span_12 section-title blog-title">
 				<?php do_action('nectar_before_post_title'); ?>
 				<?php if ( $blog_header_type === 'default_minimal' && 'post' === get_post_type() ) { ?>

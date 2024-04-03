@@ -181,7 +181,7 @@ class Vc_Manager {
 	}
 
 	/**
-	 * Get the instane of VC_Manager
+	 * Get the instance of VC_Manager
 	 *
 	 * @return self
 	 */
@@ -350,8 +350,11 @@ class Vc_Manager {
 	 *
 	 */
 	protected function asAdmin() {
-		/* nectar addition
-		 vc_license()->init(); */
+		// nectar addition
+		if ( apply_filters('nectar_wpbakery_ai_enabled', false) === true ) {
+			vc_license()->init();
+		}
+		// nectar addition end
 		vc_backend_editor()->addHooksSettings();
 	}
 
@@ -402,6 +405,7 @@ class Vc_Manager {
 				get_transient( 'vc_action' ) === 'vc_editable'
 				&& isset( $_SERVER['HTTP_SEC_FETCH_DEST'] )
 				&& 'iframe' === $_SERVER['HTTP_SEC_FETCH_DEST'] ) {
+
 				delete_transient( 'vc_action' );
 				$this->mode = 'page_editable';
 			} else {

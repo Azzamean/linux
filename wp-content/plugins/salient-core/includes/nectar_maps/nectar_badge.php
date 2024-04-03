@@ -229,7 +229,7 @@ foreach ($imported_groups as $group) {
 
 return array(
 	"name" => esc_html__("Badge", "salient-core"),
-	"base" => "heading",
+	"base" => "nectar_badge",
 	"icon" => "icon-wpb-badge",
 	"category" => esc_html__('Typography', 'salient-core'),
 	"description" => esc_html__('Badge Label', 'salient-core'),

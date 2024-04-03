@@ -75,7 +75,7 @@ if ( $header_format === 'menu-left-aligned' ||
 					wp_nav_menu(
 						array(
 							'walker'         => new Nectar_OCM_Icon_Walker(),
-							'theme_location' => 'top_nav',
+							'theme_location' => apply_filters('nectar_simple_dropdown_ocm_location','top_nav'),
 							'container'      => '',
 							'items_wrap'     => '%3$s',
 						)

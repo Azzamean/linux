@@ -164,6 +164,10 @@ body .woocommerce .nectar-woo-flickity[data-item-shadow="1"] li.product.text_on_
 }
 
 @media only screen and (max-width: 690px) {
+
+  .nectar-woo-flickity[data-controls="arrows-and-text"] {
+    position: relative;
+  }
 	body .woocommerce .nectar-woo-flickity.related-upsell-carousel .flickity-slider .flickity-cell,
 	body .woocommerce .nectar-woo-flickity[data-mobile-col-width="75%"] .flickity-slider .flickity-cell {
 		width: 75%;

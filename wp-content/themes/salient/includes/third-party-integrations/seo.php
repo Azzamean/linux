@@ -227,6 +227,11 @@ add_filter( 'wpseo_sitemap_urlimages', 'salient_wpbakery_image_gallery_sitemap_i
 if( !function_exists('salient_is_yoast_breadcrumb_active') ) {
   function salient_is_yoast_breadcrumb_active() {
     if ( function_exists('yoast_breadcrumb') && class_exists('WPSEO_Options') ) {
+      
+    if ( !method_exists('WPSEO_Options', 'get') ) {
+      return false;
+    }
+
     $breadcrumbs_enabled = WPSEO_Options::get( 'breadcrumbs-enable', false );
       if ( $breadcrumbs_enabled && is_page() && !is_front_page() ) {
         return true;

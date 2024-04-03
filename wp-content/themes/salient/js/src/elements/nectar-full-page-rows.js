@@ -757,6 +757,11 @@
               that.responsiveTooltips();
               $(window).trigger('nectar-waypoints-reinit');
               $(window).trigger('fp-section-init');
+
+              // Added for compatibility with elements inside of a scroll overflow section.
+              // Ensure that the scroll height is accurate for the inner content which might have been 
+              // Sized with JS e.g. lazy loaded items.
+              $(window).trigger('resize');
           }
           
           if($row_id !='footer-outer') {

@@ -504,13 +504,13 @@ body .nectar-recent-posts-single_featured .nectar-button[data-arrow-style="curve
 .nectar-recent-posts-single_featured.multiple_featured[data-bg-overlay="diagonal_gradient"] .recent-post-container {
   z-index: 10;
 }
- .nectar-recent-posts-single_featured.multiple_featured .recent-post-container h2 a > span {
+ .nectar-recent-posts-single_featured.multiple_featured .recent-post-container .large-featured-post-title a > span {
      position: relative;
      display: inline-block;
      overflow: hidden;
      vertical-align: bottom;
 }
- .nectar-recent-posts-single_featured.multiple_featured .recent-post-container h2 a > span span {
+ .nectar-recent-posts-single_featured.multiple_featured .recent-post-container .large-featured-post-title a > span span {
      position: relative;
      display: block;
      -webkit-transform: translate3d(0, 102%, 0);
@@ -524,7 +524,7 @@ body .nectar-recent-posts-single_featured .nectar-button[data-arrow-style="curve
     margin-top: -25px;
 }
  .nectar-recent-posts-single_featured.multiple_featured .active .grav-wrap, 
- .nectar-recent-posts-single_featured.multiple_featured .active .recent-post-container h2 a > span span, 
+ .nectar-recent-posts-single_featured.multiple_featured .active .recent-post-container .large-featured-post-title a > span span, 
  .nectar-recent-posts-single_featured.multiple_featured .active .nectar-button,
  .nectar-recent-posts-single_featured.multiple_featured .active .custom-content {
      transition: opacity .85s cubic-bezier(0.4, 0, 0.1, 1) 0.2s, transform .85s cubic-bezier(0.4, 0, 0.1, 1) 0.2s, box-shadow .45s cubic-bezier(0.25, 1, 0.33, 1);
@@ -541,7 +541,7 @@ body .nectar-recent-posts-single_featured .nectar-button[data-arrow-style="curve
      opacity: 1;
      transform: translateY(0px)
 }
- .nectar-recent-posts-single_featured.multiple_featured .active .recent-post-container h2 a > span span {
+ .nectar-recent-posts-single_featured.multiple_featured .active .recent-post-container .large-featured-post-title a > span span {
      -webkit-transform: translate3d(0, 0, 0);
      transform: translate3d(0, 0, 0);
      opacity: 1;

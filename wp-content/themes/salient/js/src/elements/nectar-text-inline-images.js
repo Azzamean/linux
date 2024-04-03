@@ -151,6 +151,7 @@
         initInlineImages();
         $(window).on('vc_reload', function(){
             setTimeout(initInlineImages,200); 
+            setTimeout(initInlineImages,1500); 
         });
 
         

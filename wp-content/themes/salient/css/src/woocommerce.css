@@ -3342,6 +3342,7 @@ ul.products li.product.no-trans, ul.products li.product.no-trans *, ul.products 
 .woocommerce ul.products li.product .price del, .woocommerce-page ul.products li.product .price del {
 	font-size: 0.67em;
 	color: rgba(145, 145, 145, 0.5);
+	opacity: 1;
 	display: inline;
 }
 

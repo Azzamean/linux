@@ -805,6 +805,11 @@ div[data-style="parallax_next_only"].blog_next_prev_buttons h3 {
   padding-top: 60px;
 }
 
+.related-post-wrap h3.related-title.hidden {
+  visibility: hidden;
+  height: 0;
+}
+
 .related-post-wrap h3.related-title:not(.nectar-blog-single-section-title) {
   margin-bottom: 20px;
 }

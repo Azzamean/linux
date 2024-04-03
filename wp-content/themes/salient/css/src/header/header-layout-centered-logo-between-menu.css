@@ -94,7 +94,7 @@ body #header-outer[data-format="centered-logo-between-menu"] .row .col.span_9 .s
 }
 
 
-#header-outer[data-format="centered-logo-between-menu"] .row .col.span_3 {
+#header-outer[data-format="centered-logo-between-menu"] #top .row .col.span_3 {
   pointer-events: none;
 }
 body #header-outer[data-format="centered-logo-between-menu"] .span_3 #logo:not(.no-image) img {

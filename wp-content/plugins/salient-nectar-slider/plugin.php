@@ -5,7 +5,7 @@
  * Description: A stylish & simple slider to feature content.
  * Author: ThemeNectar
  * Author URI: https://themenectar.com
- * Version: 1.7.5
+ * Version: 1.7.6
  * Text Domain: salient-nectar-slider
  */
 
@@ -17,7 +17,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 define( 'SALIENT_NECTAR_SLIDER_ROOT_DIR_PATH', plugin_dir_path( __FILE__ ) );
 define( 'SALIENT_NECTAR_SLIDER_PLUGIN_PATH', plugins_url( 'salient-nectar-slider' ) );
 if ( ! defined( 'SALIENT_NECTAR_SLIDER_VERSION' ) ) {
-	define( 'SALIENT_NECTAR_SLIDER_VERSION', '1.7.5' );
+	define( 'SALIENT_NECTAR_SLIDER_VERSION', '1.7.6' );
 }
 
 register_deactivation_hook( __FILE__, 'flush_rewrite_rules' );

@@ -33,6 +33,7 @@ extract(shortcode_atts(array(
   'img_link' => '',
   'img_link_large' => '',
 	'img_link_caption' => '',
+  'screen_reader_text' => '',
   'hover_animation' => 'none',
   'hover_overlay_color' => '',
   'box_shadow' => 'none',
@@ -46,6 +47,7 @@ extract(shortcode_atts(array(
   'image_size' => '',
   'custom_image_size' => '',
   'custom_sizes_attr' => '',
+  'display_title' => '',
   'mask_enable' => '',
   'mask_shape' => '',
   'mask_custom_image' => '',
@@ -61,6 +63,7 @@ extract(shortcode_atts(array(
   $image_width  = (!empty($image_width)) ? esc_attr($image_width) : '100';
   $image_height = (!empty($image_height)) ? esc_attr($image_height) : '100';
   $image_srcset = null;
+  $image_id = false;
   $has_dimension_data = false;
   $wp_image_size = ( !empty($image_size) ) ? esc_html($image_size) : 'full';
 
@@ -70,6 +73,7 @@ extract(shortcode_atts(array(
 
   if( preg_match('/^\d+$/',$image_url) ) {
 
+    $image_id = $image_url;
 		$image_url = apply_filters('wpml_object_id', $image_url, 'attachment', TRUE);
 
     $image_src = wp_get_attachment_image_src($image_url, $wp_image_size);
@@ -238,6 +242,14 @@ extract(shortcode_atts(array(
     $image_attrs_escaped .= 'data-animation-easing="'.esc_attr($animation_easing).'" ';
   }
 
+  if ( apply_filters('nectar_display_single_image_titles', $display_title) === '1' && $image_id ) {
+    $image_title = get_the_title($image_id);
+    if ( $image_title ) {
+      $image_attrs_escaped .= 'title="'.esc_attr($image_title).'" ';
+    }
+  
+  }
+
 	// Attributes applied to inner wrap for hover effect.
 	$image_hover_attrs_escaped = '';
 	if( !empty($hover_animation) && 'none' !== $hover_animation ) {
@@ -250,6 +262,14 @@ extract(shortcode_atts(array(
     $image_hover_attrs_escaped .= ' style="'.$custom_shadow_markup.'"';
   }
 
+  $disable_third_party_lazy_loading = apply_filters('nectar_disable_third_party_lazy_loading', true);
+  if ( $disable_third_party_lazy_loading ) {
+    if ( empty($el_class) ) {
+      $el_class = 'skip-lazy';
+    } else {
+      $el_class .= ' skip-lazy';
+    }
+  }
 
   if( 'lazy-load' === $image_loading && true === $has_dimension_data && NectarLazyImages::activate_lazy() ||
 	   ( true === $has_dimension_data && property_exists('NectarLazyImages', 'global_option_active') && true === NectarLazyImages::$global_option_active && 'skip-lazy-load' !== $image_loading ) ) {
@@ -277,6 +297,11 @@ extract(shortcode_atts(array(
 
   if( !empty($img_link) || !empty($img_link_large) ) {
 
+    $aria_label_markup = '';
+    if ( !empty($screen_reader_text) ) {
+      $aria_label_markup = ' aria-label="'.esc_attr($screen_reader_text).'"';
+    }
+
     if( !empty($img_link) && empty($img_link_large) ) {
 
       $link_classes = array(esc_attr($alignment));
@@ -290,8 +315,8 @@ extract(shortcode_atts(array(
       <div class="inner"'.$inner_style_attrs.'>
         <div class="hover-wrap"'.$image_hover_attrs_escaped.'> '.$color_overlay_markup_escaped.'
           <div class="hover-wrap-inner">
-            <a href="'.esc_url($img_link).'" target="'.esc_attr($img_link_target).'" class="'.implode(' ',$link_classes).'">
-              <img class="img-with-animation skip-lazy '.esc_attr($el_class).'" '.$image_attrs_escaped.' />
+            <a href="'.esc_url($img_link).'"'.$aria_label_markup.' target="'.esc_attr($img_link_target).'" class="'.implode(' ',$link_classes).'">
+              <img class="img-with-animation '.esc_attr($el_class).'" '.$image_attrs_escaped.' />
             </a>
           </div>
         </div>
@@ -304,8 +329,8 @@ extract(shortcode_atts(array(
       <div class="inner"'.$inner_style_attrs.'>
         <div class="hover-wrap"'.$image_hover_attrs_escaped.'> '.$color_overlay_markup_escaped.'
           <div class="hover-wrap-inner">
-            <a href="'.esc_url($image_url).'" class="pp '.esc_attr($alignment).'"'.$wp_img_caption_markup_escaped.'>
-              <img class="img-with-animation skip-lazy '.esc_attr($el_class).'" '.$image_attrs_escaped.' />
+            <a href="'.esc_url($image_url).'"'.$aria_label_markup.' class="pp '.esc_attr($alignment).'"'.$wp_img_caption_markup_escaped.'>
+              <img class="img-with-animation '.esc_attr($el_class).'" '.$image_attrs_escaped.' />
             </a>
           </div>
         </div>
@@ -319,7 +344,7 @@ extract(shortcode_atts(array(
       <div class="inner"'.$inner_style_attrs.'>
         <div class="hover-wrap"'.$image_hover_attrs_escaped.'> '.$color_overlay_markup_escaped.'
           <div class="hover-wrap-inner">
-            <img class="img-with-animation skip-lazy '.esc_attr($el_class).'" '.$image_attrs_escaped.' />
+            <img class="img-with-animation '.esc_attr($el_class).'" '.$image_attrs_escaped.' />
           </div>
         </div>
       </div>

@@ -109,6 +109,14 @@ class TablePress_Options_View extends TablePress_View {
 			</div>
 			<?php
 		endif;
+
+		if ( tb_tp_fs()->is_plan_or_trial__premium_only( TablePress::$modules['default-style-customizer']['minimum_plan'] ) ) :
+			?>
+				<p>
+					<?php printf( __( 'To change your tables’ default style in a visual tool, activate the “%1$s” module on the <a href="%2$s">Modules screen</a>.', 'tablepress' ), __( 'Default Style Customizer', 'tablepress' ), TablePress::url( array( 'action' => 'modules' ) ) ); ?>
+				</p>
+			<?php
+		endif;
 	}
 
 	/**

@@ -99,6 +99,11 @@ if( !function_exists('nectar_portfolio_processing') ) {
 			$masonry_sizing_type   = (!empty($nectar_options['portfolio_masonry_grid_sizing']) && $nectar_options['portfolio_masonry_grid_sizing'] === 'photography') ? 'photography' : 'default';
 			$constrain_col_class   = (!empty($constrain_max_cols) && $constrain_max_cols === 'true') ? ' constrain-max-cols' : null ;
 			$infinite_scroll_class = null;
+			$skip_lazy_class_name  = '';
+			$disable_third_party_lazy_loading = apply_filters('nectar_disable_third_party_lazy_loading', true);
+			if ( $disable_third_party_lazy_loading ) {
+				$skip_lazy_class_name = 'skip-lazy';
+			}
 			
 			// Disable masonry for default project style fullwidth.
 			if( $project_style === '1' && $cols === 'elastic' && $bypass_image_cropping !== 'true') {
@@ -495,7 +500,7 @@ if( !function_exists('nectar_portfolio_processing') ) {
 										$custom_thumbnail = get_post_meta($post->ID, '_nectar_portfolio_custom_thumbnail', true); 
 										
 										if( !empty($custom_thumbnail) ){
-											echo '<img class="custom-thumbnail skip-lazy" src="'.nectar_ssl_check( esc_url( $custom_thumbnail ) ).'" alt="'. get_the_title() .'" />';
+											echo '<img class="custom-thumbnail '.esc_attr($skip_lazy_class_name).'" src="'.nectar_ssl_check( esc_url( $custom_thumbnail ) ).'" alt="'. get_the_title() .'" />';
 										}
 										
 										else {
@@ -540,7 +545,7 @@ if( !function_exists('nectar_portfolio_processing') ) {
 
 												if(!empty($image_src)) $image_src = $image_src[0];
 
-												$project_featured_img = '<img class="size-'. esc_attr( $masonry_item_sizing ) .' skip-lazy" src="'. esc_url( $image_src ) .'" alt="'. esc_attr( $wp_img_alt_tag ) .'" height="'. esc_attr( $image_height ).'" width="'. esc_attr( $image_width ).'" ' . $image_srcset.' '.$image_sizes.' />';
+												$project_featured_img = '<img class="size-'. esc_attr( $masonry_item_sizing ) .' '.esc_attr($skip_lazy_class_name).'" src="'. esc_url( $image_src ) .'" alt="'. esc_attr( $wp_img_alt_tag ) .'" height="'. esc_attr( $image_height ).'" width="'. esc_attr( $image_width ).'" ' . $image_srcset.' '.$image_sizes.' />';
 												
 												echo $project_featured_img; 
 											} 
@@ -646,7 +651,7 @@ if( !function_exists('nectar_portfolio_processing') ) {
 										$custom_thumbnail = get_post_meta($post->ID, '_nectar_portfolio_custom_thumbnail', true); 
 										
 										if( !empty($custom_thumbnail) ){
-											echo '<img class="custom-thumbnail skip-lazy" src="'.nectar_ssl_check( esc_url( $custom_thumbnail ) ).'" alt="'. get_the_title() .'" />';
+											echo '<img class="custom-thumbnail '.esc_attr($skip_lazy_class_name).'" src="'.nectar_ssl_check( esc_url( $custom_thumbnail ) ).'" alt="'. get_the_title() .'" />';
 										}
 										else {
 											
@@ -690,7 +695,7 @@ if( !function_exists('nectar_portfolio_processing') ) {
 
 												if(!empty($image_src)) $image_src = $image_src[0];
 
-												$project_featured_img = '<img class="size-'. esc_attr( $masonry_item_sizing ) .' skip-lazy" src="'. esc_url( $image_src ) .'" alt="'. esc_attr( $wp_img_alt_tag ) .'" height="'. esc_attr( $image_height ).'" width="'. esc_attr( $image_width ).'" ' . $image_srcset.' '.$image_sizes.' />';
+												$project_featured_img = '<img class="size-'. esc_attr( $masonry_item_sizing ) .' '.esc_attr($skip_lazy_class_name).'" src="'. esc_url( $image_src ) .'" alt="'. esc_attr( $wp_img_alt_tag ) .'" height="'. esc_attr( $image_height ).'" width="'. esc_attr( $image_width ).'" ' . $image_srcset.' '.$image_sizes.' />';
 												
 												echo $project_featured_img; 
 												
@@ -720,7 +725,12 @@ if( !function_exists('nectar_portfolio_processing') ) {
 													
 												<?php } else {
 													
-													$featured_image = wp_get_attachment_image_src( get_post_thumbnail_id(), 'full' );  							
+													$featured_image = wp_get_attachment_image_src( get_post_thumbnail_id(), 'full' );  
+													if( !isset($featured_image[0]) ) {
+														$featured_image = [
+															0 => ''
+														];
+													}							
 													$video_embed = get_post_meta($post->ID, '_nectar_video_embed', true);
 													$video_m4v = get_post_meta($post->ID, '_nectar_video_m4v', true);
 													
@@ -783,7 +793,7 @@ if( !function_exists('nectar_portfolio_processing') ) {
 										$custom_thumbnail = get_post_meta($post->ID, '_nectar_portfolio_custom_thumbnail', true); 
 										
 										if( !empty($custom_thumbnail) ){
-											echo '<img class="custom-thumbnail skip-lazy" src="'.nectar_ssl_check( esc_url( $custom_thumbnail ) ).'" alt="'. get_the_title() .'" />';
+											echo '<img class="custom-thumbnail '.esc_attr($skip_lazy_class_name).'" src="'.nectar_ssl_check( esc_url( $custom_thumbnail ) ).'" alt="'. get_the_title() .'" />';
 										}
 										else {
 											
@@ -827,7 +837,7 @@ if( !function_exists('nectar_portfolio_processing') ) {
 
 												if(!empty($image_src)) $image_src = $image_src[0];
 												
-												$project_featured_img = '<img class="size-'. esc_attr( $masonry_item_sizing ) .' skip-lazy" src="'. esc_url( $image_src ) .'" alt="'. esc_attr( $wp_img_alt_tag ) .'" height="'. esc_attr( $image_height ).'" width="'. esc_attr( $image_width ).'" ' . $image_srcset.' '.$image_sizes.' />';
+												$project_featured_img = '<img class="size-'. esc_attr( $masonry_item_sizing ) .' '.esc_attr($skip_lazy_class_name).'" src="'. esc_url( $image_src ) .'" alt="'. esc_attr( $wp_img_alt_tag ) .'" height="'. esc_attr( $image_height ).'" width="'. esc_attr( $image_width ).'" ' . $image_srcset.' '.$image_sizes.' />';
 												
 												echo $project_featured_img; 
 												
@@ -858,7 +868,12 @@ if( !function_exists('nectar_portfolio_processing') ) {
 													
 												<?php } else {
 													
-													$featured_image = wp_get_attachment_image_src( get_post_thumbnail_id(), 'full' );  							
+													$featured_image = wp_get_attachment_image_src( get_post_thumbnail_id(), 'full' );
+													if( !isset($featured_image[0]) ) {
+														$featured_image = [
+															0 => ''
+														];
+													} 							
 													$video_embed    = get_post_meta($post->ID, '_nectar_video_embed', true);
 													$video_m4v      = get_post_meta($post->ID, '_nectar_video_m4v', true);
 													
@@ -918,7 +933,7 @@ if( !function_exists('nectar_portfolio_processing') ) {
 										$custom_thumbnail = get_post_meta($post->ID, '_nectar_portfolio_custom_thumbnail', true); 
 										
 										if( !empty($custom_thumbnail) ){
-											echo '<img class="custom-thumbnail skip-lazy" src="'.nectar_ssl_check( esc_url( $custom_thumbnail ) ).'" alt="'. get_the_title() .'" />';
+											echo '<img class="custom-thumbnail '.esc_attr($skip_lazy_class_name).'" src="'.nectar_ssl_check( esc_url( $custom_thumbnail ) ).'" alt="'. get_the_title() .'" />';
 										}
 										else {
 											
@@ -965,7 +980,7 @@ if( !function_exists('nectar_portfolio_processing') ) {
 													$image_src = $image_src[0];
 												}
 												
-												$project_featured_img = '<img class="size-'. esc_attr( $masonry_item_sizing ) .' skip-lazy" src="'. esc_url( $image_src ) .'" alt="'. esc_attr( $wp_img_alt_tag ) .'" height="'. esc_attr( $image_height ).'" width="'. esc_attr( $image_width ).'" ' . $image_srcset.' '.$image_sizes.' />';
+												$project_featured_img = '<img class="size-'. esc_attr( $masonry_item_sizing ) .' '.esc_attr($skip_lazy_class_name).'" src="'. esc_url( $image_src ) .'" alt="'. esc_attr( $wp_img_alt_tag ) .'" height="'. esc_attr( $image_height ).'" width="'. esc_attr( $image_width ).'" ' . $image_srcset.' '.$image_sizes.' />';
 												
 												echo $project_featured_img; 
 												
@@ -1000,7 +1015,12 @@ if( !function_exists('nectar_portfolio_processing') ) {
 													
 												<?php } else {
 													
-													$featured_image = wp_get_attachment_image_src( get_post_thumbnail_id(), 'full' );  							
+													$featured_image = wp_get_attachment_image_src( get_post_thumbnail_id(), 'full' );
+													if( !isset($featured_image[0]) ) {
+														$featured_image = [
+															0 => ''
+														];
+													}						
 													$video_embed    = get_post_meta($post->ID, '_nectar_video_embed', true);
 													$video_m4v      = get_post_meta($post->ID, '_nectar_video_m4v', true);
 													
@@ -1061,7 +1081,7 @@ if( !function_exists('nectar_portfolio_processing') ) {
 										$custom_thumbnail = get_post_meta($post->ID, '_nectar_portfolio_custom_thumbnail', true); 
 										
 										if( !empty($custom_thumbnail) ){
-											echo '<img class="custom-thumbnail skip-lazy" src="'.nectar_ssl_check( esc_url( $custom_thumbnail ) ).'" alt="'. get_the_title() .'" />';
+											echo '<img class="custom-thumbnail '.esc_attr($skip_lazy_class_name).'" src="'.nectar_ssl_check( esc_url( $custom_thumbnail ) ).'" alt="'. get_the_title() .'" />';
 										}
 										else {
 											
@@ -1108,7 +1128,7 @@ if( !function_exists('nectar_portfolio_processing') ) {
 													$image_src = $image_src[0];
 												}
 												
-												$project_featured_img = '<img class="size-'. esc_attr( $masonry_item_sizing ) .' skip-lazy" src="'. esc_url( $image_src ) .'" alt="'. esc_attr( $wp_img_alt_tag ) .'" height="'. esc_attr( $image_height ).'" width="'. esc_attr( $image_width ).'" ' . $image_srcset.' '.$image_sizes.' />';
+												$project_featured_img = '<img class="size-'. esc_attr( $masonry_item_sizing ) .' '.esc_attr($skip_lazy_class_name).'" src="'. esc_url( $image_src ) .'" alt="'. esc_attr( $wp_img_alt_tag ) .'" height="'. esc_attr( $image_height ).'" width="'. esc_attr( $image_width ).'" ' . $image_srcset.' '.$image_sizes.' />';
 												
 												echo $project_featured_img; 
 												
@@ -1139,7 +1159,12 @@ if( !function_exists('nectar_portfolio_processing') ) {
 													
 												<?php } else {
 													
-													$featured_image = wp_get_attachment_image_src( get_post_thumbnail_id(), 'full' );  							
+													$featured_image = wp_get_attachment_image_src( get_post_thumbnail_id(), 'full' ); 
+													if( !isset($featured_image[0]) ) {
+														$featured_image = [
+															0 => ''
+														];
+													} 							
 													$video_embed    = get_post_meta($post->ID, '_nectar_video_embed', true);
 													$video_m4v      = get_post_meta($post->ID, '_nectar_video_m4v', true);
 													
@@ -1215,7 +1240,7 @@ if( !function_exists('nectar_portfolio_processing') ) {
 												$img = wp_get_attachment_image_src(  $attach_id, $thumb_size );
 												//add one sizer img
 												if($i == 1) {
-													echo '<img class="sizer skip-lazy" src="'. esc_url( $img[0] ) .'" alt="'.get_the_title().'" />';
+													echo '<img class="sizer '.esc_attr($skip_lazy_class_name).'" src="'. esc_url( $img[0] ) .'" alt="'.get_the_title().'" />';
 												}
 												echo '<div class="parallaxImg-layer" data-img="'. esc_url( $img[0] ) .'" Layer-'.$i.'"></div>';
 												
@@ -1229,7 +1254,7 @@ if( !function_exists('nectar_portfolio_processing') ) {
 											
 											if (!empty($custom_thumbnail)) {
 												
-												echo '<img class="sizer skip-lazy" src="'. esc_url( $custom_thumbnail ) .'" alt="'.get_the_title().'" />';
+												echo '<img class="sizer '.esc_attr($skip_lazy_class_name).'" src="'. esc_url( $custom_thumbnail ) .'" alt="'.get_the_title().'" />';
 												
 												echo '<div class="parallaxImg">';
 												echo '<div class="parallaxImg-layer" data-img="'. esc_url( $custom_thumbnail ) .'"></div>';
@@ -1290,7 +1315,7 @@ if( !function_exists('nectar_portfolio_processing') ) {
 												}
 												
 												if($bypass_image_cropping === 'true') {
-													echo '<img class="sizer skip-lazy" src="'. esc_url( $thumbnail_url[0] ) .'" alt="'.get_the_title().'" />';
+													echo '<img class="sizer '.esc_attr($skip_lazy_class_name).'" src="'. esc_url( $thumbnail_url[0] ) .'" alt="'.get_the_title().'" />';
 												} else {
 													echo '<img class="sizer" src="' . SALIENT_PORTFOLIO_PLUGIN_PATH . '/img/' . esc_attr( $no_image_size ) . '" alt="'.get_the_title().'" />';
 												}
@@ -1335,7 +1360,7 @@ if( !function_exists('nectar_portfolio_processing') ) {
 													break;
 												}
 												
-												echo '<img class="sizer skip-lazy" src="' . SALIENT_PORTFOLIO_PLUGIN_PATH . '/img/' . esc_attr( $no_image_size ) . '" alt="'.get_the_title().'" />';
+												echo '<img class="sizer '.esc_attr($skip_lazy_class_name).'" src="' . SALIENT_PORTFOLIO_PLUGIN_PATH . '/img/' . esc_attr( $no_image_size ) . '" alt="'.get_the_title().'" />';
 												
 												echo '<div class="parallaxImg">';
 												echo '<div class="parallaxImg-layer" data-img="'.get_template_directory_uri().'/img/'. esc_attr( $no_image_size ) .'"></div>';
@@ -1360,7 +1385,12 @@ if( !function_exists('nectar_portfolio_processing') ) {
 											
 										<?php } else {
 											
-											$featured_image = wp_get_attachment_image_src( get_post_thumbnail_id(), 'full' );  							
+											$featured_image = wp_get_attachment_image_src( get_post_thumbnail_id(), 'full' ); 
+											if( !isset($featured_image[0]) ) {
+												$featured_image = [
+													0 => ''
+												];
+											}						
 											$video_embed    = get_post_meta($post->ID, '_nectar_video_embed', true);
 											$video_m4v      = get_post_meta($post->ID, '_nectar_video_m4v', true);
 											
@@ -1418,7 +1448,7 @@ if( !function_exists('nectar_portfolio_processing') ) {
 										$custom_thumbnail = get_post_meta($post->ID, '_nectar_portfolio_custom_thumbnail', true); 
 										
 										if( !empty($custom_thumbnail) ){
-											echo '<img class="custom-thumbnail skip-lazy" src="'.nectar_ssl_check( esc_url( $custom_thumbnail ) ).'" alt="'. get_the_title() .'" />';
+											echo '<img class="custom-thumbnail '.esc_attr($skip_lazy_class_name).'" src="'.nectar_ssl_check( esc_url( $custom_thumbnail ) ).'" alt="'. get_the_title() .'" />';
 										}
 										else {
 											
@@ -1463,7 +1493,7 @@ if( !function_exists('nectar_portfolio_processing') ) {
 
 												if(!empty($image_src)) $image_src = $image_src[0];
 												
-												$project_featured_img = '<img class="size-'. esc_attr( $masonry_item_sizing ) .' skip-lazy" src="'. esc_url( $image_src ) .'" alt="'. esc_attr( $wp_img_alt_tag ) .'" height="'. esc_attr( $image_height ).'" width="'. esc_attr( $image_width ).'" ' . $image_srcset.' '.$image_sizes.' />';
+												$project_featured_img = '<img class="size-'. esc_attr( $masonry_item_sizing ) .' '.esc_attr($skip_lazy_class_name).'" src="'. esc_url( $image_src ) .'" alt="'. esc_attr( $wp_img_alt_tag ) .'" height="'. esc_attr( $image_height ).'" width="'. esc_attr( $image_width ).'" ' . $image_srcset.' '.$image_sizes.' />';
 												
 												echo $project_featured_img; 
 												
@@ -1495,7 +1525,12 @@ if( !function_exists('nectar_portfolio_processing') ) {
 													
 												<?php } else {
 													
-													$featured_image = wp_get_attachment_image_src( get_post_thumbnail_id(), 'full' );  							
+													$featured_image = wp_get_attachment_image_src( get_post_thumbnail_id(), 'full' );
+													if( !isset($featured_image[0]) ) {
+														$featured_image = [
+															0 => ''
+														];
+													}							
 													$video_embed    = get_post_meta($post->ID, '_nectar_video_embed', true);
 													$video_m4v      = get_post_meta($post->ID, '_nectar_video_m4v', true);
 													
@@ -1561,7 +1596,7 @@ if( !function_exists('nectar_portfolio_processing') ) {
 										$custom_thumbnail = get_post_meta($post->ID, '_nectar_portfolio_custom_thumbnail', true); 
 										
 										if( !empty($custom_thumbnail) ){
-											echo '<img class="custom-thumbnail skip-lazy" src="'.nectar_ssl_check( esc_url( $custom_thumbnail ) ).'" alt="'. get_the_title() .'" />';
+											echo '<img class="custom-thumbnail '.esc_attr($skip_lazy_class_name).'" src="'.nectar_ssl_check( esc_url( $custom_thumbnail ) ).'" alt="'. get_the_title() .'" />';
 										}
 										else {
 											
@@ -1608,7 +1643,7 @@ if( !function_exists('nectar_portfolio_processing') ) {
 													$image_src = $image_src[0];
 												}
 												
-												$project_featured_img = '<img class="size-'. esc_attr( $masonry_item_sizing ) .' skip-lazy" src="'. esc_url( $image_src ) .'" alt="'. esc_attr( $wp_img_alt_tag ) .'" height="'. esc_attr( $image_height ).'" width="'. esc_attr( $image_width ).'" ' . $image_srcset.' '.$image_sizes.' />';
+												$project_featured_img = '<img class="size-'. esc_attr( $masonry_item_sizing ) .' '.esc_attr($skip_lazy_class_name).'" src="'. esc_url( $image_src ) .'" alt="'. esc_attr( $wp_img_alt_tag ) .'" height="'. esc_attr( $image_height ).'" width="'. esc_attr( $image_width ).'" ' . $image_srcset.' '.$image_sizes.' />';
 												
 												echo $project_featured_img; 
 												
@@ -1640,7 +1675,12 @@ if( !function_exists('nectar_portfolio_processing') ) {
 													
 												<?php } else {
 													
-													$featured_image = wp_get_attachment_image_src( get_post_thumbnail_id(), 'full' );  							
+													$featured_image = wp_get_attachment_image_src( get_post_thumbnail_id(), 'full' );
+													if( !isset($featured_image[0]) ) {
+														$featured_image = [
+															0 => ''
+														];
+													}							
 													$video_embed    = get_post_meta($post->ID, '_nectar_video_embed', true);
 													$video_m4v      = get_post_meta($post->ID, '_nectar_video_m4v', true);
 													
@@ -1724,7 +1764,7 @@ if( !function_exists('nectar_portfolio_processing') ) {
 												
 											}
 											
-											echo '<img class="custom-thumbnail skip-lazy" src="'.nectar_ssl_check( esc_url( $custom_thumbnail ) ).'" '. $image_srcset. $image_sizes .' alt="'. get_the_title() .'" />';
+											echo '<img class="custom-thumbnail '.esc_attr($skip_lazy_class_name).'" src="'.nectar_ssl_check( esc_url( $custom_thumbnail ) ).'" '. $image_srcset. $image_sizes .' alt="'. get_the_title() .'" />';
 											
 										}
 										
@@ -1774,7 +1814,7 @@ if( !function_exists('nectar_portfolio_processing') ) {
 												}
 
 		
-												$project_featured_img = '<img class="size-'. esc_attr( $masonry_item_sizing ) .' skip-lazy" src="'. esc_url( $image_src ) .'" alt="'. esc_attr( $wp_img_alt_tag ) .'" height="'. esc_attr( $image_height ).'" width="'. esc_attr( $image_width ).'" ' . $image_srcset.' '.$image_sizes.' />';
+												$project_featured_img = '<img class="size-'. esc_attr( $masonry_item_sizing ) .' '.esc_attr($skip_lazy_class_name).'" src="'. esc_url( $image_src ) .'" alt="'. esc_attr( $wp_img_alt_tag ) .'" height="'. esc_attr( $image_height ).'" width="'. esc_attr( $image_width ).'" ' . $image_srcset.' '.$image_sizes.' />';
 												
 												echo $project_featured_img; 
 											} 
@@ -1795,7 +1835,12 @@ if( !function_exists('nectar_portfolio_processing') ) {
 												
 											<?php } else {
 												
-												$featured_image = wp_get_attachment_image_src( get_post_thumbnail_id(), 'full' );  							
+												$featured_image = wp_get_attachment_image_src( get_post_thumbnail_id(), 'full' );
+												if( !isset($featured_image[0]) ) {
+													$featured_image = [
+														0 => ''
+													];
+												}							
 												$video_embed    = get_post_meta($post->ID, '_nectar_video_embed', true);
 												$video_m4v      = get_post_meta($post->ID, '_nectar_video_m4v', true);
 												
@@ -1958,6 +2003,12 @@ if( !function_exists('nectar_portfolio_processing') ) {
 				if(!empty($nectar_options['main-portfolio-link'])) {
 					$portfolio_link = $nectar_options['main-portfolio-link'];
 				}
+
+				$skip_lazy_class_name  = '';
+				$disable_third_party_lazy_loading = apply_filters('nectar_disable_third_party_lazy_loading', true);
+				if ( $disable_third_party_lazy_loading ) {
+					$skip_lazy_class_name = 'skip-lazy';
+				}
 				
 				
 				//project style
@@ -2088,7 +2139,7 @@ if( !function_exists('nectar_portfolio_processing') ) {
 							$custom_thumbnail = get_post_meta($post->ID, '_nectar_portfolio_custom_thumbnail', true); 
 							
 							if( !empty($custom_thumbnail) ){
-								$project_img = '<img class="custom-thumbnail skip-lazy" src="'.nectar_ssl_check($custom_thumbnail).'" alt="'. get_the_title() .'" />';
+								$project_img = '<img class="custom-thumbnail '.esc_attr($skip_lazy_class_name).'" src="'.nectar_ssl_check($custom_thumbnail).'" alt="'. get_the_title() .'" />';
 							}
 							
 							$more_details_html = ($lightbox_only !== 'true') ? '<a class="default-link" href="' . esc_attr($the_project_link) . '">'.esc_html__("More Details", 'salient-portfolio').'</a>' : null; 
@@ -2184,7 +2235,7 @@ if( !function_exists('nectar_portfolio_processing') ) {
 							$custom_thumbnail = get_post_meta($post->ID, '_nectar_portfolio_custom_thumbnail', true); 
 							
 							if( !empty($custom_thumbnail) ){
-								$project_img = '<img class="custom-thumbnail skip-lazy" src="'.nectar_ssl_check($custom_thumbnail).'" alt="'. get_the_title() .'" />';
+								$project_img = '<img class="custom-thumbnail '.esc_attr($skip_lazy_class_name).'" src="'.nectar_ssl_check($custom_thumbnail).'" alt="'. get_the_title() .'" />';
 							}
 							
 							if($lightbox_only !== 'true') {
@@ -2288,7 +2339,7 @@ if( !function_exists('nectar_portfolio_processing') ) {
 							$custom_thumbnail = get_post_meta($post->ID, '_nectar_portfolio_custom_thumbnail', true); 
 							
 							if( !empty($custom_thumbnail) ){
-								$project_img = '<img class="custom-thumbnail skip-lazy" src="'.nectar_ssl_check($custom_thumbnail).'" alt="'. get_the_title() .'" />';
+								$project_img = '<img class="custom-thumbnail '.esc_attr($skip_lazy_class_name).'" src="'.nectar_ssl_check($custom_thumbnail).'" alt="'. get_the_title() .'" />';
 							}
 							
 							if($lightbox_only !== 'true') {
@@ -2391,7 +2442,7 @@ if( !function_exists('nectar_portfolio_processing') ) {
 							$custom_thumbnail = get_post_meta($post->ID, '_nectar_portfolio_custom_thumbnail', true); 
 							
 							if( !empty($custom_thumbnail) ){
-								$project_img = '<img class="custom-thumbnail skip-lazy" src="'.esc_attr(nectar_ssl_check($custom_thumbnail)).'" alt="'. get_the_title() .'" />';
+								$project_img = '<img class="custom-thumbnail '.esc_attr($skip_lazy_class_name).'" src="'.esc_attr(nectar_ssl_check($custom_thumbnail)).'" alt="'. get_the_title() .'" />';
 							}
 							
 							if($lightbox_only !== 'true') {

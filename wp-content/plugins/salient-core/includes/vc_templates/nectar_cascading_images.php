@@ -252,10 +252,20 @@ for( $i = 1; $i < 5; $i++ ) {
       $img_el = '<img src="'.$placeholder_img_src.'" data-nectar-img-src="'.esc_attr($image_url).'" '.$image_srcset.' height="'.esc_attr($image_height).'" width="'.esc_attr($image_width).'" class="skip-lazy nectar-lazy" alt="'.esc_attr($image_alt).'" />';
     } else {
 			
+      $class_names = '';
+      $class_attr = '';
+      $disable_third_party_lazy_loading = apply_filters('nectar_disable_third_party_lazy_loading', true);
+      if ( $disable_third_party_lazy_loading ) {
+        $class_names = 'skip-lazy';
+      }
+      if ( !empty($class_names) ) {
+        $class_attr = 'class="' . esc_attr($class_names) . '"';
+      }
+      
 			if( true === $has_dimension_data ) {
-				$img_el = '<img src="'.esc_attr($image_url).'" '.$image_srcset.' height="'.esc_attr($image_height).'" width="'.esc_attr($image_width).'" class="skip-lazy" alt="'.esc_attr($image_alt).'" />';
+				$img_el = '<img src="'.esc_attr($image_url).'" '.$image_srcset.' height="'.esc_attr($image_height).'" width="'.esc_attr($image_width).'" '.$class_attr.' alt="'.esc_attr($image_alt).'" />';
 			} else {
-				$img_el = '<img src="'.esc_attr($image_url).'" '.$image_srcset.' class="skip-lazy" alt="'.esc_attr($image_alt).'" />';
+				$img_el = '<img src="'.esc_attr($image_url).'" '.$image_srcset.' '.$class_attr.' alt="'.esc_attr($image_alt).'" />';
 			}
     
     }

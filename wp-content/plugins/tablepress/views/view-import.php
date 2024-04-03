@@ -58,7 +58,9 @@ class TablePress_Import_View extends TablePress_View {
 		$this->add_meta_box( 'import-form', __( 'Import Tables', 'tablepress' ), array( $this, 'postbox_import_form' ), 'normal' );
 		$screen = get_current_screen();
 		add_filter( "postbox_classes_{$screen->id}_tablepress_{$this->action}-import-form", array( $this, 'postbox_classes' ) );
-		$this->add_meta_box( 'tables-auto-import', __( 'Automatic Periodic Table Import', 'tablepress' ), array( $this, 'postbox_auto_import' ), 'additional' );
+		if ( tb_tp_fs()->is_free_plan() || tb_tp_fs()->is_plan_or_trial( TablePress::$modules['automatic-periodic-table-import']['minimum_plan'] ) ) {
+			$this->add_meta_box( 'tables-auto-import', __( 'Automatic Periodic Table Import', 'tablepress' ), array( $this, 'postbox_auto_import' ), 'additional' );
+		}
 	}
 
 	/**
@@ -98,7 +100,6 @@ class TablePress_Import_View extends TablePress_View {
 			'importServer'           => $this->admin_page->convert_to_json_parse_output( $data['import_server'] ),
 			'importFormField'        => $this->admin_page->convert_to_json_parse_output( $data['import_form-field'] ),
 			'importExistingTable'    => $this->admin_page->convert_to_json_parse_output( $data['import_existing_table'] ),
-			'zipSupportAvailable'    => $this->admin_page->convert_to_json_parse_output( $data['zip_support_available'] ),
 			'showImportSourceServer' => ( ( ! is_multisite() && current_user_can( 'manage_options' ) ) || is_super_admin() ) ? 'true' : 'false',
 			'legacyImport'           => $this->admin_page->convert_to_json_parse_output( $data['legacy_import'] ),
 		);
@@ -147,6 +148,14 @@ class TablePress_Import_View extends TablePress_View {
 				<strong><?php _e( 'Pro Tip:', 'tablepress' ); ?></strong>
 				<?php printf( __( 'You can automate the import of tables from URLs or server files with the <a href="%1$s">“%2$s” premium feature</a>!', 'tablepress' ), 'https://tablepress.org/modules/automatic-periodic-table-import/?utm_source=plugin&utm_medium=textlink&utm_content=import-screen', __( 'Automatic Periodic Table Import', 'tablepress' ) ); ?>
 			</p>
+			<?php
+		endif;
+
+		if ( tb_tp_fs()->is_plan_or_trial__premium_only( TablePress::$modules['automatic-periodic-table-import']['minimum_plan'] ) ) :
+			?>
+				<p>
+					<?php printf( __( 'To configure the automatic periodic import of your tables, activate the “%1$s” module on the <a href="%2$s">Modules screen</a>.', 'tablepress' ), __( 'Automatic Periodic Table Import', 'tablepress' ), TablePress::url( array( 'action' => 'modules' ) ) ); ?>
+				</p>
 			<?php
 		endif;
 	}

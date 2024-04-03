@@ -10,6 +10,7 @@ if ( ! class_exists( 'Vc_Automap_Model' ) ) {
 	 * @see Vc_Automapper
 	 * @since 4.1
 	 */
+	#[\AllowDynamicProperties]
 	class Vc_Automap_Model {
 		/**
 		 * @var string
@@ -39,12 +40,12 @@ if ( ! class_exists( 'Vc_Automap_Model' ) ) {
 			'params',
 		);
 		public $name;
-
 		/* nectar addition - php 8.2 compat, removes dynamically created props */
 		public $category;
 		public $description;
 		public $params;
 		/* nectar addition end  */
+
 		/**
 		 * @param $data
 		 */
@@ -54,7 +55,6 @@ if ( ! class_exists( 'Vc_Automap_Model' ) ) {
 			if ( is_array( $data ) ) {
 				$this->data = stripslashes_deep( $data );
 			}
-	
 			foreach ( $this->vars as $var ) {
 				$this->{$var} = $this->get( $var );
 			}

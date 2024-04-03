@@ -76,7 +76,21 @@ class TablePress_Admin_Page {
 
 		// Load JavaScript translation files, for all scripts that rely on `wp-i18n`.
 		if ( in_array( 'wp-i18n', $dependencies, true ) ) {
-			wp_set_script_translations( "tablepress-{$name}", 'tablepress' );
+			/*
+			 * Load JS translations from the premium files, if available.
+			 * This check might not be needed as WordPress loads the translations from wordpress.org automatically,
+			 * but as only curated premium translations are available, we can abbreviate the loading process.
+			 */
+			$language_file_path = '';
+			if ( tb_tp_fs()->is_plan_or_trial__premium_only( 'pro' ) ) {
+				/** This filter is documented in the WordPress file wp-includes/l10n.php */
+				$locale = apply_filters( 'plugin_locale', determine_locale(), 'tablepress' );
+				$available_premium_locales = array( 'de_DE' );
+				if ( in_array( $locale, $available_premium_locales, true ) ) {
+					$language_file_path = TABLEPRESS_ABSPATH . 'modules/i18n';
+				}
+			}
+			wp_set_script_translations( "tablepress-{$name}", 'tablepress', $language_file_path );
 		}
 
 		if ( ! empty( $script_data ) ) {

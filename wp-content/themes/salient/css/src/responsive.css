@@ -36,6 +36,7 @@ Description: Global responsive styles
 
 
   .nectar-slider-wrap[data-full-width="false"] .swiper-slide .content h2,
+  .nectar-slider-wrap[data-full-width="false"] .swiper-slide .content div.ns-heading-el,
   #boxed .nectar-slider-wrap[data-full-width="false"] .swiper-slide .content h2 {
     font-size: 32px;
     line-height: 50px;
@@ -1457,6 +1458,7 @@ Description: Global responsive styles
   .swiper-slide .content h2,
   .swiper-slide .content h1,
   .swiper-slide .content h3,
+  .swiper-slide .content div.ns-heading-el,
   .swiper-slide .content .buttons,
   .nectar-slider-wrap[data-caption-trans="reveal_title"] .swiper-slide .content h2 > span span,
   .nectar-slider-wrap[data-caption-trans="reveal_title"] .swiper-slide .content h1 > span span {
@@ -1470,6 +1472,7 @@ Description: Global responsive styles
   .swiper-slide .content h2,
   .swiper-slide .content h1,
   .swiper-slide .content h3,
+  .swiper-slide .content div.ns-heading-el,
   .swiper-slide .content .buttons,
   .nectar-slider-wrap[data-caption-trans="reveal_title"] .swiper-slide .content h2 > span span,
   .nectar-slider-wrap[data-caption-trans="reveal_title"] .swiper-slide .content h2 .word,
