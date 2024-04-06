@@ -20,6 +20,9 @@ require_once "widgets/single-posts-linux.php";
 require_once "widgets/featured-items-linux.php";
 require_once "widgets/testing-new-posts.php";
 
+// GET CONTENT SECURITY POLICY
+require_once "csp/csp.php";
+
 // GET CHILD THEME LIBRARIES
 function salient_child_enqueue_styles() {
     $nectar_theme_version = nectar_get_theme_version();
@@ -523,8 +526,6 @@ function comments_logic() {
     global $current_multisite;
     global $multisite_three_dev;
     global $multisite_three_live;
-	global $multisite_five_dev;
-    global $multisite_five_live;
     if ((is_multisite() && $current_multisite == $multisite_three_dev) || (is_multisite() && $current_multisite == $multisite_three_live)) {
         $site_id = get_current_blog_id();
         // CCC
@@ -535,9 +536,6 @@ function comments_logic() {
             enable_comments_posts();
         }
     }
-	else if ((is_multisite() && $current_multisite == $multisite_five_dev) || (is_multisite() && $current_multisite == $multisite_five_live)) {
-            remove_comments();
-	}
 }
 
 // CAPABILITY FOR MULTISITE ADMIN USERS

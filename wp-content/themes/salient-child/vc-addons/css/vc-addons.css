@@ -320,37 +320,6 @@ a.list-design.navigation-btn {
 	height: 200px !important;
 }
 
-@media only screen and (max-width: 600px) {
-	.list-design.flex {
-		flex-flow: column !important;
-	}
-
-	.grid-design.outer {
-		display: grid;
-		margin-bottom: 0;
-	}
-
-	.grid-design.outer .grid-design.projects {
-		margin: 0;
-		margin-bottom: 35px;
-		padding: 15px;
-	}
-
-	.flipbox-design.outer {
-		display: grid;
-		margin-bottom: 0;
-	}
-
-	.flipbox-design .projects {
-		margin: 0;
-		margin-bottom: 35px;
-	}
-
-	.list-design.right {
-		flex-basis: 100%;
-	}
-}
-
 /* MEMBERS API STYLES */
 .slider.container {
 	background-color: inherit;
@@ -434,8 +403,7 @@ a.list-design.navigation-btn {
 	margin-top: 10px;
 }
 
-
-/* Persons Custom Post Type CSS */
+/* PERSONS CUSTOM POST TYPE CSS */
 
 .persons .col {
 	margin: 0 0 20px 0 !important;
@@ -490,7 +458,7 @@ a.list-design.navigation-btn {
 	display: none;
 }
 
-/* New Person profile photo overrides */
+/* NEW PERSON PROFILE PHOTO OVERRIDES */
 
 .single-person-icon {
 	width: 100px !important;
@@ -505,4 +473,44 @@ a.list-design.navigation-btn {
 	min-height: 100% !important;
 	text-align: center;
 	max-width: 100% !important;
+}
+
+
+/* START OF MOBILE STYLE */
+
+@media only screen and (max-width: 600px) {
+	.list-design.flex {
+		flex-flow: column !important;
+	}
+
+	.grid-design.outer {
+		display: grid;
+		margin-bottom: 0;
+	}
+
+	.grid-design.outer .grid-design.projects {
+		margin: 0;
+		margin-bottom: 35px;
+		padding: 15px;
+	}
+
+	.flipbox-design.outer {
+		display: grid;
+		margin-bottom: 0;
+	}
+
+	.flipbox-design .projects {
+		margin: 0;
+		margin-bottom: 35px;
+	}
+
+	.list-design.right {
+		flex-basis: 100%;
+	}
+
+	.grid-design.outer {
+		min-height: 100px;
+		align-items: center;
+		justify-content: center;
+	}
 }

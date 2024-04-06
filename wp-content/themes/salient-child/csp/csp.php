@@ -39,7 +39,7 @@ function generate_custom_nonce(){
 
 // ADD THE NONCE TO INLINE SCRIPTS
 function add_nonce_to_scripts( $attr ) {
-	if ( 'text/javascript' !== $attr['type'] ) {
+	if ( 'text/javascript' !== ($attr['type'] ?? '') ) {
 		return $attr;
 	}
 	return array(
