@@ -237,7 +237,7 @@ h1.projects-title-text.white {
 }
 
 .top-information-middle {
-	display: flex;
+	display: flex !important;
 	align-items: center;
 	justify-content: center;
 }
