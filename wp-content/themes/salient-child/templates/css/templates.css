@@ -1,7 +1,11 @@
 /* PROJECTS */
 
-.projects-wrap {
+.projects-template .projects-wrap {
 	padding: 0;
+}
+
+.projects-template .col {
+    float: none;
 }
 
 .projects-background {
