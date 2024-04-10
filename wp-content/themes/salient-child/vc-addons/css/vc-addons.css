@@ -203,7 +203,7 @@ a.list-design.navigation-btn {
 .grid-design.outer .vc_col-sm-3 {
     max-width: 23%;
     flex: 1 1 0;
-    width: 0;
+    width: 100%;
 }
 
 .grid-design.navigation-btn a:after {
