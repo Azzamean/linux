@@ -129,6 +129,7 @@ a.list-design.navigation-btn {
     justify-content: center;
 }
 
+.grid-design.image-wrapper a,
 .grid-design.image-wrapper img {
 	height: 100%;
 	max-height: 100px;
