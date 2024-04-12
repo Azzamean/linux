@@ -477,6 +477,10 @@ function lf_meta_header_multisite_three() {
         case "20":
             echo $jdf_banner_dark;
         break;
+            // MARGO
+        case "23":
+            echo $jdf_banner_dark;
+        break;
             // AOUSD
         case "28":
             echo $jdf_banner_light_alternative;
