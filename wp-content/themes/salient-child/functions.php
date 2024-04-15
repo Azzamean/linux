@@ -479,7 +479,7 @@ function lf_meta_header_multisite_three() {
         break;
             // MARGO
         case "23":
-            echo $jdf_banner_dark;
+            echo $linux_foundation_dark;
         break;
             // AOUSD
         case "28":
