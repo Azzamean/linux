@@ -518,10 +518,15 @@ function editor_granted_appearance_access() {
     global $multisite_three_live;
     if ((is_multisite() && $current_multisite == $multisite_three_dev) || (is_multisite() && $current_multisite == $multisite_three_live)) {
         $site_id = get_current_blog_id();
+         // InterUSS
+         if ($site_id == "2") {
+            editor_appearance_access();
+        }       
         // LF Energy
         if ($site_id == "18") {
             editor_appearance_access();
         }
+
     }
 }
 
