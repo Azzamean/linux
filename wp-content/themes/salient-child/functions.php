@@ -24,7 +24,8 @@ require_once "widgets/testing-new-posts.php";
 require_once "csp/csp.php";
 
 // GET CHILD THEME LIBRARIES
-function salient_child_enqueue_styles() {
+function salient_child_enqueue_styles()
+{
     $nectar_theme_version = nectar_get_theme_version();
     wp_enqueue_style("salient-child-style", get_stylesheet_directory_uri() . "/style.css", "", $nectar_theme_version);
     wp_enqueue_style("vc-addons-style", get_stylesheet_directory_uri() . "/vc-addons/css/vc-addons.css", "", $nectar_theme_version);
@@ -43,21 +44,25 @@ function salient_child_enqueue_styles() {
 add_action("wp_enqueue_scripts", "salient_child_enqueue_styles");
 
 // FORCE SSL
-function force_ssl(){
-	if (!is_ssl()) {
-		wp_redirect('https://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'], 301);
-		exit();
-	}
+function force_ssl()
+{
+    if (!is_ssl()) {
+        wp_redirect('https://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'], 301);
+        exit();
+    }
 }
 add_action('template_redirect', 'force_ssl');
 
-add_action("template_redirect", function () {
-    ob_start();
-});
+add_action(
+    "template_redirect", function () {
+        ob_start();
+    }
+);
 
 // OSANO CODE FOR TRACKING
-function osano_script() {
-?>
+function osano_script()
+{
+    ?>
 <script src="https://cmp.osano.com/16A0DbT9yDNIaQkvZ/3b49aaa9-15ab-4d47-a8fb-96cc25b5543c/osano.js" nonce="3423fsdf3kj34j" integrity="sha384-Gw4evf0QRTGuxQbOvn8v28Z0xyAt9tLT0U3dtOCvUoy+bIDmPA3TL2L4idZr7Fav" crossorigin="anonymous"></script>
     <?php
 }
@@ -66,26 +71,28 @@ add_action("wp_head", "osano_script");
 // DISABLE PLUGIN NOTIFICATIONS
 add_action("admin_enqueue_scripts", "acf_template_fields");
 add_action("login_enqueue_scripts", "acf_template_fields");
-function acf_template_fields() {
+function acf_template_fields()
+{
     wp_register_script("salient-child-acf-template-fields-javascript", get_stylesheet_directory_uri() . "/templates/js/templates.js", ["jquery"], "3.6.1", true);
     wp_enqueue_script("salient-child-acf-template-fields-javascript");
 }
 
 // CUSTOM POST TYPE TEMPLATES FROM A DIRECTORY
-function custom_post_types_templates($template) {
+function custom_post_types_templates($template)
+{
     $post_types = ["projects", "webinars"];
     $defaultProjectsTemplate = locate_template("templates/single-projects.php");
     $defaultWebinarsTemplate = locate_template("templates/single-webinars.php");
     $templateSlug = get_page_template_slug(get_queried_object_id()); // this is null if no template name is given; hence default
     
-	// PROJECTS
+    // PROJECTS
     if (is_singular("projects") && $defaultProjectsTemplate != "" && $templateSlug == null) {
         //if (is_singular($post_types) && !file_exists(get_stylesheet_directory() . "/single-projects.php") && get_page_template_slug(get_queried_object_id()) == null)
         $template = $defaultProjectsTemplate;
     }
     //if (is_post_type_archive($post_types) && !file_exists(get_stylesheet_directory() . "/archive-projects.php")){}
     
-	// WEBINARS
+    // WEBINARS
     if (is_singular("webinars") && $defaultWebinarsTemplate != "" && $templateSlug == null) {
         $template = $defaultWebinarsTemplate;
     }
@@ -94,7 +101,8 @@ function custom_post_types_templates($template) {
 add_filter("template_include", "custom_post_types_templates");
 
 // REDIRECT PANTHEON LOGIN TO WORK CORRECTLY
-function redirect_pantheon_login() {
+function redirect_pantheon_login()
+{
     if (strpos($_SERVER["REQUEST_URI"], "/wp-signup.php?") !== false) {
         wp_redirect("/wp-admin/");
         exit();
@@ -103,80 +111,93 @@ function redirect_pantheon_login() {
 add_action("init", "redirect_pantheon_login");
 
 // ALLOW MIME TYPE UPLOADS; EXAMPLE: SVG's
-function cc_mime_types($mimes) {
+function cc_mime_types($mimes)
+{
     $mimes["svg"] = "image/svg+xml";
     $mimes["svgz"] = "image/svg+xml";
     return $mimes;
 }
 add_filter("upload_mimes", "cc_mime_types");
 
-add_filter("map_meta_cap", function ($caps, $cap, $user_id) {
-    if ("unfiltered_upload" !== $cap) {
-        return $caps;
-    }
-    if (user_can($user_id, "edit_others_posts")) {
-        if (false !== ($key = array_search("do_not_allow", $caps))) {
-            unset($caps[$key]);
+add_filter(
+    "map_meta_cap", function ($caps, $cap, $user_id) {
+        if ("unfiltered_upload" !== $cap) {
+            return $caps;
         }
-        $caps[] = "unfiltered_upload";
-        $caps = array_values($caps);
-    }
-    return $caps;
-}, 10, 3);
+        if (user_can($user_id, "edit_others_posts")) {
+            if (false !== ($key = array_search("do_not_allow", $caps))) {
+                unset($caps[$key]);
+            }
+            $caps[] = "unfiltered_upload";
+            $caps = array_values($caps);
+        }
+        return $caps;
+    }, 10, 3
+);
 
-add_filter("user_has_cap", function ($allcaps, $caps) {
-    if (!in_array("unfiltered_upload", $caps)) {
+add_filter(
+    "user_has_cap", function ($allcaps, $caps) {
+        if (!in_array("unfiltered_upload", $caps)) {
+            return $allcaps;
+        }
+        $allcaps["unfiltered_upload"] = true;
         return $allcaps;
-    }
-    $allcaps["unfiltered_upload"] = true;
-    return $allcaps;
-}, 10, 4);
+    }, 10, 4
+);
 
 // REMOVE COMMENTS FUNCTION; CAN BE PLACED IN A MU PLUGIN IF WANTED
-function remove_comments() {
-    add_action("admin_init", function () {
-		
-        // REDIRECT USERS TRYING TO ACCESS COMMENTS PAGE
-        global $pagenow;
-        if ($pagenow === "edit-comments.php" || $pagenow === "options-discussion.php") {
-            wp_redirect(admin_url());
-            exit();
-        }
-		
-        // REMOVE COMMENTS METABOX FROM DASHBOARD
-        remove_meta_box("dashboard_recent_comments", "dashboard", "normal");
-		
-        // DISABLE SUPPORT FOR COMMENTS AND TRACKBACKS IN POST TYPES
-        foreach (get_post_types() as $post_type) {
-            if (post_type_supports($post_type, "comments")) {
-                remove_post_type_support($post_type, "comments");
-                remove_post_type_support($post_type, "trackbacks");
+function remove_comments()
+{
+    add_action(
+        "admin_init", function () {
+        
+            // REDIRECT USERS TRYING TO ACCESS COMMENTS PAGE
+            global $pagenow;
+            if ($pagenow === "edit-comments.php" || $pagenow === "options-discussion.php") {
+                wp_redirect(admin_url());
+                exit();
+            }
+        
+            // REMOVE COMMENTS METABOX FROM DASHBOARD
+            remove_meta_box("dashboard_recent_comments", "dashboard", "normal");
+        
+            // DISABLE SUPPORT FOR COMMENTS AND TRACKBACKS IN POST TYPES
+            foreach (get_post_types() as $post_type) {
+                if (post_type_supports($post_type, "comments")) {
+                    remove_post_type_support($post_type, "comments");
+                    remove_post_type_support($post_type, "trackbacks");
+                }
             }
         }
-    });
-	
+    );
+    
     // CLOSE COMMENTS ON THE FRONT-END
     add_filter("comments_open", "__return_false", 20, 2);
     add_filter("pings_open", "__return_false", 20, 2);
-	
+    
     // HIDE EXISTING COMMENTS
     add_filter("comments_array", "__return_empty_array", 10, 2);
-	
+    
     // REMOVE COMMENTS PAGE AND OPTION PAGE IN MENU
-    add_action("admin_menu", function () {
-        remove_menu_page("edit-comments.php");
-        remove_submenu_page("options-general.php", "options-discussion.php");
-    });
-	
+    add_action(
+        "admin_menu", function () {
+            remove_menu_page("edit-comments.php");
+            remove_submenu_page("options-general.php", "options-discussion.php");
+        }
+    );
+    
     // REMOVE COMMENTS LINK FROM ADMIN BAR
-    add_action("add_admin_bar_menus", function () {
-        remove_action("admin_bar_menu", "wp_admin_bar_comments_menu", 60);
-    });
-	
+    add_action(
+        "add_admin_bar_menus", function () {
+            remove_action("admin_bar_menu", "wp_admin_bar_comments_menu", 60);
+        }
+    );
+    
     // REMOVE COMMENTS FROM ADMIN BAR ON MULTISITE
     add_action("admin_bar_menu", "remove_toolbar_items", PHP_INT_MAX - 1);
-	
-    function remove_toolbar_items($bar) {
+    
+    function remove_toolbar_items($bar)
+    {
         // global $wp_admin_bar;
         // $wp_admin_bar->remove_node( 'blog-1-c' );
         $sites = get_blogs_of_user(get_current_user_id());
@@ -187,7 +208,8 @@ function remove_comments() {
 }
 
 // DEFAULT SETTINGS FOR ALL COMMENTS
-function enable_comments_posts() {
+function enable_comments_posts()
+{
     global $pagenow;
     if ("post.php" === $pagenow && isset($_GET["post"]) && "post" !== get_post_type($_GET["post"])) {
         remove_comments();
@@ -199,23 +221,28 @@ function enable_comments_posts() {
 }
 
 /***************************************/
-/******* ADVANCED CUSTOM FIELDS *******/
+/*******
+ * ADVANCED CUSTOM FIELDS 
+ *******/
 /*************************************/
  
 // FIRST. REMOVE ALL POST FORMATS
-function remove_posts_formats() {
+function remove_posts_formats()
+{
     remove_theme_support("post-formats");
 }
 add_action("after_setup_theme", "remove_posts_formats", 11);
 
 // SECOND. ADD IN WANTED POST FORMATS
-function add_posts_formats() {
+function add_posts_formats()
+{
     add_theme_support("post-formats", ["standard", "link"]);
 }
 add_action("after_setup_theme", "add_posts_formats", 11);
 
 // RENAME FORMATS APPROPRIATE
-function rename_post_formats($translation, $text, $context, $domain) {
+function rename_post_formats($translation, $text, $context, $domain)
+{
     $names = ["Standard" => "Normal", "Link" => "External Link"];
     if ($context == "Post format") {
         $translation = str_replace(array_keys($names), array_values($names), $text);
@@ -225,8 +252,9 @@ function rename_post_formats($translation, $text, $context, $domain) {
 add_filter("gettext_with_context", "rename_post_formats", 10, 4);
 
 // STYLE ACF BACKEND
-function acf_admin_head() {
-?>
+function acf_admin_head()
+{
+    ?>
     <style type="text/css">
     .acf-postbox h2.hndle.ui-sortable-handle {
         color: #ffffff;
@@ -275,12 +303,15 @@ if (!is_super_admin()) {
     add_filter("acf/settings/show_admin", "my_acf_settings_show_admin");
 }
 
-function my_acf_settings_show_admin($show_admin) {
+function my_acf_settings_show_admin($show_admin)
+{
     return false;
 }
 
 /**********************************************/
-/******* END OF ADVANCED CUSTOM FIELDS *******/
+/*******
+ * END OF ADVANCED CUSTOM FIELDS 
+*******/
 /********************************************/
 
 // ADD SALIENT CUSTOM FONTS
@@ -312,7 +343,8 @@ add_filter(
 
 // DEFAULT SCREEN OPTIONS
 add_filter("hidden_meta_boxes", "custom_hidden_meta_boxes");
-function custom_hidden_meta_boxes($hidden) {
+function custom_hidden_meta_boxes($hidden)
+{
     $hidden = ["wpb_wpbakery", "nectar-metabox-header-nav-transparency", "nectar-metabox-fullscreen-rows", "nectar-metabox-page-header", "postcustom", "revisionsdiv", "slugdiv", "authordiv", ];
     return $hidden;
 }
@@ -320,7 +352,8 @@ function custom_hidden_meta_boxes($hidden) {
 // DISABLE PLUGIN NOTIFICATIONS
 add_action("admin_enqueue_scripts", "turn_off_notifications");
 add_action("login_enqueue_scripts", "turn_off_notifications");
-function turn_off_notifications() {
+function turn_off_notifications()
+{
     echo "<style>.update-nag, .updated, .error, .is-dismissible, .setting-error-tgmpa { display: none !important; }</style>";
     echo "<style>li#wp-admin-bar-my-sites ul#wp-admin-bar-my-sites-list {height: 500px !important; display: flex !important;flex-direction: column !important;flex-wrap: wrap !important;}</style>";
     echo "<style>ul#wp-admin-bar-my-sites-list {width: 700px;}</style>";
@@ -329,7 +362,8 @@ function turn_off_notifications() {
 
 // SHORTCODE FOR UBER MENU LOGO
 if (in_array("ubermenu/ubermenu.php", apply_filters("active_plugins", get_option("active_plugins")))) {
-    function uber_salient_logo($atts = []) {
+    function uber_salient_logo($atts = [])
+    {
         // ubermenu\pro\search.php
         // salient\nectar\helpers\header.php
         global $nectar_options;
@@ -337,14 +371,16 @@ if (in_array("ubermenu/ubermenu.php", apply_filters("active_plugins", get_option
         return '<a id="logo" href="' . esc_url($nectar_logo_url) . '" data-supplied-ml-starting-dark="' . esc_attr($nectar_header_options["using_mobile_logo_starting_dark"]) . '" data-supplied-ml-starting="' . esc_attr($nectar_header_options["using_mobile_logo_starting"]) . '" data-supplied-ml="' . esc_attr($nectar_header_options["using_mobile_logo"]) . '" ' . wp_kses_post($nectar_header_options["logo_class"]) . ">" . '<img class="stnd skip-lazy' . $default_logo_class . $dark_default_class . '" width="' . nectar_logo_dimensions("width", $nectar_options["logo"]) . '" height="' . nectar_logo_dimensions("height", $nectar_options["logo"]) . '" alt="' . esc_html($salient_logo_text) . '" src="' . nectar_options_img($nectar_options["logo"]) . '" ' . $std_retina_srcset . " />" . "</a>";
     }
     add_shortcode("uber_logo", "uber_salient_logo");
-    function uber_search_icon() {
+    function uber_search_icon()
+    {
         return '<a class="mobile-search" href="#searchbox"><span class="nectar-icon icon-salient-search" aria-hidden="true"></span><span class="screen-reader-text">' . esc_html__("search", "salient") . "</span></a>";
     }
     add_shortcode("uber_search", "uber_search_icon");
 }
 
 // REDIRECT PAGES FOR THE POST FORMAT LINK
-function format_link_header() {
+function format_link_header()
+{
     //while (have_posts()) {
     ///the_post();
     if (has_post_format("link") && !is_category()) {
@@ -367,7 +403,8 @@ add_action("wp_head", "format_link_header", 1);
    https://bloggerpilot.com/en/disable-wordpress-image-sizes/ 
 */
 
-function remove_salient_custom_image_sizes() {
+function remove_salient_custom_image_sizes()
+{
     remove_image_size("portfolio-thumb");
     remove_image_size("nectar_small_square");
     remove_image_size("portfolio-thumb_large");
@@ -392,12 +429,15 @@ add_action("after_setup_theme", "remove_salient_custom_image_sizes", 11);
 
 //print_r( get_intermediate_image_sizes() );
 
-add_filter("intermediate_image_sizes", function ($sizes) {
-    // return array_diff($sizes, ['thumbnail', 'medium', 'medium_large', 'large']);
-    return array_diff($sizes, ["medium_large"]);
-});
+add_filter(
+    "intermediate_image_sizes", function ($sizes) {
+        // return array_diff($sizes, ['thumbnail', 'medium', 'medium_large', 'large']);
+        return array_diff($sizes, ["medium_large"]);
+    }
+);
 
-function remove_large_image_sizes() {
+function remove_large_image_sizes()
+{
     remove_image_size("1536x1536");
     remove_image_size("2048x2048");
 }
@@ -411,7 +451,9 @@ add_action("init", "remove_large_image_sizes");
 
 /*************************************/
 /************************************/
-/******* CODE FOR MULTISITES *******/
+/*******
+ * CODE FOR MULTISITES 
+*******/
 /**********************************/
 /*********************************/
 
@@ -426,32 +468,34 @@ if ((is_multisite() && $current_multisite == $multisite_three_dev) || (is_multis
     $site_id = get_current_blog_id();
     switch ($site_id) {
             // CCC         
-        case "10":
-            include_once "sites/ccc/functions.php";
+    case "10":
+        include_once "sites/ccc/functions.php";
         break;
             // O3D
-        case "13":
-            include_once "sites/o3d/functions.php";
+    case "13":
+        include_once "sites/o3d/functions.php";
         break;
             // NextArch
-        case "15":
-            include_once "sites/nextarch/functions.php";
+    case "15":
+        include_once "sites/nextarch/functions.php";
         break;
             // Yocto
-        case "32":
-            include_once "sites/yocto/functions.php";
+    case "32":
+        include_once "sites/yocto/functions.php";
         break;
     }
 }
 
 // STYLE FOR PROJECTS BANNERS
-function enqueue_styles_projects_banner() {
+function enqueue_styles_projects_banner()
+{
     $nectar_theme_version = nectar_get_theme_version();
     wp_enqueue_style("projects-banner-style", get_stylesheet_directory_uri() . "/css/projects-banner.css", "", $nectar_theme_version);
 }
 
 // TOP LINUX FOUNDATION PROJECTS HEADER BANNER STRIP FOR LFPROJECTS3/MS3
-function lf_meta_header_multisite_three() {
+function lf_meta_header_multisite_three()
+{
     $site_id = get_current_blog_id();
     $academy_software_foundation = '<div class="lfprojects awsf-background"><div class="container"><a href="https://www.aswf.io/projects/" target="_blank" rel="noopener noreferrer"><img src="/wp-content/uploads/banners/aswf_banner_dark.svg" alt="The Linux Foundation Projects"></a></div></div>';
     $jdf_banner_light = '<div class="lfprojects white-background jdf"><div class="container"><a href="https://jointdevelopment.org/" target="_blank" rel="noopener noreferrer"><img src="/wp-content/uploads/banners/jdf_banner_color.svg" alt="The Linux Foundation Projects"></a></div></div>';
@@ -462,79 +506,89 @@ function lf_meta_header_multisite_three() {
     $linux_foundation_dark = '<div class="lfprojects"><div class="container"><a href="https://www.linuxfoundation.org/projects" target="_blank" rel="noopener noreferrer"><img src="/wp-content/uploads/banners/lfprojects_banner_other.svg" alt="The Linux Foundation Projects"></a></div></div>';
     switch ($site_id) {
             // DPEL AWSF
-        case "8":
-            echo $academy_software_foundation;
+    case "8":
+        echo $academy_software_foundation;
         break;
             // OMPF
-        case "14":
-            echo $linux_foundation_light_background;
+    case "14":
+        echo $linux_foundation_light_background;
         break;
             // OVERTURE MAPS FOUNDATION
-        case "16":
-            echo $jdf_banner_light;
+    case "16":
+        echo $jdf_banner_light;
         break;
             // ULTRA ETHERNET
-        case "20":
-            echo $jdf_banner_dark;
+    case "20":
+        echo $jdf_banner_dark;
         break;
             // MARGO
-        case "23":
-            echo $linux_foundation_dark;
+    case "23":
+        echo $linux_foundation_dark;
         break;
             // AOUSD
-        case "28":
-            echo $jdf_banner_light_alternative;
+    case "28":
+        echo $jdf_banner_light_alternative;
         break;
             // SPDX
-        case "31":
-            echo $linux_foundation_light;
+    case "31":
+        echo $linux_foundation_light;
         break;
             // YOCTO
-        case "32":
-            echo $linux_foundation_light;
+    case "32":
+        echo $linux_foundation_light;
         break;
-        default:
-            echo $linux_foundation_dark;
+    default:
+        echo $linux_foundation_dark;
     }
 }
 
 // TOP LINUX FOUNDATION PROJECTS HEADER BANNER STRIP FOR LFPROJECTS5/MS5
-function lf_meta_header_multisite_five() {
+function lf_meta_header_multisite_five()
+{
     $linux_foundation_dark = '<div class="lfprojects"><div class="container"><a href="https://www.linuxfoundation.org/projects" target="_blank" rel="noopener noreferrer"><img src="/wp-content/uploads/banners/lfprojects_banner_other.svg" alt="The Linux Foundation Projects"></a></div></div>';
     echo $linux_foundation_dark;
 }
 
 // ALLOW EDITORS TO ACCESS THE APPEARANCE TAB AND ITS CHILDREN
-function editor_appearance_access() {
+function editor_appearance_access()
+{
     $roleObject = get_role("editor");
     if (!$roleObject->has_cap("edit_theme_options")) {
         $roleObject->add_cap("edit_theme_options");
     }
 }
 
-function editor_granted_appearance_access() {
+function editor_granted_appearance_access()
+{
     global $current_multisite;
     global $multisite_three_dev;
     global $multisite_three_live;
+    global $multisite_five_dev;
+    global $multisite_five_live;
     if ((is_multisite() && $current_multisite == $multisite_three_dev) || (is_multisite() && $current_multisite == $multisite_three_live)) {
         $site_id = get_current_blog_id();
          // InterUSS
-         if ($site_id == "2") {
+        if ($site_id == "2") {
             editor_appearance_access();
         }       
         // LF Energy
         if ($site_id == "18") {
             editor_appearance_access();
         }
-
+    }
+    if ((is_multisite() && $current_multisite == $multisite_five_dev) || (is_multisite() && $current_multisite == $multisite_five_live)) {
+        $site_id = get_current_blog_id();
     }
 }
 
 // LOGIC FOR COMMENTS ON SITES
-function comments_logic() {
+function comments_logic()
+{
     global $current_multisite;
     global $multisite_three_dev;
     global $multisite_three_live;
+    global $multisite_five_dev;
+    global $multisite_five_live;
     if ((is_multisite() && $current_multisite == $multisite_three_dev) || (is_multisite() && $current_multisite == $multisite_three_live)) {
         $site_id = get_current_blog_id();
         // CCC
@@ -545,25 +599,29 @@ function comments_logic() {
             enable_comments_posts();
         }
     }
+    if ((is_multisite() && $current_multisite == $multisite_three_dev) || (is_multisite() && $current_multisite == $multisite_three_live)) {
+        remove_comments();
+    }
 }
 
 // CAPABILITY FOR MULTISITE ADMIN USERS
-function ms_admin_users_caps($caps, $cap, $user_id, $args) {
+function ms_admin_users_caps($caps, $cap, $user_id, $args)
+{
     foreach ($caps as $key => $capability) {
         if ($capability != "do_not_allow") {
             continue;
         }
         switch ($cap) {
-            case "edit_user":
-            case "edit_users":
-                $caps[$key] = "edit_users";
+        case "edit_user":
+        case "edit_users":
+            $caps[$key] = "edit_users";
             break;
-            case "delete_user":
-            case "delete_users":
-                $caps[$key] = "delete_users";
+        case "delete_user":
+        case "delete_users":
+            $caps[$key] = "delete_users";
             break;
-            case "create_users":
-                $caps[$key] = $cap;
+        case "create_users":
+            $caps[$key] = $cap;
             break;
         }
     }
@@ -571,7 +629,8 @@ function ms_admin_users_caps($caps, $cap, $user_id, $args) {
 }
 
 // PREVENTS ADMINS FROM DELETING SUPER ADMINS
-function ms_edit_permission_check() {
+function ms_edit_permission_check()
+{
     global $current_user, $profileuser;
     $screen = get_current_screen();
     get_currentuserinfo();
@@ -588,28 +647,33 @@ function ms_edit_permission_check() {
 }
 
 // REMOVE THE AVATAR PLUGIN FROM ADMIN MENU
-function wpdocs_remove_edit_menu() {
+function wpdocs_remove_edit_menu()
+{
     if (!is_super_admin()) {
         remove_menu_page("one-user-avatar");
     }
 }
 
 // REDIRECTION PLUGIN ACCESS
-function redirection_to_editor() {
+function redirection_to_editor()
+{
     return 'edit_pages';
 }
-add_filter( 'redirection_role', 'redirection_to_editor' );
+add_filter('redirection_role', 'redirection_to_editor');
 
 // CLEAR CACHE ON POST UPDATES
-function clear_cache_on_update() {
-	if ( function_exists( 'pantheon_clear_edge_all' ) ) {
-		pantheon_clear_edge_all();
-	}
+function clear_cache_on_update()
+{
+    if (function_exists('pantheon_clear_edge_all') ) {
+        pantheon_clear_edge_all();
+    }
 }
-add_action( 'save_post', 'clear_cache_on_update' );
+add_action('save_post', 'clear_cache_on_update');
 
 /**********************************************/
-/******* MULTISITE LOGIC FOR FUNCTIONS *******/
+/*******
+ * MULTISITE LOGIC FOR FUNCTIONS 
+*******/
 /********************************************/
 if (is_multisite()) {
     editor_granted_appearance_access();
@@ -634,7 +698,9 @@ if ((is_multisite() && $current_multisite == $multisite_five_dev) || (is_multisi
 }
 
 /***********************************************/
-/******* MULTISITE HELPERS TO FIND DATA *******/
+/*******
+ * MULTISITE HELPERS TO FIND DATA 
+*******/
 /*********************************************/
 
 // GET PLUGIN BEING USED SITE ON A MULTISITE
