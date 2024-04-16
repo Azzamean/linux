@@ -599,7 +599,7 @@ function comments_logic()
             enable_comments_posts();
         }
     }
-    if ((is_multisite() && $current_multisite == $multisite_three_dev) || (is_multisite() && $current_multisite == $multisite_three_live)) {
+    if ((is_multisite() && $current_multisite == $multisite_five_dev) || (is_multisite() && $current_multisite == $multisite_five_live)) {
         remove_comments();
     }
 }
