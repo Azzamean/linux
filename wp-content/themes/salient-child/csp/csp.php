@@ -51,11 +51,14 @@ add_filter( 'wp_inline_script_attributes', 'add_nonce_to_scripts', 1, 1 );
 
 // ADD THE NONCE TO CALLED SCRIPTS
 function script_tag_nonce( $tag, $handle ) {
-if ( $handle != 'grab_all_ids' || $handle == null || !($handle)) {
+$verify_nonce = wp_verify_nonce( $verify_nonce, generate_custom_nonce() );
+if ( $handle != 'grab_all_ids' || $handle == null || !($handle) ) {
+        // 'grab_all_ids' is just so the jQuery handle grabs every ID since that ID shouldn't / probably does not exist
         //$nonce = wp_create_nonce(); // Or whatever your nonce value should be
-        $tag = str_replace( '<script ', "<script nonce='" . generate_custom_nonce() . "' ", $tag );
+        if($verify_nonce) {
+            $tag = str_replace( '<script ', "<script nonce='" . generate_custom_nonce() . "' ", $tag );
+        }
     } 
-
     return $tag;
 }
 add_filter( 'script_loader_tag', 'script_tag_nonce', 10, 2 );
