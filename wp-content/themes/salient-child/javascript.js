@@ -1,6 +1,6 @@
 jQuery(document).ready(function ($) {
 
-   $('.sf-menu a').each(function () {
+   $('.sf-menu .sub-menu a').each(function () {
       var a = new RegExp('/' + window.location.host + '/');
       if (!a.test(this.href)) {
          $(this).addClass("external");
