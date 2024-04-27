@@ -126,11 +126,11 @@ class TablePress_Module_Row_Order {
 	 *
 	 * @since 2.0.0
 	 *
-	 * @param string $a First string for the comparion.
-	 * @param string $b Second string for the comparion.
+	 * @param string[] $a First row for the comparison.
+	 * @param string[] $b Second row for the comparison.
 	 * @return int Result of the comparison.
 	 */
-	public static function compare_rows( string $a, string $b ): int {
+	public static function compare_rows( array $a, array $b ): int {
 		return strnatcasecmp( $a[ self::$sort_column ], $b[ self::$sort_column ] );
 	}
 

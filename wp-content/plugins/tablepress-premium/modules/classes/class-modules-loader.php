@@ -43,9 +43,38 @@ class TablePress_Modules_Loader {
 	 * @since 2.0.0
 	 */
 	public function __construct() {
+		// If the Automatic Periodic Table Import module is active, load the Action Scheduler library.
+		if ( 'true' === get_option( 'tablepress_load_action_scheduler', 'false' ) ) {
+			require_once TABLEPRESS_ABSPATH . 'modules/libraries/action-scheduler/action-scheduler.php';
+		}
+
 		add_action( 'tablepress_run', array( __CLASS__, 'init_modules' ) );
 		add_filter( 'tablepress_exit_early', array( __CLASS__, 'load_early_modules' ) );
 		add_action( 'tablepress_loaded', array( __CLASS__, 'load_modules' ) );
+	}
+
+	/**
+	 * Loads the TablePress Premium language file.
+	 *
+	 * Try loading the Premium translations file for the current locale.
+	 * If one doesn't exist, WordPress will fall back to the free version's file.
+	 *
+	 * @since 2.2.4
+	 */
+	public static function load_language_file(): void {
+		// Prevent repeated execution via a static variable, as loading the translation file once is enough.
+		static $translation_file_loaded = false;
+		if ( $translation_file_loaded ) {
+			return;
+		}
+
+		/** This filter is documented in the WordPress file wp-includes/l10n.php */
+		$locale = apply_filters( 'plugin_locale', determine_locale(), 'tablepress' );
+		$premium_mofile = TABLEPRESS_ABSPATH . 'modules/i18n/' . "tablepress-{$locale}.mo";
+		load_textdomain( 'tablepress', $premium_mofile );
+
+		// Prevent repeated execution via a static variable, as loading the translation file once is enough.
+		$translation_file_loaded = true;
 	}
 
 	/**
@@ -54,17 +83,8 @@ class TablePress_Modules_Loader {
 	 * @since 2.0.0
 	 */
 	public static function init_modules(): void {
-		/*
-		 * Try loading the Premium translations file for the current locale.
-		 * If one doesn't exist, WordPress will fall back to the free version's file.
-		 *
-		 * @TODO: This currently does not load translations for frontend strings of modules (like Buttons, SearchPanes, and SearchBuilder).
-		 */
 		if ( is_admin() ) {
-			/** This filter is documented in the WordPress file wp-includes/l10n.php */
-			$locale = apply_filters( 'plugin_locale', determine_locale(), 'tablepress' );
-			$premium_mofile = TABLEPRESS_ABSPATH . 'modules/i18n/' . "tablepress-{$locale}.mo";
-			load_textdomain( 'tablepress', $premium_mofile );
+			self::load_language_file();
 		}
 
 		// Load the module trait, so that it's available for all module classes.
@@ -200,6 +220,15 @@ class TablePress_Modules_Loader {
 		 */
 		$refresh_table_options = ( ! empty( $_GET['refresh_table_options'] ) && 'true' === $_GET['refresh_table_options'] ); // The GET parameter is set by `handle_post_action_modules()` and in `TablePress_Controller::plugin_update_check()`.
 		if ( $initialize_table_options || $refresh_table_options ) {
+			// Stop loading the Action Scheduler library and unschedule the recurring actions when the "Automatic Periodic Table Import" module is deactivated.
+			$automatic_periodic_table_import_active = tb_tp_fs()->is_plan_or_trial( TablePress::$modules['automatic-periodic-table-import']['minimum_plan'] ) && in_array( 'automatic-periodic-table-import', $active_modules, true );
+			if ( ! $automatic_periodic_table_import_active ) {
+				update_option( 'tablepress_load_action_scheduler', 'false', true );
+				if ( function_exists( 'as_unschedule_all_actions' ) ) {
+					as_unschedule_all_actions( 'tablepress_automatic_periodic_table_import_action' );
+				}
+			}
+
 			TablePress::$model_table->merge_table_options_defaults( false );
 		}
 

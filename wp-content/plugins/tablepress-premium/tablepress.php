@@ -5,13 +5,13 @@
  *
  * @package TablePress
  * @author Tobias Bäthge
- * @version 2.2.1
+ * @version 2.3
  *
  *
  * Plugin Name: TablePress (Premium)
  * Plugin URI: https://tablepress.org/
  * Description: Embed beautiful and interactive tables into your WordPress website’s posts and pages, without having to write code!
- * Version: 2.2.1
+ * Version: 2.3
  * Update URI: https://api.freemius.com
  * Requires at least: 6.0
  * Requires PHP: 7.2
@@ -22,7 +22,7 @@
  * Donate URI: https://tablepress.org/donate/
  *
  *
- * Copyright 2012-2023 Tobias Bäthge
+ * Copyright 2012-2024 Tobias Bäthge
  *
  * TablePress is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License, version 2, as published by
@@ -43,6 +43,9 @@
  */
 // Prohibit direct script loading.
 defined( 'ABSPATH' ) || die( 'No direct script access allowed!' );
+if ( !defined( 'TABLEPRESS_IS_PLAYGROUND_PREVIEW' ) ) {
+    define( 'TABLEPRESS_IS_PLAYGROUND_PREVIEW', false );
+}
 
 if ( function_exists( 'tb_tp_fs' ) ) {
     tb_tp_fs()->set_basename( true, __FILE__ );
@@ -81,6 +84,7 @@ if ( function_exists( 'tb_tp_fs' ) ) {
                 'updates'   => false,
                 'localhost' => false,
             ),
+                'anonymous_mode'    => TABLEPRESS_IS_PLAYGROUND_PREVIEW,
                 'is_live'           => true,
             ) );
         }
@@ -134,10 +138,10 @@ if ( function_exists( 'tb_tp_fs' ) ) {
      * Load TablePress class, which holds common functions and variables.
      */
     require_once TABLEPRESS_ABSPATH . 'classes/class-tablepress.php';
+    /*
+     * Load TablePress premium modules.
+     */
     if ( tb_tp_fs()->is__premium_only() ) {
-        /*
-         * Load TablePress premium modules.
-         */
         TablePress::load_class( 'TablePress_Modules_Loader', 'class-modules-loader.php', 'modules/classes' );
     }
     /*

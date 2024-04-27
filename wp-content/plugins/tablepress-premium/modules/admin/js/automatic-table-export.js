@@ -11,9 +11,9 @@
  * Internal dependencies.
  */
 import { initializeReactComponent } from '../../../admin/js/common/react-loader';
-import TablePressAutomaticTableExportScreen from './automatic-table-export/screen';
+import Screen from './automatic-table-export/screen';
 
 initializeReactComponent(
 	'tablepress-automatic-table-export-screen',
-	<TablePressAutomaticTableExportScreen />
+	<Screen />
 );

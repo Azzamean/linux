@@ -11,9 +11,15 @@
  * Internal dependencies.
  */
 import { initializeReactComponent } from '../../../admin/js/common/react-loader';
-import DefaultStyleCustomizerScreen from './default-style-customizer/screen';
+import Screen from './default-style-customizer/screen';
+import { ScreenSettingsProvider } from './default-style-customizer/context/screen-settings';
+
 
 initializeReactComponent(
 	'tablepress-default-style-customizer-screen',
-	<DefaultStyleCustomizerScreen />
+	(
+		<ScreenSettingsProvider>
+			<Screen />
+		</ScreenSettingsProvider>
+	)
 );

@@ -182,21 +182,27 @@ class TablePress_Module_DataTables_SearchPanes {
 			return $datatables_strings;
 		}
 
-		$datatables_strings['searchPanes'] = array(
-			'clearMessage'    => _x( 'Clear All', 'SearchPanes module', 'tablepress' ),
-			'clearPane'       => _x( '&times;', 'SearchPanes module', 'tablepress' ),
-			'collapse'        => array(
-				'0' => _x( 'SearchPanes', 'SearchPanes module', 'tablepress' ),
-				'_' => _x( 'SearchPanes (%d)', 'SearchPanes module', 'tablepress' ),
+		TablePress_Modules_Loader::load_language_file();
+
+		$new_strings = array(
+			'searchPanes' => array(
+				'clearMessage'    => _x( 'Clear All', 'SearchPanes module', 'tablepress' ),
+				'clearPane'       => _x( '&times;', 'SearchPanes module', 'tablepress' ),
+				'collapse'        => array(
+					'0' => _x( 'SearchPanes', 'SearchPanes module', 'tablepress' ),
+					'_' => _x( 'SearchPanes (%d)', 'SearchPanes module', 'tablepress' ),
+				),
+				'collapseMessage' => _x( 'Collapse All', 'SearchPanes module', 'tablepress' ),
+				'count'           => _x( '{total}', 'SearchPanes module', 'tablepress' ),
+				'emptyMessage'    => '<em>' . _x( 'No data', 'SearchPanes module', 'tablepress' ) . '</em>',
+				'emptyPanes'      => _x( 'No SearchPanes', 'SearchPanes module', 'tablepress' ),
+				'loadMessage'     => _x( 'Loading Search Panes...', 'SearchPanes module', 'tablepress' ),
+				'showMessage'     => _x( 'Show All', 'SearchPanes module', 'tablepress' ),
+				'title'           => _x( 'Filters Active - %d', 'SearchPanes module', 'tablepress' ),
 			),
-			'collapseMessage' => _x( 'Collapse All', 'SearchPanes module', 'tablepress' ),
-			'count'           => _x( '{total}', 'SearchPanes module', 'tablepress' ),
-			'emptyMessage'    => '<em>' . _x( 'No data', 'SearchPanes module', 'tablepress' ) . '</em>',
-			'emptyPanes'      => _x( 'No SearchPanes', 'SearchPanes module', 'tablepress' ),
-			'loadMessage'     => _x( 'Loading Search Panes...', 'SearchPanes module', 'tablepress' ),
-			'showMessage'     => _x( 'Show All', 'SearchPanes module', 'tablepress' ),
-			'title'           => _x( 'Filters Active - %d', 'SearchPanes module', 'tablepress' ),
 		);
+		// Merge existing strings into the new strings, so that existing translations are not lost.
+		$datatables_strings = array_replace_recursive( $new_strings, $datatables_strings );
 
 		return $datatables_strings;
 	}

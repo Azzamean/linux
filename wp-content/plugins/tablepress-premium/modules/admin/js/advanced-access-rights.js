@@ -11,9 +11,9 @@
  * Internal dependencies.
  */
 import { initializeReactComponent } from '../../../admin/js/common/react-loader';
-import AdvancedAccessRightsScreen from './advanced-access-rights/screen';
+import Screen from './advanced-access-rights/screen';
 
 initializeReactComponent(
 	'tablepress-advanced-access-rights-screen',
-	<AdvancedAccessRightsScreen />
+	<Screen />
 );

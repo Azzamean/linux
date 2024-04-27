@@ -272,7 +272,7 @@ abstract class TablePress_View {
 	 */
 	protected function add_meta_box( string $id, string $title, callable $callback, string $context = 'normal', string $priority = 'default', ?array $callback_args = null ): void {
 		$this->has_meta_boxes = true;
-		add_meta_box( "tablepress_{$this->action}-{$id}", $title, $callback, null, $context, $priority, $callback_args ); // @phpstan-ignore-line
+		add_meta_box( "tablepress_{$this->action}-{$id}", $title, $callback, null, $context, $priority, $callback_args );
 	}
 
 	/**
@@ -377,7 +377,7 @@ abstract class TablePress_View {
 		// "Import" screen has file upload.
 		$enctype = ( 'import' === $this->action ) ? ' enctype="multipart/form-data"' : '';
 		?>
-		<form action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>" method="post"<?php echo $enctype; ?>>
+		<form action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>" method="post"<?php echo $enctype; ?> id="tablepress-page-form">
 			<?php
 				$this->do_text_boxes( 'header' );
 				$hide_if_no_js = ( in_array( $this->action, array( 'export', 'import' ), true ) ) ? ' class="hide-if-no-js"' : '';
@@ -421,9 +421,9 @@ abstract class TablePress_View {
 		?>
 		<div id="tablepress-header" class="header">
 			<h1 class="name"><img src="<?php echo plugins_url( 'admin/img/tablepress-icon.png', TABLEPRESS__FILE__ ); ?>" class="tablepress-icon" alt="<?php esc_attr_e( 'TablePress plugin logo', 'tablepress' ); ?>" /><?php _e( 'TablePress', 'tablepress' ); ?><?php echo tb_tp_fs()->is_plan_or_trial( 'pro', true ) ? ' Pro' : ( tb_tp_fs()->is_plan_or_trial( 'max', true ) ? ' Max' : '' ); ?></h1>
-			<?php if ( tb_tp_fs()->is_free_plan() ) : ?>
+			<?php if ( ! TABLEPRESS_IS_PLAYGROUND_PREVIEW && tb_tp_fs()->is_free_plan() ) : ?>
 				<div class="buttons">
-					<a href="<?php echo 'https://tablepress.org/premium/?utm_source=plugin&utm_medium=button&utm_content=upgrade-button'; ?>" class="tablepress-button">
+					<a href="https://tablepress.org/premium/?utm_source=plugin&utm_medium=button&utm_content=upgrade-button" class="tablepress-button">
 						<span><?php _e( 'Upgrade to Premium', 'tablepress' ); ?></span>
 						<span class="dashicons dashicons-arrow-right-alt" />
 					</a>

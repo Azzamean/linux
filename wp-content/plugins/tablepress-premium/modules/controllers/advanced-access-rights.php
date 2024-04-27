@@ -24,7 +24,7 @@ class TablePress_Module_Advanced_Access_Rights {
 	 * Map with the users' access rights to the tables.
 	 *
 	 * @since 2.0.0
-	 * @var array<string, non-empty-array<int|string, 0|1>>
+	 * @var array<string, array<int|string, 0|1>>
 	 */
 	protected $access_rights_map = array();
 
@@ -93,7 +93,7 @@ class TablePress_Module_Advanced_Access_Rights {
 	 *
 	 * @since 2.0.0
 	 *
-	 * @return non-empty-array<string, non-empty-array<int|string, 0|1>> Map with the users' access rights to the tables.
+	 * @return array<string, array<int|string, 0|1>> Map with the users' access rights to the tables.
 	 */
 	protected function create_access_rights_map(): array {
 		$table_ids = TablePress::$model_table->load_all( false, false ); // Don't prime the post meta cache, don't run filter.
@@ -122,12 +122,14 @@ class TablePress_Module_Advanced_Access_Rights {
 	 *
 	 * @since 2.0.0
 	 *
-	 * @param array<string, non-empty-array<int|string, 0|1>> $full_map  Access rights map with all tables/users.
-	 * @param array<string, non-empty-array<int|string, 0|1>> $merge_map Access rights map that is to be merged into the full map.
-	 * @return array<string, non-empty-array<int|string, 0|1>> Merged access rights map.
+	 * @param array<string, array<int|string, 0|1>> $full_map  Access rights map with all tables/users.
+	 * @param array<string, array<int|string, 0|1>> $merge_map Access rights map that is to be merged into the full map.
+	 * @return array<string, array<int|string, 0|1>> Merged access rights map.
 	 */
 	protected function merge_access_rights_maps( array $full_map, array $merge_map ): array {
 		foreach ( $full_map as $table_id => $users ) {
+			$table_id = (string) $table_id; // Ensure that the table ID is a string, as it comes from an array key where numeric strings are converted to integers.
+
 			foreach ( $users as $user_id => $user_has_rights ) {
 				if ( isset( $merge_map[ $table_id ][ $user_id ] ) ) {
 					$full_map[ $table_id ][ $user_id ] = $merge_map[ $table_id ][ $user_id ];
@@ -221,6 +223,7 @@ class TablePress_Module_Advanced_Access_Rights {
 	 */
 	public function user_register_handler( int $user_id ): void {
 		foreach ( $this->access_rights_map as $table_id => $dummy ) {
+			$table_id = (string) $table_id; // Ensure that the table ID is a string, as it comes from an array key where numeric strings are converted to integers.
 			$this->access_rights_map[ $table_id ][ $user_id ] = $this->access_rights_map[ $table_id ]['#new_users'];
 			ksort( $this->access_rights_map[ $table_id ] );
 			$new_users = $this->access_rights_map[ $table_id ]['#new_users'];
@@ -239,6 +242,7 @@ class TablePress_Module_Advanced_Access_Rights {
 	 */
 	public function deleted_user_handler( int $user_id ): void {
 		foreach ( $this->access_rights_map as $table_id => $dummy ) {
+			$table_id = (string) $table_id; // Ensure that the table ID is a string, as it comes from an array key where numeric strings are converted to integers.
 			unset( $this->access_rights_map[ $table_id ][ $user_id ] );
 		}
 		$this->option->update( $this->access_rights_map );
@@ -440,6 +444,8 @@ class TablePress_Module_Advanced_Access_Rights {
 		$this->access_rights_map = $this->merge_access_rights_maps( $default_access_rights_map, $this->access_rights_map );
 
 		foreach ( $this->access_rights_map as $table_id => $users ) {
+			$table_id = (string) $table_id; // Ensure that the table ID is a string, as it comes from an array key where numeric strings are converted to integers.
+
 			foreach ( $users as $user_id => $user_has_rights ) {
 				$user_has_rights = ( isset( $advanced_access_rights[ $table_id ][ $user_id ] ) && 1 === $advanced_access_rights[ $table_id ][ $user_id ] );
 				$this->access_rights_map[ $table_id ][ $user_id ] = $user_has_rights ? 1 : 0;

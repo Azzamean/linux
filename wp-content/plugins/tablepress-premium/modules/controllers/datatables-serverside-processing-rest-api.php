@@ -37,6 +37,7 @@ class TablePress_Module_DataTables_ServerSide_Processing_REST_API extends WP_RES
 	 *
 	 * @since 2.0.0
 	 */
+	#[\Override]
 	public function register_routes(): void {
 		// Return DataTables Server-side Processing data for a table.
 		register_rest_route(
@@ -96,6 +97,7 @@ class TablePress_Module_DataTables_ServerSide_Processing_REST_API extends WP_RES
 	 * @param WP_REST_Request $request Full details about the request.
 	 * @return WP_Error|true True if the request has read access, WP_Error otherwise.
 	 */
+	#[\Override]
 	public function get_item_permissions_check( /* WP_REST_Request */ $request ) /* : WP_Error|true */ {
 		// Don't use type hints in the method declaration to prevent PHP errors, as the method is inherited.
 
@@ -119,6 +121,7 @@ class TablePress_Module_DataTables_ServerSide_Processing_REST_API extends WP_RES
 	 * @param WP_REST_Request $request Full details about the request.
 	 * @return WP_Error|WP_REST_Response Response object on success, or WP_Error on failure.
 	 */
+	#[\Override]
 	public function get_item( /* WP_REST_Request */ $request ) /* : WP_Error|WP_REST_Response */ {
 		// Don't use type hints in the method declaration to prevent PHP errors, as the method is inherited.
 
@@ -500,6 +503,7 @@ class TablePress_Module_DataTables_ServerSide_Processing_REST_API extends WP_RES
 	 * @param WP_REST_Request      $request Full details about the request.
 	 * @return WP_REST_Response|WP_Error Response object on success, or WP_Error object on failure.
 	 */
+	#[\Override]
 	public function prepare_item_for_response( /* array */ $table, /* WP_REST_Request */ $request ) /* : WP_REST_Response|WP_Error */ {
 		// Don't use type hints in the method declaration to prevent PHP errors, as the method is inherited.
 
@@ -517,6 +521,7 @@ class TablePress_Module_DataTables_ServerSide_Processing_REST_API extends WP_RES
 	 *
 	 * @return array<string, mixed> Item schema data.
 	 */
+	#[\Override]
 	public function get_item_schema(): array {
 		if ( $this->schema ) {
 			return $this->add_additional_fields_schema( $this->schema );
@@ -569,6 +574,7 @@ class TablePress_Module_DataTables_ServerSide_Processing_REST_API extends WP_RES
 	 *
 	 * @return array<string, mixed> Collection parameters.
 	 */
+	#[\Override]
 	public function get_collection_params(): array {
 		return array(
 			'context' => $this->get_context_param( array( 'default' => 'view' ) ),

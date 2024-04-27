@@ -252,10 +252,16 @@ class TablePress_Module_DataTables_AlphabetSearch {
 			return $datatables_strings;
 		}
 
-		$datatables_strings['alphabetsearch'] = array(
-			'search' => _x( 'Search: ', 'AlphabetSearch module', 'tablepress' ),
-			'none'   => _x( 'None', 'AlphabetSearch module', 'tablepress' ),
+		TablePress_Modules_Loader::load_language_file();
+
+		$new_strings = array(
+			'alphabetsearch' => array(
+				'search' => _x( 'Search: ', 'AlphabetSearch module', 'tablepress' ),
+				'none'   => _x( 'None', 'AlphabetSearch module', 'tablepress' ),
+			),
 		);
+		// Merge existing strings into the new strings, so that existing translations are not lost.
+		$datatables_strings = array_replace_recursive( $new_strings, $datatables_strings );
 
 		return $datatables_strings;
 	}

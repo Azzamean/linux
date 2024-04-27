@@ -85,27 +85,32 @@ class TablePress_Admin_AJAX_Controller extends TablePress_Controller {
 		$success = false;
 		$message = 'error_save';
 		$error_details = '';
-		do { // to be able to "break;" (allows for better readable code)
+		do { // To be able to "break;" (allows for better readable code).
 			// Load table, without table data, but with options and visibility settings.
 			$existing_table = TablePress::$model_table->load( $edit_table['id'], false, true );
-			if ( is_wp_error( $existing_table ) ) { // maybe somehow load a new table here? (TablePress::$model_table->get_table_template())?
+			if ( is_wp_error( $existing_table ) ) { // @todo Maybe somehow load a new table here? (TablePress::$model_table->get_table_template())?
 				$error = new WP_Error( 'ajax_save_table_load', '', $edit_table['id'] );
 				$error->merge_from( $existing_table );
 				$error_details = TablePress::get_wp_error_string( $error );
 				break;
 			}
 
-			// Check and convert data that was transmitted as JSON.
-			if ( empty( $edit_table['data'] )
-			|| empty( $edit_table['options'] )
-			|| empty( $edit_table['visibility'] ) ) {
-				$error = new WP_Error( 'ajax_save_table_data_empty', '', $edit_table['id'] );
-				$error_details = TablePress::get_wp_error_string( $error );
-				break;
+			// Check and convert all data that was transmitted as valid JSON.
+			$keys = array( 'data', 'options', 'visibility' );
+			foreach ( $keys as $key ) {
+				if ( empty( $edit_table[ $key ] ) ) {
+					$error = new WP_Error( "ajax_save_table_{$key}_empty", '', $edit_table['id'] );
+					$error_details = TablePress::get_wp_error_string( $error );
+					break 2;
+				}
+				$edit_table[ $key ] = json_decode( $edit_table[ $key ], true );
+				if ( is_null( $edit_table[ $key ] ) ) {
+					$error = new WP_Error( "ajax_save_table_{$key}_invalid_json", '', $edit_table['id'] );
+					$error_details = TablePress::get_wp_error_string( $error );
+					break 2;
+				}
+				$edit_table[ $key ] = (array) $edit_table[ $key ]; // Cast to array again, to catch strings, etc.
 			}
-			$edit_table['data'] = (array) json_decode( $edit_table['data'], true );
-			$edit_table['options'] = (array) json_decode( $edit_table['options'], true );
-			$edit_table['visibility'] = (array) json_decode( $edit_table['visibility'], true );
 
 			// Check consistency of new table, and then merge with existing table.
 			$table = TablePress::$model_table->prepare_table( $existing_table, $edit_table, true );
@@ -169,6 +174,8 @@ class TablePress_Admin_AJAX_Controller extends TablePress_Controller {
 			$response['table_id'] = $table['id']; // @phpstan-ignore-line
 			$response['new_edit_nonce'] = wp_create_nonce( TablePress::nonce( 'edit', $table['id'] ) ); // @phpstan-ignore-line
 			$response['new_preview_nonce'] = wp_create_nonce( TablePress::nonce( 'preview_table', $table['id'] ) ); // @phpstan-ignore-line
+			$response['new_copy_nonce'] = wp_create_nonce( TablePress::nonce( 'copy_table', $table['id'] ) ); // @phpstan-ignore-line
+			$response['new_delete_nonce'] = wp_create_nonce( TablePress::nonce( 'delete_table', $table['id'] ) ); // @phpstan-ignore-line
 			$response['last_modified'] = TablePress::format_datetime( $table['last_modified'] ); // @phpstan-ignore-line
 			$response['last_editor'] = TablePress::get_user_display_name( $table['options']['last_editor'] ); // @phpstan-ignore-line
 		}
@@ -207,22 +214,25 @@ class TablePress_Admin_AJAX_Controller extends TablePress_Controller {
 
 		// Default response data.
 		$success = false;
-		do { // to be able to "break;" (allows for better readable code)
+		do { // To be able to "break;" (allows for better readable code).
 			// Load table, without table data, but with options and visibility settings.
 			$existing_table = TablePress::$model_table->load( $preview_table['id'], false, true );
-			if ( is_wp_error( $existing_table ) ) { // maybe somehow load a new table here? (TablePress::$model_table->get_table_template())?
+			if ( is_wp_error( $existing_table ) ) { // @todo Maybe somehow load a new table here? (TablePress::$model_table->get_table_template())?
 				break;
 			}
 
-			// Check and convert data that was transmitted as JSON.
-			if ( empty( $preview_table['data'] )
-			|| empty( $preview_table['options'] )
-			|| empty( $preview_table['visibility'] ) ) {
-				break;
+			// Check and convert all data that was transmitted as valid JSON.
+			$keys = array( 'data', 'options', 'visibility' );
+			foreach ( $keys as $key ) {
+				if ( empty( $preview_table[ $key ] ) ) {
+					break 2;
+				}
+				$preview_table[ $key ] = json_decode( $preview_table[ $key ], true );
+				if ( is_null( $preview_table[ $key ] ) ) {
+					break 2;
+				}
+				$preview_table[ $key ] = (array) $preview_table[ $key ]; // Cast to array again, to catch strings, etc.
 			}
-			$preview_table['data'] = (array) json_decode( $preview_table['data'], true );
-			$preview_table['options'] = (array) json_decode( $preview_table['options'], true );
-			$preview_table['visibility'] = (array) json_decode( $preview_table['visibility'], true );
 
 			// Check consistency of new table, and then merge with existing table.
 			$table = TablePress::$model_table->prepare_table( $existing_table, $preview_table, true );
@@ -279,7 +289,7 @@ class TablePress_Admin_AJAX_Controller extends TablePress_Controller {
 				$body_html .= __( 'To insert a table into a post or page, paste its Shortcode at the desired place in the editor.', 'tablepress' ) . ' '
 					. __( 'Each table has a unique ID that needs to be adjusted in that Shortcode.', 'tablepress' );
 			}
-			$body_html .= '</p>' . $_render->get_output() . '</div>';
+			$body_html .= '</p>' . $_render->get_output( 'html' ) . '</div>';
 		} else {
 			$head_html = '';
 			$body_html = __( 'The preview could not be loaded.', 'tablepress' );

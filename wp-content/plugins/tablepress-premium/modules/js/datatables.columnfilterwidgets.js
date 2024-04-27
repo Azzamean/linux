@@ -275,7 +275,7 @@ import naturalSort from '../../../admin/js/_edit-naturalsort';
 			var title = $( '<div>' + widget.oColumn.sTitle + '</div>' ).text();
 			widget.$Select.empty().append( $( '<option selected disabled></option>' ).val( '' ).text( title ) );
 			$.each( aDistinctOptions, function( i, sOption ) {
-				var sText = $( '<div>' + sOption + '</div>' ).text().replace( /\n/, ' ' );
+				var sText = $( '<div>' + sOption + '</div>' ).text().replace( /\n/g, ' ' );
 				widget.$Select.append( $( '<option></option>' ).val( sText ).text( sText ) );
 			} );
 			if ( aDistinctOptions.length > 0 ) {

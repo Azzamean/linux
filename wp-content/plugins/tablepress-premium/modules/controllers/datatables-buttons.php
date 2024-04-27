@@ -260,26 +260,32 @@ class TablePress_Module_DataTables_Buttons {
 			return $datatables_strings;
 		}
 
-		$datatables_strings['buttons'] = array(
-			'collection'    => _x( 'Collection', 'Buttons module', 'tablepress' ),
-			'colvis'        => _x( 'Column visibility', 'Buttons module', 'tablepress' ),
-			'colvisRestore' => _x( 'Restore visibility', 'Buttons module', 'tablepress' ),
-			'copy'          => _x( 'Copy', 'Buttons module', 'tablepress' ),
-			'copyKeys'      => _x( 'Press <i>ctrl</i> or <i>⌘</i> + <i>C</i> to copy the table data<br>to your system clipboard.<br><br>To cancel, click this message or press escape.', 'Buttons module', 'tablepress' ),
-			'copySuccess'   => array(
-				'1' => _x( 'Copied one row to clipboard', 'Buttons module', 'tablepress' ),
-				'_' => _x( 'Copied %d rows to clipboard', 'Buttons module', 'tablepress' ),
+		TablePress_Modules_Loader::load_language_file();
+
+		$new_strings = array(
+			'buttons' => array(
+				'collection'    => _x( 'Collection', 'Buttons module', 'tablepress' ),
+				'colvis'        => _x( 'Column visibility', 'Buttons module', 'tablepress' ),
+				'colvisRestore' => _x( 'Restore visibility', 'Buttons module', 'tablepress' ),
+				'copy'          => _x( 'Copy', 'Buttons module', 'tablepress' ),
+				'copyKeys'      => _x( 'Press <i>ctrl</i> or <i>⌘</i> + <i>C</i> to copy the table data<br>to your system clipboard.<br><br>To cancel, click this message or press escape.', 'Buttons module', 'tablepress' ),
+				'copySuccess'   => array(
+					'1' => _x( 'Copied one row to clipboard', 'Buttons module', 'tablepress' ),
+					'_' => _x( 'Copied %d rows to clipboard', 'Buttons module', 'tablepress' ),
+				),
+				'copyTitle'     => _x( 'Copy to clipboard', 'Buttons module', 'tablepress' ),
+				'csv'           => _x( 'CSV', 'Buttons module', 'tablepress' ),
+				'excel'         => _x( 'Excel', 'Buttons module', 'tablepress' ),
+				'pageLength'    => array(
+					'-1' => _x( 'Show all rows', 'Buttons module', 'tablepress' ),
+					'_'  => _x( 'Show %d rows', 'Buttons module', 'tablepress' ),
+				),
+				'pdf'           => _x( 'PDF', 'Buttons module', 'tablepress' ),
+				'print'         => _x( 'Print', 'Buttons module', 'tablepress' ),
 			),
-			'copyTitle'     => _x( 'Copy to clipboard', 'Buttons module', 'tablepress' ),
-			'csv'           => _x( 'CSV', 'Buttons module', 'tablepress' ),
-			'excel'         => _x( 'Excel', 'Buttons module', 'tablepress' ),
-			'pageLength'    => array(
-				'-1' => _x( 'Show all rows', 'Buttons module', 'tablepress' ),
-				'_'  => _x( 'Show %d rows', 'Buttons module', 'tablepress' ),
-			),
-			'pdf'           => _x( 'PDF', 'Buttons module', 'tablepress' ),
-			'print'         => _x( 'Print', 'Buttons module', 'tablepress' ),
 		);
+		// Merge existing strings into the new strings, so that existing translations are not lost.
+		$datatables_strings = array_replace_recursive( $new_strings, $datatables_strings );
 
 		return $datatables_strings;
 	}

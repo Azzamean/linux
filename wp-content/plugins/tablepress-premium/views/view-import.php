@@ -37,6 +37,7 @@ class TablePress_Import_View extends TablePress_View {
 	 * @param string               $action Action for this view.
 	 * @param array<string, mixed> $data   Data for this view.
 	 */
+	#[\Override]
 	public function setup( /* string */ $action, array $data ) /* : void */ {
 		// Don't use type hints in the method declaration to prevent PHP errors, as the method is inherited.
 
@@ -73,7 +74,7 @@ class TablePress_Import_View extends TablePress_View {
 	public function textbox_head( array $data, array $box ): void {
 		?>
 		<p>
-			<?php _e( 'TablePress can import tables from common spreadsheet applications, like XLSX files fom Excel, or CSV, ODS, HTML, and JSON files.', 'tablepress' ); ?>
+			<?php _e( 'TablePress can import tables from common spreadsheet applications, like XLSX files from Excel, or CSV, ODS, HTML, and JSON files.', 'tablepress' ); ?>
 		</p>
 		<p>
 			<?php _e( 'To import tables, select and enter the import source in the following form.', 'tablepress' ); ?>
@@ -99,7 +100,6 @@ class TablePress_Import_View extends TablePress_View {
 			'importServer'           => $this->admin_page->convert_to_json_parse_output( $data['import_server'] ),
 			'importFormField'        => $this->admin_page->convert_to_json_parse_output( $data['import_form-field'] ),
 			'importExistingTable'    => $this->admin_page->convert_to_json_parse_output( $data['import_existing_table'] ),
-			'zipSupportAvailable'    => $this->admin_page->convert_to_json_parse_output( $data['zip_support_available'] ),
 			'showImportSourceServer' => ( ( ! is_multisite() && current_user_can( 'manage_options' ) ) || is_super_admin() ) ? 'true' : 'false',
 			'legacyImport'           => $this->admin_page->convert_to_json_parse_output( $data['legacy_import'] ),
 		);

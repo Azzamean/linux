@@ -189,7 +189,7 @@ class TablePress_Table_Model extends TablePress_Model {
 	 * @param bool   $load_options_visibility Whether the table options and table visibility shall be loaded.
 	 * @return array<string, mixed>|WP_Error Table as an array on success, WP_Error on error.
 	 */
-	public function load( string $table_id, bool $load_data = true, bool $load_options_visibility = true ) /* : array|WP_Post */ {
+	public function load( string $table_id, bool $load_data = true, bool $load_options_visibility = true ) /* : array|WP_Error */ {
 		if ( empty( $table_id ) ) {
 			return new WP_Error( 'table_load_empty_table_id' );
 		}
@@ -233,9 +233,11 @@ class TablePress_Table_Model extends TablePress_Model {
 		// This loop now uses the WP cache.
 		$table_ids = array();
 		foreach ( $table_post as $table_id => $post_id ) {
-			$table_id = (string) $table_id;
+			$table_id = (string) $table_id; // Ensure that the table ID is a string, as it comes from an array key where numeric strings are converted to integers.
+
 			// Load table without data and options to save memory.
 			$table = $this->load( $table_id, false, false );
+
 			// Skip tables that could not be loaded properly.
 			if ( ! is_wp_error( $table ) ) {
 				$table_ids[] = $table_id;
@@ -274,7 +276,7 @@ class TablePress_Table_Model extends TablePress_Model {
 		// Sanitize each cell.
 		foreach ( $table['data'] as $row_idx => $row ) {
 			foreach ( $row as $column_idx => $cell_content ) {
-				$table['data'][ $row_idx ][ $column_idx ] = wp_kses_post( $cell_content ); // Equals wp_filter_post_kses(), but without the unncessary slashes handling.
+				$table['data'][ $row_idx ][ $column_idx ] = wp_kses_post( $cell_content ); // Equals wp_filter_post_kses(), but without the unnecessary slashes handling.
 			}
 		}
 
@@ -527,9 +529,11 @@ class TablePress_Table_Model extends TablePress_Model {
 		}
 
 		foreach ( $tables['table_post'] as $table_id => $post_id ) {
-			$table_id = (string) $table_id;
+			$table_id = (string) $table_id; // Ensure that the table ID is a string, as it comes from an array key where numeric strings are converted to integers.
+
 			$this->model_post->delete( $post_id ); // Post Meta fields will be deleted automatically by that function.
 			unset( $tables['table_post'][ $table_id ] );
+
 			// Invalidate table output caches that belong to this table.
 			$this->invalidate_table_output_cache( $table_id );
 		}
@@ -993,8 +997,8 @@ class TablePress_Table_Model extends TablePress_Model {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param int                                               $post_id    Post ID.
-	 * @param array<string, array{rows: int[], columns: int[]}> $visibility Table visibility.
+	 * @param int                                $post_id    Post ID.
+	 * @param array{rows: int[], columns: int[]} $visibility Table visibility.
 	 * @return bool True on success, false on error.
 	 */
 	protected function _add_table_visibility( int $post_id, array $visibility ): bool {
@@ -1007,8 +1011,8 @@ class TablePress_Table_Model extends TablePress_Model {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param int                                               $post_id    Post ID.
-	 * @param array<string, array{rows: int[], columns: int[]}> $visibility Table visibility.
+	 * @param int                                $post_id    Post ID.
+	 * @param array{rows: int[], columns: int[]} $visibility Table visibility.
 	 * @return bool True on success, false on error.
 	 */
 	protected function _update_table_visibility( int $post_id, array $visibility ): bool {
@@ -1022,12 +1026,15 @@ class TablePress_Table_Model extends TablePress_Model {
 	 * @since 1.0.0
 	 *
 	 * @param int $post_id Post ID.
-	 * @return array<string, array{rows: int[], columns: int[]}> Table visibility on success, empty array on error.
+	 * @return array{rows: int[], columns: int[]} Table visibility on success, empty array on error.
 	 */
 	protected function _get_table_visibility( int $post_id ): array {
 		$visibility = $this->model_post->get_meta_field( $post_id, $this->table_visibility_field_name );
 		if ( empty( $visibility ) ) {
-			return array();
+			return array(
+				'rows'    => array(),
+				'columns' => array(),
+			);
 		}
 		return json_decode( $visibility, true );
 	}
@@ -1055,7 +1062,7 @@ class TablePress_Table_Model extends TablePress_Model {
 		$default_table = $this->get_table_template();
 
 		// Go through all tables (this loop now uses the WP cache).
-		foreach ( $table_post as $table_id => $post_id ) {
+		foreach ( $table_post as $post_id ) {
 			$table_options = $this->_get_table_options( $post_id );
 			if ( $remove_old_options ) {
 				// Remove old (i.e. no longer existing) Table Options.
@@ -1079,6 +1086,7 @@ class TablePress_Table_Model extends TablePress_Model {
 		}
 
 		foreach ( $table_post as $table_id => $post_id ) {
+			$table_id = (string) $table_id; // Ensure that the table ID is a string, as it comes from an array key where numeric strings are converted to integers.
 			$this->invalidate_table_output_cache( $table_id );
 		}
 	}

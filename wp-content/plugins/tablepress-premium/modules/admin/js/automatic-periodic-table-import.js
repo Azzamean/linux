@@ -11,9 +11,9 @@
  * Internal dependencies.
  */
 import { initializeReactComponent } from '../../../admin/js/common/react-loader';
-import AutomaticPeriodicTableImportScreen from './automatic-periodic-table-import/screen';
+import Screen from './automatic-periodic-table-import/screen';
 
 initializeReactComponent(
 	'tablepress-automatic-periodic-table-import-screen',
-	<AutomaticPeriodicTableImportScreen />
+	<Screen />
 );

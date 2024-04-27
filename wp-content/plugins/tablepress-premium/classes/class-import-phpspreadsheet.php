@@ -8,6 +8,8 @@
  * @since 2.0.0
  */
 
+use TablePress\Import\File;
+
 // Prohibit direct script loading.
 defined( 'ABSPATH' ) || die( 'No direct script access allowed!' );
 
@@ -27,7 +29,7 @@ class TablePress_Import_PHPSpreadsheet extends TablePress_Import_Base {
 	 * @since 2.0.0
 	 */
 	public function __construct() {
-		// Load PHPSpreadsheet via the Composer autoloading mechanism.
+		// Load PHPSpreadsheet via its autoloading mechanism.
 		TablePress::load_file( 'autoload.php', 'libraries' );
 	}
 
@@ -36,13 +38,13 @@ class TablePress_Import_PHPSpreadsheet extends TablePress_Import_Base {
 	 *
 	 * @since 2.0.0
 	 *
-	 * @param array<string, mixed> $file File to import.
+	 * @param File $file File to import.
 	 * @return array<string, mixed>|WP_Error Table array on success, WP_Error on error.
 	 */
-	public function import_table( array $file ) /* : array|WP_Error */ {
-		$data = file_get_contents( $file['location'] );
+	public function import_table( File $file ) /* : array|WP_Error */ {
+		$data = file_get_contents( $file->location );
 		if ( false === $data ) {
-			return new WP_Error( 'table_import_phpspreadsheet_data_read', '', $file['location'] );
+			return new WP_Error( 'table_import_phpspreadsheet_data_read', '', $file->location );
 		}
 
 		// Remove a possible UTF-8 Byte-Order Mark (BOM).
@@ -52,7 +54,7 @@ class TablePress_Import_PHPSpreadsheet extends TablePress_Import_Base {
 		}
 
 		if ( '' === $data ) {
-			return new WP_Error( 'table_import_phpspreadsheet_data_empty', '', $file['location'] );
+			return new WP_Error( 'table_import_phpspreadsheet_data_empty', '', $file->location );
 		}
 
 		$table = $this->_maybe_import_json( $data );
@@ -77,10 +79,12 @@ class TablePress_Import_PHPSpreadsheet extends TablePress_Import_Base {
 	 * @return array<string, mixed>|false Table array on success, false if the file is not a JSON file.
 	 */
 	protected function _maybe_import_json( string $data ) /* : array|false */ {
-		// If the first non-whitespace character is not a { or [, the file is not a supported JSON file.
-		$data = ltrim( $data );
+		$data = trim( $data );
+
+		// If the file does not begin / end with [ / ] or { / }, it's not a supported JSON file.
 		$first_character = $data[0];
-		if ( '{' !== $first_character && '[' !== $first_character ) {
+		$last_character = $data[-1];
+		if ( ! ( '[' === $first_character && ']' === $last_character ) && ! ( '{' === $first_character && '}' === $last_character ) ) {
 			return false;
 		}
 
@@ -146,17 +150,17 @@ class TablePress_Import_PHPSpreadsheet extends TablePress_Import_Base {
 	 *
 	 * @since 2.0.0
 	 *
-	 * @param array<string, mixed> $file File to import.
+	 * @param File $file File to import.
 	 * @return array<string, mixed>|WP_Error Table array on success, WP_Error on error.
 	 */
-	protected function _import_phpspreadsheet( array $file ) /* : array|WP_Error */ {
+	protected function _import_phpspreadsheet( File $file ) /* : array|WP_Error */ {
 		// Rename the temporary file, as PHPSpreadsheet tries to infer the format from the file's extension.
-		if ( '' !== $file['extension'] ) {
-			$temp_file = pathinfo( $file['location'] );
-			if ( ! isset( $temp_file['extension'] ) || $file['extension'] !== $temp_file['extension'] ) {
-				$new_location = "{$temp_file['dirname']}/{$temp_file['filename']}.{$file['extension']}"; // @phpstan-ignore-line
-				if ( rename( $file['location'], $new_location ) ) {
-					$file['location'] = $new_location;
+		if ( '' !== $file->extension ) {
+			$temp_file = pathinfo( $file->location );
+			if ( ! isset( $temp_file['extension'] ) || $file->extension !== $temp_file['extension'] ) {
+				$new_location = "{$temp_file['dirname']}/{$temp_file['filename']}.{$file->extension}"; // @phpstan-ignore-line
+				if ( rename( $file->location, $new_location ) ) {
+					$file->location = $new_location;
 				}
 			}
 		}
@@ -171,13 +175,13 @@ class TablePress_Import_PHPSpreadsheet extends TablePress_Import_Base {
 			 * Fall back to CSV if no reader could be determined.
 			 */
 			try {
-				$reader = \TablePress\PhpOffice\PhpSpreadsheet\IOFactory::createReaderForFile( $file['location'] );
+				$reader = \TablePress\PhpOffice\PhpSpreadsheet\IOFactory::createReaderForFile( $file->location );
 			} catch ( \TablePress\PhpOffice\PhpSpreadsheet\Reader\Exception $exception ) {
 				$reader = \TablePress\PhpOffice\PhpSpreadsheet\IOFactory::createReader( 'Csv' );
 				// Append .csv to the file name, so that \TablePress\PhpOffice\PhpSpreadsheet\Reader\Csv::canRead() returns true.
-				$new_location = $file['location'] . '.csv';
-				if ( rename( $file['location'], $new_location ) ) {
-					$file['location'] = $new_location;
+				$new_location = $file->location . '.csv';
+				if ( rename( $file->location, $new_location ) ) {
+					$file->location = $new_location;
 				}
 			}
 
@@ -204,7 +208,7 @@ class TablePress_Import_PHPSpreadsheet extends TablePress_Import_Base {
 				$reader->setSheetIndex( 0 ); // @phpstan-ignore-line
 			}
 
-			$spreadsheet = $reader->load( $file['location'] );
+			$spreadsheet = $reader->load( $file->location );
 			$worksheet = $spreadsheet->getActiveSheet();
 			$cell_collection = $worksheet->getCellCollection();
 			$comments = $worksheet->getComments();
@@ -246,9 +250,16 @@ class TablePress_Import_PHPSpreadsheet extends TablePress_Import_Base {
 
 					// Apply data type formatting.
 					$style = $spreadsheet->getCellXfByIndex( $cell->getXfIndex() );
+
+					$format = $style->getNumberFormat()->getFormatCode() ?? \TablePress\PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_GENERAL;
+
+					// Fix floating point precision issues with numbers in the "General" Excel .xlsx format.
+					if ( 'xlsx' === $detected_format && \TablePress\PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_GENERAL === $format && is_numeric( $cell_data ) ) {
+						$cell_data = (string) (float) $cell_data; // Type-cast strings to float and back.
+					}
 					$cell_data = \TablePress\PhpOffice\PhpSpreadsheet\Style\NumberFormat::toFormattedString(
 						$cell_data,
-						$style->getNumberFormat() ? $style->getNumberFormat()->getFormatCode() : \TablePress\PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_GENERAL, // @phpstan-ignore-line
+						$format,
 						array( $this, 'format_color' )
 					);
 

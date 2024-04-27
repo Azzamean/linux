@@ -266,7 +266,7 @@ class TablePress_Module_DataTables_FixedHeader_FixedColumns {
 
 		// Change parameters and register files if at least one column is fixed.
 		if ( $js_options['datatables_fixedcolumns_left_columns'] > 0 || $js_options['datatables_fixedcolumns_right_columns'] > 0 ) {
-			// Horizontal Scrolling is mandatatory for the FixedColumns functionality.
+			// Horizontal Scrolling is mandatory for the FixedColumns functionality.
 			$js_options['datatables_scrollx'] = true;
 
 			// Register the JS files.

@@ -48,7 +48,7 @@
  *  - highlight element tag and class names can be specified in options
  *
  * Usage:
- *   // wrap every occurrance of text 'lorem' in content
+ *   // wrap every occurrence of text 'lorem' in content
  *   // with <span class='highlight'> (default options)
  *   $('#content').highlight('lorem');
  *
@@ -63,7 +63,7 @@
  *   // don't ignore case during search of term 'lorem'
  *   $('#content').highlight('lorem', { caseSensitive: true });
  *
- *   // wrap every occurrance of term 'ipsum' in content
+ *   // wrap every occurrence of term 'ipsum' in content
  *   // with <em class='important'>
  *   $('#content').highlight('ipsum', { element: 'em', className: 'important' });
  *

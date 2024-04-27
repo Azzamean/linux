@@ -89,7 +89,7 @@ div.dtsb-searchBuilder div.dtsb-group div.dtsb-logicContainer {
 div.dtsb-searchBuilder div.dtsb-group div.dtsb-criteria {
 	margin-bottom: 0.8em;
 	display: flex;
-	justify-content: start;
+	justify-content: flex-start;
 	flex-flow: row wrap;
 }
 div.dtsb-searchBuilder div.dtsb-group div.dtsb-criteria select.dtsb-dropDown,
@@ -144,7 +144,7 @@ div.dtsb-searchBuilder div.dtsb-group div.dtsb-criteria div.dtsb-buttonContainer
 		display: flex;
 		flex-flow: none;
 		flex-direction: column;
-		justify-content: start;
+		justify-content: flex-start;
 		padding-right: calc(35px + 0.8em);
 		margin-bottom: 0;
 	}

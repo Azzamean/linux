@@ -108,7 +108,7 @@ class TablePress_Module_Responsive_Tables {
 		$help_box_content .= '<p>' . __( 'The Responsive Tables module offers four approaches to get around this challenge:', 'tablepress' ) . '</p>';
 		$help_box_content .= '<ul style="list-style:disc;margin-left:12px;">';
 		$help_box_content .= '<li>' . __( '<em>Scroll</em>: This mode will make a table that is too wide to be fully displayed horizontally scrollable. With that, the user can still reach all table data. This is usually a good approach for tables with images, if they don’t automatically resize.', 'tablepress' ) . '</li>';
-		$help_box_content .= '<li>' . __( '<em>Collapse</em>: The Collapse approach can add a hide/expand effect to a table. It will hide the data from those columns that would otherwise be cut-off and instead adds that data to a collapsable row that is inserted below each entry. That row can be shown and hidden with a “+” and “-” button. This mode is especially useful in tables that show additional information for some “main” columns, e.g. in a directory table.', 'tablepress' ) . '</li>';
+		$help_box_content .= '<li>' . __( '<em>Collapse</em>: The Collapse approach can add a hide/expand effect to a table. It will hide the data from those columns that would otherwise be cut-off and instead adds that data to a collapsible row that is inserted below each entry. That row can be shown and hidden with a “+” and “-” button. This mode is especially useful in tables that show additional information for some “main” columns, e.g. in a directory table.', 'tablepress' ) . '</li>';
 		$help_box_content .= '<li>' . __( '<em>Modal</em>: Similar to the Collapse mode, the Modal mode will only show columns that fit on the screen. The other data is then shown in a modal window when a row is clicked.', 'tablepress' ) . '</li>';
 		$help_box_content .= '<li>' . __( '<em>Stack</em>: The Stack mode will show the cells of a row on top of each other, instead of next to each other. This makes the table more narrow, as it will appear to have only two columns: One for the header cells and one for the original row’s data cells.', 'tablepress' ) . '</li>';
 		$help_box_content .= '<li>' . __( '<em>Flip</em>: This mode changes the layout of the table, by flipping it to the side (rows appear as columns and vice versa), and then makes the table horizontally scrollable. This mode is a good solution for plain data tables, but will usually not work nicely in tables with images, cells of different height, or with combined/merged cells.', 'tablepress' ) . '</li>';
@@ -140,7 +140,7 @@ class TablePress_Module_Responsive_Tables {
 						<input type="radio" name="responsive" value="collapse" id="option-responsive-collapse" class="control-input" />
 						<label for="option-responsive-collapse">
 							<span class="box-title"><?php _e( 'Collapse', 'tablepress' ); ?></span>
-							<p class="description"><?php _e( 'The table will have collapsable rows.', 'tablepress' ); ?></p>
+							<p class="description"><?php _e( 'The table will have collapsible rows.', 'tablepress' ); ?></p>
 						</label>
 						</div><div class="input-field-box">
 						<input type="radio" name="responsive" value="modal" id="option-responsive-modal" class="control-input" />

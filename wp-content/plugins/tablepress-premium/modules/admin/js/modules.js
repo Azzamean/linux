@@ -23,7 +23,7 @@ const beforeunload_dialog = ( event ) => {
 	event.returnValue = ''; // Chrome requires returnValue to be set.
 };
 
-const $form = document.querySelector( '#tablepress-page form' );
+const $form = $( '#tablepress-page-form' );
 
 /**
  * On form submit: Enable disabled input fields, so that they are sent in the HTTP POST request.

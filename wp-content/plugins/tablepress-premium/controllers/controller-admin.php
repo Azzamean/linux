@@ -379,7 +379,7 @@ JS;
 		// Add additional links on Plugins page.
 		add_filter( 'plugin_action_links_' . TABLEPRESS_BASENAME, array( $this, 'add_plugin_action_links' ) );
 		add_filter( 'plugin_row_meta', array( $this, 'add_plugin_row_meta' ), 10, 2 );
-		if ( tb_tp_fs()->is_plan_or_trial__premium_only( 'pro' ) && ! tb_tp_fs()->is_paying_or_trial() ) {
+		if ( tb_tp_fs()->is_plan_or_trial__premium_only( 'pro' ) && ! tb_tp_fs()->is_paying_or_trial__premium_only() ) {
 			add_action( 'after_plugin_row_' . TABLEPRESS_BASENAME, array( $this, 'add_plugin_expiration_meta_row__premium_only' ), 10, 3 );
 		}
 	}
@@ -413,7 +413,7 @@ JS;
 			$links[] = '<a href="https://tablepress.org/faq/" title="' . esc_attr__( 'Frequently Asked Questions', 'tablepress' ) . '">' . __( 'FAQ', 'tablepress' ) . '</a>';
 			$links[] = '<a href="https://tablepress.org/documentation/">' . __( 'Documentation', 'tablepress' ) . '</a>';
 			$links[] = '<a href="https://tablepress.org/support/">' . __( 'Support', 'tablepress' ) . '</a>';
-			if ( tb_tp_fs()->is_free_plan() ) {
+			if ( ! TABLEPRESS_IS_PLAYGROUND_PREVIEW && tb_tp_fs()->is_free_plan() ) {
 				$links[] = '<a href="https://tablepress.org/premium/?utm_source=plugin&utm_medium=textlink&utm_content=plugins-screen" title="' . esc_attr__( 'Check out the Premium version of TablePress!', 'tablepress' ) . '"><strong>' . __( 'Go Premium', 'tablepress' ) . '</strong></a>';
 			}
 		}
@@ -510,8 +510,6 @@ JS;
 				break;
 			case 'about':
 				$data['first_activation'] = TablePress::$model_options->get( 'first_activation' );
-				$exporter = TablePress::load_class( 'TablePress_Export', 'class-export.php', 'classes' );
-				$data['zip_support_available'] = $exporter->zip_support_available;
 				break;
 			case 'options':
 				/*
@@ -591,10 +589,9 @@ JS;
 					$table = TablePress::$model_table->load( $table_id, false, false );
 					$data['tables'][ $table['id'] ] = $table['name']; // @phpstan-ignore-line
 				}
-				$data['table_ids'] = $table_ids; // Backwards compatibility for the retired "Table Auto Update" Extension, which still relies on this variable name.
+				$data['table_ids'] = $table_ids; // Backward compatibility for the retired "Table Auto Update" Extension, which still relies on this variable name.
 				$data['tables_count'] = TablePress::$model_table->count_tables();
 				$importer = TablePress::load_class( 'TablePress_Import', 'class-import.php', 'classes' );
-				$data['zip_support_available'] = $importer->zip_support_available;
 				$data['import_type'] = ( ! empty( $_GET['import_type'] ) ) ? $_GET['import_type'] : 'add';
 				$data['import_existing_table'] = ( ! empty( $_GET['import_existing_table'] ) ) ? $_GET['import_existing_table'] : '';
 				$data['import_source'] = ( ! empty( $_GET['import_source'] ) ) ? $_GET['import_source'] : 'file-upload';
@@ -790,7 +787,7 @@ JS;
 				break;
 		}
 
-		if ( 0 !== count( $no_success ) ) { // @TODO: maybe pass this information to the view?
+		if ( 0 !== count( $no_success ) ) { // @todo maybe pass this information to the view?
 			$message = "error_{$bulk_action}_not_all_tables";
 		} else {
 			$plural = ( count( $tables ) > 1 ) ? '_plural' : '';
@@ -830,7 +827,7 @@ JS;
 
 		$add_table = wp_unslash( $_POST['table'] );
 
-		// Perform sanity checks of posted data.
+		// Perform confidence checks of posted data.
 		$name = ( isset( $add_table['name'] ) ) ? $add_table['name'] : '';
 		$description = ( isset( $add_table['description'] ) ) ? $add_table['description'] : '';
 		if ( ! isset( $add_table['rows'], $add_table['columns'] ) ) {
@@ -1173,7 +1170,7 @@ JS;
 			} elseif ( 0 < count( $import['errors'] ) ) {
 				$wp_error_strings = array();
 				foreach ( $import['errors'] as $file ) {
-					$wp_error_strings[] = TablePress::get_wp_error_string( $file['error'] );
+					$wp_error_strings[] = TablePress::get_wp_error_string( $file->error );
 				}
 				$redirect_parameters['error_details'] = implode( ', ', $wp_error_strings );
 			}
@@ -1339,7 +1336,7 @@ JS;
 		$view_data = array(
 			'table_id'               => $table_id,
 			'head_html'              => $_render->get_preview_css(),
-			'body_html'              => $_render->get_output(),
+			'body_html'              => $_render->get_output( 'html' ),
 			'site_uses_block_editor' => TablePress::site_uses_block_editor(),
 		);
 

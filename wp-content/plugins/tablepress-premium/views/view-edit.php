@@ -37,6 +37,7 @@ class TablePress_Edit_View extends TablePress_View {
 	 * @param string               $action Action for this view.
 	 * @param array<string, mixed> $data   Data for this view.
 	 */
+	#[\Override]
 	public function setup( /* string */ $action, array $data ) /* : void */ {
 		// Don't use type hints in the method declaration to prevent PHP errors, as the method is inherited.
 
@@ -65,7 +66,7 @@ class TablePress_Edit_View extends TablePress_View {
 		$this->admin_page->enqueue_style( 'jspreadsheet' );
 		$this->admin_page->enqueue_style( 'jsuites', array( 'tablepress-jspreadsheet' ) );
 		$this->admin_page->enqueue_style( 'edit', array( 'tablepress-jspreadsheet', 'tablepress-jsuites' ) );
-		if ( tb_tp_fs()->is_free_plan() ) {
+		if ( ! TABLEPRESS_IS_PLAYGROUND_PREVIEW && tb_tp_fs()->is_free_plan() ) {
 			$this->admin_page->enqueue_style( 'edit-features', array( 'tablepress-edit' ) );
 		}
 		$this->admin_page->enqueue_script( 'jspreadsheet' );
@@ -108,7 +109,14 @@ class TablePress_Edit_View extends TablePress_View {
 	 * @param WP_Screen $screen          WP_Screen object.
 	 * @return string Extended Screen settings.
 	 */
-	public function add_screen_options_output( string $screen_settings, WP_Screen $screen ): string {
+	public function add_screen_options_output( /* string */ $screen_settings, WP_Screen $screen ): string {
+		// Don't use a type hint for the `$screen_settings` argument as many WordPress plugins seem to be returning `null` in their filter hook handlers.
+
+		// Protect against other plugins not returning a string for the `$screen_settings` argument.
+		if ( ! is_string( $screen_settings ) ) {
+			$screen_settings = '';
+		}
+
 		$screen_settings = '<fieldset id="tablepress-screen-options" class="screen-options">';
 		$screen_settings .= '<legend>' . __( 'Table editor settings', 'tablepress' ) . '</legend>';
 		$screen_settings .= '<p>' . __( 'Adjust the default size of the table cells in the table editor below.', 'tablepress' ) . ' ' . __( 'Cells with many lines of text will expand to their full height when they are edited.', 'tablepress' ) . '</p>';
@@ -135,6 +143,7 @@ class TablePress_Edit_View extends TablePress_View {
 	 *
 	 * @since 2.0.0
 	 */
+	#[\Override]
 	public function render(): void {
 		?>
 		<div id="tablepress-page" class="wrap">
@@ -185,6 +194,7 @@ class TablePress_Edit_View extends TablePress_View {
 	 * @param array<string, mixed> $data Data for this screen.
 	 * @param array<string, mixed> $box  Information about the text box.
 	 */
+	#[\Override]
 	protected function action_nonce_field( array $data, array $box ): void {
 		// Intentionally left empty. Nonces for this view are generated in postbox_table_data().
 	}
@@ -223,7 +233,7 @@ class TablePress_Edit_View extends TablePress_View {
 	</tr>
 </table>
 		<?php
-		if ( tb_tp_fs()->is_free_plan() ) :
+		if ( ! TABLEPRESS_IS_PLAYGROUND_PREVIEW && tb_tp_fs()->is_free_plan() ) :
 			?>
 			<div class="postbox premium-features">
 				<div>
@@ -245,7 +255,7 @@ class TablePress_Edit_View extends TablePress_View {
 						</div>
 					</div>
 					<div class="buttons">
-						<a href="<?php echo 'https://tablepress.org/premium/?utm_source=plugin&utm_medium=textlink&utm_content=edit-screen'; ?>" class="tablepress-button">
+						<a href="https://tablepress.org/premium/?utm_source=plugin&utm_medium=textlink&utm_content=edit-screen" class="tablepress-button">
 							<span><?php _e( 'Compare the TablePress premium versions', 'tablepress' ); ?></span>
 							<span class="dashicons dashicons-arrow-right-alt"></span>
 						</a>
@@ -271,6 +281,8 @@ class TablePress_Edit_View extends TablePress_View {
 		echo "tp.nonces = {};\n";
 		echo "tp.nonces.edit_table = '" . wp_create_nonce( TablePress::nonce( $this->action, $data['table']['id'] ) ) . "';\n";
 		echo "tp.nonces.preview_table = '" . wp_create_nonce( TablePress::nonce( 'preview_table', $data['table']['id'] ) ) . "';\n";
+		echo "tp.nonces.copy_table = '" . wp_create_nonce( TablePress::nonce( 'copy_table', $data['table']['id'] ) ) . "';\n";
+		echo "tp.nonces.delete_table = '" . wp_create_nonce( TablePress::nonce( 'delete_table', $data['table']['id'] ) ) . "';\n";
 		echo "tp.nonces.screen_options = '" . wp_create_nonce( TablePress::nonce( 'screen_options' ) ) . "';\n";
 
 		echo "tp.table = {};\n";
@@ -381,7 +393,7 @@ class TablePress_Edit_View extends TablePress_View {
 
 		echo '<p id="' . $box['id'] . '-submit" class="submit">';
 		if ( current_user_can( 'tablepress_preview_table', $data['table']['id'] ) ) {
-			echo '<a href="' . $preview_url . '" class="button button-large button-show-preview" target="_blank" data-shortcut="' . esc_attr( _x( '%1$sP', 'keyboard shortcut for Preview', 'tablepress' ) ) . '">' . __( 'Preview', 'tablepress' ) . '</a>';
+			echo '<a href="' . $preview_url . '" class="button button-large button-preview" target="_blank" data-shortcut="' . esc_attr( _x( '%1$sP', 'keyboard shortcut for Preview', 'tablepress' ) ) . '">' . __( 'Preview', 'tablepress' ) . '</a>';
 		}
 		?>
 			<input type="button" class="button button-primary button-large button-save-changes" value="<?php esc_attr_e( 'Save Changes', 'tablepress' ); ?>" data-shortcut="<?php echo esc_attr( _x( '%1$sS', 'keyboard shortcut for Save Changes', 'tablepress' ) ); ?>" />
@@ -409,13 +421,13 @@ class TablePress_Edit_View extends TablePress_View {
 		echo '<p class="submit">';
 		echo __( 'Other Actions', 'tablepress' ) . ':&nbsp; ';
 		if ( $user_can_copy_table ) {
-			echo '<a href="' . TablePress::url( array( 'action' => 'copy_table', 'item' => $data['table']['id'], 'return' => 'edit' ), true, 'admin-post.php' ) . '" class="button">' . __( 'Copy Table', 'tablepress' ) . '</a> ';
+			echo '<a href="' . TablePress::url( array( 'action' => 'copy_table', 'item' => $data['table']['id'], 'return' => 'edit' ), true, 'admin-post.php' ) . '" class="button button-copy">' . __( 'Copy Table', 'tablepress' ) . '</a> ';
 		}
 		if ( $user_can_export_table ) {
-			echo '<a href="' . TablePress::url( array( 'action' => 'export', 'table_id' => $data['table']['id'] ) ) . '" class="button">' . __( 'Export Table', 'tablepress' ) . '</a> ';
+			echo '<a href="' . TablePress::url( array( 'action' => 'export', 'table_id' => $data['table']['id'] ) ) . '" class="button button-export">' . __( 'Export Table', 'tablepress' ) . '</a> ';
 		}
 		if ( $user_can_delete_table ) {
-			echo '<a href="' . TablePress::url( array( 'action' => 'delete_table', 'item' => $data['table']['id'], 'return' => 'edit', 'return_item' => $data['table']['id'] ), true, 'admin-post.php' ) . '" class="button delete-link">' . __( 'Delete Table', 'tablepress' ) . '</a>';
+			echo '<a href="' . TablePress::url( array( 'action' => 'delete_table', 'item' => $data['table']['id'], 'return' => 'edit', 'return_item' => $data['table']['id'] ), true, 'admin-post.php' ) . '" class="button button-delete delete-link">' . __( 'Delete Table', 'tablepress' ) . '</a>';
 		}
 		echo '</p>';
 	}

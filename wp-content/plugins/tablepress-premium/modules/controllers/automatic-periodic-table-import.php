@@ -34,10 +34,53 @@ class TablePress_Module_Automatic_Periodic_Table_Import {
 	 * @since 2.0.0
 	 */
 	public function __construct() {
-		self::init_automatic_periodic_table_import();
+		// Ensure that TablePress' copy of Action Scheduler (or a newer version in another plugin) is loaded on the next page view.
+		if ( 'true' !== get_option( 'tablepress_load_action_scheduler', 'false' ) ) {
+			// `update_option()` only writes to the database if a value is changed, so this does not incur a performance penalty.
+			update_option( 'tablepress_load_action_scheduler', 'true', true );
+		}
+
+		// Hook into the action that is periodically executed by Action Scheduler.
+		add_action( 'tablepress_automatic_periodic_table_import_action', array( __CLASS__, 'perform_automatic_import' ), 10, 2 );
+
+		/*
+		 * Maybe migrate the configuration to the new format and re-schedule the cron jobs.
+		 * This action will only be called when a legacy WP Cron hook for it is registered.
+		 * This will be unregistered during the migration (which can also be triggered by e.g.
+		 * saving the automatic import configuration on the "Import" screen), so that this action
+		 * will only be executed once.
+		 */
+		add_action( 'tablepress_table_auto_import_hook', array( __CLASS__, 'load_configuration' ) );
+
+		// Adjust the Automatic Import configuration when a table is deleted or its ID is changed.
+		add_action( 'tablepress_event_deleted_table', array( $this, 'deleted_table_handler' ) );
+		add_action( 'tablepress_event_changed_table_id', array( $this, 'changed_table_id_handler' ), 10, 2 );
 
 		if ( is_admin() ) {
 			self::init_admin();
+		}
+	}
+
+	/**
+	 * Writes a message to the error log.
+	 *
+	 * @since 2.2.4
+	 *
+	 * @param mixed[]|WP_Error|object|string $data Data to log.
+	 */
+	protected static function log( /* array|WP_Error|object|string */ $data ): void {
+		if ( ! defined( 'TABLEPRESS_DEBUG' ) || true !== TABLEPRESS_DEBUG ) {
+			return;
+		}
+
+		$prefix = 'TablePress # ';
+
+		if ( is_wp_error( $data ) ) {
+			error_log( $prefix . TablePress::get_wp_error_string( $data ) ); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
+		} elseif ( is_array( $data ) || is_object( $data ) ) {
+			error_log( $prefix . var_export( $data, true ) ); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log, WordPress.PHP.DevelopmentFunctions.error_log_var_export
+		} else {
+			error_log( $prefix . $data ); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
 		}
 	}
 
@@ -52,101 +95,215 @@ class TablePress_Module_Automatic_Periodic_Table_Import {
 			'default_value' => array(),
 		);
 		self::$auto_import_config = TablePress::load_class( 'TablePress_WP_Option', 'class-wp_option.php', 'classes', $params );
+
+		/*
+		 * Maybe migrate the configuration to the new format and re-schedule the cron jobs.
+		 *
+		 * Check for string, which is the data type for `schedule` in the previous configuration scheme.
+		 * In the new scheme, it would be `null` if no entry exists, or an array if `schedule` is set (it would then be a table).
+		 */
+		$schedule = self::$auto_import_config->get( 'schedule' );
+		if ( is_string( $schedule ) ) {
+			// Get global import interval from previously configured schedule.
+			$schedules = wp_get_schedules(); // Schedules from WordPress and other plugins.
+			// Add custom schedules that the Automatic Periodic Table Import uses previously.
+			$schedules['every_minute'] = array(
+				'interval' => MINUTE_IN_SECONDS,
+			);
+			$schedules['quarterhourly'] = array(
+				'interval' => 15 * MINUTE_IN_SECONDS,
+			);
+			$interval = isset( $schedules[ $schedule ] ) ? $schedules[ $schedule ]['interval'] : DAY_IN_SECONDS;
+
+			// Add the previous schedule interval to each table separately and remove the no longer used source key.
+			$tables = self::$auto_import_config->get( 'tables', array() );
+			foreach ( $tables as &$table ) {
+				unset( $table['source'] );
+				$table['interval'] = $interval;
+			}
+			unset( $table ); // Unset use-by-reference parameter of foreach loop.
+			// Remove one level of array nesting. The configuration now only has the tables in it.
+			self::$auto_import_config->update( $tables );
+
+			wp_unschedule_hook( 'tablepress_table_auto_import_hook' ); // Unschedule the old cron job.
+			self::schedule_periodic_actions(); // Schedule the periodic import actions via Action Scheduler.
+		}
 	}
 
 	/**
-	 * Inits the Automatic Periodic Table Import module.
+	 * Schedules a single periodic import action via Action Scheduler.
 	 *
-	 * @since 2.0.0
+	 * @since 2.3.0
+	 *
+	 * @param int                         $timestamp Timestamp for the first execution of the action.
+	 * @param int|string                  $interval  Interval in seconds or cron schedule for the action to be repeated.
+	 * @param array{0: string, 1: string} $args      Data to pass to the action.
 	 */
-	public static function init_automatic_periodic_table_import(): void {
-		add_filter( 'cron_schedules', array( __CLASS__, 'cron_add_quarterhourly' ) ); // phpcs:ignore WordPress.WP.CronInterval.CronSchedulesInterval
-		add_action( 'tablepress_table_auto_import_hook', array( __CLASS__, 'perform_automatic_import' ) );
+	public static function schedule_single_periodic_action( int $timestamp, /* int|string */ $interval, array $args ): void {
+		if ( is_string( $interval ) ) {
+			// Schedule the import action with a cron-like schedule.
+			as_schedule_cron_action( $timestamp, $interval, 'tablepress_automatic_periodic_table_import_action', $args );
+		} else {
+			// Schedule the import action with a fixed integer interval.
+			as_schedule_recurring_action( $timestamp, $interval, 'tablepress_automatic_periodic_table_import_action', $args );
+		}
 	}
 
 	/**
-	 * Adds "every minute" and "quarterhourly" as possible intervals for cron hooks, as WP doesn't have these by default.
+	 * Clears and re-schedules the periodic import actions via Action Scheduler.
 	 *
-	 * @since 2.0.0
-	 *
-	 * @param array<string, array{interval: int, display: string}> $schedules Current WP Cron schedules.
-	 * @return array<string, array{interval: int, display: string}> Extended WP Cron schedules.
+	 * @since 2.3.0
 	 */
-	public static function cron_add_quarterhourly( array $schedules ): array {
-		$schedules['every_minute'] = array(
-			'interval' => 1 * MINUTE_IN_SECONDS,
-			'display'  => __( 'Once every minute', 'tablepress' ),
-		);
-		$schedules['quarterhourly'] = array(
-			'interval' => 15 * MINUTE_IN_SECONDS,
-			'display'  => __( 'Once every 15 minutes', 'tablepress' ),
-		);
-		return $schedules;
+	public static function schedule_periodic_actions(): void {
+		as_unschedule_all_actions( 'tablepress_automatic_periodic_table_import_action' );
+
+		$tables = self::$auto_import_config->get();
+		foreach ( $tables as $table_id => $table ) {
+			if ( $table['active'] ) {
+				$table_id = (string) $table_id; // Ensure that the table ID is a string, as it comes from an array key where numeric strings are converted to integers.
+				self::schedule_single_periodic_action( time(), $table['interval'], array( $table_id, $table['location'] ) );
+			}
+		}
 	}
 
 	/**
-	 * Loops through the list of tables, imports them from their given source, and replaces the existing data with the new data.
+	 * Imports a given import location and replaces an existing table with the new data.
 	 *
 	 * @since 2.0.0
+	 *
+	 * @param string $table_id Table ID of the table to replace.
+	 * @param string $location Location of the data to import.
 	 */
-	public static function perform_automatic_import(): void {
-		self::load_configuration();
-		$configuration = self::$auto_import_config->get();
+	public static function perform_automatic_import( string $table_id, string $location ): void {
+		// Initiate logging.
+		if ( defined( 'TABLEPRESS_DEBUG' ) && true === TABLEPRESS_DEBUG ) {
+			// phpcs:ignore WordPress.PHP.DevelopmentFunctions.prevent_path_disclosure_error_reporting, WordPress.PHP.DiscouragedPHPFunctions.runtime_configuration_error_reporting
+			error_reporting( E_ALL ); // Equals WP_DEBUG true.
+			// phpcs:ignore WordPress.PHP.IniSet.log_errors_Disallowed
+			ini_set( 'log_errors', 1 ); // Equals WP_LOG_ERRORS true.
+			// phpcs:ignore WordPress.PHP.IniSet.Risky
+			ini_set( 'error_log', WP_CONTENT_DIR . '/debug.log' ); // Moves error log file to WP_CONTENT_DIR/debug.log.
+		}
 
-		// Nothing to do if there are no tables to be imported automatically.
-		if ( empty( $configuration['tables'] ) ) {
+		self::log( '#######################################################' );
+		self::log( "### Importing table {$table_id} ({$location}) ###" );
+
+		if ( ! TablePress::$model_table->table_exists( $table_id ) ) {
+			self::log( 'Start script execution time (WP_START_TIMESTAMP): ' . WP_START_TIMESTAMP . ' s' );
+			self::log( "### Table {$table_id} in the automatic import configuration does not exist!" );
 			return;
 		}
 
-		$importer = TablePress::load_class( 'TablePress_Import', 'class-import.php', 'classes' );
+		$start_time = microtime( true );
+		$start_memory = memory_get_peak_usage();
+		self::log( "Starting periodic automatic table import at: {$start_time} s" );
+		self::log( "Start PHP memory: {$start_memory} bytes (limit " . ini_get( 'memory_limit' ) . ')' );
 
-		// For each table that shall be updated, and that exists, run the update function.
-		foreach ( $configuration['tables'] as $table_id => $import_config ) {
-			if ( ! $import_config['active'] ) {
-				continue;
+		$import_config = array();
+		$import_config['legacy_import'] = false;
+		$import_config['type'] = 'replace';
+		$import_config['existing_table'] = $table_id;
+		$import_config['source'] = str_starts_with( $location, 'http' ) ? 'url' : 'server';
+		$import_config[ $import_config['source'] ] = $location; // Store the import URL or server path in either 'url' or 'server'.
+
+		// Use a static variable to keep a reference to the importer, as multiple tables will need to be imported, most likely.
+		static $importer = null;
+		if ( is_null( $importer ) ) {
+			$importer = TablePress::load_class( 'TablePress_Import', 'class-import.php', 'classes' );
+		}
+		$import = $importer->run( $import_config );
+
+		if ( is_wp_error( $import ) ) {
+			$success = false;
+			$error = TablePress::get_wp_error_string( $import );
+		} elseif ( 0 < count( $import['errors'] ) ) {
+			$success = false;
+			$wp_error_strings = array();
+			foreach ( $import['errors'] as $file ) {
+				$wp_error_strings[] = TablePress::get_wp_error_string( $file->error );
+			}
+			$error = implode( ', ', $wp_error_strings );
+		} else {
+			$success = true;
+			$error = '';
+		}
+
+		$import_message = current_time( 'mysql' );
+		if ( ! $success ) {
+			$import_message = '<strong>' . __( 'Failed', 'tablepress' ) . '</strong> @ ' . $import_message;
+		}
+		if ( '' !== $error ) {
+			$import_message .= '<br /><em>' . esc_html( $error ) . '</em>';
+		}
+
+		// @phpstan-ignore-next-line
+		if ( is_null( self::$auto_import_config ) ) {
+			self::load_configuration();
+		}
+
+		$tables = self::$auto_import_config->get();
+		$tables[ $table_id ]['last_import'] = $import_message;
+		self::$auto_import_config->update( $tables );
+
+		$end_time = microtime( true );
+		$duration = $end_time - $start_time;
+		self::log( "Finished periodic automatic table import at: {$end_time} s, duration {$duration} seconds" );
+		$end_memory = memory_get_peak_usage();
+		$memory_usage = $end_memory - $start_memory;
+		self::log( "Memory usage during the import: {$memory_usage} bytes (total {$end_memory} bytes)" );
+	}
+
+	/**
+	 * Removes an entry from the Automatic Import configuration after a table was deleted.
+	 *
+	 * @since 2.3.0
+	 *
+	 * @param string $table_id ID of the deleted table.
+	 */
+	public function deleted_table_handler( string $table_id ): void {
+		self::load_configuration();
+		$tables = self::$auto_import_config->get();
+		if ( isset( $tables[ $table_id ] ) ) {
+			if ( $tables[ $table_id ]['active'] ) {
+				as_unschedule_action( 'tablepress_automatic_periodic_table_import_action', array( $table_id, $tables[ $table_id ]['location'] ) );
 			}
 
-			if ( ! TablePress::$model_table->table_exists( $table_id ) ) {
-				continue;
-			}
+			unset( $tables[ $table_id ] );
+			self::$auto_import_config->update( $tables );
+		}
+	}
 
-			$import_config['legacy_import'] = false;
-
-			// Configure replacement of the given table.
-			$import_config['type'] = 'replace';
-			$import_config['existing_table'] = $table_id;
-
-			// Store the import URL or server path in either 'url' or 'server'.
-			$import_config[ $import_config['source'] ] = $import_config['location'];
-			unset( $import_config['location'] );
-
-			$import = $importer->run( $import_config );
-
-			if ( is_wp_error( $import ) ) {
-				$success = false;
-				$error = TablePress::get_wp_error_string( $import );
-			} elseif ( 0 < count( $import['errors'] ) ) {
-				$success = false;
-				$wp_error_strings = array();
-				foreach ( $import['errors'] as $file ) {
-					$wp_error_strings[] = TablePress::get_wp_error_string( $file['error'] );
+	/**
+	 * Updates an entry in the Automatic Import configuration after a table ID was changed.
+	 *
+	 * @since 2.3.0
+	 *
+	 * @param string $new_id New ID of the table.
+	 * @param string $old_id Old ID of the table.
+	 */
+	public function changed_table_id_handler( string $new_id, string $old_id ): void {
+		self::load_configuration();
+		$tables = self::$auto_import_config->get();
+		if ( isset( $tables[ $old_id ] ) ) {
+			if ( $tables[ $old_id ]['active'] ) {
+				// Get the next timestamp for the scheduled action, so that it can be used for rescheduling, or the current time if it is not scheduled.
+				$timestamp = as_next_scheduled_action( 'tablepress_automatic_periodic_table_import_action', array( $old_id, $tables[ $old_id ]['location'] ) );
+				if ( false === $timestamp ) {
+					$timestamp = time();
+				} else {
+					// Handle the special case of in-progress actions.
+					if ( true === $timestamp ) {
+						$timestamp = time();
+					}
+					as_unschedule_action( 'tablepress_automatic_periodic_table_import_action', array( $old_id, $tables[ $old_id ]['location'] ) );
 				}
-				$error = implode( ', ', $wp_error_strings );
-			} else {
-				$success = true;
-				$error = '';
+
+				self::schedule_single_periodic_action( $timestamp, $tables[ $old_id ]['interval'], array( $new_id, $tables[ $old_id ]['location'] ) );
 			}
 
-			$import_message = $success ? __( 'Success', 'tablepress' ) : '<strong>' . __( 'Failed', 'tablepress' ) . '</strong>';
-			$import_message .= ' @ ' . current_time( 'mysql' );
-			if ( '' !== $error ) {
-				$import_message .= ' <em>' . esc_html( $error ) . '</em>';
-			}
-
-			$configuration['tables'][ $table_id ]['last_import'] = $import_message;
-
-			// Update the last import information in the configuration after every table, so that at least partial data is saved in case of an error.
-			self::$auto_import_config->update( $configuration );
+			$tables[ $new_id ] = $tables[ $old_id ];
+			unset( $tables[ $old_id ] );
+			self::$auto_import_config->update( $tables );
 		}
 	}
 
@@ -212,11 +369,7 @@ class TablePress_Module_Automatic_Periodic_Table_Import {
 		}
 
 		self::load_configuration();
-
-		$data['cron_schedules'] = wp_get_schedules();
-		$data['auto_import_schedule'] = self::$auto_import_config->get( 'schedule', 'daily' );
-		$data['auto_import_tables'] = self::$auto_import_config->get( 'tables', array() );
-
+		$data['auto_import_tables'] = self::$auto_import_config->get();
 		return $data;
 	}
 
@@ -238,54 +391,43 @@ class TablePress_Module_Automatic_Periodic_Table_Import {
 			wp_die( '-1' );
 		}
 
-		$auto_import_config = wp_unslash( $_POST['tablepress'] );
-		$auto_import_config = json_decode( $auto_import_config, true );
-
-		// Check if JSON could be decoded.
-		if ( is_null( $auto_import_config ) ) {
+		$tables = wp_unslash( $_POST['tablepress'] );
+		$tables = json_decode( $tables, true );
+		if ( is_null( $tables ) ) {
 			wp_die( '-1' );
 		}
 
-		// Specifically cast to an array again.
-		$auto_import_config = (array) $auto_import_config;
-
-		if ( ! isset( $auto_import_config['schedule'], $auto_import_config['tables'] ) || ! is_array( $auto_import_config['tables'] ) ) {
-			wp_die( '-1' );
-		}
-
-		// Check if the schedule is valid.
-		$schedules = wp_get_schedules();
-		$schedule = isset( $schedules[ $auto_import_config['schedule'] ] ) ? $auto_import_config['schedule'] : 'daily';
-
-		$configuration = array(
-			'schedule' => $schedule,
-			'tables'   => array(),
-		);
-
-		foreach ( $auto_import_config['tables'] as $table_id => $table ) {
-			$table_id = (string) $table_id;
+		$tables = (array) $tables;
+		foreach ( $tables as $table_id => $table ) {
+			$table_id = (string) $table_id; // Ensure that the table ID is a string, as it comes from an array key where numeric strings are converted to integers.
 			$table['active'] = ( isset( $table['active'] ) && $table['active'] );
-			if ( ! isset( $table['source'] ) ) {
-				$table['source'] = 'url';
-			}
 			if ( ! isset( $table['location'] ) ) {
 				$table['location'] = 'https://';
 			}
+			if ( ! isset( $table['interval'] ) ) {
+				$table['interval'] = DAY_IN_SECONDS;
+			} elseif ( is_numeric( $table['interval'] ) ) {
+				$table['interval'] = absint( $table['interval'] );
+				$table['interval'] = max( $table['interval'], MINUTE_IN_SECONDS ); // Minimum interval is 1 minute.
+			} elseif ( is_string( $table['interval'] ) ) {
+				$table['interval'] = $table['interval']; // Cron schedule. @todo Check format.
+			} else {
+				$table['interval'] = DAY_IN_SECONDS;
+			}
 			$table['last_import'] = '-';
 
-			// Only save things for tables that have changes and not just the default settings.
-			if ( $table['active'] || 'url' !== $table['source'] || 'https://' !== $table['location'] ) {
-				$configuration['tables'][ $table_id ] = $table;
+			// Only save tables to the configuration that have other than just the default settings.
+			if ( $table['active'] || 'https://' !== $table['location'] || DAY_IN_SECONDS !== $table['interval'] ) {
+				$tables[ $table_id ] = $table;
+			} else {
+				unset( $tables[ $table_id ] );
 			}
 		}
 
 		self::load_configuration();
-		self::$auto_import_config->update( $configuration );
+		self::$auto_import_config->update( $tables );
 
-		wp_clear_scheduled_hook( 'tablepress_table_auto_import_hook' );
-		if ( ! wp_next_scheduled( 'tablepress_table_auto_import_hook' ) ) {
-			wp_schedule_event( time(), $schedule, 'tablepress_table_auto_import_hook' );
-		}
+		self::schedule_periodic_actions(); // Schedule the periodic import actions via Action Scheduler.
 
 		$response = array(
 			'success' => true,

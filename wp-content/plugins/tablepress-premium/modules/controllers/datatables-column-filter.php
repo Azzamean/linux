@@ -159,7 +159,7 @@ class TablePress_Module_DataTables_Column_Filter {
 	 * @return array<string, mixed> Extended attributes for the Shortcode.
 	 */
 	public static function add_shortcode_parameters( array $default_atts ): array {
-		$default_atts['datatables_columnfilter'] = ''; // This parameter is deprecated and only kept for backwards compatibility.
+		$default_atts['datatables_columnfilter'] = ''; // This parameter is deprecated and only kept for backward compatibility.
 		$default_atts['datatables_column_filter'] = null;
 		$default_atts['datatables_column_filter_position'] = null;
 		return $default_atts;
@@ -230,7 +230,7 @@ class TablePress_Module_DataTables_Column_Filter {
 		}
 
 		switch ( true ) {
-			case ( true === $js_options['datatables_column_filter'] ): // For backwards compatibility.
+			case ( true === $js_options['datatables_column_filter'] ): // For backward compatibility.
 			case ( 'input' === $js_options['datatables_column_filter'] ):
 				$init_complete = <<<JS
 function () {

@@ -165,8 +165,8 @@ class TablePress_Module_Row_Filtering {
 	 *
 	 * @since 2.0.0
 	 *
-	 * @param array<string, mixed> $table Table for the currently processed [table /] Shortcode.
-	 * @param array<string, mixed> $render_options Output Options for the currently processed [table /] Shortcode.
+	 * @param array<string, mixed> $table          The table.
+	 * @param array<string, mixed> $render_options Render options for the table.
 	 * @return array<string, mixed> Possibly filtered table.
 	 */
 	public static function filter_rows( array $table, array $render_options ): array {

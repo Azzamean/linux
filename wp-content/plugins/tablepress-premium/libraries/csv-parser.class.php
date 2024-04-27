@@ -135,7 +135,7 @@ class CSV_Parser {
 				} elseif ( $enclosed ) {
 					++$i; // Skip next character.
 				}
-			} elseif ( ( "\n" === $curr_char && "\r" !== $prev_char || "\r" === $curr_char ) && ! $enclosed ) {
+			} elseif ( ( ( "\n" === $curr_char && "\r" !== $prev_char ) || "\r" === $curr_char ) && ! $enclosed ) {
 				// Reached end of a line.
 				++$current_line;
 				if ( $current_line >= $this->delimiter_search_max_lines ) {
@@ -170,8 +170,13 @@ class CSV_Parser {
 			$potential_delimiters = array_keys( $delimiter_counts );
 		}
 
+		// If still no delimiter was found, fall back to a comma.
+		if ( empty( $potential_delimiters ) ) {
+			$potential_delimiters = array( ',' );
+		}
+
 		// Return first array element, as that has the highest count.
-		return array_shift( $potential_delimiters ); // @phpstan-ignore-line
+		return array_shift( $potential_delimiters );
 	}
 
 	/**

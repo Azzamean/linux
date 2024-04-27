@@ -29,12 +29,13 @@ class TablePress_Automatic_Periodic_Table_Import_View extends TablePress_Import_
 	 * @param string               $action Action for this view.
 	 * @param array<string, mixed> $data   Data for this view.
 	 */
+	#[\Override]
 	public function setup( /* string */ $action, array $data ) /* : void */ {
 		// Don't use type hints in the method declaration to prevent PHP errors, as the method is inherited.
 
 		parent::setup( $action, $data );
 
-		TablePress_Modules_Helper::enqueue_style( 'automatic-periodic-table-import' );
+		TablePress_Modules_Helper::enqueue_style( 'automatic-periodic-table-import', array( 'wp-components' ) );
 		TablePress_Modules_Helper::enqueue_script( 'automatic-periodic-table-import' );
 
 		$this->add_meta_box( 'tables-auto-import', __( 'Automatic Periodic Table Import', 'tablepress' ), array( $this, 'postbox_auto_import' ), 'additional' );
@@ -53,19 +54,13 @@ class TablePress_Automatic_Periodic_Table_Import_View extends TablePress_Import_
 	public function postbox_auto_import( /* array */ $data, /* array */ $box ) /* : void */ {
 		// Don't use type hints in the method declaration to prevent PHP errors, as the method is inherited.
 
-		$script_data = array(
-			'ABSPATH'       => $this->admin_page->convert_to_json_parse_output( ABSPATH ),
-			'cronSchedules' => $this->admin_page->convert_to_json_parse_output( $data['cron_schedules'] ),
-			'schedule'      => $this->admin_page->convert_to_json_parse_output( $data['auto_import_schedule'] ),
-			'tables'        => $this->admin_page->convert_to_json_parse_output( $data['auto_import_tables'] ),
-		);
+		$tables = $this->admin_page->convert_to_json_parse_output( $data['auto_import_tables'] );
 
 		echo "<script>\n";
 		echo "window.tp = window.tp || {};\n";
-		echo "tp.automatic_periodic_table_import = {};\n";
-		foreach ( $script_data as $variable => $value ) {
-			echo "tp.automatic_periodic_table_import.{$variable} = {$value};\n";
-		}
+		echo "tp.automatic_periodic_table_import = {\n";
+		echo "\ttables: {$tables},\n";
+		echo "};\n";
 		echo "</script>\n";
 
 		echo '<div id="tablepress-automatic-periodic-table-import-screen"></div>';

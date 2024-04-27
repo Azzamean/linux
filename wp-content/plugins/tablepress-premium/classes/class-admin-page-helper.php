@@ -85,8 +85,8 @@ class TablePress_Admin_Page {
 			if ( tb_tp_fs()->is_plan_or_trial__premium_only( 'pro' ) ) {
 				/** This filter is documented in the WordPress file wp-includes/l10n.php */
 				$locale = apply_filters( 'plugin_locale', determine_locale(), 'tablepress' );
-				$availabe_premium_locales = array( 'de_DE' );
-				if ( in_array( $locale, $availabe_premium_locales, true ) ) {
+				$available_premium_locales = array( 'de_DE' );
+				if ( in_array( $locale, $available_premium_locales, true ) ) {
 					$language_file_path = TABLEPRESS_ABSPATH . 'modules/i18n';
 				}
 			}
@@ -149,7 +149,7 @@ class TablePress_Admin_Page {
 		}
 
 		/*
-		 * Print JS code for the feature pointers, extened with event handling for opened/closed "Screen Options", so that pointers can
+		 * Print JS code for the feature pointers, extended with event handling for opened/closed "Screen Options", so that pointers can
 		 * be repositioned. 210 ms is slightly slower than jQuery's "fast" value, to allow all elements to reach their original position.
 		 */
 		?>

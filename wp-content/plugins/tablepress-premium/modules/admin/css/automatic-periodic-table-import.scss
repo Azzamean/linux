@@ -14,36 +14,28 @@
 	th,
 	td {
 		vertical-align: middle;
-
-		&:nth-child(3) {
-			white-space: nowrap;
-			padding: 4px 8px 4px 4px;
-		}
 	}
 
-	th {
+	thead th {
 		background-color: #ffffff;
 		position: sticky;
 		z-index: 2;
 		top: 0;
+		white-space: nowrap;
 
 		/* Fixed header */
 		@media screen and (min-width: 601px) {
 			top: var(--wp-admin--admin-bar--height);
 		}
-
-		&:nth-child(3) {
-			label {
-				font-size: small;
-			}
-
-			input {
-				margin: 0 0.25rem 0 0;
-			}
-		}
 	}
 
-	.auto-import-location {
-		min-width: 300px;
+	/* Vertical positioning of the "Active" toggle control. */
+	.components-toggle-control {
+		margin-bottom: 0;
+	}
+
+	/* Vertical positioning of the "Interval" dropdown. */
+	select {
+		vertical-align: middle;
 	}
 }

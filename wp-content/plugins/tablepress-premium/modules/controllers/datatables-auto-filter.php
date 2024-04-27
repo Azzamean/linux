@@ -112,8 +112,7 @@ class TablePress_Module_DataTables_Auto_Filter {
 	 */
 	public static function set_datatables_parameters( array $parameters, string $table_id, string $html_id, array $js_options ): array {
 		if ( ! empty( $js_options['datatables_auto_filter'] ) ) {
-			$auto_filter_word = preg_replace( '#[^0-9a-zA-Z\.,% +_-]#', '', $js_options['datatables_auto_filter'] );
-			$parameters['search.search'] = '"search":{"search":"' . $auto_filter_word . '"}';
+			$parameters['search.search'] = '"search":{"search":"' . esc_js( $js_options['datatables_auto_filter'] ) . '"}';
 		}
 		return $parameters;
 	}

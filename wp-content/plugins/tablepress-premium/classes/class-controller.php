@@ -124,8 +124,8 @@ abstract class TablePress_Controller {
 				}
 			}
 
-			// Trigger update of the table options as premium modules might have new table options, when updating from a version older than TablePress 2.2.0.
-			if ( $current_plugin_options_db_version < 64 ) {
+			// Trigger update of the table options as premium modules might have new table options, when updating from a version older than TablePress 2.3.0.
+			if ( $current_plugin_options_db_version < 75 ) {
 				$_GET['refresh_table_options'] = 'true';
 			}
 		}

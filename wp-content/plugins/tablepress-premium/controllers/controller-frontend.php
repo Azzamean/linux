@@ -253,6 +253,8 @@ class TablePress_Frontend_Controller extends TablePress_Controller {
 		$commands = array();
 
 		foreach ( $this->shown_tables as $table_id => $table_store ) {
+			$table_id = (string) $table_id; // Ensure that the table ID is a string, as it comes from an array key where numeric strings are converted to integers.
+
 			if ( empty( $table_store['instances'] ) ) {
 				continue;
 			}
@@ -514,7 +516,7 @@ JS;
 		// Check, if a table with the given ID exists.
 		$table_id = (string) preg_replace( '/[^a-zA-Z0-9_-]/', '', $shortcode_atts['id'] );
 		if ( ! TablePress::$model_table->table_exists( $table_id ) ) {
-			$message = "[table &#8220;{$table_id}&#8221; not found /]<br />\n";
+			$message = "&#91;table “{$table_id}” not found /&#93;<br />\n";
 			/**
 			 * Filters the "Table not found" message.
 			 *
@@ -530,7 +532,7 @@ JS;
 		// Load table, with table data, options, and visibility settings.
 		$table = TablePress::$model_table->load( $table_id, true, true );
 		if ( is_wp_error( $table ) ) {
-			$message = "[table &#8220;{$table_id}&#8221; could not be loaded /]<br />\n";
+			$message = "&#91;table “{$table_id}” could not be loaded /&#93;<br />\n";
 			/**
 			 * Filters the "Table could not be loaded" message.
 			 *
@@ -544,7 +546,7 @@ JS;
 			return $message;
 		}
 		if ( isset( $table['is_corrupted'] ) && $table['is_corrupted'] ) {
-			$message = "<div>Attention: The internal data of table &#8220;{$table_id}&#8221; is corrupted!</div>";
+			$message = "<div>Attention: The internal data of table “{$table_id}” is corrupted!</div>";
 			/**
 			 * Filters the "Table data is corrupted" message.
 			 *
@@ -574,14 +576,21 @@ JS;
 		// Determine options to use (if set in Shortcode, use those, otherwise use stored options, from the "Edit" screen).
 		$render_options = array();
 		foreach ( $shortcode_atts as $key => $value ) {
-			// We have to check this, because strings 'true' or 'false' are not recognized as boolean!
-			if ( is_string( $value ) && 'true' === strtolower( $value ) ) {
-				$render_options[ $key ] = true;
-			} elseif ( is_string( $value ) && 'false' === strtolower( $value ) ) {
-				$render_options[ $key ] = false;
-			} elseif ( is_null( $value ) && isset( $table['options'][ $key ] ) ) {
+			if ( is_null( $value ) && isset( $table['options'][ $key ] ) ) {
+				// Use the table's stored option value, if the Shortcode parameter was not set.
 				$render_options[ $key ] = $table['options'][ $key ];
+			} elseif ( is_string( $value ) ) {
+				// Convert strings 'true' or 'false' to boolean, keep others.
+				$value_lowercase = strtolower( $value );
+				if ( 'true' === $value_lowercase ) {
+					$render_options[ $key ] = true;
+				} elseif ( 'false' === $value_lowercase ) {
+					$render_options[ $key ] = false;
+				} else {
+					$render_options[ $key ] = $value;
+				}
 			} else {
+				// Keep all other values.
 				$render_options[ $key ] = $value;
 			}
 		}
@@ -647,7 +656,7 @@ JS;
 			if ( false === $output || '' === $output ) {
 				// Render/generate the table HTML, as it was not found in the cache.
 				$_render->set_input( $table, $render_options );
-				$output = $_render->get_output();
+				$output = $_render->get_output( 'html' );
 				// Save render output in a transient, set cache timeout to 24 hours.
 				set_transient( $transient_name, $output, DAY_IN_SECONDS );
 				// Update output caches list transient (necessary for cache invalidation upon table saving).
@@ -675,7 +684,7 @@ JS;
 		} else {
 			// Render/generate the table HTML, as no cache is to be used.
 			$_render->set_input( $table, $render_options );
-			$output = $_render->get_output();
+			$output = $_render->get_output( 'html' );
 		}
 
 		// If DataTables is to be and can be used with this instance of a table, process its parameters and register the call for inclusion in the footer.
@@ -779,7 +788,7 @@ JS;
 		// Check, if a table with the given ID exists.
 		$table_id = preg_replace( '/[^a-zA-Z0-9_-]/', '', $shortcode_atts['id'] );
 		if ( ! TablePress::$model_table->table_exists( $table_id ) ) {
-			$message = "[table &#8220;{$table_id}&#8221; not found /]<br />\n";
+			$message = "&#91;table “{$table_id}” not found /&#93;<br />\n";
 			/** This filter is documented in controllers/controller-frontend.php */
 			$message = apply_filters( 'tablepress_table_not_found_message', $message, $table_id );
 			return $message;
@@ -788,7 +797,7 @@ JS;
 		// Load table, with table data, options, and visibility settings.
 		$table = TablePress::$model_table->load( $table_id, true, true );
 		if ( is_wp_error( $table ) ) {
-			$message = "[table &#8220;{$table_id}&#8221; could not be loaded /]<br />\n";
+			$message = "&#91;table “{$table_id}” could not be loaded /&#93;<br />\n";
 			/** This filter is documented in controllers/controller-frontend.php */
 			$message = apply_filters( 'tablepress_table_load_error_message', $message, $table_id, $table );
 			return $message;
@@ -853,7 +862,7 @@ JS;
 				$output = count( $table['data'][0] );
 				break;
 			default:
-				$output = "[table-info field &#8220;{$field}&#8221; not found in table &#8220;{$table_id}&#8221; /]<br />\n";
+				$output = "&#91;table-info field “{$field}” not found in table “{$table_id}” /&#93;<br />\n";
 				/**
 				 * Filters the "table info field not found" message.
 				 *
@@ -894,8 +903,15 @@ JS;
 	 * @param string $search_sql Current part of the "WHERE" clause of the SQL statement used to get posts/pages from the WP database that is related to searching.
 	 * @return string Eventually extended SQL "WHERE" clause, to also find posts/pages with Shortcodes in them.
 	 */
-	public function posts_search_filter( string $search_sql ): string {
+	public function posts_search_filter( /* string */ $search_sql ): string {
+		// Don't use a type hint in the method declaration as there can be cases where `null` is passed to the filter hook callback somehow.
+
 		global $wpdb;
+
+		// Protect against cases where `null` is somehow passed to the filter hook callback.
+		if ( ! is_string( $search_sql ) ) {
+			return '';
+		}
 
 		if ( ! is_search() || ! is_main_query() ) {
 			return $search_sql;
@@ -941,7 +957,7 @@ JS;
 							// Column is hidden, so don't search in it.
 							continue;
 						}
-						// @TODO: Cells are not evaluated here, so math formulas are searched.
+						// @todo Cells are not evaluated here, so math formulas are searched.
 						if ( false !== stripos( $table_cell, $search_term ) ) {
 							// Found the search term in the cell content.
 							$query_result[ $search_term ][] = $table_id; // Add table ID to result list
