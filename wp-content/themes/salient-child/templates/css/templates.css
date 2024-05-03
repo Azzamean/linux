@@ -5,7 +5,7 @@
 }
 
 .projects-template .col {
-    float: none;
+	float: none;
 }
 
 .projects-background {
@@ -183,7 +183,7 @@ h1.projects-title-text.white {
 }
 
 .tabbed ul li {
-	display: inline-block;
+	display: list-item;
 	float: none;
 }
 
