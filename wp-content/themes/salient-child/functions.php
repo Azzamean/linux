@@ -443,6 +443,16 @@ function remove_large_image_sizes()
 }
 add_action("init", "remove_large_image_sizes");
 
+// REDIRECT CPT SINGLE TO URL, ARCHIVE PAGE IS PUBLICLY AVAILABLE THOUGH; SO FOR REMOVAL OF ARCHIVES: 'publicly_queryable'  => false on the CPTS
+function members_cpt_redirect()
+{
+    if (is_singular('members') ) :
+        wp_redirect(home_url(), 301);
+        exit;
+    endif;
+}
+add_action('template_redirect', 'members_cpt_redirect');
+
 
 
 
