@@ -242,7 +242,7 @@ class ShortPixelPlugin {
 
 		if ($this->env()->is_multisite)
 		{
-			 //add_action('network_admin_menu', [$this, 'admin_network_pages']) ;
+			 add_action('network_admin_menu', [$this, 'admin_network_pages']) ;
 		}
 
 	}
@@ -652,9 +652,9 @@ class ShortPixelPlugin {
             case 'wp-shortpixel-settings': // settings
 						$controller = 'ShortPixel\Controller\SettingsController';
         	break;
-					 case 'shortpixel-network-settings':
+				/*	 case 'shortpixel-network-settings':
 					 	$controller = 'ShortPixel\Controller\View\MultiSiteViewController';
-					break;
+					break; */
           case 'wp-short-pixel-custom': // other media
 						if ('folders'  === $template_part )
 						{
