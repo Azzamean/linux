@@ -108,31 +108,33 @@ class TablePress_Module_DataTables_Buttons {
 		<p id="notice-datatables-buttons-requirements"><em><?php printf( __( 'This feature is only available when the “%1$s” and “%2$s” checkboxes in the “%3$s” and “%4$s” sections are checked.', 'tablepress' ), __( 'Table Head Row', 'tablepress' ), __( 'Enable Visitor Features', 'tablepress' ), __( 'Table Options', 'tablepress' ), __( 'Table Features for Site Visitors', 'tablepress' ) ); ?></em></p>
 		<p id="notice-datatables-buttons-custom-commands"><em><?php printf( __( 'This feature is currently being controlled via the %1$s command in the “%2$s” text field in the “%3$s” section.', 'tablepress' ), '<code>"buttons"</code>', __( 'Custom Commands', 'tablepress' ), __( 'Table Features for Site Visitors', 'tablepress' ) ); ?></em></p>
 		<p class="description"><?php _e( 'Choose the desired buttons and drag them into the desired order:', 'tablepress' ); ?></p>
-		<div class="drag-box-section-wrapper">
-			<div class="drag-box-wrapper-label"><?php _e( 'Shown buttons:', 'tablepress' ); ?></div>
-			<div id="datatables-buttons-drag-box-wrapper-active" class="drag-box-wrapper"></div>
-		</div>
-		<div class="drag-box-section-wrapper">
-			<div class="drag-box-wrapper-label"><?php _e( 'Available buttons:', 'tablepress' ); ?></div>
-			<div id="datatables-buttons-drag-box-wrapper-inactive" class="drag-box-wrapper"><div class="drag-box">
-					<input type="hidden" value="colvis" id="option-datatables_buttons-colvis" />
-					<div><?php _e( 'Colvis', 'tablepress' ); ?></div>
-				</div><div class="drag-box">
-					<input type="hidden" value="copy" id="option-datatables_buttons-copy" />
-					<div><?php _e( 'Copy', 'tablepress' ); ?></div>
-				</div><div class="drag-box">
-					<input type="hidden" value="csv" id="option-datatables_buttons-csv" />
-					<div><?php _e( 'CSV', 'tablepress' ); ?></div>
-				</div><div class="drag-box">
-					<input type="hidden" value="excel" id="option-datatables_buttons-excel" />
-					<div><?php _e( 'Excel', 'tablepress' ); ?></div>
-				</div><div class="drag-box">
-					<input type="hidden" value="pdf" id="option-datatables_buttons-pdf" />
-					<div><?php _e( 'PDF', 'tablepress' ); ?></div>
-				</div><div class="drag-box">
-					<input type="hidden" value="print" id="option-datatables_buttons-print" />
-					<div><?php _e( 'Print', 'tablepress' ); ?></div>
-				</div></div>
+		<div class="drag-box-section">
+			<div class="drag-box-section-wrapper">
+				<div class="drag-box-wrapper-label"><?php _e( 'Shown buttons:', 'tablepress' ); ?></div>
+				<div id="datatables-buttons-drag-box-wrapper-active" class="drag-box-wrapper"></div>
+			</div>
+			<div class="drag-box-section-wrapper">
+				<div class="drag-box-wrapper-label"><?php _e( 'Available buttons:', 'tablepress' ); ?></div>
+				<div id="datatables-buttons-drag-box-wrapper-inactive" class="drag-box-wrapper"><div class="drag-box">
+						<input type="hidden" value="colvis" id="option-datatables_buttons-colvis" />
+						<div><?php _e( 'Colvis', 'tablepress' ); ?></div>
+					</div><div class="drag-box">
+						<input type="hidden" value="copy" id="option-datatables_buttons-copy" />
+						<div><?php _e( 'Copy', 'tablepress' ); ?></div>
+					</div><div class="drag-box">
+						<input type="hidden" value="csv" id="option-datatables_buttons-csv" />
+						<div><?php _e( 'CSV', 'tablepress' ); ?></div>
+					</div><div class="drag-box">
+						<input type="hidden" value="excel" id="option-datatables_buttons-excel" />
+						<div><?php _e( 'Excel', 'tablepress' ); ?></div>
+					</div><div class="drag-box">
+						<input type="hidden" value="pdf" id="option-datatables_buttons-pdf" />
+						<div><?php _e( 'PDF', 'tablepress' ); ?></div>
+					</div><div class="drag-box">
+						<input type="hidden" value="print" id="option-datatables_buttons-print" />
+						<div><?php _e( 'Print', 'tablepress' ); ?></div>
+					</div></div>
+			</div>
 		</div>
 		<?php
 	}
@@ -304,6 +306,5 @@ class TablePress_Module_DataTables_Buttons {
 		$css_url = plugins_url( 'modules/css/build/datatables.buttons.css', TABLEPRESS__FILE__ );
 		wp_enqueue_style( 'tablepress-datatables-buttons', $css_url, array( 'tablepress-default' ), TablePress::version );
 	}
-
 
 } // class TablePress_Module_DataTables_Buttons

@@ -24,7 +24,6 @@ import {
 import IntervalControl from './components/interval-control';
 import { $ } from '../../../../admin/js/common/functions';
 import { save_changes as saveChanges } from '../common/save-changes';
-import naturalSort from '../../../../admin/js/edit/naturalsort';
 
 /**
  * Saves the Automatic Periodic Table Import configuration to the server.
@@ -132,7 +131,11 @@ const Screen = () => {
 					sortDataA = tableDataA[ sort.column ].toString();
 					sortDataB = tableDataB[ sort.column ].toString();
 				}
-				return sort.direction * naturalSort( sortDataA, sortDataB );
+				const sortResult = sortDataA.localeCompare( sortDataB, undefined, {
+					numeric: true,
+					sensitivity: 'base'
+				} );
+				return sort.direction * sortResult;
 			} );
 		}
 

@@ -168,10 +168,10 @@ class TablePress_Module_Row_Order {
 				}
 
 				if ( $render_options['table_head'] ) {
-					array_unshift( $array_to_sort, $head_row ); // @phpstan-ignore-line
+					array_unshift( $array_to_sort, $head_row ); // @phpstan-ignore-line ($head_row is defined in the same if-condition above.)
 				}
 				if ( $render_options['table_foot'] ) {
-					array_push( $array_to_sort, $foot_row ); // @phpstan-ignore-line
+					array_push( $array_to_sort, $foot_row ); // @phpstan-ignore-line ($foot_row is defined in the same if-condition above.)
 				}
 				break;
 

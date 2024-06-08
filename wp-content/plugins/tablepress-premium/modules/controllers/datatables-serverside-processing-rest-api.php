@@ -270,6 +270,7 @@ class TablePress_Module_DataTables_ServerSide_Processing_REST_API extends WP_RES
 			$table_hash = md5( wp_json_encode( $render_options, TABLEPRESS_JSON_OPTIONS ) ); // @phpstan-ignore-line
 			$transient_name = 'tablepress_j_' . $table_hash; // Attention: This string must not be longer than 45 characters!
 			$cached_table_data = get_transient( $transient_name );
+			$table_data = array(); // This line is needed to prevent a bunch of false PHPStan errors.
 			if ( false !== $cached_table_data && '' !== $cached_table_data ) {
 				$table_data = json_decode( $cached_table_data, true );
 				// Check if JSON could be decoded.
@@ -304,13 +305,13 @@ class TablePress_Module_DataTables_ServerSide_Processing_REST_API extends WP_RES
 
 		// Remove table head and foot rows from processing, as these are set in the HTML already.
 		if ( $render_options['table_head'] ) {
-			array_shift( $table_data ); // @phpstan-ignore-line
+			array_shift( $table_data );
 		}
 		if ( $render_options['table_foot'] ) {
-			array_pop( $table_data ); // @phpstan-ignore-line
+			array_pop( $table_data );
 		}
 
-		$records_total = count( $table_data ); // @phpstan-ignore-line
+		$records_total = count( $table_data );
 
 		/*
 		 * Filter the table data.
@@ -367,7 +368,7 @@ class TablePress_Module_DataTables_ServerSide_Processing_REST_API extends WP_RES
 
 		if ( $run_filter_loop ) { // Nothing to do if no to-be-filtered columns with filter terms exist.
 			// Generate filter data, by removing columns that shall not be filtered or that have no filter terms.
-			$filter_data = $table_data; // @phpstan-ignore-line
+			$filter_data = $table_data;
 			foreach ( $filter_data as &$row ) {
 				foreach ( $not_filtered_column_indices as $col_idx ) {
 					unset( $row[ $col_idx ] );
@@ -428,16 +429,14 @@ class TablePress_Module_DataTables_ServerSide_Processing_REST_API extends WP_RES
 			unset( $filtered_table_data, $filter_data );
 		}
 
-		$records_filtered = count( $table_data ); // @phpstan-ignore-line
+		$records_filtered = count( $table_data );
 
 		/*
 		 * Sort the (maybe filtered) table data.
 		 */
 
 		$order = $request->get_param( 'order' );
-		// @phpstan-ignore-next-line (The `$table_data` variable is not recognized from above.)
 		if ( ! is_null( $order ) && is_array( $order ) && count( $table_data ) > 1 ) { // Nothing to sort if no order command was given or if the table only has one row left.
-			// @phpstan-ignore-next-line (The `$table_data` variable is not recognized from above.).
 			$sort_data = array_map( null, ...$table_data ); // Swap rows and columns to be able to use `array_multisort()`.
 
 			$order_commands = array();
@@ -484,7 +483,7 @@ class TablePress_Module_DataTables_ServerSide_Processing_REST_API extends WP_RES
 		if ( -1 === $length ) {
 			$length = null;
 		}
-		$table_data = array_slice( $table_data, $start, $length ); // @phpstan-ignore-line
+		$table_data = array_slice( $table_data, $start, $length );
 
 		return array(
 			'draw'            => absint( $draw ),

@@ -74,5 +74,4 @@ class TablePress_Module_Default_Style_Customizer {
 		return $class_name;
 	}
 
-
 } // class TablePress_Module_Default_Style_Customizer

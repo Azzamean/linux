@@ -46,11 +46,11 @@ msgstr "Danke, dass du es benutzt!"
 msgid "Thank you for choosing TablePress, the most popular table plugin for WordPress!"
 msgstr "Danke, dass du dich für TablePress, das populärste Tabellen-Plugin für WordPress, entschieden hast!"
 
-#: views/view-import.php:170
+#: views/view-import.php:171
 msgid "The import of tables is now even more powerful! You can simply drag and drop your files into this area and TablePress will automatically detect the file format!"
 msgstr "Das Importieren von Tabellen ist jetzt noch mächtiger! Du kannst deine Dateien einfach in diesen Bereich ziehen. TablePress wird das Importformat dann automatisch bestimmen."
 
-#: views/view-import.php:169
+#: views/view-import.php:170
 msgid "TablePress feature: Drag and Drop Import with Format Detection"
 msgstr "TablePress-Funktion: Import mittels Drag-and-Drop und mit Format-Erkennung"
 
@@ -64,7 +64,7 @@ msgstr "Ein Rechtsklick auf ein Tabellen-Inhaltsfeld öffnet ein Kontextmenü f�
 
 #: views/view-edit.php:655
 #: views/view-edit.php:674
-#: views/view-import.php:170
+#: views/view-import.php:171
 #: views/view-options.php:96
 msgid "Did you know?"
 msgstr "Schon gewusst?"
@@ -233,7 +233,7 @@ msgstr[1] "%s Tabellen"
 msgid "Preview of table “%1$s” (ID %2$s)"
 msgstr "Vorschau von Tabelle „%1$s“ (ID %2$s)"
 
-#: controllers/controller-admin_ajax.php:289
+#: controllers/controller-admin_ajax.php:291
 #: views/view-about.php:114
 #: views/view-edit.php:643
 #: views/view-list.php:200
@@ -241,7 +241,7 @@ msgstr "Vorschau von Tabelle „%1$s“ (ID %2$s)"
 msgid "To insert a table into a post or page, paste its Shortcode at the desired place in the editor."
 msgstr "Um eine Tabelle in einen Beitrag oder eine Seite einzubinden, füge ihren Shortcode an der gewünschten Stelle im Editor ein."
 
-#: controllers/controller-admin_ajax.php:287
+#: controllers/controller-admin_ajax.php:289
 #: views/view-about.php:112
 #: views/view-edit.php:641
 #: views/view-list.php:198
@@ -249,7 +249,7 @@ msgstr "Um eine Tabelle in einen Beitrag oder eine Seite einzubinden, füge ihre
 msgid "TablePress table"
 msgstr "TablePress-Tabelle"
 
-#: controllers/controller-admin_ajax.php:287
+#: controllers/controller-admin_ajax.php:289
 #: views/view-about.php:112
 #: views/view-edit.php:641
 #: views/view-list.php:198
@@ -257,16 +257,16 @@ msgstr "TablePress-Tabelle"
 msgid "To insert a table into a post or page, add a “%1$s” block in the block editor and select the desired table."
 msgstr "Um eine Tabelle in einen Beitrag oder eine Seite einzubinden, füge einen „%1$s“-Block im Block-Editor ein und wähle die gewünschte Tabelle aus."
 
-#: controllers/controller-admin_ajax.php:284
+#: controllers/controller-admin_ajax.php:286
 #: views/view-preview_table.php:64
 msgid "The Table Features for Site Visitors, like sorting, filtering, and pagination, are also not available in this preview!"
 msgstr "Die Tabellenfunktionen für Seitenbesucher, wie Sortieren, Filtern und Blättern, sind in dieser Vorschau ebenfalls nicht verfügbar!"
 
-#: controllers/controller-admin.php:417
+#: controllers/controller-admin.php:423
 msgid "Go Premium"
 msgstr "Werde Premium-Nutzer"
 
-#: controllers/controller-admin.php:417
+#: controllers/controller-admin.php:423
 msgid "Check out the Premium version of TablePress!"
 msgstr "Schau dir die Premium-Versionen von TablePress an!"
 
@@ -498,7 +498,7 @@ msgstr "Exportieren"
 msgid "Export &#8220;%s&#8221;"
 msgstr "&#8222;%s&#8220; exportieren"
 
-#: modules/controllers/datatables-buttons.php:122
+#: modules/controllers/datatables-buttons.php:123
 #: views/class-all-tables-list-table.php:234
 #: admin/js/build/edit.js:1
 msgid "Copy"
@@ -525,7 +525,7 @@ msgstr "Zuletzt geändert von"
 msgid "Author"
 msgstr "Autor"
 
-#: controllers/controller-admin_ajax.php:290
+#: controllers/controller-admin_ajax.php:292
 #: views/view-about.php:116
 #: views/view-list.php:202
 #: views/view-preview_table.php:72
@@ -1267,7 +1267,7 @@ msgstr "Zweck des Plugins"
 msgid "Copy of %s"
 msgstr "Kopie von %s"
 
-#: controllers/controller-admin.php:225
+#: controllers/controller-admin.php:231
 #: models/model-table.php:448
 #: views/class-all-tables-list-table.php:174
 #: views/class-all-tables-list-table.php:219
@@ -1280,64 +1280,64 @@ msgstr "Kopie von %s"
 msgid "(no name)"
 msgstr "(kein Name)"
 
-#: controllers/controller-admin_ajax.php:283
+#: controllers/controller-admin_ajax.php:285
 #: views/view-preview_table.php:64
 msgid "Because of CSS styling in your theme, the table might look different on your page!"
 msgstr "Aufgrund des CSS-Stylings deines Themes kann die Tabelle auf deiner Seite anders aussehen!"
 
-#: controllers/controller-admin_ajax.php:282
+#: controllers/controller-admin_ajax.php:284
 #: views/view-preview_table.php:64
 msgid "This is a preview of your table."
 msgstr "Dies ist eine Vorschau der Tabelle."
 
-#: controllers/controller-admin.php:1427
+#: controllers/controller-admin.php:1452
 #: views/view-options.php:232
 #: views/view-options.php:241
 msgid "Uninstall TablePress"
 msgstr "TablePress deinstallieren"
 
-#: controllers/controller-admin.php:1425
+#: controllers/controller-admin.php:1450
 msgid "Go to Dashboard"
 msgstr "Zum Dashboard"
 
-#: controllers/controller-admin.php:1423
+#: controllers/controller-admin.php:1448
 msgid "Go to &#8220;Plugins&#8221; page"
 msgstr "zur &#8222;Plugins&#8220;-Seite gehen"
 
-#: controllers/controller-admin.php:1418
+#: controllers/controller-admin.php:1443
 msgid "You may now also delete your TablePress &#8220;Custom CSS&#8221; files in the <code>wp-content</code> folder."
 msgstr "Du kannst jetzt auch die TablePress-&#8222;Zusatz-CSS&#8220;-Dateien im <code>wp-content</code>-Ordner löschen."
 
-#: controllers/controller-admin.php:1416
+#: controllers/controller-admin.php:1441
 msgid "Please also ask him to delete your TablePress &#8220;Custom CSS&#8221; files from the server."
 msgstr "Bitte ihn auch, die TablePress-&#8222;Zusatz-CSS&#8220;-Dateien vom Server zu löschen."
 
-#: controllers/controller-admin.php:1413
+#: controllers/controller-admin.php:1438
 msgid "Your TablePress &#8220;Custom CSS&#8221; files have been deleted automatically."
 msgstr "Die &#8222;Zusatz-CSS&#8220;-Dateien wurden automatisch gelöscht."
 
-#: controllers/controller-admin.php:1410
+#: controllers/controller-admin.php:1435
 msgid "You may now manually delete the plugin&#8217;s folder <code>tablepress</code> from the <code>plugins</code> directory on your server or use the &#8220;Delete&#8221; link for TablePress on the WordPress &#8220;Plugins&#8221; page."
 msgstr "Du kannst jetzt auch den Plugin-Ordner <code>tablepress</code> manuell aus dem <code>plugins</code>-Ordern auf deinem Server löschen, oder den &#8222;Löschen&#8220;-Link für TablePress auf der WordPress&#8222;Plugins&#8220;-Seite nutzen."
 
-#: controllers/controller-admin.php:1408
+#: controllers/controller-admin.php:1433
 msgid "You may now ask the network admin to delete the plugin&#8217;s folder <code>tablepress</code> from the server, if no other site in the network uses it."
 msgstr "Du kannst jetzt den WordPress-Server-Administrator bitten, den TablePress Plugin-Ordner <code>tablepress</code> vom Server zu löschen, falls TablePress von keiner anderen Seite des Netzwerks verwendet wird."
 
-#: controllers/controller-admin.php:1406
+#: controllers/controller-admin.php:1431
 msgid "All tables, data, and options were deleted."
 msgstr "Alle Tabellen, Daten und Einstellungen wurden gelöscht."
 
-#: controllers/controller-admin.php:1405
+#: controllers/controller-admin.php:1430
 msgid "TablePress was uninstalled successfully."
 msgstr "TablePress wurde erfolgreich deinstalliert."
 
-#: controllers/controller-admin.php:1317
+#: controllers/controller-admin.php:1342
 msgid "The table could not be loaded."
 msgstr "Die Tabelle konnte nicht geladen werden."
 
-#: controllers/controller-admin.php:1307
-#: controllers/controller-admin.php:1317
+#: controllers/controller-admin.php:1332
+#: controllers/controller-admin.php:1342
 #: views/class-all-tables-list-table.php:243
 #: views/view-edit.php:396
 #: views/view-preview_table.php:58
@@ -1345,8 +1345,8 @@ msgstr "Die Tabelle konnte nicht geladen werden."
 msgid "Preview"
 msgstr "Vorschau"
 
-#: controllers/controller-admin.php:1307
-#: controllers/controller-admin_ajax.php:295
+#: controllers/controller-admin.php:1332
+#: controllers/controller-admin_ajax.php:297
 msgid "The preview could not be loaded."
 msgstr "Die Vorschau konnte nicht geladen werden."
 
@@ -1354,87 +1354,87 @@ msgstr "Die Vorschau konnte nicht geladen werden."
 msgid "Imported from Manual Input"
 msgstr "aus Manueller Eingabe importiert"
 
-#: controllers/controller-admin.php:707
+#: controllers/controller-admin.php:725
 msgid "About TablePress"
 msgstr "Über TablePress"
 
-#: controllers/controller-admin.php:706
-#: controllers/controller-admin.php:708
+#: controllers/controller-admin.php:724
+#: controllers/controller-admin.php:726
 msgid "About"
 msgstr "Über"
 
-#: controllers/controller-admin.php:699
-#: controllers/controller-admin.php:700
-#: controllers/controller-admin.php:701
+#: controllers/controller-admin.php:717
+#: controllers/controller-admin.php:718
+#: controllers/controller-admin.php:719
 msgid "Plugin Options"
 msgstr "Einstellungen"
 
-#: controllers/controller-admin.php:694
+#: controllers/controller-admin.php:712
 msgctxt "navigation bar"
 msgid "Export"
 msgstr "Export"
 
-#: controllers/controller-admin.php:692
-#: controllers/controller-admin.php:693
+#: controllers/controller-admin.php:710
+#: controllers/controller-admin.php:711
 msgid "Export a Table"
 msgstr "Tabelle exportieren"
 
-#: controllers/controller-admin.php:687
+#: controllers/controller-admin.php:705
 msgctxt "navigation bar"
 msgid "Import"
 msgstr "Import"
 
-#: controllers/controller-admin.php:685
-#: controllers/controller-admin.php:686
+#: controllers/controller-admin.php:703
+#: controllers/controller-admin.php:704
 msgid "Import a Table"
 msgstr "Tabelle importieren"
 
-#: controllers/controller-admin.php:678
+#: controllers/controller-admin.php:696
 msgid "Edit Table"
 msgstr "Tabelle bearbeiten"
 
-#: controllers/controller-admin.php:673
+#: controllers/controller-admin.php:691
 msgid "Add New"
 msgstr "Erstellen"
 
-#: controllers/controller-admin.php:671
-#: controllers/controller-admin.php:672
+#: controllers/controller-admin.php:689
+#: controllers/controller-admin.php:690
 #: views/view-add.php:43
 msgid "Add New Table"
 msgstr "Neue Tabelle"
 
-#: controllers/controller-admin.php:664
-#: controllers/controller-admin.php:665
-#: controllers/controller-admin.php:666
+#: controllers/controller-admin.php:682
+#: controllers/controller-admin.php:683
+#: controllers/controller-admin.php:684
 msgid "All Tables"
 msgstr "Alle Tabellen"
 
-#: controllers/controller-admin.php:578
+#: controllers/controller-admin.php:590
 msgctxt "Default CSV delimiter in the translated language (\";\", \",\", or \"tab\")"
 msgid ","
 msgstr ";"
 
-#: controllers/controller-admin.php:415
+#: controllers/controller-admin.php:421
 msgid "Support"
 msgstr "Unterstützung"
 
-#: controllers/controller-admin.php:414
+#: controllers/controller-admin.php:420
 msgid "Documentation"
 msgstr "Dokumentation"
 
-#: controllers/controller-admin.php:413
+#: controllers/controller-admin.php:419
 msgid "FAQ"
 msgstr "FAQ"
 
-#: controllers/controller-admin.php:413
+#: controllers/controller-admin.php:419
 msgid "Frequently Asked Questions"
 msgstr "Häufig gestellte Fragen"
 
-#: controllers/controller-admin.php:397
+#: controllers/controller-admin.php:403
 msgid "Plugin page"
 msgstr "Plugin-Seite"
 
-#: controllers/controller-admin.php:368
+#: controllers/controller-admin.php:374
 msgid "TablePress Table"
 msgstr "TablePress-Tabelle"
 
@@ -1556,8 +1556,8 @@ msgstr "Den Zugriff auf Tabellen für einzelne Nutzer beschränken."
 #: classes/class-tablepress.php:572
 #: modules/views/view-automatic_periodic_table_import.php:41
 #: views/view-import.php:62
-#: views/view-import.php:149
-#: views/view-import.php:157
+#: views/view-import.php:150
+#: views/view-import.php:158
 msgid "Automatic Periodic Table Import"
 msgstr "Automatischer periodischer Tabellen-Import"
 
@@ -1936,100 +1936,100 @@ msgstr "Verwende Drag-and-Drop mit deiner Maus oder doppelklicke auf die Schaltf
 msgid "This feature is currently being controlled via the %1$s command in the “%2$s” text field in the “%3$s” section."
 msgstr "Diese Funktion wird derzeit über den Befehl „%1$s“ im Textfeld „%2$s“ im Abschnitt „%3$s“ gesteuert."
 
-#: modules/controllers/datatables-buttons.php:112
+#: modules/controllers/datatables-buttons.php:113
 msgid "Shown buttons:"
 msgstr "Angezeigte Schaltflächen:"
 
-#: modules/controllers/datatables-buttons.php:116
+#: modules/controllers/datatables-buttons.php:117
 msgid "Available buttons:"
 msgstr "Verfügbare Schaltflächen:"
 
-#: modules/controllers/datatables-buttons.php:119
+#: modules/controllers/datatables-buttons.php:120
 msgid "Colvis"
 msgstr "Colvis"
 
-#: modules/controllers/datatables-buttons.php:125
+#: modules/controllers/datatables-buttons.php:126
 msgid "CSV"
 msgstr "CSV"
 
-#: modules/controllers/datatables-buttons.php:128
+#: modules/controllers/datatables-buttons.php:129
 msgid "Excel"
 msgstr "Excel"
 
-#: modules/controllers/datatables-buttons.php:131
+#: modules/controllers/datatables-buttons.php:132
 msgid "PDF"
 msgstr "PDF"
 
-#: modules/controllers/datatables-buttons.php:134
+#: modules/controllers/datatables-buttons.php:135
 msgid "Print"
 msgstr "Drucken"
 
-#: modules/controllers/datatables-buttons.php:267
+#: modules/controllers/datatables-buttons.php:269
 msgctxt "Buttons module"
 msgid "Collection"
 msgstr "Sammlung"
 
-#: modules/controllers/datatables-buttons.php:268
+#: modules/controllers/datatables-buttons.php:270
 msgctxt "Buttons module"
 msgid "Column visibility"
 msgstr "Spaltensichtbarkeit"
 
-#: modules/controllers/datatables-buttons.php:269
+#: modules/controllers/datatables-buttons.php:271
 msgctxt "Buttons module"
 msgid "Restore visibility"
 msgstr "Sichtbarkeit zurücksetzen"
 
-#: modules/controllers/datatables-buttons.php:270
+#: modules/controllers/datatables-buttons.php:272
 msgctxt "Buttons module"
 msgid "Copy"
 msgstr "Kopieren"
 
-#: modules/controllers/datatables-buttons.php:271
+#: modules/controllers/datatables-buttons.php:273
 msgctxt "Buttons module"
 msgid "Press <i>ctrl</i> or <i>⌘</i> + <i>C</i> to copy the table data<br>to your system clipboard.<br><br>To cancel, click this message or press escape."
 msgstr "Drücke <i>Strg</i> oder <i>⌘</i> + <i>C</i> um die Tabellendaten<br>in die Zwischenablage zu kopieren.<br><br>Um abzubrechen, klicke auf diese Meldung oder drücke Esc."
 
-#: modules/controllers/datatables-buttons.php:273
+#: modules/controllers/datatables-buttons.php:275
 msgctxt "Buttons module"
 msgid "Copied one row to clipboard"
 msgstr "Eine Zeile in die Zwischenablage kopiert"
 
-#: modules/controllers/datatables-buttons.php:274
+#: modules/controllers/datatables-buttons.php:276
 msgctxt "Buttons module"
 msgid "Copied %d rows to clipboard"
 msgstr "%d Zeilen in die Zwischenablage kopiert"
 
-#: modules/controllers/datatables-buttons.php:276
+#: modules/controllers/datatables-buttons.php:278
 msgctxt "Buttons module"
 msgid "Copy to clipboard"
 msgstr "In die Zwischenablage kopieren"
 
-#: modules/controllers/datatables-buttons.php:277
+#: modules/controllers/datatables-buttons.php:279
 msgctxt "Buttons module"
 msgid "CSV"
 msgstr "CSV"
 
-#: modules/controllers/datatables-buttons.php:278
+#: modules/controllers/datatables-buttons.php:280
 msgctxt "Buttons module"
 msgid "Excel"
 msgstr "Excel"
 
-#: modules/controllers/datatables-buttons.php:280
+#: modules/controllers/datatables-buttons.php:282
 msgctxt "Buttons module"
 msgid "Show all rows"
 msgstr "Alle Zeilen anzeigen"
 
-#: modules/controllers/datatables-buttons.php:281
+#: modules/controllers/datatables-buttons.php:283
 msgctxt "Buttons module"
 msgid "Show %d rows"
 msgstr "%d Zeilen anzeigen"
 
-#: modules/controllers/datatables-buttons.php:283
+#: modules/controllers/datatables-buttons.php:285
 msgctxt "Buttons module"
 msgid "PDF"
 msgstr "PDF"
 
-#: modules/controllers/datatables-buttons.php:284
+#: modules/controllers/datatables-buttons.php:286
 msgctxt "Buttons module"
 msgid "Print"
 msgstr "Drucken"
@@ -2639,24 +2639,24 @@ msgstr "Der REST-API-Anforderungsparameter \"%s\" ist ungültig."
 msgid "The REST API request parameters do not have the correct format."
 msgstr "Die REST-API-Anforderungsparameter haben nicht das richtige Format."
 
-#: modules/controllers/datatables-serverside-processing-rest-api.php:536
+#: modules/controllers/datatables-serverside-processing-rest-api.php:535
 #: modules/controllers/rest-api.php:482
 msgid "The table data."
 msgstr "Die Tabellendaten."
 
-#: modules/controllers/datatables-serverside-processing-rest-api.php:542
+#: modules/controllers/datatables-serverside-processing-rest-api.php:541
 msgid "DataTables Server-side Processing draw counter."
 msgstr "Anzeigezähler des DataTables Server-side Processing."
 
-#: modules/controllers/datatables-serverside-processing-rest-api.php:548
+#: modules/controllers/datatables-serverside-processing-rest-api.php:547
 msgid "DataTables Server-side Processing total number of rows."
 msgstr "Gesamtzahl der Zeilen des DataTables Server-side Processing."
 
-#: modules/controllers/datatables-serverside-processing-rest-api.php:554
+#: modules/controllers/datatables-serverside-processing-rest-api.php:553
 msgid "DataTables Server-side Processing number of filtered rows."
 msgstr "Anzahl der gefilterten Zeilen des DataTables Server-side Processing."
 
-#: modules/controllers/datatables-serverside-processing-rest-api.php:560
+#: modules/controllers/datatables-serverside-processing-rest-api.php:559
 msgid "DataTables Server-side Processing error."
 msgstr "Fehler des DataTables Server-side Processing."
 
@@ -3214,12 +3214,12 @@ msgstr "Benutzerdefinierte Zeilenreihenfolge:"
 msgid "Enter a comma-separated list of rows, e.g. “1,3-5,7”."
 msgstr "Gib eine kommagetrennte Liste von Zeilen ein, z.B. „1,3-5,7“."
 
-#: controllers/controller-admin.php:307
+#: controllers/controller-admin.php:313
 msgid "Table"
 msgstr "Tabelle"
 
-#: controllers/controller-admin.php:308
-#: controllers/controller-admin.php:309
+#: controllers/controller-admin.php:314
+#: controllers/controller-admin.php:315
 msgid "Insert a TablePress table"
 msgstr "Füge eine TablePress-Tabelle ein"
 
@@ -3420,13 +3420,13 @@ msgstr "Ändere das Standardaussehen deiner Tabellen im visuellen Stil-Customize
 
 #: classes/class-view.php:110
 #: classes/class-view.php:440
-#: controllers/controller-admin.php:438
+#: controllers/controller-admin.php:444
 #: views/view-about.php:213
 msgid "Your TablePress %s premium license has expired!"
 msgstr "Deine TablePress-%s-Premium-Lizenz ist abgelaufen!"
 
 #: classes/class-view.php:111
-#: controllers/controller-admin.php:439
+#: controllers/controller-admin.php:445
 #: views/view-about.php:215
 msgid "To again receive feature, maintenance, or security updates and support, <a href=\"%1$s\"><strong>renew your license now</strong></a>!"
 msgstr "Um erneut Funktions-, Wartungs- und Sicherheitsupdates sowie Unterstützung zu erhalten, <a href=\"%1$s\"><strong>verlängere deine Lizenz jetzt</strong></a>!"
@@ -3744,15 +3744,15 @@ msgstr "Deine Webseite verfügt über eine aktive TablePress-Premium-Lizenz, die
 msgid "You can combine multiple highlight terms with an OR operator, e.g. “term1||term2”."
 msgstr "Du kannst mehrere Suchbegriffe mit einem ODER-Operator kombinieren, z.B. „term1||term2“."
 
-#: views/view-import.php:148
+#: views/view-import.php:149
 msgid "Pro Tip:"
 msgstr "Profi-Tipp:"
 
-#: views/view-import.php:149
+#: views/view-import.php:150
 msgid "You can automate the import of tables from URLs or server files with the <a href=\"%1$s\">“%2$s” premium feature</a>!"
 msgstr "Du kannst den Import von Tabellen von URLs oder aus Dateien auf dem Server mit dem <a href=\"%1$s\">„%2$s“-Premium-Modul</a> automatisieren!"
 
-#: views/view-import.php:157
+#: views/view-import.php:158
 msgid "To configure the automatic periodic import of your tables, activate the “%1$s” module on the <a href=\"%2$s\">Modules screen</a>."
 msgstr "Um die Konfiguration des automatischen Tabellen-Imports zu ändern, aktiviere das Modul „%1$s“ auf der <a href=\"%2$s\">Module-Seite</a>."
 

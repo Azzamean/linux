@@ -5,13 +5,13 @@
  *
  * @package TablePress
  * @author Tobias Bäthge
- * @version 2.3
+ * @version 2.3.2
  *
  *
  * Plugin Name: TablePress (Premium)
  * Plugin URI: https://tablepress.org/
  * Description: Embed beautiful and interactive tables into your WordPress website’s posts and pages, without having to write code!
- * Version: 2.3
+ * Version: 2.3.2
  * Update URI: https://api.freemius.com
  * Requires at least: 6.0
  * Requires PHP: 7.2
@@ -46,10 +46,9 @@ defined( 'ABSPATH' ) || die( 'No direct script access allowed!' );
 if ( !defined( 'TABLEPRESS_IS_PLAYGROUND_PREVIEW' ) ) {
     define( 'TABLEPRESS_IS_PLAYGROUND_PREVIEW', false );
 }
-
 if ( function_exists( 'tb_tp_fs' ) ) {
     tb_tp_fs()->set_basename( true, __FILE__ );
-    // @phpstan-ignore-line
+    // @phpstan-ignore-line (Wrong variable type in Freemius function docblock.)
 } else {
     /**
      * Helper function for easier Freemius SDK access.
@@ -58,10 +57,8 @@ if ( function_exists( 'tb_tp_fs' ) ) {
      *
      * @return Freemius Freemius SDK instance.
      */
-    function tb_tp_fs()
-    {
-        global  $tb_tp_fs ;
-        
+    function tb_tp_fs() {
+        global $tb_tp_fs;
         if ( !isset( $tb_tp_fs ) ) {
             // Include Freemius SDK.
             require_once __DIR__ . '/libraries/freemius/start.php';
@@ -74,24 +71,23 @@ if ( function_exists( 'tb_tp_fs' ) ) {
                 'has_addons'        => false,
                 'has_paid_plans'    => true,
                 'menu'              => array(
-                'slug'    => 'tablepress',
-                'contact' => false,
-                'support' => false,
-                'pricing' => false,
-            ),
+                    'slug'    => 'tablepress',
+                    'contact' => false,
+                    'support' => false,
+                    'pricing' => false,
+                ),
                 'opt_in_moderation' => array(
-                'new'       => true,
-                'updates'   => false,
-                'localhost' => false,
-            ),
+                    'new'       => true,
+                    'updates'   => false,
+                    'localhost' => false,
+                ),
                 'anonymous_mode'    => TABLEPRESS_IS_PLAYGROUND_PREVIEW,
                 'is_live'           => true,
             ) );
         }
-        
         return $tb_tp_fs;
     }
-    
+
     // Init Freemius.
     tb_tp_fs();
     // Load the TablePress plugin icon for the Freemius opt-in/activation screen.
@@ -128,12 +124,10 @@ if ( function_exists( 'tb_tp_fs' ) ) {
     /*
      * Check if the site environment fulfills the minimum requirements.
      */
-    
     if ( !(require_once TABLEPRESS_ABSPATH . 'controllers/environment-checks.php') ) {
         return;
         // Exit early if the return value from the file is false.
     }
-    
     /*
      * Load TablePress class, which holds common functions and variables.
      */
@@ -147,5 +141,5 @@ if ( function_exists( 'tb_tp_fs' ) ) {
     /*
      * Start up TablePress on WordPress's "init" action hook.
      */
-    add_action( 'init', array( 'TablePress', 'run' ) );
+    add_action( 'init', array('TablePress', 'run') );
 }

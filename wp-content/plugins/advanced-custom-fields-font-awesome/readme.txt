@@ -3,8 +3,8 @@
 Contributors: mattkeys
 Tags: Advanced Custom Fields, ACF, Font Awesome, FontAwesome
 Requires at least: 3.5
-Tested up to: 6.2
-Stable tag: 4.0.5
+Tested up to: 6.5
+Stable tag: 4.0.7
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -74,6 +74,9 @@ This notification message is filterable so you can customize it to better repres
 * **ACFFA_get_icons**: (Applies to FontAwesome 4.x and 5.x icons only) Filter the array of icons and icon details loaded from the database
 * **ACFFA_get_fa_url**: Filter the URL used for enqueuing FontAwesome in the frontend and admin areas of the site.
 * **ACFFA_override_major_version**: Filter to manually set the 'major' version of FontAwesome to load (accepts either 4, 5, or 6). NOTE: This filter must be registered before any calls to ACF get_field() function are made.
+* **ACFFA_fa_api_key**: Filter to programmatically set the FontAwesome API key.
+* **ACFFA_fa_kit_token**: Filter to programmatically set the FontAwesome kit token.
+
 
 == Screenshots ==
 
@@ -81,6 +84,14 @@ This notification message is filterable so you can customize it to better repres
 2. Searchable list of all icons, including large live preview
 
 == Changelog ==
+
+= 4.0.7 =
+* Added support for FontAwesome "Sharp" family icons
+* Added support for user uploaded duotone icons in kits
+* Updated icon initialization for better compatibility with REST API, and a variety of third party site builder plugins that integrate with ACF fields.
+* Added filter (ACFFA_fa_api_key) to allow for the ability to programmatically set the FontAwesome API key.
+* Added filter (ACFFA_fa_kit_token) to allow for the ability to programmatically set the FontAwesome kit token.
+* Limited role of Select2 'dropdownCssClass' and 'containerCssClass' arguments to avoid conflicts with other plugins using older/non full feature versions of Select2
 
 = 4.0.6 =
 * Fixed php 8.2 related warning
@@ -245,6 +256,14 @@ This notification message is filterable so you can customize it to better repres
 * Initial Release.
 
 == Upgrade Notice ==
+
+= 4.0.7 =
+* Added support for FontAwesome "Sharp" family icons
+* Added support for user uploaded duotone icons in kits
+* Updated icon initialization for better compatibility with REST API, and a variety of third party site builder plugins that integrate with ACF fields.
+* Added filter (ACFFA_fa_api_key) to allow for the ability to programmatically set the FontAwesome API key.
+* Added filter (ACFFA_fa_kit_token) to allow for the ability to programmatically set the FontAwesome kit token.
+* Limited role of Select2 'dropdownCssClass' and 'containerCssClass' arguments to avoid conflicts with other plugins using older/non full feature versions of Select2
 
 = 4.0.6 =
 * Fixed php 8.2 related warning

@@ -22,11 +22,6 @@
 /* globals jQuery */
 /* eslint-disable no-var */
 
-/**
- * Internal dependencies.
- */
-import naturalSort from '../../../admin/js/_edit-naturalsort';
-
 ( function( $ ) {
 	/*
 	 * Function: fnGetColumnData
@@ -228,21 +223,19 @@ import naturalSort from '../../../admin/js/_edit-naturalsort';
 		var widget = this,
 			$options = widget.$Select.find( 'option' ).slice( 1 );
 
-		function fnSort( a, b ) {
-			var a_text = $( a ).text(),
-				b_text = $( b ).text();
+		// Default sort function.
+		let fnSort = ( a, b ) => {
+			return $( a ).text().localeCompare( $( b ).text(), undefined, {
+				numeric: true,
+				sensitivity: 'base'
+			} );
+		};
 
-			if ( widget.hasOwnProperty( 'fnSort' ) ) {
-				return widget.fnSort( a_text, b_text );
-			} else if ( naturalSort ) {
-				return naturalSort( a_text, b_text );
-			} else if ( a_text < b_text ) {
-				return -1;
-			} else if ( a_text === b_text ) {
-				return 0;
-			} else { // eslint-disable-line no-else-return
-				return 1;
-			}
+		// If defined, use a custom sort function instead.
+		if ( widget.hasOwnProperty( 'fnSort' ) ) {
+			fnSort = ( a, b ) => {
+				return widget.fnSort( $( a ).text(), $( b ).text() );
+			};
 		}
 
 		$options.sort( fnSort );

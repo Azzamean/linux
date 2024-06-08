@@ -94,14 +94,14 @@ add_filter( 'tablepress.optionsMetaBoxes', 'tp/datatables-buttons/add-meta-box',
  */
 jQuery( function( j$ ) {
 	j$( buttons_wrapper_active ).sortable( {
-		containment: '#tablepress_edit-datatables-buttons',
+		containment: '#tablepress_edit-datatables-buttons .drag-box-section',
 		cursor: 'move',
 		placeholder: 'drag-box-placeholder',
 		connectWith: '#datatables-buttons-drag-box-wrapper-inactive',
 		update: handle_drag_box_move,
 	} );
 	j$( buttons_wrapper_inactive ).sortable( {
-		containment: '#tablepress_edit-datatables-buttons',
+		containment: '#tablepress_edit-datatables-buttons .drag-box-section',
 		cursor: 'move',
 		placeholder: 'drag-box-placeholder',
 		connectWith: '#datatables-buttons-drag-box-wrapper-active',

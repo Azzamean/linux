@@ -396,7 +396,12 @@ class TablePress_Module_Advanced_Access_Rights {
 		foreach ( $table_ids as $table_id ) {
 			// Load table, without table data, options, and visibility settings.
 			$table = TablePress::$model_table->load( $table_id, false, false );
-			$data['tables'][ $table['id'] ] = $table['name']; // @phpstan-ignore-line
+
+			if ( is_wp_error( $table ) ) {
+				continue;
+			}
+
+			$data['tables'][ $table['id'] ] = $table['name'];
 		}
 
 		$users = get_users();
