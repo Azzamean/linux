@@ -8,29 +8,34 @@ class Projects
 
     function projects_grid_vc()
     {
-        $categoryTypes = get_terms([
+        $categoryTypes = get_terms(
+            [
             "taxonomy" => "projects_category",
             "hide_empty" => false,
             "orderby" => "name",
-        ]);
+            ]
+        );
 
         $all_projects_category = ["All Projects Categories" => ""];
         foreach ($categoryTypes as $catType) {
             $all_projects_category[$catType->name] = $catType->term_id;
         }
 
-        $stageTypes = get_terms([
+        $stageTypes = get_terms(
+            [
             "taxonomy" => "projects_stage",
             "hide_empty" => false,
             "orderby" => "name",
-        ]);
+            ]
+        );
 
         $all_projects_stage = ["All Projects Stages" => ""];
         foreach ($stageTypes as $stageType) {
             $all_projects_stage[$stageType->name] = $stageType->term_id;
         }
 
-        vc_map([
+        vc_map(
+            [
             "name" => __("Projects - Linux Foundation Designed", "projects"),
             "base" => "projects",
             "icon" => "vc_element-icon icon-wpb-portfolio",
@@ -148,7 +153,8 @@ class Projects
                     ],
                 ],
             ],
-        ]);
+            ]
+        );
     }
 }
 
@@ -206,30 +212,30 @@ function projects_grid($atts, $content)
     ];
 
     switch ($design) {
-        case "grid-design":
-            $design = "Grid Design";
-            break;
-        case "flipbox-design":
-            $design = "Flipbox Design";
-            break;
-        default:
-            $design = "Grid Design";
-            break;
+    case "grid-design":
+        $design = "Grid Design";
+        break;
+    case "flipbox-design":
+        $design = "Flipbox Design";
+        break;
+    default:
+        $design = "Grid Design";
+        break;
     }
 
     switch ($columns) {
-        case "2":
-            $column_class = "vc_col-sm-6";
-            break;
-        case "3":
-            $column_class = "vc_col-sm-4";
-            break;
-        case "4":
-            $column_class = "vc_col-sm-3";
-            break;
-        default:
-            $column_class = "vc_col-sm-3";
-            break;
+    case "2":
+        $column_class = "vc_col-sm-6";
+        break;
+    case "3":
+        $column_class = "vc_col-sm-4";
+        break;
+    case "4":
+        $column_class = "vc_col-sm-3";
+        break;
+    default:
+        $column_class = "vc_col-sm-3";
+        break;
     }
 
     if (!empty($projects_category_id) && !empty($projects_stages_id)) {
@@ -283,28 +289,26 @@ function projects_grid($atts, $content)
                 }
                 $output .=
                     '<div class="' . $column_class . ' grid-design projects">';
-                $output .= '<div class="grid-design image-wrapper">';
+                $output .= '<a class="grid-design link-wrap" href="' . get_permalink() . '">';
+                $output .= '<span class="grid-design image-wrapper">';
                 $output .= '<img src="' . get_field("projects_logo") . '"/>';
-                $output .= "</div>";
-                $output .= '<div class="grid-design body-wrapper">';
+                $output .= "</span>";
+                $output .= '<span class="grid-design body-wrapper">';
                 $output .= "<h3>" . get_the_title() . "</h3>";
                 $output .=
                     "<p>" .
                     wp_trim_words(get_field("projects_excerpt"), 50) .
-                    "</p>";
+                    "</p>";   
                 $output .=
-                    '<a class="grid-design projects-btn" href="' .
-                    get_permalink() .
-                    '"">Learn More</a>';
-                $output .= "</div>";
-                $output .= "</div>";
+                    '<span class="grid-design learn-more">Learn More</span>';
+                $output .= "</span>"; // body-wrapper
+                $output .= "</a>"; // link-wrap 
+                $output .= "</div>"; // projects
                 $count++;
-                if (
-                    $count == $columns ||
-                    $projects_query->current_post + 1 ==
-                        $projects_query->post_count
+                if ($count == $columns 
+                    || $projects_query->current_post + 1 ==$projects_query->post_count
                 ) {
-                    $output .= "</div>";
+                    $output .= "</div>"; // outer
                     $count = 0;
                 }
             }
@@ -344,10 +348,8 @@ function projects_grid($atts, $content)
                 $output .= "</div>";
                 $output .= "</div>";
                 $count++;
-                if (
-                    $count == $columns ||
-                    $projects_query->current_post + 1 ==
-                        $projects_query->post_count
+                if ($count == $columns 
+                    || $projects_query->current_post + 1 ==$projects_query->post_count
                 ) {
                     $output .= "</div>";
                     $count = 0;
