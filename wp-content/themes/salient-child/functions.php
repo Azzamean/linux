@@ -697,9 +697,38 @@ if (is_multisite()) {
     }
     add_action("wp_enqueue_scripts", "enqueue_styles_projects_banner", 101);
 }
+
+
 if (!is_multisite()) {
+    
     remove_comments();
+    
+    // FIX THIS SOON FOR THE VENDORS ZEPHYR
+    // USES THE PLUGIN POST GRID
+    // CONDITIONAL LOGIC FOR CONTENT SECURITY POLICY BASED OFF DOMAIN NAME
+    $domain_name = parse_url(get_site_url(), PHP_URL_HOST);
+    switch ($domain_name) {
+    case "dev-zephyr-project.pantheonsite.io":
+    case "zephyrproject.org":
+        include_once "custom-post-types/vendors.php";
+        wp_enqueue_script('custom-zephyr-js-one', get_stylesheet_directory_uri() . '/sites/zephyr/js/mixitup.js', array(), false, true);
+        wp_enqueue_script('custom-zephyr-js-two', get_stylesheet_directory_uri() . '/sites/zephyr/js/mixitup.min.js', array(), false, true);               
+        wp_enqueue_script('custom-zephyr-js-three', get_stylesheet_directory_uri() . '/sites/zephyr/js/featherlight.js', array(), false, true);           
+        wp_enqueue_script('custom-zephyr-js-four', get_stylesheet_directory_uri() . '/sites/zephyr/js/front-scripts.js', array(), false, true);
+        //wp_enqueue_script( 'custom-zephyr-js-five', get_stylesheet_directory_uri() . '/sites/zephyr/js/index.js', array(), false, true);    
+        wp_enqueue_script('custom-zephyr-js-six', get_stylesheet_directory_uri() . '/sites/zephyr/js/jquery.hoverIntent.min.js', array(), false, true);
+        wp_enqueue_script('custom-zephyr-js-seven', get_stylesheet_directory_uri() . '/sites/zephyr/js/mixitup-multifilter.js', array(), false, true);    
+        wp_enqueue_script('custom-zephyr-js-eight', get_stylesheet_directory_uri() . '/sites/zephyr/js/mixitup-multifilter.min.js', array(), false, true);
+        wp_enqueue_script('custom-zephyr-js-nine', get_stylesheet_directory_uri() . '/sites/zephyr/js/mixitup-pagination.js', array(), false, true);        
+        wp_enqueue_script('custom-zephyr-js-ten', get_stylesheet_directory_uri() . '/sites/zephyr/js/custom-zephyr.js', array(), false, true);
+        //wp_enqueue_script( 'custom-zephyr-js-eleven', get_stylesheet_directory_uri() . '/sites/zephyr/js/custom.js', array(), false, true);
+        wp_enqueue_style('custom-zephyr-css', get_stylesheet_directory_uri() . '/sites/zephyr/css/zephyr.css');
+        wp_enqueue_style('custom-zephyr-css-featherlight', get_stylesheet_directory_uri() . '/sites/zephyr/css/featherlight.css');        
+        break;
+    }
 }
+
+
 if ((is_multisite() && $current_multisite == $multisite_three_dev) || (is_multisite() && $current_multisite == $multisite_three_live)) {
     add_action("nectar_hook_after_body_open", "lf_meta_header_multisite_three", 10, 0);
 }

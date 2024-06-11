@@ -520,7 +520,9 @@ a.list-design.navigation-btn {
 	.list-design.right {
 		flex-basis: 100%;
 	}
-.grid-design.outer .vc_col-sm-3 {
-	max-width: 100% !important;
 
+	.grid-design.outer .vc_col-sm-3 {
+		max-width: 100% !important;
+
+	}
 }

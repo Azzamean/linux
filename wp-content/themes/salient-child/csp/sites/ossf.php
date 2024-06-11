@@ -36,7 +36,7 @@ function hsts_plugin_get_csp_header(): string {
 		"*.linkedin.com *.osano.com; " .
 	"font-src 'self' data: fonts.gstatic.com; " .
 	"frame-src 'self' *.osano.com *.hsforms.com *.youtube.com *.google.com *.openssf.org *.landscape2.io *.buzzsprout.com;" .
-	"img-src 'self' data: *.hsforms.com *.hubspot.com *.hubspot.net *.ads.linkedin.com secure.gravatar.com *.w.org *.google.com *.google-analytics.com  *.facebook.com; " . 
+	"img-src 'self' data: *.hsforms.com *.hubspot.com *.hubspot.net *.ads.linkedin.com secure.gravatar.com *.w.org *.google.com *.google-analytics.com  *.facebook.com *.linuxfoundation.org; " . 
 	"manifest-src 'self'; " .
 	"media-src 'self'; " .
 	//"report-uri ; " .
