@@ -153,13 +153,15 @@ a.list-design.navigation-btn {
 	align-items: center;
 }
 
-.grid-design .projects {
+.grid-design .projects,
+.grid-design .working-groups {
 	box-shadow: 0px 0px 15px rgb(0 0 0 / 15%);
 	border-radius: 10px;
 	margin: 15px;
 }
 
-.grid-design .projects p {
+.grid-design .projects p,
+.grid-design .working-groups p {
 	padding: 0 0 10px 0;
 	font-size: 18px;
 	line-height: 28px;
@@ -185,11 +187,13 @@ a.list-design.navigation-btn {
 }
 
 .grid-design .learn-more,
-.grid-design.projects-btn:after {
+.grid-design.projects-btn:after,
+.grid-design.working-groups-btn:after {
 	content: " >>";
 }
 
-.grid-design.projects-btn {
+.grid-design.projects-btn,
+.grid-design.working-groups-btn {
 	text-decoration: underline;
 }
 
@@ -226,7 +230,8 @@ a.list-design.navigation-btn {
   margin-left: 10px;
 }
 
-.grid-design .projects-btn {
+.grid-design .projects-btn,
+.grid-design .working-groups-btn {
 	color: #ffffff;
 	font-size: 1rem;
 	line-height: 1rem;
@@ -236,7 +241,8 @@ a.list-design.navigation-btn {
 	transition: opacity .45s cubic-bezier(.25, 1, .33, 1), transform .45s cubic-bezier(.25, 1, .33, 1);
 }
 
-.grid-design .projects-btn:hover {
+.grid-design .projects-btn:hover.
+.grid-design .working-groups-btn:hover {
 	color: #ffffff;
 	opacity: .85;
 }
@@ -247,7 +253,8 @@ a.list-design.navigation-btn {
 	display: flex;
 }
 
-.flipbox-design .projects {
+.flipbox-design .projects,
+.flipbox-design .working-groups {
 	margin: 15px;
 }
 
@@ -307,7 +314,8 @@ a.list-design.navigation-btn {
 	color: #ffffff;
 }
 
-.flipbox-design .projects-btn {
+.flipbox-design .projects-btn,
+.flipbox-design .working-groups-btn {
 	background-color: #ffffff;
 	padding: 8px 44px;
 	border-radius: 30px;
@@ -509,7 +517,8 @@ a.list-design.navigation-btn {
 		justify-content: center;
 	}
 
-	.grid-design.outer .grid-design.projects {
+	.grid-design.outer .grid-design.projects,
+	.grid-design.outer .grid-design.working-groups {
 		margin: 0;
 		margin-bottom: 35px;
 		padding: 15px;
@@ -520,7 +529,8 @@ a.list-design.navigation-btn {
 		margin-bottom: 0;
 	}
 
-	.flipbox-design .projects {
+	.flipbox-design .projects,
+	.flipbox-design .working-groups {
 		margin: 0;
 		margin-bottom: 35px;
 	}

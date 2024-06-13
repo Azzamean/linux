@@ -1,78 +1,78 @@
 <?php
-class Projects
+class Working_Groups
 {
     function __construct()
     {
-        add_action("vc_before_init", [$this, "projects_grid_vc"]);
+        add_action("vc_before_init", [$this, "working_groups_grid_vc"]);
     }
 
-    function projects_grid_vc()
+    function working_groups_grid_vc()
     {
         $categoryTypes = get_terms(
             [
-            "taxonomy" => "projects_category",
+            "taxonomy" => "working_groups_category",
             "hide_empty" => false,
             "orderby" => "name",
             ]
         );
 
-        $all_projects_category = ["All Projects Categories" => ""];
+        $all_working_groups_category = ["All Working Groups Categories" => ""];
         foreach ($categoryTypes as $catType) {
-            $all_projects_category[$catType->name] = $catType->term_id;
+            $all_working_groups_category[$catType->name] = $catType->term_id;
         }
 
         $stageTypes = get_terms(
             [
-            "taxonomy" => "projects_stage",
+            "taxonomy" => "working_groups_stage",
             "hide_empty" => false,
             "orderby" => "name",
             ]
         );
 
-        $all_projects_stage = ["All Projects Stages" => ""];
+        $all_working_groups_stage = ["All Working Groups Stages" => ""];
         foreach ($stageTypes as $stageType) {
-            $all_projects_stage[$stageType->name] = $stageType->term_id;
+            $all_working_groups_stage[$stageType->name] = $stageType->term_id;
         }
 
         vc_map(
             [
-            "name" => __("Projects - Linux Foundation Designed", "projects"),
-            "base" => "projects",
+            "name" => __("Working Groups - Linux Foundation Designed", "working_groups"),
+            "base" => "working_groups",
             "icon" => "vc_element-icon icon-wpb-portfolio",
             "class" => "",
-            "category" => __("Linux Foundation", "projects"),
+            "category" => __("Linux Foundation", "working_groups"),
             "description" => __(
-                "Display list of Projects custom post type",
-                "projects"
+                "Display list of Working Groups custom post type",
+                "working_groups"
             ),
             "params" => [
                 [
                     "type" => "dropdown",
-                    "heading" => esc_html__("Design", "projects"),
+                    "heading" => esc_html__("Design", "working_groups"),
                     "param_name" => "design",
                     "admin_label" => true,
                     "value" => [
-                        esc_html__("Grid Design", "projects") => "grid-design",
+                        esc_html__("Grid Design", "working_groups") => "grid-design",
                         esc_html__(
                             "Flipbox Design",
-                            "projects"
+                            "working_groups"
                         ) => "flipbox-design",
                     ],
                     "save_always" => true,
                     "description" => esc_html__(
-                        "Select the design you desire for your projects.",
-                        "projects"
+                        "Select the design you desire for your working groups.",
+                        "working_groups"
                     ),
                 ],
                 [
                     "type" => "textfield",
                     "class" => "",
-                    "heading" => __("Limit", "projects"),
+                    "heading" => __("Limit", "working_groups"),
                     "param_name" => "limit",
                     "value" => "",
                     "description" => __(
                         "Enter number of people to be displayed. Enter -1 to display all.",
-                        "projects"
+                        "working_groups"
                     ),
                     "dependency" => [
                         "element" => "design",
@@ -82,15 +82,15 @@ class Projects
                 [
                     "type" => "dropdown",
                     "class" => "",
-                    "heading" => __("Order By", "projects"),
+                    "heading" => __("Order By", "working_groups"),
                     "param_name" => "orderby",
                     "value" => [
-                        __("Title", "projects") => "title",
-                        __("Date", "projects") => "date",
-                        __("ID", "projects") => "ID",
-                        __("Random", "projects") => "rand",
+                        __("Title", "working_groups") => "title",
+                        __("Date", "working_groups") => "date",
+                        __("ID", "working_groups") => "ID",
+                        __("Random", "working_groups") => "rand",
                     ],
-                    "description" => __("Select order type.", "projects"),
+                    "description" => __("Select order type.", "working_groups"),
                     "dependency" => [
                         "element" => "design",
                         "value" => ["flipbox-design", "grid-design"],
@@ -99,13 +99,13 @@ class Projects
                 [
                     "type" => "dropdown",
                     "class" => "",
-                    "heading" => __("Sort Order", "projects"),
+                    "heading" => __("Sort Order", "working_groups"),
                     "param_name" => "order",
                     "value" => [
-                        __("Ascending", "projects") => "ASC",
-                        __("Descending", "projects") => "DESC",
+                        __("Ascending", "working_groups") => "ASC",
+                        __("Descending", "working_groups") => "DESC",
                     ],
-                    "description" => __("Select sorting order.", "projects"),
+                    "description" => __("Select sorting order.", "working_groups"),
                     "dependency" => [
                         "element" => "design",
                         "value" => ["flipbox-design", "grid-design"],
@@ -114,26 +114,26 @@ class Projects
                 [
                     "type" => "dropdown",
                     "class" => "",
-                    "heading" => esc_html__("columns", "projects"),
+                    "heading" => esc_html__("columns", "working_groups"),
                     "param_name" => "columns",
                     "value" => [
-                        esc_html__("2 columns", "projects") => "2",
-                        esc_html__("3 columns", "projects") => "3",
-                        esc_html__("4 columns", "projects") => "4",
+                        esc_html__("2 columns", "working_groups") => "2",
+                        esc_html__("3 columns", "working_groups") => "3",
+                        esc_html__("4 columns", "working_groups") => "4",
                     ],
                     "description" => esc_html__(
                         "Please select the number of columns you want displayed",
-                        "projects"
+                        "working_groups"
                     ),
                     "save_always" => true,
                 ],
                 [
                     "type" => "dropdown",
                     "class" => "",
-                    "heading" => __("Category", "projects"),
-                    "param_name" => "projects_category_id",
-                    "value" => $all_projects_category,
-                    "description" => __("", "projects"),
+                    "heading" => __("Category", "working_groups"),
+                    "param_name" => "working_groups_category_id",
+                    "value" => $all_working_groups_category,
+                    "description" => __("", "working_groups"),
                     "dependency" => [
                         "element" => "design",
                         "value" => ["flipbox-design", "grid-design"],
@@ -143,10 +143,10 @@ class Projects
                 [
                     "type" => "dropdown",
                     "class" => "",
-                    "heading" => __("Stages", "projects"),
-                    "param_name" => "projects_stages_id",
-                    "value" => $all_projects_stage,
-                    "description" => __("", "projects"),
+                    "heading" => __("Stages", "working_groups"),
+                    "param_name" => "working_groups_stages_id",
+                    "value" => $all_working_groups_stage,
+                    "description" => __("", "working_groups"),
                     "dependency" => [
                         "element" => "design",
                         "value" => ["flipbox-design", "grid-design"],
@@ -158,9 +158,9 @@ class Projects
     }
 }
 
-$projects = new Projects();
+$working_groups = new Working_Groups();
 
-function projects_grid($atts, $content)
+function working_groups_grid($atts, $content)
 {
     // GET SALIENT COLORS
     $nectar_options = get_nectar_theme_options();
@@ -188,8 +188,8 @@ function projects_grid($atts, $content)
                 "limit" => "",
                 "order" => "",
                 "orderby" => "",
-                "projects_category_id" => "",
-                "projects_stages_id" => "",
+                "working_groups_category_id" => "",
+                "working_groups_stages_id" => "",
                 "columns" => "",
             ],
             $atts
@@ -203,7 +203,7 @@ function projects_grid($atts, $content)
     $columns = !empty($columns) ? $columns : "2";
 
     $query_args = [
-        "post_type" => "projects",
+        "post_type" => "working_groups",
         "post_status" => ["publish"],
         "posts_per_page" => $limit,
         "order" => $order,
@@ -238,75 +238,75 @@ function projects_grid($atts, $content)
         break;
     }
 
-    if (!empty($projects_category_id) && !empty($projects_stages_id)) {
+    if (!empty($working_groups_category_id) && !empty($working_groups_stages_id)) {
         $query_args["tax_query"] = [
             "relation" => "AND",
             [
-                "taxonomy" => "projects_category",
+                "taxonomy" => "working_groups_category",
                 "field" => "term_id",
-                "terms" => $projects_category_id,
+                "terms" => $working_groups_category_id,
             ],
             [
-                "taxonomy" => "projects_stage",
+                "taxonomy" => "working_groups_stage",
                 "field" => "term_id",
-                "terms" => $projects_stages_id,
+                "terms" => $working_groups_stages_id,
             ],
         ];
     }
 
-    if (!empty($projects_category_id)) {
+    if (!empty($working_groups_category_id)) {
         $query_args["tax_query"] = [
             [
-                "taxonomy" => "projects_category",
+                "taxonomy" => "working_groups_category",
                 "field" => "term_id",
-                "terms" => $projects_category_id,
+                "terms" => $working_groups_category_id,
             ],
         ];
     }
 
-    if (!empty($projects_stages_id)) {
+    if (!empty($working_groups_stages_id)) {
         $query_args["tax_query"] = [
             [
-                "taxonomy" => "projects_stage",
+                "taxonomy" => "working_groups_stage",
                 "field" => "term_id",
-                "terms" => $projects_stages_id,
+                "terms" => $working_groups_stages_id,
             ],
         ];
     }
 
-    $projects_query = new WP_Query($query_args);
+    $working_groups_query = new WP_Query($query_args);
     $output = "";
     $count = 0;
 
-    if ($projects_query->have_posts()) {
+    if ($working_groups_query->have_posts()) {
         $count = 0;
-        while ($projects_query->have_posts()):
+        while ($working_groups_query->have_posts()):
             //Grid Design
             if ($design == "Grid Design") {
-                $projects_query->the_post();
+                $working_groups_query->the_post();
                 if ($count == 0) {
                     $output .= '<div class="grid-design outer">';
                 }
                 $output .=
-                    '<div class="' . $column_class . ' grid-design projects">';
+                    '<div class="' . $column_class . ' grid-design working-groups">';
                 $output .= '<a class="grid-design link-wrap" href="' . get_permalink() . '">';
                 $output .= '<span class="grid-design image-wrapper">';
-                $output .= '<img src="' . get_field("projects_logo") . '"/>';
+                $output .= '<img src="' . get_field("working_groups_logo") . '"/>';
                 $output .= "</span>";
                 $output .= '<span class="grid-design body-wrapper">';
                 $output .= "<h3>" . get_the_title() . "</h3>";
                 $output .=
                     "<p>" .
-                    wp_trim_words(get_field("projects_excerpt"), 50) .
+                    wp_trim_words(get_field("working_groups_excerpt"), 50) .
                     "</p>";   
                 $output .=
                     '<span class="grid-design learn-more">Learn More</span>';
                 $output .= "</span>"; // body-wrapper
                 $output .= "</a>"; // link-wrap 
-                $output .= "</div>"; // projects
+                $output .= "</div>"; // working-groups
                 $count++;
                 if ($count == $columns 
-                    || $projects_query->current_post + 1 ==$projects_query->post_count
+                    || $working_groups_query->current_post + 1 ==$working_groups_query->post_count
                 ) {
                     $output .= "</div>"; // outer
                     $count = 0;
@@ -315,18 +315,18 @@ function projects_grid($atts, $content)
 
             //Flipbox Design
             if ($design == "Flipbox Design") {
-                $projects_query->the_post();
+                $working_groups_query->the_post();
                 if ($count == 0) {
                     $output .= '<div class="flipbox-design outer">';
                 }
                 $output .=
                     '<div class="' .
                     $column_class .
-                    ' flipbox-design projects">';
+                    ' flipbox-design working-groups">';
                 $output .= '<div class="flipbox">';
                 $output .= '<div class="flipbox-inner">';
                 $output .= '<div class="flipbox-front">';
-                $output .= '<img src="' . get_field("projects_logo") . '">';
+                $output .= '<img src="' . get_field("working_groups_logo") . '">';
                 $output .= "</div>";
                 $output .=
                     '<div class="flipbox-back" style="background-color: ' .
@@ -335,10 +335,10 @@ function projects_grid($atts, $content)
                 $output .= "<h3>" . get_the_title() . "</h3>";
                 $output .=
                     "<p>" .
-                    wp_trim_words(get_field("projects_excerpt"), 35) .
+                    wp_trim_words(get_field("working_groups_excerpt"), 35) .
                     "</p>";
                 $output .=
-                    '<a class="flipbox-design projects-btn" href="' .
+                    '<a class="flipbox-design working-groups-btn" href="' .
                     get_permalink() .
                     '" style="color: ' .
                     $accent_color .
@@ -349,7 +349,7 @@ function projects_grid($atts, $content)
                 $output .= "</div>";
                 $count++;
                 if ($count == $columns 
-                    || $projects_query->current_post + 1 ==$projects_query->post_count
+                    || $working_groups_query->current_post + 1 ==$working_groups_query->post_count
                 ) {
                     $output .= "</div>";
                     $count = 0;
@@ -358,8 +358,8 @@ function projects_grid($atts, $content)
         endwhile; /* Restore original Post Data */
         wp_reset_postdata();
     } else {
-        $output .= "No Projects listed";
+        $output .= "No Working Groups listed";
     }
     return $output;
 }
-add_shortcode("projects", "projects_grid");
+add_shortcode("working_groups", "working_groups_grid");

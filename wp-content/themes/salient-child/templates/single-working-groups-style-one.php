@@ -1,7 +1,7 @@
 <?php
 /**
  * Template Name: Template Style 1 (One)
- * Template Post Type: projects
+ * Template Post Type: working_groups
  * The template for displaying single projects custom post types.
  *
  * @package Salient WordPress Theme
@@ -24,48 +24,48 @@ $accent_color = $nectar_options["accent-color"];
 get_header();
 ?>
 
-<div class="container-wrap projects-wrap">
+<div class="container-wrap working-groups-wrap">
     <div class="container main-content">
 
         <div class="full-width-section">
             <div class="row-bg-wrap">
                 <div class="inner-wrap">
-                <?php if ($projects_banner != null && $projects_banner_type == "Image") { ?>
-                    <div class="row-bg projects-background background-image" style="background-image: url(<?php echo $projects_banner; ?>);"></div>
+                <?php if ($working_groups_banner != null && $working_groups_banner_type == "Image") { ?>
+                    <div class="row-bg working-groups-background background-image" style="background-image: url(<?php echo $working_groups_banner; ?>);"></div>
                 <?php } else { ?>
-                    <div class="row-bg projects-background background-image" style="background-color: <?php echo $projects_banner_color; ?>"></div>
+                    <div class="row-bg working-groups-background background-image" style="background-color: <?php echo $working_groups_banner_color; ?>"></div>
                 <?php } ?>
                 </div>
             </div>
                 
-            <div class="hentry projects-heading">
-                <div class="col span_12 section-title projects-title">
+            <div class="hentry working-groups-heading">
+                <div class="col span_12 section-title working-groups-title">
                     <?php
-                    if ($projects_header == "Logo") {
-                        $header = $projects_logo; ?>
+                    if ($working_groups_header == "Logo") {
+                        $header = $working_groups_logo; ?>
                     <img src="<?php echo $header; ?>" />
                         <?php
                     }
-                    if ($projects_header == "Secondary Logo") {
-                        $header = $projects_secondary_logo; ?>
+                    if ($working_groups_header == "Secondary Logo") {
+                        $header = $working_groups_secondary_logo; ?>
                     <img src="<?php echo $header; ?>" />
                         <?php
                     }
-                    if ($projects_header != "Logo" 
-                        && $projects_header != "Secondary Logo"
+                    if ($working_groups_header != "Logo" 
+                        && $working_groups_header != "Secondary Logo"
                     ) { ?>
                     <h1 class="entry-title" style="color:#ffffff;"><?php the_title(); ?></h1>
                     <?php }
 
-                    foreach ($projects_header_excerpt as $value) {
+                    foreach ($working_groups_header_excerpt as $value) {
                         $values[] = $value;
                     }
-                    if ($projects_excerpt != null 
-                        && $projects_banner != null 
+                    if ($working_groups_excerpt != null 
+                        && $working_groups_banner != null 
                         && $value == "yes"
                     ) {
                         // echo implode(',', $values);
-                        ?><h1 class="projects-title-text white"> <?php echo $projects_excerpt; ?> </h1> <?php 
+                        ?><h1 class="working-groups-title-text white"> <?php echo $working_groups_excerpt; ?> </h1> <?php 
                     } else {
                     }
                     ?>
@@ -75,18 +75,18 @@ get_header();
         <!--/full-width-section -->
         
         <div class="row" style="padding-bottom: 0">
-            <div class="projects-post-area col" style="margin-bottom: 0">
+            <div class="working-groups-post-area col" style="margin-bottom: 0">
             
                 <div class="row">
-                    <section class="projects-description">
-                    <?php if ($projects_description_title != null 
-    || $projects_description_title != ""
+                    <section class="working-groups-description">
+                    <?php if ($working_groups_description_title != null 
+    || $working_groups_description_title != ""
 ) {
-         echo "<h6 class='projects-description-title'>" .
-             $projects_description_title .
+         echo "<h6 class='working-groups-description-title'>" .
+             $working_groups_description_title .
              "</h6>";
                     } ?>    
-                    <?php if ($projects_description != null || $projects_description != "") {
+                    <?php if ($working_groups_description != null || $working_groups_description != "") {
                         // Pull Nectar Slider CSS
                         wp_enqueue_style("nectar-slider");
                         wp_enqueue_style("font-awesome");
@@ -94,7 +94,7 @@ get_header();
                         // Pull Nectar Slider JS
                         wp_enqueue_script("anime");
                         wp_enqueue_script("nectar-slider");
-                        echo $projects_description;
+                        echo $working_groups_description;
                     } ?>
                     </section>
                 </div>
@@ -109,28 +109,28 @@ get_header();
                             } else {
                                 $banner = "background-color: " . $accent_color;
                             } ?>                
-                            <div class="row-bg projects-background" style="<?php echo $banner; ?>"></div>
+                            <div class="row-bg working-groups-background" style="<?php echo $banner; ?>"></div>
                         </div>
                     </div>
                     
-                    <section class="projects-links" style="margin-bottom: 0">
-                        <?php if (have_rows("projects_icon_urls")) :
-                            while (have_rows("projects_icon_urls")):
+                    <section class="working-groups-links" style="margin-bottom: 0">
+                        <?php if (have_rows("working_groups_icon_urls")) :
+                            while (have_rows("working_groups_icon_urls")):
                                 the_row();
-                                if (get_row_layout() == "projects_add_icon_url") :
-                                    $projects_url = get_sub_field("projects_url");
-                                    $projects_icon = get_sub_field("projects_icon");
-                                    $projects_icon_name = get_sub_field("projects_icon_name");
-                                    echo "<div class='projects-icons'>";
-                                    echo "<a class='projects-icon' href='" .
-                                      $projects_url .
+                                if (get_row_layout() == "working_groups_add_icon_url") :
+                                    $working_groups_url = get_sub_field("working_groups_url");
+                                    $working_groups_icon = get_sub_field("working_groups_icon");
+                                    $working_groups_icon_name = get_sub_field("working_groups_icon_name");
+                                    echo "<div class='working-groups-icons'>";
+                                    echo "<a class='working-groups-icon' href='" .
+                                      $working_groups_url .
                                       "'>" .
-                                      $projects_icon .
+                                      $working_groups_icon .
                                       "</a>" .
                                       "<p><a href='" .
-                                      $projects_url .
+                                      $working_groups_url .
                                       "'>" .
-                                      $projects_icon_name .
+                                      $working_groups_icon_name .
                                       "</a></p>";
                                     echo "</div>";
                                 endif;
@@ -141,7 +141,7 @@ get_header();
                 <!--/full-width-section -->
                 
             </div>
-            <!--/projects-post-area-->
+            <!--/working-groups-post-area-->
         </div>
 
         <?php echo global_shortcode(); ?>

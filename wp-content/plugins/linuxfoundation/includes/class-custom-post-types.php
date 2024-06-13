@@ -80,6 +80,15 @@ class CustomPostTypes
             "custom-post-types-admin", // page
             "custom_post_types_setting_section" // section
         );
+		
+		add_settings_field(
+            "working_groups_3", // id
+            "Working Groups", // title
+            [$this, "working_groups_3_callback"], // callback
+            "custom-post-types-admin", // page
+            "custom_post_types_setting_section" // section
+        );
+		
     }
 
     public function custom_post_types_sanitize($input)
@@ -96,7 +105,11 @@ class CustomPostTypes
         if (isset($input["members_2"])) {
             $sanitary_values["members_2"] = $input["members_2"];
         }
-
+		
+        if (isset($input["working_groups_3"])) {
+            $sanitary_values["working_groups_3"] = $input["working_groups_3"];
+        }
+		
         return $sanitary_values;
     }
 
@@ -136,6 +149,17 @@ class CustomPostTypes
                 : ""
         );
     }
+		
+    public function working_groups_3_callback()
+    {
+        printf(
+            '<input type="checkbox" name="custom_post_types_option_name[working_groups_3]" id="working_groups_3" value="working_groups_3" %s> <label for="working_groups_3">Working Groups Custom Post Type</label>',
+            isset($this->custom_post_types_options["working_groups_3"]) &&
+            $this->custom_post_types_options["working_groups_3"] === "working_groups_3"
+                ? "checked"
+                : ""
+        );
+    }
 }
 if (is_admin()) {
     $custom_post_types = new CustomPostTypes();
@@ -147,6 +171,7 @@ if (is_admin()) {
  * $projects_0 = $custom_post_types_options['projects_0']; // Projects
  * $webinars_1 = $custom_post_types_options['webinars_1']; // Working Groups
  * $members_2 = $custom_post_types_options['members_2']; // Webinars
+ * $working_groups_3 = $custom_post_types_options['working_groups_3']; // Working Groups 
  */
 
 $custom_post_types_options = get_option("custom_post_types_option_name");
@@ -182,5 +207,16 @@ if (
         require_once plugin_dir_path(__DIR__) . "../../themes/salient-child/custom-post-types/members.php";
 		require_once plugin_dir_path(__DIR__) . "../../themes/salient-child/vc-addons/members-linux.php";
 		require_once plugin_dir_path(__DIR__) . "../../themes/salient-child/vc-addons/members-api-linux.php";
+    }
+}
+
+if (
+    is_array($custom_post_types_options) &&
+    array_key_exists("working_groups_3", $custom_post_types_options)
+) {
+    $working_groups_3 = $custom_post_types_options["working_groups_3"];
+    if ($working_groups_3) {
+        require_once plugin_dir_path(__DIR__) . "../../themes/salient-child/custom-post-types/working-groups.php";
+		require_once plugin_dir_path(__DIR__) . "../../themes/salient-child/vc-addons/working-groups-linux.php";
     }
 }

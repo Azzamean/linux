@@ -15,6 +15,22 @@ $projects_icon_urls = get_field("projects_icon_urls");
 $projects_description_title = get_field("projects_description_title");
 $projects_description = get_field("projects_description");
 
+// WORKING GROUPS ACF'S
+$working_groups_logo = get_field("working_groups_logo");
+$working_groups_secondary_logo = get_field("working_groups_secondary_logo");
+$working_groups_banner = get_field("working_groups_banner");
+$working_groups_banner_color = get_field("working_groups_banner_color", false, false);
+//$working_groups_secondary_banner_color = get_field("working_groups_secondary_banner_color", false, false);
+$working_groups_banner_type = get_field("working_groups_banner_type");
+$working_groups_header = get_field("working_groups_header");
+$working_groups_header_excerpt = get_field("working_groups_header_excerpt");
+$working_groups_excerpt = get_field("working_groups_excerpt");
+$working_groups_video = get_field("working_groups_video");
+$working_groups_post_category = get_field("working_groups_post_category");
+$working_groups_icon_urls = get_field("working_groups_icon_urls");
+$working_groups_description_title = get_field("working_groups_description_title");
+$working_groups_description = get_field("working_groups_description");
+
 /*
 $banner = get_field("projects_banner");
 $excerpt = get_field("projects_excerpt");

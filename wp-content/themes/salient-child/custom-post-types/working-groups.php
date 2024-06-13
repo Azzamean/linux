@@ -1,17 +1,17 @@
 <?php
-function cptui_register_my_cpts_projects()
+function cptui_register_my_cpts_working_groups()
 {
     /**
-     * Post Type: Projects.
+     * Post Type: Working Groups.
      */
 
     $labels = [
-        "name" => __("Projects", "custom-post-type-ui"),
-        "singular_name" => __("Project", "custom-post-type-ui"),
+        "name" => esc_html__("Working Groups", "custom-post-type-ui"),
+        "singular_name" => esc_html__("Working Group", "custom-post-type-ui"),
     ];
 
     $args = [
-        "label" => __("Projects", "custom-post-type-ui"),
+        "label" => esc_html__("Working Groups", "custom-post-type-ui"),
         "labels" => $labels,
         "description" => "",
         "public" => true,
@@ -29,32 +29,32 @@ function cptui_register_my_cpts_projects()
         "map_meta_cap" => true,
         "hierarchical" => false,
         "can_export" => true,
-        "rewrite" => ["slug" => "projects", "with_front" => true],
+        "rewrite" => ["slug" => "working-groups", "with_front" => true],
         "query_var" => true,
         "menu_icon" => "dashicons-admin-page",
         "supports" => ["title", "author"],
-        "taxonomies" => ["projects_category"],
+        "taxonomies" => ["working_groups_category", "working_groups_stage"],
         "show_in_graphql" => false,
     ];
 
-    register_post_type("projects", $args);
+    register_post_type("working_groups", $args);
 }
 
-add_action("init", "cptui_register_my_cpts_projects");
+add_action("init", "cptui_register_my_cpts_working_groups");
 
-function cptui_register_my_taxes_projects_category()
+function cptui_register_my_taxes_working_group_category()
 {
     /**
-     * Taxonomy: Projects Categories.
+     * Taxonomy: Working Groups Categories.
      */
 
     $labels = [
-        "name" => __("Projects Categories", "custom-post-type-ui"),
-        "singular_name" => __("Project Category", "custom-post-type-ui"),
+        "name" => __("Working Groups Categories", "custom-post-type-ui"),
+        "singular_name" => __("Working Groups Category", "custom-post-type-ui"),
     ];
 
     $args = [
-        "label" => __("Projects Categories", "custom-post-type-ui"),
+        "label" => __("Working Groups Categories", "custom-post-type-ui"),
         "labels" => $labels,
         "public" => true,
         "publicly_queryable" => true, // this makes it a checkbox or like a regular tag
@@ -63,32 +63,35 @@ function cptui_register_my_taxes_projects_category()
         "show_in_menu" => true, // This hides it on the left admin dashboard
         "show_in_nav_menus" => true,
         "query_var" => true,
-        "rewrite" => ["slug" => "projects_category", "with_front" => true],
-        "show_admin_column" => true, // This hides in on the main projects page's list view
+        "rewrite" => [
+            "slug" => "working_groups_category",
+            "with_front" => true,
+        ],
+        "show_admin_column" => true, // This hides in on the main working groups page's list view
         "show_in_rest" => true,
         "show_tagcloud" => false,
-        "rest_base" => "projects_category",
+        "rest_base" => "working_groups_category",
         "rest_controller_class" => "WP_REST_Terms_Controller",
         "show_in_quick_edit" => false,
         "show_in_graphql" => false,
     ];
-    register_taxonomy("projects_category", ["projects"], $args);
+    register_taxonomy("working_groups_category", ["working_groups"], $args);
 }
-add_action("init", "cptui_register_my_taxes_projects_category");
+add_action("init", "cptui_register_my_taxes_working_group_category");
 
-function cptui_register_my_taxes_projects_stage()
+function cptui_register_my_taxes_working_groups_stage()
 {
     /**
-     * Taxonomy: Projects Stages.
+     * Taxonomy: Working Groups Stages.
      */
 
     $labels = [
-        "name" => __("Projects Stages", "custom-post-type-ui"),
-        "singular_name" => __("Project Stage", "custom-post-type-ui"),
+        "name" => __("Working Groups Stages", "custom-post-type-ui"),
+        "singular_name" => __("Working Groups Stage", "custom-post-type-ui"),
     ];
 
     $args = [
-        "label" => __("Projects Stages", "custom-post-type-ui"),
+        "label" => __("Working Groups Stages", "custom-post-type-ui"),
         "labels" => $labels,
         "public" => true,
         "publicly_queryable" => true,
@@ -97,18 +100,18 @@ function cptui_register_my_taxes_projects_stage()
         "show_in_menu" => true,
         "show_in_nav_menus" => true,
         "query_var" => true,
-        "rewrite" => ["slug" => "projects_stage", "with_front" => true],
+        "rewrite" => ["slug" => "working_groups_stage", "with_front" => true],
         "show_admin_column" => true,
         "show_in_rest" => true,
         "show_tagcloud" => false,
-        "rest_base" => "projects_stage",
+        "rest_base" => "working_groups_stage",
         "rest_controller_class" => "WP_REST_Terms_Controller",
         "show_in_quick_edit" => false,
         "show_in_graphql" => false,
     ];
-    register_taxonomy("projects_stage", ["projects"], $args);
+    register_taxonomy("working_groups_stage", ["working_groups"], $args);
 }
-add_action("init", "cptui_register_my_taxes_projects_stage");
+add_action("init", "cptui_register_my_taxes_working_groups_stage");
 
 add_action(
     "acf/include_fields", function () {
@@ -118,13 +121,13 @@ add_action(
 
         acf_add_local_field_group(
             [
-            "key" => "group_63a0d06a0a370",
-            "title" => "Projects",
+            "key" => "group_34fdd34dh5534",
+            "title" => "Working Groups",
             "fields" => [
             [
-                "key" => "field_63a0d0859f3d6",
+                "key" => "field_34ggf34336gd4",
                 "label" => "Logo",
-                "name" => "projects_logo",
+                "name" => "working_groups_logo",
                 "aria-label" => "",
                 "type" => "image",
                 "instructions" =>
@@ -148,9 +151,9 @@ add_action(
                 "preview_size" => "medium",
             ],
             [
-                "key" => "field_63a0d11dc11a1",
+                "key" => "field_43gffdr675890",
                 "label" => "Secondary Logo",
-                "name" => "projects_secondary_logo",
+                "name" => "working_groups_secondary_logo",
                 "aria-label" => "",
                 "type" => "image",
                 "instructions" =>
@@ -174,9 +177,9 @@ add_action(
                 "preview_size" => "medium",
             ],
             [
-                "key" => "field_63a203137b17e",
+                "key" => "field_653vd3tg33573",
                 "label" => "Header",
-                "name" => "projects_header",
+                "name" => "working_groups_header",
                 "aria-label" => "",
                 "type" => "radio",
                 "instructions" => "Use a logo instead of the page title",
@@ -200,9 +203,9 @@ add_action(
                 "save_other_choice" => 0,
             ],
             [
-                "key" => "field_6436cdd061e0c",
+                "key" => "field_76htgf445tge3",
                 "label" => "Header Excerpt",
-                "name" => "projects_header_excerpt",
+                "name" => "working_groups_header_excerpt",
                 "aria-label" => "",
                 "type" => "checkbox",
                 "instructions" => "Add the excerpt text into the header",
@@ -225,13 +228,13 @@ add_action(
                 "custom_choice_button_text" => "Add new choice",
             ],
             [
-                "key" => "field_63a0d144c11a2",
+                "key" => "field_43ff2dgt4325g",
                 "label" => "Banner",
-                "name" => "projects_banner",
+                "name" => "working_groups_banner",
                 "aria-label" => "",
                 "type" => "image",
                 "instructions" =>
-                    "Please select the projects banner background image",
+                    "Please select the working groups banner background image",
                 "required" => 0,
                 "conditional_logic" => 0,
                 "wrapper" => [
@@ -251,13 +254,13 @@ add_action(
                 "preview_size" => "medium",
             ],
             [
-                "key" => "field_63c8689f5264e",
+                "key" => "field_54fggt3dfg34g",
                 "label" => "Banner Color",
-                "name" => "projects_banner_color",
+                "name" => "working_groups_banner_color",
                 "aria-label" => "",
                 "type" => "color_picker",
                 "instructions" =>
-                    "Please select the projects banner background color",
+                    "Please select the working groups banner background color",
                 "required" => 0,
                 "conditional_logic" => 0,
                 "wrapper" => [
@@ -270,9 +273,9 @@ add_action(
                 "return_format" => "array",
             ],
             [
-                "key" => "field_63c869325264f",
+                "key" => "field_54ff3dhlo9989",
                 "label" => "Banner Type",
-                "name" => "projects_banner_type",
+                "name" => "working_groups_banner_type",
                 "aria-label" => "",
                 "type" => "radio",
                 "instructions" => "Use a banner image or color",
@@ -295,13 +298,13 @@ add_action(
                 "save_other_choice" => 0,
             ],
             [
-                "key" => "field_63a0d195c11a3",
+                "key" => "field_54ggh7uj77890",
                 "label" => "Excerpt",
-                "name" => "projects_excerpt",
+                "name" => "working_groups_excerpt",
                 "aria-label" => "",
                 "type" => "text",
                 "instructions" =>
-                    "Please enter the projects excerpt (this will go on the banner and be used for posts display preview)",
+                    "Please enter the working groups excerpt (this will go on the banner and be used for posts display preview)",
                 "required" => 0,
                 "conditional_logic" => 0,
                 "wrapper" => [
@@ -316,13 +319,13 @@ add_action(
                 "append" => "",
             ],
             [
-                "key" => "field_63a0d3c09cba1",
+                "key" => "field_54fgttgb6745g",
                 "label" => "Video",
-                "name" => "projects_video",
+                "name" => "working_groups_video",
                 "aria-label" => "",
                 "type" => "oembed",
                 "instructions" =>
-                    "Please enter the projects video link (if applicable)",
+                    "Please enter the working groups video link (if applicable)",
                 "required" => 0,
                 "conditional_logic" => 0,
                 "wrapper" => [
@@ -334,13 +337,13 @@ add_action(
                 "height" => "",
             ],
             [
-                "key" => "field_63c85b4e7964a",
-                "label" => "Projects Post Category",
-                "name" => "projects_post_category",
+                "key" => "field_54gthy3312sxn",
+                "label" => "Working Groups Post Category",
+                "name" => "working_groups_post_category",
                 "aria-label" => "",
                 "type" => "taxonomy",
                 "instructions" =>
-                    "Please enter the projects category (this will link to recent posts with the selected category)",
+                    "Please enter the working groups category (this will link to recent posts with the selected category)",
                 "required" => 0,
                 "conditional_logic" => 0,
                 "wrapper" => [
@@ -358,13 +361,13 @@ add_action(
                 "multiple" => 0,
             ],
             [
-                "key" => "field_647faeddc6cf7",
-                "label" => "Projects Category",
-                "name" => "projects_category",
+                "key" => "field_45hhbnmu88789",
+                "label" => "Working Groups Category",
+                "name" => "working_groups_category",
                 "aria-label" => "",
                 "type" => "taxonomy",
                 "instructions" =>
-                    "Please enter the projects category (this will link to the projects selected category)",
+                    "Please enter the working groups category (this will link to the working groups selected category)",
                 "required" => 0,
                 "conditional_logic" => 0,
                 "wrapper" => [
@@ -372,7 +375,7 @@ add_action(
                     "class" => "",
                     "id" => "",
                 ],
-                "taxonomy" => "projects_category",
+                "taxonomy" => "working_groups_category",
                 "add_term" => 0,
                 "save_terms" => 0,
                 "load_terms" => 0,
@@ -382,9 +385,9 @@ add_action(
                 "multiple" => 0,
             ],
             [
-                "key" => "field_63a0d4b97218a",
+                "key" => "field_43ddcfgt66hke",
                 "label" => "Icon URLs",
-                "name" => "projects_icon_urls",
+                "name" => "working_groups_icon_urls",
                 "aria-label" => "",
                 "type" => "flexible_content",
                 "instructions" =>
@@ -397,16 +400,16 @@ add_action(
                     "id" => "",
                 ],
                 "layouts" => [
-                    "layout_63a0d4bd47946" => [
-                        "key" => "layout_63a0d4bd47946",
-                        "name" => "projects_add_icon_url",
+                    "layout_4533fghtg6678" => [
+                        "key" => "layout_4533fghtg6678",
+                        "name" => "working_groups_add_icon_url",
                         "label" => "Add Icon URL",
                         "display" => "block",
                         "sub_fields" => [
                             [
-                                "key" => "field_63a0d5027218b",
+                                "key" => "field_54ffdg55855gj",
                                 "label" => "URL",
-                                "name" => "projects_url",
+                                "name" => "working_groups_url",
                                 "aria-label" => "",
                                 "type" => "url",
                                 "instructions" =>
@@ -422,9 +425,9 @@ add_action(
                                 "placeholder" => "",
                             ],
                             [
-                                "key" => "field_63a0d5ad699e9",
+                                "key" => "field_65hhd4jnh7789",
                                 "label" => "Icon",
-                                "name" => "projects_icon",
+                                "name" => "working_groups_icon",
                                 "aria-label" => "",
                                 "type" => "font-awesome",
                                 "instructions" =>
@@ -452,9 +455,9 @@ add_action(
                                 "choices" => [],
                             ],
                             [
-                                "key" => "field_63c96a9c343df",
+                                "key" => "field_78jjk83g6thy6",
                                 "label" => "Icon Name",
-                                "name" => "projects_icon_name",
+                                "name" => "working_groups_icon_name",
                                 "aria-label" => "",
                                 "type" => "text",
                                 "instructions" =>
@@ -482,9 +485,9 @@ add_action(
                 "button_label" => "Add Row",
             ],
             [
-                "key" => "field_63c96b70343e0",
+                "key" => "field_89jjhyujndr55",
                 "label" => "Description Title",
-                "name" => "projects_description_title",
+                "name" => "working_groups_description_title",
                 "aria-label" => "",
                 "type" => "text",
                 "instructions" =>
@@ -503,12 +506,13 @@ add_action(
                 "append" => "",
             ],
             [
-                "key" => "field_63a2000f2a8ff",
+                "key" => "field_84jj38fi9033k",
                 "label" => "Descrption",
-                "name" => "projects_description",
+                "name" => "working_groups_description",
                 "aria-label" => "",
                 "type" => "wysiwyg",
-                "instructions" => "Please enter the description of the project",
+                "instructions" =>
+                    "Please enter the description of the working groups",
                 "required" => 0,
                 "conditional_logic" => 0,
                 "wrapper" => [
@@ -523,9 +527,9 @@ add_action(
                 "delay" => 0,
             ],
             [
-                "key" => "field_64ca9f6df074b",
+                "key" => "field_58jjgdop33ke9",
                 "label" => "Case Studies Title",
-                "name" => "projects_case_studies_title",
+                "name" => "working_groups_case_studies_title",
                 "aria-label" => "",
                 "type" => "text",
                 "instructions" => "Please enter the title of the Case Studies",
@@ -543,9 +547,9 @@ add_action(
                 "append" => "",
             ],
             [
-                "key" => "field_647faf3b5a2a9",
+                "key" => "field_34kkj9ei2b0dn",
                 "label" => "Case Studies",
-                "name" => "projects_case_studies",
+                "name" => "working_groups_case_studies",
                 "aria-label" => "",
                 "type" => "flexible_content",
                 "instructions" => "",
@@ -557,16 +561,16 @@ add_action(
                     "id" => "",
                 ],
                 "layouts" => [
-                    "layout_647faf3ce73cd" => [
-                        "key" => "layout_647faf3ce73cd",
-                        "name" => "projects_add_case_study",
-                        "label" => "Add Projects Case Study",
+                    "layout_9033kmn7f88d9" => [
+                        "key" => "layout_9033kmn7f88d9",
+                        "name" => "working_groups_add_case_study",
+                        "label" => "Add Working Groups Case Study",
                         "display" => "block",
                         "sub_fields" => [
                             [
-                                "key" => "field_647faf5e5a2aa",
+                                "key" => "field_34ff3s4457gd4",
                                 "label" => "Case Studies Image",
-                                "name" => "projects_case_studies_image",
+                                "name" => "working_groups_case_studies_image",
                                 "aria-label" => "",
                                 "type" => "image",
                                 "instructions" =>
@@ -590,9 +594,9 @@ add_action(
                                 "preview_size" => "medium",
                             ],
                             [
-                                "key" => "field_647faf8b5a2ab",
+                                "key" => "field_433fhh990sk931",
                                 "label" => "Case Studies Title",
-                                "name" => "projects_case_studies_title",
+                                "name" => "working_groups_case_studies_title",
                                 "aria-label" => "",
                                 "type" => "text",
                                 "instructions" =>
@@ -611,9 +615,10 @@ add_action(
                                 "append" => "",
                             ],
                             [
-                                "key" => "field_647fb0075a2ac",
+                                "key" => "field_34ffdgh0k9j8g",
                                 "label" => "Case Studies Download URL",
-                                "name" => "projects_case_studies_download_url",
+                                "name" =>
+                                    "working_groups_case_studies_download_url",
                                 "aria-label" => "",
                                 "type" => "url",
                                 "instructions" => "",
@@ -642,7 +647,7 @@ add_action(
                 [
                     "param" => "post_type",
                     "operator" => "==",
-                    "value" => "projects",
+                    "value" => "working_groups",
                 ],
             ],
             ],

@@ -83,6 +83,8 @@ function custom_post_types_templates($template)
     $post_types = ["projects", "webinars"];
     $defaultProjectsTemplate = locate_template("templates/single-projects.php");
     $defaultWebinarsTemplate = locate_template("templates/single-webinars.php");
+    $defaultWorkingGroupsTemplate = locate_template("templates/single-working-groups.php");  
+    
     $templateSlug = get_page_template_slug(get_queried_object_id()); // this is null if no template name is given; hence default
     
     // PROJECTS
@@ -96,6 +98,12 @@ function custom_post_types_templates($template)
     if (is_singular("webinars") && $defaultWebinarsTemplate != "" && $templateSlug == null) {
         $template = $defaultWebinarsTemplate;
     }
+
+    // WORKING GROUPS
+    if (is_singular("working_groups") && $defaultWorkingGroupsTemplate != "" && $templateSlug == null) {
+        $template = $defaultWorkingGroupsTemplate;
+    }
+
     return $template;
 }
 add_filter("template_include", "custom_post_types_templates");
@@ -705,7 +713,7 @@ if (!is_multisite()) {
     
     // FIX THIS SOON FOR THE VENDORS ZEPHYR
     // USES THE PLUGIN POST GRID
-    // CONDITIONAL LOGIC FOR CONTENT SECURITY POLICY BASED OFF DOMAIN NAME
+    // CONDITIONAL LOGIC FOR VENDORS BASED OFF DOMAIN NAME
     $domain_name = parse_url(get_site_url(), PHP_URL_HOST);
     switch ($domain_name) {
     case "dev-zephyr-project.pantheonsite.io":
