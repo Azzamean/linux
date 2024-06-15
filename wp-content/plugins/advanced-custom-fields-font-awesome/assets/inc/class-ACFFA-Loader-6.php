@@ -77,7 +77,7 @@ class ACFFA_Loader_6
 				],
 				'timeout'	=> 30,
 				'body'		=> '{
-					"query" : "query { me { kit (token: \"' . $this->kit_token . '\") { version licenseSelected iconUploads { name width height pathData unicode } } } }" 
+					"query" : "query { me { kit (token: \"' . $this->kit_token . '\") { version licenseSelected iconUploads { name width height html pathData unicode } } } }" 
 				}'
 			] );
 
@@ -336,8 +336,9 @@ class ACFFA_Loader_6
 							}
 
 							$path = json_encode( $custom_icon->pathData );
+							$html = json_encode( $custom_icon->html );
 							$sorted_icons[ $family . '_custom' ][] = [
-								'id'	=> '{"family" : "' . $family . '", "style" : "custom", "id" : "' . $custom_icon->name . '", "label" : "' . $custom_icon->name . '", "unicode" : "' . $custom_icon->unicode . '", "width" : "' . $custom_icon->width . '", "height" : "' . $custom_icon->height . '", "path" : ' . $path . '}',
+								'id'	=> '{"family" : "' . $family . '", "style" : "custom", "id" : "' . $custom_icon->name . '", "label" : "' . $custom_icon->name . '", "unicode" : "' . $custom_icon->unicode . '", "width" : "' . $custom_icon->width . '", "height" : "' . $custom_icon->height . '", "html" : ' . $html . ', "path" : ' . $path . '}',
 								'text'	=> '<i class="fa-' . $family . ' fa-custom fa-' . $custom_icon->name . ' fa-fw"></i> ' . $custom_icon->name
 							];
 						}

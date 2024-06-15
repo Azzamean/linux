@@ -351,8 +351,20 @@ if ( ! class_exists( 'acf_field_font_awesome' ) ) :
 						];
 
 						if ( 'fak' == $icon_json->style || 'custom' == $icon_json->style ) {
+							$path_data_element = '<svg class="svg-inline--fa" viewBox="0 0 ' . $icon_json->width . ' ' . $icon_json->height . '">';
+							if ( is_array( $icon_json->path ) ) {
+								foreach ( $icon_json->path as $path ) {
+									if ( ! empty( $path ) ) {
+										$path_data_element .= '<path d="' . $path . '" />';
+									}
+								}
+							} else {
+								$path_data_element = '<path d="' . $icon_json->path . '" />';
+							}
+							$path_data_element .= '</svg>';
+
 							$svg_data = [
-								'element'	=> '<svg class="svg-inline--fa" viewBox="0 0 ' . $icon_json->width . ' ' . $icon_json->height . '"><path d="' . $icon_json->path . '" /></svg>',
+								'element'	=> isset( $icon_json->html ) ? $icon_json->html : $path_data_element,
 								'path'		=> $icon_json->path,
 								'height'	=> $icon_json->height,
 								'width'		=> $icon_json->width

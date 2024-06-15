@@ -85,6 +85,10 @@ This notification message is filterable so you can customize it to better repres
 
 == Changelog ==
 
+= 4.0.8 =
+* Bugfix php warning when returning some custom icons as an object
+* Added support for returning the FontAwesome formatted SVG on custom icons and duotone icons instead of generating it in the plugin. Previously selected icons must be reselected to use this enhanced SVG.
+
 = 4.0.7 =
 * Added support for FontAwesome "Sharp" family icons
 * Added support for user uploaded duotone icons in kits
@@ -256,6 +260,10 @@ This notification message is filterable so you can customize it to better repres
 * Initial Release.
 
 == Upgrade Notice ==
+
+= 4.0.8 =
+* Bugfix php warning when returning some custom icons as an object
+* Added support for returning the FontAwesome formatted SVG on custom icons and duotone icons instead of generating it in the plugin. Previously selected icons must be reselected to use this enhanced SVG.
 
 = 4.0.7 =
 * Added support for FontAwesome "Sharp" family icons
