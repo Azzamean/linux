@@ -1,5 +1,6 @@
 <?php
-function global_shortcode() {
+function global_shortcode()
+{
     // GRABS SPECIFIC SUBSITES
     $current_multisite = network_home_url();
     $multisite_three_dev = "https://dev-lfprojects3.linuxfoundation.org";
@@ -13,23 +14,23 @@ function global_shortcode() {
     switch ($site_id) {
             // CCC
             
-        case "10":
-            $selected_shortcode = do_shortcode('[nectar_global_section id="115"]');
+    case "10":
+        $selected_shortcode = do_shortcode('[nectar_global_section id="115"]');
         break;
             // OMP
             
-        case "14":
-            $selected_shortcode = do_shortcode('[nectar_global_section id="7879"]');
+    case "14":
+        $selected_shortcode = do_shortcode('[nectar_global_section id="7879"]');
         break;
             // LF Network
             
-        case "18":
-            $selected_shortcode = do_shortcode('[nectar_global_section id="6806"]');
+    case "18":
+        $selected_shortcode = do_shortcode('[nectar_global_section id="6806"]');
         break;
             // LF Edge
             
-        case "24":
-            $selected_shortcode = do_shortcode('[nectar_global_section id="164"]');
+    case "24":
+        $selected_shortcode = do_shortcode('[nectar_global_section id="164"]');
         break;
     }
     return $selected_shortcode;

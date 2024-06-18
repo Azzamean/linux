@@ -80,7 +80,7 @@ function acf_template_fields()
 // CUSTOM POST TYPE TEMPLATES FROM A DIRECTORY
 function custom_post_types_templates($template)
 {
-    $post_types = ["projects", "webinars"];
+    $post_types = ["projects", "webinars", "working_groups"];
     $defaultProjectsTemplate = locate_template("templates/single-projects.php");
     $defaultWebinarsTemplate = locate_template("templates/single-webinars.php");
     $defaultWorkingGroupsTemplate = locate_template("templates/single-working-groups.php");  
@@ -718,6 +718,7 @@ if (!is_multisite()) {
     switch ($domain_name) {
     case "dev-zephyr-project.pantheonsite.io":
     case "zephyrproject.org":
+    case "www.zephyrproject.org":
         include_once "custom-post-types/vendors.php";
         wp_enqueue_script('custom-zephyr-js-one', get_stylesheet_directory_uri() . '/sites/zephyr/js/mixitup.js', array(), false, true);
         wp_enqueue_script('custom-zephyr-js-two', get_stylesheet_directory_uri() . '/sites/zephyr/js/mixitup.min.js', array(), false, true);               

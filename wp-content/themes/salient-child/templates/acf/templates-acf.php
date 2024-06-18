@@ -14,6 +14,7 @@ $projects_post_category = get_field("projects_post_category");
 $projects_icon_urls = get_field("projects_icon_urls");
 $projects_description_title = get_field("projects_description_title");
 $projects_description = get_field("projects_description");
+$projects_stage_logo = get_field("projects_stage_logo");
 
 // WORKING GROUPS ACF'S
 $working_groups_logo = get_field("working_groups_logo");

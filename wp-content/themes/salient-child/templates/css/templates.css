@@ -1,11 +1,13 @@
 /* PROJECTS */
 
 .projects-template .projects-wrap,
+.working_groups-template-default .working-groups-wrap,
 .working_groups-template .working-groups-wrap {
 	padding: 0;
 }
 
 .projects-template .col,
+.working_groups-template-default .col,
 .working_groups-template .col {
 	float: none;
 }
@@ -111,6 +113,22 @@ h1.working-groups-title-text.white {
 .projects-post-area section,
 .working-groups-post-area section {
 	margin: 35px 0;
+}
+
+.projects-post-area .working-groups-flex section,
+.working-groups-post-area .working-groups-flex section {
+	margin: 0;
+}
+
+.projects-flex,
+.working-groups-flex {
+	display: flex;
+}
+
+.projects-flex .vc_col-sm-2,
+.projects-flex .vc_col-sm-3,
+.projects-flex .vc_col-sm-4 {
+	text-align: center;
 }
 
 .projects-links,

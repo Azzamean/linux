@@ -7,6 +7,7 @@
  * @package Salient WordPress Theme
  * @version 13.1
  */
+
 // Exit if accessed directly
 if (!defined("ABSPATH")) {
     exit();
@@ -21,6 +22,7 @@ require_once "global-shortcodes.php";
 $nectar_options = get_nectar_theme_options();
 $accent_color = $nectar_options["accent-color"];
 //$templateFile = get_page_template_slug(get_queried_object_id());if ($templateFile == null){echo "This is the default template";}else{echo "This is the template file: " . $templateFile;}
+//$next_post_link_url = get_permalink(get_adjacent_post(false, "", false)->ID);
 get_header();
 ?>
 
@@ -76,29 +78,40 @@ get_header();
         
         <div class="row" style="padding-bottom: 0">
             <div class="projects-post-area col" style="margin-bottom: 0">
+                
             
-                <div class="row">
-                    <section class="projects-description">
-                    <?php if ($projects_description_title != null 
-    || $projects_description_title != ""
-) {
-         echo "<h6 class='projects-description-title'>" .
-             $projects_description_title .
-             "</h6>";
-                    } ?>    
-                    <?php if ($projects_description != null || $projects_description != "") {
-                        // Pull Nectar Slider CSS
-                        wp_enqueue_style("nectar-slider");
-                        wp_enqueue_style("font-awesome");
-                        wp_enqueue_style("nectar-slider-fonts");
-                        // Pull Nectar Slider JS
-                        wp_enqueue_script("anime");
-                        wp_enqueue_script("nectar-slider");
-                        echo $projects_description;
-                    } ?>
-                    </section>
-                </div>
+                <div class="projects-flex">
 
+                    <div class="vc_col-sm-10">
+                        <section class="projects-description">
+                        <?php if ($projects_description_title != null || $projects_description_title != "") {
+                            echo "<h6 class='projects-description-title'>" .
+                            $projects_description_title .
+                            "</h6>";
+                        } ?>    
+                        <?php if ($projects_description != null || $projects_description != "") {
+                            // Pull Nectar Slider CSS
+                            wp_enqueue_style("nectar-slider");
+                            wp_enqueue_style("font-awesome");
+                            wp_enqueue_style("nectar-slider-fonts");
+                            // Pull Nectar Slider JS
+                            wp_enqueue_script("anime");
+                            wp_enqueue_script("nectar-slider");
+                            echo $projects_description;
+                        } ?>
+                        </section>
+                    </div> <!--/ vc_col-sm-10 -->  
+
+                    <div class="vc_col-sm-2">
+                    <?php if ($projects_stage_logo != null) { 
+                        ?>
+                            <img src="<?php echo $projects_stage_logo; ?>" />
+                        <?php
+                    }
+                    ?>
+                    </div>  <!--/ vc_col-sm-2 -->   
+
+                </div> <!-- projects-flex --> 
 
 
                 <div class="full-width-section">
