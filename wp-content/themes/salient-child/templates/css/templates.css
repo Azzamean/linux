@@ -1,11 +1,13 @@
 /* PROJECTS */
 
+.projects-template-default .projects-wrap,
 .projects-template .projects-wrap,
 .working_groups-template-default .working-groups-wrap,
 .working_groups-template .working-groups-wrap {
 	padding: 0;
 }
 
+.projects-template-default .col,
 .projects-template .col,
 .working_groups-template-default .col,
 .working_groups-template .col {
