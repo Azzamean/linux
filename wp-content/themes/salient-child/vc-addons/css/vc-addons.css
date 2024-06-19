@@ -501,6 +501,126 @@ a.list-design.navigation-btn {
 	max-width: 100% !important;
 }
 
+/* VENDORS CPT CSS */
+
+#vendor-filter-error {
+	display: block;
+	font-size: 15px;
+	color: #000;
+}
+
+#vendor-filter-error.hidden {
+	display: none;
+}
+
+#vendor-dropdown .term-filter-parent {
+	font-weight: 600;
+}
+
+#vendor-dropdown label {
+	font-size: 13px;
+	margin-bottom: 10px;
+}
+
+#vendor-dropdown select {
+	margin: 5px 0 20px;
+}
+
+.vendor-container {
+	height: 300px;
+	min-height: 300px;
+	max-height: 300px;
+}
+
+.vendor-shortdesc {
+	font-size: 13px !important;
+	line-height: 13px !important;
+	margin-bottom: 15px;
+	min-height: 60px;
+}
+
+.vendor-question {
+	padding-bottom: 0;
+	font-weight: bold;
+}
+
+@media (max-width: 1300px) {
+	.vendor-container {
+		width: 30% !important;
+	}
+}
+
+@media (max-width: 1100px) {
+	.vendor-container {
+		width: 45% !important;
+	}
+}
+
+@media (max-width: 800px) {
+
+	.vendor-container,
+	.mix:not(.security-advisors-child),
+	.gap {
+		width: 100% !important;
+	}
+}
+
+@media (max-width: 748px) {
+
+	.vendor-container,
+	.mix:not(.security-advisors-child),
+	.gap {
+		width: 100% !important;
+		min-height: 250px;
+		height: 250px;
+
+	}
+}
+
+#vendor-parent img {
+	max-height: 130px;
+	margin-bottom: 0;
+	cursor: pointer
+}
+
+.lightbox {
+	display: none;
+}
+
+.featherlight .featherlight-inner img {
+	max-height: 100px;
+}
+
+#vendor-parent .mix {
+	border: 1px solid #ccc;
+	width: 22.5%;
+	margin-right: 15px;
+	margin-bottom: 20px;
+	padding: 10px;
+}
+
+/*
+#vendor-parent .mix:hover {
+	border-color: #168fdf;
+}
+*/
+
+#vendor-parent.wpls-logo-showcase.wpls-logo-grid {
+	font-size: 0 !important;
+	clear: both;
+	margin-top: 80px;
+}
+
+#vendor-dropdown fieldset {
+	margin-right: 20px;
+}
+
+.mix,
+.gap {
+	width: calc(100%/4 - (((4 - 1) * 1rem) / 4));
+	float: left;
+	text-align: center;
+}
 
 /* START OF MOBILE STYLE */
 
@@ -542,5 +662,11 @@ a.list-design.navigation-btn {
 	.grid-design.outer .vc_col-sm-3 {
 		max-width: 100% !important;
 
+	}
+
+	#vendor-dropdown fieldset {
+		float: none;
+		margin-bottom: 10px;
+		width: 100% !important;
 	}
 }

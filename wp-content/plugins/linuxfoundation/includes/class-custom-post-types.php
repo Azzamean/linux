@@ -88,6 +88,15 @@ class CustomPostTypes
             "custom-post-types-admin", // page
             "custom_post_types_setting_section" // section
         );
+        add_settings_field(
+            "vendors_5", // id
+            "Vendors", // title
+            [$this, "vendors_5_callback"], // callback
+            "custom-post-types-admin", // page
+            "custom_post_types_setting_section" // section
+        );
+
+
     }
     public function custom_post_types_sanitize($input)
     {
@@ -107,6 +116,9 @@ class CustomPostTypes
         if (isset($input["working_groups_4"])) {
             $sanitary_values["working_groups_4"] = $input["working_groups_4"];
         }
+        if (isset($input["vendors_5"])) {
+            $sanitary_values["vendors_5"] = $input["vendors_5"];
+        }      
         return $sanitary_values;
     }
     public function custom_post_types_section_info()
@@ -148,6 +160,14 @@ class CustomPostTypes
             $this->custom_post_types_options["working_groups_4"] === "working_groups_4" ? "checked" : ""
         );
     }
+    public function vendors_5_callback()
+    {
+        printf(
+            '<input type="checkbox" name="custom_post_types_option_name[vendors_5]" id="vendors_5" value="vendors_5" %s> <label for="vendors_5">Vendors Custom Post Type</label>',
+            isset($this->custom_post_types_options["vendors_5"]) &&
+            $this->custom_post_types_options["vendors_5"] === "vendors_5" ? "checked" : ""
+        );
+    }    
 }
 if (is_admin()) {
     $custom_post_types = new CustomPostTypes();
@@ -160,6 +180,7 @@ if (is_admin()) {
  * $members_2 = $custom_post_types_options['members_2']; // Webinars
  * $persons_3 = $custom_post_types_options['persons_3']; // Persons
  * $working_groups_4 = $custom_post_types_options['working_groups_4']; // Working Groups 
+ * $vendors_5 = $custom_post_types_options['vendors_5']; // Vendors
 */
 $custom_post_types_options = get_option("custom_post_types_option_name");
 if (is_array($custom_post_types_options) && array_key_exists("projects_0", $custom_post_types_options)) {
@@ -190,18 +211,38 @@ if (is_array($custom_post_types_options) && array_key_exists("persons_3", $custo
     if ($persons_3) {
         include_once plugin_dir_path(__DIR__) . "../../themes/salient-child/custom-post-types/persons.php";
         include_once plugin_dir_path(__DIR__) . "../../themes/salient-child/vc-addons/persons.php";
-        wp_enqueue_style("salient-child-style", get_stylesheet_directory_uri() . "/vc-addons/css/featherlight.css", "", $nectar_theme_version);
-        wp_register_script("salient-child-featherlight", get_stylesheet_directory_uri() . "/vc-addons/js/featherlight.js", ["jquery"], "3.6.1", true);
-        wp_enqueue_script("salient-child-featherlight");     
+        wp_enqueue_style("salient-child-featherlight-style", get_stylesheet_directory_uri() . "/vc-addons/css/featherlight.css", "", $nectar_theme_version);
+        wp_register_script("salient-child-featherlight-script", get_stylesheet_directory_uri() . "/vc-addons/js/featherlight.js", ["jquery"], "3.6.1", true);
+        wp_enqueue_script("salient-child-featherlight-script");     
     }
 }
-if (
-    is_array($custom_post_types_options) &&
-    array_key_exists("working_groups_4", $custom_post_types_options)
+if (is_array($custom_post_types_options) 
+    && array_key_exists("working_groups_4", $custom_post_types_options)
 ) {
     $working_groups_4 = $custom_post_types_options["working_groups_4"];
     if ($working_groups_4) {
-        require_once plugin_dir_path(__DIR__) . "../../themes/salient-child/custom-post-types/working-groups.php";
-		require_once plugin_dir_path(__DIR__) . "../../themes/salient-child/vc-addons/working-groups-linux.php";
+        include_once plugin_dir_path(__DIR__) . "../../themes/salient-child/custom-post-types/working-groups.php";
+        include_once plugin_dir_path(__DIR__) . "../../themes/salient-child/vc-addons/working-groups-linux.php";
+    }
+}
+if (is_array($custom_post_types_options) 
+    && array_key_exists("vendors_5", $custom_post_types_options)
+) {
+    $working_groups_4 = $custom_post_types_options["vendors_5"];
+    if ($working_groups_4) {
+        include_once plugin_dir_path(__DIR__) . "../../themes/salient-child/custom-post-types/vendors.php";
+        include_once plugin_dir_path(__DIR__) . "../../themes/salient-child/vc-addons/vendors-linux.php";
+       
+        // FEATHERLIGHT
+        wp_enqueue_style("salient-child-featherlight-style", get_stylesheet_directory_uri() . "/vc-addons/css/featherlight.css", "", $nectar_theme_version);
+        wp_register_script("salient-child-featherlight-script", get_stylesheet_directory_uri() . "/vc-addons/js/featherlight.js", ["jquery"], "3.6.1", true);
+        wp_enqueue_script("salient-child-featherlight-script");  
+        
+        // MIXITUP
+        wp_enqueue_script('salient-child-mixitup-script', get_stylesheet_directory_uri() . '/vc-addons/js/mixitup.min.js', array(), false, true);               
+        wp_enqueue_script('salient-child-mixitup-multifilter-script', get_stylesheet_directory_uri() . '/vc-addons/js/mixitup-multifilter.min.js', array(), false, true);   
+
+        // CUSTOM FILTERING
+        wp_enqueue_script('custom-zephyr-js-ten', get_stylesheet_directory_uri() . '/vc-addons/js/vendors.js', array(), false, true); 
     }
 }
