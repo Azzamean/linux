@@ -11,15 +11,12 @@ jQuery(document).ready(function ($) {
    $('[data-name="projects_category"]').hide();
    $('[data-name="projects_case_studies_title"]').hide();
    $('[data-name="projects_case_studies"]').hide();
-   $('[data-name="projects_groups_stage_logo"]').hide();
 
    if ($('#page_template :selected').text() == 'Default template') {
       $('[data-name="projects_header_excerpt"]').show();
       $('[data-name="projects_video"]').show();
       $('[data-name="projects_post_category"]').show();
    } else if ($('#page_template :selected').text() == 'Template Style 1 (One)') {
-      //$('[data-name="webinars_banner"]').hide();
-      $('[data-name="webinars_speakers"]').hide();
    } else if ($('#page_template :selected').text() == 'Template Style 2 (Two)') {
 
    } else if ($('#page_template :selected').text() == 'Template Style 3 (Three)') {
@@ -27,7 +24,7 @@ jQuery(document).ready(function ($) {
       $('[data-name="projects_case_studies_title"]').show();
       $('[data-name="projects_case_studies"]').show();
    } else if ($('#page_template :selected').text() == 'Template Style 4 (Four)') {
-      $('[data-name="projects_groups_stage_logo"]').show();
+
    }
 
 
@@ -44,5 +41,7 @@ jQuery(document).ready(function ($) {
    if ($('#page_template :selected').text() == 'Default template') {
 
    }
+
+   $('[data-name="webinars_speakers"]').hide();
 
 });

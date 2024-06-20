@@ -295,31 +295,6 @@ add_action(
                 "save_other_choice" => 0,
             ],
             [
-                'key' => 'field_666f668312e68',
-                'label' => 'Stage Logo',
-                'name' => 'projects_stage_logo',
-                'aria-label' => '',
-                'type' => 'image',
-                'instructions' => 'Please enter the stage logo image of the project',
-                'required' => 0,
-                'conditional_logic' => 0,
-                'wrapper' => [
-                    'width' => '100',
-                    'class' => '',
-                    'id' => '',
-                ],
-                'return_format' => 'url',
-                'library' => 'all',
-                'min_width' => '',
-                'min_height' => '',
-                'min_size' => '',
-                'max_width' => '',
-                'max_height' => '',
-                'max_size' => '',
-                'mime_types' => '',
-                'preview_size' => 'medium',
-            ],
-            [
                 "key" => "field_63a0d195c11a3",
                 "label" => "Excerpt",
                 "name" => "projects_excerpt",
@@ -682,5 +657,67 @@ add_action(
             "show_in_rest" => 0,
             ]
         );
+        
+        acf_add_local_field_group(
+            array(
+            'key' => 'group_66732b032ffdf',
+            'title' => 'Projects Custom Taxonomy',
+            'fields' => array(
+            array(
+            'key' => 'field_66732b046fd23',
+            'label' => 'Projects Image Logo',
+            'name' => 'projects_stage_logo',
+            'aria-label' => '',
+            'type' => 'image',
+            'instructions' => '',
+            'required' => 0,
+            'conditional_logic' => 0,
+            'wrapper' => array(
+                'width' => '',
+                'class' => '',
+                'id' => '',
+            ),
+            'return_format' => 'array',
+            'library' => 'all',
+            'min_width' => '',
+            'min_height' => '',
+            'min_size' => '',
+            'max_width' => '',
+            'max_height' => '',
+            'max_size' => '',
+            'mime_types' => '',
+            'preview_size' => 'medium',
+            ),
+            ),
+            'location' => array(
+                array(
+                    array(
+                        'param' => 'taxonomy',
+                        'operator' => '==',
+                        'value' => 'projects_stage',
+                    ),
+                ),
+            ),
+            'menu_order' => 0,
+            'position' => 'normal',
+            'style' => 'default',
+            'label_placement' => 'top',
+            'instruction_placement' => 'label',
+            'hide_on_screen' => '',
+            'active' => true,
+            'description' => '',
+            'show_in_rest' => 0,
+            ) 
+        );
     }
 );
+
+/* DISPLAY THIS FIELD GROUP ONLY WHEN CLICKING ON SPECIFIC CATEGORY AND TERM */
+global $pagenow;
+if ($pagenow != "term.php") {
+    add_action('acf/init', 'projects_stage_logo_remove_my_field_group');
+}
+function projects_stage_logo_remove_my_field_group()
+{
+    acf_remove_local_field_group('group_66732b032ffdf');
+}

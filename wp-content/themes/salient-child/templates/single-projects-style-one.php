@@ -103,10 +103,17 @@ get_header();
                     </div> <!--/ vc_col-sm-10 -->  
 
                     <div class="vc_col-sm-2">
-                    <?php if ($projects_stage_logo != null) { 
-                        ?>
-                            <img src="<?php echo $projects_stage_logo; ?>" />
-                        <?php
+                    <?php 
+                    $terms = get_the_terms(get_the_ID(), 'projects_stage');  
+                    if ($terms != null) { 
+                        if($terms ) : 
+                            foreach( $terms as $term ): 
+                                $projects_stage_logo = get_field('projects_stage_logo', $term->taxonomy . '_' . $term->term_id);    
+                                if(!empty($projects_stage_logo) ) :
+                                    ?><img src="<?php echo esc_url($projects_stage_logo['url']); ?>" alt="<?php echo esc_attr($projects_stage_logo['alt']); ?>" /><?php
+                                endif; 
+                            endforeach; 
+                        endif; 
                     }
                     ?>
                     </div>  <!--/ vc_col-sm-2 -->   
