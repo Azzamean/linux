@@ -661,11 +661,11 @@ add_action(
         acf_add_local_field_group(
             array(
             'key' => 'group_66732b032ffdf',
-            'title' => 'Projects Custom Taxonomy',
+            'title' => '',
             'fields' => array(
             array(
             'key' => 'field_66732b046fd23',
-            'label' => 'Projects Image Logo',
+            'label' => 'Projects Stage Logo',
             'name' => 'projects_stage_logo',
             'aria-label' => '',
             'type' => 'image',

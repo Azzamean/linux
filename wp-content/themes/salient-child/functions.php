@@ -653,10 +653,6 @@ function lf_meta_header_multisite_three()
     $linux_foundation_dark =
         '<div class="lfprojects"><div class="container"><a href="https://www.linuxfoundation.org/projects" target="_blank" rel="noopener noreferrer"><img src="/wp-content/uploads/banners/lfprojects_banner_other.svg" alt="The Linux Foundation Projects"></a></div></div>';
     switch ($site_id) {
-        // DPEL AWSF
-    case "8":
-        echo $academy_software_foundation;
-        break;
         // OMPF
     case "14":
         echo $linux_foundation_light_background;
