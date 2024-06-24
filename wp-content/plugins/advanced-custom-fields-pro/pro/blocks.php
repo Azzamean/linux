@@ -870,7 +870,8 @@ function acf_enqueue_block_type_assets( $block_type ) {
  */
 function acf_ajax_fetch_block() {
 	// Validate ajax request.
-	if ( ! acf_verify_ajax() || current_user_can( 'edit_posts' ) ) {
+	$render_capability = apply_filters( 'acf/blocks/render_capability', 'edit_posts' );
+	if ( ! acf_verify_ajax() || ! current_user_can( $render_capability ) ) {
 		wp_send_json_error();
 	}
 

@@ -4,7 +4,7 @@ Tags: acf, fields, custom fields, meta, repeater
 Requires at least: 6.0
 Tested up to: 6.5
 Requires PHP: 7.4
-Stable tag: 6.3.2
+Stable tag: 6.3.2.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -93,6 +93,11 @@ From your WordPress dashboard
 
 
 == Changelog ==
+
+= 6.3.2.1 =
+*Release Date 24th June 2024*
+
+* Fix - ACF Blocks no longer trigger a JavaScript error when fetched via AJAX
 
 = 6.3.2 =
 *Release Date 24th June 2024*
