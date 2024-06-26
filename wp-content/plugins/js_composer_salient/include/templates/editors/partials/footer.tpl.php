@@ -43,14 +43,17 @@ $edit_layout->renderUITemplate();
 vc_include_template( 'editors/popups/ai/modal.tpl.php' );
 // [/modal ai render]
 
-// [post settings panel render]
-require_once vc_path_dir( 'EDITORS_DIR', 'popups/class-vc-post-seo.php' );
-$post_seo = new Vc_Post_Seo( $editor );
-$post_seo->render_ui_template();
-// [/post settings panel render]
-
 // [promo popup render]
 require_once vc_path_dir( 'EDITORS_DIR', 'popups/class-vc-promo-popup.php' );
 $promo_popup = new Vc_Promo_Popup();
 $promo_popup->render_ui_template();
 // [/promo popup render]
+
+/**
+ * Fires after editor footer.
+ *
+ * @param Vc_Backend_Editor | Vc_Frontend_Editor $editor
+ *
+ * @since 7.7
+ */
+do_action( 'vc_editor_footer', $editor );

@@ -82,6 +82,7 @@ class Vc_Vendor_AdvancedCustomFields {
 	}
 
 	public function mapEditorsShortcodes() {
+		// nectar addition todo - this will need to be moved to the salient-core if we want to override it
 		require_once vc_path_dir( 'VENDORS_DIR', 'plugins/acf/class-vc-acf-shortcode.php' );
 		vc_lean_map( 'vc_acf', null, vc_path_dir( 'VENDORS_DIR', 'plugins/acf/shortcode.php' ) );
 	}

@@ -37,7 +37,7 @@ if( class_exists('Salient_Portfolio') ) {
     
   $portfolio_types = ($is_admin) ? get_terms('project-type') : array('All' => 'all');
 
-  if( $is_admin ) {
+  if( $is_admin && $portfolio_types && !is_wp_error($portfolio_types) ) {
     
   	foreach ($portfolio_types as $type) {
   		$portfolio_options[$type->slug] = $type->slug;

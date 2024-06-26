@@ -48,7 +48,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 			<div class="wpb_element_label"><?php esc_html_e( 'SEO title', 'js_composer' ); ?></div>
 			<div class="edit_form_line">
 				<?php
-				wpb_add_ai_icon_to_text_field( 'textfield', 'vc_seo-title-field' );
+				if ( vc_modules_manager()->is_module_on( 'vc-ai' ) ) {
+					wpb_add_ai_icon_to_text_field( 'textfield', 'vc_seo-title-field' );
+				}
 				?>
 				<input name="title" data-preview="vc_seo-title" class="wpb-textinput" type="text" value="<?php echo empty( $seo_settings['title'] ) ? '' : esc_attr( $seo_settings['title'] ) ?>" id="vc_seo-title-field" placeholder="">
 			</div>
@@ -63,7 +65,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 			<div class="wpb_element_label"><?php esc_html_e( 'Meta description', 'js_composer' ); ?></div>
 			<div class="edit_form_line">
 				<?php
-				wpb_add_ai_icon_to_text_field( 'textarea', 'vc_seo-description-field' );
+				if ( vc_modules_manager()->is_module_on( 'vc-ai' ) ) {
+					wpb_add_ai_icon_to_text_field( 'textarea', 'vc_seo-description-field' );
+				}
 				?>
 				<textarea name="description" data-preview="vc_seo-description" class="wpb-textinput" id="vc_seo-description-field"><?php echo empty( $seo_settings['description'] ) ? '' : esc_attr( $seo_settings['description'] ) ?></textarea>
 			</div>

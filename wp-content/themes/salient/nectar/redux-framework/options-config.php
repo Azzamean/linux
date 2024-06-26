@@ -2982,6 +2982,18 @@
            'default' => 'default'
          ),
          array(
+          'id' => 'header-dropdown-delay',
+          'type' => 'select',
+          'title' => esc_html__('Header Dropdown Delay', 'salient'),
+          'subtitle' => esc_html__('Determine if dropdowns should appear after a small delay to prevent accidental user interaction.', 'salient'),
+          'desc' => '',
+          'options' => array(
+            'default' => esc_html__('Default', 'salient'),
+            'add' => esc_html__('Add Delay', 'salient')
+          ),
+          'default' => 'default'
+        ),
+         array(
            'id' => 'header-dropdown-animation',
            'type' => 'select',
            'title' => esc_html__('Header Dropdown Animation', 'salient'),

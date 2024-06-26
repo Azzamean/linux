@@ -726,6 +726,10 @@ body .container-wrap [class*="wp-block"].alignfull {
   width: 100vw;
   position: relative;
 }
+body .container-wrap .pin-spacer [class*=wp-block].alignfull {
+  margin-left: 0!important;
+  left: 0;
+}
 
 /* prevent nested full width blocks from breaking layout */
 body .container-wrap [class*="wp-block"].alignfull  [class*="wp-block"].alignfull  {
@@ -4656,6 +4660,9 @@ img.img-with-animation.nectar-lazy {
 	opacity: 1;
 }
 
+.column_element_direction_desktop_horizontal .img-with-aniamtion-wrap .hover-wrap {
+  margin-bottom: 0;
+}
 .img-with-aniamtion-wrap .hover-wrap {
 	margin-bottom: 15px;
 }
@@ -7094,6 +7101,12 @@ body .lines-button {
   background-color:transparent!important
 }
 
+/* Fixes chrome specific rendering issue that causes a jump in */
+@media only screen and (min-width: 1000px) {
+  .slide-out-widget-area-toggle a {
+    transform: translateZ(0);
+  }
+}
 .slide-out-widget-area-toggle .lines-button:after{
   background-color:rgba(0,0,0,0.4);
   display:inline-block;

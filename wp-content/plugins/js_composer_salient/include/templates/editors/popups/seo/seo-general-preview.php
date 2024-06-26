@@ -50,6 +50,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 				<span id="vc_seo-date">
 					<?php
 					if ( empty( $post->post_date ) ) {
+                        // phpcs:ignore
 						echo esc_html( date( 'F d, Y' ) );
 					} else {
 						echo esc_html( date_i18n( 'F j, Y', strtotime( $post->post_date ) ) );

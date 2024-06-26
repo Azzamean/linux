@@ -990,7 +990,6 @@ foreach( $nectar_gradient_colors as $selector => $color_grad ){
 			 -webkit-background-clip: text;
 			 -webkit-text-fill-color: transparent;
 			 background-clip: text;
-			 text-fill-color: transparent;
 		}
 
 		.nectar-button.'.$selector.',
@@ -1013,7 +1012,6 @@ foreach( $nectar_gradient_colors as $selector => $color_grad ){
 			  -webkit-background-clip: text;
 			  -webkit-text-fill-color: transparent;
 			  background-clip: text;
-			  text-fill-color: transparent;
 			  display: initial;
 		}
 		.nectar-button.'.$selector.' .hover,
@@ -1023,7 +1021,6 @@ foreach( $nectar_gradient_colors as $selector => $color_grad ){
 			  -webkit-background-clip: text;
 			  -webkit-text-fill-color: transparent;
 			  background-clip: text;
-			  text-fill-color: transparent;
 			  display: initial;
 		}
 

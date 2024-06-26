@@ -68,7 +68,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 					$title_id = $title_name;
 					$value = empty( $seo_settings[ $title_name ] ) ? '' : $seo_settings[ $title_name ];
 
-					wpb_add_ai_icon_to_text_field( 'textfield', $title_id );
+					if ( vc_modules_manager()->is_module_on( 'vc-ai' ) ) {
+						wpb_add_ai_icon_to_text_field( 'textfield', $title_id );
+					}
 					?>
 					<input name="<?php echo esc_attr( $title_name ); ?>" id="<?php echo esc_attr( $title_id ); ?>" class="wpb-textinput vc_social-title-field" type="text" value="<?php echo esc_attr( $value ); ?>" placeholder="">
 				</div>
@@ -83,7 +85,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 					$value = empty( $seo_settings[ $description_name ] ) ? '' : $seo_settings[ $description_name ];
 					$count = mb_strlen( $value ) ? mb_strlen( $value ) : 0;
 
-					wpb_add_ai_icon_to_text_field( 'textarea', $description_id );
+
+					if ( vc_modules_manager()->is_module_on( 'vc-ai' ) ) {
+						wpb_add_ai_icon_to_text_field( 'textarea', $description_id );
+					}
 					?>
 					<textarea name="<?php echo esc_attr( $description_name ); ?>" id="<?php echo esc_attr( $description_id ); ?>" class="wpb-textinput vc_social-description-field" maxlength="255"><?php echo esc_html( $value ); ?></textarea>
 					<div class="wpb-social-attr-description"><span class="vc_social-description-counter"><?php echo esc_html( $count ) ?></span>/255</div>

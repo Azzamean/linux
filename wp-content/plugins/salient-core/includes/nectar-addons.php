@@ -855,7 +855,7 @@ if(function_exists('vc_add_shortcode_param')) {
 	   $image_output = null;
 	   if(!empty($value)) $image_output = '<img src="'. esc_attr($value) . '" alt="preview" />';
 
-	   return '<div id="nectar_image_with_hotspots_preview"><input name="' . esc_attr( $settings['param_name'] ) . '" type="hidden" class="wpb_vc_param_value ' . esc_attr( $settings['param_name'] ) . '" value="'.$value.'" /> '.$image_output. '</div>';
+	   return '<div id="nectar_image_with_hotspots_preview"><input name="' . esc_attr( $settings['param_name'] ) . '" type="hidden" class="wpb_vc_param_value ' . esc_attr( $settings['param_name'] ) . '" value="'.esc_attr($value).'" /> '.$image_output. '</div>';
 	}
 
 
@@ -9464,6 +9464,7 @@ function nectar_custom_maps() {
 		if($icon_type === 'font_icon') {
 
 			$fa_mapped_icons = nectar_map_legacy_fa_icon_classes();
+			wp_enqueue_style( 'font-awesome' );
 			if( isset($fa_mapped_icons[$icon]) ) {
 				$icon = $fa_mapped_icons[$icon];
 			}

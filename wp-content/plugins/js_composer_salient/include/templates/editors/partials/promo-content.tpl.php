@@ -5,16 +5,16 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 /** @var bool $is_about_page */
 ?>
-<img class="vc-featured-img" src="<?php echo esc_url( vc_asset_url( 'vc/wpb_introduce_seo.png' ) ); ?>"/>
+<img class="vc-featured-img" src="<?php echo esc_url( vc_asset_url( 'vc/wpb-7-7-about.png' ) ); ?>"/>
 
 <div class="vc-feature-text">
-	<h3><?php esc_html_e( 'Introducing WPBakery SEO', 'js_composer' ); ?></h3>
+	<h3><?php esc_html_e( 'Module Manager, AI in the Classic Editor & Element Caching', 'js_composer' ); ?></h3>
 
-	<p><?php esc_html_e( 'Streamline your search engine optimization efforts with WPBakery\'s built-in SEO toolkit. Access WPBakery\'s SEO tools directly from the editor to boost your website\'s visibility and attract a wider audience:', 'js_composer' ); ?></p>
+	<p><?php esc_html_e( 'Manage which modules (like Custom Code, Skin Builder, Shortcode Mapper, etc.) are loaded and available in the editor. Use WPBakery AI in the Classic Editor to generate, improve, and translate texts, and enjoy improved editor performance with element caching after every edit.', 'js_composer' ); ?></p>
 	<ul>
-		<li><?php esc_html_e( 'Get social media sharing previews', 'js_composer' ); ?></li>
-		<li><?php esc_html_e( 'Gain insights from content analysis and receive suggestions for improvement', 'js_composer' ); ?></li>
-		<li><?php esc_html_e( 'Track your site\'s SEO health with a color-coded status indicator', 'js_composer' ); ?></li>
+		<li><?php esc_html_e( 'Control modules with Module Manager', 'js_composer' ); ?></li>
+		<li><?php esc_html_e( 'Utilize WPBakery AI in the Classic Editor', 'js_composer' ); ?></li>
+		<li><?php esc_html_e( 'Caching for Element Settings ', 'js_composer' ); ?></li>
 	</ul>
 	<?php
 	$tabs = vc_settings()->getTabs();

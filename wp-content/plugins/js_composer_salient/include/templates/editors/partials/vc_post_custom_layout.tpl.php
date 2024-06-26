@@ -6,11 +6,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
 * @var string $location can be 'welcome' or 'settings'
 */
-$layout_manager = new Vc_PostCustomLayout();
+$layout_manager = vc_modules_manager()->get_module( 'vc-post-custom-layout' );
 ?>
 <div id="vc_ui-panel-post-custom-layout" class="vc_post-custom-layout-wrapper vc_selected-post-custom-layout-visible-ne">
-	<a class="vc_post-custom-layout control-btn <?php echo $layout_manager->checkIfLayoutActive( 'default', $location ) ? 'vc-active-post-custom-layout' : '' ?>"
-		href="<?php echo $layout_manager->getLayoutHrefByLayoutName( 'default' ); ?>"
+	<a class="vc_post-custom-layout control-btn <?php echo $layout_manager->check_if_layout_active( 'default', $location ) ? 'vc-active-post-custom-layout' : '' ?>"
+		href="<?php echo $layout_manager->get_layout_href_by_layout_name( 'default' ); ?>"
 		data-post-custom-layout="default"
 	>
 		<svg xmlns="http://www.w3.org/2000/svg" width="88px" height="88px" viewBox="0 0 88 88">
@@ -33,8 +33,8 @@ $layout_manager = new Vc_PostCustomLayout();
 		<strong class="vc_layout-label"><?php esc_html_e( 'Default Layout', 'js_composer' ); ?></strong>
 		<p class="vc_layout-description"><?php esc_html_e( 'A blank page with your theme header and footer', 'js_composer' ); ?></p>
 	</a>
-	<a class="vc_post-custom-layout control-btn <?php echo $layout_manager->checkIfLayoutActive( 'blank', $location ) ? 'vc-active-post-custom-layout' : '' ?>"
-		href="<?php echo $layout_manager->getLayoutHrefByLayoutName( 'blank' ); ?>"
+	<a class="vc_post-custom-layout control-btn <?php echo $layout_manager->check_if_layout_active( 'blank', $location ) ? 'vc-active-post-custom-layout' : '' ?>"
+		href="<?php echo $layout_manager->get_layout_href_by_layout_name( 'blank' ); ?>"
 		data-post-custom-layout="blank"
 	>
 		<svg xmlns="http://www.w3.org/2000/svg" width="88px" height="88px" viewBox="0 0 88 88">

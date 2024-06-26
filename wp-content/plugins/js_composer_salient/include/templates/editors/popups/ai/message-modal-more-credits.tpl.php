@@ -11,8 +11,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 <h3 class="vc_heading"><?php esc_html_e( 'Insufficient WPBakery AI Credits', 'js_composer' ); ?></h3>
 <p class="vc_description">
 	<?php
-	echo esc_html( 'You have reached your monthly limit of free', 'js_composer' );
-	echo  ' ' .esc_html( empty( $modal_controller->credits_limit ) ? '' : $modal_controller->credits_limit ) . ' ';
+	esc_html_e( 'You have reached your monthly limit of free', 'js_composer' );
+	echo  ' ' . esc_html( empty( $modal_controller->credits_limit ) ? '' : $modal_controller->credits_limit ) . ' ';
 	esc_html_e( 'WPBakery AI credits per site.', 'js_composer' ); ?>
 	<br />
 	<?php esc_html_e( 'The credits are used everytime you use WPBakery AI to generate content.', 'js_composer' ); ?>

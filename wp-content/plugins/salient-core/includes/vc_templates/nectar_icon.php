@@ -88,7 +88,7 @@ if( $icon_family === 'linea' && $enable_animation === 'true' && $icon !== '' && 
 	$icon_markup    = '<span class="svg-icon-holder" data-size="'. esc_attr($icon_size) . '" data-animation-speed="'.esc_attr($animation_speed).'" data-animation="'.esc_attr($enable_animation).'" data-animation-delay="'.esc_attr($animation_delay).'" data-color="'.esc_attr(strtolower($icon_color)) .'"><span>';
 	
 	ob_start();
-	get_template_part( 'css/fonts/svg/'. $converted_icon .'.svg' );
+	get_template_part( 'css/fonts/svg/'. sanitize_file_name($converted_icon) .'.svg' );
 	$icon_markup .=  ob_get_contents();
 	ob_end_clean();
 	

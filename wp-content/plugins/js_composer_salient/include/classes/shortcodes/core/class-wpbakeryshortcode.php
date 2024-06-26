@@ -255,9 +255,6 @@ abstract class WPBakeryShortCode {
 		return ( $this->isInline() || $this->isEditor() && true === $this->settings( 'is_container' ) ? '<span class="vc_container-anchor"></span>' : '' ) . $content;
 	}
 
-	/**
-	 *
-	 */
 	public function enqueueAssets() {
 		if ( ! empty( $this->settings['admin_enqueue_js'] ) ) {
 			$this->registerJs( $this->settings['admin_enqueue_js'] );
@@ -334,9 +331,6 @@ abstract class WPBakeryShortCode {
 		}
 	}
 
-	/**
-	 *
-	 */
 	public static function enqueueCss() {
 		if ( ! empty( self::$css_scripts ) ) {
 			foreach ( self::$css_scripts as $stylesheet ) {
@@ -345,9 +339,6 @@ abstract class WPBakeryShortCode {
 		}
 	}
 
-	/**
-	 *
-	 */
 	public static function enqueueJs() {
 		if ( ! empty( self::$js_scripts ) ) {
 			foreach ( self::$js_scripts as $script ) {

@@ -10,6 +10,8 @@
     <taxonomy translate="1">project-attributes</taxonomy>
   </taxonomies>
   <custom-fields>
+    <custom-field action="copy">nectar_g_section_conditions</custom-field>
+    <custom-field action="copy">nectar_g_section_locations</custom-field>
     <custom-field action="copy">nectar_menu_options</custom-field>
     <custom-field action="copy">_force_transparent_header</custom-field>
     <custom-field action="copy">_disable_transparent_header</custom-field>

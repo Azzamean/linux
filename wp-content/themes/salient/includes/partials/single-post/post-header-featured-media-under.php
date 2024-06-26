@@ -64,8 +64,7 @@ $show_excerpt   = (isset($nectar_options['blog_header_image_under_excerpt'] ) ) 
         $selector = '.featured-media-under-header__featured-media .post-featured-img';
       
         if( !empty($custom_bg) ) {
-          echo nectar_responsive_page_header_css($custom_bg, $selector);
-
+          
           $custom_bg_id = attachment_url_to_postid($custom_bg);
           $img_meta     = wp_get_attachment_metadata($custom_bg_id);
           $width        = ( !empty($img_meta['width']) ) ? $img_meta['width'] : '1000';
@@ -77,7 +76,6 @@ $show_excerpt   = (isset($nectar_options['blog_header_image_under_excerpt'] ) ) 
         else {
           $image_id = get_post_thumbnail_id($post->ID);
           if( $image_id ) {
-            echo nectar_responsive_page_header_css($image_id, $selector);
             echo '<span class="'.esc_attr(implode(' ', $bg_classname)).'">'.get_the_post_thumbnail($post->ID, 'full').'</span>';
           }
         }

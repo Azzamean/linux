@@ -234,8 +234,8 @@
   padding-right: 0;
   > .vc_column-inner {
     box-sizing: border-box;
-    padding-left: @grid-gutter-width/2;
-    padding-right: @grid-gutter-width/2;
+    padding-left: (@grid-gutter-width / 2);
+    padding-right: (@grid-gutter-width / 2);
     width: 100%;
   }
 }
@@ -243,10 +243,10 @@
 // row gaps
 .vc_make-column-gap(@spacing) {
   &.vc_column-gap-@{spacing} {
-    margin-left: -(@grid-gutter-width + @spacing)/2;
-    margin-right: -(@grid-gutter-width + @spacing)/2;
+    margin-left: (-(@grid-gutter-width + @spacing)/2);
+    margin-right: (-(@grid-gutter-width + @spacing)/2);
     > .vc_column_container {
-      padding: unit(@spacing/2, px);
+      padding: unit((@spacing/2), px);
     }
   }
 }

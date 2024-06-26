@@ -1269,6 +1269,11 @@
       that.rendered = true;
     });
 
+    setTimeout(function(){
+      that.player.dispatchEvent(new Event('rendered', { bubbles: true }));
+    }, 500);
+
+
   };
 
 

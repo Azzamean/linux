@@ -64,6 +64,7 @@ class WPBakeryShortCode_Vc_Accordion extends WPBakeryShortCode {
 
 
 
+
 /* nectar addition */ 
 class WPBakeryShortCode_Toggles extends WPBakeryShortCode {
 	protected $controls_css_settings = 'out-tc vc_controls-content-widget';

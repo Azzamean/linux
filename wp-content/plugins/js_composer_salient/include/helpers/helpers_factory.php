@@ -4,7 +4,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * WPBakery WPBakery Page Builder Main manager.
+ * WPBakery Page Builder Main manager.
  *
  * @package WPBakeryPageBuilder
  * @since   4.2
@@ -77,6 +77,24 @@ if ( ! function_exists( 'vc_automapper' ) ) {
 	 */
 	function vc_automapper() {
 		return vc_manager()->automapper();
+	}
+}
+if ( ! function_exists( 'vc_autoload_manager' ) ) {
+	/**
+	 * @return Vc_Autoload_Manager
+	 * @since 7.7
+	 */
+	function vc_autoload_manager() {
+		return vc_manager()->autoload();
+	}
+}
+if ( ! function_exists( 'vc_modules_manager' ) ) {
+	/**
+	 * @return Vc_Modules_Manager
+	 * @since 7.7
+	 */
+	function vc_modules_manager() {
+		return vc_manager()->modules();
 	}
 }
 if ( ! function_exists( 'vc_frontend_editor' ) ) {
@@ -344,19 +362,22 @@ function vc_value_from_safe( $value, $encode = false ) {
 }
 
 /**
+ * @depreacted 7.7 ( use modules settings )
  * @param bool $disable
  * @since 4.2
- *
  */
 function vc_disable_automapper( $disable = true ) {
+	_deprecated_function( __FUNCTION__, '7.7', 'Use plugin settings module tab to disable automapper' );
 	vc_automapper()->setDisabled( $disable );
 }
 
 /**
+ * @depreacted 7.7 ( use modules settings )
  * @return bool
  * @since 4.2
  */
 function vc_automapper_is_disabled() {
+	_deprecated_function( __FUNCTION__, '7.7', 'Use plugin settings module tab to disable automapper' );
 	return vc_automapper()->disabled();
 }
 

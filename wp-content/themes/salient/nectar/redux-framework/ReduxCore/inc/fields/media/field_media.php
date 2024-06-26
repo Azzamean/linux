@@ -82,8 +82,8 @@ if ( ! class_exists( 'ReduxFramework_media' ) ) {
              /* nectar addition */
             //upgrade proof
             $fixed_ID = $this->field['id'];
-            $legacy_media = (!empty($old_options[$fixed_ID])) ? $old_options[$fixed_ID] : '-';
-            $old_image_id = ($legacy_media != '-') ? fjarrett_get_attachment_id_from_url( $legacy_media ) : '-';
+            $legacy_media = (isset($old_options[$fixed_ID]) && !empty($old_options[$fixed_ID])) ? $old_options[$fixed_ID] : '-';
+            $old_image_id = ($legacy_media != '-' && is_string($legacy_media)) ? fjarrett_get_attachment_id_from_url( $legacy_media ) : '-';
             $display_val = (isset($salient_redux[$this->field['id']]['id']) || $legacy_media == '-') ? $this->value['id'] : $old_image_id;
             /* nectar addition end */
 

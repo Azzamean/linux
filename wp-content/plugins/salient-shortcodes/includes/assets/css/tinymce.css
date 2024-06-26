@@ -7,8 +7,8 @@
 	float: right;
 }
 
-[class^="icon-"],[class*=" icon-"] {
-	color: #333!important;
+#nectar-sc-generator [class^="icon-"], #nectar-sc-generator [class*=" icon-"] {
+	color: #333;
 }
 
 select[name="icon-set-select"] {

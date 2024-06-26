@@ -153,6 +153,7 @@ if ( ! function_exists( 'vc_is_updater_disabled' ) ) {
 		return true;
 		// nectar addition end
 		//return vc_manager()->isUpdaterDisabled();
+
 	}
 }
 if ( ! function_exists( 'vc_default_editor_post_types' ) ) {

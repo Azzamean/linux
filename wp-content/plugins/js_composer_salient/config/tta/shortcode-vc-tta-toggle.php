@@ -97,6 +97,6 @@ return array(
 [vc_tta_toggle_section section_index=2 title="' . esc_html__( 'Yearly', 'js_composer' )  . '"][/vc_tta_toggle_section]
 	',
 	'admin_enqueue_js' => array(
-		vc_asset_url( 'lib/vc_tabs/vc-tabs.min.js' ),
+		vc_asset_url( 'lib/vc/vc_tabs/vc-tabs.min.js' ),
 	),
 );

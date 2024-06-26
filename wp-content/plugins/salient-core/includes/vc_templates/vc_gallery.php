@@ -1079,6 +1079,8 @@ foreach ( $images as $attach_id ) {
 							}
 
 
+							$project_title_text_escaped = isset( $attachment_meta['title'] ) && !empty( $attachment_meta['title'] ) ? '<span class="screen-reader-text">'. wp_kses_post( $attachment_meta['title'] ).'</span>' : '';
+
 							//project style 1
 							if($gallery_style == '1') { ?>
 
@@ -1143,7 +1145,7 @@ foreach ( $images as $attach_id ) {
 								   		<?php } else { ?>
 								   			 <a <?php echo 'href="'.esc_url($p_img_large[0]).'"';
 								   			  if(!empty($attachment_meta['description'])) { echo ' title="'.esc_attr(wp_kses_post($attachment_meta['description'])).'"'; }
-								   			 echo ' class="pretty_photo"'; ?>></a>
+								   			 echo ' class="pretty_photo"'; ?>><?php echo $project_title_text_escaped; ?></a>
 								   		<?php } ?>
 
 										<div class="vert-center">
@@ -1204,7 +1206,7 @@ foreach ( $images as $attach_id ) {
 								   		<?php } else { ?>
 								   			 <a <?php echo 'href="'. esc_url( $p_img_large[0] ) .'"';
 								   			  if(!empty($attachment_meta['description'])) echo ' title="'.esc_attr(wp_kses_post($attachment_meta['description'])).'"';
-								   			  echo ' class="pretty_photo"'; ?>></a>
+								   			  echo ' class="pretty_photo"'; ?>><?php echo $project_title_text_escaped; ?></a>
 								   		<?php } ?>
 
 									</div>
@@ -1236,7 +1238,7 @@ foreach ( $images as $attach_id ) {
 								   		<?php } else { ?>
 								   			 <a <?php echo 'href="'. esc_url ( $p_img_large[0] ) .'"';
 								   			  if(!empty($attachment_meta['description'])) echo ' title="'.esc_attr(wp_kses_post($attachment_meta['description'])).'"';
-								   			  echo ' class="pretty_photo"'; ?>></a>
+								   			  echo ' class="pretty_photo"'; ?>><?php echo $project_title_text_escaped; ?></a>
 								   		<?php } ?>
 
 										<div class="bottom-meta">
@@ -1291,7 +1293,7 @@ foreach ( $images as $attach_id ) {
 								   		<?php } else { ?>
 								   			 <a <?php echo 'href="'. esc_url( $p_img_large[0] ) .'"';
 								   			  if(!empty($attachment_meta['description'])) echo ' title="'.esc_attr(wp_kses_post($attachment_meta['description'])).'"';
-								   			  echo ' class="pretty_photo"'; ?>></a>
+								   			  echo ' class="pretty_photo"'; ?>><?php echo $project_title_text_escaped; ?></a>
 								   		<?php } ?>
 
 								   	<?php } ?>
@@ -1322,7 +1324,7 @@ foreach ( $images as $attach_id ) {
 								   		<?php } else { ?>
 								   			 <a <?php echo 'href="'. esc_url( $p_img_large[0] ) .'"';
 								   			  if(!empty($attachment_meta['description'])) echo ' title="'.esc_attr(wp_kses_post($attachment_meta['description'])).'"';
-								   			 echo ' class="pretty_photo"'; ?>></a>
+								   			 echo ' class="pretty_photo"'; ?>><?php echo $project_title_text_escaped; ?></a>
 								   		<?php } ?>
 
 										<div class="vert-center">
@@ -1364,7 +1366,7 @@ foreach ( $images as $attach_id ) {
 								   		<?php } else { ?>
 								   			 <a <?php echo 'href="'. esc_url( $p_img_large[0] ) .'"';
 								   			  if(!empty($attachment_meta['description'])) echo ' title="'.esc_attr(wp_kses_post($attachment_meta['description'])).'"';
-								   			 echo ' class="pretty_photo"'; ?>></a>
+								   			 echo ' class="pretty_photo"'; ?>><?php echo $project_title_text_escaped; ?></a>
 								   		<?php } ?>
 
 										<div class="vert-center">

@@ -20,13 +20,17 @@ if ( ! defined( 'ABSPATH' ) ) {
 			<div class="vc_ui-panel-content vc_properties-list vc_edit_form_elements" data-vc-ui-element="panel-content">
 				<div class="vc_row">
 					<div class="vc_col-sm-12 vc_column" id="vc_settings-title-container">
-						<div class="wpb_element_label"><?php esc_html_e( 'Page title', 'js_composer' ); ?></div>
+						<div class="wpb_settings-title">
+							<div class="wpb_element_label"><?php esc_html_e( 'Page title', 'js_composer' ); ?></div>
+							<?php if ( is_string( $title_info ) ) { echo $title_info ; } ?>
+						</div>
 						<div class="edit_form_line">
 							<?php
-							wpb_add_ai_icon_to_text_field( 'textfield', 'vc_page-title-field' );
+							if ( vc_modules_manager()->is_module_on( 'vc-ai' ) ) {
+								wpb_add_ai_icon_to_text_field( 'textfield', 'vc_page-title-field' );
+							}
 							?>
 							<input name="page_title" class="wpb-textinput vc_title_name" type="text" value="" id="vc_page-title-field" placeholder="<?php esc_attr_e( 'Please enter page title', 'js_composer' ); ?>">
-							<span class="vc_description"><?php printf( esc_html__( 'Change title of the current %s (Note: changes may not be displayed in a preview, but will take effect after saving page).', 'js_composer' ), esc_html( get_post_type() ) ); ?></span>
 						</div>
 					</div>
 					<?php // nectar addition ?>
@@ -40,54 +44,78 @@ if ( ! defined( 'ABSPATH' ) ) {
 						?>
 						</div> -->
 					<?php // nectar addition end ?>
-					<div class="vc_col-sm-12 vc_column">
-						<div class="wpb_element_label"><?php esc_html_e( 'Custom CSS settings', 'js_composer' ); ?></div>
-						<div class="edit_form_line">
-							<div class="vc_ui-settings-text-wrapper">
-								<p><?php esc_html_e( '<style>' ) ?></p>
-								<?php
-								wpb_add_ai_icon_to_code_field( 'custom_css', 'wpb_css_editor' );
-								?>
+					<?php
+					if ( vc_modules_manager()->is_module_on( 'vc-custom-css' ) ) {
+						?>
+						<div class="vc_col-sm-12 vc_column">
+							<div class="wpb_settings-title">
+								<div class="wpb_element_label">
+									<?php esc_html_e( 'Custom CSS settings', 'js_composer' ); ?>
+								</div>
+								<?php if ( is_string( $css_info ) ) { echo $css_info ; } ?>	
 							</div>
-							<pre id="wpb_css_editor" class="wpb_content_element custom_code wpb_frontend"></pre>
-							<p><?php esc_html_e( '</style>' ) ?></p>
-							<span class="vc_description vc_clearfix"><?php esc_html_e( 'Enter custom CSS (Note: it will be outputted only on this particular page).', 'js_composer' ); ?></span>
-						</div>
-					</div>
-					<div class="vc_col-sm-12 vc_column">
-						<div class="wpb_element_label"><?php esc_html_e( 'Custom JavaScript in <head>', 'js_composer' ); ?></div>
-						<div class="edit_form_line">
-							<div class="vc_ui-settings-text-wrapper">
-								<p><?php esc_html_e( '<script>' ) ?></p>
-								<?php
-								wpb_add_ai_icon_to_code_field( 'custom_js', 'wpb_js_header_editor' );
-								?>
+							<div class="edit_form_line">
+								<div class="vc_ui-settings-text-wrapper">
+									<p><?php esc_html_e( '<style>' ) ?></p>
+									<?php
+									if ( vc_modules_manager()->is_module_on( 'vc-ai' ) ) {
+										wpb_add_ai_icon_to_code_field( 'custom_css', 'wpb_css_editor' );
+									}
+									?>
+								</div>
+								<pre id="wpb_css_editor" class="wpb_content_element custom_code wpb_frontend"></pre>
+								<p><?php esc_html_e( '</style>' ) ?></p>
 							</div>
-							<pre id="wpb_js_header_editor" class="wpb_content_element custom_code wpb_frontend <?php echo $can_unfiltered_html_cap ?: 'wpb_missing_unfiltered_html'; ?>"><?php echo $can_unfiltered_html_cap ? '' : wpbakery()->getEditorsLocale()['unfiltered_html_access']; ?></pre>
-							<p><?php esc_html_e( '</script>' ) ?></p>
-							<span class="vc_description vc_clearfix">
-								<?php esc_html_e( 'Enter custom JS (Note: it will be outputted only on this particular page inside <head> tag).', 'js_composer' ); ?>
-							</span>
 						</div>
-					</div>
-					<div class="vc_col-sm-12 vc_column">
-						<div class="wpb_element_label">
-							<?php esc_html_e( 'Custom JavaScript before </body>', 'js_composer' ); ?>
-						</div>
-						<div class="edit_form_line">
-							<div class="vc_ui-settings-text-wrapper">
-								<p><?php esc_html_e( '<script>' ) ?></p>
-								<?php
-								wpb_add_ai_icon_to_code_field( 'custom_js', 'wpb_js_footer_editor' );
-								?>
+						<?php
+					}
+					?>
+					<?php
+					if ( vc_modules_manager()->is_module_on( 'vc-custom-js' ) ) {
+						?>
+						<div class="vc_col-sm-12 vc_column">
+							<div class="wpb_settings-title">
+								<div class="wpb_element_label">
+									<?php esc_html_e( 'Custom JavaScript in <head>', 'js_composer' ); ?>
+								</div>
+								<?php if ( is_string( $js_head_info ) ) { echo $js_head_info ; } ?>	
 							</div>
-							<pre id="wpb_js_footer_editor" class="wpb_content_element custom_code wpb_frontend <?php echo $can_unfiltered_html_cap ?: 'wpb_missing_unfiltered_html'; ?>"><?php echo $can_unfiltered_html_cap ? '' : wpbakery()->getEditorsLocale()['unfiltered_html_access']; ?></pre>
-							<p><?php esc_html_e( '</script>' ) ?></p>
-							<span class="vc_description vc_clearfix">
-								<?php esc_html_e( 'Enter custom JS (Note: it will be outputted only on this particular page before closing </body> tag).', 'js_composer' ); ?>
-							</span>
+							<div class="edit_form_line">
+								<div class="vc_ui-settings-text-wrapper">
+									<p><?php esc_html_e( '<script>' ) ?></p>
+									<?php
+									if ( vc_modules_manager()->is_module_on( 'vc-ai' ) ) {
+										wpb_add_ai_icon_to_code_field( 'custom_js', 'wpb_js_header_editor' );
+									}
+									?>
+								</div>
+								<pre id="wpb_js_header_editor" class="wpb_content_element custom_code wpb_frontend <?php echo $can_unfiltered_html_cap ?: 'wpb_missing_unfiltered_html'; ?>"><?php echo $can_unfiltered_html_cap ? '' : wpbakery()->getEditorsLocale()['unfiltered_html_access']; ?></pre>
+								<p><?php esc_html_e( '</script>' ) ?></p>
+							</div>
 						</div>
-					</div>
+						<div class="vc_col-sm-12 vc_column">
+							<div class="wpb_settings-title">
+								<div class="wpb_element_label">
+									<?php esc_html_e( 'Custom JavaScript before </body>', 'js_composer' ); ?>
+								</div>
+								<?php if ( is_string( $js_body_info ) ) { echo $js_body_info ; } ?>	
+							</div>
+							<div class="edit_form_line">
+								<div class="vc_ui-settings-text-wrapper">
+									<p><?php esc_html_e( '<script>' ) ?></p>
+									<?php
+									if ( vc_modules_manager()->is_module_on( 'vc-ai' ) ) {
+										wpb_add_ai_icon_to_code_field( 'custom_js', 'wpb_js_footer_editor' );
+									}
+									?>
+								</div>
+								<pre id="wpb_js_footer_editor" class="wpb_content_element custom_code wpb_frontend <?php echo $can_unfiltered_html_cap ?: 'wpb_missing_unfiltered_html'; ?>"><?php echo $can_unfiltered_html_cap ? '' : wpbakery()->getEditorsLocale()['unfiltered_html_access']; ?></pre>
+								<p><?php esc_html_e( '</script>' ) ?></p>
+							</div>
+						</div>
+						<?php
+					}
+					?>
 				</div>
 			</div>
 		</div>

@@ -8,7 +8,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 ?>
 <div id="wpb-notice-<?php esc_attr_e( $notice['id'] ); ?>" class="updated wpb-notice">
 	<?php if ( ! empty( $notice['image'] ) ) :  ?>
-		<div class="wpb-notice-image"  data-notice-link="<?php  empty( $notice['link'] ) ?: esc_attr_e( $notice['link'] ); ?>" style="<?php echo empty( $notice['link'] ) ?: 'cursor: pointer' ?>">
+        <?php // phpcs:ignore ?>
+		<div class="wpb-notice-image"  data-notice-link="<?php esc_attr_e( $link ); ?>" style="<?php echo empty( $notice['link'] ) ?: 'cursor: pointer' ?>">
 			<img src="<?php esc_attr_e( $notice['image'] ); ?>" alt="<?php empty( $notice['title'] ) ? esc_attr_e( 'wpbakery notice', 'js_composer' ) : esc_attr_e( $notice['title'] ); ?>">
 		</div>
 	<?php endif; ?>

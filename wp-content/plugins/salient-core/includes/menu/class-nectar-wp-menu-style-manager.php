@@ -1710,7 +1710,9 @@
      public static function is_writable() {
 
         global $wp_filesystem;
-        require_once( ABSPATH . 'wp-admin/includes/file.php' );
+        if ( empty($wp_filesystem) ) {
+          require_once( ABSPATH . 'wp-admin/includes/file.php' );
+        }
         
         $wp_upload_dir = wp_upload_dir( null, false );
         $upload_dir = $wp_upload_dir['basedir'];

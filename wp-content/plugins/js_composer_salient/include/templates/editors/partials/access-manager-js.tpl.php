@@ -14,6 +14,7 @@ $custom_tag = 'script';
 		_mergedCaps = <?php echo wp_json_encode( vc_user_access()->part( 'shortcodes' )->getMergedCaps() ); ?>;
 		_check = function ( part, rule, custom, not_check_state ) {
 			<?php
+			// phpcs:ignore
 			if ( current_user_can( 'administrator' ) ) {
 				echo 'return rule==="disabled_ce_editor" ? false : true;';
 			}
@@ -48,6 +49,7 @@ $custom_tag = 'script';
 					return <?php
 					if ( is_multisite() && is_super_admin() ) {
 						echo 'true;';
+					// phpcs:ignore
 					} elseif ( current_user_can( 'administrator' ) ) {
 						echo 'true;';
 					} else {
@@ -90,6 +92,7 @@ $custom_tag = 'script';
 					<?php
 					if ( is_multisite() && is_super_admin() ) {
 						echo 'return true;';
+                    // phpcs:ignore
 					} elseif ( current_user_can( 'administrator' ) ) {
 						echo 'return true;';
 					} ?>

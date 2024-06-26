@@ -280,8 +280,8 @@ if( !empty($icon) ) {
 
 	$box_link = null;
 	if(!empty($link_url)) {
-		$link_sr_text = (!empty($link_screen_reader)) ? 'aria-label="'.esc_html($link_screen_reader).'" ' : '';
-		$box_link = '<a '.$new_tab_markup.' href="'.esc_attr($link_url).'" '.$link_sr_text.'class="box-link"></a>';
+		$link_sr_text = (!empty($link_screen_reader)) ? '<span class="screen-reader-text">'.esc_html($link_screen_reader).'</span>' : '';
+		$box_link = '<a '.$new_tab_markup.' href="'.esc_attr($link_url).'" class="box-link">'.$link_sr_text.'</a>';
 	}
 
 	$text_link = null;

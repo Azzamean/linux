@@ -19,7 +19,7 @@ extract(shortcode_atts(array(
 wp_enqueue_script('vc_pie');
 
 $el_class = $this->getExtraClass( $el_class );
-$css_class =  apply_filters(VC_SHORTCODE_CUSTOM_CSS_FILTER_TAG, 'vc_pie_chart wpb_content_element'.$el_class, $this->settings['base'], $atts);
+$css_class =  apply_filters(VC_SHORTCODE_CUSTOM_CSS_FILTER_TAG, 'vc_pie_chart wpb_content_element'.esc_attr($el_class), $this->settings['base'], $atts);
 
 $pie_value = strip_tags(htmlspecialchars_decode($value));
 $pie_label_value = strip_tags(htmlspecialchars_decode($label_value));

@@ -171,6 +171,7 @@ class Vc_Updater {
 		// WP will use same name for plugin directory as archive name, so we have to rename it
 		if ( basename( $downloaded_archive, '.zip' ) !== $plugin_directory_name ) {
 			$new_archive_name = dirname( $downloaded_archive ) . '/' . $plugin_directory_name . time() . '.zip';
+			// phpcs:ignore
 			if ( rename( $downloaded_archive, $new_archive_name ) ) {
 				$downloaded_archive = $new_archive_name;
 			}

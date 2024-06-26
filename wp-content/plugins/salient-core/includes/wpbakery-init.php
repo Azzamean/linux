@@ -165,6 +165,7 @@ if ( class_exists( 'WPBakeryVisualComposerAbstract' ) && defined( 'SALIENT_VC_AC
                     wp_register_script( 'wnumb', SALIENT_CORE_PLUGIN_PATH.'/includes/admin/assets/js/wnumb.js', array(), $Salient_Core->plugin_version);
 
                     wp_enqueue_script( 'spectrum', SALIENT_CORE_PLUGIN_PATH.'/includes/admin/assets/js/spectrum.js', array($depends_on), $Salient_Core->plugin_version, true );
+                    wp_enqueue_style( 'spectrum', SALIENT_CORE_PLUGIN_PATH.'/includes/admin/assets/css/spectrum.css', array(), $Salient_Core->plugin_version );
             
 
                     wp_enqueue_script( 'nectar-page-builder-edit', SALIENT_CORE_PLUGIN_PATH.'/includes/admin/assets/js/nectar-element-edit.js', array($depends_on, 'wnumb', 'nectar_lottie_player', 'spectrum'), $Salient_Core->plugin_version, true );
@@ -182,10 +183,6 @@ if ( class_exists( 'WPBakeryVisualComposerAbstract' ) && defined( 'SALIENT_VC_AC
             wp_enqueue_style( 'linea', get_template_directory_uri() . '/css/fonts/svg/font/style.css' );
             wp_enqueue_style( 'iconsmind', get_template_directory_uri() . '/css/iconsmind.css' );
             wp_enqueue_style( 'nectar-brands', get_template_directory_uri() . '/css/nectar-brands.css' );
-
-            // Page Builder Deps.
-            wp_enqueue_style( 'spectrum', SALIENT_CORE_PLUGIN_PATH.'/includes/admin/assets/css/spectrum.css', array(), $Salient_Core->plugin_version );
-            
 
         }
     }

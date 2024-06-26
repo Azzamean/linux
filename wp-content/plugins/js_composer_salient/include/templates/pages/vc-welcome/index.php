@@ -16,11 +16,7 @@ $custom_tag = 'script'; // Update to wp_add_inline later
 	</div>
 	<p class="vc-page-actions">
 		<?php
-		if ( vc_user_access()
-				->wpAny( 'manage_options' )
-				->part( 'settings' )
-				->can( 'vc-general-tab' )
-				->get() && ( ! is_multisite() || ! is_main_site() )
+		if ( vc_user_access()->wpAny( 'manage_options' )->part( 'settings' )->can( 'vc-general-tab' )->get() && ( ! is_multisite() || ! is_main_site() )
 		) :
 			?>
 			<a href="<?php echo esc_url( admin_url( 'admin.php?page=vc-general' ) ); ?>"

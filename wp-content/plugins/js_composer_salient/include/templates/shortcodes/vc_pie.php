@@ -56,7 +56,8 @@ if ( ! $color ) {
 	$color = $colors['grey'];
 }
 
-$class_to_filter = 'vc_pie_chart wpb_content_element';
+$element_class = empty( $this->settings['element_default_class'] ) ? '' : $this->settings['element_default_class'];
+$class_to_filter = 'vc_pie_chart ' . esc_attr( $element_class );
 $class_to_filter .= vc_shortcode_custom_css_class( $css, ' ' ) . $this->getExtraClass( $el_class ) . $this->getCSSAnimation( $css_animation );
 $css_class = apply_filters( VC_SHORTCODE_CUSTOM_CSS_FILTER_TAG, $class_to_filter, $this->settings['base'], $atts );
 
@@ -64,15 +65,13 @@ $wrapper_attributes = array();
 if ( ! empty( $el_id ) ) {
 	$wrapper_attributes[] = 'id="' . esc_attr( $el_id ) . '"';
 }
-
 /* nectar addition */
 $pie_value = strip_tags(htmlspecialchars_decode($value));
 $pie_label_value = strip_tags(htmlspecialchars_decode($label_value));
 $pie_units = strip_tags(htmlspecialchars_decode($units));
 
 $output = '<div ' . implode( ' ', $wrapper_attributes ) . ' class= "' . esc_attr( $css_class ) . '" data-pie-value="' . esc_attr( $pie_value) . '" data-pie-label-value="' . esc_attr( $pie_label_value ) . '" data-pie-units="' . esc_attr( $pie_units ) . '" data-pie-color="' . esc_attr( $color ) . '">';
-/* nectar addition end */
-$output .= '<div class="wpb_wrapper">';
+/* nectar addition end */$output .= '<div class="wpb_wrapper">';
 $output .= '<div class="vc_pie_wrapper">';
 $output .= '<span class="vc_pie_chart_back" style="border-color: ' . esc_attr( $color ) . '"></span>';
 $output .= '<span class="vc_pie_chart_value"></span>';

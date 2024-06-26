@@ -35,7 +35,7 @@ function vc_vc_grid_item_form_field( $settings, $value ) {
 		'post_type' => Vc_Grid_Item_Editor::postType(),
 	) );
 	foreach ( $grid_item_posts as $post ) {
-		$output .= '<option  data-vc-link="' . esc_url( get_edit_post_link( $post->ID ) ) . '"value="' . esc_attr( $post->ID ) . '"' . ( (string) $post->ID === $value ? ' selected="true"' : '' ) . '>' . esc_html( $post->post_title ) . '</option>';
+		$output .= '<option  data-vc-link="' . esc_url( get_edit_post_link( $post->ID ) ) . '"value="' . esc_attr( $post->ID ) . '"' . ( (string) $post->ID === $value ? ' selected="true"' : '' ) . '>' . esc_html( _draft_or_post_title( $post ) ) . '</option>';
 	}
 	$output .= '</select></div>';
 

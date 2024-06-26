@@ -113,6 +113,9 @@ body[data-col-gap*="px"] .blog-recent.columns-1 .col.span_12 {
     margin-bottom:2%;
      padding:20px
 }
+.blog-recent[data-style="minimal"] .excerpt {
+    margin-bottom: 5px;
+}
  .blog-recent[data-style="minimal"] .meta{
     margin-bottom:13px;
      display:block

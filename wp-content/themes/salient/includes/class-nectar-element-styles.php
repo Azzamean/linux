@@ -3465,8 +3465,8 @@ class NectarElDynamicStyles {
 
         if( isset($atts['font_size_phone']) ) {
           self::$element_css[] = '@media only screen and (max-width: 690px) { 
-            body .nectar-cta.font_size_phone_'. self::decimal_unit_type_class($atts['font_size_phone']) .',
-            body .nectar-cta.font_size_phone_'. self::decimal_unit_type_class($atts['font_size_phone']) .' * {
+            html body .nectar-cta.font_size_phone_'. self::decimal_unit_type_class($atts['font_size_phone']) .',
+            html body .nectar-cta.font_size_phone_'. self::decimal_unit_type_class($atts['font_size_phone']) .' * {
               font-size: '. esc_attr(self::font_size_output($atts['font_size_phone'])) .';
               line-height: 1.1;
           }
@@ -8228,7 +8228,7 @@ class NectarElDynamicStyles {
 
           if( isset($atts['font_size_'.$device]) && strlen($atts['font_size_'.$device]) > 0 ) {
 
-            $font_size = esc_attr( self::percent_unit_type_class($atts['font_size_'.$device]) );
+            $font_size = esc_attr( self::decimal_unit_type_class($atts['font_size_'.$device]) );
             $line_height = esc_attr('1');
 
             if( strpos($font_size,'vw') !== false  ) {
@@ -9210,7 +9210,14 @@ class NectarElDynamicStyles {
         self::$element_css[] = self::mask_param_group_styles('img-with-aniamtion-wrap', '> .inner', $shadow, $atts);
 
         // Positioning.
-        $positions = self::positioning_group_styles('img-with-aniamtion-wrap',$atts);
+        $using_scroll_animation = isset($atts['animation_movement_intensity']) && !empty($atts['animation_movement_intensity']);
+        if ( $using_scroll_animation ) {
+          // Separate transform from animated values.
+          $positions = self::positioning_group_styles('img-with-aniamtion-wrap', $atts, ' > .inner');
+        } else {
+          $positions = self::positioning_group_styles('img-with-aniamtion-wrap', $atts);
+        }
+
         foreach( $positions as $position ) {
           self::$element_css[] = $position;
         }
@@ -10623,7 +10630,6 @@ class NectarElDynamicStyles {
         			 -webkit-background-clip: text;
         			 -webkit-text-fill-color: transparent;
         			 background-clip: text;
-        			 text-fill-color: transparent;
         			 display: inline-block;
         		}';
 
@@ -10665,7 +10671,6 @@ class NectarElDynamicStyles {
                 -webkit-background-clip: text;
                 -webkit-text-fill-color: transparent;
                 background-clip: text;
-                text-fill-color: transparent;
                 display: inline-block;
               }';
 
@@ -10679,7 +10684,6 @@ class NectarElDynamicStyles {
                 -webkit-background-clip: text;
                 -webkit-text-fill-color: transparent;
                 background-clip: text;
-                text-fill-color: transparent;
                 display: inline-block;
               }';
 
@@ -15252,7 +15256,7 @@ class NectarElDynamicStyles {
 
   }
 
-  public static function positioning_group_styles($element_name, $atts) {
+  public static function positioning_group_styles($element_name, $atts, $transform_selector = '') {
 
     $css = array();
 
@@ -15287,7 +15291,7 @@ class NectarElDynamicStyles {
         if( false === $transform_y && false !== $transform_x ) {
 
           $css[] = '@media only screen '.$media_query_size.'  {
-            .'.$element_name.'.translate_x_'.$device.'_'. esc_attr( self::percent_unit_type_class($atts['translate_x_'.$device]) ) .' {
+            .'.$element_name.'.translate_x_'.$device.'_'. esc_attr( self::percent_unit_type_class($atts['translate_x_'.$device]) ) . $transform_selector .' {
             -webkit-transform: '.esc_attr( $transform_vals ).';
             transform: '.esc_attr( $transform_vals ).';
           } }';
@@ -15297,7 +15301,7 @@ class NectarElDynamicStyles {
         else if ( false !== $transform_y && false === $transform_x ) {
 
           $css[] = '@media only screen '.$media_query_size.'  {
-            .'.$element_name.'.translate_y_'.$device.'_'. esc_attr( self::percent_unit_type_class($atts['translate_y_'.$device]) ) .' {
+            .'.$element_name.'.translate_y_'.$device.'_'. esc_attr( self::percent_unit_type_class($atts['translate_y_'.$device]) ) . $transform_selector .' {
             -webkit-transform: '.esc_attr( $transform_vals ).';
             transform: '.esc_attr( $transform_vals ).';
           } }';
@@ -15306,7 +15310,7 @@ class NectarElDynamicStyles {
         // X and Y.
         else if( false !== $transform_y && false !== $transform_x ) {
           $css[] = '@media only screen '.$media_query_size.'  {
-            .'.$element_name.'.translate_x_'.$device.'_'. esc_attr( self::percent_unit_type_class($atts['translate_x_'.$device]) ) .'.translate_y_'.$device.'_'. esc_attr( self::percent_unit_type_class($atts['translate_y_'.$device]) ) .' {
+            .'.$element_name.'.translate_x_'.$device.'_'. esc_attr( self::percent_unit_type_class($atts['translate_x_'.$device]) ) .'.translate_y_'.$device.'_'. esc_attr( self::percent_unit_type_class($atts['translate_y_'.$device]) ) . $transform_selector .' {
             -webkit-transform: '.esc_attr( $transform_vals ).';
             transform: '.esc_attr( $transform_vals ).';
           } }';

@@ -20,9 +20,6 @@ class Vc_Shared_Templates {
 	 */
 	protected $download_link_url = 'https://support.wpbakery.com/templates/download-link';
 
-	/**
-	 *
-	 */
 	public function init() {
 		if ( $this->initialized ) {
 			return;

@@ -163,9 +163,11 @@ if( $style !== 'slider' &&
       }
 			
 			
-			// Allow link posts in certian styles.
+			// Allow link posts in certain styles.
 			if( $style === 'classic_enhanced' || 
-			    $style === 'classic_enhanced_alt' ) {
+			    $style === 'classic_enhanced_alt' ||
+          $style === 'minimal' ||
+          $style === 'title_only' ) {
 					unset($recentBlogPosts['tax_query']);
 			}
 
@@ -297,9 +299,21 @@ if( $style !== 'slider' &&
 
           } // end default style
 
-          else if( $style === 'minimal' ) { ?>
+          else if( $style === 'minimal' ) { 
+            
+            $post_link_target = ( get_post_format() === 'link' ) ? 'target="_blank"' : '';
 
-            <a href="<?php the_permalink(); ?>" aria-label="<?php the_title(); ?>"></a>
+            $minimal_perma = get_permalink();
+						$post_link_url  = get_post_meta( $post->ID, '_nectar_link', true );
+						$post_link_text = get_the_content();
+
+						if ( empty( $post_link_text ) && !empty($post_link_url) ) {
+							$minimal_perma = esc_url($post_link_url);
+						}
+
+            ?>
+            
+            <a href="<?php echo $minimal_perma; ?>" <?php echo $post_link_target; ?> aria-label="<?php the_title(); ?>"></a>
             <div class="post-header">
               <span class="meta"> <span> <?php echo get_the_date() . '</span> ' . esc_html__( 'in','salient-core'); ?> <?php the_category(', '); ?> </span>
               <h3 class="title"><?php the_title(); ?></h3>
@@ -312,9 +326,20 @@ if( $style !== 'slider' &&
 
           <?php } // end minimal style
 
-          else if( $style === 'title_only' ) { ?>
+          else if( $style === 'title_only' ) { 
+            
+            $post_link_target = ( get_post_format() === 'link' ) ? 'target="_blank"' : '';
 
-            <a href="<?php the_permalink(); ?>" aria-label="<?php the_title(); ?>"></a>
+            $title_only_perma = get_permalink();
+						$post_link_url  = get_post_meta( $post->ID, '_nectar_link', true );
+						$post_link_text = get_the_content();
+
+						if ( empty( $post_link_text ) && !empty($post_link_url) ) {
+							$title_only_perma = esc_url($post_link_url);
+						}
+            ?>
+
+            <a href="<?php echo $title_only_perma; ?>" <?php echo $post_link_target; ?> aria-label="<?php the_title(); ?>"></a>
             <div class="post-header">
               <span class="meta"> <?php echo get_the_date(); ?> </span>
               <h2 class="title"><?php the_title(); ?></h2>
@@ -439,7 +464,7 @@ if( $style !== 'slider' &&
               }
             echo '</span>';
 
-            echo '<a class="entire-meta-link" aria-label="'.get_the_title().'" href="'. esc_url($classic_enhanced_perma) .'" '.$post_link_target.'></a>'; ?>
+            echo '<a class="entire-meta-link" href="'. esc_url($classic_enhanced_perma) .'" '.$post_link_target.'><span class="screen-reader-text">'.get_the_title().'</span></a>'; ?>
 
             <div class="article-content-wrap">
               <div class="post-header">

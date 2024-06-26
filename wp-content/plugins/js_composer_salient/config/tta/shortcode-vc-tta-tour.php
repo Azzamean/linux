@@ -258,6 +258,6 @@ return array(
 [vc_tta_section title="' . sprintf( '%s %d', esc_html__( 'Section', 'js_composer' ), 2 ) . '"][/vc_tta_section]
 	',
 	'admin_enqueue_js' => array(
-		vc_asset_url( 'lib/vc_tabs/vc-tabs.min.js' ),
+		vc_asset_url( 'lib/vc/vc_tabs/vc-tabs.min.js' ),
 	),
 );

@@ -15,7 +15,6 @@ class Vc_Post_Admin {
 	public function init() {
 		// hooks for backend editor
 		add_action( 'save_post', [ $this, 'save' ] );
-		add_filter( 'wp_insert_post_data', [ $this, 'change_post_fields' ], 10, 2 );
 		// hooks for frontend editor
 		add_action( 'wp_ajax_vc_save', [ $this, 'saveAjaxFe' ] );
 
@@ -56,13 +55,19 @@ class Vc_Post_Admin {
 
 		$post = get_post( $post_id );
 
+		/**
+		 * Filter post data before we update it with our plugin.
+		 *
+		 * @since 7.7
+		 * @param WP_Post $post
+		 */
+		$post = apply_filters( 'vc_before_update_post_data', $post );
+
 		$post = $this->set_post_content( $post );
 
 		$post = $this->set_post_title( $post );
 
 		$post = $this->set_post_status( $post );
-
-		$post = $this->set_post_slug( $post );
 
 		if ( vc_user_access()->part( 'unfiltered_html' )->checkStateAny( true, null )->get() ) {
 			kses_remove_filters();
@@ -73,7 +78,6 @@ class Vc_Post_Admin {
 
 		$this->setPostMeta( $post_id );
 
-		wpbakery()->buildShortcodesCustomCss( $post_id );
 		wp_cache_flush();
 		ob_clean();
 	}
@@ -88,24 +92,6 @@ class Vc_Post_Admin {
 			return;
 		}
 		$this->setPostMeta( $post_id );
-	}
-
-	/**
-	 * Change post fields corresponding to post settings.
-	 *
-	 * @since 7.4
-	 * @param array $post_fields
-	 * @return array
-	 *
-	 */
-	public function change_post_fields( $post_fields ) {
-		if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE || vc_is_inline() ) {
-			return $post_fields;
-		}
-
-		$post_fields = $this->set_post_slug( $post_fields );
-
-		return $post_fields;
 	}
 
 	/**
@@ -223,40 +209,6 @@ class Vc_Post_Admin {
 	}
 
 	/**
-	 * Set post slug
-	 *
-	 * @param WP_Post | array $post
-	 * @return WP_Post | array
-	 */
-	public function set_post_slug( $post ) {
-		$post_seo = vc_post_param( 'vc_post_custom_seo_settings' );
-		if ( empty( $post_seo ) ) {
-			return $post;
-		}
-
-		$post_seo = json_decode( stripslashes( $post_seo ), true );
-		if ( empty( $post_seo['slug'] ) ) {
-			return $post;
-		}
-
-		$slug = wp_unique_post_slug(
-			sanitize_title( $post_seo['slug'] ),
-			$post->ID,
-			$post->post_status,
-			$post->post_type,
-			$post->post_parent
-		);
-
-		if ( is_array( $post ) ) {
-			$post['post_name'] = $slug;
-		} else {
-			$post->post_name = $slug;
-		}
-
-		return $post;
-	}
-
-	/**
 	 * Set plugin meta to specific post.
 	 *
 	 * @param int $id
@@ -287,7 +239,13 @@ class Vc_Post_Admin {
 
 		$this->setPostMetaByList( $id, $meta_list );
 
-		wpbakery()->buildShortcodesCustomCss( $id );
+		$types = [
+			'default',
+			'custom',
+		];
+		foreach ( $types as $type ) {
+			wpbakery()->buildShortcodesCss( $id, $type );
+		}
 	}
 
 	/**
@@ -297,18 +255,8 @@ class Vc_Post_Admin {
 	 * @return array
 	 */
 	public function get_post_meta_list() {
-		return apply_filters( 'vc_post_meta_list',
-			[
-				//@since 4.4
-				'custom_css',
-				//@since 7.0
-				'custom_js_header',
-				'custom_js_footer',
-				'custom_layout',
-				//@since 7.4
-				'custom_seo_settings',
-			]
-		);
+		// we add valie to it in our modules
+		return apply_filters( 'vc_post_meta_list', [] );
 	}
 
 	/**

@@ -40,10 +40,12 @@
 	}
 
 	var isFrontendEditor = 'admin_frontend_editor' === window.vc_mode;
-	if (isFrontendEditor) {
-		// Initialize once on this event to prevent scroll on initial editor load
-		vc.events.once('shortcodeView:ready', initializeScrollLogic);
-	} else {
-		vc.events.on('shortcodeView:ready', _.debounce(scrollToElement, 300));
-	}
+	// nectar addition
+	// if (isFrontendEditor) {
+	// 	// Initialize once on this event to prevent scroll on initial editor load
+	// 	vc.events.once('shortcodeView:ready', initializeScrollLogic);
+	// } else {
+	// 	vc.events.on('shortcodeView:ready', _.debounce(scrollToElement, 300));
+	// }
+	// nectar addition end
 })(window.jQuery);

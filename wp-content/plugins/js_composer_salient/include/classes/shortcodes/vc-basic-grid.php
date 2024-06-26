@@ -138,7 +138,7 @@ class WPBakeryShortCode_Vc_Basic_Grid extends WPBakeryShortCode_Vc_Pageable {
 	public function shortcodeScripts() {
 		parent::shortcodeScripts();
 
-		wp_register_script( 'vc_grid-js-imagesloaded', vc_asset_url( 'lib/bower/imagesloaded/imagesloaded.pkgd.min.js' ), array( 'jquery-core' ), WPB_VC_VERSION, true );
+		wp_register_script( 'vc_grid-js-imagesloaded', vc_asset_url( 'lib/vendor/node_modules/imagesloaded/imagesloaded.pkgd.min.js' ), array( 'jquery-core' ), WPB_VC_VERSION, true );
 		wp_register_script( 'vc_grid', vc_asset_url( 'js/dist/vc_grid.min.js' ), array(
 			'jquery-core',
 			'underscore',
@@ -510,6 +510,7 @@ class WPBakeryShortCode_Vc_Basic_Grid extends WPBakeryShortCode_Vc_Pageable {
 			);
 			if ( ! empty( $atts['taxonomies'] ) ) {
 				$vc_taxonomies_types = get_taxonomies( array( 'public' => true ) );
+				// phpcs:ignore
 				$terms = get_terms( array_keys( $vc_taxonomies_types ), array(
 					'hide_empty' => false,
 					'include' => $atts['taxonomies'],

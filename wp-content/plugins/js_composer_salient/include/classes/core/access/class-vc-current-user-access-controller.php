@@ -143,6 +143,7 @@ class Vc_Current_User_Access_Controller extends Vc_Role_Access_Controller {
 
 		if ( $this->getValidAccess() ) {
 			// Administrators have all access always
+            // phpcs:ignore
 			if ( current_user_can( 'administrator' ) ) {
 				$this->setValidAccess( true );
 
@@ -188,6 +189,7 @@ class Vc_Current_User_Access_Controller extends Vc_Role_Access_Controller {
 	public function getState() {
 		$currentUser = wp_get_current_user();
 		$allCaps = $currentUser->get_role_caps();
+        // phpcs:ignore
 		if ( current_user_can( 'administrator' ) ) {
 			return true;
 		}

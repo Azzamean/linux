@@ -197,18 +197,19 @@ class Vc_Backend_Editor extends Vc_Editor {
 			'underscore',
 		), WPB_VC_VERSION, true );
 		// used in tta shortcodes, and panels.
-		wp_register_script( 'vc_accordion_script', vc_asset_url( 'lib/vc_accordion/vc-accordion.min.js' ), array( 'jquery-core' ), WPB_VC_VERSION, true );
+		wp_register_script( 'vc_accordion_script', vc_asset_url( 'lib/vc/vc_accordion/vc-accordion.min.js' ), array( 'jquery-core' ), WPB_VC_VERSION, true );
 		wp_register_script( 'vc-backend-min-js', vc_asset_url( 'js/dist/backend.min.js' ), array(
 			'vc-backend-actions-js',
 			'vc_accordion_script',
 			'wp-color-picker',
 		), WPB_VC_VERSION, true );
-		wp_register_script( 'wpb_php_js', vc_asset_url( 'lib/php.default/php.default.min.js' ), array( 'jquery-core' ), WPB_VC_VERSION, true );
+		wp_register_script( 'wpb_php_js', vc_asset_url( 'lib/vendor/php.default/php.default.min.js' ), array( 'jquery-core' ), WPB_VC_VERSION, true );
 		// used as polyfill for JSON.stringify and etc
-		wp_register_script( 'wpb_json-js', vc_asset_url( 'lib/bower/json-js/json2.min.js' ), array(), WPB_VC_VERSION, true );
+		wp_register_script( 'wpb_json-js', vc_asset_url( 'lib/vendor/node_modules/json-js/json2.min.js' ), array(), WPB_VC_VERSION, true );
 		// used in post settings editor
-		wp_register_script( 'ace-editor', vc_asset_url( 'lib/bower/ace-builds/src-min-noconflict/ace.js' ), array( 'jquery-core' ), WPB_VC_VERSION, true );
+		wp_register_script( 'ace-editor', vc_asset_url( 'lib/vendor/node_modules/ace-builds/src-min-noconflict/ace.js' ), array( 'jquery-core' ), WPB_VC_VERSION, true );
 		wp_register_script( 'webfont', 'https://ajax.googleapis.com/ajax/libs/webfont/1.6.26/webfont.js', array(), WPB_VC_VERSION, true ); // Google Web Font CDN
+		wp_register_script( 'popper', vc_asset_url( 'lib/vendor/node_modules/@popperjs/core/dist/umd/popper.min.js' ), array(), WPB_VC_VERSION, true );
 
 		wp_localize_script( 'vc-backend-actions-js', 'i18nLocale', wpbakery()->getEditorsLocale() );
 	}
@@ -220,7 +221,7 @@ class Vc_Backend_Editor extends Vc_Editor {
 			/**
 			 * @deprecated, used for accordions/tabs/tours
 			 */
-			wp_register_style( 'ui-custom-theme', vc_asset_url( 'css/ui-custom-theme/jquery-ui-less.custom.min.css' ), array(), WPB_VC_VERSION );
+			wp_register_style( 'ui-custom-theme', vc_asset_url( 'css/jquery-ui-less.custom.min.css' ), array(), WPB_VC_VERSION );
 
 			/**
 			 * @todo check vc_add-element-deprecated-warning for fa icon usage ( set to our font )
@@ -234,7 +235,7 @@ class Vc_Backend_Editor extends Vc_Editor {
 			 * @todo check for usages
 			 * definetelly used in edit form param: css_animation, but curreny vc_add_shortcode_param doesn't accept css [ @todo refactor that ]
 			 */
-			wp_register_style( 'vc_animate-css', vc_asset_url( 'lib/bower/animate-css/animate.min.css' ), array(), WPB_VC_VERSION );
+			wp_register_style( 'vc_animate-css', vc_asset_url( 'lib/vendor/node_modules/animate.css/animate.min.css' ), array(), WPB_VC_VERSION );
 		}
 	}
 
@@ -264,6 +265,7 @@ class Vc_Backend_Editor extends Vc_Editor {
 			'wpb_json-js',
 			'ace-editor',
 			'webfont',
+			'popper',
 			'vc-backend-min-js',
 		);
 

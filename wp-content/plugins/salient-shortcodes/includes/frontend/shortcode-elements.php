@@ -580,7 +580,7 @@ function nectar_team_member($atts, $content = null) {
 		
 
 
-	$html .= '<div class="team-member" data-style="'.$team_memeber_style.'">';
+	$html .= '<div class="team-member" data-style="'.esc_attr($team_memeber_style).'">';
 	
 	if($team_memeber_style === 'meta_overlaid' || $team_memeber_style === 'meta_overlaid_alt'){
 		
@@ -1454,7 +1454,7 @@ function nectar_recent_posts($atts, $content = null) {
 									  //video embed
 									  if( !empty( $video_embed ) ) {
 										
-							        echo '<div class="video">' . do_shortcode($video_embed) . '</div>';
+							        echo '<div class="video">' . do_shortcode(wp_kses_post($video_embed)) . '</div>';
 										
 							      } 
 							          //self hosted video pre 3-6
@@ -1603,7 +1603,7 @@ function nectar_recent_posts($atts, $content = null) {
   							if ( ! empty( $categories ) ) {
   								$output = null;
   							    foreach( $categories as $category ) {
-  							        $output .= '<a class="'.$category->slug.'" href="' . esc_url( get_category_link( $category->term_id ) ) . '">' . esc_html( $category->name ) . '</a>';
+  							        $output .= '<a class="'.esc_attr($category->slug).'" href="' . esc_url( get_category_link( $category->term_id ) ) . '">' . esc_html( $category->name ) . '</a>';
   							        break;
                     }
   							    echo trim( $output);
@@ -1656,7 +1656,7 @@ function nectar_recent_posts($atts, $content = null) {
 							if ( ! empty( $categories ) ) {
 								$output = null;
 							    foreach( $categories as $category ) {
-							        $output .= '<a class="'.$category->slug.'" href="' . esc_url( get_category_link( $category->term_id ) ) . '">' . esc_html( $category->name ) . '</a>';
+							        $output .= '<a class="'.esc_attr($category->slug).'" href="' . esc_url( get_category_link( $category->term_id ) ) . '">' . esc_html( $category->name ) . '</a>';
 							    }
 							    echo trim( $output);
 								}
@@ -1760,7 +1760,7 @@ function nectar_recent_posts($atts, $content = null) {
  
     $animate_in_effect = (!empty($nectar_options['header-animate-in-effect'])) ? $nectar_options['header-animate-in-effect'] : 'none';
     
-    echo '<div id="'.uniqid('rps_').'" class="nectar-recent-posts-single_featured parallax_section" data-padding="'. esc_attr( $large_featured_padding ) .'" data-bg-overlay="'. esc_attr( $bg_overlay ) .'" data-height="'. esc_attr( $slider_size ) .'" data-animate-in-effect="'. esc_attr( $animate_in_effect ) .'" data-remove-post-date="'. esc_attr( $blog_remove_post_date ) .'" data-remove-post-author="'. esc_attr( $blog_remove_post_author ) .'" data-remove-post-comment-number="'.$blog_remove_post_comment_number.'" data-remove-post-nectar-love="'.$blog_remove_post_nectar_love.'">';
+    echo '<div id="'.uniqid('rps_').'" class="nectar-recent-posts-single_featured parallax_section" data-padding="'. esc_attr( $large_featured_padding ) .'" data-bg-overlay="'. esc_attr( $bg_overlay ) .'" data-height="'. esc_attr( $slider_size ) .'" data-animate-in-effect="'. esc_attr( $animate_in_effect ) .'" data-remove-post-date="'. esc_attr( $blog_remove_post_date ) .'" data-remove-post-author="'. esc_attr( $blog_remove_post_author ) .'" data-remove-post-comment-number="'.esc_attr($blog_remove_post_comment_number).'" data-remove-post-nectar-love="'.esc_attr($blog_remove_post_nectar_love).'">';
 
     $i = 0;
     if( $recent_posts_query->have_posts() ) :  while( $recent_posts_query->have_posts() ) : $recent_posts_query->the_post(); global $post; ?>
@@ -1799,7 +1799,7 @@ function nectar_recent_posts($atts, $content = null) {
                   $i = 0;
                   foreach( $categories as $category ) {
                      $i++;
-                     $cat_output .= '<a class="'.$category->slug.'" href="' . esc_url( get_category_link( $category->term_id ) ) . '"><span class="'.$category->slug.'">'.esc_html( $category->name ) .'</span></a>';
+                     $cat_output .= '<a class="'.esc_attr($category->slug).'" href="' . esc_url( get_category_link( $category->term_id ) ) . '"><span class="'.esc_attr($category->slug).'">'.esc_html( $category->name ) .'</span></a>';
                      if($i > 0) {
                        break;  
                      }
@@ -1935,7 +1935,7 @@ function nectar_recent_posts($atts, $content = null) {
                   $i = 0;
                   foreach( $categories as $category ) {
                      $i++;
-                     $cat_output .= '<a class="'.$category->slug.'" href="' . esc_url( get_category_link( $category->term_id ) ) . '"><span class="'.$category->slug.'">'.esc_html( $category->name ) .'</span></a>';
+                     $cat_output .= '<a class="'.esc_attr($category->slug).'" href="' . esc_url( get_category_link( $category->term_id ) ) . '"><span class="'.esc_attr($category->slug).'">'.esc_html( $category->name ) .'</span></a>';
                       if($i > 0) {
                         break;  
                       }

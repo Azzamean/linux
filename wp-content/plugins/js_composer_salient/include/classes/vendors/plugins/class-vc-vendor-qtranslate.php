@@ -343,7 +343,7 @@ class Vc_Vendor_Qtranslate {
 
 		$output .= '<input type="hidden" id="vc_vendor_qtranslate_posttitle" value="' . esc_attr( vc_frontend_editor()->post()->post_title ) . '" data-lang="' . esc_attr($q_lang) . '"/>';
 		// nectar addition end
-
+		
 		echo $output;
 	}
 

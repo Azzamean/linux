@@ -413,6 +413,7 @@ function vc_field_attached_images( $images = array() ) {
 }
 
 
+
 /* nectar addition */ 
 if( !function_exists('fjarrett_get_attachment_id_by_url') ) {
 	function fjarrett_get_attachment_id_by_url( $url ) {
@@ -438,7 +439,6 @@ if( !function_exists('fjarrett_get_attachment_id_by_url') ) {
 	}
 }
 /* nectar addition end */ 
-
 
 /**
  * @param $param_value
@@ -922,6 +922,7 @@ function vc_colorCreator( $colour, $per = 10 ) { // phpcs:ignore
 		return $colour;
 	}
 }
+
 
 
 /* nectar addition */ 
@@ -1455,8 +1456,7 @@ function vc_stringify_attributes( $attributes ) {
 function vc_is_responsive_disabled() {
 	//nectar addition
 	$disable_responsive = '0';
-  //nectar addition end
-
+	//nectar addition end
 	return '1' === $disable_responsive;
 }
 
@@ -1613,88 +1613,22 @@ function wpb_check_wordpress_com_env() {
 		'2' === ATOMIC_CLIENT_ID;
 }
 
-/**
- * Get name of post custom layout.
- * @note it can be empty sting if post custom layout is not set
- * @since 7.0
- *
- * @return string
- */
-function wpb_get_name_post_custom_layout() {
-	$layout_manager = new Vc_PostCustomLayout();
-	return $layout_manager->getCustomLayoutName();
-}
-
-if ( ! function_exists( 'wpb_add_ai_to_text_field' ) ) {
+if ( ! function_exists( 'wpb_get_post_id' ) ) {
 	/**
-	 * Add AI icon to text field.
+	 * Get current post id for plugin custom output like css and js.
 	 *
-	 * @param string $type
-	 * @param string $field_id
-	 * @since 7.4
+	 * @since  7.7
+	 * @return false|int
 	 */
-	function wpb_add_ai_icon_to_text_field( $type, $field_id ) {
-		if ( ! vc_user_access()->part( 'text_ai' )->can()->get() ) {
-			return;
+	function wpb_get_post_id_for_custom_output() {
+		$id = false;
+		if ( is_front_page() || is_home() ) {
+			$id = get_queried_object_id();
+		} elseif ( is_singular() ) {
+			$id = get_the_ID();
+		}
 
-		}
-		// nectar addition
-		if ( apply_filters('nectar_wpbakery_ai_enabled', false) !== true ) {
-			return;
-		}
-		wpb_get_ai_icon_template( $type, $field_id );
+		return $id;
 	}
 }
 
-if ( ! function_exists( 'wpb_add_ai_to_code_field' ) ) {
-	/**
-	 * Add AI icon to code field.
-	 *
-	 * @param string $type
-	 * @param string $field_id
-	 * @since 7.4
-	 */
-	function wpb_add_ai_icon_to_code_field( $type, $field_id ) {
-		if ( ! vc_user_access()->part( 'code_ai' )->can()->get() ) {
-			return;
-		}
-		// nectar addition
-		if ( apply_filters('nectar_wpbakery_ai_enabled', false) !== true ) {
-			return;
-		}
-		// nectar addition end
-		wpb_get_ai_icon_template( $type, $field_id );
-	}
-}
-
-if ( ! function_exists( 'wpb_get_ai_icon_template' ) ) {
-	/**
-	 * Get AI icon.
-	 *
-	 * @param string $type
-	 * @param string $field_id
-	 * @since 7.4
-	 *
-	 * @return mixed
-	 */
-	function wpb_get_ai_icon_template( $type, $field_id, $is_include = true ) {
-		$template = apply_filters( 'wpb_get_ai_icon_template', 'editors/partials/icon-ai.tpl.php', $type, $field_id );
-		if ( $is_include ) {
-			vc_include_template(
-				$template,
-				[
-					'type' => $type,
-					'field_id' => $field_id,
-				]
-			);
-		} else {
-			return vc_get_template(
-				$template,
-				[
-					'type' => $type,
-					'field_id' => $field_id,
-				]
-			);
-		}
-	}
-}

@@ -27,7 +27,7 @@ $nectar_post_class_additions = ' masonry-blog-item';
 
       <div class="content-inner">
         
-        <a class="entire-meta-link" href="<?php the_permalink(); ?>" aria-label="<?php the_title(); ?>"></a>
+        <a class="entire-meta-link" href="<?php the_permalink(); ?>"><span class="screen-reader-text"><?php echo get_the_title(); ?></span></a>
         
         <?php
         

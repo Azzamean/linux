@@ -832,23 +832,26 @@ if( $woocommerce && 'h3' === $product_tab_heading_typography ) {
 
     $font_family = (1 === preg_match('~[0-9]~', $nectar_options['h4_font'])) ? '"'. $nectar_options['h4_font'] .'"' : $nectar_options['h4_font'];
 
-		?>
 
-		@media only screen and (min-width: 691px) {
-			.portfolio-items[data-ps="6"] .wide_tall .work-meta h4 {
-				font-size: <?php if(!empty($nectar_options['h4_font_size']) && $nectar_options['h4_font_size'] != '-') echo intval($nectar_options['h4_font_size'])*1.7 . 'px!important' ?>;
-				line-height: <?php if(!empty($nectar_options['h4_font_size']) && $nectar_options['h4_font_size'] != '-') echo (intval($nectar_options['h4_font_size'])*1.7) +8 . 'px!important' ?>;
+		if(!empty($nectar_options['h4_font_size']) && $nectar_options['h4_font_size'] != '-') {
+			?>
+
+			@media only screen and (min-width: 691px) {
+				.portfolio-items[data-ps="6"] .wide_tall .work-meta h4 {
+					font-size: <?php if(!empty($nectar_options['h4_font_size']) && $nectar_options['h4_font_size'] != '-') echo intval($nectar_options['h4_font_size'])*1.7 . 'px!important' ?>;
+					line-height: <?php if(!empty($nectar_options['h4_font_size']) && $nectar_options['h4_font_size'] != '-') echo (intval($nectar_options['h4_font_size'])*1.7) +8 . 'px!important' ?>;
+				}
+
+				.nectar-slide-in-cart .widget_shopping_cart .cart_list .mini_cart_item > a:not(.remove) {
+					<?php if($nectar_options['h4_font'] != '-') echo 'font-family: ' . $font_family .'!important;';
+					if(!empty($styles[0]) && $styles[0] == 'regular') $styles[0] = '400';
+					if(!empty($styles[0]) && strpos($styles[0],'italic') === false) { echo 'font-weight:' .  $styles[0] .'!important;'; } ?>
+				}
+
 			}
-
-			.nectar-slide-in-cart .widget_shopping_cart .cart_list .mini_cart_item > a:not(.remove) {
-				<?php if($nectar_options['h4_font'] != '-') echo 'font-family: ' . $font_family .'!important;';
-				if(!empty($styles[0]) && $styles[0] == 'regular') $styles[0] = '400';
-			  if(!empty($styles[0]) && strpos($styles[0],'italic') === false) { echo 'font-weight:' .  $styles[0] .'!important;'; } ?>
-			}
-
-		}
 
 		<?php
+		}
 			$defined_font_size   = (!empty($nectar_options['h4_font_size']) && $nectar_options['h4_font_size'] != '-') ? intval($nectar_options['h4_font_size']) : $nectar_h4_default_size;
 			$defined_line_height = (!empty($the_line_height)) ? intval($the_line_height) : $nectar_h4_default_size + 10;
 		?>
@@ -966,13 +969,14 @@ if( $woocommerce && 'h3' === $product_tab_heading_typography ) {
 		// Store calculated line height.
 		$the_line_height = nectar_font_line_height('h5_font', $line_height, $nectar_options);
 
-		?>
-
-		body .wpb_column > .wpb_wrapper > .morphing-outline .inner > h5 {
-			font-size: <?php if(!empty($nectar_options['h5_font_size']) && $nectar_options['h5_font_size'] != '-') echo ceil(intval($nectar_options['h5_font_size'])*1.35) . 'px' ?>;
+		
+		if( !empty($nectar_options['h5_font_size']) && $nectar_options['h5_font_size'] != '-')  {
+			echo 'body .wpb_column > .wpb_wrapper > .morphing-outline .inner > h5 {
+				font-size: '.ceil(intval($nectar_options['h5_font_size'])*1.35) . 'px'.'
+			}';
 		}
 
-		<?php
+		
 			$defined_font_size = (!empty($nectar_options['h5_font_size']) && $nectar_options['h5_font_size'] != '-') ? intval($nectar_options['h5_font_size']) : $nectar_h5_default_size;
 			$defined_line_height = (!empty($the_line_height)) ? intval($the_line_height) : $nectar_h5_default_size + 10;
 		?>

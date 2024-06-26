@@ -71,12 +71,18 @@ extract(shortcode_atts(array(
     $wp_image_size = esc_html($custom_image_size);
   }
 
+  $full_image_url = $image_url;
+
   if( preg_match('/^\d+$/',$image_url) ) {
 
     $image_id = $image_url;
 		$image_url = apply_filters('wpml_object_id', $image_url, 'attachment', TRUE);
 
     $image_src = wp_get_attachment_image_src($image_url, $wp_image_size);
+    $full_image_url = wp_get_attachment_image_url($image_url, 'full');
+    if (!$full_image_url) {
+      $full_image_url = ( isset($image_src[0]) ) ? $image_src[0] : '';
+    }
 
     if (function_exists('wp_get_attachment_image_srcset')) {
 
@@ -329,7 +335,7 @@ extract(shortcode_atts(array(
       <div class="inner"'.$inner_style_attrs.'>
         <div class="hover-wrap"'.$image_hover_attrs_escaped.'> '.$color_overlay_markup_escaped.'
           <div class="hover-wrap-inner">
-            <a href="'.esc_url($image_url).'"'.$aria_label_markup.' class="pp '.esc_attr($alignment).'"'.$wp_img_caption_markup_escaped.'>
+            <a href="'.esc_url($full_image_url).'"'.$aria_label_markup.' class="pp '.esc_attr($alignment).'"'.$wp_img_caption_markup_escaped.'>
               <img class="img-with-animation '.esc_attr($el_class).'" '.$image_attrs_escaped.' />
             </a>
           </div>

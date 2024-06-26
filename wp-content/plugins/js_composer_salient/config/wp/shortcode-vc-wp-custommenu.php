@@ -5,6 +5,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 $custom_menus = array();
 if ( 'vc_edit_form' === vc_post_param( 'action' ) && vc_verify_admin_nonce() ) {
+	// phpcs:ignore
 	$menus = get_terms( 'nav_menu', array( 'hide_empty' => false ) );
 	if ( is_array( $menus ) && ! empty( $menus ) ) {
 		foreach ( $menus as $single_menu ) {

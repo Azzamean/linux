@@ -79,10 +79,11 @@ function nectar_icon($atts, $content = null) {
         $animation_speed_time = 65;
       }
 
-			$svg_icon = '<div class="nectar_icon_wrap"><span class="svg-icon-holder" data-size="'. esc_attr($icon_size) . '" data-animation-speed="'.esc_attr($animation_speed_time).'" data-animation="'.esc_attr($enable_animation).'" data-animation-delay="'.esc_attr($animation_delay).'" data-color="'.esc_attr(strtolower($color)) .'"><span>';
+		$svg_icon = '<div class="nectar_icon_wrap"><span class="svg-icon-holder" data-size="'. esc_attr($icon_size) . '" data-animation-speed="'.esc_attr($animation_speed_time).'" data-animation="'.esc_attr($enable_animation).'" data-animation-delay="'.esc_attr($animation_delay).'" data-color="'.esc_attr(strtolower($color)) .'"><span>';
       
-      ob_start();
-    
+     	ob_start();
+
+		$image = sanitize_file_name($image);
     	get_template_part( 'css/fonts/svg/'. $image );
       
     	$svg_icon .= ob_get_contents();
@@ -103,6 +104,7 @@ function nectar_icon($atts, $content = null) {
 		
   	ob_start();
   
+	$converted_icon = sanitize_file_name($converted_icon);
   	get_template_part( 'css/fonts/svg-iconsmind/'. $converted_icon .'.svg' );
   	
   	$icon_markup .=  ob_get_contents();
@@ -178,7 +180,7 @@ function nectar_icon($atts, $content = null) {
 		if( strpos($image, 'fa-') !== false ) {
 			$fontawesome_extra = ' fa';
 		}
-		return '<i class="'. esc_attr($size_class) . $fontawesome_extra . ' ' . $image . ' ' . esc_attr(strtolower($color)) .'">' . $border . '</i>';
+		return '<i class="'. esc_attr($size_class) . $fontawesome_extra . ' ' . esc_attr($image) . ' ' . esc_attr(strtolower($color)) .'">' . $border . '</i>';
 	}
     
 }
@@ -252,7 +254,8 @@ function nectar_button($atts, $content = null) {
   	if(!empty($image) && strpos($image,'.svg') !== false) {
 			
   		if(!empty($image)) { 
-				$button_icon = '<img src="'.get_template_directory_uri() . '/css/fonts/svg/'.$image.'" alt="icon" />'; 
+				$image = sanitize_file_name($image);
+				$button_icon = '<img src="'.get_template_directory_uri() . '/css/fonts/svg/'.esc_attr($image).'" alt="icon" />'; 
 				$has_icon = ' has-icon'; 
 			} else { 
 				$button_icon = null; 
@@ -406,7 +409,7 @@ function nectar_one_half( $atts, $content = null ) {
 	
 	$column_classes   = null;
 	$box_border       = null;
-  $parsed_animation = null;	
+  $parsed_animation = '';	
 	
 	if($boxed === 'true') { 
 		$column_classes .= ' boxed'; 
@@ -446,7 +449,7 @@ function nectar_one_half_last( $atts, $content = null ) {
 	
 	$column_classes   = null;
 	$box_border       = null;
-  $parsed_animation = null;	
+  $parsed_animation = '';	
 	
 	if($boxed === 'true') { 
 		$column_classes .= ' boxed'; 
@@ -485,7 +488,7 @@ function nectar_one_third( $atts, $content = null ) {
 	
 	$column_classes   = null;
 	$box_border       = null;
-  $parsed_animation = null;	
+	$parsed_animation = '';	
 	
 	if($boxed === 'true') { 
 		$column_classes .= ' boxed'; 
@@ -524,7 +527,7 @@ function nectar_one_third_last( $atts, $content = null ) {
 	
 	$column_classes   = null;
 	$box_border       = null;
-  $parsed_animation = null;	
+	$parsed_animation = '';
 	
 	if($boxed === 'true') { 
 		$column_classes .= ' boxed'; $box_border = '<span class="bottom-line"></span>'; 
@@ -561,7 +564,7 @@ function nectar_two_thirds( $atts, $content = null ) {
 	
 	$column_classes   = null;
 	$box_border       = null;
-	$parsed_animation = null;	
+	$parsed_animation = '';	
 	
 	if($boxed === 'true') { 
 		$column_classes .= ' boxed'; 
@@ -599,7 +602,7 @@ function nectar_two_thirds_last( $atts, $content = null ) {
 	
 	$column_classes   = null;
 	$box_border       = null;
-  $parsed_animation = null;	
+	$parsed_animation = '';	
 	
 	if($boxed === 'true') { 
 		$column_classes .= ' boxed'; 
@@ -638,7 +641,7 @@ function nectar_one_fourth( $atts, $content = null ) {
 	
 	$column_classes   = null;
 	$box_border       = null;
-  $parsed_animation = null;	
+	$parsed_animation = '';		
 	
 	if($boxed === 'true') { 
 		$column_classes .= ' boxed'; 
@@ -676,7 +679,7 @@ function nectar_one_fourth_last( $atts, $content = null ) {
 	
 	$column_classes   = null;
 	$box_border       = null;
-	$parsed_animation = null;	
+	$parsed_animation = '';		
 	
 	if($boxed === 'true') { 
 		$column_classes .= ' boxed'; 
@@ -714,7 +717,7 @@ function nectar_three_fourths( $atts, $content = null ) {
 	
 	$column_classes   = null;
 	$box_border       = null;
-	$parsed_animation = null;	
+	$parsed_animation = '';	
 	
 	if($boxed === 'true') { 
 		$column_classes .= ' boxed'; 
@@ -753,7 +756,7 @@ function nectar_three_fourths_last( $atts, $content = null ) {
 	
 	$column_classes   = null;
 	$box_border       = null;
-	$parsed_animation = null;	
+	$parsed_animation = '';	
 	
 	if($boxed === 'true') { 
 		$column_classes .= ' boxed'; 
@@ -792,7 +795,7 @@ function nectar_one_sixth( $atts, $content = null ) {
 	
 	$column_classes   = null;
 	$box_border       = null;
-  $parsed_animation = null;	
+	$parsed_animation = '';	
 	
 	if($boxed === 'true') { 
 		$column_classes .= ' boxed'; 
@@ -830,7 +833,7 @@ function nectar_one_sixth_last( $atts, $content = null ) {
 	
 	$column_classes   = null;
 	$box_border       = null;
-	$parsed_animation = null;	
+	$parsed_animation = '';	
 	
 	if($boxed === 'true') { 
 		$column_classes .= ' boxed'; 
@@ -868,7 +871,7 @@ function nectar_five_sixths( $atts, $content = null ) {
 	
 	$column_classes   = null;
 	$box_border       = null;
-  $parsed_animation = null;	
+	$parsed_animation = '';	
 	
 	if($boxed === 'true') { 
 		$column_classes .= ' boxed'; 
@@ -905,7 +908,7 @@ function nectar_five_sixths_last( $atts, $content = null ) {
 	
 	$column_classes   = null;
 	$box_border       = null;
-  $parsed_animation = null;	
+	$parsed_animation = '';	
 	
 	if($boxed === 'true') { 
 		$column_classes .= ' boxed'; 
@@ -945,7 +948,7 @@ function nectar_one_whole( $atts, $content = null ) {
 	
 	$column_classes   = null;
 	$box_border       = null;
-	$parsed_animation = null;	
+	$parsed_animation = '';	
 	
 	if($boxed === 'true') { 
 		$column_classes .= ' boxed'; 

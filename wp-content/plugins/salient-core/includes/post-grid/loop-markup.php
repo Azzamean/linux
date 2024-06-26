@@ -376,13 +376,13 @@ if(!function_exists('nectar_post_grid_item_markup')) {
               if( 'lazy-load' === $atts['image_loading'] && NectarLazyImages::activate_lazy() ||
                  ( property_exists('NectarLazyImages', 'global_option_active') && true === NectarLazyImages::$global_option_active && 'skip-lazy-load' !== $atts['image_loading'] ) ) {
 
-                $regular_image_markup .= '<img class="nectar-lazy" data-nectar-img-src="'.nectar_ssl_check( esc_url( $custom_thumbnail ) ).'" alt="'. get_the_title() .'" />';
+                $regular_image_markup .= '<img class="nectar-lazy" data-nectar-img-src="'.nectar_ssl_check( esc_url( $custom_thumbnail ) ).'" alt="'. esc_attr(get_the_title()) .'" />';
                 
               }
 
               // Regular load.
               else {              
-                $regular_image_markup .= '<img class="skip-lazy" src="'.nectar_ssl_check( esc_url( $custom_thumbnail ) ).'" alt="'. get_the_title() .'" />';
+                $regular_image_markup .= '<img class="skip-lazy" src="'.nectar_ssl_check( esc_url( $custom_thumbnail ) ).'" alt="'. esc_attr(get_the_title()) .'" />';
                 
               }
 
@@ -507,7 +507,7 @@ if(!function_exists('nectar_post_grid_item_markup')) {
             $markup .= '<div class="nectar-post-grid-item-bg-wrap">'.$parallax_el_markup_open.'<div class="nectar-post-grid-item-bg-wrap-inner">';
             // Conditional based on style
             if( 'content_overlaid' !== $atts['grid_style'] && 'vertical_list' !== $atts['grid_style'] ) {
-              $markup .= '<a class="bg-wrap-link" aria-label="'.get_the_title().'" href="'. esc_attr($post_perma) .'"></a>';
+              $markup .= '<a class="bg-wrap-link" href="'. esc_attr($post_perma) .'"><span class="screen-reader-text">'.get_the_title().'</span></a>';
             }
 
             $markup .= $secondary_image_markup . '<div class="nectar-post-grid-item-bg">'.apply_filters('nectar_post_grid_item_image', $regular_image_markup).'</div>';
@@ -537,11 +537,11 @@ if(!function_exists('nectar_post_grid_item_markup')) {
             $markup .= $nectar_post_grid_item_content_markup_before;
           }
 
-          $markup .= '<a class="nectar-post-grid-link'.$link_classes_escaped.'" href="'. esc_attr($post_perma) .'" aria-label="'.get_the_title().'"'.$link_attrs_escaped.'></a>';
+          $markup .= '<a class="nectar-post-grid-link'.$link_classes_escaped.'" href="'. esc_attr($post_perma) .'" '.$link_attrs_escaped.'><span class="screen-reader-text">'.get_the_title().'</span></a>';
 
           $markup .= $category_markup;
 
-          $post_title_overlay = ( isset($atts['post_title_overlay']) && 'yes' === $atts['post_title_overlay'] ) ? ' data-title-text="'.get_the_title().'"' : '';
+          $post_title_overlay = ( isset($atts['post_title_overlay']) && 'yes' === $atts['post_title_overlay'] ) ? ' data-title-text="'.esc_attr(get_the_title()).'"' : '';
 
           $markup .= '<div class="item-main">';
           

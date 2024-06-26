@@ -35,6 +35,12 @@
   transition: transform 0.3s cubic-bezier(0.2, 0.6, 0.3, 1);
 }
 
+@-moz-document url-prefix() {
+  .flickity-slider {
+    transition: none!important;
+  }
+}
+
 .nectar-flickity.nectar-carousel[data-format="default"][data-wrap="no-wrap"][data-ticker-speed] .flickity-slider {
   transition: none;
 }

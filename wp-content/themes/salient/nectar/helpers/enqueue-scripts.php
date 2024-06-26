@@ -441,6 +441,7 @@ function nectar_register_js() {
 			'quick_search'                => ( $ajax_search === 'yes' && $header_search !== 'false' && $nectar_theme_skin === 'material' ) ? 'true' : 'false',
 			'react_compat'                => apply_filters('salient_react_compatibility', 'disabled'), // deprecated -- removed from use in 16.0
 			'header_entrance'             =>  $header_entrance,
+			'dropdown_hover_intent'       => ( isset( $nectar_options['header-dropdown-delay'] ) ) ? esc_html($nectar_options['header-dropdown-delay']) : 'default',
 			'simplify_ocm_mobile'         => ( isset( $nectar_options['header-slide-out-from-right-simplify-mobile'] ) ) ? esc_html($nectar_options['header-slide-out-from-right-simplify-mobile']) : 'false',
 			'mobile_header_format'        => ( isset( $nectar_options['mobile-menu-layout'] ) ) ? esc_html($nectar_options['mobile-menu-layout']) : 'default',
 			'ocm_btn_position'            => ( isset( $nectar_options['ocm_btn_position'] ) ) ? esc_html($nectar_options['ocm_btn_position']) : 'default',

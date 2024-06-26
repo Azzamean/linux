@@ -1410,7 +1410,7 @@ if( !function_exists('nectar_ocm_button_markup') ) {
 		}
 
 		echo '<li class="slide-out-widget-area-toggle" data-icon-animation="simple-transform" data-custom-color="'.esc_attr($ocm_menu_btn_bg_color) .'">';
-			echo '<div> <a href="#sidewidgetarea" aria-label="'. esc_attr__('Navigation Menu', 'salient') .'" aria-expanded="false" role="button" class="closed'.$menu_label_class.'"> '.$menu_label.'<span aria-hidden="true"> <i class="lines-button x2"> <i class="lines"></i> </i> </span> </a> </div>';
+			echo '<div> <a href="#slide-out-widget-area" aria-label="'. esc_attr__('Navigation Menu', 'salient') .'" aria-expanded="false" role="button" class="closed'.$menu_label_class.'"> '.$menu_label.'<span aria-hidden="true"> <i class="lines-button x2"> <i class="lines"></i> </i> </span> </a> </div>';
 		echo '</li>';
 	}
 }

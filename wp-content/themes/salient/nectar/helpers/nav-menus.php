@@ -762,6 +762,21 @@ if ( ! function_exists( 'nectar_menu_options_walker_nav_menu' ) ) {
 add_filter( 'walker_nav_menu_start_el', 'nectar_menu_options_walker_nav_menu', 10, 4 );
 
 
+if( !function_exists('salient_wcag_nav_menu_link_attributes') ) {
+	function salient_wcag_nav_menu_link_attributes( $atts, $item, $args, $depth ) {
+
+		// Add [aria-haspopup] and [aria-expanded] to menu items that have children
+		$item_has_children = in_array( 'menu-item-has-children', $item->classes );
+		if ( $item_has_children ) {
+			$atts['aria-haspopup'] = "true";
+			$atts['aria-expanded'] = "false";
+		}
+
+		return $atts;
+	}
+}
+add_filter( 'nav_menu_link_attributes', 'salient_wcag_nav_menu_link_attributes', 10, 4 );
+
 
 
 

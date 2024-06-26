@@ -22,7 +22,9 @@ $custom_tag = 'script';
 <<?php echo esc_attr( $custom_tag ); ?>>
 	window.vc_post_id = <?php echo get_the_ID(); ?>;
 	<?php
-	$vc_gitem_template = vc_request_param( 'vc_gitem_template' );
+	// nectar addition - php 8.2 compatibility, pass in empty string as second argument
+	$vc_gitem_template = vc_request_param( 'vc_gitem_template', '' );
+	// nectar addition end
 	$template = Vc_Grid_Item::predefinedTemplate( $vc_gitem_template );
 	if ( strlen( $vc_gitem_template ) && $template ) {
 		echo "var vcDefaultGridItemContent = '" . $template['template'] . "';";

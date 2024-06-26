@@ -1835,6 +1835,12 @@
 					$disableHI = false;
 				}
 
+				if ( window.nectarOptions && window.nectarOptions.dropdown_hover_intent ) {
+					if ( window.nectarOptions.dropdown_hover_intent === 'add' ) {
+						$disableHI = false;
+					}
+				}
+
 				$(".sf-menu:not(.buttons)").superfish({
 					delay: 500,
 					speed: 'fast',
@@ -3349,6 +3355,14 @@
 			$(window).on('nectar-ocm-open',this.setFocus.bind(this));
 			$(window).on('nectar-ocm-close',this.releaseFocus.bind(this));
 
+			$( 'nav' ).on( 'focus.aria mouseenter.aria', '[aria-haspopup="true"]', function ( ev ) {
+				$( ev.currentTarget ).attr( 'aria-expanded', true );
+			});
+			
+			$( 'nav' ).on( 'blur.aria mouseleave.aria', '[aria-haspopup="true"]', function ( ev ) {
+				$( ev.currentTarget ).attr( 'aria-expanded', false );
+			});
+
 			this.escCloseEvents();
 		};
 	
@@ -4458,7 +4472,11 @@
 				if ($('body[data-ls="magnific"]').length > 0 || $('body[data-ls="pretty_photo"]').length > 0) {
 					magnificInit();
 				} else if ($('body[data-ls="fancybox"]').length > 0) {
-					fancyBoxInit();
+					if ( $().fancybox ) {
+						fancyBoxInit();
+					} else {
+						setTimeout(fancyBoxInit, 200);
+					}
 				}
 			},60);
 
@@ -13150,7 +13168,7 @@
 							var $iconInsertLocation = ( $('.slide-out-widget-area-toggle[data-custom-color="true"]').length > 0 ) ? '#slide-out-widget-area > div' : '#slide-out-widget-area';
 
 							if( $('.ios-ocm-style').length === 0 ) {
-								$('<div class="slide-out-widget-area-toggle slide-out-hover-icon-effect" data-icon-animation="simple-transform"><div> <a href="#sidewidgetarea" role="button" class="closed"> <span> <span class="screen-reader-text">'+nectar_front_i18n.menu+'</span> <i class="lines-button x2" role="none"> <i class="lines"></i> </i> </span> </a> </div> </div>').insertAfter($iconInsertLocation);
+								$('<div class="slide-out-widget-area-toggle slide-out-hover-icon-effect" data-icon-animation="simple-transform"><div> <a href="#slide-out-widget-area" role="button" class="closed"> <span> <span class="screen-reader-text">'+nectar_front_i18n.menu+'</span> <i class="lines-button x2" role="none"> <i class="lines"></i> </i> </span> </a> </div> </div>').insertAfter($iconInsertLocation);
 							}
 							
 							if ($('#header-outer[data-has-menu="true"]').length > 0 ||
@@ -13170,7 +13188,8 @@
 							});
 
 						} else {
-							$body.on('click', '.slide-out-widget-area-toggle:not(.std-menu) a', function(e){
+							
+							function slideOutFromRightHoverClickTrigger() {
 								
 								// Prevent double click event.
 								if ( clickEventEnabled ) {
@@ -13181,8 +13200,17 @@
 									}, 350);
 								}
 								
-								e.preventDefault();
-							});
+								return false;
+							};
+							$body.on('click touchend', '.slide-out-widget-area-toggle:not(.std-menu) a', slideOutFromRightHoverClickTrigger);
+							if ( window.nectarOcmOpen ) {
+								
+								setTimeout(() => {
+									slideOutFromRightHoverClickTrigger();
+								}, 40);
+								
+							}
+
 							$body.on('click', '#slide-out-widget-area-bg', OCM_slideOutRightMobileClose);
 							$body.on('click', '.ios-ocm-style .slide_out_area_close', function(e){
 								OCM_slideOutRightMobileClose();
@@ -14446,12 +14474,19 @@
 				*/
 				function OCM_clickTriggeredStylesInit() {
 
+					// trigger OCM open when clicked from delay JS
+					if ( window.nectarOcmOpen ) {
+						nectarOcmOpenCallback();
+					}
+
 					// Click triggered open bind.
           $body.on('click', '.slide-out-widget-area-toggle:not(.std-menu) a.closed.animating', function(){
             return false;
           });
 
-					$body.on('click', '.slide-out-widget-area-toggle:not(.std-menu) a.closed:not(.animating), .nectar-ocm-trigger-open', function () {
+					$body.on('click touchend', '.slide-out-widget-area-toggle:not(.std-menu) a.closed:not(.animating), .nectar-ocm-trigger-open',nectarOcmOpenCallback);
+
+					function nectarOcmOpenCallback() {
 
 						if ( nectarState.ocmAnimating || 
                  nectarBoxRoll.animating == 'true' || 
@@ -14550,8 +14585,7 @@
 
 						return false;
 
-					});
-
+					}
 
 
 					// Close event bind.
@@ -18742,7 +18776,7 @@
 							headerOffset = ($logoHeight - logoShrinkNum) + Math.ceil((headerPadding * 2) / 1.8) + nectarDOMInfo.adminBarHeight;
 						}
 
-						$('.main-content > .row > .wpb_row').each(function () {
+						$('.main-content > .row > .wpb_row, #full_width_portfolio #portfolio-extra > .wpb_row').each(function () {
 
 							var $that = $(this);
 							var $textColor;
@@ -21140,7 +21174,7 @@
 						$("#header-outer").find("a[href*='#']:not([href='#'])").each(function() {
 							if( $(this).attr('href') !== '#' &&
 							    $(this).attr('href') !== '#searchbox' &&
-									$(this).attr('href') !== '#sidewidgetarea') {
+									$(this).attr('href') !== '#slide-out-widget-area') {
 								hashLinksFound = true;
 							}
 						});
@@ -21363,7 +21397,7 @@
 
 						var $animatedScrollingTimeout;
 
-						$body.on('click', '#header-outer nav .sf-menu a, #header-outer .mobile-header .sf-menu a, #footer-outer .nectar-button, #footer-outer .widget_nav_menu a, #footer-widgets .textwidget a, #mobile-menu li a, .nectar-scrolling-tabs:not(.navigation_func_active_link_only) .scrolling-tab-nav a, .container-wrap a:not(.wpb_tabs_nav a):not(.navigation_func_active_link_only .scrolling-tab-nav a):not(.comment-wrap .navigation a):not(.woocommerce-checkout a):not(.um-woo-view-order):not(.magnific):not([data-fancybox]):not(.woocommerce-tabs .tabs a):not(.slider-prev):not(.slider-next):not(.testimonial-next-prev a):not(.page-numbers), .swiper-slide .button a, #slide-out-widget-area a, #slide-out-widget-area .inner div a', function (e) {
+						$body.on('click', '#header-outer nav .sf-menu a:not([href="#slide-out-widget-area"]), #header-outer .mobile-header .sf-menu a, #footer-outer .nectar-button, #footer-outer .widget_nav_menu a, #footer-widgets .textwidget a, #mobile-menu li a, .nectar-scrolling-tabs:not(.navigation_func_active_link_only) .scrolling-tab-nav a, .container-wrap a:not(.wpb_tabs_nav a):not(.navigation_func_active_link_only .scrolling-tab-nav a):not(.comment-wrap .navigation a):not(.woocommerce-checkout a):not(.um-woo-view-order):not(.magnific):not([data-fancybox]):not(.woocommerce-tabs .tabs a):not(.slider-prev):not(.slider-next):not(.testimonial-next-prev a):not(.page-numbers), .swiper-slide .button a, #slide-out-widget-area a, #slide-out-widget-area .inner div a', function (e) {
               
 							var triggerAnimatedScroll = true;
 							var $hash = $(this).prop("hash");

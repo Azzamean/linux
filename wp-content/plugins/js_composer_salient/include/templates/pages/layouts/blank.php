@@ -42,10 +42,10 @@ while ( have_posts() ) :
 	<?php
 
 endwhile;
+wp_footer();
 /* nectar addition */
 do_action('nectar_hook_before_body_close'); 
 /* nectar addition end */
-wp_footer();
 ?>
 </body>
 </html>

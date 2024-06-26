@@ -660,7 +660,7 @@ function nectar_blog_social_sharing() {
 								echo '</span>';
 								?>
 
-								<a class="entire-meta-link" href="<?php the_permalink(); ?>" aria-label="<?php echo get_the_title(); ?>"></a>
+								<a class="entire-meta-link" href="<?php the_permalink(); ?>"><span class="screen-reader-text"><?php echo get_the_title(); ?></span></a>
 
 								<div class="article-content-wrap">
 									<div class="post-header">

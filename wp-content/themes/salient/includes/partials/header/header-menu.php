@@ -103,7 +103,7 @@ if( $nectar_header_format === 'centered-menu-bottom-bar' &&
 						<?php } ?>
 						<?php if ( $nectar_header_options['side_widget_area'] === '1' || $nectar_header_options['side_widget_class'] === 'simple' ) { ?>
 							<div class="slide-out-widget-area-toggle mobile-icon <?php echo esc_attr( $nectar_header_options['side_widget_class'] ); ?>" data-custom-color="<?php echo esc_attr($nectar_header_options['ocm_menu_btn_color']); ?>" data-icon-animation="simple-transform">
-								<div> <a href="#sidewidgetarea" role="button" aria-label="<?php echo esc_attr__('Navigation Menu', 'salient'); ?>" aria-expanded="false" class="<?php echo 'closed' . esc_attr($menu_label_class); ?>">
+								<div> <a href="#slide-out-widget-area" role="button" aria-label="<?php echo esc_attr__('Navigation Menu', 'salient'); ?>" aria-expanded="false" class="<?php echo 'closed' . esc_attr($menu_label_class); ?>">
 									<?php if( true === $menu_label ) {
 										echo '<i class="label">' . esc_html__('Menu','salient') .'</i>';
 									} else {
@@ -150,7 +150,7 @@ if( $nectar_header_format === 'centered-menu-bottom-bar' &&
 				if ( $nectar_header_options['side_widget_area'] === '1' || $nectar_header_options['side_widget_class'] === 'simple' ) {
 					?>
 					<div class="slide-out-widget-area-toggle mobile-icon <?php echo esc_attr( $nectar_header_options['side_widget_class'] ); ?>" data-custom-color="<?php echo esc_attr($nectar_header_options['ocm_menu_btn_color']); ?>" data-icon-animation="simple-transform">
-						<div> <a href="#sidewidgetarea" role="button" aria-label="<?php echo esc_attr__('Navigation Menu', 'salient'); ?>" aria-expanded="false" class="<?php echo 'closed' . esc_attr($menu_label_class); ?>">
+						<div> <a href="#slide-out-widget-area" role="button" aria-label="<?php echo esc_attr__('Navigation Menu', 'salient'); ?>" aria-expanded="false" class="<?php echo 'closed' . esc_attr($menu_label_class); ?>">
 							<?php if( true === $menu_label ) {
 								echo '<i class="label">' . esc_html__('Menu','salient') .'</i>';
 							}
@@ -166,7 +166,7 @@ if( $nectar_header_format === 'centered-menu-bottom-bar' &&
 					echo '<div class="nav-outer">';
 				}
 				?>
-					<nav>
+					<nav aria-label="<?php echo esc_html__('Main Menu', 'salient'); ?>">
 						<?php 
 						// Centered Logo Between Menu Alt.
 						if( in_array($nectar_header_format, array('centered-logo-between-menu-alt') ) ) { 

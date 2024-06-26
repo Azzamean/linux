@@ -131,7 +131,8 @@ if (!class_exists('Nectar_Global_Sections_Render')) {
             $global_sections_query_args = array(
                 'post_type'    => 'salient_g_sections',
                 'post_status'  => 'publish',
-                'no_found_rows'  => true
+                'no_found_rows'  => true,
+                'posts_per_page' => -1
             );
             
             $global_sections_query = new WP_Query( $global_sections_query_args );

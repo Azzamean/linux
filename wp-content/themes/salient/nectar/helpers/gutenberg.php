@@ -75,6 +75,9 @@ function nectar_block_editor_assets() {
  * @since 10.0
  */
 function nectar_gutenberg_editor_fullwidth_support() {
+	// Allows Salient to utilize theme.json as a hybrid theme correctly without FSE templates.
+	remove_theme_support('block-templates');
+
 	add_theme_support(
 		'gutenberg',
 		array( 'wide-images' => true )

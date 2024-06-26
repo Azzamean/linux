@@ -11,7 +11,9 @@
 		&lt;script&gt;
 	</p>
 	<?php
-	wpb_add_ai_icon_to_code_field( 'custom_js',  'wpb_js_' . esc_attr( $area ) . '_editor' );
+	if ( vc_modules_manager()->is_module_on( 'vc-ai' ) ) {
+		wpb_add_ai_icon_to_code_field( 'custom_js',  'wpb_js_' . esc_attr( $area ) . '_editor' );
+	}
 	?>
 </div>
 <textarea name="<?php echo esc_attr( $field_prefix ); ?>custom_js_<?php echo esc_attr( $area ); ?>" class="wpb_code_editor custom_code" data-code-type="html" style="display:none"><?php echo esc_textarea( $value ); ?></textarea>

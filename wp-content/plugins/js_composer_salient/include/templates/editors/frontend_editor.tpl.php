@@ -46,10 +46,19 @@ require_once vc_path_dir( 'EDITORS_DIR', 'navbar/class-vc-navbar-frontend.php' )
 $nav_bar = new Vc_Navbar_Frontend( $post );
 $nav_bar->render();
 // [/vc_navbar frontend]
-
+if ( vc_modules_manager()->is_module_on( 'vc-post-custom-layout' ) ) {
+	$custom_layout = vc_modules_manager()->get_module( 'vc-post-custom-layout' );
+	if ( $custom_layout->get_custom_layout_name() ) {
+		$template_class = ' vc_post-custom-layout-selected';
+	} else {
+		$template_class = '';
+	}
+} else {
+	$template_class = ' vc_post-custom-layout-selected';
+}
 ?>
 <div id="vc_no-content-helper"
-	class="vc_welcome vc_select-post-custom-layout-frontend-editor vc_ui-font-open-sans <?php echo wpb_get_name_post_custom_layout() ? 'vc_post-custom-layout-selected' : ''; ?>">
+	class="vc_welcome vc_select-post-custom-layout-frontend-editor vc_ui-font-open-sans <?php echo esc_attr( $template_class ); ?>">
 	<?php
 	vc_include_template(
 		'editors/partials/start-logo.tpl.php'
@@ -57,14 +66,16 @@ $nav_bar->render();
 	vc_include_template(
 		'editors/partials/start-select-layout-title.tpl.php'
 	);
-	vc_include_template(
-		'editors/partials/vc_post_custom_layout.tpl.php',
-		[ 'location' => 'welcome' ]
-	);
+	if ( vc_modules_manager()->is_module_on( 'vc-post-custom-layout' ) ) {
+		vc_include_template(
+			'editors/partials/vc_post_custom_layout.tpl.php',
+			[ 'location' => 'welcome' ]
+		);
+	}
 	?>
 </div>
 
-<div id="vc_inline-frame-wrapper" class="<?php echo wpb_get_name_post_custom_layout() ? 'vc_post-custom-layout-selected' : ''; ?> vc_selected-post-custom-layout-visible-e"></div>
+<div id="vc_inline-frame-wrapper" class="<?php echo esc_attr( $template_class ); ?> vc_selected-post-custom-layout-visible-e"></div>
 
 <?php
 vc_include_template( 'editors/partials/footer.tpl.php',
@@ -101,6 +112,7 @@ vc_include_template(
 	window.vcAdminNonce = '<?php echo esc_js( vc_generate_nonce( 'vc-admin-nonce' ) ); ?>';
 	window.wpb_js_google_fonts_save_nonce = '<?php echo esc_js( wp_create_nonce( 'wpb_js_google_fonts_save' ) ); ?>';
 	window.vc_post_id = <?php echo esc_js( $post_ID ); ?>;
+	window.vc_auto_save = <?php echo wp_json_encode( get_option( 'wpb_js_auto_save' ) ) ?>;
 </<?php echo esc_attr( $custom_tag ); ?>>
 
 <?php vc_include_template( 'editors/partials/vc_settings-image-block.tpl.php' ); ?>

@@ -73,10 +73,29 @@ if (!empty($id)) {
 					echo '</style>';
 				}
 			} else {
-				$vc->addPageCustomCss($section_id);
+				if ( class_exists('Vc_Custom_Css_Module') ) {
+					vc_modules_manager()->get_module( 'vc-custom-css' )->output_custom_css_to_page($section_id);
+				} else {
+					$vc->addPageCustomCss($section_id);	
+				}
+			
 			}
 
-			$vc->addShortcodesCustomCss($section_id);
+			if ( class_exists('Vc_Custom_Css_Module') ) {
+				vc_modules_manager()->get_module( 'vc-custom-css' )->output_custom_css_to_page($section_id);
+			}
+			else if ( method_exists($vc,'addPageCustomCss') ) {
+				$vc->addPageCustomCss($section_id);
+			} else if ( method_exists($vc,'addShortcodesCustomCss') ) {
+				$vc->addShortcodesCustomCss($section_id);
+			}
+			
 		}
+
+		 // Look for dynamic CSS from blocks.
+		 $dynamic_css = get_post_meta( $section_id, '_nectar_blocks_css', true );
+		 if ( ! empty( $dynamic_css ) ) {
+		   echo '<style type="text/css" data-type="nectar-global-section-dynamic-css">'. $dynamic_css .'</style>';
+		 }
 	}
 }

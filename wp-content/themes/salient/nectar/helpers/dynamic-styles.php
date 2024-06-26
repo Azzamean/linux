@@ -1097,7 +1097,7 @@ if (!function_exists('nectar_page_specific_dynamic')) {
 			text-align: left;
 			line-height: 1.5;
 		}
-		.featured-media-under-header__meta-wrap .meta-author > span span {
+		.featured-media-under-header__meta-wrap .meta-author > span span:not(.rich-snippet-hidden) {
 			display: block;	
 		}
 		.featured-media-under-header__meta-wrap .meta-date,

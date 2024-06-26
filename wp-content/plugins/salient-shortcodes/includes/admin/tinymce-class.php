@@ -318,8 +318,10 @@ if (class_exists('Salient_Nectar_Slider')) {
 		$slider_locations = get_terms('slider-locations');
 		$locations = array();
 		
-		foreach($slider_locations as $location) {
-			$locations[$location->slug] = $location->name;
+		if ( $slider_locations && ! is_wp_error( $slider_locations ) ) {
+			foreach($slider_locations as $location) {
+				$locations[$location->slug] = $location->name;
+			} 
 		}
 		
 		if (empty($locations)) {
@@ -4683,8 +4685,10 @@ if (class_exists('Salient_Portfolio')) {
 	
 	$types_options = array("all" => "All");
 	
-	foreach($portfolio_types as $type) {
-		$types_options[$type-> slug] = $type-> name;
+	if ( $portfolio_types && ! is_wp_error( $portfolio_types ) ) { 
+		foreach($portfolio_types as $type) {
+			$types_options[$type-> slug] = $type-> name;
+		}
 	}
 	
 	
