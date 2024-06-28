@@ -28,6 +28,7 @@ function hsts_plugin_get_csp_header(): string {
 	"default-src 'none'; " .
 	"script-src 'self' 'nonce-3423fsdf3kj34j' *.hsforms.net *.hs-scripts.com *.googletagmanager.com *.google.com *.osano.com " . 	
 		"*.usemessages.com *.hubspot.com *.hsadspixel.net *.hs-analytics.net *.hscollectedforms.net *.hsleadflows.net *.hs-banner.com *.facebook.net " .
+        "*js.zi-scripts.com *ws-assets.zoominfo.com *ws.zoominfo.com *schedule.zoominfo.com *api.schedule.zoominfo.com " . 
 		"*.buzzsprout.com;" .
 	"style-src 'unsafe-inline' 'self' fonts.googleapis.com *.osano.com;" .
 	"object-src 'self' *.osano.com; " .
