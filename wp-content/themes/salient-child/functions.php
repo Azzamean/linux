@@ -23,6 +23,9 @@ require_once "widgets/testing-new-posts.php";
 // GET CONTENT SECURITY POLICY
 require_once "csp/csp.php";
 
+// GET SHORTCODES
+require_once "api/sync/sync.php";
+
 // GET CHILD THEME LIBRARIES
 function salient_child_enqueue_styles()
 {
