@@ -1,0 +1,69 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "tec/speaker-list-block",
+  "version": "0.1.0",
+  "title": "Speaker List",
+  "category": "event-schedule-manager",
+  "supports": {
+    "html": true
+  },
+  "attributes": {
+    "show_image": {
+      "type": "boolean",
+      "default": true
+    },
+    "image_size": {
+      "type": "number",
+      "default": 150
+    },
+    "posts_per_page": {
+      "type": "string",
+      "default": "100"
+    },
+    "orderby": {
+      "type": "string",
+      "default": "date"
+    },
+    "order": {
+      "type": "string",
+      "default": "desc"
+    },
+    "speaker_link": {
+      "type": "string",
+      "default": ""
+    },
+    "track": {
+      "type": "string",
+      "default": ""
+    },
+    "groups": {
+      "type": "string",
+      "default": ""
+    },
+    "columns": {
+      "type": "number",
+      "default": 1
+    },
+    "gap": {
+      "type": "number",
+      "default": 30
+    },
+    "align": {
+      "type": "string",
+      "default": "left"
+    },
+    "show_content": {
+      "type": "boolean",
+      "default": true
+    }
+  },
+  "textdomain": "event-schedule-manager",
+  "editorScript": "file:./index.js",
+  "keywords": [
+    "schedule",
+    "speaker",
+    "shortcode"
+  ],
+  "render": "file:./render.php"
+}

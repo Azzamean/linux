@@ -644,6 +644,7 @@ class ACFFA_Loader_6
 	{
 		switch( $style ) {
 			case 'custom':
+			case 'fak':
 				$default_family = 'kit';
 				break;
 

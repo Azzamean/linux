@@ -1,0 +1,45 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "tec/sponsors-block",
+  "version": "0.1.0",
+  "title": "Sponsors",
+  "category": "event-schedule-manager",
+  "supports": {
+    "html": true
+  },
+  "attributes": {
+    "link": {
+      "type": "string",
+      "default": "none"
+    },
+    "title": {
+      "type": "string",
+      "default": "hidden"
+    },
+    "content": {
+      "type": "string",
+      "default": "hidden"
+    },
+    "excerpt_length": {
+      "type": "number",
+      "default": 55
+    },
+    "heading_level": {
+      "type": "string",
+      "default": "h2"
+    },
+    "include_unassigned": {
+      "type": "boolean",
+      "default": true
+    }
+  },
+  "textdomain": "event-schedule-manager",
+  "editorScript": "file:./index.js",
+  "keywords": [
+    "schedule",
+    "sponsor",
+    "shortcode"
+  ],
+  "render": "file:./render.php"
+}

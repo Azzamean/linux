@@ -359,7 +359,7 @@ if ( ! class_exists( 'acf_field_font_awesome' ) ) :
 									}
 								}
 							} else {
-								$path_data_element = '<path d="' . $icon_json->path . '" />';
+								$path_data_element .= '<path d="' . $icon_json->path . '" />';
 							}
 							$path_data_element .= '</svg>';
 
