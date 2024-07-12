@@ -75,4 +75,5 @@
 		</div>
 	<?php endif; ?>
 	</div>
+	<input type="hidden" name="shortcode" id="atb-shortcode" value=<?php echo esc_attr( $id ); ?> >
 </div>

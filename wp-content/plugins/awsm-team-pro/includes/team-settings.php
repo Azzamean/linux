@@ -86,6 +86,8 @@ settings_errors();
 							</div>
 						</fieldset>
 					</td>
+				<?php
+				/*
 				</tr>
 					<tr>
 						<th scope="row">
@@ -103,6 +105,8 @@ settings_errors();
 							</p>
 						</td>
 					</tr>
+				*/
+				?>
 				</tbody>
 			</table>
 		</div><!-- #awsm-team-options-container -->

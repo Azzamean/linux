@@ -5,6 +5,7 @@
  */
 
 import ATPInspector from './modules/inspector';
+import ATServerSideRender from "./modules/awsm-team-server-side-render";
 
 const { __ } = wp.i18n; // Import __() from wp.i18n
 const { registerBlockType } = wp.blocks; // Import registerBlockType() from wp.blocks
@@ -50,7 +51,7 @@ registerBlockType( 'gutenberg-awsm/awsm-team-dynamic', {
 		if( typeof shortcode !== 'undefined' ) {
 			return [
 				<ATPInspector { ...{ setAttributes, ...props } } />,
-				<ServerSideRender
+				<ATServerSideRender
 					block="gutenberg-awsm/awsm-team-dynamic"
 					attributes={ attributes }
 				/>

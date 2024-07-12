@@ -3,7 +3,7 @@
  * Plugin Name: AWSM Team Pro
  * Plugin URI: http://awsm.in/team-pro-documentation
  * Description: The most versatile plugin to create and manage your Team page. Packed with 8 unique presets and number of styles to choose from.
- * Version: 1.11.0
+ * Version: 1.11.2
  * Author: AWSM Innovations
  * Author URI: http://awsm.in/
  * License: GPL
@@ -73,12 +73,12 @@ if ( ! class_exists( 'Awsm_Team' ) ) :
 				'plugin_base'     => dirname( plugin_basename( __FILE__ ) ),
 				'plugin_base_url' => plugin_basename( __FILE__ ),
 				'plugin_file'     => __FILE__,
-				'plugin_version'  => '1.11.0',
+				'plugin_version'  => '1.11.2',
 			);
 
 			$this->run_plugin();
 			$this->adminfunctions();
-			$this->update_plugin();
+			// $this->update_plugin();
 		}
 
 		/**
@@ -121,9 +121,9 @@ if ( ! class_exists( 'Awsm_Team' ) ) :
 			add_action( 'after_setup_theme', array( $this, 'awsm_add_thumbnail_support' ) );
 			add_filter( 'post_thumbnail_size', array( $this, 'awsm_remove_srcset' ) );
 			add_action( 'init', array( $this, 'awsm_team_blocks' ) );
-			add_action( 'after_plugin_row_' . $this->settings['plugin_base_url'], array( $this, 'after_plugin_row' ), 100 );
+			//phpcs:ignore Squiz.Commenting.InlineComment.InvalidEndChar add_action( 'after_plugin_row_' . $this->settings['plugin_base_url'], array( $this, 'after_plugin_row' ), 100 ); 
 			add_action( 'admin_init', array( $this, 'register_team_settings' ) );
-			add_action( 'admin_notices', array( $this, 'automatic_update_notice' ) );
+			//phpcs:ignore Squiz.Commenting.InlineComment.InvalidEndChar add_action( 'admin_notices', array( $this, 'automatic_update_notice' ) );
 			add_action( 'wp_ajax_awsm_team_pro_admin_notice', array( $this, 'awsm_team_pro_admin_notice' ) );
 			add_action( 'admin_enqueue_scripts', array( $this, 'admin_enqueue_scripts_global' ) );
 			add_action( 'wp_ajax_awsm_team_search', array( $this, 'awsm_search_filter' ) );
@@ -172,6 +172,7 @@ if ( ! class_exists( 'Awsm_Team' ) ) :
 			$args     = array(
 				'post_type'      => 'awsm_team',
 				'posts_per_page' => -1,
+				'post_status'    => 'publish',
 			);
 			$teams    = new WP_Query( $args );
 			$teamlist = array();
@@ -366,7 +367,12 @@ if ( ! class_exists( 'Awsm_Team' ) ) :
 			$limit          = intval( $settings['limit'] );
 			$filter_content = $settings['filter_content'] === 'no' ? false : true;
 
-			$options = $this->get_options( 'awsm_team', $id );
+			$options     = $this->get_options( 'awsm_team', $id );
+			$post_status = get_post_status( $id );
+			if ( $post_status !== 'publish' ) {
+				return '<div class="awsm-team-error">' . __( 'Team not found', 'awsm-team-pro' ) . '</div>';
+			}
+
 			if ( ! $options ) {
 				return '<div class="awsm-team-error">' . __( 'Team not found', 'awsm-team-pro' ) . '</div>';
 			}
@@ -388,6 +394,7 @@ if ( ! class_exists( 'Awsm_Team' ) ) :
 				} else {
 					$teamargs = array(
 						'post_type'      => 'awsm_team_member',
+						// 'post_status'    => 'publish',
 						'post__in'       => $options['memberlist'],
 						'posts_per_page' => -1,
 						'orderby'        => ( $orderby ) ? $orderby : $options['awsm_member_order_by'],
@@ -1087,7 +1094,7 @@ if ( ! class_exists( 'Awsm_Team' ) ) :
 			foreach ( $member_teams  as $key => $team ) {
 				$team_title = get_the_title( $key );
 				$title      = ! empty( $team_title ) ? esc_html( $team_title ) : "Team $key";
-				if ( false != get_post_status( $key ) && 'trash' != get_post_status( $key ) ) {
+				if ( false != get_post_status( $key ) && 'publish' === get_post_status( $key ) ) {
 					$team_links .= '<a href="' . esc_url( get_edit_post_link( $key ) ) . '" title="' . esc_html( get_the_title( $key ) ) . '">' . $title . '</a>,';
 				}
 			}
@@ -1537,6 +1544,7 @@ if ( ! class_exists( 'Awsm_Team' ) ) :
 					} else {
 						$teams_of_member_arr[] = $member_id;
 					}
+					$teams_of_member_arr = array_unique( array_filter( $teams_of_member_arr ) );
 					update_post_meta( $team_id, 'memberlist', $teams_of_member_arr );
 					$teams_of_member_arr[] = '';
 				}
@@ -2117,6 +2125,14 @@ if ( ! class_exists( 'Awsm_Team' ) ) :
 				true
 			);
 
+			wp_enqueue_style(
+				'gutenberg-awsm-team-editor-css',
+				plugins_url( 'blocks/editor.css', dirname( __FILE__ ) ),
+				array( 'atp_choose_team' ),
+				$this->settings['plugin_version'],
+				'all'
+			);
+
 			if ( function_exists( 'register_block_type' ) ) {
 				register_block_type(
 					'gutenberg-awsm/awsm-team-dynamic',
@@ -2153,7 +2169,12 @@ if ( ! class_exists( 'Awsm_Team' ) ) :
 			$id             = $atts['shortcode'];
 			$filter_content = isset( $atts['filterContent'] ) && $atts['filterContent'] === 'no' ? false : true;
 
-			$options = $this->get_options( 'awsm_team', $id );
+			$options     = $this->get_options( 'awsm_team', $id );
+			$post_status = get_post_status( $id );
+			if ( $post_status !== 'publish' ) {
+				return '<div class="awsm-team-error">' . __( 'Team not found', 'awsm-team-pro' ) . '</div>';
+			}
+
 			if ( ! $options ) {
 				return '<div class="awsm-team-error">' . __( 'Team not found', 'awsm-team-pro' ) . '</div>';
 			}

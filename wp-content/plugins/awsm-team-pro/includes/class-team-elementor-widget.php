@@ -56,7 +56,7 @@ class AWSMTeamElementorWidget extends \Elementor\Widget_Base {
 	 *
 	 * @return void
 	 */
-	protected function _register_controls() {
+	protected function register_controls() {
 		$awsm_team = Awsm_Team::init();
 		$this->start_controls_section(
 			'setting_section',

@@ -8,6 +8,23 @@
  */
  "use strict";
  ;(function($) {
+	if (typeof awsmTeamPublic === 'undefined') {
+		window.awsmTeamPublic = {
+			'ajaxurl': '',
+			'deep_linking': {
+				'enable': '',
+				'member': {
+					'prefix': 'member',
+					'suffix': 'info',
+				},
+				'team': {
+					'prefix': 'team',
+					'suffix': 'info',
+				},
+			},
+			'scripts_src': ''
+		};
+	}
 
     //Ensures there will be no 'console is undefined' errors in IE
     window.console = window.console || (function(){

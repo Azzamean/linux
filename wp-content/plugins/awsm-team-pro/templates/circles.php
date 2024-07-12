@@ -67,4 +67,5 @@ if ( in_array( $options['preset'], array( 'style-2', 'style-3', 'style-4' ), tru
 		?>
 		</div>
 		<?php endif; ?>
+		<input type="hidden" name="shortcode" id="atb-shortcode" value=<?php echo esc_attr( $id ); ?> >
 </div>
