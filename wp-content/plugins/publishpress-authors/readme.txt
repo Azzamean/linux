@@ -7,7 +7,7 @@ Tags: multiple authors, authors, guest authors, author bio, author layouts
 Requires at least: 5.5
 Requires PHP: 7.2.5
 Tested up to: 6.5
-Stable tag: 4.7.0
+Stable tag: 4.7.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -245,6 +245,19 @@ There are two ways to install the PublishPress Authors plugin:
 5. Activate the PublishPress Authors plugin.
 
 == Changelog ==
+
+= [4.7.1] - 10 July 2024 =
+
+* Update: Add Trash feature to Authors Lists, #1848
+* Fixed: Author Box Export Template not same as layout, #1754
+* Update: Add redirect for new installs, #1796
+* Fixed: Deprecated Message on PHP 8.3, #1858
+* Update: Add a bulk edit action to switch "Guest Author" to "Guest Author With User Account", #1859
+* Fixed: Support for Divi Guest author, #1856
+* Update: Make Author Lists title required, #1845
+* Update: Add documentation link for Author Pages, #1843
+* Update: Update promo box, #1840
+* Update: Authors Translation Updates_v.4.7.0, #1853
 
 = [4.7.0] - 20 June 2024 =
 
