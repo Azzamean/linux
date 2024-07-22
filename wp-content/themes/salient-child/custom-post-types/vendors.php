@@ -44,6 +44,7 @@ case "www.zephyrproject.org":
     include_once "vendors/zephyr-taxonomy.php";      
     break;
 case "spdx.dev-lfprojects3.linuxfoundation.org":
+case "spdx.dev":   
     include_once "vendors/spdx-taxonomy.php";      
     break;
 }
