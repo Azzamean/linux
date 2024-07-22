@@ -27,17 +27,16 @@ function hsts_plugin_get_csp_header(): string {
     $csp =
 	"default-src 'none'; " .
 	"script-src 'self' 'nonce-3423fsdf3kj34j' *.hsforms.net *.hs-scripts.com *.googletagmanager.com *.google.com *.osano.com " . 	
-		"*.usemessages.com *.hubspot.com *.hsadspixel.net *.hs-analytics.net *.hscollectedforms.net *.hsleadflows.net *.hs-banner.com *.facebook.net " .
-        "*js.zi-scripts.com *ws-assets.zoominfo.com *ws.zoominfo.com *schedule.zoominfo.com *api.schedule.zoominfo.com " . 
-		"*.buzzsprout.com;" .
-	"style-src 'unsafe-inline' 'self' fonts.googleapis.com *.osano.com;" .
+	    "*.usemessages.com *.hubspot.com *.hsadspixel.net *.hs-analytics.net *.hscollectedforms.net *.hsleadflows.net *.hs-banner.com *.facebook.net " .
+        "js.zi-scripts.com ws.zoominfo.com tags.clickagy.com ws-assets.zoominfo.com schedule.zoominfo.com api.schedule.zoominfo.com  *.buzzsprout.com snap.licdn.com;" .
+    "style-src 'unsafe-inline' 'self' fonts.googleapis.com *.osano.com;" .
 	"object-src 'self' *.osano.com; " .
 	"base-uri 'self'; " .
-	"connect-src 'self' *.hsforms.com *.hscollectedforms.net analytics.google.com *.google-analytics.com *.hubspot.com *.doubleclick.net *.hubapi.com " .
-		"*.linkedin.com *.osano.com; " .
-	"font-src 'self' data: fonts.gstatic.com; " .
-	"frame-src 'self' *.osano.com *.hsforms.com *.youtube.com *.google.com *.openssf.org *.landscape2.io *.buzzsprout.com;" .
-	"img-src 'self' data: *.hsforms.com *.hubspot.com *.hubspot.net *.ads.linkedin.com secure.gravatar.com *.w.org *.google.com *.google-analytics.com  *.facebook.com *.linuxfoundation.org; " . 
+    "connect-src 'self' *.hsforms.com *.hscollectedforms.net analytics.google.com *.google-analytics.com *.hubspot.com *.doubleclick.net *.hubapi.com " .
+	    "*.linkedin.com *.osano.com aorta.clickagy.com  hemsync.clickagy.com ws.zoominfo.com api.schedule.zoominfo.com *.googleadservices.com; " .
+    "font-src 'self' data: fonts.gstatic.com; " .
+    "frame-src 'self' *.osano.com *.hsforms.com *.youtube.com *.google.com *.openssf.org *.landscape2.io *.buzzsprout.com aorta.clickagy.com hemsync.clickagy.com *.doubleclick.net;" .
+    "img-src 'self' data: *.hsforms.com *.hubspot.com *.hubspot.net *.ads.linkedin.com secure.gravatar.com *.w.org *.google.com *.google-analytics.com  *.facebook.com *.linuxfoundation.org; " . 
 	"manifest-src 'self'; " .
 	"media-src 'self'; " .
 	//"report-uri ; " .
@@ -46,3 +45,4 @@ function hsts_plugin_get_csp_header(): string {
 	"form-action 'self' *.hsforms.com; ";
     return empty($csp) ? '' : $csp;
 }
+

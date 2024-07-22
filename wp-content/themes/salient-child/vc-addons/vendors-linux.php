@@ -53,7 +53,7 @@ class Vendors
                 'base' => 'vendors',
                 'icon' => 'icon-wpb-images-stack',
                 'class' => '',
-                'category' => __('Content', 'vendors'),
+                'category' => __('Linux Foundation', 'vendors'),
                 'description' => __('Display logo in a grid view.', 'vendors'),
                 'params' => array(
                     // General settings
