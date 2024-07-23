@@ -27,9 +27,9 @@ $nectar_fp_options = nectar_get_full_page_options();
     if (have_posts()):
         $category_id = get_cat_ID(single_cat_title("", false));
         echo do_shortcode(
-            '[recent_posts_linux_foundation design="grid-design" columns="2" limit="10" sort="DESC" offset="" category_id="' .
+            '[recent_posts_linux_foundation design="grid-design" columns="2" limit="-1" sort="DESC" offset="" category_id="' .
                 $category_id .
-                '" categories="0" embedded_code="" featured_image="hide-featured-image" excerpt="" navigation="show_navigation_btn" navigation_text="LEARN MORE" date_author="date" pagination="show-pagination"]'
+                '" categories="0" embedded_code="" featured_image="hide-featured-image" excerpt="" navigation="show_navigation_btn" navigation_text="LEARN MORE" date_author="date" pagination="hide-pagination"]'
         );
     endif;
     nectar_hook_after_content();
