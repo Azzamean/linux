@@ -532,10 +532,16 @@ a.list-design.navigation-btn {
 	max-height: 300px;
 }
 
+.vendor-title {
+	font-size: 16px;
+	line-height: 20px;
+	font-weight: 700;
+}
+
 .vendor-shortdesc {
 	font-size: 13px !important;
 	line-height: 13px !important;
-	margin-bottom: 15px;
+	margin: 10px;
 	min-height: 60px;
 }
 
@@ -578,7 +584,7 @@ a.list-design.navigation-btn {
 }
 
 #vendor-parent img {
-	max-height: 130px;
+	max-height: 75px;
 	margin-bottom: 0;
 	cursor: pointer
 }

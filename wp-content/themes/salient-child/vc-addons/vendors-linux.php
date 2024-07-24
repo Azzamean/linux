@@ -323,6 +323,7 @@ function vendors_grid_nodejsf($atts, $content)
                 '" alt="' .
                 get_the_title() .
                 '">';
+            $output .= '<div class="vendor-title">' . get_the_title() . '</div>';
             $output .=
                 '<div class="vendor-shortdesc">' .
                 $short_desc .
@@ -348,7 +349,7 @@ function vendors_grid_nodejsf($atts, $content)
             // $output .= '<p class="vendor-question">What business or technology benefit do your users get by using your app, product or project?</p><p class="vendor-answer">'. get_field('benefits') .'</p>';
             // $output .= '<p class="vendor-question">What were the most compelling features of Node.js for this project?</p><p class="vendor-answer">'. get_field('features') .'</p>';
             $output .=
-                '<a href="' .
+                '<div class="vendor-twitter"><a href="' .
                 get_field('website') .
                 '" target="_blank">Visit</a>
 							<a href="https://twitter.com/intent/tweet?url=https://' .
@@ -356,7 +357,7 @@ function vendors_grid_nodejsf($atts, $content)
                 $uri_parts[0] .
                 '?application=' .
                 get_post_field('post_name') .
-                '"><i class="fa fa-twitter"></i></a>
+                '"><i class="fa fa-twitter"></i></a></div>
 						</div>
 					';
         endwhile;
