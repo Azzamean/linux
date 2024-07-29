@@ -586,7 +586,8 @@ a.list-design.navigation-btn {
 #vendor-parent img {
 	max-height: 75px;
 	margin-bottom: 0;
-	cursor: pointer
+	cursor: pointer;
+	object-fit: contain;
 }
 
 .lightbox {
@@ -603,6 +604,9 @@ a.list-design.navigation-btn {
 	margin-right: 15px;
 	margin-bottom: 20px;
 	padding: 10px;
+	display: flex;
+	justify-content: space-between;
+	flex-direction: column;
 }
 
 /*
