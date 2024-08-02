@@ -124,7 +124,7 @@ function notification_bar_settings_page()
         "quicktags" => ["buttons" => ","],
         "tinymce" => [
             "toolbar1" =>
-                "formatselect,fontsizeselect, bold,italic,underline, link,unlink",
+                "formatselect,fontsizeselect, bold,italic,underline, link,unlink, alignleft, aligncenter, alignright, alignjustify",
             "toolbar2" => "",
             "toolbar3" => ""
         ]
