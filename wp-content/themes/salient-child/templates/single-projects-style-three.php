@@ -58,6 +58,11 @@ get_header();
                          </div>
                         <?php
                     }
+                    if ($projects_header != "Logo" 
+                        && $projects_header != "Secondary Logo"
+                    ) { ?>
+                <h1 class="entry-title" style="color:#ffffff;"><?php the_title(); ?></h1>
+                    <?php }
                     ?>
                 </div>    
             </div>
@@ -68,7 +73,7 @@ get_header();
                 <div class="row">
                     <section class="projects-description">
                     <?php if ($projects_description_title != null 
-                    || $projects_description_title != ""
+    || $projects_description_title != ""
 ) {
          echo "<h6 class='projects-description-title'>" .
              $projects_description_title .
