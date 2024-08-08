@@ -140,21 +140,52 @@ class Zapier_Provider extends Service_Provider {
 		// Add endpoints to settings dashboard.
 		add_action( 'admin_init', [ $this, 'add_endpoints_to_dashboard' ] );
 
-		$this->setup_add_to_queues();
+		// Wait until plugins are loaded and then add queues for our various plugins.
+		add_action( 'tribe_plugins_loaded', [ $this, 'setup_add_to_queues' ] );
 	}
 
 	/**
 	 * Adds the actions to add to the queues.
 	 *
 	 * @since 6.0.0 Migrated to Common from Event Automator
+	 * @since 6.0.0.1 Split the method in sub-methods for each plugin.
 	 */
-	protected function setup_add_to_queues() {
+	public function setup_add_to_queues() {
+		$this->add_tec_setup();
+		$this->add_et_setup();
+	}
+
+	/**
+	 * Adds the actions required for The Events Calendar.
+	 *
+	 * @since 6.0.0.1
+	 *
+	 * @return void
+	 */
+	protected function add_tec_setup(): void {
+		if ( ! did_action( 'tribe_events_bound_implementations' ) ) {
+			return;
+		}
+
 		// Canceled Events.
 		add_action( 'tribe_events_event_status_update_post_meta', [ $this, 'add_canceled_to_queue' ], 10, 2 );
 		// New Events.
 		add_action( 'wp_insert_post', [ $this, 'add_to_queue' ], 10, 3 );
 		// Updated Events.
 		add_action( 'post_updated', [ $this, 'add_updated_to_queue' ], 10, 3 );
+	}
+
+	/**
+	 * Adds the actions required for Event Tickets.
+	 *
+	 * @since 6.0.0.1
+	 *
+	 * @return void
+	 */
+	protected function add_et_setup(): void {
+		if ( ! did_action( 'tribe_tickets_plugin_loaded' ) ) {
+			return;
+		}
 
 		// Attendees.
 		add_action( 'event_tickets_rsvp_attendee_created', [ $this, 'add_rsvp_attendee_to_queue' ], 10, 4 );
@@ -170,6 +201,7 @@ class Zapier_Provider extends Service_Provider {
 		// Refunded Ticket Orders.
 		add_action( 'tec_tickets_commerce_order_status_refunded', [ $this, 'add_refunded_tc_order_to_queue' ], 10, 3 );
 		add_action( 'edd_refund_order', [ $this, 'add_refunded_edd_order_to_queue' ], 10, 3 );
+
 		add_action( 'woocommerce_order_status_changed', [ $this, 'add_refunded_woo_order_to_queue' ], 10, 4 );
 
 		// Checkin.
@@ -191,13 +223,6 @@ class Zapier_Provider extends Service_Provider {
 		add_filter( 'tec_event_automator_zapier_settings_fields', [ $this, 'add_dashboard_fields' ] );
 		add_filter( 'tec_event_automator_zapier_endpoint_details', [ $this, 'filter_create_event_details' ], 10, 2 );
 		add_filter( 'tec_event_automator_zapier_enable_add_to_queues', [ $this, 'filter_enable_add_to_queues' ], 10 );
-		add_filter( 'rest_pre_dispatch', [ $this, 'pre_dispatch_verification' ], 10, 3 );
-		add_filter( 'rest_pre_dispatch', [ $this, 'pre_dispatch_verification_for_update_events' ], 10, 3 );
-		add_filter( 'rest_pre_dispatch', [ $this, 'pre_dispatch_verification_for_find_attendees' ], 10, 3 );
-		add_filter( 'rest_pre_dispatch', [ $this, 'pre_dispatch_verification_for_find_tickets' ], 10, 3 );
-		add_filter( 'rest_request_before_callbacks', [ $this, 'modify_rest_api_params_before_validation' ], 1, 3 );
-		add_filter( 'rest_request_before_callbacks', [ $this, 'modify_rest_api_params_before_validation_for_update_events' ], 1, 3 );
-
 	}
 
 	/**
@@ -302,6 +327,7 @@ class Zapier_Provider extends Service_Provider {
 	 * Done on `rest_pre_dispatch` to be able to set current user to pass validation capability checks.
 	 *
 	 * @since 6.0.0 Migrated to Common from Event Automator
+	 * @deprecated 6.0.1 - Use Tribe\Events\Pro\Integrations\Event_Automator\Zapier_Provider->pre_dispatch_verification_for_create_events
 	 *
 	 * @param mixed           $result  Response to replace the requested version with. Can be anything
 	 *                                 a normal endpoint can return, or null to not hijack the request.
@@ -311,6 +337,7 @@ class Zapier_Provider extends Service_Provider {
 	 * @return null With always return null, failure will happen on the can_create permission check.
 	 */
 	public function pre_dispatch_verification( $result, $server, $request ) {
+		_deprecated_function( __METHOD__, '6.0.1', 'Use Tribe\Events\Pro\Integrations\Event_Automator\Zapier_Provider->pre_dispatch_verification_for_create_events instead.' );
 		return $this->container->make( Create_Events::class )->pre_dispatch_verification( $result, $server, $request );
 	}
 
@@ -319,6 +346,7 @@ class Zapier_Provider extends Service_Provider {
 	 * Done on `rest_pre_dispatch` to be able to set current user to pass validation capability checks.
 	 *
 	 * @since 6.0.0 Migrated to Common from Event Automator
+	 * @deprecated 6.0.1 - Use Tribe\Events\Pro\Integrations\Event_Automator\Zapier_Provider->pre_dispatch_verification_for_update_events
 	 *
 	 * @param mixed           $result  Response to replace the requested version with. Can be anything
 	 *                                 a normal endpoint can return, or null to not hijack the request.
@@ -328,6 +356,7 @@ class Zapier_Provider extends Service_Provider {
 	 * @return null With always return null, failure will happen on the can_create permission check.
 	 */
 	public function pre_dispatch_verification_for_update_events( $result, $server, $request ) {
+		_deprecated_function( __METHOD__, '6.0.1', 'Use Tribe\Events\Pro\Integrations\Event_Automator\Zapier_Provider->pre_dispatch_verification_for_update_events instead.' );
 		return $this->container->make( Update_Events::class )->pre_dispatch_verification( $result, $server, $request );
 	}
 
@@ -336,6 +365,7 @@ class Zapier_Provider extends Service_Provider {
 	 * Done on `rest_pre_dispatch` to be able to set current user to pass validation capability checks.
 	 *
 	 * @since 6.0.0 Migrated to Common from Event Automator
+	 * @deprecated 6.0.1 - Use Tribe\Tickets\Plus\Integrations\Event_Automator\Zapier_Provider->pre_dispatch_verification_for_find_attendees
 	 *
 	 * @param mixed           $result  Response to replace the requested version with. Can be anything
 	 *                                 a normal endpoint can return, or null to not hijack the request.
@@ -345,6 +375,7 @@ class Zapier_Provider extends Service_Provider {
 	 * @return null With always return null, failure will happen on the can_create permission check.
 	 */
 	public function pre_dispatch_verification_for_find_attendees( $result, $server, $request ) {
+		_deprecated_function( __METHOD__, '6.0.1', 'Use Tribe\Tickets\Plus\Integrations\Event_Automator\Zapier_Provider->pre_dispatch_verification_for_find_attendees instead.' );
 		return $this->container->make( Find_Attendees::class )->pre_dispatch_verification( $result, $server, $request );
 	}
 
@@ -353,6 +384,7 @@ class Zapier_Provider extends Service_Provider {
 	 * Done on `rest_pre_dispatch` to be able to set current user to pass validation capability checks.
 	 *
 	 * @since 6.0.0 Migrated to Common from Event Automator
+	 * @deprecated 6.0.1 - Use Tribe\Tickets\Plus\Integrations\Event_Automator\Zapier_Provider->pre_dispatch_verification_for_find_tickets
 	 *
 	 * @param mixed           $result  Response to replace the requested version with. Can be anything
 	 *                                 a normal endpoint can return, or null to not hijack the request.
@@ -362,6 +394,7 @@ class Zapier_Provider extends Service_Provider {
 	 * @return null With always return null, failure will happen on the can_create permission check.
 	 */
 	public function pre_dispatch_verification_for_find_tickets( $result, $server, $request ) {
+		_deprecated_function( __METHOD__, '6.0.1', 'Use Tribe\Tickets\Plus\Integrations\Event_Automator\Zapier_Provider->pre_dispatch_verification_for_find_tickets instead.' );
 		return $this->container->make( Find_Tickets::class )->pre_dispatch_verification( $result, $server, $request );
 	}
 
@@ -369,6 +402,7 @@ class Zapier_Provider extends Service_Provider {
 	 * Modifies REST API comma seperated  parameters before validation.
 	 *
 	 * @since 6.0.0 Migrated to Common from Event Automator
+	 * @deprecated 6.0.1 - Use Tribe\Events\Pro\Integrations\Event_Automator\Zapier_Provider->modify_rest_api_params_before_validation
 	 *
 	 * @param WP_REST_Response|WP_Error $response Response to replace the requested version with. Can be anything
 	 *                                            a normal endpoint can return, or a WP_Error if replacing the
@@ -379,6 +413,7 @@ class Zapier_Provider extends Service_Provider {
 	 * @return WP_REST_Response|WP_Error The response.
 	 */
 	public function modify_rest_api_params_before_validation( $response, $server, $request ) {
+		_deprecated_function( __METHOD__, '6.0.1', 'Use Tribe\Events\Pro\Integrations\Event_Automator\Zapier_Provider->modify_rest_api_params_before_validation instead.' );
 		return $this->container->make( Create_Events::class )->modify_rest_api_params_before_validation( $response, $server, $request );
 	}
 
@@ -386,6 +421,7 @@ class Zapier_Provider extends Service_Provider {
 	 * Modifies REST API comma seperated  parameters before validation.
 	 *
 	 * @since 6.0.0 Migrated to Common from Event Automator
+	 * @deprecated 6.0.1 - Use Tribe\Events\Pro\Integrations\Event_Automator\Zapier_Provider->modify_rest_api_params_before_validation_for_update_events
 	 *
 	 * @param WP_REST_Response|WP_Error $response Response to replace the requested version with. Can be anything
 	 *                                            a normal endpoint can return, or a WP_Error if replacing the
@@ -396,6 +432,7 @@ class Zapier_Provider extends Service_Provider {
 	 * @return WP_REST_Response|WP_Error The response.
 	 */
 	public function modify_rest_api_params_before_validation_for_update_events( $response, $server, $request ) {
+		_deprecated_function( __METHOD__, '6.0.1', 'Use Tribe\Events\Pro\Integrations\Event_Automator\Zapier_Provider->modify_rest_api_params_before_validation_for_update_events instead.' );
 		return $this->container->make( Update_Events::class )->modify_rest_api_params_before_validation( $response, $server, $request );
 	}
 
