@@ -23,6 +23,9 @@ require_once "widgets/testing-new-posts.php";
 // GET CONTENT SECURITY POLICY
 require_once "csp/csp.php";
 
+// GDPR YOUTUBE VIDEO COMPLIANCE
+require_once "includes/gdpr-youtube.php";
+
 // GET CHILD THEME LIBRARIES
 function salient_child_enqueue_styles()
 {
@@ -102,15 +105,6 @@ add_action(
         ob_start();
     }
 );
-
-// OSANO CODE FOR TRACKING
-function osano_script()
-{
-    ?>
-<script src="https://cmp.osano.com/16A0DbT9yDNIaQkvZ/3b49aaa9-15ab-4d47-a8fb-96cc25b5543c/osano.js" nonce="3423fsdf3kj34j" integrity="sha384-Gw4evf0QRTGuxQbOvn8v28Z0xyAt9tLT0U3dtOCvUoy+bIDmPA3TL2L4idZr7Fav" crossorigin="anonymous"></script>
-    <?php
-}
-add_action("wp_head", "osano_script");
 
 // DISABLE PLUGIN NOTIFICATIONS
 add_action("admin_enqueue_scripts", "acf_template_fields");
@@ -400,33 +394,6 @@ function my_acf_settings_show_admin($show_admin)
  *******/
 /********************************************/
 
-// ADD SALIENT CUSTOM FONTS
-/*
-function salient_redux_custom_fonts()
-{
-    return [
-        "Custom Fonts" => [
-            "BwModelica-Bold" => "BwModelica-Bold",
-            "BwModelica-BoldItalic" => "BwModelica-BoldItalic",
-            "BwModelica-ExtraBold" => "BwModelica-ExtraBold",
-            "BwModelica-ExtraBoldItalic" => "BwModelica-ExtraBoldItalic",
-            "BwModelica-Light" => "BwModelica-Light",
-            "BwModelica-LightItalic" => "BwModelica-LightItalic",
-            "BwModelica-Medium" => "BwModelica-Medium",
-            "BwModelica-MediumItalic" => "BwModelica-MediumItalic",
-            "BwModelica-Regular" => "BwModelica-Regular",
-            "BwModelica-RegularItalic" => "BwModelica-RegularItalic",
-            "BwModelicaSS02-Regular" => "BwModelicaSS02-Regular",
-            "BwModelicaSS02-RegularItalic" => "BwModelicaSS02-RegularItalic"
-        ]
-    ];
-}
-add_filter(
-    "redux/salient_redux/field/typography/custom_fonts",
-    "salient_redux_custom_fonts"
-);
-*/
-
 // DEFAULT SCREEN OPTIONS
 add_filter("hidden_meta_boxes", "custom_hidden_meta_boxes");
 function custom_hidden_meta_boxes($hidden)
@@ -582,6 +549,19 @@ function members_cpt_redirect()
     endif;
 }
 add_action('template_redirect', 'members_cpt_redirect');
+
+// DISABLE /USERS REST ROUTES
+add_filter(
+    'rest_endpoints', function ( $endpoints ) {
+        if (isset($endpoints['/wp/v2/users']) ) {
+            unset($endpoints['/wp/v2/users']);
+        }
+        if (isset($endpoints['/wp/v2/users/(?P<id>[\d]+)']) ) {
+            unset($endpoints['/wp/v2/users/(?P<id>[\d]+)']);
+        }
+        return $endpoints;
+    }
+);
 
 /*************************************/
 /************************************/
@@ -829,6 +809,17 @@ function clear_cache_on_update()
 }
 add_action('save_post', 'clear_cache_on_update');
 
+/* GET LATEST FONT AWESOME VERSION */
+add_action('wp_enqueue_scripts', 'update_font_awesome');
+add_action('admin_enqueue_scripts', 'update_font_awesome');
+function update_font_awesome()
+{
+    wp_dequeue_style('font-awesome');
+    wp_deregister_style('font-awesome');
+    wp_enqueue_style('font-awesome', 'https://use.fontawesome.com/releases/v6.0.0/css/all.css', '', '6.0.0');
+    wp_enqueue_style('font-awesome-shim', 'https://use.fontawesome.com/releases/v6.0.0/css/v4-shims.css', array('font-awesome'), '6.0.0');
+}
+
 /**********************************************/
 /*******
  * MULTISITE LOGIC FOR FUNCTIONS
@@ -901,3 +892,162 @@ function the_dramatist_debug_admin_menu() {
 }
 add_action( 'admin_init', 'the_dramatist_debug_admin_menu' );
 */
+
+
+// ADD SALIENT CUSTOM FONTS
+
+function salient_redux_custom_fonts()
+{
+    return [
+        "Custom Fonts" => [
+
+            /*
+            "Bitter-Black" => "Bitter-Black",
+            "Bitter-BlackItalic" => "Bitter-BlackItalic",
+            "Bitter-Bold" => "Bitter-Bold",
+            "Bitter-BoldItalic" => "Bitter-BoldItalic",
+            "Bitter-ExtraBold" => "Bitter-ExtraBold",
+            "Bitter-ExtraBoldItalic" => "Bitter-ExtraBoldItalic",
+            "Bitter-ExtraLight" => "Bitter-ExtraLight",
+            "Bitter-ExtraLightItalic" => "Bitter-ExtraLightItalic",
+            "Bitter-Italic" => "Bitter-Italic",
+            "Bitter-Light" => "Bitter-Light",
+            "Bitter-LightItalic" => "Bitter-LightItalic",
+            "Bitter-Medium" => "Bitter-Medium",
+            "Bitter-MediumItalic" => "Bitter-MediumItalic",
+            "Bitter-Regular" => "Bitter-Regular",
+            "Bitter-SemiBold" => "Bitter-SemiBold",
+            "Bitter-SemiBoldItalic" => "Bitter-SemiBoldItalic",
+            "Bitter-Thin" => "Bitter-Thin",
+            "Bitter-ThinItalic" => "Bitter-ThinItalic",
+
+            "Montserrat-Black" => "Montserrat-Black",
+            "Montserrat-BlackItalic" => "Montserrat-BlackItalic",
+            "Montserrat-Bold" => "Montserrat-Bold",
+            "Montserrat-BoldItalic" => "Montserrat-BoldItalic",
+            "Montserrat-ExtraBold" => "Montserrat-ExtraBold",
+            "Montserrat-ExtraBoldItalic" => "Montserrat-ExtraBoldItalic",
+            "Montserrat-ExtraLight" => "Montserrat-ExtraLight",
+            "Montserrat-ExtraLightItalic" => "Montserrat-ExtraLightItalic",
+            "Montserrat-Italic" => "Montserrat-Italic",
+            "Montserrat-Light" => "Montserrat-Light",
+            "Montserrat-LightItalic" => "Montserrat-LightItalic",
+            "Montserrat-Medium" => "Montserrat-Medium",
+            "Montserrat-MediumItalic" => "Montserrat-MediumItalic",
+            "Montserrat-Regular" => "Montserrat-Regular",
+            "Montserrat-SemiBold" => "Montserrat-SemiBold",
+            "Montserrat-SemiBoldItalic" => "Montserrat-SemiBoldItalic",
+            "Montserrat-Thin" => "Montserrat-Thin",
+            "Montserrat-ThinItalic" => "Montserrat-ThinItalic",
+
+            "OpenSans_Condensed-Bold" => "OpenSans_Condensed-Bold",
+            "OpenSans_Condensed-BoldItalic" => "OpenSans_Condensed-BoldItalic",
+            "OpenSans_Condensed-ExtraBold" => "OpenSans_Condensed-ExtraBold",
+            "OpenSans_Condensed-ExtraBoldItalic" => "OpenSans_Condensed-ExtraBoldItalic",
+            "OpenSans_Condensed-Italic" => "OpenSans_Condensed-Italic",
+            "OpenSans_Condensed-Light" => "OpenSans_Condensed-Light",
+            "OpenSans_Condensed-LightItalic" => "OpenSans_Condensed-LightItalic",
+            "OpenSans_Condensed-Medium" => "OpenSans_Condensed-Medium",
+            "OpenSans_Condensed-MediumItalic" => "OpenSans_Condensed-MediumItalic",
+            "OpenSans_Condensed-Regular" => "OpenSans_Condensed-Regular",
+            "OpenSans_Condensed-SemiBold" => "OpenSans_Condensed-SemiBold",
+            "OpenSans_Condensed-SemiBoldItalic" => "OpenSans_Condensed-SemiBoldItalic",
+            "OpenSans_SemiCondensed-Bold" => "OpenSans_SemiCondensed-Bold",
+            "OpenSans_SemiCondensed-BoldItalic" => "OpenSans_SemiCondensed-BoldItalic",
+            "OpenSans_SemiCondensed-ExtraBold" => "OpenSans_SemiCondensed-ExtraBold",
+            "OpenSans_SemiCondensed-ExtraBoldItalic" => "OpenSans_SemiCondensed-ExtraBoldItalic",
+            "OpenSans_SemiCondensed-Italic" => "OpenSans_SemiCondensed-Italic",
+            "OpenSans_SemiCondensed-Light" => "OpenSans_SemiCondensed-Light",
+            "OpenSans_SemiCondensed-LightItalic" => "OpenSans_SemiCondensed-LightItalic",
+            "OpenSans_SemiCondensed-Medium" => "OpenSans_SemiCondensed-Medium",
+            "OpenSans_SemiCondensed-MediumItalic" => "OpenSans_SemiCondensed-MediumItalic",
+            "OpenSans_SemiCondensed-Regular" => "OpenSans_SemiCondensed-Regular",
+            "OpenSans_SemiCondensed-SemiBold" => "OpenSans_SemiCondensed-SemiBold",
+            "OpenSans_SemiCondensed-SemiBoldItalic" => "OpenSans_SemiCondensed-SemiBoldItalic",
+            "OpenSans-Bold" => "OpenSans-Bold",
+            "OpenSans-BoldItalic" => "OpenSans-BoldItalic",
+            "OpenSans-ExtraBold" => "OpenSans-ExtraBold",
+            "OpenSans-ExtraBoldItalic" => "OpenSans-ExtraBoldItalic",
+            "OpenSans-Italic" => "OpenSans-Italic",
+            "OpenSans-Light" => "OpenSans-Light",
+            "OpenSans-LightItalic" => "OpenSans-LightItalic",
+            "OpenSans-Medium" => "OpenSans-Medium",
+            "OpenSans-MediumItalic" => "OpenSans-MediumItalic",
+            "OpenSans-Regular" => "OpenSans-Regular",
+            "OpenSans-SemiBold" => "OpenSans-SemiBold",
+            "OpenSans-SemiBoldItalic" => "OpenSans-SemiBoldItalic",
+
+            "Roboto-Black" => "Roboto-Black",
+            "Roboto-BlackItalic" => "Roboto-BlackItalic",
+            "Roboto-Bold" => "Roboto-Bold",
+            "Roboto-BoldItalic" => "Roboto-BoldItalic",
+            "Roboto-Italic" => "Roboto-Italic",
+            "Roboto-Light" => "Roboto-Light",
+            "Roboto-LightItalic" => "Roboto-LightItalic",
+            "Roboto-Medium" => "Roboto-Medium",
+            "Roboto-MediumItalic" => "Roboto-MediumItalic",
+            "Roboto-Regular" => "Roboto-Regular",
+            "Roboto-Thin" => "Roboto-Thin",
+            "Roboto-ThinItalic" => "Roboto-ThinItalic",      
+
+            "RobotoSlab-Black" => "RobotoSlab-Black",
+            "RobotoSlab-Bold" => "RobotoSlab-Bold",
+            "RobotoSlab-ExtraBold" => "RobotoSlab-ExtraBold",
+            "RobotoSlab-ExtraLight" => "RobotoSlab-ExtraLight",
+            "RobotoSlab-Light" => "RobotoSlab-Light",
+            "RobotoSlab-Medium" => "RobotoSlab-Medium",
+            "RobotoSlab-Regular" => "RobotoSlab-Regular",
+            "RobotoSlab-SemiBold" => "RobotoSlab-SemiBold",
+            "RobotoSlab-Thin" => "RobotoSlab-Thin",
+
+            "SourceSans3-Black" => "SourceSans3-Black",
+            "SourceSans3-BlackItalic" => "SourceSans3-BlackItalic",
+            "SourceSans3-Bold" => "SourceSans3-Bold",
+            "SourceSans3-BoldItalic" => "SourceSans3-BoldItalic",
+            "SourceSans3-ExtraBold" => "SourceSans3-ExtraBold",
+            "SourceSans3-ExtraBoldItalic" => "SourceSans3-ExtraBoldItalic",
+            "SourceSans3-ExtraLight" => "SourceSans3-ExtraLight",
+            "SourceSans3-ExtraLightItalic" => "SourceSans3-ExtraLightItalic",
+            "SourceSans3-Italic" => "SourceSans3-Italic",
+            "SourceSans3-Light" => "SourceSans3-Light",
+            "SourceSans3-LightItalic" => "SourceSans3-LightItalic",
+            "SourceSans3-Medium" => "SourceSans3-Medium",
+            "SourceSans3-MediumItalic" => "SourceSans3-MediumItalic",
+            "SourceSans3-Regular" => "SourceSans3-Regular",
+            "SourceSans3-SemiBold" => "SourceSans3-SemiBold",
+            "SourceSans3-SemiBoldItalic" => "SourceSans3-SemiBoldItalic",
+
+            "WorkSans-Black" => "WorkSans-Black",
+            "WorkSans-BlackItalic" => "WorkSans-BlackItalic",
+            "WorkSans-Bold" => "WorkSans-Bold",
+            "WorkSans-BoldItalic" => "WorkSans-BoldItalic",
+            "WorkSans-ExtraBold" => "WorkSans-ExtraBold",
+            "WorkSans-ExtraBoldItalic" => "WorkSans-ExtraBoldItalic",
+            "WorkSans-ExtraLight" => "WorkSans-ExtraLight",
+            "WorkSans-ExtraLightItalic" => "WorkSans-ExtraLightItalic",
+            "WorkSans-Italic" => "WorkSans-Italic",
+            "WorkSans-Light" => "WorkSans-Light",
+            "WorkSans-LightItalic" => "WorkSans-LightItalic",
+            "WorkSans-Medium" => "WorkSans-Medium",
+            "WorkSans-MediumItalic" => "WorkSans-MediumItalic",
+            "WorkSans-Regular" => "WorkSans-Regular",
+            "WorkSans-SemiBold" => "WorkSans-SemiBold",
+            "WorkSans-SemiBoldItalic" => "WorkSans-SemiBoldItalic",
+            "WorkSans-Thin" => "WorkSans-Thin",
+            "WorkSans-ThinItalic" => "WorkSans-ThinItalic"
+            */
+
+            "Bitter" => "Bitter",
+            "Montserrat" => "Montserrat",
+            "Open Sans" => "Open Sans",
+            "Roboto" => "Roboto",
+            "Roboto Slab" => "Roboto Slab",
+            "Work Sans" => "Work Sans",
+
+        ]
+    ];
+}
+add_filter(
+    "redux/salient_redux/field/typography/custom_fonts",
+    "salient_redux_custom_fonts"
+);

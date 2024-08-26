@@ -484,6 +484,11 @@ a.list-design.navigation-btn {
 	display: none;
 }
 
+.fa.fa-classic.fa-brands.fa-mastodon::before {
+	content: "\e917";
+	font-family: icomoon;
+}
+
 /* NEW PERSON PROFILE PHOTO OVERRIDES */
 
 .single-person-icon {
