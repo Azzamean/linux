@@ -1047,7 +1047,9 @@ function salient_redux_custom_fonts()
         ]
     ];
 }
+/*
 add_filter(
     "redux/salient_redux/field/typography/custom_fonts",
     "salient_redux_custom_fonts"
 );
+*/
