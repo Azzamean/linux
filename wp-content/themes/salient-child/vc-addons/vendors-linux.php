@@ -348,6 +348,38 @@ function vendors_grid_nodejsf($atts, $content)
             // $output .= '<p class="vendor-question">Who are the consumers/users of your app, product or project?</p><p class="vendor-answer">'. get_field('consumers') .'</p>';
             // $output .= '<p class="vendor-question">What business or technology benefit do your users get by using your app, product or project?</p><p class="vendor-answer">'. get_field('benefits') .'</p>';
             // $output .= '<p class="vendor-question">What were the most compelling features of Node.js for this project?</p><p class="vendor-answer">'. get_field('features') .'</p>';
+            
+            $vendor_classification = taxonomy_exists('vendor_classification');
+            $vendor_version_support = taxonomy_exists('vendor_version_support');
+
+            if ($vendor_classification == true) {
+                $vc_terms = get_the_terms($post->ID, 'vendor_classification');
+                if (! empty($vc_terms) && ! is_wp_error($vc_terms) ) {          
+                    $output .= '<h3>Classification</h3>';
+                    $output .= '<p>';
+                    $comma = '';
+                    foreach ( $vc_terms as $tax ) {
+                        $output .= '<span>' . $comma . __($tax->name) . '</span>';
+                        $comma = ', ';
+                    }       
+                    $output .= '</p>';
+                }
+            }
+
+            if ($vendor_version_support == true) {
+                $vvs_terms = get_the_terms($post->ID, 'vendor_version_support');
+                if (! empty($vvs_terms) && ! is_wp_error($vvs_terms) ) {          
+                    $output .= '<h3>Version Support</h3>';
+                    $output .= '<p>';
+                    $comma = '';
+                    foreach ( $vvs_terms as $tax ) {
+                        $output .= '<span>' . $comma . __($tax->name) . '</span>';
+                        $comma = ', ';
+                    }       
+                    $output .= '</p>';
+                }
+            }
+            
             $output .=
                 '<div class="vendor-twitter"><a href="' .
                 get_field('website') .

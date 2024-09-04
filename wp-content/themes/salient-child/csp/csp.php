@@ -5,14 +5,13 @@
 // CONDITIONAL LOGIC FOR CONTENT SECURITY POLICY BASED OFF DOMAIN NAME
 $domain_name = parse_url(get_site_url(), PHP_URL_HOST);
 switch ($domain_name) {
-case "ms-csp-openssf.pantheonsite.io":
-case "dev-openssf.pantheonsite.io":
-case "openssf.org":
-    include_once "sites/ossf.php";
-    break;
-default:
-      add_action("send_headers", "default_security_headers");
-      add_action("wp_head", "osano_script_global");
+    case "ms-csp-openssf.pantheonsite.io":
+    case "dev-openssf.pantheonsite.io":
+    case "openssf.org":
+        require_once "sites/ossf.php";
+        break;
+	default:
+       add_action("send_headers", "default_security_headers");
 }
 
 // DEFAULT SECURITY HEADERS IF NO SITE IS IN CONDITION
@@ -58,6 +57,7 @@ function add_nonce_to_scripts( $attr )
 }
 add_filter('wp_inline_script_attributes', 'add_nonce_to_scripts', 1, 1);
 add_filter('wp_script_attributes', 'add_nonce_to_scripts', 1, 1);
+add_filter( 'wp_script_attributes', 'add_nonce_to_scripts', 1, 1 );
 
 // ADD THE NONCE TO CALLED SCRIPTS
 function script_tag_nonce( $tag, $handle )
@@ -79,7 +79,7 @@ function lf_capture_start()
     ob_start('lf_htmlsource_replnonce');
 }
 
-add_action('wp_print_footer_scripts', 'lf_capture_stop', 1000); //shutdown - too late or used by other caching plugins?
+add_action('shutdown', 'lf_capture_stop', 1000); //wp_print_footer_scripts - too late or used by other caching plugins?
 function lf_capture_stop()
 {
     ob_end_flush();
@@ -89,7 +89,7 @@ function lf_htmlsource_replnonce($buffer)
 {
     //get generated nonce to replace static nonce
     $nonce = 'nonce="' . generate_custom_nonce() . '"';
-    
+    //<script type="text/javascript">(window.NREUM
     $buffer = str_replace(['<script type="text/javascript">', '<script>'], '<script type="text/javascript" ' . $nonce . '>', $buffer);
     return str_replace(['nonce="3423fsdf3kj34j"', "nonce='3423fsdf3kj34j'"], $nonce, $buffer);
 }
