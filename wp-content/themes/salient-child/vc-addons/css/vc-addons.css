@@ -348,7 +348,7 @@ a.list-design.navigation-btn {
 
 /* MEMBERS API STYLES */
 .slider.container {
-	background-color: inherit;
+	background-color: #F6F7FA;
 	width: 100%;
 	margin: 0 auto;
 	padding: 4rem 0;
@@ -362,11 +362,11 @@ a.list-design.navigation-btn {
 	margin: 0 auto;
 }
 
-.slider .slick-slide img {
-	width: 75px;
-	height: 75px;
-	margin-bottom: 0;
+.slider img {
+	width: 75px !important;
+	height: 75px !important;
 	cursor: pointer;
+	object-fit: contain;
 }
 
 .slider.link {
@@ -377,7 +377,7 @@ a.list-design.navigation-btn {
 .slick-slide {
 	background: #fff;
 	border-radius: 10px;
-	border: 1px solid #a1a1a4;
+	border: 1px solid #A1A1A4;
 	margin-bottom: 15px;
 	margin-right: 15px;
 	padding: 15px;
@@ -387,12 +387,6 @@ a.list-design.navigation-btn {
 	text-align: center;
 	justify-content: center;
 }
-
-.slick-track {
-	left: -550px !important;
-	position: relative !important;
-}
-
 
 /* WEBINARS */
 .webinars-outer {

@@ -16,7 +16,7 @@ $multisite_three_dev = "https://dev-lfprojects3.linuxfoundation.org";
 $multisite_three_live = "https://live-lfprojects3.linuxfoundation.org";
 $multisite_five_dev = "https://dev-lfprojects5.linuxfoundation.org";
 $multisite_five_live = "https://live-lfprojects5.linuxfoundation.org";
-$site_id;
+$site_id = '';
 if ((is_multisite() && $current_multisite == $multisite_three_dev) || (is_multisite() && $current_multisite == $multisite_three_live)) {
     $site_id = get_current_blog_id();
 }

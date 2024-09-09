@@ -203,7 +203,7 @@ if (is_array($custom_post_types_options) && array_key_exists("members_2", $custo
     if ($members_2) {
         include_once plugin_dir_path(__DIR__) . "../../themes/salient-child/custom-post-types/members.php";
         include_once plugin_dir_path(__DIR__) . "../../themes/salient-child/vc-addons/members-linux.php";
-        include_once plugin_dir_path(__DIR__) . "../../themes/salient-child/vc-addons/members-api-linux.php";
+        //include_once plugin_dir_path(__DIR__) . "../../themes/salient-child/vc-addons/members-api-linux.php";
     }
 }
 if (is_array($custom_post_types_options) && array_key_exists("persons_3", $custom_post_types_options)) {
