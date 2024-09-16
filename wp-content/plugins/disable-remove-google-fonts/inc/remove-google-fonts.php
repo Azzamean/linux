@@ -53,6 +53,8 @@ function drgf_dequeueu_fonts() {
 	// Dequeue the Codestar Framework font loader.
 	wp_dequeue_script( 'csf-google-web-fonts' );
 
+	wp_dequeue_script( 'mo-google-webfont' );
+
 	global $wp_styles;
 
 	if ( ! ( $wp_styles instanceof WP_Styles ) ) {
@@ -330,4 +332,10 @@ function dgrf_after_plugins_loaded() {
 	 * Dequeue Google Fonts loaded by the GroovyMenu plugin.
 	 */
 	remove_action( 'wp_head', 'groovy_menu_add_gfonts_from_pre_storage' );
+
 }
+
+/**
+ * Dequeue Google Fonts loaded by Stackable.
+ */
+add_filter( 'stackable_enqueue_font', '__return_false' );
