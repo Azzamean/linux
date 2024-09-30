@@ -323,7 +323,15 @@ function vendors_grid_nodejsf($atts, $content)
                 '" alt="' .
                 get_the_title() .
                 '">';
-            $output .= '<div class="vendor-title">' . get_the_title() . '</div>';
+
+            $website = get_field('website');
+            if($website != null || $website != '') {    
+                $output .= '<div class="vendor-title"><a href="' . $website . '">' . get_the_title() . '</a></div>';
+            }
+            else {
+                $output .= '<div class="vendor-title">' . get_the_title() . '</div>'; 
+            }
+
             $output .=
                 '<div class="vendor-shortdesc">' .
                 $short_desc .
@@ -380,6 +388,14 @@ function vendors_grid_nodejsf($atts, $content)
                 }
             }
             
+            $website = get_field('website');
+            if($website != null || $website != '') {
+                $output .= '<h3>Website</h3>';
+                $output .= '<a href="' . $website . '">' . $website . '</a>';
+            }
+
+
+
             $output .=
                 '<div class="vendor-twitter"><a href="' .
                 get_field('website') .

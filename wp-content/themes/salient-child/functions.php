@@ -693,8 +693,7 @@ function editor_granted_appearance_access()
     global $multisite_three_live;
     global $multisite_five_dev;
     global $multisite_five_live;
-    if ((is_multisite() && $current_multisite == $multisite_three_dev) 
-        || (is_multisite() && $current_multisite == $multisite_three_live)
+    if ((is_multisite() && $current_multisite == $multisite_three_dev)
     ) {
         $site_id = get_current_blog_id();
         // InterUSS
@@ -706,6 +705,16 @@ function editor_granted_appearance_access()
             editor_appearance_access();
         }
     }
+    if ((is_multisite() && $current_multisite == $multisite_five_live)
+    ) {
+        $site_id = get_current_blog_id();
+        // Trust
+        if ($site_id == "10") {
+            editor_appearance_access();
+        }
+    }
+
+
     if ((is_multisite() && $current_multisite == $multisite_five_dev) 
         || (is_multisite() && $current_multisite == $multisite_five_live)
     ) {
@@ -894,4 +903,21 @@ function the_dramatist_debug_admin_menu() {
     echo '<pre>' . print_r( $GLOBALS[ 'menu' ], TRUE) . '</pre>';
 }
 add_action( 'admin_init', 'the_dramatist_debug_admin_menu' );
+*/
+
+
+
+
+/* WP SMTP Settings
+define("WPMS_ON", true);
+define("WPMS_MAIL_FROM", "noreply@linuxfoundation.org");
+define("WPMS_MAIL_FROM_NAME", "Linux Foundation Projects");
+define("WPMS_MAILER", "smtp"); // Possible values 'smtp', 'mail', or 'sendmail'
+define("WPMS_SET_RETURN_PATH", "false"); // Sets $phpmailer->Sender if true
+define("WPMS_SMTP_HOST", "email-smtp.us-west-2.amazonaws.com"); // The SMTP mail host
+define("WPMS_SMTP_PORT", 587); // The SMTP server port number
+define("WPMS_SSL", "tls"); // Possible values '', 'ssl', 'tls' - note TLS is not STARTTLS
+define("WPMS_SMTP_AUTH", true); // True turns on SMTP authentication, false turns it off
+define("WPMS_SMTP_USER", "AKIA57RHWO7HXEGJL524"); // SMTP authentication username, only used if WPMS_SMTP_AUTH is true
+define("WPMS_SMTP_PASS", "BC/r3SHkuLlVp2GW0inV6/NBx8NzjKuRXz30jZEGP4/G"); // SMTP authentication password, only used if WPMS_SMTP_AUTH is true
 */
