@@ -24,7 +24,8 @@ jQuery(document).ready(function ($) {
       $('[data-name="projects_case_studies_title"]').show();
       $('[data-name="projects_case_studies"]').show();
    } else if ($('#page_template :selected').text() == 'Template Style 4 (Four)') {
-
+      $('[data-name="projects_video"]').show();
+      $('[data-name="projects_post_category"]').show();
    }
 
 
