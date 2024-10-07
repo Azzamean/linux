@@ -66,5 +66,5 @@
 
 /* VISUAL COMPOSER MODULE ON PAGE FIX */
 .page-submenu.stuck {
-	margin-top: 33px;
+	margin-top: 33px !important;
 }
