@@ -43,7 +43,7 @@ class Vc_Design_Options_Module_Settings
 
 		add_action( 'vc_before_init', [$this, 'check_for_custom_css_build'] );
 
-		add_action( 'vc-settings-render-tab-vc-color', [$this, 'page_settings_design_options_load'] );
+		add_action( 'vc-settings-render-tab-vc-color', [$this, 'load_module_settings_assets'] );
 	}
 
 	/**
@@ -87,16 +87,6 @@ class Vc_Design_Options_Module_Settings
 			echo esc_html__( 'Open Design Options', 'js_composer' ) . '</a>';
 			echo '</p></div>';
 		}
-	}
-
-	/**
-	 * Enqueue module script.
-	 *
-	 * @since 7.7
-	 */
-	public function page_settings_design_options_load() {
-		add_filter( 'vc_settings-tab-submit-button-attributes-color', [$this, 'page_settings_tab_color_submit_attributes'] );
-		wp_enqueue_script( 'vc_less_js', vc_asset_url( 'lib/vendor/node_modules/less/dist/less.min.js' ), array(), WPB_VC_VERSION, true );
 	}
 
 	/**
@@ -714,5 +704,21 @@ class Vc_Design_Options_Module_Settings
 	 */
 	public function get_custom_css_version() {
 		return get_option( vc_settings()::$field_prefix . 'less_version', false );
+	}
+
+	/**
+	 * Load scripts that demand tab settings.
+	 *
+	 * since 7.8
+	 */
+	public function load_module_settings_assets() {
+		wp_enqueue_style( 'wp-color-picker' );
+		wp_enqueue_script( 'wp-color-picker' );
+		wp_add_inline_script( 'wp-color-picker', 'jQuery( ".color-control" ).wpColorPicker();' );
+
+		add_filter( 'vc_settings-tab-submit-button-attributes-color', [$this, 'page_settings_tab_color_submit_attributes'] );
+		wp_enqueue_script( 'vc_less_js', vc_asset_url( 'lib/vendor/node_modules/less/dist/less.min.js' ), array(), WPB_VC_VERSION, true );
+		wp_enqueue_script( 'wpb_design_options_module', vc_asset_url( '../modules/design-options/assets/dist/module.min.js' ), array(), WPB_VC_VERSION, true );
+		wp_enqueue_style( 'wpb_design_options_module', vc_asset_url( '../modules/design-options/assets/dist/module.min.css' ), false, WPB_VC_VERSION );
 	}
 }

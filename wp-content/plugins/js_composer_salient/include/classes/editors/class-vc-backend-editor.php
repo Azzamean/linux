@@ -29,7 +29,7 @@ require_once vc_path_dir( 'EDITORS_DIR', 'class-vc-editor.php' );
 class Vc_Backend_Editor extends Vc_Editor {
 
 	/**
-	 * @var bool|string $post - stores data about post.
+	 * @var mixed $post - stores data about post.
 	 */
 	public $post = false;
 
@@ -40,7 +40,10 @@ class Vc_Backend_Editor extends Vc_Editor {
 	 * @access public
 	 */
 	public function addHooksSettings() {
-		// @todo - fix_roles do this only if be editor is enabled.
+		if ( ! vc_user_access()->part( 'backend_editor' )->can()->get() ) {
+			return;
+		}
+
 		// load backend editor
 		if ( function_exists( 'add_theme_support' ) ) {
 			add_theme_support( 'post-thumbnails' ); // @todo check is it needed?
@@ -113,6 +116,7 @@ class Vc_Backend_Editor extends Vc_Editor {
 		vc_include_template( 'editors/backend_editor.tpl.php', array(
 			'editor' => $this,
 			'post' => $this->post,
+			'wpb_vc_status' => $this->getEditorPostStatus(),
 		) );
 		add_action( 'admin_footer', array(
 			$this,
@@ -122,6 +126,25 @@ class Vc_Backend_Editor extends Vc_Editor {
 
 		return true;
 	}
+
+	/**
+	 * Check if current post is edited lastly by our editor.
+	 *
+	 * @since 7.8
+	 * @return mixed
+	 */
+	public function getEditorPostStatus() {
+		$post_editor_status = wpb_get_post_editor_status( $this->post->ID );
+		$get_param_status = vc_get_param( 'wpb_vc_js_status', $post_editor_status );
+		$wpb_vc_status = apply_filters( 'wpb_vc_js_status_filter', $get_param_status );
+
+		if ( '' === $wpb_vc_status || ! isset( $wpb_vc_status ) ) {
+			$wpb_vc_status = vc_user_access()->part( 'backend_editor' )->checkState( 'default' )->get() ? 'true' : 'false';
+		}
+
+		return $wpb_vc_status;
+	}
+
 
 	/**
 	 * Output required html and js content for VC editor.
@@ -208,14 +231,18 @@ class Vc_Backend_Editor extends Vc_Editor {
 		wp_register_script( 'wpb_json-js', vc_asset_url( 'lib/vendor/node_modules/json-js/json2.min.js' ), array(), WPB_VC_VERSION, true );
 		// used in post settings editor
 		wp_register_script( 'ace-editor', vc_asset_url( 'lib/vendor/node_modules/ace-builds/src-min-noconflict/ace.js' ), array( 'jquery-core' ), WPB_VC_VERSION, true );
+		wp_register_script( 'wpb-code-editor', vc_asset_url( 'js/dist/post-code-editor.min.js' ), array( 'jquery-core' ), WPB_VC_VERSION, true );
 		wp_register_script( 'webfont', 'https://ajax.googleapis.com/ajax/libs/webfont/1.6.26/webfont.js', array(), WPB_VC_VERSION, true ); // Google Web Font CDN
 		wp_register_script( 'popper', vc_asset_url( 'lib/vendor/node_modules/@popperjs/core/dist/umd/popper.min.js' ), array(), WPB_VC_VERSION, true );
+
+		vc_modules_manager()->register_modules_script();
 
 		wp_localize_script( 'vc-backend-actions-js', 'i18nLocale', wpbakery()->getEditorsLocale() );
 	}
 
 	public function registerBackendCss() {
 		wp_register_style( 'js_composer', vc_asset_url( 'css/js_composer_backend_editor.min.css' ), array(), WPB_VC_VERSION, false );
+		wp_register_style( 'wpb_modules_css', vc_asset_url( 'css/modules.min.css' ), array(), WPB_VC_VERSION, false );
 
 		if ( $this->editorEnabled() ) {
 			/**
@@ -263,17 +290,16 @@ class Vc_Backend_Editor extends Vc_Editor {
 			'wpb_php_js',
 			// used in our files [e.g. edit form saving sprintf]
 			'wpb_json-js',
-			'ace-editor',
 			'webfont',
 			'popper',
 			'vc-backend-min-js',
+			'wpb-modules-js',
 		);
 
+		$common = apply_filters( 'vc_enqueue_backend_editor_js', array_merge( $wp_dependencies, $dependencies ) );
+
 		// This workaround will allow to disable any of dependency on-the-fly
-		foreach ( $wp_dependencies as $dependency ) {
-			wp_enqueue_script( $dependency );
-		}
-		foreach ( $dependencies as $dependency ) {
+		foreach ( $common as $dependency ) {
 			wp_enqueue_script( $dependency );
 		}
 	}
@@ -292,6 +318,7 @@ class Vc_Backend_Editor extends Vc_Editor {
 		);
 		$dependencies = array(
 			'js_composer',
+			'wpb_modules_css'
 		);
 
 		// This workaround will allow to disable any of dependency on-the-fly

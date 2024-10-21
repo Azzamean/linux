@@ -50,6 +50,9 @@ $el_settings = array(
 	'vertical_list_read_more' => esc_attr($vertical_list_read_more),
 	'read_more_button' => esc_attr($read_more_button),
 	'animation' => esc_attr($animation),
+	'custom_fields' => esc_attr($custom_fields),
+	'custom_fields_location' => esc_attr($custom_fields_location),
+	'display_type' => esc_attr($display_type)
 );
 
 $el_query = array(
@@ -61,6 +64,7 @@ $el_query = array(
 	'cpt_name' => esc_attr($cpt_name),
 	'custom_query_tax' => esc_attr($custom_query_tax),
   	'ignore_sticky_posts' => esc_attr($ignore_sticky_posts),
+	'exclude_current_post' => esc_attr($exclude_current_post),
 ); 
 
 $css_class_arr = array('nectar-post-grid-wrap');
@@ -105,6 +109,14 @@ if( 'post' === $post_type ) {
 	
 	$selected_cats_arr = explode(",", $blog_category);
 	$blog_cat_list     = get_categories();
+
+	// Starting category.
+	$custom_starting_category = false;
+	if ( !empty($blog_starting_category) && 
+		 'all' !== $blog_starting_category && 
+	   in_array($blog_starting_category, $selected_cats_arr) ) {
+		$custom_starting_category = true;
+	}
 	
 	if( in_array('all', $selected_cats_arr) ) {
 		
@@ -115,7 +127,8 @@ if( 'post' === $post_type ) {
 			$all_filters = $blog_category;
 		}
 		
-		$cat_links_escaped .= '<a href="#" class="active all-filter" data-total-count="'.esc_attr(nectar_post_grid_get_category_total($all_filters, 'post')).'" data-filter="'. esc_attr($all_filters) .'">'.esc_html__('All', 'salient-core').'</a>';
+		$active_class = ( false === $custom_starting_category ) ? 'active ' : '';
+		$cat_links_escaped .= '<a href="#" class="'.$active_class.' all-filter" data-total-count="'.esc_attr(nectar_post_grid_get_category_total($all_filters, 'post')).'" data-filter="'. esc_attr($all_filters) .'">'.esc_html__('All', 'salient-core').'</a>';
 	} else {
 		
 		if( 'yes' === $enable_sortable) {
@@ -123,11 +136,17 @@ if( 'post' === $post_type ) {
 			$blog_category = $selected_cats_arr[0];
 		}
 	}
+
+	// manipulate starting category.
+	if ( true === $custom_starting_category ) {
+		$blog_category = $blog_starting_category;
+	}
 	
 	foreach ($blog_cat_list as $type) {
 
 		if( in_array($type->slug, $selected_cats_arr) || true === $show_all_cats ) {
-  		$cat_links_escaped .= '<a href="#" data-filter="'.esc_attr($type->slug).'" data-total-count="'.esc_attr(nectar_post_grid_get_category_total($type->slug, 'post')).'">'. esc_attr($type->name) .'</a>';
+			$active_class = ( true === $custom_starting_category && $type->slug === $blog_category ) ? 'class="active" ' : '';
+  			$cat_links_escaped .= '<a href="#" '.$active_class.'data-filter="'.esc_attr($type->slug).'" data-total-count="'.esc_attr(nectar_post_grid_get_category_total($type->slug, 'post')).'">'. esc_attr($type->name) .'</a>';
 		}
 	}
 	
@@ -138,6 +157,15 @@ if( 'post' === $post_type ) {
 	$project_cat_list  = get_terms( array(
 	    'taxonomy' => 'project-type'
 	) );
+
+	// Starting category.
+	$custom_starting_category = false;
+	if ( !empty($portfolio_starting_category) && 
+		 'all' !== $portfolio_starting_category && 
+	   in_array($portfolio_starting_category, $selected_cats_arr) ) {
+		$custom_starting_category = true;
+	}
+	
 	
 	if( in_array('all', $selected_cats_arr) ) {
 		
@@ -148,7 +176,8 @@ if( 'post' === $post_type ) {
 			$all_filters = $portfolio_category;
 		}
 		
-		$cat_links_escaped .= '<a href="#" class="active all-filter" data-filter="'.esc_attr($all_filters).'" data-total-count="'.esc_attr(nectar_post_grid_get_category_total($all_filters, 'portfolio')).'">'.esc_html__('All', 'salient-core').'</a>';
+		$active_class = ( false === $custom_starting_category ) ? 'active ' : '';
+		$cat_links_escaped .= '<a href="#" class="'.$active_class.'all-filter" data-filter="'.esc_attr($all_filters).'" data-total-count="'.esc_attr(nectar_post_grid_get_category_total($all_filters, 'portfolio')).'">'.esc_html__('All', 'salient-core').'</a>';
 	} else {
 		// Only query for the first category to start.
 		if( 'yes' === $enable_sortable) {
@@ -156,11 +185,17 @@ if( 'post' === $post_type ) {
 		}
 	}
 	
+	// manipulate starting category.
+	if ( true === $custom_starting_category ) {
+		$portfolio_category = $portfolio_starting_category;
+	}
+
 	if( !is_wp_error($project_cat_list) ) { 
 		foreach ($project_cat_list as $type) {
 
 			if( in_array($type->slug, $selected_cats_arr) || true === $show_all_cats ) {
-	  		$cat_links_escaped .= '<a href="#" data-filter="'.esc_attr($type->slug).'" data-total-count="'.esc_attr(nectar_post_grid_get_category_total($type->slug, 'portfolio')).'">'. esc_attr($type->name) .'</a>';
+				$active_class = ( true === $custom_starting_category && $type->slug === $portfolio_category ) ? 'class="active" ' : '';
+	  			$cat_links_escaped .= '<a href="#" '.$active_class.'data-filter="'.esc_attr($type->slug).'" data-total-count="'.esc_attr(nectar_post_grid_get_category_total($type->slug, 'portfolio')).'">'. esc_attr($type->name) .'</a>';
 			}
 		}
 	}
@@ -234,7 +269,8 @@ if( 'yes' === $enable_sortable && in_array( $sortable_alignment, array('sidebar_
 $filter_el_css_class = implode(" ", $filter_css_class_arr);
 
 if( !empty($cat_links_escaped) ) {
-	echo '<div class="'.$filter_el_css_class.'" data-active-color="'.esc_attr($sortable_color).'" data-align="'.esc_attr($sortable_alignment).'" data-animation="'.esc_attr($animation).'" data-sortable="'.esc_attr($enable_sortable).'"><h4>'.esc_html__('Filter','salient-core').'</h4><div>'.$cat_links_escaped.'</div></div>';
+	$filter_heading = ('yes' === $enable_sortable) ? '<h4>'.esc_html__('Filter','salient-core').'</h4>' : '';
+	echo '<div class="'.$filter_el_css_class.'" data-active-color="'.esc_attr($sortable_color).'" data-align="'.esc_attr($sortable_alignment).'" data-animation="'.esc_attr($animation).'" data-sortable="'.esc_attr($enable_sortable).'">'.$filter_heading.'<div>'.$cat_links_escaped.'</div></div>';
 }
 	
 
@@ -252,6 +288,11 @@ if( function_exists('nectar_el_dynamic_classnames') ) {
 $nectar_post_grid_class = 'nectar-post-grid';
 if( 'carousel' === $display_type ) {
 	$nectar_post_grid_class .= ' nectar-flickity';
+}
+
+if ( 'stack' === $display_type ) {
+	$nectar_post_grid_class .= ' layout-stacked';
+	wp_enqueue_script('nectar-post-grid-stacked');
 }
 
 echo '<div class="'.$nectar_post_grid_class.$dynamic_el_styles.'" '.$data_attrs_escaped.'>';
@@ -280,6 +321,10 @@ if( 'post' === $post_type ) {
 
   if( $ignore_sticky_posts == 'yes' ) {
     $nectar_blog_arr['ignore_sticky_posts'] = true;
+  }
+  if( $exclude_current_post == 'yes' ) {
+	global $post;
+	$nectar_blog_arr['post__not_in'] = array( $post->ID );
   }
   
   $nectar_blog_el_query = new WP_Query( $nectar_blog_arr );
@@ -313,6 +358,11 @@ else if( 'portfolio' === $post_type ) {
 		'project-type'   => $portfolio_category,
 		'offset'         => $post_offset,
 	);
+
+  if( $exclude_current_post == 'yes' ) {
+	 global $post;
+	 $portfolio_arr['post__not_in'] = array( $post->ID );
+  }
 
   $portfolio_arr = apply_filters( 'nectar_post_grid_query', $portfolio_arr );
 
@@ -353,6 +403,10 @@ if( 'custom' === $post_type && !empty($cpt_name) ) {
 
   if( $ignore_sticky_posts == 'yes' ) {
     $nectar_custom_query_arr['ignore_sticky_posts'] = true;
+  }
+  if( $exclude_current_post == 'yes' ) {
+	global $post;
+	$nectar_custom_query_arr['post__not_in'] = array( $post->ID );
   }
 	
 	if( !empty($custom_query_tax) && $cpt_tax_query ) {

@@ -129,7 +129,7 @@ function nectar_get_header_variables() {
 	$bg_header                 = ( ! empty( $post->ID ) && $post->ID != 0 ) ? $using_page_header : 0;
 	$bg_header                 = ( $bg_header == 1 ) ? 'true' : 'false';
 	$header_box_shadow         = ( ! empty( $nectar_options['header-box-shadow'] ) ) ? $nectar_options['header-box-shadow'] : 'small';
-	$header_remove_stickiness  = ( ! empty( $nectar_options['header-remove-fixed'] ) ) ? $nectar_options['header-remove-fixed'] : '0';
+	$header_remove_stickiness  = NectarThemeManager::$header_remove_fixed;
 	if( $nectar_using_VC_front_end_editor ) {
 		$header_remove_stickiness = '1';
 	}
@@ -393,7 +393,8 @@ function nectar_body_attributes() {
 		echo 'data-animated-anchors="false" ';
 	}
 
-	if ( ! empty( $nectar_options['ajax-page-loading'] ) && $nectar_options['ajax-page-loading'] === '1' ) {
+	$using_view_transitions_api = ( isset($nectar_options['page-transition-type']) && 'view-transitions' === $nectar_options['page-transition-type'] ) ? true : false;
+	if ( !$using_view_transitions_api && ! empty( $nectar_options['ajax-page-loading'] ) && $nectar_options['ajax-page-loading'] === '1' ) {
 		echo 'data-ajax-transitions="true" ';
 	} else {
 		echo 'data-ajax-transitions="false" ';
@@ -875,8 +876,10 @@ if ( ! function_exists( 'nectar_page_trans_markup' ) ) {
 		$nectar_using_VC_front_end_editor = ($nectar_using_VC_front_end_editor == 'true') ? true : false;
 
 		$ajax_page_loading = ( ! empty( $nectar_options['ajax-page-loading'] ) && $nectar_options['ajax-page-loading'] === '1' ) ? true : false;
+		$using_view_transitions_api = ( isset($nectar_options['page-transition-type']) && 'view-transitions' === $nectar_options['page-transition-type'] ) ? true : false;
 
-		if ( $ajax_page_loading === false || $nectar_using_VC_front_end_editor ) {
+		
+		if ( $using_view_transitions_api || $ajax_page_loading === false || $nectar_using_VC_front_end_editor ) {
 			return;
 		}
 
@@ -943,9 +946,12 @@ if ( ! function_exists( 'nectar_page_trans_markup' ) ) {
 global $nectar_options;
 
 function nectar_page_transition_bg_fix() {
+	global $nectar_options;
 	$page_transition_bg     = ( ! empty( $nectar_options['transition-bg-color'] ) ) ? $nectar_options['transition-bg-color'] : '#ffffff';
 	$page_transition_bg_2   = ( ! empty( $nectar_options['transition-bg-color-2'] ) ) ? $nectar_options['transition-bg-color-2'] : $page_transition_bg;
 	$page_transition_effect = ( ! empty( $nectar_options['transition-effect'] ) ) ? $nectar_options['transition-effect'] : 'standard';
+	$using_view_transitions_api = ( isset($nectar_options['page-transition-type']) && 'view-transitions' === $nectar_options['page-transition-type'] ) ? true : false;
+
 
 	// set html bg color to match preloading screen to avoid white flash in chrome
 	if ( $page_transition_effect === 'horizontal_swipe' ) {
@@ -954,7 +960,9 @@ function nectar_page_transition_bg_fix() {
 		$css = 'html:not(.page-trans-loaded) { background-color: ' . $page_transition_bg . '; }';
 	}
 
-	wp_add_inline_style( 'main-styles', $css );
+	if (!$using_view_transitions_api) {
+		wp_add_inline_style( 'main-styles', $css );
+	}
 
 }
 
@@ -1368,7 +1376,7 @@ if ( ! function_exists( 'nectar_ocm_add_social' ) ) {
 		for ( $i = 0; $i < count( $social_link_arr ); $i++ ) {
 
 			if ( ! empty( $nectar_options[ $social_link_arr[ $i ] ] ) && strlen( $nectar_options[ $social_link_arr[ $i ] ] ) > 1 ) {
-				echo '<li><a target="_blank" rel="noopener" href="' . esc_url( $nectar_options[ $social_link_arr[ $i ] ] ) . '"><i class="' . esc_attr( $social_icon_arr[ $i ] ) . '"></i></a></li>';
+				echo '<li><a target="_blank" rel="noopener" href="' . esc_url( $nectar_options[ $social_link_arr[ $i ] ] ) . '"><span class="screen-reader-text">'.esc_attr(str_replace("-url", "", $social_link_arr[$i])).'</span><i class="' . esc_attr( $social_icon_arr[ $i ] ) . '"></i></a></li>';
 			}
 		}
 
@@ -1409,8 +1417,12 @@ if( !function_exists('nectar_ocm_button_markup') ) {
 			$menu_label_class = ' using-label';
 		}
 
+		$icon_variant_attr = (isset($nectar_options['header-slide-out-widget-area-icon-variant']) && $nectar_options['header-slide-out-widget-area-icon-variant'] !== 'default') ? 
+			' data-variant="'.esc_attr($nectar_options['header-slide-out-widget-area-icon-variant']).'"' : 
+			'';
+
 		echo '<li class="slide-out-widget-area-toggle" data-icon-animation="simple-transform" data-custom-color="'.esc_attr($ocm_menu_btn_bg_color) .'">';
-			echo '<div> <a href="#slide-out-widget-area" aria-label="'. esc_attr__('Navigation Menu', 'salient') .'" aria-expanded="false" role="button" class="closed'.$menu_label_class.'"> '.$menu_label.'<span aria-hidden="true"> <i class="lines-button x2"> <i class="lines"></i> </i> </span> </a> </div>';
+			echo '<div> <a href="#slide-out-widget-area" aria-label="'. esc_attr__('Navigation Menu', 'salient') .'" aria-expanded="false" role="button" class="closed'.$menu_label_class.'"> '.$menu_label.'<span aria-hidden="true"> <i class="lines-button x2"'.$icon_variant_attr.'> <i class="lines"></i> </i> </span> </a> </div>';
 		echo '</li>';
 	}
 }

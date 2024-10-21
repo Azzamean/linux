@@ -16,6 +16,19 @@
 
    class Nectar_Setting_Field {
 
+     public $field_type_list = array();
+      public $defaults = array();
+      public $field_id = '';
+      public $field_type = '';
+      public $field_cat = '';
+      public $field_label = '';
+      public $field_description = '';
+      public $field_options = '';
+      public $field_custom_attrs = '';
+      public $field_custom_attrs_arr = '';
+      public $value = '';
+      public $default_value = '';
+
      public function __construct( $id, $field = array(), $value = null ) {
 
        // Verify that passed type is valid.
@@ -235,7 +248,7 @@
        echo '<div class="nectar-metabox-table"><div class="switch-options salient'.$activated.'">
           <label class="cb-enable'.$selected_enable.'"><span>On</span></label>
           <label class="cb-disable'.$selected_disable.'"><span>Off</span></label>
-          <input type="hidden" name="'.$this->field_id.'" value="'. $this->field_value() .'">
+          <input type="hidden" id="' . $this->field_id . '" name="'.$this->field_id.'" value="'. $this->field_value() .'">
         </div></div>';
      }
 

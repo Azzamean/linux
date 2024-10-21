@@ -20,7 +20,7 @@ if( get_option( 'nectar_dismiss_plugin_notice' ) !== 'true' ) {
 		
 	$theme = wp_get_theme();
 	$salient_on_theme_options_page_bool = ( is_admin() && isset($_GET['page']) && $_GET['page'] === sanitize_html_class($theme->get( 'Name' )) ) ? true : false;
-
+	$custom_branding = get_option( 'salient_custom_branding_theme_name', false );
 	if( ! class_exists('Salient_Portfolio') ||
 		! class_exists('Salient_Nectar_Slider') ||
 		! class_exists('Salient_Home_Slider') ||
@@ -28,9 +28,10 @@ if( get_option( 'nectar_dismiss_plugin_notice' ) !== 'true' ) {
 		! class_exists('Salient_Demo_Importer') ||
 		! class_exists('Salient_Core') ||
 		! class_exists('Salient_Widgets') ||
-		! class_exists('Salient_Social') ) {
+		! class_exists('Salient_Social') ||
+		! class_exists('Salient_Custom_Branding') ) {
 		
-		if( current_user_can( 'install_plugins' ) && $salient_on_theme_options_page_bool )	{
+		if( current_user_can( 'install_plugins' ) && $salient_on_theme_options_page_bool && !$custom_branding )	{
 			add_action( 'admin_notices', 'nectar_add_dismissible_plugin_notice' );
 			add_action( 'admin_enqueue_scripts', 'nectar_add_plugin_notice_admin_notice_script' );
 		}
@@ -72,6 +73,9 @@ function nectar_add_dismissible_plugin_notice() { ?>
 					}
 					if( ! class_exists('Salient_Shortcodes') ) {
 	          echo '<li><strong><a target="_blank" href="'. esc_url( admin_url( 'themes.php?page=tgmpa-install-plugins' ) ). '">'. esc_html__('Salient Shortcodes', 'salient') . '</a></strong><span>'. esc_html__('Optional','salient') .'</span></li>'; 
+					}
+					if( ! class_exists('Salient_Custom_Branding') ) {
+			echo '<li><strong><a target="_blank" href="'. esc_url( admin_url( 'themes.php?page=tgmpa-install-plugins' ) ). '">'. esc_html__('Salient Custom Branding', 'salient') . '</a></strong><span>'. esc_html__('Optional','salient') .'</span></li>'; 
 					}
           ?>
         </ul>

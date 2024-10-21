@@ -333,11 +333,12 @@
       if( $parent.is('[data-toggles]') ) {
 
         var toggles = $parent.attr('data-toggles');
-
+ 
+        console.log(that.$modalInner.find('[id*="' + toggles + '"]'));
         if( $(this).val() == 'on' ) {
-          that.$modalInner.find('#'+toggles).parents('.setting-field').show();
+          that.$modalInner.find('[id*="' + toggles + '"]').parents('.setting-field').show();
         } else {
-          that.$modalInner.find('#'+toggles).parents('.setting-field').hide();
+          that.$modalInner.find('[id*="' + toggles + '"]').parents('.setting-field').hide();
         }
 
       }

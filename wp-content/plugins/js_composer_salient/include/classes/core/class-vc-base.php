@@ -587,7 +587,7 @@ class Vc_Base {
 	 * @since  3.1
 	 */
 	public function frontCss() {
-		wp_register_style( 'flexslider', vc_asset_url( 'lib/vendor/node_modules/flexslider/flexslider.min.css' ), array(), WPB_VC_VERSION );
+		wp_register_style( 'wpb_flexslider', vc_asset_url( 'lib/vendor/node_modules/flexslider/flexslider.min.css' ), array(), WPB_VC_VERSION );
 		wp_register_style( 'nivo-slider-css', vc_asset_url( 'lib/vendor/node_modules/nivo-slider/nivo-slider.min.css' ), array(), WPB_VC_VERSION );
 		wp_register_style( 'nivo-slider-theme', vc_asset_url( 'lib/vendor/node_modules/nivo-slider/themes/default/default.min.css' ), array( 'nivo-slider-css' ), WPB_VC_VERSION );
 		wp_register_style( 'prettyphoto', vc_asset_url( 'lib/vendor/prettyphoto/css/prettyPhoto.min.css' ), array(), WPB_VC_VERSION );
@@ -650,7 +650,7 @@ class Vc_Base {
 
 		wp_register_script( 'twbs-pagination', vc_asset_url( 'lib/vendor/node_modules/twbs-pagination/jquery.twbsPagination.min.js' ), array( 'jquery-core' ), WPB_VC_VERSION, true );
 		wp_register_script( 'nivo-slider', vc_asset_url( 'lib/vendor/node_modules/nivo-slider/jquery.nivo.slider.pack.js' ), array( 'jquery-core' ), WPB_VC_VERSION, true );
-		wp_register_script( 'flexslider', vc_asset_url( 'lib/vendor/node_modules/flexslider/jquery.flexslider-min.js' ), array( 'jquery-core' ), WPB_VC_VERSION, true );
+		wp_register_script( 'wpb_flexslider', vc_asset_url( 'lib/vendor/node_modules/flexslider/jquery.flexslider-min.js' ), array( 'jquery-core' ), WPB_VC_VERSION, true );
 		wp_register_script( 'wpb_composer_front_js', vc_asset_url( 'js/dist/js_composer_front.min.js' ), array( 'jquery-core' ), WPB_VC_VERSION, true );
 
 		/**
@@ -831,7 +831,12 @@ class Vc_Base {
 	 *
 	 */
 	public function getEditorsLocale() {
-		return array(
+		/**
+		 * Filter for VC editor locale.
+		 * @since 7.8
+		 * return array
+		 */
+		return apply_filters( 'vc_get_editor_locale', array(
 			'add_remove_picture' => esc_html__( 'Add/remove picture', 'js_composer' ),
 			'finish_adding_text' => esc_html__( 'Finish Adding Images', 'js_composer' ),
 			'add_image' => esc_html__( 'Add Image', 'js_composer' ),
@@ -911,7 +916,6 @@ class Vc_Base {
 			'gutenbergDoesntWorkProperly' => esc_html__( 'Gutenberg plugin doesn\'t work properly. Please check Gutenberg plugin.', 'js_composer' ),
 			'unfiltered_html_access' => esc_html__( 'Custom HTML is disabled for your user role. Please contact your site Administrator to change your capabilities.', 'js_composer' ),
 			'not_editable_post' => sprintf( '%s %s %s', esc_html__( 'This', 'js_composer' ), get_post_type() ? get_post_type() : 'post', esc_html__( 'can not be edited with WPBakery since it is missing a WordPress default content area.', 'js_composer' ) ),
-			'ai_response_error' => esc_html__( 'An error occurred when requesting a response from WPBakery AI (Code: 623)', 'js_composer' ),
 			'generate' => esc_html__( 'Generate', 'js_composer' ),
 			'regenerate' => esc_html__( 'Regenerate', 'js_composer' ),
 			'problems' => esc_html__( 'Problems', 'js_composer' ),
@@ -974,6 +978,6 @@ class Vc_Base {
 			'previouslyUsedKeyphrase' => esc_html__( 'Previously used keyphrase', 'js_composer' ),
 			'previouslyUsedKeyphraseSuccess' => esc_html__( 'You\'ve not used this keyphrase before, very good.', 'js_composer' ),
 			'previouslyUsedKeyphraseWarn' => esc_html__( 'You\'ve used this keyphrase before', 'js_composer' ),
-		);
+		));
 	}
 }

@@ -33,7 +33,7 @@ if ( ! empty( $styles ) ) {
 	$style = '';
 }
 
-if ( 'post_title' === $atts['source'] ) {
+if ( isset( $atts['source'] ) && 'post_title' === $atts['source'] ) {
 	$text = get_the_title( get_the_ID() );
 }
 

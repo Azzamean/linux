@@ -21,48 +21,136 @@ class Vc_Ai_Modal_Controller {
 	 * Get AI modal data.
 	 *
 	 * @since 7.2
-	 * @param array $data
+	 * @param array $modal_param
 	 * @return array
 	 */
-	public function get_modal_data( $data ) {
-
+	public function get_modal_data( $modal_param ) {
 		$response['type'] = 'promo';
+		if ( ! vc_license()->isActivated() ) {
+			$response['content'] =
+				$this->get_ai_promo_template( 'happy', 'access-ai', $modal_param );
+			return $response;
+		}
 
-		$access_status = $this->get_access_ai_api_status( $data );
-		if ( 'license_no_valid' === $access_status ) {
-			$response['content'] = vc_get_template(
-				'editors/popups/ai/promo.tpl.php',
-				[
-					'logo_template_path' => 'editors/popups/ai/happy-ai-logo.tpl.php',
-					'message_template_path' => 'editors/popups/ai/message-modal-access-ai.tpl.php',
-					'modal_controller' => $this,
-				]
-			);
-		} elseif ( 'credits_expired' === $access_status ) {
-			$response['content'] = vc_get_template(
-				'editors/popups/ai/promo.tpl.php',
-				[
-					'logo_template_path' => 'editors/popups/ai/sad-ai-logo.tpl.php',
-					'message_template_path' => 'editors/popups/ai/message-modal-more-credits.tpl.php',
-					'modal_controller' => $this,
-				]
-			);
-		} elseif ( is_wp_error( $access_status ) ) {
-			$response['content'] = vc_get_template(
-				'editors/popups/ai/promo.tpl.php',
-				[
-					'logo_template_path' => 'editors/popups/ai/sad-ai-logo.tpl.php',
-					'message_template_path' => 'editors/popups/ai/message-modal-custom.tpl.php',
-					'modal_controller' => $this,
-					'error_message' => $access_status->get_error_message(),
-				]
-			);
-		} else {
-			$response['type'] = 'content';
-			$response['content'] = $this->get_ai_form_template( $data );
+		$api_connector = $this->set_api_connector_with_response_status( $modal_param );
+		$access_status = $this->get_access_ai_api_response_status( $api_connector->api_response_data );
+
+		if ( is_wp_error( $access_status ) ) {
+			$response['content'] =
+				$this->get_ai_promo_template(
+					'sad',
+					'custom',
+					$modal_param,
+					$access_status->get_error_message()
+				);
+			return $response;
+		}
+
+		switch ( $access_status ) {
+			case 'license_not_valid':
+				$response['content'] =
+					$this->get_ai_promo_template( 'happy', 'access-ai', $modal_param );
+				break;
+			case 'credits_expired':
+				$response['content'] =
+					$this->get_ai_promo_template( 'sad', 'more-credits', $modal_param );
+				break;
+			default:
+				$response['type'] = 'content';
+				$response['content'] = $this->get_ai_form_template( $modal_param );
+				$response['tokens_left'] = $api_connector->api_response_data['tokens-left'];
+				$response['tokens_total'] = $api_connector->api_response_data['tokens-total'];
 		}
 
 		return $response;
+	}
+
+	/**
+	 * Set API connector with response status.
+	 *
+	 * @since 7.8
+	 * @param array $data
+	 * @return Vc_Ai_Api_Connector
+	 */
+	public function set_api_connector_with_response_status( $data ) {
+		require_once vc_path_dir( 'MODULES_DIR', 'ai/class-vc-ai-api-connector.php' );
+
+		$api_connector = new Vc_Ai_Api_Connector();
+		$data = $api_connector->add_license_key_to_request_data( $data );
+		return $api_connector->set_api_response_data( $data, 'status' );
+	}
+
+	/**
+	 * Get token usage request.
+	 *
+	 * @since 7.7
+	 */
+	public function get_token_usage_request() {
+		if ( ! vc_license()->isActivated() ) {
+			return new WP_Error(
+				'ai_error_token_usage_license_not_active',
+				esc_html__( 'Credit usage update error (Code: 621): license not active', 'js_composer' )
+			);
+		}
+
+		$api_connector = $this->set_api_connector_with_response_status( [] );
+
+		$access_status = $this->get_access_ai_api_response_status( $api_connector->api_response_data );
+		if ( is_wp_error( $access_status ) ) {
+			return $access_status;
+		}
+
+		switch ( $access_status ) {
+			case 'license_not_valid':
+				$response = new WP_Error(
+					'ai_error_token_usage_license_not_active',
+					esc_html__( 'Credit usage update error (Code: 621): license not active', 'js_composer' )
+				);
+				break;
+			case 'credits_expired':
+				$response['tokens_left'] = 0;
+				$response['tokens_total'] = $this->credits_limit;
+				break;
+			default:
+				$response['tokens_left'] = $api_connector->api_response_data['tokens-left'];
+				$response['tokens_total'] = $api_connector->api_response_data['tokens-total'];
+		}
+
+		return $response;
+	}
+
+	/**
+	 * Get AI promo template.
+	 *
+	 * @since 7.7
+	 * @param string $logo_type
+	 * @param string $message_template
+	 * @param array $modal_param
+	 * @param string $error_message
+	 * @return string
+	 */
+	public function get_ai_promo_template( $logo_type, $message_template, $modal_param, $error_message = '' ) {
+		$params = [
+			'logo_template_path' => 'editors/popups/ai/' . $logo_type . '-ai-logo.tpl.php',
+			'message_template_path' => 'editors/popups/ai/message-modal-' . $message_template . '.tpl.php',
+			'modal_controller' => $this,
+			'modal_param' => $modal_param,
+		];
+
+		if ( $error_message ) {
+			$params['error_message'] = $error_message;
+		}
+
+		if ( empty( $modal_param['is_settings_page'] ) ) {
+			return vc_get_template(
+				'editors/popups/ai/promo-modal.tpl.php',
+				$params
+			);
+		}
+		return vc_get_template(
+			'editors/popups/ai/promo-settings.tpl.php',
+			$params
+		);
 	}
 
 	/**
@@ -99,44 +187,35 @@ class Vc_Ai_Modal_Controller {
 	}
 
 	/**
-	 * Get access status to AI API.
+	 * Get access status from AI API response.
 	 *
-	 * @since 7.2
+	 * @since 7.7
+	 * @param string | WP_Error $response
 	 * @return string | WP_Error
 	 */
-	public function get_access_ai_api_status( $data ) {
-		if ( ! vc_license()->isActivated() ) {
-			return 'license_no_valid';
-		}
-
-		require_once vc_path_dir( 'MODULES_DIR', 'ai/class-vc-ai-api-connector.php' );
-
-		$api_connector = new Vc_Ai_Api_Connector();
-		$data = $api_connector->add_license_key_to_request_data( $data );
-		if ( is_wp_error( $data ) ) {
-			return 'license_no_valid';
-		}
-		$response = $api_connector->get_api_response_data( $data, 'status', true );
-
+	public function get_access_ai_api_response_status( $response ) {
 		if ( ! is_wp_error( $response ) ) {
 			return 'success';
 		}
+		if ( ! isset( $response->errors['ai_error_response'][0] ) ) {
+			return $response;
+		}
 
-		if ( isset( $response->errors['ai_error_response'][0] ) ) {
-			$message = $response->errors['ai_error_response'][0];
-			if ( strpos( $message, 'license has expired' ) !== false ) {
-				return 'license_no_valid';
+		$message = $response->errors['ai_error_response'][0];
+
+		if ( strpos( $message, 'license has expired' ) !== false ) {
+			$response = 'license_not_valid';
+			// user disabled it on a support portal, but still has in options
+		} elseif ( strpos( $message, 'WPBakery Page Builder license not activated' ) !== false ) {
+			$response = 'license_not_valid';
+		} elseif ( strpos( $message, 'reached your monthly limit' ) !== false ) {
+			preg_match( '/free (\d+) WPBakery/', $message, $matches );
+
+			if ( isset( $matches[1] ) ) {
+				$this->credits_limit = (int) $matches[1];
 			}
 
-			if ( strpos( $message, 'reached your monthly limit' ) !== false ) {
-				preg_match( '/free (\d+) WPBakery/', $message, $matches );
-
-				if ( isset( $matches[1] ) ) {
-					$this->credits_limit = (int) $matches[1];
-				}
-
-				return 'credits_expired';
-			}
+			$response = 'credits_expired';
 		}
 
 		return $response;

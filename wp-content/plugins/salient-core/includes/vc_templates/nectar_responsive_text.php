@@ -10,6 +10,7 @@ extract(shortcode_atts(array(
     'link_href' => '',
     'class_name' => '',
     'max_width' => '',
+    'inherited_font_style' => '',
 ), $atts));
 
 $styles = '';
@@ -58,9 +59,14 @@ if( function_exists('nectar_el_dynamic_classnames') ) {
 	$el_classes[] = '';
 }
 
+$el_attrs = '';
+if ( !empty($inherited_font_style) && 'default' !== $inherited_font_style ) {
+  $el_attrs .= ' data-inherit-heading-family="'.$inherited_font_style.'"';
+}
+
 
 // Output.
-echo '<div class="'.nectar_clean_classnames(implode(' ',$el_classes)).'"'.$styles.'>';
+echo '<div class="'.nectar_clean_classnames(implode(' ',$el_classes)).'"'.$styles.$el_attrs.'>';
 
 if (!empty($link_href)) {
     echo '<a href="'.esc_url($link_href).'">'.wpb_js_remove_wpautop( wp_kses_post( $content ), true ).'</a>';

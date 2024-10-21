@@ -137,6 +137,315 @@ if ( ! function_exists( 'nectar_walker_nav_menu' ) ) {
 	function nectar_walker_nav_menu() {
 
 		class Nectar_Arrow_Walker_Nav_Menu extends Walker_Nav_Menu {
+
+			// Used to skip default children when a global section is attached.
+			public function walk( $elements, $max_depth, ...$args ) {
+				
+				global $nectar_options;
+
+				$output = '';
+
+				// Invalid parameter or nothing to walk.
+				if ( $max_depth < -1 || empty( $elements ) ) {
+					return $output;
+				}
+		
+				$parent_field = $this->db_fields['parent'];
+
+				// Flat display.
+				if ( -1 === $max_depth ) {
+					$empty_array = [];
+					foreach ( $elements as $e ) {
+						$this->display_element( $e, $empty_array, 1, 0, $args, $output );
+					}
+					return $output;
+				}
+				
+				/*
+					* Need to display in hierarchical order.
+					* Separate elements into two buckets: top level and children elements.
+					* Children_elements is two dimensional array. Example:
+					* Children_elements[10][] contains all sub-elements whose parent is 10.
+					*/
+				$top_level_elements = [];
+				$children_elements  = [];
+				foreach ( $elements as $e ) {
+					if ( empty( $e->$parent_field ) ) {
+						$top_level_elements[] = $e;
+					} else {
+						$children_elements[ $e->$parent_field ][] = $e;
+					}
+				}
+				
+				/*
+					* When none of the elements is top level.
+					* Assume the first one must be root of the sub elements.
+					*/
+				if ( empty( $top_level_elements ) ) {
+		
+					$first = array_slice( $elements, 0, 1 );
+					$root  = $first[0];
+		
+					$top_level_elements = [];
+					$children_elements  = [];
+					foreach ( $elements as $e ) {
+						if ( $root->$parent_field === $e->$parent_field ) {
+							$top_level_elements[] = $e;
+						} else {
+							$children_elements[ $e->$parent_field ][] = $e;
+						}
+					}
+				}
+		
+				/* Determine if sub menu items should be skipped when a global section
+				 	 is attached as the display output.
+				  */
+				$this->top_level_count = count( $top_level_elements );
+				foreach ( $top_level_elements as $index => $e ) {
+
+					$menu_item_options = maybe_unserialize( get_post_meta( $e->ID, 'nectar_menu_options', true ) );
+					if( !empty($menu_item_options) && $nectar_options['header_format'] != 'left-header') {
+						$using_mega_menu = isset($menu_item_options['enable_mega_menu']) && 'on' === $menu_item_options['enable_mega_menu'];
+						$has_global_section = isset($menu_item_options['mega_menu_global_section']) && '-' !== $menu_item_options['mega_menu_global_section'];
+						if( $using_mega_menu && $has_global_section) {
+							$this->unset_children( $e, $children_elements );
+						}
+						
+					}
+
+					
+					$this->display_element( $e, $children_elements, $max_depth, 0, $args, $output );
+				}
+				// Reset the count.
+				$this->top_level_count = 0;
+		
+				if ( ( 0 === $max_depth ) && count( $children_elements ) > 0 ) {
+					$empty_array = [];
+					foreach ( $children_elements as $orphans ) {
+						foreach ( $orphans as $op ) {
+							$this->display_element( $op, $empty_array, 1, 0, $args, $output );
+						}
+					}
+				}
+		
+				return $output;
+			}
+
+			public function start_el( &$output, $data_object, $depth = 0, $args = null, $current_object_id = 0 ) {
+
+				global $nectar_options;
+
+				// Restores the more descriptive, specific name for use within this method.
+				$menu_item = $data_object;
+			
+				if ( isset( $args->item_spacing ) && 'discard' === $args->item_spacing ) {
+					$t = '';
+					$n = '';
+				} else {
+					$t = "\t";
+					$n = "\n";
+				}
+				$indent = ( $depth ) ? str_repeat( $t, $depth ) : '';
+			
+				$classes   = empty( $menu_item->classes ) ? array() : (array) $menu_item->classes;
+				$classes[] = 'menu-item-' . $menu_item->ID;
+			
+				/**
+				 * Filters the arguments for a single nav menu item.
+				 *
+				 * @since 4.4.0
+				 *
+				 * @param stdClass $args      An object of wp_nav_menu() arguments.
+				 * @param WP_Post  $menu_item Menu item data object.
+				 * @param int      $depth     Depth of menu item. Used for padding.
+				 */
+				$args = apply_filters( 'nav_menu_item_args', $args, $menu_item, $depth );
+			
+				/**
+				 * Filters the CSS classes applied to a menu item's list item element.
+				 *
+				 * @since 3.0.0
+				 * @since 4.1.0 The `$depth` parameter was added.
+				 *
+				 * @param string[] $classes   Array of the CSS classes that are applied to the menu item's `<li>` element.
+				 * @param WP_Post  $menu_item The current menu item object.
+				 * @param stdClass $args      An object of wp_nav_menu() arguments.
+				 * @param int      $depth     Depth of menu item. Used for padding.
+				 */
+				$class_names = implode( ' ', apply_filters( 'nav_menu_css_class', array_filter( $classes ), $menu_item, $args, $depth ) );
+			
+				/**
+				 * Filters the ID attribute applied to a menu item's list item element.
+				 *
+				 * @since 3.0.1
+				 * @since 4.1.0 The `$depth` parameter was added.
+				 *
+				 * @param string   $menu_item_id The ID attribute applied to the menu item's `<li>` element.
+				 * @param WP_Post  $menu_item    The current menu item.
+				 * @param stdClass $args         An object of wp_nav_menu() arguments.
+				 * @param int      $depth        Depth of menu item. Used for padding.
+				 */
+				$id = apply_filters( 'nav_menu_item_id', 'menu-item-' . $menu_item->ID, $menu_item, $args, $depth );
+			
+				$li_atts          = array();
+				$li_atts['id']    = ! empty( $id ) ? $id : '';
+				$li_atts['class'] = ! empty( $class_names ) ? $class_names : '';
+			
+				/**
+				 * Filters the HTML attributes applied to a menu's list item element.
+				 *
+				 * @since 6.3.0
+				 *
+				 * @param array $li_atts {
+				 *     The HTML attributes applied to the menu item's `<li>` element, empty strings are ignored.
+				 *
+				 *     @type string $class        HTML CSS class attribute.
+				 *     @type string $id           HTML id attribute.
+				 * }
+				 * @param WP_Post  $menu_item The current menu item object.
+				 * @param stdClass $args      An object of wp_nav_menu() arguments.
+				 * @param int      $depth     Depth of menu item. Used for padding.
+				 */
+				$li_atts       = apply_filters( 'nav_menu_item_attributes', $li_atts, $menu_item, $args, $depth );
+				$li_attributes = $this->build_atts( $li_atts );
+			
+				$output .= $indent . '<li' . $li_attributes . '>';
+			
+				$atts           = array();
+				$atts['title']  = ! empty( $menu_item->attr_title ) ? $menu_item->attr_title : '';
+				$atts['target'] = ! empty( $menu_item->target ) ? $menu_item->target : '';
+				if ( '_blank' === $menu_item->target && empty( $menu_item->xfn ) ) {
+					$atts['rel'] = 'noopener';
+				} else {
+					$atts['rel'] = $menu_item->xfn;
+				}
+			
+				if ( ! empty( $menu_item->url ) ) {
+					if ( get_privacy_policy_url() === $menu_item->url ) {
+						$atts['rel'] = empty( $atts['rel'] ) ? 'privacy-policy' : $atts['rel'] . ' privacy-policy';
+					}
+			
+					$atts['href'] = $menu_item->url;
+				} else {
+					$atts['href'] = '';
+				}
+			
+				$atts['aria-current'] = $menu_item->current ? 'page' : '';
+			
+				/**
+				 * Filters the HTML attributes applied to a menu item's anchor element.
+				 *
+				 * @since 3.6.0
+				 * @since 4.1.0 The `$depth` parameter was added.
+				 *
+				 * @param array $atts {
+				 *     The HTML attributes applied to the menu item's `<a>` element, empty strings are ignored.
+				 *
+				 *     @type string $title        Title attribute.
+				 *     @type string $target       Target attribute.
+				 *     @type string $rel          The rel attribute.
+				 *     @type string $href         The href attribute.
+				 *     @type string $aria-current The aria-current attribute.
+				 * }
+				 * @param WP_Post  $menu_item The current menu item object.
+				 * @param stdClass $args      An object of wp_nav_menu() arguments.
+				 * @param int      $depth     Depth of menu item. Used for padding.
+				 */
+				$atts       = apply_filters( 'nav_menu_link_attributes', $atts, $menu_item, $args, $depth );
+				$attributes = $this->build_atts( $atts );
+			
+				/** This filter is documented in wp-includes/post-template.php */
+				$title = apply_filters( 'the_title', $menu_item->title, $menu_item->ID );
+			
+				/**
+				 * Filters a menu item's title.
+				 *
+				 * @since 4.4.0
+				 *
+				 * @param string   $title     The menu item's title.
+				 * @param WP_Post  $menu_item The current menu item object.
+				 * @param stdClass $args      An object of wp_nav_menu() arguments.
+				 * @param int      $depth     Depth of menu item. Used for padding.
+				 */
+				$title = apply_filters( 'nav_menu_item_title', $title, $menu_item, $args, $depth );
+			
+				$item_output  = $args->before;
+				$item_output .= '<a' . $attributes . '>';
+				$item_output .= $args->link_before . $title . $args->link_after;
+				$item_output .= '</a>';
+				$item_output .= $args->after;
+					
+				
+				// If a global section is attached to display as the megamenu
+				$nectar_menu_options_enabled = apply_filters('nectar_menu_options_enabled', true);
+				$menu_item_options = maybe_unserialize( get_post_meta( $menu_item->ID, 'nectar_menu_options', true ) );
+				
+				$compatible_menu_locations = array('top_nav', 'top_nav_pull_left', 'top_nav_pull_right', 'secondary_nav');
+				$header_format  = ( ! empty( $nectar_options['header_format'] ) ) ? $nectar_options['header_format'] : 'default';
+
+				// Has options saved.
+				if( !empty($menu_item_options) && 
+					false !== $nectar_menu_options_enabled &&
+					$header_format != 'left-header' ) {
+
+					if(isset($args->theme_location) ) {
+					$using_mega_menu = isset($menu_item_options['enable_mega_menu']) && 'on' === $menu_item_options['enable_mega_menu'];
+					$attached_global_section = isset($menu_item_options['mega_menu_global_section']) && '-' !== $menu_item_options['mega_menu_global_section'] ? $menu_item_options['mega_menu_global_section'] : false;
+						
+						if( $using_mega_menu && 
+						$attached_global_section &&
+						in_array($args->theme_location, $compatible_menu_locations) ) {
+
+							// Add global section to menu output.
+							$item_output .= '<div class="nectar-global-section-megamenu nectar-global-section force-contained-rows">
+							<div class="inner">
+								'.do_shortcode('[nectar_global_section id="'.esc_attr($attached_global_section).'"]').'
+								</div>
+							</div>';
+
+							// Also generate dynamic CSS for global section
+							if( class_exists('NectarElDynamicStyles') ) {
+
+								if( 0 !== $attached_global_section  ) {
+									$global_section_query = get_post($attached_global_section);
+						
+									if( isset($global_section_query->post_content) && !empty($global_section_query->post_content) ) {
+										$global_section_content = $global_section_query->post_content;
+									}
+								}
+								NectarElDynamicStyles::$element_css = array();
+								$global_section_css = NectarElDynamicStyles::generate_styles($global_section_content);
+								if( $global_section_css ) {
+									$item_output .= '<style>'.$global_section_css.'</style>';
+								}
+							}
+						}  // end attached and compatible check.
+					
+					} // end check for theme location.
+
+				} // end item has menu options saved.
+
+				
+				/**
+				 * Filters a menu item's starting output.
+				 *
+				 * The menu item's starting output only includes `$args->before`, the opening `<a>`,
+				 * the menu item's title, the closing `</a>`, and `$args->after`. Currently, there is
+				 * no filter for modifying the opening and closing `<li>` for a menu item.
+				 *
+				 * @since 3.0.0
+				 *
+				 * @param string   $item_output The menu item's starting HTML output.
+				 * @param WP_Post  $menu_item   Menu item data object.
+				 * @param int      $depth       Depth of menu item. Used for padding.
+				 * @param stdClass $args        An object of wp_nav_menu() arguments.
+				 */
+				$output .= apply_filters( 'walker_nav_menu_start_el', $item_output, $menu_item, $depth, $args );
+			}
+			
+
+
+			// Display Element.
 			function display_element( $element, &$children_elements, $max_depth, $depth, $args, &$output ) {
 				
 				if( !isset($depth) ) {
@@ -176,12 +485,13 @@ if ( ! function_exists( 'nectar_walker_nav_menu' ) ) {
 					$element->classes[] = 'nectar-regular-menu-item';
 				}
 
-
 				// Nectar Menu Options.
 				$nectar_menu_options_enabled = apply_filters('nectar_menu_options_enabled', true);
 				$item_icon_output = '';
 				$menu_label = '';
-        $custom_typography_class = '';
+				$custom_typography_class = '';
+				$attached_global_section = false;
+				$is_button_style = false;
 
 				if( isset($element->ID) ) {
 
@@ -202,6 +512,13 @@ if ( ! function_exists( 'nectar_walker_nav_menu' ) ) {
 										 unset($element->classes[$index]);
 										 $element->classes = array_values( $element->classes );
 									}
+								}
+
+								// track whether global section is attached to menu item.
+								if( isset($menu_item_options['mega_menu_global_section']) && 
+									'-' !== $menu_item_options['mega_menu_global_section'] && 
+									$header_format != 'left-header') {
+									$attached_global_section = true;
 								}
 
 								// Add nectar megamenu class.
@@ -240,6 +557,7 @@ if ( ! function_exists( 'nectar_walker_nav_menu' ) ) {
 							// Button style
 							if( isset($menu_item_options['menu_item_link_link_style']) && 'default' !== $menu_item_options['menu_item_link_link_style'] ) {
 								$element->classes[] = 'menu-item-btn-style-'.esc_attr($menu_item_options['menu_item_link_link_style']);
+								$is_button_style = true;
 							}
 							if( isset($menu_item_options['menu_item_link_link_text_style']) && 'default' !== $menu_item_options['menu_item_link_link_text_style'] ) {
 
@@ -247,6 +565,8 @@ if ( ! function_exists( 'nectar_walker_nav_menu' ) ) {
 
 								if( 'text-reveal-wave' === $menu_item_options['menu_item_link_link_text_style'] ) {
 									$element->title = preg_replace("/([^\\s>])(?!(?:[^<>]*)?>)/u","<span class=\"char\">$1</span>",$element->title);
+								} else if ( 'text-reveal' === $menu_item_options['menu_item_link_link_text_style'] ) {
+									$element->title = '<span class="nectar-text-reveal-button"><span class="nectar-text-reveal-button__text" data-text="'.esc_attr($element->title).'">'.$element->title.'</span></span>';
 								}
 								
 							}
@@ -259,7 +579,7 @@ if ( ! function_exists( 'nectar_walker_nav_menu' ) ) {
 							$parent_menu_item_options = maybe_unserialize( get_post_meta( $element->menu_item_parent, 'nectar_menu_options', true ) );
 
 							// Parent is using megamenu.
-							if( isset($parent_menu_item_options ['enable_mega_menu']) && 'on' === $parent_menu_item_options ['enable_mega_menu'] ) {
+							if( isset($parent_menu_item_options['enable_mega_menu']) && 'on' === $parent_menu_item_options['enable_mega_menu'] ) {
 
 								// Megamenu child title.
 								if( isset($menu_item_options['disable_mega_menu_title']) && 'on' === $menu_item_options['disable_mega_menu_title'] ) {
@@ -311,31 +631,31 @@ if ( ! function_exists( 'nectar_walker_nav_menu' ) ) {
 									// Add font awesome icon.
 									$item_icon_output = '<i class="nectar-menu-icon fa '.esc_attr( $menu_item_options['menu_item_icon'] ).'" role="presentation"></i>';
 									$element->classes[] = 'menu-item-has-icon';
-                  wp_enqueue_style( 'font-awesome' );
+									wp_enqueue_style( 'font-awesome' );
 
 						} 
-            else if( isset($menu_item_options['menu_item_icon_type']) &&
+						else if( isset($menu_item_options['menu_item_icon_type']) &&
 								'iconsmind' === $menu_item_options['menu_item_icon_type'] &&
 								isset($menu_item_options['menu_item_icon_iconsmind']) && 
-                defined('SALIENT_CORE_ROOT_DIR_PATH') && 
-                file_exists(SALIENT_CORE_ROOT_DIR_PATH.'includes/icons/class-nectar-icon.php') ) {
+								defined('SALIENT_CORE_ROOT_DIR_PATH') && 
+								file_exists(SALIENT_CORE_ROOT_DIR_PATH.'includes/icons/class-nectar-icon.php') ) {
 
 									// Add iconsmind icons.
-                  include_once( SALIENT_CORE_ROOT_DIR_PATH.'includes/icons/class-nectar-icon.php' );
+									include_once( SALIENT_CORE_ROOT_DIR_PATH.'includes/icons/class-nectar-icon.php' );
 
-                  if( class_exists('Nectar_Icon') ) {
-                    $nectar_icon_class = new Nectar_Icon(array(
-                    'icon_name' => str_replace('iconsmind-','',$menu_item_options['menu_item_icon_iconsmind']),
-                    'icon_library' => 'iconsmind',
-                    ));
-                  
-                    $item_icon_output = '<span class="nectar-menu-icon svg-icon">'.$nectar_icon_class->render_icon().'</span>';
-          
-                    $element->classes[] = 'menu-item-has-icon';
-                  }
+									if( class_exists('Nectar_Icon') ) {
+										$nectar_icon_class = new Nectar_Icon(array(
+										'icon_name' => str_replace('iconsmind-','',$menu_item_options['menu_item_icon_iconsmind']),
+										'icon_library' => 'iconsmind',
+										));
+									
+										$item_icon_output = '<span class="nectar-menu-icon svg-icon">'.$nectar_icon_class->render_icon().'</span>';
+							
+										$element->classes[] = 'menu-item-has-icon';
+									}
 
 						}
-            else if ( isset($menu_item_options['menu_item_icon_type']) &&
+						else if ( isset($menu_item_options['menu_item_icon_type']) &&
 						            'custom_text' === $menu_item_options['menu_item_icon_type'] &&
 												isset($menu_item_options['menu_item_icon_custom_text']) &&
 												!empty($menu_item_options['menu_item_icon_custom_text']) ) {
@@ -344,64 +664,64 @@ if ( ! function_exists( 'nectar_walker_nav_menu' ) ) {
 									$element->classes[] = 'menu-item-has-icon';
 						}
 						else if( isset($menu_item_options['menu_item_icon_type']) &&
-											 'custom' === $menu_item_options['menu_item_icon_type'] &&
-											 isset($menu_item_options['menu_item_icon_custom']) &&
-											 isset($menu_item_options['menu_item_icon_custom']['id']) ) {
+								'custom' === $menu_item_options['menu_item_icon_type'] &&
+								isset($menu_item_options['menu_item_icon_custom']) &&
+								isset($menu_item_options['menu_item_icon_custom']['id']) ) {
 
-												 // Image icon.
-												 $image_markup = '';
+									// Image icon.
+									$image_markup = '';
 
-												 if( $depth > 0 ) {
-													 // Lazy load submenu image icons.
-													 $image_markup_src = wp_get_attachment_image_src( $menu_item_options['menu_item_icon_custom']['id'], 'large' );
-													 $image_meta       = wp_get_attachment_metadata( $menu_item_options['menu_item_icon_custom']['id'] );
-													 $image_alt_tag    = get_post_meta( $menu_item_options['menu_item_icon_custom']['id'], '_wp_attachment_image_alt', true );
+									if( $depth > 0 ) {
+										// Lazy load submenu image icons.
+										$image_markup_src = wp_get_attachment_image_src( $menu_item_options['menu_item_icon_custom']['id'], 'large' );
+										$image_meta       = wp_get_attachment_metadata( $menu_item_options['menu_item_icon_custom']['id'] );
+										$image_alt_tag    = get_post_meta( $menu_item_options['menu_item_icon_custom']['id'], '_wp_attachment_image_alt', true );
 
-													 $image_height = '20px';
-													 $image_width = '20px';
+										$image_height = '20px';
+										$image_width = '20px';
 
-											     if(isset($image_meta['width']) && !empty($image_meta['width'])) {
-											       $image_width = $image_meta['width'];
-											     }
-											     if(isset($image_meta['height']) && !empty($image_meta['height'])) {
-											       $image_height = $image_meta['height'];
-													 }
+										if(isset($image_meta['width']) && !empty($image_meta['width'])) {
+											$image_width = $image_meta['width'];
+										}
+										if(isset($image_meta['height']) && !empty($image_meta['height'])) {
+											$image_height = $image_meta['height'];
+										}
 
-													 if( isset($image_markup_src[0]) && !empty($image_markup_src[0]) ) {
-														 $placeholder_img_src = "data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D'http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg'%20viewBox%3D'0%200%20".esc_attr($image_width).'%20'.esc_attr($image_height)."'%2F%3E";
-														 $image_markup = '<img src="'.$placeholder_img_src.'" class="nectar-menu-icon-img" alt="'.esc_attr($image_alt_tag).'" width="'.esc_attr($image_height).'" height="'.esc_attr($image_width).'" data-menu-img-src="'.esc_url($image_markup_src[0]).'" />';
-													 }
-												 }
-												 else {
-													 $image_markup = wp_get_attachment_image($menu_item_options['menu_item_icon_custom']['id'], 'large',false,array('class'=>'nectar-menu-icon-img'));
-												 }
+										if( isset($image_markup_src[0]) && !empty($image_markup_src[0]) ) {
+											$placeholder_img_src = "data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D'http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg'%20viewBox%3D'0%200%20".esc_attr($image_width).'%20'.esc_attr($image_height)."'%2F%3E";
+											$image_markup = '<img src="'.$placeholder_img_src.'" class="nectar-menu-icon-img" alt="'.esc_attr($image_alt_tag).'" width="'.esc_attr($image_height).'" height="'.esc_attr($image_width).'" data-menu-img-src="'.esc_url($image_markup_src[0]).'" />';
+										}
+									}
+									else {
+										$image_markup = wp_get_attachment_image($menu_item_options['menu_item_icon_custom']['id'], 'large',false,array('class'=>'nectar-menu-icon-img'));
+									}
 
-												 if( $image_markup ) {
-													 $item_icon_output = $image_markup;
-													 $element->classes[] = 'menu-item-has-icon';
-												 }
+									if( $image_markup ) {
+										$item_icon_output = $image_markup;
+										$element->classes[] = 'menu-item-has-icon';
+									}
 
 
 						}
 
-             // Custom Typography.
-             if( $depth > 0 ) {
+						// Custom Typography.
+						if( $depth > 0 ) {
 
-              $ext_menu_item = false;
+							$ext_menu_item = false;
 
-              if( isset($menu_item_options['menu_item_link_bg_type']) &&
-              'none' !== $menu_item_options['menu_item_link_bg_type'] ) {
-                $ext_menu_item =  true;
-              }
+							if( isset($menu_item_options['menu_item_link_bg_type']) &&
+							'none' !== $menu_item_options['menu_item_link_bg_type'] ) {
+								$ext_menu_item =  true;
+							}
 
-              $custom_type = (isset($menu_item_options['menu_item_link_typography'])) ? $menu_item_options['menu_item_link_typography'] : 'default';
+							$custom_type = (isset($menu_item_options['menu_item_link_typography'])) ? $menu_item_options['menu_item_link_typography'] : 'default';
 
-              if( $ext_menu_item == false && 'default' !== $custom_type ) {
-                $custom_typography_class = ' nectar-inherit-'.esc_attr($custom_type);
-              }
-              
-             } // End custom typography.
-             
+							if( $ext_menu_item == false && 'default' !== $custom_type ) {
+								$custom_typography_class = ' nectar-inherit-'.esc_attr($custom_type);
+							}
+							
+						} // End custom typography.
+						
 
 						// Hide menu title text.
 						if( isset($menu_item_options['menu_item_hide_menu_title']) &&
@@ -417,26 +737,40 @@ if ( ! function_exists( 'nectar_walker_nav_menu' ) ) {
 
 				}
 				
+				// Text reveal hover effect.
+				$menu_item_title = $element->title;
+				$theme_location = isset($args[0]) && property_exists($args[0], 'theme_location') ? $args[0]->theme_location : false;
+				if (!$is_button_style &&
+					0 == $depth &&
+					in_array($theme_location, array('top_nav', 'top_nav_pull_left', 'top_nav_pull_right')) &&
+					isset($nectar_options['header-hover-effect']) && 
+					'text_reveal' === $nectar_options['header-hover-effect']) {
+					$menu_item_title = '<span class="nectar-text-reveal-button"><span class="nectar-text-reveal-button__text" data-text="'.$element->title.'">'.$element->title.'</span></span>';
+				}
+
+				$element->title = '<span class="nectar-text-reveal-button"><span class="nectar-text-reveal-button__text" data-text="'.$element->title.'">'.$element->title.'</span></span>';
 				// Item is a widget area
 				if( in_array('widget-area-active', $element->classes)  ) {
 					$element->title = $element->title;
 				}
 				// Dropdown arrows
 				else if ( ! empty( $children_elements[ $element->$id_field ] ) && $element->menu_item_parent == 0 && $theme_skin != 'ascend' && $header_format != 'left-header' && $dropdownArrows != 'dont_show' ||
-						 ! empty( $children_elements[ $element->$id_field ] ) && $element->menu_item_parent == 0 && $dropdownArrows === 'show' ) {
-					$element->title     = $item_icon_output.'<span class="menu-title-text">' .$element->title . '</span>'.$menu_label.'<span class="sf-sub-indicator"><i class="fa fa-angle-down icon-in-menu" aria-hidden="true"></i></span>';
+						 ! empty( $children_elements[ $element->$id_field ] ) && $element->menu_item_parent == 0 && $dropdownArrows === 'show' || 
+						 $attached_global_section && $dropdownArrows === 'show' ||
+						 $attached_global_section && $dropdownArrows != 'dont_show' && $header_format !== 'left-header' && $theme_skin == 'original' ) {
+					$element->title     = $item_icon_output.'<span class="menu-title-text">' .$menu_item_title . '</span>'.$menu_label.'<span class="sf-sub-indicator"><i class="fa fa-angle-down icon-in-menu" aria-hidden="true"></i></span>';
 					$element->classes[] = 'sf-with-ul';
 				}
 
 				else if ( ! empty( $children_elements[ $element->$id_field ] ) && $element->menu_item_parent != 0 && $header_format != 'left-header') {
 					$dropdown_icon = (is_rtl()) ? 'fa-angle-left' : 'fa-angle-right';
-					$element->title = $item_icon_output.'<span class="menu-title-text'.esc_attr($custom_typography_class).'">'.$element->title . '</span>'.$menu_label.'<span class="sf-sub-indicator"><i class="fa '.$dropdown_icon.' icon-in-menu" aria-hidden="true"></i></span>';
+					$element->title = $item_icon_output.'<span class="menu-title-text'.esc_attr($custom_typography_class).'">'.$menu_item_title . '</span>'.$menu_label.'<span class="sf-sub-indicator"><i class="fa '.$dropdown_icon.' icon-in-menu" aria-hidden="true"></i></span>';
 				}
 				else if ( ! empty( $children_elements[ $element->$id_field ] ) && $element->menu_item_parent != 0 && true === $forced_arrows ) {
-					$element->title = $item_icon_output.'<span class="menu-title-text'.esc_attr($custom_typography_class).'">'.$element->title . '</span>'.$menu_label.'<span class="sf-sub-indicator"><i class="fa fa-angle-down icon-in-menu" aria-hidden="true"></i></span>';
+					$element->title = $item_icon_output.'<span class="menu-title-text'.esc_attr($custom_typography_class).'">'.$menu_item_title . '</span>'.$menu_label.'<span class="sf-sub-indicator"><i class="fa fa-angle-down icon-in-menu" aria-hidden="true"></i></span>';
 				}
 				else {
-					$element->title = $item_icon_output.'<span class="menu-title-text'.esc_attr($custom_typography_class).'">'.$element->title . '</span>'.$menu_label;
+					$element->title = $item_icon_output.'<span class="menu-title-text'.esc_attr($custom_typography_class).'">'.$menu_item_title . '</span>'.$menu_label;
 				}
 
 				// Left Header.
@@ -446,6 +780,8 @@ if ( ! function_exists( 'nectar_walker_nav_menu' ) ) {
 
 				Walker_Nav_Menu::display_element( $element, $children_elements, $max_depth, $depth, $args, $output );
 			}
+
+
 		}
 
 	}
@@ -482,6 +818,7 @@ if( !class_exists('Nectar_OCM_Icon_Walker') ) {
 			$item_icon_output = '';
 			$menu_label = '';
 			$ext_menu_item = false;
+			$attached_global_section = false;
 			
 			if( isset($element->ID) ) {
 
@@ -490,10 +827,17 @@ if( !class_exists('Nectar_OCM_Icon_Walker') ) {
 				// Has options saved.
 				if( !empty($menu_item_options) && false !== $nectar_menu_options_enabled ) {
 					
+					// track whether global section is attached to menu item.
+					$attached_global_section_mobile = isset($menu_item_options['mega_menu_global_section_mobile']) && '-' !== $menu_item_options['mega_menu_global_section_mobile'] ? $menu_item_options['mega_menu_global_section_mobile'] : false;
+					if( isset($menu_item_options['mega_menu_global_section']) && 
+					'-' !== $menu_item_options['mega_menu_global_section']) {
+						$attached_global_section = true;
+					}
+
 					// Flag to skip mobile item.
 					if( isset($menu_item_options['menu_item_persist_mobile_header']) &&
 					'on' == $menu_item_options['menu_item_persist_mobile_header'] &&
-            $depth == 0) {
+            		$depth == 0) {
 						$render_item = false;
 					}
 
@@ -517,10 +861,10 @@ if( !class_exists('Nectar_OCM_Icon_Walker') ) {
 							isset($menu_item_options['menu_item_icon']) ) {
 
 								// Add font awesome icon.
-                wp_enqueue_style( 'font-awesome' );
+                				wp_enqueue_style( 'font-awesome' );
 								$item_icon_output = '<i class="nectar-menu-icon fa '.esc_attr( $menu_item_options['menu_item_icon'] ).'"></i>';
 					}
-          else if( isset($menu_item_options['menu_item_icon_type']) &&
+         	 else if( isset($menu_item_options['menu_item_icon_type']) &&
 								'iconsmind' === $menu_item_options['menu_item_icon_type'] &&
 								isset($menu_item_options['menu_item_icon_iconsmind']) && 
                 defined('SALIENT_CORE_ROOT_DIR_PATH') && 
@@ -586,10 +930,75 @@ if( !class_exists('Nectar_OCM_Icon_Walker') ) {
 				$element->title = '<span class="menu-title-text">'.$element->title . '</span>'.$menu_label;
 			}
 
+			// Add menu-item-has-children class for megamneus
+			if( $attached_global_section && $attached_global_section_mobile ) {
+				$element->classes[] = 'menu-item-has-children';
+			}
+
 			if( $render_item === true ) {
 				Walker_Nav_Menu::display_element( $element, $children_elements, $max_depth, $depth, $args, $output );
 			}
 		} // end display_element
+
+		public function start_el(&$output, $data_object, $depth = 0, $args = null, $current_object_id = 0 ) {
+			$menu_item = $data_object;
+			// Call the parent method to get the default output.
+			parent::start_el($output, $menu_item, $depth, $args);
+
+			// If a global section is attached to display as the megamenu
+			$nectar_menu_options_enabled = apply_filters('nectar_menu_options_enabled', true);
+			$menu_item_options = maybe_unserialize( get_post_meta( $menu_item->ID, 'nectar_menu_options', true ) );
+			
+			$compatible_menu_locations = array('top_nav', 'top_nav_pull_left', 'top_nav_pull_right', 'secondary_nav');
+			
+			// Has options saved.
+			if( !empty($menu_item_options) && 
+				false !== $nectar_menu_options_enabled ) {
+
+				if(isset($args->theme_location) ) {
+				$using_mega_menu = isset($menu_item_options['enable_mega_menu']) && 'on' === $menu_item_options['enable_mega_menu'];
+				$attached_global_section_mobile = isset($menu_item_options['mega_menu_global_section_mobile']) && '-' !== $menu_item_options['mega_menu_global_section_mobile'] ? $menu_item_options['mega_menu_global_section_mobile'] : false;
+					
+				if( $using_mega_menu && 
+					$attached_global_section_mobile &&
+					in_array($args->theme_location, $compatible_menu_locations) ) {
+
+						// Add global section to menu output.
+						$item_output = '<div class="nectar-global-section-megamenu nectar-global-section force-contained-rows sub-menu">
+						<div class="inner">
+							'.do_shortcode('[nectar_global_section id="'.esc_attr($attached_global_section_mobile).'"]').'
+							</div>
+						</div>';
+
+						// Also generate dynamic CSS for global section
+						if( class_exists('NectarElDynamicStyles') ) {
+
+							if( 0 !== $attached_global_section_mobile  ) {
+								$global_section_query = get_post($attached_global_section_mobile);
+					
+								if( isset($global_section_query->post_content) && !empty($global_section_query->post_content) ) {
+									$global_section_content = $global_section_query->post_content;
+									NectarElDynamicStyles::$element_css = array();
+									$global_section_css = NectarElDynamicStyles::generate_styles($global_section_content);
+									if( $global_section_css ) {
+										$item_output .= '<style>'.$global_section_css.'</style>';
+									}
+								}
+							}
+							
+						}
+
+						$output .= apply_filters( 'walker_nav_menu_start_el', $item_output, $menu_item, $depth, $args );
+
+					}  // end attached and compatible check.
+				
+				} // end check for theme location.
+
+			} // end item has menu options saved.
+
+			// Add the custom class to the current item.
+		}
+			
 
 	}
 }
@@ -628,10 +1037,10 @@ if( !class_exists('Nectar_Walker_Mobile_Header_Items') ) {
 						$element->classes[] = 'menu-item-hidden-text';
 					}
 
-          // Button style
-          if( isset($menu_item_options['menu_item_link_link_style']) && 'default' !== $menu_item_options['menu_item_link_link_style'] ) {
-            $element->classes[] = 'menu-item-btn-style-'.esc_attr($menu_item_options['menu_item_link_link_style']);
-          }
+					// Button style
+					if( isset($menu_item_options['menu_item_link_link_style']) && 'default' !== $menu_item_options['menu_item_link_link_style'] ) {
+						$element->classes[] = 'menu-item-btn-style-'.esc_attr($menu_item_options['menu_item_link_link_style']);
+					}
 
 					// Menu Item Label.
 					if( isset($menu_item_options['menu_item_link_label']) &&
@@ -646,20 +1055,20 @@ if( !class_exists('Nectar_Walker_Mobile_Header_Items') ) {
 							'font_awesome' === $menu_item_options['menu_item_icon_type'] &&
 							isset($menu_item_options['menu_item_icon']) ) {
 
-								// Add font awesome icon.
-               	wp_enqueue_style( 'font-awesome' );
-								$item_icon_output = '<i class="nectar-menu-icon fa '.esc_attr( $menu_item_options['menu_item_icon'] ).'"></i>';
-                $element->classes[] = 'menu-item-has-icon';
+											// Add font awesome icon.
+							wp_enqueue_style( 'font-awesome' );
+											$item_icon_output = '<i class="nectar-menu-icon fa '.esc_attr( $menu_item_options['menu_item_icon'] ).'"></i>';
+							$element->classes[] = 'menu-item-has-icon';
 					}
-         	 else if( isset($menu_item_options['menu_item_icon_type']) &&
-							'iconsmind' === $menu_item_options['menu_item_icon_type'] &&
-							isset($menu_item_options['menu_item_icon_iconsmind']) && 
-							defined('SALIENT_CORE_ROOT_DIR_PATH') && 
-							file_exists(SALIENT_CORE_ROOT_DIR_PATH.'includes/icons/class-nectar-icon.php') ) {
+					else if( isset($menu_item_options['menu_item_icon_type']) &&
+						'iconsmind' === $menu_item_options['menu_item_icon_type'] &&
+						isset($menu_item_options['menu_item_icon_iconsmind']) && 
+						defined('SALIENT_CORE_ROOT_DIR_PATH') && 
+						file_exists(SALIENT_CORE_ROOT_DIR_PATH.'includes/icons/class-nectar-icon.php') ) {
 
 							// Add iconsmind icons.
 							include_once( SALIENT_CORE_ROOT_DIR_PATH.'includes/icons/class-nectar-icon.php' );
-              $element->classes[] = 'menu-item-has-icon';
+             			 $element->classes[] = 'menu-item-has-icon';
 
 						if( class_exists('Nectar_Icon') ) {
 							$nectar_icon_class = new Nectar_Icon(array(
@@ -677,7 +1086,7 @@ if( !class_exists('Nectar_Walker_Mobile_Header_Items') ) {
 								isset($menu_item_options['menu_item_icon_custom_text']) &&
 								!empty($menu_item_options['menu_item_icon_custom_text']) ) {
                 
-                $element->classes[] = 'menu-item-has-icon';
+                				$element->classes[] = 'menu-item-has-icon';
 								$item_icon_output = '<span class="nectar-menu-icon">'.sanitize_text_field( urldecode($menu_item_options['menu_item_icon_custom_text']) ) . '</span>';
 
 					}
@@ -690,7 +1099,7 @@ if( !class_exists('Nectar_Walker_Mobile_Header_Items') ) {
 								$image_markup = wp_get_attachment_image($menu_item_options['menu_item_icon_custom']['id'], 'large',false,array('class'=>'nectar-menu-icon-img'));
 								if( $image_markup ) {
 									$item_icon_output = $image_markup;
-                  $element->classes[] = 'menu-item-has-icon';
+                  					$element->classes[] = 'menu-item-has-icon';
 								}
 
 					}
@@ -766,10 +1175,12 @@ if( !function_exists('salient_wcag_nav_menu_link_attributes') ) {
 	function salient_wcag_nav_menu_link_attributes( $atts, $item, $args, $depth ) {
 
 		// Add [aria-haspopup] and [aria-expanded] to menu items that have children
-		$item_has_children = in_array( 'menu-item-has-children', $item->classes );
-		if ( $item_has_children ) {
-			$atts['aria-haspopup'] = "true";
-			$atts['aria-expanded'] = "false";
+		if ( property_exists($item, 'classes') ) {
+			$item_has_children = in_array( 'menu-item-has-children', $item->classes );
+			if ( $item_has_children ) {
+				$atts['aria-haspopup'] = "true";
+				$atts['aria-expanded'] = "false";
+			}
 		}
 
 		return $atts;

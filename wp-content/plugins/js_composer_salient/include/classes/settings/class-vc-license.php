@@ -134,6 +134,7 @@ class Vc_License {
 		// unique
 		$errors = array_unique( array_column( $errors, 'message' ) );
 		foreach ( $errors as $error ) {
+			$error = esc_html__( 'WPBakery License Error: ', 'js_composer' ) . $error;
 			$this->outputNotice( $error, false );
 		}
 	}

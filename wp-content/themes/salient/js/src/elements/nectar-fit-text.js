@@ -17,7 +17,8 @@ function NectarFitText() {
 NectarFitText.prototype.init = function() {
   this.fitties = [];
   this.fitties = fitty('[data-has-fit-text="true"]',{
-    observeWindow: false
+    observeWindow: false,
+    maxSize: 700
   });
   this.fitties.forEach((fitty) => {
     fitty.element.addEventListener('fit', function (e) {
@@ -36,11 +37,15 @@ NectarFitText.prototype.bindEvents = function() {
     });
   }
 
-  window.addEventListener('load', function () {
-    this.setTimeout(function () {
-      self.resizeFitties();
-    }, 100);
-  });
+  const usingViewTransition = (window.nectarOptions && window.nectarOptions.view_transitions_effect && window.nectarOptions.view_transitions_effect.length > 0) ? true : false;
+
+  if (!usingViewTransition) {
+    window.addEventListener('load', function () {
+      this.setTimeout(function () {
+        self.resizeFitties();
+      }, 100);
+    });
+  }
 };
 
 NectarFitText.prototype.resizeFitties = function() {

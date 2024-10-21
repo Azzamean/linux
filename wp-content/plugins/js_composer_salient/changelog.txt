@@ -1,5 +1,25 @@
 *** WPBakery Page Builder changelog ***
 
+2024-07-22 - version 7.8
+  - New: WPBakery AI credit usage data is available in the Settings and the AI window
+  - New: Script loading is optimized based on the usage
+  - Update: The editor access buttons are located properly
+  - Update: The error handling is updated with more information available
+  - Fix: Content publishing and reloading redirects work properly
+  - Fix: Security update for additional control over the user role access rights
+  - Fix: Element edit window reacts to user actions (clicks) properly
+  - Fix: The image carousel element has a correct placeholder image
+  - Fix: The FAQ element toggles work properly
+  - Fix: The editor works properly with PHP 8.2
+  - Fix: Auto-update works properly with the TinyMCE text mode
+  - Fix: WPBakery AI-generated code is added properly
+  - Fix: Height mode in custom grid templates is working properly
+  - Fix: The notification badge for the Settings works properly
+  - Fix: Call to action element has proper margin-top
+  - Fix: The AI icon is positioned properly
+  - Fix: The notification popup works properly for all user roles
+  - Fix: The editor works properly with product variations
+
 2024-06-19 - version 7.7.2
   - Fix: Element save works properly on all environments
 

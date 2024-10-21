@@ -162,7 +162,8 @@ for( $i = 1; $i < 5; $i++ ) {
 		
 		} else {
       
-      
+      $image_url = apply_filters('wpml_object_id', $cascading_attrs['image_'.$i.'_url'], 'attachment', TRUE);
+
       $image_meta = wp_get_attachment_metadata($cascading_attrs['image_'.$i.'_url']);
 			
       if( isset($image_meta['width']) && !empty($image_meta['width']) ) {

@@ -2688,7 +2688,7 @@ jQuery(document).ready(function($){
   var $loading_bg_storage = $('.first-section .nectar-slider-loading').css('background-image');
   
   function transparentheaderLoadingCalcs() {
-
+    
     if($('body #header-outer[data-transparent-header="true"]').length > 0) {
       
       if($('#page-header-bg').length === 0) {
@@ -3670,7 +3670,9 @@ if ('IntersectionObserver' in window) {
 
   if( $('#nectar_fullscreen_rows').length == 0 && $('#header-outer[data-permanent-transparent="1"]').length > 0 ) {
     $('.top-level .nectar-slider-wrap').each(function(slider){
-      sliderObserver.observe($(this)[0]);
+      if ($(this).parents('.wpb_gallery').length === 0 ) {
+        sliderObserver.observe($(this)[0]);
+      }
     });
   }
   
@@ -3681,6 +3683,12 @@ if ('IntersectionObserver' in window) {
   
   
   function darkFirstSlide(slider){
+    
+    // skip for image galleries
+    if( slider.parents('.wpb_gallery').length > 0 ) {
+      return;
+    }
+
     if( slider.parents('.parallax_slider_outer').length > 0 && slider.parents('.first-section').length > 0 && slider.find('.swiper-slide-active[data-color-scheme="dark"]').length > 0 ) {
       $('#header-outer').addClass('dark-slide');
     } else if(slider.parents('.parallax_slider_outer').length > 0 || slider.parents('.first-section').length > 0 ) {
@@ -4670,6 +4678,33 @@ if ('IntersectionObserver' in window) {
     
     
     currentSlide = $($containerClass + ' .swiper-slide-active').index();
+
+    //  No caption animation edge case to still reset videos.
+    if ( captionTransString === 'none' ) {
+      
+       // reset all other slide videos.
+       $($containerClass+' .swiper-slide:not(".swiper-slide-active")').each(function(){
+        if($(this).find('.video-wrap video').length > 0) { 
+          $(this).find('.video-wrap video').get(0).pause(); 
+          if($(this).find('.video-wrap video').get(0).currentTime != 0 ){ 
+            $(this).find('.video-wrap video').get(0).currentTime = 0;
+          }
+        }
+      });
+
+      //pause video if there's one
+      $($containerClass+' .swiper-slide').each(function(){
+        // play active video
+        if ( $(this).hasClass('swiper-slide-active') ) {
+          if($(this).find('.video-wrap video').length > 0) { 
+            $(this).find('.video-wrap video').get(0).play();
+          }
+        }
+
+      });
+    
+    }
+    
     
     //make sure user isn't going back to same slide 
     if( $($containerClass+' .swiper-slide:nth-child('+ (currentSlide + 1) +')').find('.content *').length > 0 && captionTransString !== 'reveal_title') {
@@ -5386,11 +5421,14 @@ if ('IntersectionObserver' in window) {
 
     //dark slide header 
     if($($obj.container).parent().attr('data-overall_style') !== 'directional') {
-      if( $($obj.container).parents('.first-section').length > 0 && $($obj.container).find('.swiper-slide-active[data-color-scheme="dark"]').length > 0 ||
-      $('#nectar_fullscreen_rows').length > 0 && $($obj.container).find('.swiper-slide-active[data-color-scheme="dark"]').length > 0) {
-        $('#header-outer').addClass('dark-slide');
-      } else if( $($obj.container).parents('.first-section').length > 0 || $('#nectar_fullscreen_rows').length > 0) {
-        $('#header-outer').removeClass('dark-slide');
+      // prevent for image galleries
+      if ($($obj.container).parents('.wpb_gallery').length === 0 ) {
+        if( $($obj.container).parents('.first-section').length > 0 && $($obj.container).find('.swiper-slide-active[data-color-scheme="dark"]').length > 0 ||
+        $('#nectar_fullscreen_rows').length > 0 && $($obj.container).find('.swiper-slide-active[data-color-scheme="dark"]').length > 0) {
+          $('#header-outer').addClass('dark-slide');
+        } else if( $($obj.container).parents('.first-section').length > 0 || $('#nectar_fullscreen_rows').length > 0) {
+          $('#header-outer').removeClass('dark-slide');
+        }
       }
     } 
     ////directional trans - will be called early so need to adjust the slide being looked for

@@ -37,7 +37,6 @@ body.search-results .container-wrap .main-content {
   line-height:42px;
   margin-bottom:0;
   text-transform:none;
-  font-family:'Open Sans';
   font-weight:600;
   letter-spacing:-1px
 }
@@ -240,7 +239,6 @@ body.search-results #search-results[data-layout*="list"] article {
   display:block;
   font-size:12px;
   letter-spacing:0;
-  font-family:'Open Sans';
   font-weight:400;
   color:#999;
   margin-top:3px

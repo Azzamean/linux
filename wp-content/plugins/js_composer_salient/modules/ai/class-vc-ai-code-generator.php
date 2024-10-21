@@ -49,8 +49,7 @@ class Vc_Ai_Code_Generator {
 
 		$data = $this->edit_data_before_request( $data );
 
-		$is_messaged_data = true;
-		return $this->api_connector->get_api_response_data( $data, $this->api_url_part, $is_messaged_data );
+		return $this->api_connector->set_api_response_data( $data, $this->api_url_part )->get_message_from_data();
 	}
 
 	/**

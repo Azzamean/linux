@@ -39,6 +39,7 @@ function nectar_register_js() {
 		wp_register_script( 'jquery-mousewheel', $nectar_get_template_directory_uri . '/js/'.$src_dir.'/third-party/jquery.mousewheel.min.js', array( 'jquery' ), '3.1.13', true );
 		wp_register_script( 'nectar_priority', $nectar_get_template_directory_uri . '/js/'.$src_dir.'/priority.js', array( 'jquery', 'jquery-easing', 'jquery-mousewheel' ), $nectar_theme_version, true );
 		wp_register_script( 'nectar_slider_priority', $nectar_get_template_directory_uri . '/js/'.$src_dir.'/nectar-slider-priority.js', array( 'jquery', 'jquery-easing', 'jquery-mousewheel' ), $nectar_theme_version, true );
+		wp_register_script( 'nectar-smooth-scroll', $nectar_get_template_directory_uri . '/js/'.$src_dir.'/nectar-smooth-scroll.js', array( 'jquery', 'nectar-frontend' ), $nectar_theme_version, true );
 
 		// Third party scripts.
 		wp_register_script( 'modernizer', $nectar_get_template_directory_uri . '/js/'.$src_dir.'/third-party/modernizr.min.js', array( 'jquery' ), '2.6.2', true );
@@ -66,10 +67,9 @@ function nectar_register_js() {
 		wp_register_script( 'pixi', $nectar_get_template_directory_uri . '/js/'.$src_dir.'/third-party/pixi.min.js', array( 'jquery' ), '4.5.1', true );
 		wp_deregister_script( 'anime' );
 		wp_register_script( 'anime', $nectar_get_template_directory_uri . '/js/'.$src_dir.'/third-party/anime.min.js', array( 'jquery' ), '4.5.1', true );
-		wp_register_script( 'lottie-player', $nectar_get_template_directory_uri . '/js/'.$src_dir.'/third-party/lottie-player.min.js', array( 'jquery' ), '0.4.0', true );
+		wp_register_script( 'lottie-player', $nectar_get_template_directory_uri . '/js/'.$src_dir.'/third-party/lottie-player.min.js', array( 'jquery' ), '5.12.2', true );
 		wp_register_script( 'nectar-waypoints', $nectar_get_template_directory_uri . '/js/'.$src_dir.'/third-party/waypoints.js', array( 'jquery' ), '4.0.2', true );
-
-
+		
 		// Page option conditional scripts.
 		wp_register_script( 'nectar-single-product', $nectar_get_template_directory_uri . '/js/'.$src_dir.'/nectar-single-product.js', array( 'jquery' ), $nectar_theme_version, true );
 		wp_register_script( 'nectar-single-product-reviews', $nectar_get_template_directory_uri . '/js/'.$src_dir.'/nectar-single-product-reviews.js', array( 'jquery' ), $nectar_theme_version, true );
@@ -88,7 +88,8 @@ function nectar_register_js() {
 		wp_register_script( 'nectar-sticky-media-sections', $nectar_get_template_directory_uri . '/js/'.$src_dir.'/elements/nectar-sticky-media-sections.js', array( 'jquery', 'nectar-waypoints', 'nectar-frontend' ), $nectar_theme_version, true );
 		wp_register_script( 'nectar-fit-text', $nectar_get_template_directory_uri . '/js/'.$src_dir.'/elements/nectar-fit-text.js', array( 'jquery', 'nectar-frontend' ), $nectar_theme_version, true );
 		wp_register_script( 'nectar-lottie', $nectar_get_template_directory_uri . '/js/'.$src_dir.'/elements/nectar-lottie.js', array( 'jquery', 'lottie-player', 'nectar-frontend' ), $nectar_theme_version, true );
-		
+		wp_register_script( 'nectar-post-grid-stacked', $nectar_get_template_directory_uri . '/js/'.$src_dir.'/elements/nectar-post-grid-stacked.js', array( 'jquery' ), $nectar_theme_version, true );
+
 		// Main Salient script.
 		wp_register_script( 'nectar-frontend', $nectar_get_template_directory_uri . '/js/'.$src_dir.'/init.js', array( 'jquery', 'superfish', 'nectar-waypoints', 'nectar-transit' ), $nectar_theme_version, true );
 
@@ -212,6 +213,11 @@ function nectar_register_js() {
 		if (NectarElAssets::locate(array('animated_gradient_bg="true"'))) {
             wp_enqueue_script('nectar-animated-gradient');
         }
+
+		// Smooth Scrolling.
+		if ( isset( $nectar_options['smooth-scroll'] ) && $nectar_options['smooth-scroll'] === '1' ) {
+			wp_enqueue_script('nectar-smooth-scroll');
+		}
 		
 
 		
@@ -399,7 +405,9 @@ function nectar_register_js() {
 	$ajax_search       = ( ! empty( $nectar_options['header-disable-ajax-search'] ) && $nectar_options['header-disable-ajax-search'] === '1' ) ? 'no' : 'yes';
 	$header_search     = ( ! empty( $nectar_options['header-disable-search'] ) && $nectar_options['header-disable-search'] === '1' ) ? 'false' : 'true';
 	$nectar_theme_skin = NectarThemeManager::$skin;
+	$using_boxed       = (!empty($nectar_options['boxed_layout']) && $nectar_options['boxed_layout'] === '1') ? true : false;
 	$header_format     = ( ! empty( $nectar_options['header_format'] ) ) ? $nectar_options['header_format'] : 'default';
+	$body_border       = ( isset($nectar_options['body-border']) && '1' === $nectar_options['body-border'] ) ? true : false;
 	$header_entrance   = 'false';
 
 	if( isset($post->ID) ) {
@@ -428,9 +436,27 @@ function nectar_register_js() {
 		$ajax_add_to_cart = '0';
 	}
 
+	$using_smooth_scroll = ( isset( $nectar_options['smooth-scroll'] ) && '1' === $nectar_options['smooth-scroll'] ) ? 'true' : 'false';
+	$smooth_scroll_strength = ( isset( $nectar_options['smooth-scroll-strength'] ) ) ? esc_html($nectar_options['smooth-scroll-strength']) : '50';
+	if( $nectar_using_VC_front_end_editor || 
+		$page_full_screen_rows === 'on' ) {
+		$using_smooth_scroll = false;
+	}
+	
 	$woo_using_cart_addons = 'false';
 	if( class_exists('WC_Dynamic_Pricing') ) {
 		$woo_using_cart_addons = 'true';
+	}
+
+	$view_transitions_effect = '';
+	$using_page_transitions = isset($nectar_options['ajax-page-loading']) &&
+    !empty( $nectar_options['ajax-page-loading'] ) &&
+    $nectar_options['ajax-page-loading'] === '1' ? true : false;
+
+	if ( $using_page_transitions && 
+		isset($nectar_options['page-transition-type']) && 
+		'view-transitions' === $nectar_options['page-transition-type'] ) {
+		$view_transitions_effect = isset($nectar_options['transitions-api-effect']) ? $nectar_options['transitions-api-effect'] : '';
 	}
 
 	wp_localize_script(
@@ -438,9 +464,13 @@ function nectar_register_js() {
 		'nectarOptions',
 		array(
 			'delay_js'                    => $delay_js,
+			'smooth_scroll'               => $using_smooth_scroll,
+			'smooth_scroll_strength'      => $smooth_scroll_strength,
 			'quick_search'                => ( $ajax_search === 'yes' && $header_search !== 'false' && $nectar_theme_skin === 'material' ) ? 'true' : 'false',
 			'react_compat'                => apply_filters('salient_react_compatibility', 'disabled'), // deprecated -- removed from use in 16.0
 			'header_entrance'             =>  $header_entrance,
+			'body_border_func'            => NectarThemeManager::$body_border_func,
+			'body_border_mobile'          => ( isset( $nectar_options['body-border-mobile'] ) && $body_border ) ? esc_html($nectar_options['body-border-mobile']) : '0',
 			'dropdown_hover_intent'       => ( isset( $nectar_options['header-dropdown-delay'] ) ) ? esc_html($nectar_options['header-dropdown-delay']) : 'default',
 			'simplify_ocm_mobile'         => ( isset( $nectar_options['header-slide-out-from-right-simplify-mobile'] ) ) ? esc_html($nectar_options['header-slide-out-from-right-simplify-mobile']) : 'false',
 			'mobile_header_format'        => ( isset( $nectar_options['mobile-menu-layout'] ) ) ? esc_html($nectar_options['mobile-menu-layout']) : 'default',
@@ -455,7 +485,8 @@ function nectar_register_js() {
 			'woo_minimal_product_effect'  => ( isset( $nectar_options['product_minimal_hover_effect'] ) ) ? esc_html($nectar_options['product_minimal_hover_effect']) : 'default',
 			'woo_related_upsell_carousel' => ( isset( $nectar_options['single_product_related_upsell_carousel'] ) && '1' === $nectar_options['single_product_related_upsell_carousel'] ) ? 'true' : 'false',
 			'woo_product_variable_select' => ( isset( $nectar_options['product_variable_select_style'] ) ) ? esc_html($nectar_options['product_variable_select_style']) : 'default',
-			'woo_using_cart_addons'       => $woo_using_cart_addons
+			'woo_using_cart_addons'       => $woo_using_cart_addons,
+			'view_transitions_effect'	  => $view_transitions_effect 
 		)
 	);
 

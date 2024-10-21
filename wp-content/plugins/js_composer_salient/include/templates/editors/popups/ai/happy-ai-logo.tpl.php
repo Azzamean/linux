@@ -6,7 +6,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 ?>
 <div class="vc_ui-ai-promo">
 	<svg xmlns="http://www.w3.org/2000/svg" width="191px" height="231px" viewBox="0 0 191 231">
-		<title>wpb-ai-robot</title>
+		<title>wpb-ai-robot-happy</title>
 		<g id="AI" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
 			<g id="AI-window-promo" transform="translate(-624.000000, -166.000000)">
 				<g id="AI-window" transform="translate(420.000000, 85.000000)">

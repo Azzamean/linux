@@ -31,6 +31,7 @@ $icon_params = array(
             esc_html__( 'Steadysets', 'salient-core' ) => 'steadysets',
             esc_html__( 'Linecons', 'salient-core' ) => 'linecons',
             esc_html__( 'Additional Brands', 'salient-core' ) => 'nectarbrands',
+            esc_html__( 'Pulsating Circle', 'salient-core' ) => 'pulsating-circle',
         ),
         'save_always' => true,
         'param_name' => 'icon_family',
@@ -135,6 +136,7 @@ $icon_params = array(
         'param_name' => 'icon_style',
         'description' => esc_html__( 'Select your button style.', 'salient-core' ),
     ),
+    
     array(
         'type' => 'dropdown',
         'heading' => __( 'Icon Border Thickness', 'salient-core' ),
@@ -179,6 +181,15 @@ $icon_params = array(
         'dependency' => array( 'element' => 'icon_color_type', 'value' => array( 'custom' ) ),
         'value' => '',
         'description' => esc_html__( 'Choose a custom color for your icon, outside of the global color scheme', 'salient-core' ),
+    ),
+
+    array(
+        'type' => 'colorpicker',
+        'class' => '',
+        'heading' => 'Icon Hover Color',
+        'param_name' => 'icon_color_custom_hover',
+        'dependency' => array( 'element' => 'icon_color_type', 'value' => array( 'custom' ) ),
+        'value' => ''
     ),
 
     array(
@@ -291,7 +302,15 @@ $icon_params = array(
             'None' => 'none',
         ),
         'save_always' => true
-    )
+    ),
+
+    array(
+        'type' => 'textfield',
+        'heading' => esc_html__( 'CSS Class Name', 'salient-core' ),
+        'param_name' => 'class_name',
+        'description' => ''
+    ),
+
 
 );
 

@@ -469,11 +469,11 @@
     
     if($('body:not(.mobile) #header-outer[data-has-menu="true"]').length > 0 && 
     $('#nectar_fullscreen_rows > .wpb_row:nth-child('+index+')[data-fullscreen-anchor-id]').length > 0 && 
-    $('header#top nav > ul.sf-menu > li').find('> a[href$="#'+$hashSubstrng+'"]').length > 0 ) {
+    $('header#top nav > ul.sf-menu li').find('> a[href$="#'+$hashSubstrng+'"]').length > 0 ) {
       
-      $('header#top nav > ul.sf-menu > li').removeClass('current-menu-item');
+      $('header#top nav > ul.sf-menu li').removeClass('current-menu-item');
       
-      $('header#top nav > ul.sf-menu > li')
+      $('header#top nav > ul.sf-menu li')
         .find('> a[href$="'+$hashSubstrng+'"]')
         .parent()
         .addClass('current-menu-item');

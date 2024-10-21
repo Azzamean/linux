@@ -148,7 +148,7 @@ Description: Styles loaded only when responsive styling is disabled in theme opt
 }
 
 /* iPad landscape fixes */
-@media only screen and (min-device-width: 481px) and (max-device-width: 1025px) and (orientation:landscape) {
+@media only screen and (min-width: 481px) and (max-width: 1025px) and (orientation:landscape) {
 	
 	.orbit > div {
 		position: absolute !important;

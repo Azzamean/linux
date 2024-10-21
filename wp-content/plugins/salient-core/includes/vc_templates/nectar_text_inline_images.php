@@ -25,6 +25,16 @@ extract(shortcode_atts(array(
 /*************** IMAGES ***************/
 if( 'images' === $media_type ) {
 
+  $image_size_for_media_lib = $image_size;
+
+  // image size transforms
+  if ( 'large__h_rect' === $image_size ) {
+    $image_size_for_media_lib = 'large';
+  }
+  if ( 'small__h_rect' === $image_size ) {
+    $image_size_for_media_lib = 'medium';
+  }
+
   /* Gather images into an arr */
   $images = explode( ',', $images );
   $images_markup_arr = array();
@@ -36,7 +46,7 @@ if( 'images' === $media_type ) {
           if( 'lazy-load' === $image_loading && NectarLazyImages::activate_lazy() ||
               ( property_exists('NectarLazyImages', 'global_option_active') && true === NectarLazyImages::$global_option_active && 'skip-lazy-load' !== $image_loading ) ) {
               
-              $image_arr = wp_get_attachment_image_src($attach_id, $image_size);
+              $image_arr = wp_get_attachment_image_src($attach_id, $image_size_for_media_lib);
 
               if( isset($image_arr[0]) ) {
 
@@ -59,7 +69,7 @@ if( 'images' === $media_type ) {
           
           else {
 
-              $image_src = wp_get_attachment_image_src($attach_id, $image_size);
+              $image_src = wp_get_attachment_image_src($attach_id, $image_size_for_media_lib);
               $image_alt = get_post_meta($attach_id, '_wp_attachment_image_alt', TRUE);
 
               if( $image_src ) {
@@ -118,14 +128,14 @@ else {
 $content = wp_kses_post( $content );
 
 /* Interpolate symbol */
-$content = preg_replace_callback( '/\*/', function( $match ) use( $images_markup_arr, &$count ) {
+$content = preg_replace_callback( '/\*/', function( $match ) use( $images_markup_arr, &$count, $image_size ) {
     
     $count = ( $count ) ? $count : 0;
 
     $html = '<span class="image-error"></span>';
 
     if( isset($images_markup_arr[$count]) ) {
-      $html = '<span class="nectar-text-inline-images__marker">&nbsp;'.$images_markup_arr[$count].'</span>';
+      $html = '<span class="nectar-text-inline-images__marker" data-img-size="'.esc_attr($image_size).'">&nbsp;'.$images_markup_arr[$count].'</span>';
     } 
 
     $count++;

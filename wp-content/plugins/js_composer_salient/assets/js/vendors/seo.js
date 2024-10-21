@@ -17,18 +17,77 @@
 	
 	function nectarAnalyzeContent(data) {
 
-		var content = data;
-		content = contentModification(data);
+		// exit if in gutenburg editor.
+		if ( document.body.classList.contains( 'block-editor-page' ) ) {
+			return data;
+		}
+
+		var content = extractTextFromShortcodes(data);
+		content = contentModification(content);
+
 		return content;
 		
 	}
+
+	function extractTextFromShortcodes(content) {
+    const stack = [];
+    const extractedTexts = [];
+    const regex = /\[([a-zA-Z_]+)([^\]]*)\]|\[\/([a-zA-Z_]+)\]|([^[]+)/g;
+    const textAttrRegex = /(?:text|text_content|quote)\s*=\s*"([^"]*)"/g;
+
+		// ensure page is using WPBakery and not classic editor.
+		const wpBakeryShortcodeRegex = /\[vc_row\b/;
+		if (!wpBakeryShortcodeRegex.test(content)) {
+		  return content;
+		}
+
+    let match;
+    while ((match = regex.exec(content)) !== null) {
+        if (match[1]) {
+            // Opening shortcode tag
+            const attrs = match[2];
+            let attrMatch;
+            // Extract text from attributes that begin with "text"
+            while ((attrMatch = textAttrRegex.exec(attrs)) !== null) {
+								if ( attrMatch[1].trim() !== 'true' ) {
+                	extractedTexts.push(attrMatch[1].trim());
+								}
+            }
+            stack.push({ tag: match[1], text: '' });
+        } else if (match[3]) {
+            // Closing shortcode tag
+            let nestedContent = '';
+            while (stack.length > 0) {
+                const top = stack.pop();
+                if (top.tag === match[3]) {
+                    if (top.text.trim()) {
+                        extractedTexts.push(top.text.trim());
+                    }
+                    break;
+                } else {
+                    nestedContent = top.text + nestedContent;
+                }
+            }
+            if (stack.length > 0) {
+                stack[stack.length - 1].text += nestedContent;
+            }
+        } else if (match[4]) {
+            // Text content
+            if (stack.length > 0) {
+                stack[stack.length - 1].text += match[4];
+            }
+        }
+    }
+
+    return extractedTexts.join(' ');
+}
 	
 	function contentModification(data) {
 		
 		data = _.reduce( relevantData, function ( memo, value, key ) {
 
 			if( value.html && value.append ) {
-				memo += value.html;
+				memo += ' ' + value.html;
 			}
 			else if ( value.html && value.insertAtLocation ) {
 				memo = memo.replace( '"' + value.text + '"', '""]' + value.html + '[' );

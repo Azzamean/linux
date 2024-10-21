@@ -79,18 +79,20 @@ class Vc_Modules_Manager {
 				'module_class' => 'Vc_Custom_Css_Module',
 				'is_active' => true,
 			],
-			'vc-design-options' => [
-				'name' => esc_html__( 'Design Option (Skin builder)', 'js_composer' ),
-				'main_file_path' => $modules_dir . '/design-options/module.php',
-				'module_class' => 'Vc_Design_Options_Module',
-				'is_active' => true,
-			],
-			'vc-post-custom-layout' => [
-				'name' => esc_html__( 'Post Custom Layout', 'js_composer' ),
-				'main_file_path' => $modules_dir . '/post-custom-layout/module.php',
-				'module_class' => 'Vc_Post_Custom_Layout_Module',
-				'is_active' => true,
-			],
+			// nectar addition
+			// 'vc-design-options' => [
+			// 	'name' => esc_html__( 'Design Option (Skin builder)', 'js_composer' ),
+			// 	'main_file_path' => $modules_dir . '/design-options/module.php',
+			// 	'module_class' => 'Vc_Design_Options_Module',
+			// 	'is_active' => true,
+			// ],
+			// 'vc-post-custom-layout' => [
+			// 	'name' => esc_html__( 'Post Custom Layout', 'js_composer' ),
+			// 	'main_file_path' => $modules_dir . '/post-custom-layout/module.php',
+			// 	'module_class' => 'Vc_Post_Custom_Layout_Module',
+			// 	'is_active' => true,
+			// ],
+			// nectar addition end
 		];
 	}
 
@@ -193,7 +195,7 @@ class Vc_Modules_Manager {
 
 	/**
 	 * Check current module status.
-	 * First we check if user enable module in plugin settings.
+	 * First we check if user enabled module in plugin settings.
 	 * Second we check if module is active in module attributes.
 	 *
 	 * @note we use this check before we turn module on
@@ -369,5 +371,37 @@ class Vc_Modules_Manager {
 		}
 
 		return true;
+	}
+
+	/**
+	 * Register modules script file.
+	 *
+	 * @since 7.8
+	 */
+	public function register_modules_script() {
+		wp_register_script( 'wpb-modules-js', vc_asset_url( 'js/dist/modules.min.js' ), [], WPB_VC_VERSION, true );
+	}
+
+	/**
+	 * Check if user set custom modules optionality in plugin settings.
+	 *
+	 * @since 7.8
+	 * @return bool
+	 */
+	public function is_modules_set_in_setting() {
+		$module_settings = json_decode( get_option( $this->get_option_name(), '' ), true );
+
+		if ( empty( $module_settings ) ) {
+			return false;
+		}
+
+		// if all modules has true value we consider that user not changed anything
+		foreach ( $module_settings as $module_status ) {
+			if ( false === $module_status ) {
+				return true;
+			}
+		}
+
+		return false;
 	}
 }

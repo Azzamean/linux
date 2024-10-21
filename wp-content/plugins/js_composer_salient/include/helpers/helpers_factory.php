@@ -344,21 +344,14 @@ function vc_is_editor() {
  * @since 4.2
  */
 function vc_value_from_safe( $value, $encode = false ) {
+	$value = is_string( $value ) ? $value : '';
 	// @codingStandardsIgnoreLine
 	$value = preg_match( '/^#E\-8_/', $value ) ? rawurldecode( base64_decode( preg_replace( '/^#E\-8_/', '', $value ) ) ) : $value;
 	if ( $encode ) {
 		$value = htmlentities( $value, ENT_COMPAT, 'UTF-8' );
 	}
 
-	return str_replace( [
-		'`{`',
-		'`}`',
-		'``',
-	], [
-		'[',
-		']',
-		'"',
-	], $value );
+	return str_replace( [ '`{`', '`}`', '``', ], [ '[', ']', '"', ], $value );
 }
 
 /**
@@ -396,6 +389,7 @@ function vc_get_dropdown_option( $param, $value ) {
 		reset( $value );
 		$value = isset( $value['value'] ) ? $value['value'] : current( $value );
 	}
+	$value = is_string( $value ) ? $value : '';
 	$value = preg_replace( '/\s/', '_', $value );
 
 	return ( '' !== $value ? $value : '' );

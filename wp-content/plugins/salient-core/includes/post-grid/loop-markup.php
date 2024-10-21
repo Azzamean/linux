@@ -55,6 +55,87 @@ function nectar_post_grid_get_category_total($category_id, $post_type, $term_tax
 /**
  * Post grid item display.
  *
+ * @since 2.0.6
+ */
+
+if(!function_exists('nectar_get_post_grid_custom_fields_parsed')) {
+  function nectar_get_post_grid_custom_fields_parsed($custom_fields) {
+
+    if ( empty($custom_fields) ) {
+      return;
+    }
+
+    $custom_fields_parsed = json_decode( urldecode( $custom_fields ), true );
+    if ( !$custom_fields_parsed || !is_array($custom_fields_parsed) ) {
+      return;
+    }
+
+    return $custom_fields_parsed;
+
+  }
+}
+
+if(!function_exists('nectar_post_grid_custom_fields_markup')) {
+  function nectar_post_grid_custom_fields_markup($custom_fields) {
+    
+    global $post;
+    
+    $custom_fields_parsed = nectar_get_post_grid_custom_fields_parsed($custom_fields);
+    
+    if ( !$post || !$custom_fields_parsed ) {
+      return;
+    }
+
+    $markup = '';
+    foreach($custom_fields_parsed as $item) {
+      if ( !isset($item['meta_key']) || empty($item['meta_key']) ) {
+        continue;
+      }
+
+      $meta_key = sanitize_text_field($item['meta_key']);
+      $meta_value = get_post_meta( $post->ID, $meta_key, true );
+
+      if ( empty($meta_value) || !is_string($meta_value) ) {
+        continue;
+      }
+
+      $meta_value = apply_filters('nectar_post_grid_custom_field_value', $meta_value, $meta_key, $post->ID);
+
+      $tag = 'span';
+      $inline_class = '';
+
+      if ( isset($item['render_tag']) && 
+          in_array($item['render_tag'], array('div', 'span', 'label', 'em', 'p', 'h2', 'h3', 'h4', 'h5', 'h6')) ) {
+          
+          $tag = sanitize_text_field($item['render_tag']);
+          if ( in_array($tag, array('em','span')) ) {
+            $inline_class = ' inline';
+          }
+      }
+
+      $markup .= '<'.$tag.' class="nectar-post-grid-item__custom-field'.$inline_class.'" data-key="'.esc_attr($item['meta_key']).'">';
+        if ( isset( $item['use_custom_format'] ) ) {
+          $custom_format = ( isset($item['custom_format']) && !empty($item['custom_format']) ) ? wp_kses_post($item['custom_format']) : '%s';
+          $markup .= preg_replace('/\%s/', wp_kses_post($meta_value), $custom_format);
+        } else {
+          $markup .= wp_kses_post($meta_value);
+        }
+        
+      $markup .= '</'.$tag.'>';
+
+    }
+
+    if (!empty($markup)) {
+      $markup = '<div class="nectar-post-grid-item__custom-fields">'.$markup.'</div>';
+    }
+    return $markup;
+
+  }
+}
+
+/**
+ * Post grid item display.
+ *
  * @since 1.3
  */
 if(!function_exists('nectar_post_grid_item_markup')) {
@@ -123,6 +204,23 @@ if(!function_exists('nectar_post_grid_item_markup')) {
             $atts['read_more_button'] = 'no';
           }
           if( !isset($atts['parallax_scrolling'])) {
+            $atts['parallax_scrolling'] = '';
+          }
+          if ( !isset($atts['custom_fields']) ) {
+            $atts['custom_fields'] = '';
+          }
+          if ( !isset($atts['custom_fields_location']) ) {
+            $atts['custom_fields_location'] = '';
+          }
+          if ( !isset($atts['display_type'])) {
+            $atts['display_type'] = 'grid';
+          }
+
+          if ( !isset($atts['text_content_layout']) ) {
+            $atts['text_content_layout'] = 'all_top_left';
+          }
+
+          if ( $atts['display_type'] === 'stack' ) {
             $atts['parallax_scrolling'] = '';
           }
 
@@ -329,6 +427,7 @@ if(!function_exists('nectar_post_grid_item_markup')) {
 
             $custom_project_class = get_post_meta($post->ID, '_nectar_project_css_class', true);
             $custom_thumbnail     = get_post_meta($post->ID, '_nectar_portfolio_custom_thumbnail', true);
+            $project_video_src    = get_post_meta($post->ID, '_nectar_portfolio_custom_video', true);
 
             // Class name
             if( !empty($custom_project_class) ) {
@@ -409,6 +508,20 @@ if(!function_exists('nectar_post_grid_item_markup')) {
 
             } // End Featured Img.
 
+            // Project Video.
+            if( !empty($project_video_src) ) {
+              $thumbnail_id = get_post_thumbnail_id( $post->ID );
+              if( 'lazy-load' === $atts['image_loading'] && NectarLazyImages::activate_lazy() ||
+                  ( property_exists('NectarLazyImages', 'global_option_active') && true === NectarLazyImages::$global_option_active && 'skip-lazy-load' !== $atts['image_loading'] ) ) {
+                    $regular_image_markup .= nectar_lazy_loaded_video_markup($project_video_src, 'video/mp4', 'nectar-post-grid-item-bg__video');
+                  } else {
+                    $regular_image_markup .= '<video class="nectar-post-grid-item-bg__video" preload="auto" loop autoplay muted playsinline>
+                      <source src="'.esc_url($project_video_src).'" type="video/mp4">
+                    </video>';
+                  }
+              
+            }
+
             
             // Categories.
             $category_markup = null;
@@ -439,6 +552,11 @@ if(!function_exists('nectar_post_grid_item_markup')) {
               }
 
               $category_markup .= '</span>';
+
+              // remove empty markup 
+              if ( empty($project_categories)  ) {
+                $category_markup = '';
+              }
 
             }
 
@@ -488,10 +606,18 @@ if(!function_exists('nectar_post_grid_item_markup')) {
 
           }
 
+          $merge_category_with_meta = false;
+          if ( $atts['display_type'] === 'stack' ) {
+            $merge_category_with_meta = true;
+          }
           
           $bg_overlay_markup = (isset($atts['color_overlay']) && !empty($atts['color_overlay'])) ? 'style=" background-color: '. esc_attr($atts['color_overlay']) .';"' : '';
-
-
+          $custom_fields_markup = nectar_post_grid_custom_fields_markup($atts['custom_fields']);
+          
+          if( $custom_fields_markup ) {
+            $custom_class_name .= ' nectar-post-grid-item__custom-fields-'.esc_attr($atts['custom_fields_location']);
+          }
+          
           /****************** Output Markup ******************/
           $markup .= '<div class="nectar-post-grid-item'.esc_attr($custom_class_name).'"'.$card_color_style.' data-post-id="'.esc_attr($post->ID).'" data-has-img="'.esc_attr($has_image).'"> <div class="inner">';
 
@@ -537,9 +663,15 @@ if(!function_exists('nectar_post_grid_item_markup')) {
             $markup .= $nectar_post_grid_item_content_markup_before;
           }
 
+          if ( $atts['text_content_layout'] === 'corners' ) {
+            $markup .= '<span class="nectar-post-grid__arrow-indicator"><svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="60 58 140 140" height="200px" width="200px" xmlns="http://www.w3.org/2000/svg"><path d="M198,64V168a6,6,0,0,1-12,0V78.48L68.24,196.24a6,6,0,0,1-8.48-8.48L177.52,70H88a6,6,0,0,1,0-12H192A6,6,0,0,1,198,64Z"></path></svg></span>';
+          }
+
           $markup .= '<a class="nectar-post-grid-link'.$link_classes_escaped.'" href="'. esc_attr($post_perma) .'" '.$link_attrs_escaped.'><span class="screen-reader-text">'.get_the_title().'</span></a>';
 
-          $markup .= $category_markup;
+          if ( !$merge_category_with_meta ) {
+            $markup .= $category_markup;
+          }
 
           $post_title_overlay = ( isset($atts['post_title_overlay']) && 'yes' === $atts['post_title_overlay'] ) ? ' data-title-text="'.esc_attr(get_the_title()).'"' : '';
 
@@ -571,15 +703,26 @@ if(!function_exists('nectar_post_grid_item_markup')) {
             $markup .= $excerpt_markup;
           }
 
+
           // Meta.
           $has_meta_date = ( isset($atts['display_date']) && 'yes' === $atts['display_date'] ) ? true : false;
           $has_meta_reading_time = ( isset($atts['display_estimated_reading_time']) && 'yes' === $atts['display_estimated_reading_time'] && function_exists('nectar_estimated_reading_time') ) ? true : false;
           $has_author = ( isset($atts['display_author']) && 'yes' === $atts['display_author'] ) ? true : false;
 
-          if( $has_meta_date || $has_meta_reading_time || $has_author) {
+          if( $has_meta_date || $has_meta_reading_time || $has_author || 
+              ($merge_category_with_meta && $category_markup) ) {
             $markup .= '<span class="nectar-post-grid-item__meta-wrap">';
           }
 
+
+          // Custom Fields -- before meta.
+          if( $atts['custom_fields_location'] === 'before_post_meta' ) {
+            $markup .= $custom_fields_markup;
+          }
+
+          if ( $merge_category_with_meta ) {
+            $markup .= $category_markup;
+          }
 
           // Date.
           $meta_date = '';
@@ -604,7 +747,10 @@ if(!function_exists('nectar_post_grid_item_markup')) {
            // Author.
            $meta_author = '';
            $author_position = ( isset($atts['author_position']) && !empty($atts['author_position']) ) ? $atts['author_position'] : 'default';
- 
+           if ( 'stack' === $atts['display_type'] ) {
+              $author_position = 'default';
+           }
+           
            if ($has_author) {
 
              $author_link_start = $author_link_end = '';
@@ -648,9 +794,17 @@ if(!function_exists('nectar_post_grid_item_markup')) {
             $markup .= $meta_date;
             $markup .= $meta_est_reading;
           }
+
+
+          // Custom Fields -- after meta.
+          if( $atts['custom_fields_location'] === 'after_post_meta' ) {
+            $markup .= $custom_fields_markup;
+          }
+  
           
           // End Meta.
-          if( $has_meta_date || $has_meta_reading_time || $has_author ) {
+          if( $has_meta_date || $has_meta_reading_time || $has_author || 
+            ($merge_category_with_meta && $category_markup) ) {
             $markup .= '</span>';
           }
           
@@ -683,6 +837,7 @@ if(!function_exists('nectar_post_grid_item_markup')) {
               $markup .= '</span></span>';
           }
 
+      
           $markup .= '</div>';
 
           $markup .= '</div>';

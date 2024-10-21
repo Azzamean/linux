@@ -95,9 +95,29 @@ class CustomPostTypes
             "custom-post-types-admin", // page
             "custom_post_types_setting_section" // section
         );
-
-
+        add_settings_field(
+            "people_6", // id
+            "People", // title
+            [$this, "people_6_callback"], // callback
+            "custom-post-types-admin", // page
+            "custom_post_types_setting_section" // section
+        );
+        add_settings_field(
+            "exchange_7", // id
+            "Exchange", // title
+            [$this, "exchange_7_callback"], // callback
+            "custom-post-types-admin", // page
+            "custom_post_types_setting_section" // section
+        );
+        add_settings_field(
+            "organizations_8", // id
+            "Organizations", // title
+            [$this, "organizations_8_callback"], // callback
+            "custom-post-types-admin", // page
+            "custom_post_types_setting_section" // section
+        );
     }
+
     public function custom_post_types_sanitize($input)
     {
         $sanitary_values = [];
@@ -118,7 +138,16 @@ class CustomPostTypes
         }
         if (isset($input["vendors_5"])) {
             $sanitary_values["vendors_5"] = $input["vendors_5"];
-        }      
+        }
+        if (isset($input["people_6"])) {
+            $sanitary_values["people_6"] = $input["people_6"];
+        } 
+        if (isset($input["exchange_7"])) {
+            $sanitary_values["exchange_7"] = $input["exchange_7"];
+        }    
+        if (isset($input["organizations_8"])) {
+            $sanitary_values["organizations_8"] = $input["organizations_8"];
+        }     
         return $sanitary_values;
     }
     public function custom_post_types_section_info()
@@ -167,11 +196,37 @@ class CustomPostTypes
             isset($this->custom_post_types_options["vendors_5"]) &&
             $this->custom_post_types_options["vendors_5"] === "vendors_5" ? "checked" : ""
         );
-    }    
+    }
+    public function people_6_callback()
+    {
+        printf(
+            '<input type="checkbox" name="custom_post_types_option_name[people_6]" id="people_6" value="people_6" %s> <label for="people_6">People Custom Post Type</label>',
+            isset($this->custom_post_types_options["people_6"]) &&
+            $this->custom_post_types_options["people_6"] === "people_6" ? "checked" : ""
+        );
+    }  
+    public function exchange_7_callback()
+    {
+        printf(
+            '<input type="checkbox" name="custom_post_types_option_name[exchange_7]" id="exchange_7" value="exchange_7" %s> <label for="exchange_7">Exchange Custom Post Type</label>',
+            isset($this->custom_post_types_options["exchange_7"]) &&
+            $this->custom_post_types_options["exchange_7"] === "exchange_7" ? "checked" : ""
+        );
+    }  
+    public function organizations_8_callback()
+    {
+        printf(
+            '<input type="checkbox" name="custom_post_types_option_name[organizations_8]" id="organizations_8" value="organizations_8" %s> <label for="organizations_8">Organizations Custom Post Type</label>',
+            isset($this->custom_post_types_options["organizations_8"]) &&
+            $this->custom_post_types_options["organizations_8"] === "organizations_8" ? "checked" : ""
+        );
+    }  
 }
+
 if (is_admin()) {
     $custom_post_types = new CustomPostTypes();
 }
+
 /*
  * Retrieve this value with:
  * $custom_post_types_options = get_option( 'custom_post_types_option_name' ); // Array of All Options
@@ -181,7 +236,11 @@ if (is_admin()) {
  * $persons_3 = $custom_post_types_options['persons_3']; // Persons
  * $working_groups_4 = $custom_post_types_options['working_groups_4']; // Working Groups 
  * $vendors_5 = $custom_post_types_options['vendors_5']; // Vendors
+ * $people_6 = $custom_post_types_options['people_6']; // people
+ * $exchange_7 = $custom_post_types_options['exchange_7']; // Exchange
+ * $organizations_8 = $custom_post_types_options['organizations_8']; // Organizations
 */
+
 $custom_post_types_options = get_option("custom_post_types_option_name");
 if (is_array($custom_post_types_options) && array_key_exists("projects_0", $custom_post_types_options)) {
     $projects_0 = $custom_post_types_options["projects_0"];
@@ -244,5 +303,43 @@ if (is_array($custom_post_types_options)
 
         // CUSTOM FILTERING
         wp_enqueue_script('custom-zephyr-js-ten', get_stylesheet_directory_uri() . '/vc-addons/js/vendors.js', array(), false, true); 
+    }
+}
+
+if (is_array($custom_post_types_options) && array_key_exists("people_6", $custom_post_types_options)) {
+    $people_6 = $custom_post_types_options["people_6"];
+    if ($people_6) {
+        include_once plugin_dir_path(__DIR__) . "../../themes/salient-child/custom-post-types/people.php";
+        include_once plugin_dir_path(__DIR__) . "../../themes/salient-child/vc-addons/people.php"; 
+
+        // FEATHERLIGHT
+        wp_enqueue_style("salient-child-featherlight-style", get_stylesheet_directory_uri() . "/vc-addons/css/featherlight.css", "", $nectar_theme_version);
+        wp_register_script("salient-child-featherlight-script", get_stylesheet_directory_uri() . "/vc-addons/js/featherlight.js", ["jquery"], "3.6.1", true);
+        wp_enqueue_script("salient-child-featherlight-script");  
+    }
+}
+
+if (is_array($custom_post_types_options) && array_key_exists("exchange_7", $custom_post_types_options)) {
+    $exchange_7 = $custom_post_types_options["exchange_7"];
+    if ($exchange_7) {
+        include_once plugin_dir_path(__DIR__) . "../../themes/salient-child/custom-post-types/exchange.php";
+
+        // EXCHANGE
+        wp_enqueue_style("salient-child-exchange-style", get_stylesheet_directory_uri() . "/custom-post-types/exchange/css/exchange.css", "", $nectar_theme_version);
+        wp_register_script("salient-child-exchange-script", get_stylesheet_directory_uri() . "/custom-post-types/exchange/js/exchange.js", ["jquery"], "3.6.1", true);
+        wp_enqueue_script("salient-child-exchange-script");  
+    }
+}
+
+if (is_array($custom_post_types_options) && array_key_exists("organizations_8", $custom_post_types_options)) {
+    $organizations_8 = $custom_post_types_options["organizations_8"];
+    if ($organizations_8) {
+        include_once plugin_dir_path(__DIR__) . "../../themes/salient-child/custom-post-types/organizations.php";
+        include_once plugin_dir_path(__DIR__) . "../../themes/salient-child/vc-addons/organizations.php"; 
+
+        // FEATHERLIGHT
+        wp_enqueue_style("salient-child-featherlight-style", get_stylesheet_directory_uri() . "/vc-addons/css/featherlight.css", "", $nectar_theme_version);
+        wp_register_script("salient-child-featherlight-script", get_stylesheet_directory_uri() . "/vc-addons/js/featherlight.js", ["jquery"], "3.6.1", true);
+        wp_enqueue_script("salient-child-featherlight-script");  
     }
 }

@@ -40,6 +40,7 @@ class NectarElDynamicStyles {
     'nectar_btn',
     'nectar_cascading_images',
     'nectar_horizontal_list_item',
+    'nectar_project_categories',
     'nectar_icon_list',
     'nectar_icon_list_item',
     'nectar_gradient_text',
@@ -454,11 +455,13 @@ class NectarElDynamicStyles {
       if( $row_column_margin === 'none' ) {
 
         self::$element_css[] = '
-        body .container-wrap .wpb_row[data-column-margin="none"]:not(.full-width-section):not(.full-width-content) {
+        body .container-wrap .wpb_row[data-column-margin="none"]:not(.full-width-section):not(.full-width-content),
+        html body .wpb_row[data-column-margin="none"]:not(.full-width-section):not(.full-width-content) {
           margin-bottom: 0;
         }
         
         body .container-wrap .vc_row-fluid[data-column-margin="none"] > .span_12,
+        html body .vc_row-fluid[data-column-margin="none"] > .span_12,
         body .container-wrap .vc_row-fluid[data-column-margin="none"] .full-page-inner > .container > .span_12,
         body .container-wrap .vc_row-fluid[data-column-margin="none"] .full-page-inner > .span_12 {
           margin-left: 0;
@@ -466,7 +469,9 @@ class NectarElDynamicStyles {
         }
         
         body .container-wrap .vc_row-fluid[data-column-margin="none"] .wpb_column:not(.child_column),
-        body .container-wrap .inner_row[data-column-margin="none"] .child_column {
+        body .container-wrap .inner_row[data-column-margin="none"] .child_column,
+        html body .vc_row-fluid[data-column-margin="none"] .wpb_column:not(.child_column),
+        html body .inner_row[data-column-margin="none"] .child_column {
           padding-left: 0;
           padding-right: 0;
         }';
@@ -487,6 +492,7 @@ class NectarElDynamicStyles {
 
         self::$element_css[] = '
         body .container-wrap .vc_row-fluid[data-column-margin="'.$column_margin_amt.'px"] > .span_12,
+        html body .vc_row-fluid[data-column-margin="'.$column_margin_amt.'px"] > .span_12,
         body .container-wrap .vc_row-fluid[data-column-margin="'.$column_margin_amt.'px"] .full-page-inner > .container > .span_12,
         body .container-wrap .vc_row-fluid[data-column-margin="'.$column_margin_amt.'px"] .full-page-inner > .span_12 {
           margin-left: -'.($column_margin_amt/2).'px;
@@ -494,11 +500,14 @@ class NectarElDynamicStyles {
         }
 
         body .container-wrap .vc_row-fluid[data-column-margin="'.$column_margin_amt.'px"] .wpb_column:not(.child_column),
-        body .container-wrap .inner_row[data-column-margin="'.$column_margin_amt.'px"] .child_column {
+        body .container-wrap .inner_row[data-column-margin="'.$column_margin_amt.'px"] .child_column,
+        html body .vc_row-fluid[data-column-margin="'.$column_margin_amt.'px"] .wpb_column:not(.child_column),
+        html body .inner_row[data-column-margin="'.$column_margin_amt.'px"] .child_column {
           padding-left: '.($column_margin_amt/2).'px;
           padding-right: '.($column_margin_amt/2).'px;
         }
         .container-wrap .vc_row-fluid[data-column-margin="'.$column_margin_amt.'px"].full-width-content > .span_12,
+        html body .vc_row-fluid[data-column-margin="'.$column_margin_amt.'px"].full-width-content > .span_12,
         .container-wrap .vc_row-fluid[data-column-margin="'.$column_margin_amt.'px"].full-width-content .full-page-inner > .span_12 {
           margin-left: 0;
           margin-right: 0;
@@ -514,6 +523,13 @@ class NectarElDynamicStyles {
           .vc_row-fluid .vc_row-fluid.inner_row[data-column-margin="'.$column_margin_amt.'px"] > .span_12 > .one-fourths:not([class*="vc_col-xs-"]) {
             margin-bottom: '.$column_margin_amt.'px;
           }
+        }
+
+        @media only screen and (max-width: 999px) {
+          .vc_row-fluid[data-column-margin="'.$column_margin_amt.'px"] .wpb_column:not([class*="vc_col-xs-"]):not(.child_column):not(:last-child),
+          .inner_row[data-column-margin="'.$column_margin_amt.'px"] .child_column:not([class*="vc_col-xs-"]):not(:last-child) {
+            margin-bottom: '.$column_margin_amt.'px;
+          }
         }';
 
       }
@@ -524,12 +540,15 @@ class NectarElDynamicStyles {
         $custom_column_gap = self::percent_unit_type($atts['column_margin_custom']);
         
         self::$element_css[] = '@media only screen and (min-width: 1000px) { 
+            #header-outer .column-margin-'.nectar_el_decimal_unit_type_class($atts['column_margin_custom']).'.wpb_row > .span_12,
             #ajax-content-wrap .column-margin-'.nectar_el_decimal_unit_type_class($atts['column_margin_custom']).'.wpb_row > .span_12,
             #ajax-content-wrap .column-margin-'.nectar_el_decimal_unit_type_class($atts['column_margin_custom']).'.wpb_row .full-page-inner > .container > .span_12,
             #ajax-content-wrap .column-margin-'.nectar_el_decimal_unit_type_class($atts['column_margin_custom']).'.wpb_row .full-page-inner > .span_12 {
               margin-left: calc('.$custom_column_gap.'/-2);
               margin-right: calc('.$custom_column_gap.'/-2);
             }
+            #header-outer .column-margin-'.nectar_el_decimal_unit_type_class($atts['column_margin_custom']).' .wpb_column:not(.child_column),
+            #header-outer .column-margin-'.nectar_el_decimal_unit_type_class($atts['column_margin_custom']).'.inner_row .child_column,
             #ajax-content-wrap .column-margin-'.nectar_el_decimal_unit_type_class($atts['column_margin_custom']).' .wpb_column:not(.child_column),
             #ajax-content-wrap .column-margin-'.nectar_el_decimal_unit_type_class($atts['column_margin_custom']).'.inner_row .child_column {
               padding-left: calc('.$custom_column_gap.'/2);
@@ -1421,7 +1440,9 @@ class NectarElDynamicStyles {
         $padding_pos = $atts['column_padding_position'];
 
         if( 'top' === $padding_pos ) {
-          self::$element_css[] = '#ajax-content-wrap .col[data-padding-pos="top"] > .vc_column-inner,
+          self::$element_css[] = '
+          body[data-aie] .col[data-padding-pos="top"] > .vc_column-inner,
+          #ajax-content-wrap .col[data-padding-pos="top"] > .vc_column-inner,
           #ajax-content-wrap .col[data-padding-pos="top"] > .n-sticky > .vc_column-inner {
             padding-right:0;
             padding-bottom:0;
@@ -1430,6 +1451,7 @@ class NectarElDynamicStyles {
         } 
         else if ( 'right' === $padding_pos ) {
           self::$element_css[] = '
+          body[data-aie] .col[data-padding-pos="right"] > .vc_column-inner,
           body #ajax-content-wrap .col[data-padding-pos="right"] > .vc_column-inner,
           #ajax-content-wrap .col[data-padding-pos="right"] > .n-sticky > .vc_column-inner {
             padding-left:0;
@@ -1439,6 +1461,7 @@ class NectarElDynamicStyles {
         }
         else if ( 'left' === $padding_pos ) {
           self::$element_css[] = '
+          body[data-aie] .col[data-padding-pos="left"] > .vc_column-inner,
           body #ajax-content-wrap .col[data-padding-pos="left"] > .vc_column-inner,
           #ajax-content-wrap .col[data-padding-pos="left"] > .n-sticky > .vc_column-inner {
             padding-right:0;
@@ -1448,6 +1471,7 @@ class NectarElDynamicStyles {
         }
         else if ( 'bottom' === $padding_pos ) {
           self::$element_css[] = '
+          body[data-aie] .col[data-padding-pos="bottom"] > .vc_column-inner,
           body #ajax-content-wrap .col[data-padding-pos="bottom"] > .vc_column-inner,
           #ajax-content-wrap .col[data-padding-pos="bottom"] > .n-sticky > .vc_column-inner {
             padding-right:0;
@@ -1579,7 +1603,8 @@ class NectarElDynamicStyles {
         }';
       }
       if( isset($atts['column_element_spacing']) && 'default' !== $atts['column_element_spacing'] ) {
-        self::$element_css[] = $col_selector.'.el_spacing_'. esc_attr( $atts['column_element_spacing']) .' > .vc_column-inner > .wpb_wrapper > div:not(:last-child){
+        self::$element_css[] = $col_selector.'.el_spacing_'. esc_attr( $atts['column_element_spacing']) .' > .vc_column-inner > .wpb_wrapper > div:not(:last-child),
+         '.$col_selector.'.el_spacing_'. esc_attr( $atts['column_element_spacing']) .' > .n-sticky > .vc_column-inner > .wpb_wrapper > div:not(:last-child) {
           margin-bottom: '.esc_attr( $atts['column_element_spacing'] ).';
         }';
       }
@@ -2309,6 +2334,28 @@ class NectarElDynamicStyles {
 
     }
 
+    else if( false !== strpos($shortcode[0],'[nectar_icon_list_item ') ) {
+      $atts = shortcode_parse_atts($shortcode_inner);
+
+      // Custom font size.
+      self::$element_css[] = self::font_size_group_styles('nectar-icon-list-item .content h4', false, false, '', $atts);
+      self::$element_css[] = '.row .nectar-icon-list .nectar-icon-list-item[class*="font_size"] h4 {
+        line-height: 1.3;
+      }';
+      if( isset($atts['text_color']) && !empty($atts['text_color']) ) {
+        $text_color = ltrim($atts['text_color'],'#');
+
+        self::$element_css[] = '
+        #ajax-content-wrap .nectar-icon-list-item.content_color_'.esc_attr($text_color).' .content {
+          color: #'.esc_attr($text_color).';
+        }
+        #ajax-content-wrap .nectar-icon-list-item.content_color_'.esc_attr($text_color).' h4 {
+          color: inherit; 
+        }';
+      }
+      
+    }
+
     else if( false !== strpos($shortcode[0],'[nectar_price_typography ') ) {
       $atts = shortcode_parse_atts($shortcode_inner);
 
@@ -2335,16 +2382,26 @@ class NectarElDynamicStyles {
       $atts = shortcode_parse_atts($shortcode_inner);
       // Core.
       self::$element_css[] = '
-      #ajax-content-wrap .nectar-responsive-text * {
+      #ajax-content-wrap .nectar-responsive-text *,
+       body .nectar-responsive-text * {
         margin-bottom: 0;
         color: inherit;
       }
-      #ajax-content-wrap .nectar-responsive-text[class*="font_size"] * {
+      #ajax-content-wrap .nectar-responsive-text[class*="font_size"] *,
+      body .nectar-responsive-text[class*="font_size"] * {
         font-size: inherit; 
         line-height: inherit;
       }
       .nectar-responsive-text.nectar-link-underline-effect a {
         text-decoration: none;
+      }
+      .nectar-responsive-text[data-inherit-heading-family] > * {
+        font-family: inherit;
+        font-weight: inherit;
+        font-size: inherit;
+        line-height: inherit;
+        text-transform: inherit;
+        letter-spacing: inherit;
       }
       ';
 
@@ -2544,6 +2601,63 @@ class NectarElDynamicStyles {
       //self::$element_css[] = '';
 
       //// default.
+      self::$element_css[] = '
+      .nectar_icon_wrap i {
+        vertical-align: middle;
+        top: 0;
+      }
+      .nectar_icon_wrap i[class*="nectar-brands"] {
+        display: inline-block;
+      }
+      .wpb_wrapper > .nectar_icon_wrap  {
+        margin-bottom: 0;
+      }
+      .nectar_icon_wrap i {
+        transition: color .25s ease;
+      }
+      .nectar_icon_wrap path {
+        transition: fill .25s ease;
+      }';
+
+      if ( 'pulsating-circle ') {
+        self::$element_css[] = '
+            .nectar-pulsate i {
+              display: block;
+              border-radius: 200px;
+              background-color: currentColor;
+              position: relative;
+            }
+            .nectar-pulsate i:after {
+                display: block;
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                content: "";
+                width: 100%;
+                height: 100%;
+                margin: -50% auto auto -50%;
+                -webkit-transform-origin: 50% 50%;
+                transform-origin: 50% 50%;
+                border-radius: 50%;
+                background-color: currentColor;
+                opacity: 1;
+                z-index: 11;
+                pointer-events: none;
+                animation: nectar_pulsate 2s cubic-bezier(.2,1,.2,1) infinite;
+            }
+
+            @keyframes nectar_pulsate { 
+                0% {
+                    opacity: 0.6;
+                    transform: scale(1);
+                }
+                100% {
+                    opacity: 0;
+                    transform: scale(3);
+                }
+            }';
+      }
+
       if( 'default' === $icon_style ) {
         self::$element_css[] = '
           .nectar_icon_wrap[data-style*="default"][data-color*="extra-color-gradient"] .nectar_icon i {
@@ -2668,6 +2782,7 @@ class NectarElDynamicStyles {
           border-radius:100px;
           z-index: -1;
           opacity: 0.11;
+          transition: background-color .25s ease;
         }
  
         .nectar_icon_wrap[data-style="soft-bg"] .nectar_icon i {
@@ -2750,6 +2865,7 @@ class NectarElDynamicStyles {
         if( isset($atts['icon_style']) && !empty($atts['icon_style']) ) {
 
           $icon_color = ltrim($atts['icon_color_custom'],'#');
+          $icon_color_hover = (isset($atts['icon_color_custom_hover']) && !empty($atts['icon_color_custom_hover'])) ? ltrim($atts['icon_color_custom_hover'],'#') : false;
 
             // Default style.
             if( 'default' === $atts['icon_style'] ) {
@@ -2760,6 +2876,14 @@ class NectarElDynamicStyles {
               self::$element_css[] = '.nectar_icon_wrap[data-style="default"] .icon_color_custom_'.esc_attr($icon_color).' .im-icon-wrap path {
                 fill: #'.esc_attr($icon_color).';
               }';
+              if ( $icon_color_hover ) {
+                self::$element_css[] = '.nectar_icon_wrap[data-style="default"] .icon_color_custom_hover_'.esc_attr($icon_color_hover).':hover i {
+                  color: #'.esc_attr($icon_color_hover). esc_attr( $override ).';
+                }';
+                self::$element_css[] = '.nectar_icon_wrap[data-style="default"] .icon_color_custom_hover_'.esc_attr($icon_color_hover).':hover .im-icon-wrap path {
+                  fill: #'.esc_attr($icon_color_hover). esc_attr( $override ).';
+                }';
+              }
             }
 
             // Border Basic style.
@@ -2776,6 +2900,20 @@ class NectarElDynamicStyles {
               self::$element_css[] = '.nectar_icon_wrap[data-style*="border"] .icon_color_custom_'.esc_attr($icon_color).' .im-icon-wrap path {
                 fill: #'.esc_attr($icon_color).';
               }';
+
+              if ( $icon_color_hover ) {
+                self::$element_css[] = '.nectar_icon_wrap[data-style="border-basic"] .icon_color_custom_hover_'.esc_attr($icon_color_hover).':hover i {
+                  color: #'.esc_attr($icon_color_hover). esc_attr( $override ).';
+                }';
+                self::$element_css[] = '.nectar_icon_wrap[data-style="border-basic"] .nectar_icon.icon_color_custom_hover_'.esc_attr($icon_color_hover).':hover ,
+                .nectar_icon_wrap[data-style="border-animation"]:not([data-draw="true"]) .nectar_icon.icon_color_custom_hover_'.esc_attr($icon_color_hover).':hover ,
+                .nectar_icon_wrap[data-style="border-animation"][data-draw="true"] .nectar_icon.icon_color_custom_hover_'.esc_attr($icon_color_hover).':hover {
+                  border-color: #'.esc_attr($icon_color_hover). esc_attr( $override ).';
+                }';
+                self::$element_css[] = '.nectar_icon_wrap[data-style="border-basic"] .icon_color_custom_hover_'.esc_attr($icon_color_hover).':hover .im-icon-wrap path {
+                  fill: #'.esc_attr($icon_color_hover). esc_attr( $override ).';
+                }';
+              }
             }
 
             // Border animation style.
@@ -2787,6 +2925,13 @@ class NectarElDynamicStyles {
               self::$element_css[] = '.nectar_icon_wrap[data-style=border-animation]:not([data-color*="extra-color-gradient"]) .nectar_icon:not(.no-grad):hover svg path {
                 fill: #fff;
               }';
+
+              if ( $icon_color_hover ) {
+                self::$element_css[] = '.nectar_icon_wrap[data-style="border-animation"]:not([data-draw="true"]) .nectar_icon.icon_color_custom_hover_'.esc_attr($icon_color_hover).':hover {
+                  background-color: #'.esc_attr($icon_color_hover). esc_attr( $override ).';
+                }';
+
+              }
 
               
             }
@@ -2807,6 +2952,15 @@ class NectarElDynamicStyles {
               self::$element_css[] = '.nectar_icon_wrap[data-style="shadow-bg"]:not([data-color=white]) .nectar_icon .im-icon-wrap path {
                 fill: #fff;
               }';
+              if ( $icon_color_hover ) {
+                self::$element_css[] = '.nectar_icon_wrap[data-style="shadow-bg"] .nectar_icon.icon_color_custom_hover_'.esc_attr($icon_color_hover).':hover,
+                .nectar_icon_wrap[data-style="shadow-bg"] .nectar_icon.icon_color_custom_hover_'.esc_attr($icon_color_hover).':hover:after {
+                  background-color: #'.esc_attr($icon_color_hover). esc_attr( $override ).';
+                }';
+                self::$element_css[] = '.nectar_icon_wrap[data-style="shadow-bg"] .nectar_icon.icon_color_custom_hover_'.esc_attr($icon_color_hover).':hover:before {
+                  box-shadow: 0px 15px 28px #'.esc_attr($icon_color_hover). esc_attr( $override ).';
+                }';
+              }
             }
 
             // Soft BG style.
@@ -2821,6 +2975,19 @@ class NectarElDynamicStyles {
               self::$element_css[] = '.nectar_icon_wrap[data-style="soft-bg"] .icon_color_custom_'.esc_attr($icon_color).' .im-icon-wrap path {
                 fill: #'.esc_attr($icon_color).';
               }';
+
+              if ( $icon_color_hover ) {
+                self::$element_css[] = '.nectar_icon_wrap[data-style="soft-bg"] .nectar_icon.icon_color_custom_hover_'.esc_attr($icon_color_hover).':hover i {
+                  color: #'.esc_attr($icon_color_hover). esc_attr( $override ).';
+                }';
+                self::$element_css[] = '.nectar_icon_wrap[data-style="soft-bg"] .nectar_icon.icon_color_custom_hover_'.esc_attr($icon_color_hover).':hover:before {
+                  background-color: #'.esc_attr($icon_color_hover). esc_attr( $override ).';
+                }';
+                self::$element_css[] = '.nectar_icon_wrap[data-style="soft-bg"] .icon_color_custom_hover_'.esc_attr($icon_color_hover).':hover .im-icon-wrap path {
+                  fill: #'.esc_attr($icon_color_hover). esc_attr( $override ).';
+                }';
+              }
+
             }
 
             // SVG.
@@ -3181,6 +3348,16 @@ class NectarElDynamicStyles {
               bottom: 0;
               left: 0;
             }
+
+            @media only screen and (max-width: 690px) {
+              body .nectar-next-section-wrap.minimal-arrow a {
+                width: 22px;
+                height: 55px;
+              }
+              body .nectar-next-section-wrap.minimal-arrow svg {
+                width: 30px;
+              }
+            }
             
             .nectar-next-section-wrap[data-custom-color="true"].bounce a {
               border-radius: 100px;
@@ -3346,7 +3523,8 @@ class NectarElDynamicStyles {
 
             // Border radius.
             if( isset($atts['border_radius']) && strlen($atts['border_radius']) > 0 ) {
-              self::$element_css[] = '#ajax-content-wrap .nectar-cta.border_radius_'. self::percent_unit_type(esc_attr( $atts['border_radius'])) .' .link_wrap {
+              self::$element_css[] = '#ajax-content-wrap .nectar-cta.border_radius_'. self::percent_unit_type(esc_attr( $atts['border_radius'])) .' .link_wrap,
+              #header-outer .nectar-cta.border_radius_'. self::percent_unit_type(esc_attr( $atts['border_radius'])) .' .link_wrap  {
                 border-radius: '.self::percent_unit_type(esc_attr( $atts['border_radius'] )).'!important;
               }';
             }
@@ -3437,10 +3615,16 @@ class NectarElDynamicStyles {
         
         
         /* Custom font size */
+        $custom_font_sizing = self::font_size_group_styles('nectar-cta', false, false, '', $atts);
+        $custom_font_sizing .= self::font_size_group_styles('nectar-cta *', false, false, '', $atts);
+
+        if ( !empty($custom_font_sizing) ) {
+          self::$element_css[] = $custom_font_sizing;
+        }
+
         if( isset($atts['font_size_desktop']) ) {
           self::$element_css[] = '.nectar-cta.font_size_desktop_'. self::decimal_unit_type_class($atts['font_size_desktop']) .',
           .nectar-cta.font_size_desktop_'. self::decimal_unit_type_class($atts['font_size_desktop']) .' * {
-            font-size: '. esc_attr(self::font_size_output($atts['font_size_desktop'])) .';
             line-height: 1.1;
           }'; 
 
@@ -3457,7 +3641,6 @@ class NectarElDynamicStyles {
           self::$element_css[] = '@media only screen and (max-width: 999px) { 
             body .nectar-cta.font_size_tablet_'. self::decimal_unit_type_class($atts['font_size_tablet']) .',
             body .nectar-cta.font_size_tablet_'. self::decimal_unit_type_class($atts['font_size_tablet']) .' *  {
-              font-size: '. esc_attr(self::font_size_output($atts['font_size_tablet'])) .';
               line-height: 1.1;
           }
           }'; 
@@ -3467,7 +3650,6 @@ class NectarElDynamicStyles {
           self::$element_css[] = '@media only screen and (max-width: 690px) { 
             html body .nectar-cta.font_size_phone_'. self::decimal_unit_type_class($atts['font_size_phone']) .',
             html body .nectar-cta.font_size_phone_'. self::decimal_unit_type_class($atts['font_size_phone']) .' * {
-              font-size: '. esc_attr(self::font_size_output($atts['font_size_phone'])) .';
               line-height: 1.1;
           }
           }'; 
@@ -3958,15 +4140,16 @@ class NectarElDynamicStyles {
 
         $atts = shortcode_parse_atts($shortcode_inner);
 
-        $post_grid_masonry    = ( isset($atts['enable_masonry']) && 'yes' === $atts['enable_masonry'] ) ? true : false;
-        $post_grid_style      = ( isset($atts['grid_style']) ) ? $atts['grid_style'] : 'content_overlaid';
-        $post_grid_spacing    = ( isset($atts['grid_item_spacing']) ) ? $atts['grid_item_spacing'] : 'none';
-        $post_grid_br         = ( isset($atts['border_radius']) ) ? $atts['border_radius'] : 'none';
-        $post_grid_opacity    = ( isset($atts['color_overlay_opacity']) ) ? $atts['color_overlay_opacity'] : '0.3';
-        $post_grid_opacity_h  = ( isset($atts['color_overlay_hover_opacity']) ) ? $atts['color_overlay_hover_opacity'] : '0.4';
-        $post_grid_custom_ar  = ( isset($atts['custom_image_aspect_ratio']) && in_array($atts['custom_image_aspect_ratio'], array('1-1','16-9','3-2','4-3','4-5')) ) ? $atts['custom_image_aspect_ratio'] : false;
-        $post_grid_featured_f = ( isset($atts['featured_top_item']) && 'yes' === $atts['featured_top_item'] ) ? true : false;
-
+        $post_grid_masonry     = ( isset($atts['enable_masonry']) && 'yes' === $atts['enable_masonry'] ) ? true : false;
+        $post_grid_style       = ( isset($atts['grid_style']) ) ? $atts['grid_style'] : 'content_overlaid';
+        $post_grid_spacing     = ( isset($atts['grid_item_spacing']) ) ? $atts['grid_item_spacing'] : 'none';
+        $post_grid_br          = ( isset($atts['border_radius']) ) ? $atts['border_radius'] : 'none';
+        $post_grid_opacity     = ( isset($atts['color_overlay_opacity']) ) ? $atts['color_overlay_opacity'] : '0.3';
+        $post_grid_opacity_h   = ( isset($atts['color_overlay_hover_opacity']) ) ? $atts['color_overlay_hover_opacity'] : '0.4';
+        $post_grid_custom_ar   = ( isset($atts['custom_image_aspect_ratio']) && in_array($atts['custom_image_aspect_ratio'], array('1-1','16-9','3-2','4-3','4-5')) ) ? $atts['custom_image_aspect_ratio'] : false;
+        $post_grid_featured_f  = ( isset($atts['featured_top_item']) && 'yes' === $atts['featured_top_item'] ) ? true : false;
+        $post_grid_overlaid_ar = ('content_overlaid' === $post_grid_style && isset($atts['overlaid_aspect_ratio_image_size']) && $atts['overlaid_aspect_ratio_image_size'] === 'yes' && isset($atts['overlaid_custom_image_aspect_ratio'])) ? $atts['overlaid_custom_image_aspect_ratio'] : false;
+        
         // Height.
         if( isset($atts['grid_item_height']) && !empty($atts['grid_item_height']) ) {
 
@@ -4002,7 +4185,7 @@ class NectarElDynamicStyles {
         }
 
         // Border Radius.
-        if( in_array($post_grid_br, array('3px','5px','10px','15px')) ) {
+        if( in_array($post_grid_br, array('3px','5px','10px','15px','20px','25px')) ) {
 
           self::$element_css[] = '
           .nectar-post-grid[data-border-radius="'.$post_grid_br.'"][data-text-layout="all_bottom_left_shadow"] .nectar-post-grid-item:before,
@@ -4054,12 +4237,41 @@ class NectarElDynamicStyles {
             line-height: 1!important;
             background-color: var(--nectar-accent-color);
           }
-          #ajax-content-wrap .nectar-post-grid .meta-category .style-button {
+          #ajax-content-wrap .nectar-post-grid .meta-category .style-button,
+          body .nectar-post-grid .meta-category .style-button {
             color: #fff;
           }
           .nectar-post-grid .meta-category .style-button:before {
             display: none;
           }';
+        } else if ( isset($atts['category_style']) && 'see-through-button' === $atts['category_style']  ) {
+           self::$element_css[] = '
+          .nectar-post-grid .meta-category .style-see-through-button {
+            padding: 0.4em 0.8em;
+            line-height: 1!important;
+            position: relative;
+          }
+          #ajax-content-wrap .nectar-post-grid .meta-category .style-see-through-button:before {
+            border-radius: var(--nectar-border-radius);
+            border: 1px solid;
+            height: 100%;
+            width: 100%;
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: auto;
+            content: " ";
+            display: block;
+            background-color: transparent;
+            opacity: 0.3;
+            transform: none;
+            transition: opacity 0.25s ease;
+            box-sizing: border-box;
+          }
+          #ajax-content-wrap .nectar-post-grid .meta-category .style-see-through-button:hover:before {
+            opacity: 1;
+          }
+           ';
         }
 
         // Read more button.
@@ -4659,7 +4871,8 @@ class NectarElDynamicStyles {
         #ajax-content-wrap .nectar-post-grid .flickity-page-dots {
           bottom: 0;
         }
-        #ajax-content-wrap .nectar-post-grid[data-controls] .flickity-viewport {
+        #ajax-content-wrap .nectar-post-grid[data-controls] .flickity-viewport,
+        .nectar-flickity[data-control-style="material_pagination"].nectar-post-grid:not(.masonry) .flickity-viewport {
           margin-top: 0;
           margin-bottom: 0;
         }
@@ -4853,7 +5066,106 @@ class NectarElDynamicStyles {
           ';
           }
        } // end carousel.
+       
+      // Stacked.
+      if ( isset($atts['display_type']) && 'stack' === $atts['display_type'] ) {
 
+        $transformed_spacing = ($post_grid_spacing === 'none') ? '0px' : $post_grid_spacing;
+        $color_overlay = ( isset($atts['color_overlay']) && !empty($atts['color_overlay']) ) ? $atts['color_overlay'] : false;
+
+        self::$element_css[] = '
+        html body,
+        html body.compensate-for-scrollbar {
+            overflow: visible;
+            touch-action: pan-y;
+        }
+    
+        .nectar-post-grid.layout-stacked[data-stack-animation-effect="blurred_scale"] {
+          transform-origin: top;
+        }
+     
+        .nectar-post-grid.layout-stacked[data-grid-spacing="'.esc_attr($post_grid_spacing).'"] {
+          margin: 0!important;
+          grid-row-gap: '.esc_attr($transformed_spacing).';
+        }
+        .nectar-post-grid.layout-stacked .nectar-post-grid-item .content .post-heading {
+          max-width: 90%;
+        }
+        .layout-stacked[data-grid-spacing="'.esc_attr($post_grid_spacing).'"] .nectar-post-grid-item {
+          position: sticky;
+          will-change: transform;
+          top: calc('.esc_attr($transformed_spacing).');
+        }
+        .layout-stacked[data-grid-spacing="'.esc_attr($post_grid_spacing).'"] .nectar-post-grid-item {
+          margin: 0;
+      
+        }
+        #ajax-content-wrap .wpb_row.full-width-content .nectar-post-grid {
+          margin-top: 0;
+          margin-bottom: 0;
+        }
+
+        #ajax-content-wrap .layout-stacked[data-text-layout="all_middle"] .item-main,
+        #ajax-content-wrap .layout-stacked[data-text-layout="corners"] .item-main {
+          height: 100%;
+          justify-content: flex-end;
+          display: flex;
+          flex-direction: column;
+        }
+        @media only screen and (max-width: 690px) {
+          .layout-stacked[data-text-layout="all_middle"] .content {
+            padding: 20px;
+          }
+        }
+
+         #ajax-content-wrap .layout-stacked[data-text-layout="corners"] .item-main .post-heading {
+          flex: 1;
+          display: flex;
+          flex-direction: column;
+          justify-content: flex-end;
+          order: 2;
+        }
+
+        #ajax-content-wrap .layout-stacked[data-text-layout="all_middle"] .item-main .post-heading {
+          flex: 1;
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          order: 2;
+        }
+        #ajax-content-wrap .layout-stacked[data-text-layout="all_middle"] .nectar-post-grid-item__meta-wrap {
+          justify-content: space-between;
+          width: 100%;
+          order: 1;
+        }
+        .nectar-post-grid.layout-stacked .nectar-post-grid-item__meta-wrap > span:not(:nth-child(1)):before {
+          display: none;
+        }
+        .nectar-post-grid.layout-stacked .nectar-post-grid-item__excerpt-wrap {
+          order: 3;
+        }
+        .nectar-post-grid.layout-stacked .nectar-post-grid-item__excerpt-wrap .meta-excerpt,
+        .nectar-post-grid.layout-stacked[data-text-layout="all_middle"] .nectar-post-grid-item__meta-wrap {
+          margin-top: 0;
+        }
+        ';
+        
+        // if ( isset($atts['stack_animation_effect']) && $atts['stack_animation_effect'] === 'overlapping' ) {
+        //     self::$element_css[] = '.layout-stacked[data-grid-spacing="'.esc_attr($post_grid_spacing).'"][data-stack-animation-effect="overlapping"] .nectar-post-grid-item:nth-child(2) {
+        //       top: calc('.esc_attr($transformed_spacing).' + 20px);
+        //     }
+        //       .layout-stacked[data-grid-spacing="'.esc_attr($post_grid_spacing).'"][data-stack-animation-effect="overlapping"] .nectar-post-grid-item:nth-child(3) {
+        //       top: calc('.esc_attr($transformed_spacing).' + 40px);
+        //     }';
+        // }
+
+        if ( $color_overlay ) {
+          self::$element_css[] = '.layout-stacked[data-post-item-bg-color="'.esc_attr($color_overlay).'"] .nectar-post-grid-item .inner {
+            background-color: '.esc_attr($color_overlay).';
+          }';
+        }
+      }
+      
        // Mobile columns -- non carousel.
        if ( isset($atts['columns_tablet']) && 'default' !== $atts['columns_tablet'] ) {
           $tablet_cols = $atts['columns_tablet'];
@@ -4897,6 +5209,26 @@ class NectarElDynamicStyles {
        // Masonry Layout Variants.
        $additional_meta_dispay = ( isset($atts['additional_meta_display']) ) ? $atts['additional_meta_display'] : 'default';
        if( $post_grid_masonry ) {
+
+        // 2 columns ==============================
+        if( isset($atts['columns']) && '2' === $atts['columns'] ) {
+
+          $masonry_variant = ( isset($atts['2_col_masonry_layout']) ) ? $atts['2_col_masonry_layout'] : 'default';
+
+          if ( 'default_alt' === $masonry_variant  ) {
+            // core.
+              self::$element_css[] = '
+                .nectar-post-grid[data-columns="2"][data-masonry="yes"].layout-default_alt > div:nth-of-type(3n + 1) {
+                  grid-column-end: span 1;
+                  grid-row-end: span 1;
+                }
+                .nectar-post-grid[data-columns="2"][data-masonry="yes"].layout-default_alt > div:nth-of-type(3n + 3) {
+                  grid-column-end: span 2;
+                  grid-row-end: span 2;
+                }';
+          }
+
+        }
 
         // 3 columns ==============================
           if( isset($atts['columns']) && '3' === $atts['columns'] ) {
@@ -5054,7 +5386,7 @@ class NectarElDynamicStyles {
 
                   
                   @media only screen and (max-width: 999px) and (min-width: 691px) {
-,
+
                     #ajax-content-wrap .nectar-post-grid[data-columns="3"].layout-vert_staggered > div:nth-child(6n + 1) .content {
                       position: relative;
                       padding-bottom: 5%;
@@ -5181,7 +5513,8 @@ class NectarElDynamicStyles {
 
                 @media only screen and (min-width: 1000px) {
 
-                  #ajax-content-wrap [data-style="content_under_image"] [data-columns="3"].layout-vert_staggered > div:nth-child(6n + 5) .content * {
+                  #ajax-content-wrap [data-style="content_under_image"] [data-columns="3"].layout-vert_staggered > div:nth-child(6n + 5) .content *,
+                  body [data-style="content_under_image"] [data-columns="3"].layout-vert_staggered > div:nth-child(6n + 5) .content * {
                     color: #fff;
                   }
 
@@ -5212,7 +5545,8 @@ class NectarElDynamicStyles {
                 }
 
 
-                #ajax-content-wrap [data-style="content_under_image"] [data-columns="3"].layout-vert_staggered > div:nth-child(6n + 1) .content * {
+                #ajax-content-wrap [data-style="content_under_image"] [data-columns="3"].layout-vert_staggered > div:nth-child(6n + 1) .content *,
+                body [data-style="content_under_image"] [data-columns="3"].layout-vert_staggered > div:nth-child(6n + 1) .content * {
                   color: #fff;
                 }
 
@@ -5378,7 +5712,8 @@ class NectarElDynamicStyles {
                   background: radial-gradient(circle at 0 0, rgba(0,0,0,0.75) 0, transparent 70%);
                 }
   
-                #ajax-content-wrap [data-style="content_under_image"] [data-columns="4"].layout-mixed > div:nth-child(10n + 1) .content * {
+                #ajax-content-wrap [data-style="content_under_image"] [data-columns="4"].layout-mixed > div:nth-child(10n + 1) .content *,
+                body .nectar-post-grid-wrap[data-style="content_under_image"] > [data-columns="4"].layout-mixed > div:nth-child(10n + 1) .content * {
                   color: #fff;
                 }
   
@@ -5407,7 +5742,8 @@ class NectarElDynamicStyles {
                   height: 100%!important;
                 }
   
-                #ajax-content-wrap [data-style="content_under_image"] [data-columns="4"].layout-mixed > div:nth-child(10n + 1) .content * {
+                #ajax-content-wrap [data-style="content_under_image"] [data-columns="4"].layout-mixed > div:nth-child(10n + 1) .content *,
+                body [data-style="content_under_image"] [data-columns="4"].layout-mixed > div:nth-child(10n + 1) .content * {
                   color: #fff;
                 }
 
@@ -5503,7 +5839,8 @@ class NectarElDynamicStyles {
                   background: radial-gradient(circle at 0 0, rgba(0,0,0,0.75) 0, transparent 70%);
                 }
 
-                #ajax-content-wrap [data-style="content_under_image"] [data-columns="4"].layout-mixed > div:nth-child(10n + 8) .content * {
+                #ajax-content-wrap [data-style="content_under_image"] [data-columns="4"].layout-mixed > div:nth-child(10n + 8) .content *,
+                body [data-style="content_under_image"] [data-columns="4"].layout-mixed > div:nth-child(10n + 8) .content *  {
                   color: #fff;
                 }
 
@@ -5535,7 +5872,8 @@ class NectarElDynamicStyles {
                 }
 
               
-                #ajax-content-wrap [data-style="content_under_image"] [data-columns="4"].layout-mixed > div:nth-child(10n + 8) .content * {
+                #ajax-content-wrap [data-style="content_under_image"] [data-columns="4"].layout-mixed > div:nth-child(10n + 8) .content *,
+                body [data-style="content_under_image"] [data-columns="4"].layout-mixed > div:nth-child(10n + 8) .content * {
                   color: #fff;
                 }
                 
@@ -5730,7 +6068,8 @@ class NectarElDynamicStyles {
                   background: radial-gradient(circle at 0 0, rgba(0,0,0,0.75) 0, transparent 70%);
                 }
   
-                #ajax-content-wrap [data-style="content_under_image"] [data-columns="4"].layout-vert_staggered > div:nth-child(6n + 1) .content * {
+                #ajax-content-wrap [data-style="content_under_image"] [data-columns="4"].layout-vert_staggered > div:nth-child(6n + 1) .content *,
+                body [data-style="content_under_image"] [data-columns="4"].layout-vert_staggered > div:nth-child(6n + 1) .content * {
                   color: #fff;
                 }
                 
@@ -5758,7 +6097,8 @@ class NectarElDynamicStyles {
                   height: 100%!important;
                 }
   
-                #ajax-content-wrap [data-style="content_under_image"] [data-columns="4"].layout-vert_staggered > div:nth-child(6n + 1) .content * {
+                #ajax-content-wrap [data-style="content_under_image"] [data-columns="4"].layout-vert_staggered > div:nth-child(6n + 1) .content *,
+                body [data-style="content_under_image"] [data-columns="4"].layout-vert_staggered > div:nth-child(6n + 1) .content * {
                   color: #fff;
                 }
                 
@@ -5850,7 +6190,8 @@ class NectarElDynamicStyles {
                   background: radial-gradient(circle at 0 0, rgba(0,0,0,0.75) 0, transparent 70%);
                 }
 
-                #ajax-content-wrap [data-style="content_under_image"] [data-columns="4"].layout-vert_staggered > div:nth-child(6n + 6) .content * {
+                #ajax-content-wrap [data-style="content_under_image"] [data-columns="4"].layout-vert_staggered > div:nth-child(6n + 6) .content *,
+                body [data-style="content_under_image"] [data-columns="4"].layout-vert_staggered > div:nth-child(6n + 6) .content * {
                   color: #fff;
                 }
 
@@ -5882,6 +6223,7 @@ class NectarElDynamicStyles {
                 }
 
               
+                body [data-style="content_under_image"] [data-columns="4"].layout-vert_staggered > div:nth-child(6n + 6) .content *,
                 #ajax-content-wrap [data-style="content_under_image"] [data-columns="4"].layout-vert_staggered > div:nth-child(6n + 6) .content * {
                   color: #fff;
                 }
@@ -6075,7 +6417,8 @@ class NectarElDynamicStyles {
                   background: radial-gradient(circle at 0 0, rgba(0,0,0,0.75) 0, transparent 70%);
                 }
   
-                #ajax-content-wrap [data-style="content_under_image"] [data-columns="4"].layout-vert_staggered_middle > div:nth-child(7n + 2) .content * {
+                #ajax-content-wrap [data-style="content_under_image"] [data-columns="4"].layout-vert_staggered_middle > div:nth-child(7n + 2) .content *,
+                body [data-style="content_under_image"] [data-columns="4"].layout-vert_staggered_middle > div:nth-child(7n + 2) .content * {
                   color: #fff;
                 }
 
@@ -6103,7 +6446,8 @@ class NectarElDynamicStyles {
                   height: 100%!important;
                 }
   
-                #ajax-content-wrap [data-style="content_under_image"] [data-columns="4"].layout-vert_staggered_middle > div:nth-child(7n + 2) .content * {
+                #ajax-content-wrap [data-style="content_under_image"] [data-columns="4"].layout-vert_staggered_middle > div:nth-child(7n + 2) .content *,
+                body [data-style="content_under_image"] [data-columns="4"].layout-vert_staggered_middle > div:nth-child(7n + 2) .content *  {
                   color: #fff;
                 }
                 
@@ -6563,8 +6907,8 @@ class NectarElDynamicStyles {
         // Overlaid category.
         if (  'content_under_image' === $post_grid_style ) {
               self::$element_css[] = '
-              #ajax-content-wrap .nectar-post-grid-wrap .category-position-overlaid .nectar-post-grid-item .content {
-                position: static;
+              .nectar-post-grid-wrap .category-position-overlaid .nectar-post-grid-item .content {
+                position: static!important;
               }
               .nectar-post-grid-wrap .category-position-overlaid .nectar-post-grid-item .meta-category {
                 position: absolute;
@@ -6575,10 +6919,12 @@ class NectarElDynamicStyles {
               }';
 
               if( isset($atts['category_style']) && 'underline' === $atts['category_style'] ) {
-                self::$element_css[] = '#ajax-content-wrap .nectar-post-grid-wrap .category-position-overlaid .nectar-post-grid-item .meta-category a.style-underline {
+                self::$element_css[] = '#ajax-content-wrap .nectar-post-grid-wrap .category-position-overlaid .nectar-post-grid-item .meta-category a.style-underline,
+                body .nectar-post-grid-wrap .category-position-overlaid .nectar-post-grid-item .meta-category a.style-underline {
                   color: #fff;
                 }
-                #ajax-content-wrap .nectar-post-grid-wrap .category-position-overlaid .nectar-post-grid-item .meta-category a.style-underline:before {
+                #ajax-content-wrap .nectar-post-grid-wrap .category-position-overlaid .nectar-post-grid-item .meta-category a.style-underline:before,
+                body .nectar-post-grid-wrap .category-position-overlaid .nectar-post-grid-item .meta-category a.style-underline:before {
                   background-color: #fff;
                 }';
               }
@@ -6709,6 +7055,7 @@ class NectarElDynamicStyles {
             }';
           }
 
+
           // Divider.
           if( isset($atts['content_next_to_image_divider']) && 
             $atts['content_next_to_image_divider'] === 'yes' && 
@@ -6815,8 +7162,144 @@ class NectarElDynamicStyles {
         }
 
 
-        // Content overlaid.
+        // Content overlaid aspect ratio.
         if( 'content_overlaid' === $post_grid_style ) {
+
+            $overlaid_ar = esc_attr(self::image_aspect_ratio_direct($post_grid_overlaid_ar));
+            // must be less than the original aspect ratio. 
+            // 2x the original aspect ratio won't be enough when a gap is used so we're using 3 for a cushion.
+            $overlaid_ar_calc_extra = 'calc(('.$overlaid_ar.') * 3)';
+            $overlaid_ar_calc = 'calc(('.$overlaid_ar.') * 2)';
+            
+
+            // overlaid locked to aspect ratio.
+            if( $post_grid_overlaid_ar ) {
+            self::$element_css[] = '
+            .overlaid-aspect-ratio-image-size-'. esc_attr($post_grid_overlaid_ar) . ' .nectar-post-grid-item {
+              min-height: 0!important;
+            }
+            .overlaid-aspect-ratio-image-size-'. esc_attr($post_grid_overlaid_ar) . ' .nectar-post-grid-item > .inner {
+              aspect-ratio: '.$overlaid_ar.';
+              position: relative;
+            }
+            @media only screen and (max-width: 690px) {
+              body .nectar-post-grid[data-columns][data-grid-spacing] .nectar-post-grid-item {
+                padding-bottom: 0;
+              }
+            }';
+            // masonry aspect ratio. ==============================
+            if( isset($atts['enable_masonry']) && 'yes' === $atts['enable_masonry'] ) {
+              self::$element_css[] = '.nectar-post-grid[data-masonry="yes"][class*="overlaid-aspect-ratio-image-size"] {
+                grid-auto-rows: auto!important;
+              }';
+
+              // ---- 2 columns.
+              if ( isset($atts['columns']) && '2' === $atts['columns'] ) {
+                $masonry_variant = ( isset($atts['2_col_masonry_layout']) ) ? $atts['2_col_masonry_layout'] : 'default';
+
+                if( 'default_alt' === $masonry_variant ) {
+                  self::$element_css[] = '@media only screen and (min-width: 691px) {
+                    .overlaid-aspect-ratio-image-size-'. esc_attr($post_grid_overlaid_ar) . '[data-columns="2"][data-masonry="yes"].layout-default_alt > div:nth-of-type(3n + 3) > .inner {
+                      aspect-ratio: '.$overlaid_ar_calc.';
+                    }
+                  }';
+                } else {
+                  self::$element_css[] = '@media only screen and (min-width: 691px) {
+                    .overlaid-aspect-ratio-image-size-'. esc_attr($post_grid_overlaid_ar) . '[data-columns="2"][data-masonry="yes"] > div:nth-of-type(3n + 1) > .inner {
+                      aspect-ratio: '.$overlaid_ar_calc.';
+                    }
+                  }';
+                }
+
+              }
+
+              // ---- 3 columns.
+              if ( isset($atts['columns']) && '3' === $atts['columns'] ) {
+                $masonry_variant = ( isset($atts['3_col_masonry_layout']) ) ? $atts['3_col_masonry_layout'] : 'default';
+                // vert staggered ==============================
+                if( 'vert_staggered' === $masonry_variant ) {
+                  self::$element_css[] = '
+                  @media only screen and (min-width: 1000px) {
+                   .overlaid-aspect-ratio-image-size-'. esc_attr($post_grid_overlaid_ar) . '[data-columns="3"].layout-vert_staggered > div:nth-of-type(6n + 5) > .inner {
+                     aspect-ratio: '.$overlaid_ar_calc_extra.';
+                   }
+                 }
+                 @media only screen and (min-width: 691px) {
+                   .overlaid-aspect-ratio-image-size-'. esc_attr($post_grid_overlaid_ar) . '[data-columns="3"].layout-vert_staggered > div:nth-of-type(6n + 1) > .inner {
+                     aspect-ratio: '.$overlaid_ar_calc.';
+                   }
+                 }';
+                } 
+                // regular  ==============================
+                else if ( 'default' === $masonry_variant ) { 
+                  self::$element_css[] = '
+                    @media only screen and (min-width: 999px) {
+                      .overlaid-aspect-ratio-image-size-'. esc_attr($post_grid_overlaid_ar) . '[data-columns="3"][data-masonry="yes"] > div:nth-of-type(10n + 1) > .inner,
+                      .overlaid-aspect-ratio-image-size-'. esc_attr($post_grid_overlaid_ar) . '[data-columns="3"][data-masonry="yes"] > div:nth-of-type(10n + 7) > .inner {
+                        aspect-ratio: '.$overlaid_ar_calc_extra.';
+                      }
+                    }
+                    @media only screen and (max-width: 999px) and (min-width: 691px) {
+                      body .wpb_row .nectar-post-grid[data-columns="3"][data-masonry="yes"] > div:nth-child(3n+1) > .inner {
+                        aspect-ratio: '.$overlaid_ar_calc.';
+                      }
+                    }';
+                } 
+               
+              } // end 3 columns
+
+              // ---- 4 columns.
+              if ( isset($atts['columns']) && '4' === $atts['columns'] ) {
+                $masonry_variant = ( isset($atts['4_col_masonry_layout']) ) ? $atts['4_col_masonry_layout'] : 'default';
+
+                if ( 'default' === $masonry_variant ) { 
+                    self::$element_css[] = '
+                    @media only screen and (min-width: 1000px) {
+                     .overlaid-aspect-ratio-image-size-'. esc_attr($post_grid_overlaid_ar) . '[data-columns="4"][data-masonry="yes"] > div:nth-of-type(6n + 6) > .inner {
+                       aspect-ratio: '.$overlaid_ar_calc_extra.';
+                     }
+                   }
+                   @media only screen and (min-width: 691px) {
+                     .overlaid-aspect-ratio-image-size-'. esc_attr($post_grid_overlaid_ar) . '[data-columns="4"][data-masonry="yes"] > div:nth-of-type(6n + 1) > .inner {
+                       aspect-ratio: '.$overlaid_ar_calc_extra.';
+                     }
+                   }
+                     
+                   @media only screen and (min-width: 691px) and (max-width: 1000px) {
+                   .overlaid-aspect-ratio-image-size-'. esc_attr($post_grid_overlaid_ar) . '[data-columns="4"][data-masonry="yes"] > div:nth-of-type(3n + 1) > .inner {
+                       aspect-ratio: '.$overlaid_ar_calc.';
+                     }
+                  }';
+                } else if ( 'vert_staggered' === $masonry_variant ) {
+                  self::$element_css[] = '
+                    @media only screen and (min-width: 1000px) {
+                     .overlaid-aspect-ratio-image-size-'. esc_attr($post_grid_overlaid_ar) . '[data-columns="4"].layout-vert_staggered > div:nth-child(6n + 1) > .inner, 
+                     .overlaid-aspect-ratio-image-size-'. esc_attr($post_grid_overlaid_ar) . '[data-columns="4"].layout-vert_staggered > div:nth-child(6n + 6) > .inner {
+                        aspect-ratio: '.$overlaid_ar_calc_extra.';
+                      }
+                    }
+                       @media only screen and (min-width: 691px) {
+                     .overlaid-aspect-ratio-image-size-'. esc_attr($post_grid_overlaid_ar) . '[data-columns="4"].layout-vert_staggered > div:nth-child(6n + 1) > .inner {
+                        aspect-ratio: '.$overlaid_ar_calc.';
+                      }
+                    }
+                  ';
+                }
+                else if ( 'vert_staggered_middle' === $masonry_variant ) {
+                  self::$element_css[] = '
+                    @media only screen and (min-width: 1000px) {
+                     .overlaid-aspect-ratio-image-size-'. esc_attr($post_grid_overlaid_ar) . '[data-columns="4"].layout-vert_staggered_middle > div:nth-child(7n + 2) > .inner {
+                        aspect-ratio: '.$overlaid_ar_calc_extra.';
+                      }
+                    }
+                       
+                  ';
+                }
+
+              } // end 4 columns.
+
+            } // using masonry
+          }
 
           // Custom padding
           foreach( self::$devices as $device => $media_query_size ) {
@@ -6828,6 +7311,7 @@ class NectarElDynamicStyles {
               self::$element_css[] = '@media only screen '.$media_query_size.' {
                 '.$body_selector.' [data-style="content_overlaid"] .nectar-post-grid.'.$device.'_padding_'.self::percent_unit_type_class($device_padding).' .content {
                   padding: '.self::percent_unit_type($device_padding).';
+                  --post-grid-padding: '.self::percent_unit_type($device_padding).';
                 }
               }';
             }
@@ -7028,9 +7512,9 @@ class NectarElDynamicStyles {
 
           self::$element_css[] = '
           @media only screen and (min-width: 1000px) {
-          #ajax-content-wrap .vert_list_hover_effect_slight_move .item-main:before,
+          .vert_list_hover_effect_slight_move .item-main:before,
           .vert_list_hover_effect_slight_move .item-main .post-heading-wrap {
-            transition: transform 0.35s ease, color .45s cubic-bezier(.15,.75,.5,1) 0s, border-color .45s cubic-bezier(.15,.75,.5,1) 0s;
+            transition: transform 0.35s ease, color .45s cubic-bezier(.15,.75,.5,1) 0s, border-color .45s cubic-bezier(.15,.75,.5,1) 0s!important;
           }
           .vert_list_hover_effect_slight_move .nectar-post-grid-item:hover .item-main:before,
           .vert_list_hover_effect_slight_move .nectar-post-grid-item:hover .item-main .post-heading-wrap {
@@ -7484,6 +7968,14 @@ class NectarElDynamicStyles {
           }';
         }
 
+        // category color.
+        if( isset($atts['category_button_color']) && !empty($atts['category_button_color']) ) {
+           self::$element_css[] = '.category-button-color-'. esc_attr( nectar_color_classname($atts['category_button_color'])) . ' .meta-category a.style-button {
+            background-color: '. esc_attr($atts['category_button_color']) . ';
+            backdrop-filter: blur(10px);
+          }';
+        }
+
 
       } // End Post Grid Element.
 
@@ -7753,6 +8245,11 @@ class NectarElDynamicStyles {
           flex-wrap: wrap;
         }
 
+        .centered-text .nectar-star-rating,
+        [class*="text-align"] .nectar-star-rating {
+          display: inline-flex;
+        }
+
         .nectar-star-rating * {
           font-size: inherit;
           line-height: 1.3;
@@ -8005,6 +8502,7 @@ class NectarElDynamicStyles {
         }
 
         .nectar-text-inline-images__marker video {
+          object-fit: cover;
           position: absolute;
           width: 100%;
           height: 100%;
@@ -8018,6 +8516,31 @@ class NectarElDynamicStyles {
         
         
         ';
+
+        // Custom image sizes.
+        if( isset($atts['image_size']) ) {
+
+          $image_size = $atts['image_size'];
+
+          if ( 'large__h_rect' === $image_size || 
+               'small__h_rect' === $image_size ) {
+            self::$element_css[] = '.nectar-text-inline-images .nectar-text-inline-images__marker[data-img-size="'.esc_attr($image_size).'"] img {
+              aspect-ratio: 1.75/1;
+              object-fit: cover;
+            }';
+          }
+
+          self::$element_css[] = '.nectar-text-inline-images.image_size_'.esc_attr($image_size).' .nectar-text-inline-images__marker img {
+            width: '.esc_attr($image_size).';
+          }';
+        }
+
+        // Roundness.
+        if ( isset($atts['media_roundness']) && '0px' !== $atts['media_roundness'] ) {
+          self::$element_css[] = '.nectar-text-inline-images--roundness--'. $atts['media_roundness'].' .nectar-text-inline-images__marker {
+            clip-path: inset(10% round '.esc_attr($atts['media_roundness']).');
+          }';
+        }
 
         // Text Direction.
         $text_direction = self::text_direction_styles($atts, '.nectar-text-inline-images');
@@ -8208,6 +8731,9 @@ class NectarElDynamicStyles {
             white-space: nowrap;
             display: inline-block;
           }
+          a:has(.nectar-split-heading[data-has-fit-text="true"])  {
+            display: block;
+          }
           .nectar-split-heading[data-has-fit-text="true"] * {
             font-size: inherit;
           }
@@ -8314,6 +8840,9 @@ class NectarElDynamicStyles {
           .nectar-split-heading[data-animation-type="line-reveal-by-space"]:not(.markup-generated) {
             opacity: 0;
           }
+          .nectar-split-heading[data-animation-type="line-reveal-by-space"]:not(.markup-generated).animated-in {
+              opacity: 1;
+          }
           @media only screen and (max-width: 999px) {
             .nectar-split-heading[data-m-rm-animation="true"] {
               opacity: 1!important;
@@ -8330,10 +8859,21 @@ class NectarElDynamicStyles {
              vertical-align: bottom;
           }
           
-          .nectar-split-heading[data-animation-type="line-reveal-by-space"] span,
-          .nectar-split-heading[data-animation-type="line-reveal-by-space"]:not(.markup-generated) > * {
+          .nectar-split-heading[data-animation-type="line-reveal-by-space"] span {
             line-height: 1.2;
           }
+
+          @media only screen and (min-width: 1000px) {
+            .nectar-split-heading[data-animation-type="line-reveal-by-space"]:not(.markup-generated) > * {
+              line-height: 1.2;
+            }
+          }
+          @media only screen and (max-width: 999px) {
+            .nectar-split-heading[data-animation-type="line-reveal-by-space"]:not([data-m-rm-animation="true"]):not(.markup-generated) > * {
+              line-height: 1.2;
+            }
+          }
+
           .nectar-split-heading[data-animation-type="line-reveal-by-space"][data-stagger="true"]:not([data-text-effect*="letter-reveal"]) span .inner {
             transition: transform 1.2s cubic-bezier(0.25, 1, 0.5, 1), opacity 1.2s cubic-bezier(0.25, 1, 0.5, 1);
           }
@@ -8431,22 +8971,22 @@ class NectarElDynamicStyles {
 
           if( 'twist-bottom-2' ===  $text_effect ) {
             self::$element_css[] = 'body .nectar-split-heading[data-text-effect="twist-bottom-2"] > * > span,
-            .nectar-split-heading[data-stored-text-effect="twist-bottom-2"] > * > span {
+           body .nectar-split-heading[data-stored-text-effect="twist-bottom-2"] > * > span {
               overflow: visible;
             }
 
             .nectar-split-heading[data-text-effect="twist-bottom-2"] > *,
-            .nectar-split-heading[data-stored-text-effect="twist-bottom-2"] > * {
+            body .nectar-split-heading[data-stored-text-effect="twist-bottom-2"] > * {
               perspective: 1000px;
             }
 
             body .nectar-split-heading[data-text-effect="twist-bottom-2"] > * > span,
-            .nectar-split-heading[data-stored-text-effect="twist-bottom-2"] > * > span {
+            body .nectar-split-heading[data-stored-text-effect="twist-bottom-2"] > * > span {
               transform-style: preserve-3d;
             }
 
             body .nectar-split-heading[data-text-effect="twist-bottom-2"] span .inner,
-            .nectar-split-heading[data-stored-text-effect="twist-bottom-2"] span .inner  {
+            body .nectar-split-heading[data-stored-text-effect="twist-bottom-2"] span .inner  {
               transform-origin: center center -2em;
               transform: rotateX(-40deg) rotateY(13deg) rotateZ(13deg);
               opacity: 0;
@@ -8454,8 +8994,8 @@ class NectarElDynamicStyles {
           }
 
           if( 'none' === $text_effect ) {
-            self::$element_css[] = '#ajax-content-wrap .nectar-split-heading[data-text-effect="none"] {
-              opacity: 1;
+            self::$element_css[] = '.nectar-split-heading[data-text-effect="none"] {
+              opacity: 1!important;
             }';
           }
           
@@ -9189,6 +9729,163 @@ class NectarElDynamicStyles {
         }
 
       } // End Nectar Scrolling Text.
+
+      // project categories
+      else if( false !== strpos($shortcode[0],'[nectar_project_categories ') ) {
+        
+        $atts = shortcode_parse_atts($shortcode_inner);
+        $style = ( isset($atts['style']) ) ? $atts['style'] : 'default';
+        
+        
+        self::$element_css[] = '
+        .nectar-meta-category-el {
+           display: flex;
+          flex-wrap: wrap;
+          gap: 10px;
+        }
+        .nectar-meta-category-el a {
+          color: inherit;
+          position: relative;
+        }';
+
+
+
+        foreach( self::$devices as $device => $media_query_size ) {
+
+          // Alignment.
+          if( isset($atts['alignment_'.$device]) && $atts['alignment_'.$device] != 'inherit' ) {
+
+            $alignment = $atts['alignment_'.$device];
+            $flex_align = 'flex-start';
+
+            if( 'center' === $alignment ) {
+              $flex_align = 'center';
+            } 
+            else if('right' === $alignment) {
+              $flex_align = 'flex-end';
+            }
+
+            self::$element_css[] = '@media only screen '.$media_query_size.' {
+              .nectar-meta-category-el.alignment_'.$alignment.'_'.$device.' {
+                  justify-content: '.$flex_align.';
+                }
+              }';
+            
+          } // end alignment set.
+
+        } // end device loop.
+
+        if ( 'default' === $style ) {
+          self::$element_css[] = '
+          .nectar-meta-category-el.style-default > a:before {
+            height: 1px;
+            width: 100%;
+            background-color: currentColor;
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            transform: scaleX(0);
+            transition: transform 0.4s ease;
+            transform-origin: right;
+          }
+          
+          .nectar-meta-category-el.style-default > a:hover:before {
+            transform: scaleX(1);
+            transform-origin: left;
+          }
+          ';
+        } 
+        if ( 'outline' === $style ) {
+          self::$element_css[] = '.nectar-meta-category-el.style-outline > * {
+              position: relative;
+              display: inline-block;
+              line-height: 1;
+              padding: 0.4em 0.8em;
+            }
+            .nectar-meta-category-el.style-outline > *:before {
+              content: "";
+              position: absolute;
+              left: 0;
+              top: 0;
+              width: 100%;
+              height: 100%;
+              border: 1px solid currentColor;
+              border-radius: var(--nectar-border-radius);
+              opacity: 0.5;
+              transition: opacity 0.2s ease;
+            }
+            .nectar-meta-category-el.style-outline > a:hover:before {
+                opacity: 1;
+            }';
+        }
+
+      }
+
+      // Horizontal list item.
+      else if( false !== strpos($shortcode[0],'[nectar_horizontal_list_item ') ) {
+
+        $atts = shortcode_parse_atts($shortcode_inner);
+
+        $border_color = ( isset($atts['border_color']) && !empty($atts['border_color']) ) ? ltrim($atts['border_color'],'#') : false; 
+        $border_animation = ( isset($atts['border_animation']) && 'true' === $atts['border_animation']) ? true: false; 
+        $responsive_columns = ( isset($atts['responsive_display']) && 'multiple_columns' === $atts['responsive_display']) ? true : false;
+        $columns = ( isset($atts['columns'])) ? $atts['columns'] : false;
+
+        if ( $columns && $responsive_columns ) {
+          self::$element_css[] = '@media only screen and (max-width: 999px) {
+            #ajax-content-wrap .nectar-hor-list-item.multiple-columns[data-columns="'.esc_attr($columns).'"] {
+                display: flex;
+                flex-wrap: wrap;
+                --list-gap: 30px;
+                grid-row-gap: 5px;
+                grid-column-gap: var(--list-gap);
+              }
+              #ajax-content-wrap .nectar-hor-list-item.multiple-columns[data-columns="'.esc_attr($columns).'"] .nectar-list-item {
+                width: calc(50% - var(--list-gap))!important;
+                padding-bottom: 0;
+              }
+          }';
+          
+        } 
+
+        if ($border_animation) {
+          self::$element_css[] = '
+            #ajax-content-wrap .border_color_'.esc_attr($border_color).'.nectar-hor-list-item {
+              border: none;
+              transition: opacity 1.1s cubic-bezier(0.65,0,0.25,1);
+            }
+            #ajax-content-wrap .border_color_'.esc_attr($border_color).'.nectar-hor-list-item:after {
+              position: absolute;
+              z-index: 10;
+              bottom: 0;
+              left: 0;
+              width: 100%;
+              height: 1px;
+              content: "";
+              display: block;
+              transform: scaleX(0);
+              transform-origin: left;
+              transition: transform 1.1s cubic-bezier(0.65,0,0.25,1);
+            }
+            #ajax-content-wrap .border_color_'.esc_attr($border_color).'.nectar-hor-list-item.animated-in:after {
+              transform: scaleX(1);
+            }';
+          if ( $border_color ) {
+            self::$element_css[] = '
+            #ajax-content-wrap .border_color_'.esc_attr($border_color).'.nectar-hor-list-item:after {
+              background-color: #'.esc_attr($border_color).';
+            }';
+          }
+        } else {
+          if ( $border_color ) {
+            self::$element_css[] = '
+            #ajax-content-wrap .border_color_'.esc_attr($border_color).'.nectar-hor-list-item {
+              border-color: #'.esc_attr($border_color).';
+            }';
+          }
+        }
+      }
 
       // Single Image Element.
       else if( false !== strpos($shortcode[0],'[image_with_animation ') ) {
@@ -10700,13 +11397,15 @@ class NectarElDynamicStyles {
       else if( false !== strpos($shortcode[0],'[nectar_sticky_media_sections ') ) {
         
         $atts = shortcode_parse_atts($shortcode_inner);
+        $type = (isset($atts['type'])) ? esc_attr($atts['type']) : 'default';
+
         $media_width = (isset($atts['media_width'])) ? esc_attr($atts['media_width']) : '50%'; 
         $media_height = (isset($atts['media_height'])) ? esc_attr($atts['media_height']) : '50%'; 
         $content_spacing = (isset($atts['content_spacing'])) ? esc_attr($atts['content_spacing']) : '20vh'; 
         $content_position =  (isset($atts['content_position'])) ? esc_attr($atts['content_position']) : 'right';
         $mobile_aspect_ratio = (isset($atts['mobile_aspect_ratio'])) ? esc_attr($atts['mobile_aspect_ratio']) : '16-9';
         $media_border_radius = (isset($atts['border_radius']) && 'none' !== $atts['border_radius']) ? esc_attr($atts['border_radius']) : false;
-
+        
         //// Core.
         if( self::$using_front_end_editor ) {
           self::$element_css[] = '
@@ -10716,6 +11415,11 @@ class NectarElDynamicStyles {
           ';
         }
         self::$element_css[] = '
+
+        .nectar-sticky-media-section__content-section {
+          position: relative;
+        }
+        
         @media only screen and (min-width: 1000px) {
           
           #boxed #ajax-content-wrap {
@@ -10750,108 +11454,335 @@ class NectarElDynamicStyles {
 
         }';
 
-        self::$element_css[] = '.nectar-sticky-media-sections.mobile-aspect-ratio-'.$mobile_aspect_ratio.' .nectar-sticky-media-content__media-wrap {
-          padding-bottom: '.self::image_aspect_ratio($mobile_aspect_ratio).';
+        // Default sticky media display /////////////////////////////
+        if ( $type !== 'scroll-pinned-sections' ) {
+
+          self::$element_css[] = '.nectar-sticky-media-sections.mobile-aspect-ratio-'.$mobile_aspect_ratio.' .nectar-sticky-media-content__media-wrap {
+            padding-bottom: '.self::image_aspect_ratio($mobile_aspect_ratio).';
+          }';
+
+          self::$element_css[] = '@media only screen and (max-width: 999px) {
+            .nectar-sticky-media-section__featured-media {
+              display: none;
+            }
+            .nectar-sticky-media-content__media-wrap {
+              display: block;
+            }
+
+            .nectar-sticky-media-content__media-wrap {
+              position: relative;
+              margin-bottom: 45px;
+            }
+            .nectar-sticky-media-sections .nectar-sticky-media-section__content-section:not(:last-child) {
+              margin-bottom: 100px;
+            }
+            .nectar-sticky-media-sections .nectar-fancy-ul ul {
+              margin-bottom: 0;
+            }
+          }
+
+          
+          .nectar-sticky-media-section__media-wrap {
+            transition: opacity 0.2s ease 0.1s;
+          }
+
+          .nectar-sticky-media-section__media-wrap.active {
+            transition: opacity 0.2s ease;
+            z-index: 100;
+          }
+
+          .nectar-sticky-media-section__media-wrap:not(.active) {
+            opacity: 0;
+          }
+
+          .nectar-sticky-media-section__media,
+          .nectar-sticky-media-section__media-wrap {
+            background-size: cover;
+            background-position: center;
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+          }
+
+          .nectar-sticky-media-section__media video {
+            object-fit: cover;
+            width: 100%;
+            height: 100%;
+          }
+
+          .nectar-sticky-media-section__media video.nectar-lazy-video {
+            transition: opacity 0.55s ease 0.25s;
+            opacity: 0;
+          }
+          .nectar-sticky-media-section__media video.nectar-lazy-video.loaded {
+            opacity: 1;
+          }
+          
+          .nectar-sticky-media-section__media video.fit-contain {
+            object-fit: contain;
+          }
+
+          .nectar-sticky-media-section__content {
+            flex: 1;
+          }
+        
+          ';
+
+          //// Spacing.
+          self::$element_css[] = '@media only screen and (min-width: 1000px) { 
+            .nectar-sticky-media-sections.content-spacing-'.esc_attr($content_spacing).' .nectar-sticky-media-section__content-section:not(:last-child) {
+            margin-bottom: '.esc_attr($content_spacing).';
+          }
         }';
 
-        self::$element_css[] = '@media only screen and (max-width: 999px) {
-          .nectar-sticky-media-section__featured-media {
-            display: none;
-          }
-          .nectar-sticky-media-content__media-wrap {
-            display: block;
-          }
-
-          .nectar-sticky-media-content__media-wrap {
-            position: relative;
-            margin-bottom: 45px;
-          }
-          .nectar-sticky-media-sections .nectar-sticky-media-section__content-section:not(:last-child) {
-            margin-bottom: 100px;
-          }
-          .nectar-sticky-media-sections .nectar-fancy-ul ul {
-            margin-bottom: 0;
-          }
+        //// Border Radius.
+        if( $media_border_radius ) {
+          self::$element_css[] = '.nectar-sticky-media-sections.media-border-radius-'.$media_border_radius.' .nectar-sticky-media-section__media-wrap,
+          .nectar-sticky-media-sections.media-border-radius-'.$media_border_radius.' .nectar-sticky-media-content__media-wrap {
+          border-radius: '.$media_border_radius.';
+          overflow: hidden;
+          }';
         }
 
+
+          //// Width.
+          self::$element_css[] = '.nectar-sticky-media-sections.media-width-'.self::percent_unit_type_class(esc_attr($media_width)).' .nectar-sticky-media-section__featured-media {
+            width: calc('.esc_attr($media_width).' - 3%);
+          }
+          ';
+
+          //// Height.
+          self::$element_css[] = '.nectar-sticky-media-sections.media-height-'.self::percent_unit_type_class(esc_attr($media_height)).' .nectar-sticky-media-section__featured-media {
+            height: '.esc_attr($media_height).';
+          }
         
-        .nectar-sticky-media-section__media-wrap {
-          transition: opacity 0.2s ease 0.1s;
+          ';
         }
 
-        .nectar-sticky-media-section__media-wrap.active {
-          transition: opacity 0.2s ease;
-          z-index: 100;
-        }
+        // Scroll pinned sticky media layout ///////////////////////////
+        else if( $type === 'scroll-pinned-sections' ) {
 
-        .nectar-sticky-media-section__media-wrap:not(.active) {
-          opacity: 0;
-        }
+          $content_alignment = isset($atts['content_alignment']) ? $atts['content_alignment'] : 'default';
+          $section_height = isset($atts['section_height']) ? $atts['section_height'] : '50vh';
+          $subtract_nav_height = isset($atts['subtract_nav_height']) && 'yes' === $atts['subtract_nav_height'] ? true : false;
+          $using_navigation = isset($atts['navigation']) && 'yes' === $atts['navigation'] ? true : false;
 
-        .nectar-sticky-media-section__media,
-        .nectar-sticky-media-section__media-wrap {
-          background-size: cover;
-          background-position: center;
-          position: absolute;
-          left: 0;
-          top: 0;
-          width: 100%;
-          height: 100%;
-        }
+          // Core.
+          self::$element_css[] = '
+              html body,
+              html body.compensate-for-scrollbar {
+                overflow: visible;
+              }
 
-        .nectar-sticky-media-section__media video {
-          object-fit: cover;
-          width: 100%;
-          height: 100%;
-        }
+              .type--scroll-pinned-sections .nectar-sticky-media-content__media-wrap {
+                display: block;
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background-color: var(--nectar-bg-color);
+              }
+              .type--scroll-pinned-sections .nectar-sticky-media-content__media-wrap > * {
+                background-size: cover;
+                height: 100%;
+                width: 100%;
+              }
+              .type--scroll-pinned-sections .nectar-sticky-media-content__media-wrap video {
+                object-fit: cover;
+                object-position: center;
+                width: 100%;
+                height: 100%;
+              }
 
-        .nectar-sticky-media-section__media video.nectar-lazy-video {
-          transition: opacity 0.55s ease 0.25s;
-          opacity: 0;
-        }
-        .nectar-sticky-media-section__media video.nectar-lazy-video.loaded {
-          opacity: 1;
-        }
-        
-        .nectar-sticky-media-section__media video.fit-contain {
-          object-fit: contain;
-        }
+              .nectar-sticky-media-sections.type--scroll-pinned-sections {
+                display: block;
+                gap: 0;
+                position: relative;
+              }
 
-        .nectar-sticky-media-section__content {
-          flex: 1;
+              .nectar-sticky-media-sections.type--scroll-pinned-sections .nectar-sticky-media-section__content-section__wrap {
+                transition: transform 0.25s ease;
+                overflow: hidden;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                height: 100%;
+              }
+
+              .nectar-sticky-media-sections.type--scroll-pinned-sections .nectar-sticky-media-section__content-section {
+                position: sticky;
+              }
+
+              .nectar-sticky-media-sections.type--scroll-pinned-sections .nectar-sticky-media-section__content-section-inner {
+                z-index: 10;
+                position: relative;
+                display: flex;
+                flex-direction: column;
+              }
+              
+              #ajax-content-wrap .type--scroll-pinned-sections .nectar-sticky-media-section__content-section-inner > .vc_row.inner_row:last-child {
+                margin-bottom: 0;
+              }
+            ';
+
+            if ( $using_navigation ) {
+
+              $navigation_negative_margin = 'calc(-1 * (var(--section-height) + var(--section-gap) ) )';
+              $navigation_height = 'calc(var(--section-height) + var(--section-gap));';
+              $navigation_color = isset($atts['navigation_color']) ? $atts['navigation_color'] : '#000';
+              $navigation_color_trimmed = ltrim($navigation_color, '#');
+              if ( $subtract_nav_height ) {
+                $navigation_negative_margin = 'calc(-1 * (var(--section-height) - var(--header-nav-height) + var(--section-gap) ) )';
+                $navigation_height = 'calc(var(--section-height) - var(--header-nav-height) + var(--section-gap));';
+              }
+              
+              self::$element_css[] = '
+              .nectar-sticky-media-sections.type--scroll-pinned-sections.has-navigation .nectar-sticky-media-section__content__wrap {
+                margin-top: '.$navigation_negative_margin.';
+              }
+
+              .type--scroll-pinned-sections .nectar-sticky-media-section__navigation {
+                position: sticky;
+                top: var(--section-offset);
+                left: calc(100%);
+                width: 60px;
+                z-index: 100;
+                border-bottom: 0!important;
+                height: '.$navigation_height.';
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+              }
+              .type--scroll-pinned-sections .nectar-sticky-media-section__navigation__inner {
+                padding-right: 30px;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                gap: 7px;
+                margin-top: calc(-1 * var(--section-gap) );
+              }
+              .type--scroll-pinned-sections .nectar-sticky-media-section__navigation__inner button {
+                pointer-events: all;
+                background-color: transparent;
+                box-shadow: none;
+                width: 25px;
+                height: 25px;
+                line-height: 23px;
+                font-size: 11px;
+                text-align: center;
+                position: relative;
+                border-radius: 100px!important;
+                border: none;
+                transition: background-color 0.25s ease, color 0.25s ease, opacity 0.25s ease;
+              }
+              .type--scroll-pinned-sections .nectar-sticky-media-section__navigation__inner button:after {
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                content: "";
+                box-sizing: border-box;
+                border-radius: 100px;
+                border: 1px solid #000;
+                transition: opacity 0.25s ease;
+                opacity: 0.5;
+              }
+              .type--scroll-pinned-sections .nectar-sticky-media-section__navigation__inner button:hover:not(.active):after {
+                opacity: 1;
+              }
+              .type--scroll-pinned-sections .nectar-sticky-media-section__navigation__inner button.active {
+                color: #fff;
+                cursor: pointer;
+              }
+              
+              .type--scroll-pinned-sections.navigation-color-'.esc_attr( $navigation_color_trimmed ).' .nectar-sticky-media-section__navigation__inner button:not(.active) {
+                color: '.esc_attr( $navigation_color ).';
+              }
+              .type--scroll-pinned-sections.navigation-color-'.esc_attr( $navigation_color_trimmed ).' .nectar-sticky-media-section__navigation__inner button.active {
+                background-color: '.esc_attr( $navigation_color ).';
+              }
+              .type--scroll-pinned-sections.navigation-color-'.esc_attr( $navigation_color_trimmed ).' .nectar-sticky-media-section__navigation__inner button:after {
+                border-color: '.esc_attr( $navigation_color ).';
+              }
+              ';
+
+              if ( $navigation_color === '#ffffff' ) {
+                self::$element_css[] = '.type--scroll-pinned-sections.navigation-color-'.esc_attr( $navigation_color_trimmed ).' .nectar-sticky-media-section__navigation__inner button.active {
+                   color: #000;
+                }';
+              }
+            }
+            
+            // Border radius
+            if( $media_border_radius ) {
+              self::$element_css[] = '.nectar-sticky-media-sections.type--scroll-pinned-sections.media-border-radius-'.$media_border_radius.' .nectar-sticky-media-section__content-section__wrap,
+              .nectar-sticky-media-sections.type--scroll-pinned-sections.media-border-radius-'.$media_border_radius.' .nectar-sticky-media-content__media-wrap {
+                border-radius: '.$media_border_radius.';
+                overflow: hidden;
+              }';
+            }
+
+            // Alignment.
+            if( $content_alignment === 'middle' ) {
+              self::$element_css[] = '.type--scroll-pinned-sections.content-alignment-middle .nectar-sticky-media-section__content-section__wrap {
+                justify-content: center;
+              }';
+            }
+            if( $content_alignment === 'bottom' ) {
+              self::$element_css[] = '.type--scroll-pinned-sections.content-alignment-bottom .nectar-sticky-media-section__content-section__wrap {
+                justify-content: flex-end;
+              }';
+            }
+            if( $content_alignment === 'stretch' ) {
+              self::$element_css[] = 'type--scroll-pinned-sections.content-alignment-stretch .nectar-sticky-media-section__content-section__wrap {
+                justify-content: stretch;
+              }
+              .type--scroll-pinned-sections.content-alignment-stretch .nectar-sticky-media-section__content-section__wrap > * {
+                flex: 1;
+              }';
+            }
+
+            // Height.
+            if ( $section_height ) {
+
+              $subtract_nav_height_class = '';
+              $nav_height = '';
+              $calc_section_height = $section_height;
+
+              $percent_gap = (100 - intval($section_height)) / 2;
+              $calc_gap = 'calc( '.$percent_gap.'vh)';
+
+              if ( $subtract_nav_height ) {
+                $subtract_nav_height_class = '.subtract-nav-height';
+                $nav_height = 'var(--header-nav-height)';
+                $calc_section_height = 'calc( '.$section_height.' - '.$nav_height.' )';
+                $calc_gap = 'calc( '.$percent_gap.'vh + '.$nav_height.' )';
+              }
+
+              
+              self::$element_css[] = '
+              .type--scroll-pinned-sections.section-height-'.esc_attr($section_height).$subtract_nav_height_class.' {
+                --section-height: '.esc_attr($section_height).';
+                --section-offset: '.$calc_gap.';
+                --section-gap: '.$percent_gap.'vh;
+              }
+              .type--scroll-pinned-sections.section-height-'.esc_attr($section_height).$subtract_nav_height_class.' .nectar-sticky-media-section__content-section {
+                height: '.esc_attr($calc_section_height).';
+              }
+              .type--scroll-pinned-sections.section-height-'.esc_attr($section_height).$subtract_nav_height_class.' .nectar-sticky-media-section__content-section {
+                top: '.$calc_gap.';
+              }
+              .type--scroll-pinned-sections.section-height-'.esc_attr($section_height).$subtract_nav_height_class.' .nectar-sticky-media-section__content__wrap > div {
+                border-bottom: '.esc_attr($percent_gap).'vh solid transparent;
+                box-sizing: content-box;
+              }';
+            }
+            
         }
-       
-        ';
-
-        //// Spacing.
-        self::$element_css[] = '@media only screen and (min-width: 1000px) { 
-           .nectar-sticky-media-sections.content-spacing-'.esc_attr($content_spacing).' .nectar-sticky-media-section__content-section:not(:last-child) {
-          margin-bottom: '.esc_attr($content_spacing).';
-        }
-      }';
-
-      //// Border Radius.
-      if( $media_border_radius ) {
-        self::$element_css[] = '.nectar-sticky-media-sections.media-boder-radius-'.$media_border_radius.' .nectar-sticky-media-section__media-wrap,
-        .nectar-sticky-media-sections.media-boder-radius-'.$media_border_radius.' .nectar-sticky-media-content__media-wrap {
-        border-radius: '.$media_border_radius.';
-        overflow: hidden;
-        }';
-      }
-
-
-        //// Width.
-        self::$element_css[] = '.nectar-sticky-media-sections.media-width-'.self::percent_unit_type_class(esc_attr($media_width)).' .nectar-sticky-media-section__featured-media {
-          width: calc('.esc_attr($media_width).' - 3%);
-        }
-        ';
-
-        //// Height.
-        self::$element_css[] = '.nectar-sticky-media-sections.media-height-'.self::percent_unit_type_class(esc_attr($media_height)).' .nectar-sticky-media-section__featured-media {
-          height: '.esc_attr($media_height).';
-        }
-      
-        ';
 
       }
 
@@ -10859,6 +11790,7 @@ class NectarElDynamicStyles {
       else if( false !== strpos($shortcode[0],'[nectar_sticky_media_section ') ) {
         $atts = shortcode_parse_atts($shortcode_inner);
 
+        $link_indicator = isset($atts['link_indicator']) && $atts['link_indicator'] === 'true' ? true : false; 
         $acceptable_alignments = array('left-top','left-center','left-bottom','center-top','center-center','center-bottom','right-top','right-center','right-bottom');
         
         $video_alignment = ( isset($atts['video_alignment']) && in_array($atts['video_alignment'],$acceptable_alignments) ) ? $atts['video_alignment'] : false;
@@ -10866,6 +11798,17 @@ class NectarElDynamicStyles {
         if( $video_alignment ) {
           self::$element_css[] = '.nectar-sticky-media-section__featured-media video.align-'.$video_alignment.' {
             object-position: '.str_replace('-',' ',$video_alignment).';
+          }';
+        }
+
+        if ($link_indicator) {
+          self::$element_css[] = '.nectar-sticky-media-section__link {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 100; 
           }';
         }
 
@@ -14649,6 +15592,7 @@ class NectarElDynamicStyles {
   }
 
 
+
   /**
   * Determines the unit type px or percent
   */
@@ -14720,6 +15664,8 @@ class NectarElDynamicStyles {
       return floatval($str) . 'vh';
     } else if( false !== strpos($str,'vw') ) {
       return floatval($str) . 'vw';
+    } else if( false !== strpos($str,'rem') ) {
+      return floatval($str) . 'rem';
     } else if( false !== strpos($str,'em') ) {
       return floatval($str) . 'em';
     } else if( 'inherit' === $str ) {
@@ -14782,6 +15728,28 @@ class NectarElDynamicStyles {
     }
     else { //1-1 default
       return 'calc((1 / 1) * 100%)';
+    }
+  }
+
+  public static function image_aspect_ratio_direct($aspect) {
+
+    if( '4-3' === $aspect )  {
+      return '4 / 3';
+    }
+    else if( '3-2' === $aspect )  {
+      return '3 / 2';
+    }
+    else if( '16-9' === $aspect )  {
+      return '16 / 9';
+    }
+    else if( '2-1' === $aspect )  {
+      return '2 / 1';
+    }
+    else if( '4-5' === $aspect )  {
+      return '4 / 5';
+    }
+    else { //1-1 default
+      return '1 / 1';
     }
   }
 
@@ -15553,7 +16521,8 @@ class NectarElDynamicStyles {
 
         $css .= '@media only screen '.$media_query_size.' {
           '.$html_selector.$body_selector.'#ajax-content-wrap '.$container_selector.'.'.$device_param.'_'.esc_attr(self::decimal_unit_type_class($atts[$device_param])).$minmax_classes.'.'.$element_name .',
-          '.$html_selector.$body_selector.$container_selector.'.'.$device_param.'_'.esc_attr(self::decimal_unit_type_class($atts[$device_param])).$minmax_classes.'.'.$element_name .' {
+          '.$html_selector.$body_selector.$container_selector.'.'.$device_param.'_'.esc_attr(self::decimal_unit_type_class($atts[$device_param])).$minmax_classes.'.'.$element_name .',
+          '.$html_selector.$body_selector.'#header-outer .'.$device_param.'_'.esc_attr(self::decimal_unit_type_class($atts[$device_param])).$minmax_classes.'.'.$element_name .' {
             font-size: '.$computed_size.$important.';
           }
         }';
@@ -15566,7 +16535,8 @@ class NectarElDynamicStyles {
 
     // Line height.
     if(isset($atts['font_line_height'])) {
-      $css .= '#ajax-content-wrap .font_line_height_'.esc_attr(self::decimal_unit_type_class($atts['font_line_height'])).'.'.$element_name .' {
+      $css .= '#ajax-content-wrap .font_line_height_'.esc_attr(self::decimal_unit_type_class($atts['font_line_height'])).'.'.$element_name .',
+      body .font_line_height_'.esc_attr(self::decimal_unit_type_class($atts['font_line_height'])).'.'.$element_name .'  {
           line-height: '.self::line_height_output($atts['font_line_height']).';
       }';
     }
@@ -15645,6 +16615,25 @@ if( !function_exists('nectar_el_padding_unit_type_class') ) {
 		return intval($str) . 'px';
 	}
 
+ }
+
+ // Adds support for rgba in classnames.
+ if( !function_exists('nectar_color_classname') ) {
+  function nectar_color_classname($str) {
+    if( false !== strpos($str,'rgba') ) {
+        // Replace parentheses with double underscores
+        $str = str_replace(['(', ')'], '__', $str);
+
+        // Replace commas with underscores
+        $str = str_replace(',', '_', $str);
+
+        // Replace decimals with double hyphens
+        $str = str_replace('.', '--', $str);
+        return $str;
+    } else {
+      return str_replace('#','hex-', $str);
+    }
+  }
  }
 
 
@@ -16413,6 +17402,12 @@ if (!function_exists('nectar_font_param_group_classes')) {
 			 if( isset($atts['icon_color_custom']) && true === nectar_el_custom_color_bool('icon_color', $atts) ) {
 				 $color = ltrim($atts['icon_color_custom'],'#');
 				 $classnames .= 'icon_color_custom_'. esc_attr($color) . ' ';
+
+         // hover color
+         if ( isset($atts['icon_color_custom_hover']) && !empty($atts['icon_color_custom_hover']) ) {
+            $hover_color = ltrim($atts['icon_color_custom_hover'],'#');
+            $classnames .= 'icon_color_custom_hover_'. esc_attr($hover_color) . ' ';
+         }
 			 }
 
      }
@@ -16508,6 +17503,14 @@ if (!function_exists('nectar_font_param_group_classes')) {
       }
       if( isset($atts['font_size_phone']) ) {
         $classnames .= 'font_size_phone_'. esc_attr(nectar_el_decimal_unit_type_class($atts['font_size_phone'])) . ' ';
+      }
+
+      // Min/max font size.
+      if(isset($atts['font_size_min']) && !empty($atts['font_size_min']) ) {
+        $classnames .= 'font_size_min_'. esc_attr(nectar_el_decimal_unit_type_class($atts['font_size_min'])) . ' ';
+      }
+      if(isset($atts['font_size_max']) && !empty($atts['font_size_max']) ) {
+        $classnames .= 'font_size_max_'. esc_attr(nectar_el_decimal_unit_type_class($atts['font_size_max'])) . ' ';
       }
 
        // Positioning.
@@ -16629,7 +17632,52 @@ if (!function_exists('nectar_font_param_group_classes')) {
       }
 
       if( isset($atts['border_radius']) && 'none' !== $atts['border_radius'] ) {
-        $classnames .= 'media-boder-radius-'.$atts['border_radius'].' ';
+        $classnames .= 'media-border-radius-'.esc_attr($atts['border_radius']).' ';
+      }
+
+      if( isset($atts['type']) && 'default' !== $atts['type'] ) {
+        $classnames .= 'type--'.esc_attr($atts['type']).' ';
+      }
+
+      // Scroll pinned options
+      if( isset($atts['type']) && 'scroll-pinned-sections' === $atts['type'] ) {
+        
+        // Content alignment
+        if( isset($atts['content_alignment']) && 'default' !== $atts['content_alignment'] ) {
+          $classnames .= 'content-alignment-'.esc_attr($atts['content_alignment']).' ';
+        }
+
+        // Section Height
+        if( isset($atts['section_height']) && !empty( $atts['section_height'] ) ) {
+          $classnames .= 'section-height-'.esc_attr($atts['section_height']).' ';
+        }
+
+        // Substract nav height
+        if( isset($atts['subtract_nav_height']) && 'yes' === $atts['subtract_nav_height'] ) {
+          $classnames .= 'subtract-nav-height ';
+        }
+        
+        
+        if ( isset($atts['navigation']) && 'yes' === $atts['navigation'] ) {
+          $classnames .= 'has-navigation ';
+        }
+
+        // navigation color.
+        if( isset($atts['navigation_color']) && !empty($atts['navigation_color']) ) {
+          $color = ltrim($atts['navigation_color'],'#');
+          $classnames .= 'navigation-color-'. esc_attr($color) . ' ';
+        }
+
+        // Effect
+        if( isset($atts['effect'])) {
+          $classnames .= 'effect-'.esc_attr($atts['effect']).' ';
+        }
+
+        // Stacking
+        if( isset($atts['stacking_effect']) && 'yes' === $atts['stacking_effect'] ) {
+          $classnames .= 'stacking-effect ';
+        }
+
       }
 
      }
@@ -16711,6 +17759,21 @@ if (!function_exists('nectar_font_param_group_classes')) {
 
      }
 
+    else if( 'nectar_horizontal_list_item' === $el ) {
+
+      if( isset($atts['border_animation']) && 'true' === $atts['border_animation'] ) {
+        $classnames .= 'has_border_animation nectar-waypoint-el ';
+      }
+      if( isset($atts['border_color']) ) {
+        $color = ltrim($atts['border_color'],'#');
+        $classnames .= 'border_color_'. esc_attr($color) . ' ';
+      }
+      // responsive 
+      if ( isset($atts['responsive_display']) && 'multiple_columns' === $atts['responsive_display']) {
+        $classnames .= 'multiple-columns ';
+      }
+    }
+
 
      else if( 'nectar_text_inline_images' === $el ) {
 
@@ -16737,6 +17800,10 @@ if (!function_exists('nectar_font_param_group_classes')) {
         $classnames .= 'nectar-text-inline-images--stagger-animation ';
       }
 
+      // media roundness
+      if ( isset($atts['media_roundness']) && '0px' !== $atts['media_roundness'] ) {
+        $classnames .= 'nectar-text-inline-images--roundness--'. $atts['media_roundness'] . ' ';
+      }
       
 
       // Line height.
@@ -16929,6 +17996,15 @@ if (!function_exists('nectar_font_param_group_classes')) {
        if( $post_grid_custom_ar ) {
         $classnames .= 'custom-aspect-ratio-'. esc_attr($post_grid_custom_ar) . ' ';
        }
+        if( $post_grid_style === 'content_overlaid' && 
+            isset($atts['overlaid_aspect_ratio_image_size']) && 
+            !empty($atts['overlaid_aspect_ratio_image_size']) && 
+            isset($atts['display_type']) && 'stack' !== $atts['display_type']
+        ) {
+          $ratio = isset($atts['overlaid_custom_image_aspect_ratio']) ? $atts['overlaid_custom_image_aspect_ratio'] : '1-1';
+          $classnames .= 'overlaid-aspect-ratio-image-size-'. esc_attr($ratio) . ' ';
+        }
+
 
        // Excerpt Display.
        if (isset($atts['excerpt_display']) && 'default' !== $atts['excerpt_display']) {
@@ -16977,6 +18053,11 @@ if (!function_exists('nectar_font_param_group_classes')) {
        } else {
         $classnames .= 'category-position-before-title ';
        }
+
+       // category button color.
+        if( isset($atts['category_button_color']) && !empty($atts['category_button_color']) ) {
+          $classnames .= 'category-button-color-'. esc_attr( nectar_color_classname($atts['category_button_color'])) . ' ';
+        }
 
        // Additional meta.
        if( isset($atts['additional_meta_display']) && 'default' !== $atts['additional_meta_display'] ) {
@@ -17195,6 +18276,17 @@ if (!function_exists('nectar_font_param_group_classes')) {
 
 		 }
 
+     else if ( 'nectar_project_categories' === $el ) {
+        $devices = array('desktop','tablet','phone');
+        // Alignment.
+        foreach( $devices as $device ) {
+
+          if( isset($atts['alignment_'.$device]) && $atts['alignment_'.$device] != 'inherit' ) {
+            $classnames .= 'alignment_'. esc_attr($atts['alignment_'.$device]) . '_' . $device . ' ';
+          }
+        }
+     }
+
      else if( 'nectar_animated_shape' === $el ) {
 
       $devices = array('desktop','tablet','phone');
@@ -17322,6 +18414,19 @@ if (!function_exists('nectar_font_param_group_classes')) {
 
 
       }
+
+     }
+
+     else if ( 'nectar_icon_list_item' === $el ) {
+      
+       //  color.
+			 if( isset($atts['text_color']) && !empty($atts['text_color']) ) {
+        $color = ltrim($atts['text_color'],'#');
+        $classnames .= 'content_color_'. esc_attr($color) . ' ';
+      }
+
+      // Custom font size.
+      $classnames .= nectar_font_param_group_classes($atts);
 
      }
 

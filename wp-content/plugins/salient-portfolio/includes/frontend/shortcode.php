@@ -2609,3 +2609,69 @@ if( !function_exists('nectar_portfolio_processing') ) {
 		}
 		
 		add_shortcode('recent_projects', 'nectar_recent_projects');
+
+
+
+		add_shortcode('nectar_project_categories', 'nectar_project_categories_render');
+
+		function nectar_project_categories_render($atts, $content = null) {
+
+			extract(shortcode_atts(array(
+				"style" => 'default', 
+				'category_display' => '', 
+				'link_categories' => '',
+				'font_style' => '',
+				'alignment' => ''
+			), $atts));  
+
+			global $post;
+			
+			if ( !isset($post->ID) ) {
+				return;
+			}
+
+			$category_markup = '';
+
+			$project_categories = get_the_terms($post->ID,"project-type");
+
+			if ( !empty($project_categories) ) {
+			  $output = null;
+			  foreach ( $project_categories as $term ) {
+
+				 // Category display type
+				 if ( $category_display === 'parent_only' && $term->parent !== 0 ) {
+				  continue;
+				}
+
+				if( isset($term->slug) ) {
+					if ( $link_categories === 'true') {
+						$output .= '<a class="' . esc_attr( $term->slug ) .'" href="' . esc_url( get_category_link( $term->term_id ) ) . '">' . esc_html( $term->name ) . '</a>';
+					} else {
+				  		$output .= '<span>'. esc_html( $term->name ) . '</span>';
+					}
+				}
+
+			  }
+			  $category_markup .=  trim( $output );
+			}
+
+			if ($category_markup) {
+				$classnames = ['nectar-meta-category-el'];
+
+
+				// Dynamic style classes.
+				if( function_exists('nectar_el_dynamic_classnames') ) {
+					$classnames[] = nectar_el_dynamic_classnames('nectar_project_categories', $atts);
+				} 
+				// style.
+				if ($style) {
+					$classnames[] = 'style-'.$style;
+				}
+				// typography.
+				if (in_array($font_style, array('h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'label'))) {
+					$classnames[] = 'nectar-inherit-' . $font_style;
+				}
+				return '<span class="'.implode(' ', $classnames) .'">'.$category_markup.'</span>';
+			}
+			
+		}

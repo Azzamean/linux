@@ -30,18 +30,18 @@ Description: Off canvas menu set to "Fullscreen Split" in theme options
   display: none!important;
 }
 
- #slide-out-widget-area.fullscreen-split .inner {
+ #slide-out-widget-area.fullscreen-split .inner-wrap > .inner {
    display: -webkit-flex;
    display: flex;
    top: 0;
 }
 
-#slide-out-widget-area.fullscreen-split .inner > .container {
+#slide-out-widget-area.fullscreen-split .inner-wrap > .inner > .container {
  padding-top: 30px;
  padding-bottom: 30px
 }
 
-[data-permanent-transparent="1"] #slide-out-widget-area.fullscreen-split .inner > .container {
+[data-permanent-transparent="1"] #slide-out-widget-area.fullscreen-split .inner-wrap > .inner > .container {
   padding-top: 0;
 }
 
@@ -53,7 +53,7 @@ Description: Off canvas menu set to "Fullscreen Split" in theme options
     display: flex;
 }
 
-#slide-out-widget-area.fullscreen-split .inner > .container {
+#slide-out-widget-area.fullscreen-split .inner-wrap > .inner > .container {
   display: -webkit-flex;
   display: flex;
   margin: auto;
@@ -190,7 +190,7 @@ Description: Off canvas menu set to "Fullscreen Split" in theme options
 }
 
 
-#slide-out-widget-area.fullscreen-split .inner .off-canvas-menu-container li a {
+#slide-out-widget-area.fullscreen-split .inner-wrap > .inner .off-canvas-menu-container li a {
   -webkit-transition: color 0.37s cubic-bezier(0.52, 0.01, 0.16, 1);
   transition: color 0.37s cubic-bezier(0.52, 0.01, 0.16, 1);
   display: inline-block;
@@ -200,7 +200,7 @@ Description: Off canvas menu set to "Fullscreen Split" in theme options
    margin: 0 0 5px 0;
 }
 
-#slide-out-widget-area.fullscreen-split .off-canvas-menu-container li a:after {
+#slide-out-widget-area.fullscreen-split .off-canvas-menu-container li > a:after {
   transform-origin: left;
   pointer-events: none;
   bottom: -2px;
@@ -209,11 +209,11 @@ Description: Off canvas menu set to "Fullscreen Split" in theme options
   border-color: #fff;
 }
 
-#slide-out-widget-area[data-dropdown-func].fullscreen-split .inner .off-canvas-menu-container li li a {
+#slide-out-widget-area[data-dropdown-func].fullscreen-split .inner-wrap > .inner .off-canvas-menu-container li li a {
   font-size: 18px;
   line-height: 26px;
 }
-#slide-out-widget-area[data-dropdown-func].fullscreen-split .inner .off-canvas-menu-container li li {
+#slide-out-widget-area[data-dropdown-func].fullscreen-split .inner-wrap > .inner .off-canvas-menu-container li li {
   margin: 5px 0;
 }
 
@@ -336,7 +336,7 @@ Description: Off canvas menu set to "Fullscreen Split" in theme options
     margin-top: 35px;
   }
 
-  #slide-out-widget-area.fullscreen-split .inner > .container {
+  #slide-out-widget-area.fullscreen-split .inner-wrap > .inner > .container {
     display: block;
   }
 

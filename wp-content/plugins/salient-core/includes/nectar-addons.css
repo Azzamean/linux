@@ -18,6 +18,10 @@
   --nectar-yellow-h: #e9a30c;
 }
 
+div[id*="wpb-notice"].wpb-notice {
+	display: none;
+}
+
 .vc_add-element-container .vc_element-icon:before,
 .wpb_content_element>.wpb_element_wrapper .vc_element-icon:before,
 #nectar-list-view-content .nectar_el_icon:before,
@@ -593,6 +597,9 @@ body .wpb_content_element>.wpb_element_wrapper .icon-wpb-morphing-outline:before
   display: none!important;
 }
 .hidden-device-group-element .device-selection {
+  display: none!important;
+}
+.hidden-device-group-element-full, .hidden-device-group-element-full + .nectar-device-group-wrap {
   display: none!important;
 }
 
@@ -1223,6 +1230,12 @@ body .vc_navbar .vc_post-settings {
 #vc_navbar[class*="-frontend"] .vc_icon-btn.vc_templates-button.salient-studio-templates {
   padding: 6px 15px 6px 36px;
 }
+.vc_navbar .vc_icon-btn.vc_templates-button.salient-studio-templates.custom_branding,
+#vc_navbar[class*="-frontend"] .vc_icon-btn.vc_templates-button.salient-studio-templates.custom_branding {
+  padding: 6px 15px 6px 5px;
+  background: none;
+}
+
 #vc_navbar[class*="-frontend"] .vc_icon-btn.vc_templates-button.user-templates {
   padding: 6px 15px;
 }
@@ -1316,6 +1329,10 @@ body .vc_navbar .vc_icon-btn.salient-studio-templates {
   display: block;
   background: url(img/salient-vc-toolbar.svg) no-repeat 15px center;
   background-size: 20px;
+}
+body .vc_navbar .vc_icon-btn.salient-studio-templates.custom_branding {
+  background: none;
+  padding: 6px 15px 6px 5px;
 }
 
 .gallery_widget_attached_images .icon-remove:before,
@@ -3551,6 +3568,89 @@ body .vc_edit_form_elements .vc_wrapper-param-type-nectar_numerical.no-device-gr
 .vc_edit_form_elements .vc_wrapper-param-type-nectar_numerical.no-device-group[class*="constrain_group_"][data-vc-shortcode-param-name*="top"] .edit_form_line,
 .vc_edit_form_elements .vc_wrapper-param-type-nectar_numerical.no-device-group[class*="constrain_group_"][data-vc-shortcode-param-name*="top"] .edit_form_line {
   margin-top: 28px;
+}
+
+/* CF Repeater */
+
+.nectar-repeater-field {
+  padding: 0 15px 15px;
+}
+.nectar-repeater-field__item {
+  position: relative;
+  border: 1px solid #bfbfbf;
+  border-radius: 5px;
+  padding: 25px;
+  margin-bottom: 25px;
+}
+
+.nectar-repeater-field__item .wpb_element_label {
+  margin-top: 10px;
+  min-width: 140px;
+}
+
+.nectar-repeater-field__item form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.nectar-repeater-field__item form > div {
+  display: flex;
+  gap: 20px;
+}
+
+.nectar-repeater-field__item__remove {
+  position: absolute;
+  top: -15px;
+  right: 25px;
+  border-radius: 50%;
+  border: 1px solid #bfbfbf;
+  padding: 4px;
+  height: 20px;
+  width: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  color: #444;
+  line-height: 1;
+  background-color: #fff;
+}
+
+.nectar-repeater-field__item__remove:hover {
+  color: var(--nectar-blue);
+}
+
+.nectar-repeater-field__template {
+  display: none;
+}
+
+.nectar-repeater-field__add {
+  padding: 10px 20px;
+  border-radius: 5px;
+  color: #fff!important;
+  font-weight: 500;
+  text-decoration: none;
+  gap: 6px;
+  display: inline-flex;
+  align-items: center;
+  background-color: var(--nectar-blue);
+}
+
+.nectar-repeater-field__add:hover {
+  background-color: #2e4ce8;
+}
+
+.nectar-repeater-field svg {
+  height: 20px;
+  width: 20px;
+  fill: currentColor;
+}
+
+.nectar-repeater-field .salient-fancy-checkbox {
+  margin-bottom: 10px;
+}
+.nectar-repeater-field .salient-fancy-checkbox:not(.fancy-checkbox-activated) ~ .dependent {
+  display: none;
 }
 
 

@@ -22,8 +22,8 @@ Description: Off canvas menu set to "Fullscreen" in theme options
      -webkit-box-sizing:content-box;
      -moz-box-sizing:content-box
 }
- #slide-out-widget-area.fullscreen .inner,
- #slide-out-widget-area.fullscreen-alt .inner{
+ #slide-out-widget-area.fullscreen .inner-wrap > .inner,
+ #slide-out-widget-area.fullscreen-alt .inner-wrap > .inner{
     width:100%;
      position:relative;
      top: 0;
@@ -154,7 +154,7 @@ body #slide-out-widget-area .inner .off-canvas-menu-container li.menu-item-has-i
    animation: fullscreenGlobalFadein 0.5s ease-in-out forwards 0.4s;
 }
 
-#slide-out-widget-area-bg:not(.open) + #slide-out-widget-area[class*="fullscreen"].open .nectar-global-section {
+#slide-out-widget-area-bg:not(.open) + #slide-out-widget-area[class*="fullscreen"].open .nectar-global-section:not(.nectar-global-section-megamenu) {
    opacity: 0!important;
 }
 
@@ -312,8 +312,8 @@ body #slide-out-widget-area .inner .off-canvas-menu-container li.menu-item-has-i
      transform:scale(0);
      -webkit-transform:scale(0);
 }
- #slide-out-widget-area.fullscreen .inner >div,
- #slide-out-widget-area.fullscreen-alt .inner >div{
+ #slide-out-widget-area.fullscreen .inner-wrap > .inner >div,
+ #slide-out-widget-area.fullscreen-alt .inner-wrap > .inner >div{
     margin:13px 0px
 }
  body #slide-out-widget-area.fullscreen .slide_out_area_close,

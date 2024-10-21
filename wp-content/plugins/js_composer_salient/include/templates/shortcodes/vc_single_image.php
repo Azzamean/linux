@@ -105,7 +105,9 @@ switch ( $source ) {
 }
 
 if ( ! $img ) {
-	$img['thumbnail'] = '<img class="vc_img-placeholder vc_single_image-img" src="' . esc_url( $default_src ) . '" />';
+	$img = [
+		'thumbnail' => '<img class="vc_img-placeholder vc_single_image-img" src="' . esc_url( $default_src ) . '" />',
+	];
 }
 
 $el_class = $this->getExtraClass( $el_class );

@@ -11,12 +11,14 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * List of tabs
  * 1. General Settings - set access rules and allowed content types for editors.
- * 2. Role Manager - set access rules and allowed content types for editors.
- * 3. Design Options - custom color and spacing editor for VC shortcodes elements.
- * 4. Custom CSS - add custom css to your WP pages.
- * 5. Custom JS - add custom css to your WP pages.
- * 6. Product License - license key activation for automatic VC updates.
- * 7. My Shortcodes - automated mapping tool for shortcodes.
+ * 2. Modules Manager - set access to certain plugin functionality.
+ * 3. Role Manager - set access rules and allowed content types for editors.
+ * 4. Product License - license key activation for automatic VC updates.
+ * 5. Design Options - custom color and spacing editor for VC shortcodes elements.
+ * 6. Custom CSS - add custom css to your WP pages.
+ * 7. Custom JS - add custom css to your WP pages.
+ * 8. WPBakery AI - access to AI options.
+ * 9. My Shortcodes - automated mapping tool for shortcodes.
  *
  * @link http://codex.wordpress.org/Settings_API WordPress settings API
  * @since 3.4
@@ -71,6 +73,8 @@ class Vc_Settings {
 	 * @var array
 	 */
 	public $google_fonts_subsets_excluded = array();
+
+	protected $google_fonts_subsets_settings;
 
 	/**
 	 * @param string $field_prefix
@@ -155,8 +159,6 @@ class Vc_Settings {
 	 */
 	public function renderTab( $tab ) {
 		require_once vc_path_dir( 'CORE_DIR', 'class-vc-page.php' );
-		wp_enqueue_style( 'wp-color-picker' );
-		wp_enqueue_script( 'wp-color-picker' );
 
 		$tabs = $this->getTabs();
 		foreach ( $tabs as $key => $value ) {
@@ -351,7 +353,7 @@ class Vc_Settings {
 		wp_enqueue_script( 'wpb_js_composer_settings' );
 		wp_enqueue_script( 'popper' );
 
-		$this->locale = array(
+		$this->locale = apply_filters( 'vc_get_settings_locale', array(
 			'are_you_sure_reset_css_classes' => esc_html__( 'Are you sure you want to reset to defaults?', 'js_composer' ),
 			'are_you_sure_reset_color' => esc_html__( 'Are you sure you want to reset to defaults?', 'js_composer' ),
 			'saving' => esc_html__( 'Saving...', 'js_composer' ),
@@ -371,8 +373,7 @@ class Vc_Settings {
 			'error_param_already_exists' => esc_html__( 'Param %s already exists. Param names must be unique.', 'js_composer' ),
 			'error_wrong_param_name' => esc_html__( 'Please use only letters, numbers and underscore for param name', 'js_composer' ),
 			'error_enter_valid_shortcode' => esc_html__( 'Please enter valid shortcode to parse!', 'js_composer' ),
-
-		);
+		));
 		wp_localize_script( 'wpb_js_composer_settings', 'vcData', apply_filters( 'vc_global_js_data', array(
 			'version' => WPB_VC_VERSION,
 			'debug' => false,
@@ -402,10 +403,7 @@ class Vc_Settings {
 	 * @since 7.7
 	 */
 	public function use_modules_callback() {
-
-		?>
-		<p><?php esc_html_e( 'Control module loading and availability in the editor. Disabled modules will be hidden from all user roles and corresponding functionality will not be loaded.', 'js_composer' ); ?></p>
-		<?php
+		vc_include_template( 'pages/vc-settings/partials/modules/title.php' );
 
 		$modules_manager = vc_modules_manager();
 		$all_modules = $modules_manager->get_all();
@@ -419,20 +417,23 @@ class Vc_Settings {
 				$hidden_value[ $module_slug ] = false;
 				$module_value = '';
 			}
-			?>
-			<div class="wpb-module-wrapper">
-				<p><?php echo esc_html( $module_data['name'] ) ?></p>
-				<div class="wpb-toggle-wrapper">
-					<input type="checkbox" <?php esc_attr_e( $module_value ); ?> id="<?php esc_html_e( $module_slug ); ?>" class="module-toggle" />
-					<label for="<?php esc_html_e( $module_slug ); ?>"><?php esc_html_e( $module_data['name'] ); ?></label>
-				</div>
-			</div>
-			<?php
+			vc_include_template(
+				'pages/vc-settings/partials/modules/toggle.php',
+				[
+					'module_data' => $module_data,
+					'module_slug' => $module_slug,
+					'module_value' => $module_value,
+				]
+			);
 		}
 
-		?>
-		<input type="hidden" value="<?php esc_attr_e( wp_json_encode( $hidden_value ) ); ?>" id="wpb_js_modules" name="<?php echo esc_attr( $modules_manager->get_option_name() ); ?>">
-		<?php
+		vc_include_template(
+			'pages/vc-settings/partials/modules/hidden-input.php',
+			[
+				'hidden_value' => $hidden_value,
+				'option_name' => $modules_manager->get_option_name(),
+			]
+		);
 	}
 
 	/**
@@ -747,7 +748,7 @@ class Vc_Settings {
 	}
 
 	/**
-	 * We should reset some modules optionality when modules option changed.
+	 * We should reset some optionality of other modules when modules option changed.
 	 *
 	 * @since 7.7
 	 */

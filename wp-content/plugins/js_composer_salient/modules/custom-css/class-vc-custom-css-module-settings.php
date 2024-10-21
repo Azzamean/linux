@@ -19,7 +19,7 @@ class Vc_Custom_Css_Module_Settings
 
 		add_action( 'vc_settings_set_sections', [$this, 'add_settings_section'] );
 
-		add_action( 'vc-settings-render-tab-vc-custom_css', [$this, 'load_page_settings_custom_css'] );
+		add_action( 'vc-settings-render-tab-vc-custom_css', [$this, 'load_module_settings_assets'] );
 	}
 
 	/**
@@ -31,9 +31,7 @@ class Vc_Custom_Css_Module_Settings
 	 */
 	public function set_setting_tab( $tabs ) {
 		if ( vc_settings()->showConfigurationTabs() ) {
-			if ( ! vc_is_as_theme() || apply_filters( 'vc_settings_page_show_design_tabs', false ) ) {
-				$tabs['vc-custom_css'] = esc_html__( 'Custom CSS', 'js_composer' );
-			}
+			$tabs['vc-custom_css'] = esc_html__( 'Custom CSS', 'js_composer' );
 		}
 
 		return $tabs;
@@ -88,11 +86,18 @@ class Vc_Custom_Css_Module_Settings
 	}
 
 	/**
-	 * Load script for a custom css on our setting page.
+	 * Load assets related to module settings.
 	 *
-	 * since 7.7
+	 * since 7.8
 	 */
-	public function load_page_settings_custom_css() {
+	public function load_module_settings_assets() {
 		wp_enqueue_script( 'ace-editor', vc_asset_url( 'lib/vendor/node_modules/ace-builds/src-min-noconflict/ace.js' ), array( 'jquery-core' ), WPB_VC_VERSION, true );
+		wp_enqueue_script( 'wpb-code-editor', vc_asset_url( 'js/dist/post-code-editor.min.js' ), array( 'jquery-core' ), WPB_VC_VERSION, true );
+		wp_enqueue_script( 'wpb_custom_css_module', vc_asset_url( '../modules/custom-css/assets/dist/module.min.js' ), array(), WPB_VC_VERSION, true );
+		wp_enqueue_style( 'wpb_custom_css_module', vc_asset_url( '../modules/custom-css/assets/dist/module.min.css' ), false, WPB_VC_VERSION );
+		if ( vc_modules_manager()->is_module_on( 'vc-ai' ) ) {
+			wp_enqueue_script( 'wpb_ai_module', vc_asset_url( '../modules/ai/assets/dist/module.min.js' ), [], WPB_VC_VERSION, true );
+			wp_enqueue_style( 'wpb_ai_module', vc_asset_url( '../modules/ai/assets/dist/module.min.css' ), false, WPB_VC_VERSION );
+		}
 	}
 }

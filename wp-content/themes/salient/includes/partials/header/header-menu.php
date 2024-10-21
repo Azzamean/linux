@@ -101,14 +101,21 @@ if( $nectar_header_format === 'centered-menu-bottom-bar' &&
 						?>
 						<ul class="buttons" data-user-set-ocm="<?php echo esc_attr( $nectar_header_options['user_set_side_widget_area'] ); ?>"><?php nectar_header_button_items(); ?></ul>
 						<?php } ?>
-						<?php if ( $nectar_header_options['side_widget_area'] === '1' || $nectar_header_options['side_widget_class'] === 'simple' ) { ?>
+						<?php if ( $nectar_header_options['side_widget_area'] === '1' || $nectar_header_options['side_widget_class'] === 'simple' ) { 
+							$ocm_anchor = ( NectarThemeManager::$ocm_style !== 'simple' ) ? '#slide-out-widget-area' : '#mobile-menu';
+						?>
 							<div class="slide-out-widget-area-toggle mobile-icon <?php echo esc_attr( $nectar_header_options['side_widget_class'] ); ?>" data-custom-color="<?php echo esc_attr($nectar_header_options['ocm_menu_btn_color']); ?>" data-icon-animation="simple-transform">
-								<div> <a href="#slide-out-widget-area" role="button" aria-label="<?php echo esc_attr__('Navigation Menu', 'salient'); ?>" aria-expanded="false" class="<?php echo 'closed' . esc_attr($menu_label_class); ?>">
+								<div> <a href="<?php echo esc_attr($ocm_anchor); ?>" role="button" aria-label="<?php echo esc_attr__('Navigation Menu', 'salient'); ?>" aria-expanded="false" class="<?php echo 'closed' . esc_attr($menu_label_class); ?>">
 									<?php if( true === $menu_label ) {
 										echo '<i class="label">' . esc_html__('Menu','salient') .'</i>';
 									} else {
 										echo '<span class="screen-reader-text">'.esc_html__('Menu','salient').'</span>';
-									} ?><span aria-hidden="true"> <i class="lines-button x2"> <i class="lines"></i> </i> </span> </a> </div>
+									}
+									$icon_variant_attr = (isset($nectar_options['header-slide-out-widget-area-icon-variant']) && $nectar_options['header-slide-out-widget-area-icon-variant'] !== 'default') ? 
+									' data-variant="'.esc_attr($nectar_options['header-slide-out-widget-area-icon-variant']).'"' : 
+									'';
+									echo '<span aria-hidden="true"> <i class="lines-button x2"'.$icon_variant_attr.'> <i class="lines"></i> </i> </span> </a> </div>'; 
+									?>
 							</div>
 						<?php } ?>
 					</nav>
@@ -148,15 +155,21 @@ if( $nectar_header_format === 'centered-menu-bottom-bar' &&
 				?>
 				<?php
 				if ( $nectar_header_options['side_widget_area'] === '1' || $nectar_header_options['side_widget_class'] === 'simple' ) {
+					$ocm_anchor = ( NectarThemeManager::$ocm_style !== 'simple' ) ? '#slide-out-widget-area' : '#mobile-menu';
 					?>
 					<div class="slide-out-widget-area-toggle mobile-icon <?php echo esc_attr( $nectar_header_options['side_widget_class'] ); ?>" data-custom-color="<?php echo esc_attr($nectar_header_options['ocm_menu_btn_color']); ?>" data-icon-animation="simple-transform">
-						<div> <a href="#slide-out-widget-area" role="button" aria-label="<?php echo esc_attr__('Navigation Menu', 'salient'); ?>" aria-expanded="false" class="<?php echo 'closed' . esc_attr($menu_label_class); ?>">
+						<div> <a href="<?php echo $ocm_anchor; ?>" role="button" aria-label="<?php echo esc_attr__('Navigation Menu', 'salient'); ?>" aria-expanded="false" class="<?php echo 'closed' . esc_attr($menu_label_class); ?>">
 							<?php if( true === $menu_label ) {
 								echo '<i class="label">' . esc_html__('Menu','salient') .'</i>';
 							}
 							else {
 								echo '<span class="screen-reader-text">'.esc_html__('Menu','salient').'</span>';
-							} ?><span aria-hidden="true"> <i class="lines-button x2"> <i class="lines"></i> </i> </span>
+							} 
+							$icon_variant_attr = (isset($nectar_options['header-slide-out-widget-area-icon-variant']) && $nectar_options['header-slide-out-widget-area-icon-variant'] !== 'default') ? 
+									' data-variant="'.esc_attr($nectar_options['header-slide-out-widget-area-icon-variant']).'"' : 
+									'';
+							echo '<span aria-hidden="true"> <i class="lines-button x2"'.$icon_variant_attr.'> <i class="lines"></i> </i> </span>';
+							?>
 						</a></div>
 					</div>
 				<?php } ?>

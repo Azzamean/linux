@@ -45,6 +45,10 @@
 		height:0
 }
 
+body.single-portfolio .container-wrap > .main-content > .row:has(~ .nectar-global-section) {
+	padding-bottom: 0;
+}
+
 body.single-portfolio div[data-project-header-bg="true"] .container-wrap{
 	 padding-top:40px!important
 }
@@ -2843,13 +2847,20 @@ body.cssreflections .portfolio-items .parallaxImg.transition {
 }
 .portfolio-items[data-ps="2"] .col .work-item:hover .work-info,
 .portfolio-items[data-ps="2"] .col .work-item:hover .work-info .vert-center > *,
-.portfolio-items[data-ps="1"] .col .work-item:hover .work-info,
-.portfolio-items[data-ps="1"] .col .work-item:hover .work-info .vert-center > *,
 .recent-work-carousel.default-style .work-item:hover .work-info .vert-center > *,
 .portfolio-items.carousel .col .work-item.style-2:hover .work-info,
 .portfolio-items.carousel .col .work-item.style-2:hover .work-info .vert-center > * {
 	opacity: 1;
 }
+
+/* fix ios double tap issue */
+@media only screen and (min-width: 1000px) {
+	.portfolio-items[data-ps="1"] .col .work-item:hover .work-info,
+	.portfolio-items[data-ps="1"] .col .work-item:hover .work-info .vert-center > * {
+		opacity: 1;
+	}
+}
+
 .portfolio-items[data-ps="1"] .col .work-item:hover .work-info-bg,
 .portfolio-items[data-ps="2"] .col .work-item:hover .work-info-bg,
 .portfolio-items.carousel .col .work-item.style-2:hover .work-info-bg {
@@ -4197,10 +4208,7 @@ body[data-ext-responsive="true"][data-full-width-header="true"] .nectar_fullscre
 		opacity: 0;
 		text-indent: -9999px;
 	}
-	.portfolio-items[data-ps="1"] .col .work-item:hover .work-info .vert-center > a {
-		opacity: 0;
-	}
-	
+
 	.portfolio-items .col .work-item .work-info .custom-content .nectar-button {
 		width: auto;
 	}

@@ -4,6 +4,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 /**
  * @var array $notice
+ * @var string $link
  */
 ?>
 <div id="wpb-notice-<?php esc_attr_e( $notice['id'] ); ?>" class="updated wpb-notice">

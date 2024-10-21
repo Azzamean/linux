@@ -99,7 +99,7 @@ function vc_classic_editor_post_states( $state ) {
  */
 function vc_is_wpb_content() {
 	$post = get_post();
-	if ( ! empty( $post ) && isset( $post->post_content ) && preg_match( '/\[vc_row/', $post->post_content ) ) {
+	if ( ! empty( $post ) && isset( $post->post_content ) && wpb_get_post_editor_status( $post->ID ) ) {
 		return true;
 	}
 

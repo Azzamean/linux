@@ -50,18 +50,22 @@ Description: Header Layout set to "Centered Logo Between Menu Alt" in theme opti
     position: static;
   }
 
-  #header-outer[data-lhe="animated_underline"] #top .right-aligned-menu-items nav > ul > li.menu-item:last-of-type > a {
+  #header-outer[data-lhe="animated_underline"] #top .right-aligned-menu-items nav > ul > li.menu-item:last-of-type > a,
+  #header-outer[data-lhe="text_reveal"] #top .right-aligned-menu-items nav > ul > li.menu-item:last-of-type > a {
     margin-right: 0;
   }
-  #header-outer[data-lhe="animated_underline"] #top .span_9 nav > ul > li.menu-item:first-of-type > a {
+  #header-outer[data-lhe="animated_underline"] #top .span_9 nav > ul > li.menu-item:first-of-type > a,
+  #header-outer[data-lhe="text_reveal"] #top .span_9 nav > ul > li.menu-item:first-of-type > a {
     margin-left: 0;
   }
 
   #header-outer[data-lhe="default"] #top .right-aligned-menu-items nav > ul > li.menu-item:last-of-type:not([class*="button"]) > a,
+  #header-outer[data-lhe="text_reveal"] #top .right-aligned-menu-items nav > ul > li.menu-item:last-of-type:not([class*="button"]) > a,
   #header-outer .nectar-header-text-content-wrap:last-child .nectar-header-text-content {
     padding-right: 0;
   }
-  #header-outer[data-lhe="default"] #top .span_9 nav > ul > li.menu-item:first-of-type:not([class*="button"]) > a {
+  #header-outer[data-lhe="default"] #top .span_9 nav > ul > li.menu-item:first-of-type:not([class*="button"]) > a,
+  #header-outer[data-lhe="text_reveal"] #top .span_9 nav > ul > li.menu-item:first-of-type:not([class*="button"]) > a {
     padding-left: 0;
   }
   

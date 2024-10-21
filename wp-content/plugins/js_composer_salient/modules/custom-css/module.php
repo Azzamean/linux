@@ -68,6 +68,16 @@ class Vc_Custom_Css_Module
 			$this,
 			'build_custom_css',
 		) );
+
+		add_filter( 'vc_enqueue_backend_editor_js', array(
+			$this,
+			'enqueue_editor_js'
+		));
+
+		add_filter( 'vc_enqueue_frontend_editor_js', array(
+			$this,
+			'enqueue_editor_js'
+		));
 	}
 
 	/**
@@ -224,5 +234,19 @@ class Vc_Custom_Css_Module
 
 		return true;
 
+	}
+
+	/**
+	 * Load module JS in frontend and backend editor.
+	 *
+	 * @since 7.8
+	 * @param array $dependencies
+	 * @return array
+	 */
+	public function enqueue_editor_js( $dependencies ) {
+		$dependencies[] = 'ace-editor';
+		$dependencies[] = 'wpb-code-editor';
+
+		return $dependencies;
 	}
 }

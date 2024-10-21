@@ -55,8 +55,8 @@ if ( 'nivo' === $type ) {
 	$el_end = '</li>';
 	$slides_wrap_start = '<ul class="slides">';
 	$slides_wrap_end = '</ul>';
-	wp_enqueue_style( 'flexslider' );
-	wp_enqueue_script( 'flexslider' );
+	wp_enqueue_style( 'wpb_flexslider' );
+	wp_enqueue_script( 'wpb_flexslider' );
 } elseif ( 'image_grid' === $type ) {
 	wp_enqueue_script( 'vc_grid-js-imagesloaded' );
 	wp_enqueue_script( 'isotope' );

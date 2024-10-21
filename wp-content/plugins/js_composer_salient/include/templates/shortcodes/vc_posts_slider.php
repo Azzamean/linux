@@ -52,8 +52,8 @@ if ( 'nivo' === $type ) {
 	$el_end = '</li>';
 	$slides_wrap_start = '<ul class="slides">';
 	$slides_wrap_end = '</ul>';
-	wp_enqueue_style( 'flexslider' );
-	wp_enqueue_script( 'flexslider' );
+	wp_enqueue_style( 'wpb_flexslider' );
+	wp_enqueue_script( 'wpb_flexslider' );
 }
 $flex_fx = '';
 if ( 'flexslider' === $type || 'flexslider_fade' === $type || 'fading' === $type ) {

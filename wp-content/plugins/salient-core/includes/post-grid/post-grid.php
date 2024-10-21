@@ -93,7 +93,11 @@ class NectarPostGrid {
     $attributes['vertical_list_read_more']         = sanitize_text_field($_POST['settings']['vertical_list_read_more']); 
     $attributes['animation']                       = sanitize_text_field($_POST['settings']['animation']);
     $attributes['read_more_button']                = sanitize_text_field($_POST['settings']['read_more_button']);
-    
+    $attributes['custom_fields']                   = $_POST['settings']['custom_fields']; // sanitized later
+    $attributes['custom_fields_location']          = sanitize_text_field($_POST['settings']['custom_fields_location']);
+    $attributes['display_type']                    = sanitize_text_field($_POST['settings']['display_type']);
+    $attributes['text_content_layout']             = sanitize_text_field($_POST['settings']['text_content_layout']);
+
     if( 'all' === $category || '-1' === $category ) {
       $category  = null;
     }
@@ -132,6 +136,8 @@ class NectarPostGrid {
       'offset'              => $post_offset,
       'post__not_in'        => $excluded_posts
     );
+
+    $nectar_post_grid_query_args = apply_filters( 'nectar_post_grid_query', $nectar_post_grid_query_args );
 
     if( 'portfolio' === $post_type ) {
       $nectar_post_grid_query_args['post_type']    = $post_type;
@@ -195,12 +201,15 @@ class NectarPostGrid {
         'custom_query_tax' => '',
         'cpt_all_filter' => '',
         'portfolio_category' 	=> 'all',
+        'portfolio_starting_category' 	=> 'all',
         'blog_category' 	=> 'all',
+        'blog_starting_category' => 'all',
         'text_content_layout' => 'top_left',
         'subtext' => 'none',
         'orderby' => 'date',
         'order' 	=> 'DESC',
         'display_type' => 'grid',
+        'stack_animation_effect' => 'none',
         'flickity_controls' => '',
         'flickity_overflow' => '',
         'flickity_wrap_around' => '',
@@ -227,6 +236,7 @@ class NectarPostGrid {
         'author_position' => 'default',
         'additional_meta_size' => 'default',
         'ignore_sticky_posts' => '',
+        'exclude_current_post' => '',
         'category_functionality' => 'default',
         'category_style' => 'underline',
         'category_position' => 'default',
@@ -286,6 +296,8 @@ class NectarPostGrid {
         'content_next_to_image_image_gap' => 'default',
         'content_next_to_image_image_position' => 'left',
         'content_next_to_image_vertical_align' => 'top',
+        'custom_fields' => '',
+        'custom_fields_location' => '',
         'css_class_name' => ''
       );
   }
@@ -345,6 +357,14 @@ class NectarPostGrid {
       $data_attributes .= 'data-indicator-text="'. esc_html($indicator_text). '" ';
       if( $enable_masonry ) {
         $data_attributes .= 'data-masonry="'.esc_attr($enable_masonry).'" ';
+      }
+    }
+
+    if ( 'stack' === $display_type ) {
+      $data_attributes .= 'data-stack-animation-effect="'.esc_attr($stack_animation_effect).'" ';
+      $columns = '1';
+      if ($color_overlay) {
+        $data_attributes .= 'data-post-item-bg-color="'.esc_attr($color_overlay).'" ';
       }
     }
     

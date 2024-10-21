@@ -2,8 +2,11 @@
 if ( ! defined( 'ABSPATH' ) ) {
 	die( '-1' );
 }
+/**
+ * @var Vc_Frontend_Editor $editor
+ * @var bool $wpb_vc_status
+ */
 
-/** @var Vc_Frontend_Editor $editor */
 global $menu, $submenu, $parent_file, $post_ID, $post, $post_type, $post_type_object, $plugin_page, $title;
 $post_ID = $editor->post_id;
 $post = $editor->post;
@@ -24,6 +27,7 @@ require_once $editor->adminFile( 'admin-header.php' );
 // @since 4.8 js logic for user role access manager.
 vc_include_template( 'editors/partials/access-manager-js.tpl.php' );
 $custom_tag = 'script';
+$modules = vc_modules_manager()->get_settings();
 ?>
 	<div id="vc_preloader">
 		<!-- nectar addition -->
@@ -36,6 +40,7 @@ $custom_tag = 'script';
 		window.vc_mode = '<?php echo esc_js( vc_mode() ); ?>';
 		window.vc_iframe_src = '<?php echo esc_js( $editor->url ); ?>';
 		window.wpbGutenbergEditorUrl = '<?php echo esc_js( set_url_scheme( admin_url( 'post-new.php?post_type=wpb_gutenberg_param' ) ) ); ?>';
+		window.vc_modules = <?php echo wp_json_encode( $modules ); ?>;
 	</<?php echo esc_attr( $custom_tag ); ?>>
 	<input type="hidden" name="vc_post_title" id="vc_title-saved" value="<?php echo esc_attr( $post_title ); ?>"/>
 	<input type="hidden" name="vc_post_id" id="vc_post-id" value="<?php echo esc_attr( $editor->post_id ); ?>"/>
@@ -111,6 +116,7 @@ vc_include_template(
 	window.vc_roles = [];
 	window.vcAdminNonce = '<?php echo esc_js( vc_generate_nonce( 'vc-admin-nonce' ) ); ?>';
 	window.wpb_js_google_fonts_save_nonce = '<?php echo esc_js( wp_create_nonce( 'wpb_js_google_fonts_save' ) ); ?>';
+	window.wpb_vc_js_status = '<?php echo esc_js( wp_json_encode( $wpb_vc_status ) ); ?>';
 	window.vc_post_id = <?php echo esc_js( $post_ID ); ?>;
 	window.vc_auto_save = <?php echo wp_json_encode( get_option( 'wpb_js_auto_save' ) ) ?>;
 </<?php echo esc_attr( $custom_tag ); ?>>

@@ -42,9 +42,14 @@ if( !empty($nectar_options['blog_lazy_load']) && '1' === $nectar_options['blog_l
   $width  = ( !empty($img_meta['width']) ) ? $img_meta['width'] : '100';
   $height = ( !empty($img_meta['height']) ) ? $img_meta['height'] : '100';
   
+  $skip_lazy_class = '';
+  $disable_third_party_lazy_loading = apply_filters('nectar_disable_third_party_lazy_loading', true);
+  if ( $disable_third_party_lazy_loading ) {
+    $skip_lazy_class = ' skip-lazy';
+  }
   echo '<a href="' . esc_url( get_permalink() ) . '"><span class="post-featured-img">';
   if( has_post_thumbnail() ) { 
-    echo '<img class="nectar-lazy skip-lazy wp-post-image" alt="'.esc_attr($alt_tag).'" height="'.esc_attr($height).'" width="'.esc_attr($width).'" data-nectar-img-src="'.esc_attr($img_src[0]).'" data-nectar-img-srcset="'.esc_attr($img_srcset).'" sizes="'.esc_attr($image_attrs['sizes']).'" />';
+    echo '<img class="nectar-lazy wp-post-image'.$skip_lazy_class.'" alt="'.esc_attr($alt_tag).'" height="'.esc_attr($height).'" width="'.esc_attr($width).'" data-nectar-img-src="'.esc_attr($img_src[0]).'" data-nectar-img-srcset="'.esc_attr($img_srcset).'" sizes="'.esc_attr($image_attrs['sizes']).'" />';
   }
   echo '</span></a>';
   

@@ -31,7 +31,8 @@ extract(shortcode_atts(array(
 	'margin_left' => '',
 	'zindex' => '',
 	'screen_reader_text' => '',
-	'pointer_events' => ''
+	'pointer_events' => '',
+	'class_name' => '',
 ), $atts));
 
 // Icon.
@@ -200,13 +201,22 @@ if( !empty($url) ) {
 if( function_exists('nectar_el_dynamic_classnames') && 
     function_exists('nectar_position_param_group_classes') ) {
 	$dynamic_el_styles = nectar_el_dynamic_classnames('nectar_icon', $atts);
-	$dynamic_position_classes = ' ' . nectar_position_param_group_classes( $atts );
+	$dynamic_classes = ' ' . nectar_position_param_group_classes( $atts );
 	if( 'none' === $pointer_events ) {
-		$dynamic_position_classes .= ' no-pointer-events';
+		$dynamic_classes .= ' no-pointer-events';
 	}
 } else {
 	$dynamic_el_styles = '';
-	$dynamic_position_classes = '';
+	$dynamic_classes = '';
+}
+
+// pulsate animation.
+if( 'pulsating-circle' === $icon_family ) {
+	$dynamic_classes .= ' nectar-pulsate';
+}
+
+if( !empty($class_name) ) {
+    $dynamic_classes .= ' '. $class_name;
 }
 
 $icon_attributes_escaped = '';
@@ -218,7 +228,7 @@ if( 'linea' === $icon_family && 'true' === $enable_animation ) {
 	$icon_attributes_escaped .= ' data-draw="'.esc_attr($enable_animation).'"';
 }
 
-echo '<div class="nectar_icon_wrap'.$dynamic_position_classes.'"'.$icon_attributes_escaped.' data-style="'.esc_attr($icon_style).'" data-padding="'.esc_attr($icon_padding).'" data-color="'.esc_attr(strtolower($icon_color)).'" style="'.$wrapping_styles.'" >
+echo '<div class="nectar_icon_wrap'.$dynamic_classes.'"'.$icon_attributes_escaped.' data-style="'.esc_attr($icon_style).'" data-padding="'.esc_attr($icon_padding).'" data-color="'.esc_attr(strtolower($icon_color)).'" style="'.$wrapping_styles.'" >
 		<div class="nectar_icon'.$dynamic_el_styles.'" '.$grad_dimensions.'>'. $icon_link. $icon_markup.'</div>
 	</div>';
 

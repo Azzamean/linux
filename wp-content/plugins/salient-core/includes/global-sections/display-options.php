@@ -344,6 +344,17 @@ if (!class_exists('Nectar_Global_Sections_Display_Options')) {
                     ),
                 ),
 
+                'portfolio' => array(
+                    array(
+                        'value' => 'salient_portfolio_hook_single_before_content',
+                        'label' => esc_html__('Before Single Project Content', 'salient-core'),
+                    ),
+                    array(
+                        'value' => 'salient_portfolio_hook_single_after_content',
+                        'label' => esc_html__('After Single Project Content', 'salient-core'),
+                    )
+                ),
+
                 'woocommerce' => array(
                     array(
                         'value' => 'nectar_woocommerce_before_shop_loop',
@@ -520,6 +531,11 @@ if (!class_exists('Nectar_Global_Sections_Display_Options')) {
                     array(
                         'label' => esc_html__('Menu','salient-core'),
                         'options' => $this->theme_hooks['menu']
+
+                    ),
+                    array(
+                        'label' => esc_html__('Portfolio','salient-core'),
+                        'options' =>  $this->theme_hooks['portfolio']
 
                     ),
                     array(

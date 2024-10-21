@@ -87,6 +87,13 @@ switch($icon_family) {
 $icon_markup = null;
 $has_icon    = 'false';
 
+// Dynamic style classes.
+if( function_exists('nectar_el_dynamic_classnames') ) {
+    $dynamic_el_styles = ' '. nectar_el_dynamic_classnames('nectar_horizontal_list_item', $atts);
+} else {
+	$dynamic_el_styles = '';
+}
+
 // SVG Icon.
 if( $icon_family === 'iconsmind' ) {
 	
@@ -126,7 +133,7 @@ else {
 }
 
 
-echo '<div class="nectar-hor-list-item '.$hasbtn_class.'" data-hover-effect="'.esc_attr($hover_effect).'" data-br="'.esc_attr($border_radius).'" data-font-family="'.esc_attr($font_family).'" data-color="'.esc_attr($hover_color).'" data-columns="'.esc_attr($columns).'" data-column-layout="'.esc_attr($column_layout_to_use).'">'; 
+echo '<div class="nectar-hor-list-item '.$hasbtn_class.$dynamic_el_styles.'" data-hover-effect="'.esc_attr($hover_effect).'" data-br="'.esc_attr($border_radius).'" data-font-family="'.esc_attr($font_family).'" data-color="'.esc_attr($hover_color).'" data-columns="'.esc_attr($columns).'" data-column-layout="'.esc_attr($column_layout_to_use).'">'; 
 	
 	for($i = 0; $i < intval($columns); $i++) {
 

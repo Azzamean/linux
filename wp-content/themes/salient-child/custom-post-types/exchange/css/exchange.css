@@ -1,0 +1,496 @@
+/***********************************/
+
+
+/* SEARCH AND FILTER RESULTS PAGE */
+
+
+/*********************************/
+ 
+
+/* COLORS
+*
+* 
+* 
+* Yellow: #FFC72C;
+* Blue: #0A3799;
+* Black: #333333;
+* Green: #90D633;
+* 
+* 
+* 
+* Hardware: #0A3799
+* Cores: #FFC72C
+* Software: #0A6B7C
+* Services: #62cbc9
+* Learn: #FDDA64
+* 
+* 
+* 
+*/
+
+.exchange-header,
+.exchange-header h1 {
+	color: #ffffff;
+}
+
+.exchange-header p {
+	color: #ffffff;
+	font-size: 28px;
+	line-height: 1.3;
+	color: #fff !important;
+	font-family: 'Open Sans';
+	font-weight: 300;
+}
+
+.exchange-header h1 {
+	font-size: 42px;
+	line-height: 48px;
+	font-weight: 400;
+}
+
+.sf-field-search,
+.sf-field-submit {
+	display: none !important;
+}
+
+.top-search-box {
+	max-width: 250px;
+	background-color: #ffffff !important;
+	padding: 5px !important;
+	font-size: 1rem !important;
+	margin-left: 30px;
+	height: 40px;
+}
+
+.top-search-btn {
+	background: #0A3799 !important;
+	font-family: 'FontAwesome' !important;
+	font-weight: 400 !important;
+}
+
+.sf-top-categories input:nth-child(7),
+.sf-top-categories label:nth-child(8) {
+	/* display: none !important; */
+}
+
+.sf-field-taxonomy-exchange_category {
+	padding: 0 !important;
+}
+
+.vc_col-sm-12.wpb_column.column_container .top-search-btn {
+	border-radius: 0 !important;
+	padding: 10px 15px !important;
+	height: 40px;
+	margin-left: -5px;
+	border-top-right-radius: 5px !important;
+	border-bottom-right-radius: 5px !important;
+}
+
+.vc_col-sm-12.wpb_column.column_container .top-search-btn:hover,
+.vc_col-sm-12.wpb_column.column_container .top-search-btn:focus {
+	transform: none !important;
+	opacity: 1 !important;
+	box-shadow: none !important;
+}
+
+.sf-categories {
+	display: none !important;
+}
+
+.sf-top-categories {
+	display: inline-block;
+	margin-left: 30px;
+}
+
+.sf-top-categories label {
+	margin: 0 5px 0 2px;
+	color: #333333;
+	font-size: 1rem;
+}
+
+.results-information {
+	border: 1px solid #C2C2C2;
+	border-radius: 10px;
+	margin: 0 30px 30px 0;
+}
+
+.results-title {
+	color: #FFC72C;
+}
+
+.results-provider {
+	color: #0A3799;
+}
+
+.results-image {
+	max-height: 100px;
+}
+
+.top-results {
+	margin: 15px !important;
+}
+
+.bottom-results .bottom-results-left,
+.bottom-results .bottom-results-right {
+	margin: 1px 0 0 -1px !important;
+}
+
+.bottom-results-right,
+.results-page {
+	float: right !important;
+}
+
+.results-category {
+	color: #ffffff;
+	display: inline-block;
+	border-bottom-left-radius: 10px;
+	text-transform: uppercase;
+	width: 200px;
+	text-align: center;
+	padding: 5px 0;
+}
+
+.results-page {
+	background-color: #FFC72C;
+	color: #ffffff;
+	display: inline-block;
+	border-bottom-right-radius: 10px;
+	text-transform: uppercase;
+	width: 150px;
+	text-align: center;
+	padding: 5px 0;
+}
+
+.section-results {
+	clear: both;
+	padding: 0px;
+	margin: 0px;
+}
+
+.col-results {
+	display: block;
+	float: left;
+	margin: 1% 0 1% 1.6%;
+}
+
+.col-results:first-child {
+	margin-left: 0;
+}
+
+.col-results p {
+	padding: 0;
+	margin-bottom: 5px;
+}
+
+.group-results:before,
+.group-results:after {
+	content: "";
+	display: table;
+}
+
+.group-results:after {
+	clear: both;
+}
+
+.group-results {
+	zoom: 1;
+}
+
+.span_3_of_3-results {
+	width: 100%;
+}
+
+.span_2_of_3-results {
+	width: 66.1%;
+}
+
+.span_1_of_3-results {
+	width: 32.2%;
+}
+
+.vertical-middle {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.span_1_of_3-results,
+.span_2_of_3-results,
+.span_3_of_3-results {
+	/* min-height: 250px; */
+}
+
+@media only screen and (max-width: 480px) {
+	.col-results {
+		margin: 1% 0 1% 0%;
+	}
+
+	.span_3_of_3-results,
+	.span_2_of_3-results,
+	.span_1_of_3-results {
+		width: 100%;
+	}
+}
+
+.span_2_of_2-results {
+	width: 100%;
+}
+
+.span_1_of_2-results {
+	width: 49.2%;
+}
+
+@media only screen and (max-width: 480px) {
+	.col-results {
+		margin: 1% 0 1% 0%;
+	}
+}
+
+@media only screen and (max-width: 480px) {
+
+	.span_2_of_2-results,
+	.span_1_of_2-results {
+		width: 100%;
+	}
+}
+
+.span_3_of_3-results {
+	width: 100%;
+}
+
+.span_2_of_3-results {
+	width: 66.13%;
+}
+
+.span_1_of_3-results {
+	width: 32.26%;
+}
+
+@media only screen and (max-width: 480px) {
+	.col-results {
+		margin: 1% 0 1% 0%;
+	}
+
+	.span_3_of_3-results,
+	.span_2_of_3-results,
+	.span_1_of_3-results {
+		width: 100%;
+	}
+}
+
+
+/*******************************************/
+
+
+/* END OF SEARCH AND FILTER RESULTS PAGE */
+
+
+/****************************************/
+
+
+/**********************************/
+
+
+/* SEARCH AND FILTERING SIDE BAR */
+
+
+/********************************/
+
+.hardware,
+.cores,
+.software,
+.services,
+.learning {
+	display: none !important;
+}
+
+.searchandfilter {
+	color: #333333 !important;
+}
+
+.searchandfilter label {
+	display: contents !important;
+}
+
+.searchandfilter ul li li {
+	padding: 0 0 5px 0;
+}
+
+.searchandfilter ul li[data-sf-field-input-type]:after,
+.searchandfilter ul li h4:after,
+.searchandfilter ul li ul:before {
+	display: inline-block;
+	width: 100%;
+	font-size: 1.25rem;
+	font-weight: 600;
+	margin-bottom: 10px;
+}
+
+.sf-label-checkbox {
+	font-size: 1rem;
+	padding-left: 5px !important
+}
+
+
+/* BEFORE NAMING FILTERING */
+
+.sf-field-post-meta-exchange_stage ul:before {
+	content: 'Stage';
+}
+
+.sf-field-post-meta-exchange_license_type ul:before {
+	content: 'License Type';
+}
+
+.sf-field-post-meta-exchange_cost ul:before {
+	content: 'Cost';
+}
+
+.sf-field-post-meta-exchange_buswidth:before {
+	content: 'Hardware';
+	display: inline-block;
+	width: 100%;
+	font-size: 1.5rem;
+	font-weight: 600;
+	margin: 10px 0;
+}
+
+.sf-field-post-meta-exchange_buswidth ul:before {
+	content: 'Bus Width';
+}
+
+.sf-field-post-meta-exchange_power ul:before {
+	content: 'Power';
+}
+
+.sf-field-post-meta-exchange_memory_storage ul:before {
+	content: 'Memory Storage';
+}
+
+.sf-field-post-meta-exchange_connectivity ul:before {
+	content: 'Connectivity';
+}
+
+.sf-field-post-meta-exchange_peripherals ul:before {
+	content: 'Peripherals';
+}
+
+.sf-field-post-meta-exchange_video_display ul:before {
+	content: 'Video Display';
+}
+
+.sf-field-post-meta-exchange_riscv_compatible:before {
+	content: 'Cores';
+	display: inline-block;
+	width: 100%;
+	font-size: 1.5rem;
+	font-weight: 600;
+	margin: 10px 0;
+}
+
+.sf-field-post-meta-exchange_riscv_compatible ul:before {
+	content: 'RISC-V Compatible';
+}
+
+.sf-field-post-meta-exchange_profile ul:before {
+	content: 'Profile';
+}
+
+.sf-field-post-meta-exchange_language ul:before {
+	content: 'Language';
+}
+
+.sf-field-post-meta-exchange_extension ul:before {
+	content: 'Extension';
+}
+
+.sf-field-post-meta-exchange_core_type ul:before {
+	content: 'Core Type';
+}
+
+.sf-field-post-meta-exchange_user_spec ul:before {
+	content: 'User Spec';
+}
+
+.sf-field-post-meta-exchange_priv_spec ul:before {
+	content: 'Priv. Spec';
+}
+
+.sf-field-post-meta-exchange_software_type:before {
+	content: 'Software';
+	display: inline-block;
+	width: 100%;
+	font-size: 1.5rem;
+	font-weight: 600;
+	margin: 10px 0;
+}
+
+.sf-field-post-meta-exchange_software_type ul:before {
+	content: 'Software Type';
+}
+
+.sf-field-post-meta-exchange_service_type:before {
+	content: 'Services';
+	display: inline-block;
+	width: 100%;
+	font-size: 1.5rem;
+	font-weight: 600;
+	margin: 10px 0;
+}
+
+.sf-field-post-meta-exchange_service_type ul:before {
+	content: 'Service Type';
+}
+
+.sf-field-post-meta-exchange_learn_type:before {
+	content: 'Learning';
+	display: inline-block;
+	width: 100%;
+	font-size: 1.5rem;
+	font-weight: 600;
+	margin: 10px 0;
+}
+
+.sf-field-post-meta-exchange_learn_type ul:before {
+	content: 'Learning Type';
+}
+
+.sf-field-post-meta-exchange_learn_category ul:before {
+	content: 'Learning Category';
+}
+
+.sf-field-post-meta-exchange_learn_level ul:before {
+	content: 'Learning Level';
+}
+
+.sf-field-post-meta-exchange_learn_language ul:before {
+	content: 'Learning Language';
+}
+
+.sf-field-post-meta-_additional_settings,
+.sf-field-post-meta-_disable_transparent_header {
+	display: none !important;
+}
+
+/*****************************************/
+
+
+/* END OF SEARCH AND FILTERING SIDE BAR */
+
+
+/***************************************/
+
+.exchange-btn {
+	text-transform: uppercase;
+	display: block;
+	max-width: 50%;
+	text-align: center;
+	font-size: 1rem !important;
+	margin: 15px auto 0;
+}
+
+.search-results img.attachment-full.size-full.skip-lazy.wp-post-image {
+	width: 100%;
+	max-width: 200px;
+	margin: 15px auto;
+}

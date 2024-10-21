@@ -124,7 +124,14 @@ if( 'html' === $text_full_html ) {
 	$text_markup = do_shortcode($content);
 }
 
-echo '<div class="nectar-icon-list-item"><div class="list-icon-holder" data-icon_type="'.esc_attr($icon_type).'">'.$icon_output.'</div><div class="content"><h4>'.wp_kses_post($header).'</h4>'.wp_kses_post($text_markup).'</div></div>';
+// Dynamic style classes.
+if( function_exists('nectar_el_dynamic_classnames') ) {
+	$dynamic_el_styles = nectar_el_dynamic_classnames('nectar_icon_list_item', $atts);
+} else {
+	$dynamic_el_styles = '';
+}
+
+echo '<div class="nectar-icon-list-item'.esc_attr($dynamic_el_styles).'"><div class="list-icon-holder" data-icon_type="'.esc_attr($icon_type).'">'.$icon_output.'</div><div class="content"><h4>'.wp_kses_post($header).'</h4>'.wp_kses_post($text_markup).'</div></div>';
 
 if( !$nectar_using_VC_front_end_editor ) {
 	$GLOBALS['nectar-list-item-count']++;

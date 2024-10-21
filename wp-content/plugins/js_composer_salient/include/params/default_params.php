@@ -78,7 +78,7 @@ function vc_dropdown_form_field( $settings, $value ) {
  */
 function vc_checkbox_form_field( $settings, $value ) {
 	$output = '';
-	if ( is_array( $value ) ) {
+	if ( is_array( $value ) || is_null( $value ) ) {
 		$value = ''; // fix #1239
 	}
 	$current_value = strlen( $value ) > 0 ? explode( ',', $value ) : array();
@@ -127,6 +127,7 @@ function vc_posttypes_form_field( $settings, $value ) {
 		'public' => true,
 	);
 	$post_types = get_post_types( $args );
+	$value = is_null( $value ) ? '' : $value;
 	foreach ( $post_types as $post_type ) {
 		$checked = '';
 		if ( 'attachment' !== $post_type ) {
@@ -197,8 +198,9 @@ function vc_exploded_textarea_form_field( $settings, $value ) {
  */
 function vc_exploded_textarea_safe_form_field( $settings, $value ) {
 	$value = vc_value_from_safe( $value, true );
-	$value = str_replace( ',', "\n", $value );
-
+	if ( isset( $value ) ) {
+		$value = str_replace( ',', "\n", $value );
+	}
 	return '<textarea name="' . $settings['param_name'] . '" class="wpb_vc_param_value wpb-textarea ' . $settings['param_name'] . ' ' . $settings['type'] . '">' . $value . '</textarea>';
 }
 

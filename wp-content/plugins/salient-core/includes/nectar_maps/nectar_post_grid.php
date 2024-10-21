@@ -159,6 +159,16 @@ $nectar_post_grid_params = array(
       "description" => esc_html__("Please select the categories you would like to display in the grid. You can also select multiple categories if needed (ctrl + click on PC and command + click on Mac).", "salient-core")
     ),
     array(
+      "type" => "dropdown",
+      "heading" => esc_html__("Starting Category", "salient-core"),
+      "param_name" => "portfolio_starting_category",
+      "value" => $portfolio_options,
+      'save_always' => true,
+      "dependency" => array('element' => "post_type", 'value' => 'portfolio'),
+      "description" => esc_html__("Please select the category you would like to set as active when using sortable filters. This will be skipped if the selected category is not set to display above.", "salient-core")
+    ),
+
+    array(
       "type" => "dropdown_multi",
       "heading" => esc_html__("Blog Categories", "salient-core"),
       "param_name" => "blog_category",
@@ -166,6 +176,15 @@ $nectar_post_grid_params = array(
       'save_always' => true,
       "dependency" => array('element' => "post_type", 'value' => 'post'),
       "description" => esc_html__("Please select the categories you would like to display for your blog. You can also select multiple categories if needed (ctrl + click on PC and command + click on Mac).", "salient-core")
+    ),
+    array(
+      "type" => "dropdown",
+      "heading" => esc_html__("Starting Category", "salient-core"),
+      "param_name" => "blog_starting_category",
+      "value" => $blog_options,
+      'save_always' => true,
+      "dependency" => array('element' => "post_type", 'value' => 'post'),
+      "description" => esc_html__("Please select the category you would like to set as active when using sortable filters. This will be skipped if the selected category is not set to display above..", "salient-core")
     ),
     
 		
@@ -249,6 +268,14 @@ $nectar_post_grid_params = array(
 			"value" => Array(esc_html__("Yes, please", "salient-core") => 'yes')
 		),
 
+    array(
+			"type" => 'checkbox',
+			"heading" => esc_html__("Exclude Current Post", "salient-core"),
+			"param_name" => "exclude_current_post",
+			'edit_field_class' => 'vc_col-xs-12 salient-fancy-checkbox',
+			"value" => Array(esc_html__("Yes, please", "salient-core") => 'yes')
+		),
+
 		array(
 			"type" => 'checkbox',
 			"heading" => esc_html__("Gallery Lightbox", "salient-core"),
@@ -277,7 +304,23 @@ $nectar_post_grid_params = array(
     "options" => array(
       esc_html__("Grid", "salient-core") => "grid",
       esc_html__("Carousel", "salient-core") => "carousel",
+      esc_html__("Stack", "salient-core") => "stack",
     ),
+  ),
+
+  array(
+    "type" => "dropdown",
+    "heading" => esc_html__("Animation Effect", "salient-core"),
+    "param_name" => "stack_animation_effect",
+    "value" => array(
+      esc_html__("None",'salient-core') => "none",
+      esc_html__("Overlapping",'salient-core') => "overlapping",
+      esc_html__("Scale",'salient-core') => "scale",
+      esc_html__("Blurred Scale",'salient-core') => "blurred_scale",
+    ),
+    'save_always' => true,
+    "dependency" => array('element' => "display_type", 'value' => array('stack')),
+    "description" => esc_html__("The animation effect when scrolling through your posts.", "salient-core"),
   ),
 
   array(
@@ -507,9 +550,12 @@ $nectar_post_grid_params = array(
         "40%" => "40vh",
         "50%" => "50vh",
         "60%" => "60vh",
-        "75%" => "75vh"
+        "70%" => "75vh",
+        "80%" => "80vh",
+        "90%" => "90vh",
+        "100%" => "100vh"
       ),
-      "description" => esc_html__("Please select the height you would like for your items to display in. The percentage is based on the viewport height that the grid is viewed on. ", "salient-core")
+      "description" => esc_html__("Please select the height you would like for your items to display in. The percentage is based on the viewport height that the grid is viewed on. You can also choose a fixed ratio instead below.", "salient-core")
     ),
 		
 		
@@ -607,19 +653,19 @@ $nectar_post_grid_params = array(
       ),
     ),
 
-    // array(
-    //   "type" => "nectar_radio_image",
-    //   "dependency" => array('element' => "columns", 'value' => array('2')),
-    //   "class" => "",
-    //   'save_always' => true,
-    //   "heading" => esc_html__("Masonry Layout", "salient-core"),
-    //   "param_name" => "2_col_masonry_layout",
-    //   'std' => 'default',
-    //   "options" => array(
-    //     "default" => array( esc_html__('Horizontal', 'salient-core') => SALIENT_CORE_PLUGIN_PATH."/includes/img/masonry_layouts/2-col.png"),
-    //     'vert_staggered' => array( esc_html__('Vertical Staggered', 'salient-core') => SALIENT_CORE_PLUGIN_PATH."/includes/img/masonry_layouts/2-col-alt.png"),
-    //   ),
-    // ),
+    array(
+      "type" => "nectar_radio_image",
+      "dependency" => array('element' => "columns", 'value' => array('2')),
+      "class" => "",
+      'save_always' => true,
+      "heading" => esc_html__("Masonry Layout", "salient-core"),
+      "param_name" => "2_col_masonry_layout",
+      'std' => 'default',
+      "options" => array(
+        "default" => array( esc_html__('Horizontal', 'salient-core') => SALIENT_CORE_PLUGIN_PATH."/includes/img/masonry_layouts/2-col.png"),
+        'default_alt' => array( esc_html__('Horizontal Alt', 'salient-core') => SALIENT_CORE_PLUGIN_PATH."/includes/img/masonry_layouts/2-col-alt.jpg"),
+      ),
+    ),
 
 
 
@@ -689,6 +735,31 @@ $nectar_post_grid_params = array(
     ),
 
     array(
+      "type" => 'checkbox',
+      "heading" => esc_html__("Lock Aspect Ratio to Image Size", "salient-core"),
+			"dependency" => array('element' => "grid_style", 'value' => array('content_overlaid')),
+      "param_name" => "overlaid_aspect_ratio_image_size",
+			'edit_field_class' => 'vc_col-xs-12 salient-fancy-checkbox',
+      "value" => Array(esc_html__("Yes, please", "salient-core") => 'yes')
+    ),
+    array(
+      "type" => "dropdown",
+      "class" => "",
+      'save_always' => true,
+      "heading" => esc_html__("Image Aspect Ratio", "salient-core"),
+      "param_name" => "overlaid_custom_image_aspect_ratio",
+      "dependency" => array('element' => "overlaid_aspect_ratio_image_size", 'not_empty' => true),
+      "value" => array(
+        "1:1" => "1-1",
+				"16:9" => "16-9",
+				"3:2" =>  "3-2",
+				"4:3" => "4-3",
+        "4:5" => "4-5",
+      ),
+      'std' => '1-1',
+    ),
+
+    array(
       "type" => "dropdown",
       "class" => "",
       'save_always' => true,
@@ -747,7 +818,7 @@ $nectar_post_grid_params = array(
       "type" => "dropdown",
       "class" => "",
       'save_always' => true,
-      "heading" => esc_html__("Image Loading", "salient-core"),
+      "heading" => esc_html__("Media Loading", "salient-core"),
       "param_name" => "image_loading",
       "value" => array(
         "Default" => "default",
@@ -777,6 +848,7 @@ $nectar_post_grid_params = array(
         "Zoom out reveal" => "zoom-out-reveal",
       ),
       'std' => 'none',
+      "dependency" => array('element' => "display_type", 'value' => array('carousel', 'grid'))
     ),
     array(
       "type" => "dropdown",
@@ -793,6 +865,7 @@ $nectar_post_grid_params = array(
         "Large" => "400",
       ),
       'std' => '90',
+      "dependency" => array('element' => "display_type", 'value' => array('carousel', 'grid'))
     ),
     array(
       "type" => "dropdown",
@@ -825,6 +898,7 @@ $nectar_post_grid_params = array(
         'easeOutCirc'=>'easeOutCirc',
         'easeInOutCirc'=>'easeInOutCirc'
       ),
+      "dependency" => array('element' => "display_type", 'value' => array('carousel', 'grid'))
     ),
 
     array(
@@ -998,7 +1072,9 @@ $nectar_post_grid_params = array(
         esc_html__('Below Content', 'salient-core') => 'below_title',
         esc_html__('Overlaid', 'salient-core') => 'overlaid'
       ),
-      "dependency" => array('element' => "display_categories", 'value' => 'yes'),
+      "dependency" => array(
+        'element' => 'display_type', 'value' => array('grid','carousel')
+      ),
       'save_always' => true,
       "group" => esc_html__("Meta Data", "salient-core"),
     ),
@@ -1009,11 +1085,22 @@ $nectar_post_grid_params = array(
       'param_name' => 'category_style',
       'value' => array(
         esc_html__('Underline', 'salient-core') => 'underline',
-        esc_html__('Button', 'salient-core') => 'button'
+        esc_html__('Button', 'salient-core') => 'button',
+        esc_html__('See Through Button', 'salient-core') => 'see-through-button'
       ),
 			"dependency" => array('element' => "display_categories", 'value' => 'yes'),
       'save_always' => true,
 			"group" => esc_html__("Meta Data", "salient-core"),
+    ),
+
+    array(
+      "type" => "colorpicker",
+      "class" => "",
+			"group" => esc_html__("Meta Data", "salient-core"),
+      'heading' => esc_html__( 'Category Color', 'salient-core' ),
+      "param_name" => "category_button_color",
+      "value" => "",
+			"dependency" => array('element' => "category_style", 'value' => 'button'),
     ),
 
     array(
@@ -1034,7 +1121,7 @@ $nectar_post_grid_params = array(
     array(
       "type" => "nectar_group_header",
       "class" => "",
-      "heading" => esc_html__("Additional Meta", "salient-core" ),
+      "heading" => esc_html__("Post Meta", "salient-core" ),
       "param_name" => "group_header_6",
       "edit_field_class" => "",
       "group" => esc_html__("Meta Data", "salient-core"),
@@ -1148,7 +1235,40 @@ $nectar_post_grid_params = array(
       'save_always' => true,
 			"group" => esc_html__("Meta Data", "salient-core"),
     ),
+    
+    array(
+      "type" => "nectar_group_header",
+      "class" => "",
+      "heading" => esc_html__("Custom Fields", "salient-core" ),
+      "param_name" => "group_header_7",
+      "edit_field_class" => "",
+      "group" => esc_html__("Meta Data", "salient-core"),
+      "value" => ''
+    ),
+
+    array(
+      'type' => 'dropdown',
+      'heading' => esc_html__( 'Custom Fields Display Location', 'salient-core' ),
+      'param_name' => 'custom_fields_location',
+      'value' => array(
+        esc_html__('Before Post Meta', 'salient-core') => 'before_post_meta',
+        esc_html__('After Post Meta', 'salient-core') => 'after_post_meta',
+      ),
+      'save_always' => true,
+			"group" => esc_html__("Meta Data", "salient-core"),
+    ),
 		
+
+    array(
+      "type" => "nectar_cf_repeater",
+      "class" => "",
+      "param_name" => "custom_fields",
+      "edit_field_class" => "",
+      "group" => esc_html__("Meta Data", "salient-core"),
+      "value" => ''
+    ),
+
+    
   
 		array(
       'type' => 'dropdown',
@@ -1314,10 +1434,11 @@ $nectar_post_grid_params = array(
       'heading' => esc_html__( 'Text Content Layout', 'salient-core' ),
       'param_name' => 'text_content_layout',
       'value' => array(
-        esc_html__('All Top Left', 'salient-core') => 'all_top_left',
-        esc_html__('All Middle', 'salient-core') => 'all_middle',
-        esc_html__('All Bottom Left', 'salient-core') => 'all_bottom_left',
-				esc_html__('All Bottom Left With Shadow', 'salient-core') => 'all_bottom_left_shadow'
+        esc_html__('Top Left', 'salient-core') => 'all_top_left',
+        esc_html__('Middle', 'salient-core') => 'all_middle',
+        esc_html__('Bottom Left', 'salient-core') => 'all_bottom_left',
+				esc_html__('Bottom Left With Shadow', 'salient-core') => 'all_bottom_left_shadow',
+        esc_html__('Corners', 'salient-core') => 'corners',
       ),
       'save_always' => true,
 			"dependency" => array('element' => "grid_style", 'value' => 'content_overlaid'),
@@ -1594,6 +1715,8 @@ $nectar_post_grid_params = array(
         "5px" => "5px",
         "10px" => "10px",
         "15px" => "15px",
+        "20px" => "20px",
+        "25px" => "25px",
       ),
       'std' => 'none',
     ),

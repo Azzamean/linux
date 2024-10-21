@@ -29,6 +29,34 @@
          }
        }
 
+       $global_section_options = array(
+        '-' => esc_html__('Select a Global Section','salient-core'),
+       );
+       $global_sections_query = get_posts(
+        array(
+          'posts_per_page' => -1,
+          'post_status'    => 'publish',
+          'ignore_sticky_posts' => true,
+          'no_found_rows'  => true,
+          'post_type'      => 'salient_g_sections'
+        )
+      );
+      
+
+      foreach( $global_sections_query as $section ) {
+        if( property_exists( $section, 'post_title') && property_exists( $section, 'ID') ) {
+          $global_section_options[$section->ID] = $section->post_title;
+        }
+      }
+
+      $salient_options_panel_text = esc_html__('Salient options panel.','salient-core');
+      if ( class_exists('NectarThemeManager') && 
+        property_exists('NectarThemeManager', 'custom_theme_name') &&
+        NectarThemeManager::$custom_theme_name ) {
+        $salient_options_panel_text = esc_html(NectarThemeManager::$custom_theme_name) . ' ' . esc_html__('options panel.', 'salient-core');
+      }
+        
+
        self::$settings = array(
          /************* mega menu *************/
         'enable_mega_menu' => array(
@@ -37,7 +65,10 @@
           'label'         => esc_html__('Enable Mega Menu','salient-core'),
           'description'   => esc_html__('Turns your dropdown into a megamenu. All submenu items will display horizontally.','salient-core'),
           'max_depth' => '0',
-          'default_value' => '0'
+          'default_value' => '0',
+          'custom_attrs'    => array(
+            'data-toggles' => 'mega_menu_global_section',
+           ),
         ),
         'mega_menu_width' => array(
           'type'          => 'dropdown',
@@ -51,6 +82,25 @@
             '75' => esc_html__('x3 Regular Dropdown','salient-core'),
             '50' => esc_html__('x2 Regular Dropdown','salient-core')
           )
+        ),
+
+        'mega_menu_global_section' => array(
+          'type'          => 'dropdown',
+          'category'      => 'mega-menu',
+          'label'         => esc_html__('Mega Menu Global Section','salient-core'),
+          'description'   => esc_html__('Assign a custom global section to display as your mega menu.','salient-core'),
+          'default_value' => 'left',
+          'max_depth' => '0',
+          'options' => $global_section_options,
+        ),
+        'mega_menu_global_section_mobile' => array(
+          'type'          => 'dropdown',
+          'category'      => 'mega-menu',
+          'label'         => esc_html__('Mega Menu Global Section Mobile','salient-core'),
+          'description'   => esc_html__('Assign a custom global section to display as your mega menu in the Off Canvas Menu. Not compatible with fullscreen menus.','salient-core'),
+          'default_value' => 'left',
+          'max_depth' => '0',
+          'options' => $global_section_options,
         ),
         'mega_menu_alignment' => array(
           'type'          => 'dropdown',
@@ -489,7 +539,7 @@
            'type'           => 'dropdown',
            'category'       => 'menu-item',
            'label'          => esc_html__('Menu Item Title Inherits Typography From','salient-core'),
-           'description'    => esc_html__('Specify the font settings that the menu item should inherit from. These settings are defined by you in the','salient-core') . ' <a href="'. esc_url( admin_url() .'?page='.self::$theme_options_name.'&tab=10' ) .'" target="_blank">' .esc_html__('Salient options panel.','salient-core') . '</a>',
+           'description'    => esc_html__('Specify the font settings that the menu item should inherit from. These settings are defined by you in the','salient-core') . ' <a href="'. esc_url( admin_url() .'?page='.self::$theme_options_name.'&tab=10' ) .'" target="_blank">' . $salient_options_panel_text . '</a>',
            'default_value'  => 'none',
            'max_depth' => '-1',
            'min_depth' => '1',
@@ -588,6 +638,7 @@
             'options'        => array(
                 'default'      => esc_html__('Default','salient-core'),
                 'text-reveal-wave'  => esc_html__('Text Reveal Wave','salient-core'),
+                'text-reveal' => esc_html__('Text Reveal','salient-core'),
               )
             ),
 
@@ -751,7 +802,7 @@
           'type'          => 'image',
           'category'       => 'menu-icon',
           'label'         => esc_html__('Custom Icon Selection','salient-core'),
-          'description'   => esc_html__('Upload a custom icon to display next to the menu item title. You can select the size which menu icons will display at in the','salient-core') . ' <a href="'. esc_url( admin_url() .'?page='.self::$theme_options_name.'&tab=13' ) .'" target="_blank">' .esc_html__('Salient options panel.','salient-core') . '</a>',
+          'description'   => esc_html__('Upload a custom icon to display next to the menu item title. You can select the size which menu icons will display at in the','salient-core') . ' <a href="'. esc_url( admin_url() .'?page='.self::$theme_options_name.'&tab=13' ) .'" target="_blank">' . $salient_options_panel_text . '</a>',
           'max_depth' => '-1',
           'default_value' => array(
             'id' => '',
@@ -784,7 +835,7 @@
           'type'          => 'icon',
           'category'       => 'menu-icon',
           'label'         => esc_html__('Font Icon Selection','salient-core'),
-          'description'   => esc_html__('Select an icon to display next to the menu item title. You can select the size which menu icons will display at in the','salient-core') . ' <a href="'. esc_url( admin_url() .'?page='.self::$theme_options_name.'&tab=13' ) .'" target="_blank">' .esc_html__('Salient options panel.','salient-core') . '</a>',
+          'description'   => esc_html__('Select an icon to display next to the menu item title. You can select the size which menu icons will display at in the','salient-core') . ' <a href="'. esc_url( admin_url() .'?page='.self::$theme_options_name.'&tab=13' ) .'" target="_blank">' . $salient_options_panel_text . '</a>',
           'max_depth' => '-1',
           'custom_attrs'    => array(
             'data-library' => 'font_awesome',
@@ -795,7 +846,7 @@
           'type'          => 'icon',
           'category'       => 'menu-icon',
           'label'         => esc_html__('Font Icon Selection','salient-core'),
-          'description'   => esc_html__('Select an icon to display next to the menu item title. You can select the size which menu icons will display at in the','salient-core') . ' <a href="'. esc_url( admin_url() .'?page='.self::$theme_options_name.'&tab=13' ) .'" target="_blank">' .esc_html__('Salient options panel.','salient-core') . '</a>',
+          'description'   => esc_html__('Select an icon to display next to the menu item title. You can select the size which menu icons will display at in the','salient-core') . ' <a href="'. esc_url( admin_url() .'?page='.self::$theme_options_name.'&tab=13' ) .'" target="_blank">' . $salient_options_panel_text . '</a>',
           'max_depth' => '-1',
           'custom_attrs'    => array(
             'data-library' => 'iconsmind',

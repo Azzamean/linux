@@ -10,6 +10,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 	die( '-1' );
 }
 
+require_once vc_manager()->path( 'MODULES_DIR', 'ai/class-vc-ai-module-settings.php' );
+
 /**
  * Module entry point.
  * @since 7.7
@@ -17,20 +19,35 @@ if ( ! defined( 'ABSPATH' ) ) {
 class Vc_Ai_Module
 {
 	/**
+	 * Settings object.
+	 *
+	 * @var Vc_Ai_Module_Settings
+	 */
+	public $settings;
+
+	/**
 	 * Module init.
 	 *
 	 * @since 7.7
 	 */
 	public function init() {
+		$this->settings = new Vc_Ai_Module_Settings();
+		$this->settings->init();
+
 		require_once vc_path_dir( 'MODULES_DIR', 'ai/helpers.php' );
 
 		add_action( 'wp_ajax_wpb_ai_api_get_response', [$this, 'get_ai_api_response'] );
 		add_action( 'wp_ajax_wpb_ai_generate_content_check_cache', [$this, 'get_generate_ai_content_check_cache'] );
 		add_action( 'wp_ajax_wpb_ai_get_modal_data', [$this, 'get_modal_ai_data'] );
+		add_action( 'wp_ajax_wpb_ai_get_token_usage', [$this, 'get_token_usage_data'] );
+
 		add_filter( 'vc_single_param_edit_holder_output', [$this, 'add_ai_icon_to_attributes'], 10, 2 );
 		
 		
 		add_filter( 'vc_roles_parts_list', [$this, 'add_ai_role_parts'], 10, 1 );
+
+		add_filter( 'vc_get_editor_locale', [$this, 'add_module_localization'], 10, 1 );
+		add_filter( 'vc_get_settings_locale', [$this, 'add_module_localization'], 10, 1 );
 	}
 
 	/**
@@ -73,7 +90,7 @@ class Vc_Ai_Module
 	}
 
 	/**
-	 * Gen AI modal content.
+	 * Get AI modal content.
 	 *
 	 * @sine 7.2
 	 */
@@ -85,7 +102,26 @@ class Vc_Ai_Module
 
 		$data = $modal_controller->get_modal_data( vc_request_param( 'data' ) );
 
-		// in case of error we should it inside modal content
+		// in case of error we should show it inside modal content
+		wp_send_json_success( $data );
+	}
+
+	/**
+	 * Get AI token usage corresponding to current active license.
+	 *
+	 * @sine 7.7
+	 */
+	public function get_token_usage_data() {
+		vc_user_access()->checkAdminNonce()->validateDie();
+
+		require_once vc_path_dir( 'MODULES_DIR', 'ai/class-vc-ai-modal-controller.php' );
+		$modal_controller = new Vc_Ai_Modal_Controller();
+
+		$data = $modal_controller->get_token_usage_request();
+		if ( is_wp_error( $data ) ) {
+			wp_send_json_error( $data );
+		}
+
 		wp_send_json_success( $data );
 	}
 
@@ -227,5 +263,22 @@ class Vc_Ai_Module
 		$parts[] = 'text_ai';
 
 		return $parts;
+	}
+
+	/**
+	 * Add module localization.
+	 *
+	 * @since 7.7
+	 * @param array $localization
+	 * @return array
+	 */
+	public function add_module_localization( $localization ) {
+		$localization['ai_credit_usage'] = esc_html__( 'Credit usage: ', 'js_composer' );
+		$localization['ai_response_error'] = esc_html__(
+			'An error occurred when requesting a response from WPBakery AI (Code: 623)',
+			'js_composer'
+		);
+
+		return $localization;
 	}
 }

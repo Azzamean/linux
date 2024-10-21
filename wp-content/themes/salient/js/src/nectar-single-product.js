@@ -885,7 +885,10 @@ jQuery(document).ready(function($){
 
                       $.each($mainProdSlider, function(i, el){
                         el.flickity( 'selectCell', 0 );
-                        el.flickity( 'resize' );
+                        el.flickity( 'reloadCells' );
+                        setTimeout(function(){
+                          el.flickity( 'resize' );
+                        },1000);
                       });
                       
                     }

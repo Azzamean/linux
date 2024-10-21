@@ -76,6 +76,20 @@ return array(
 			),
 			"dependency" => Array('element' => "columns", 'value' => array('4')),
 		),
+
+		
+		
+		array(
+			"type" => "dropdown",
+			'save_always' => true,
+			"heading" => "Responsive Display",
+			"param_name" => "responsive_display",
+			"value" => array(
+				"Stacked" => "stacked",
+				"Multiple Columns" => "multiple_columns",
+			),
+			"dependency" => Array('element' => "columns", 'value' => array('2','3','4')),
+		),
 		
 		array(
 			"type" => "dropdown",
@@ -322,6 +336,24 @@ return array(
 				"Bottom Border, No Hover Effect" => "none",
 				"Full Border" => "full_border",
 			),
+		),
+
+		array(
+			"type" => "checkbox",
+			"class" => "",
+			'edit_field_class' => 'vc_col-xs-12 salient-fancy-checkbox',
+			"heading" => esc_html__("Border Animation", "salient-core"),
+			"param_name" => "border_animation",
+			"value" => Array(esc_html__("Yes", "salient-core") => 'true'),
+			"dependency" => array('element' => "hover_effect", 'value' => array('default','none'))	  	
+		),
+		array(
+			"type" => "colorpicker",
+			"class" => "",
+			"heading" => "Border Color",
+			"param_name" => "border_color",
+			"value" => "",
+      		"dependency" => array('element' => "hover_effect", 'value' => array('default','none'))	  	
 		),
 		
 		array(

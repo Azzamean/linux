@@ -817,6 +817,10 @@ body:not(.mobile) .fp-scroller {
   display: none;
 }
 
+body .nectar-sticky-media-sections.type--scroll-pinned-sections .nectar-sticky-media-section__content-section {
+  position: relative!important;
+}
+
 
 #nectar_fullscreen_rows #footer-outer img.img-with-animation,
 #nectar_fullscreen_rows #footer-outer .col.has-animation,
@@ -964,7 +968,7 @@ body:not(.mobile) .fp-scroller {
   }
 }
 
-@media only screen and (max-device-width: 2600px) {
+@media only screen and (max-width: 2600px) {
   
     .using-mobile-browser #nectar_fullscreen_rows[data-mobile-disable="on"],
     .using-ios-device #nectar_fullscreen_rows[data-mobile-disable="on"] {

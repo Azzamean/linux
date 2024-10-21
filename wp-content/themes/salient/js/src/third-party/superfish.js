@@ -190,6 +190,7 @@
 				if (!o) {
 					return this;
 				}
+			
 				var $this = this.addClass(o.hoverClass),
 					$ul = $this.children(o.popUpSelector);
 
@@ -319,7 +320,7 @@
 	};
 
 	$.fn.superfish.defaults = {
-		popUpSelector: 'ul,.sf-mega', // within menu context
+		popUpSelector: 'ul,.sf-mega, .nectar-global-section-megamenu', // within menu context
 		hoverClass: 'sfHover',
 		pathClass: 'overrideThisToUse',
 		pathLevels: 1,

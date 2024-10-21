@@ -201,7 +201,7 @@ class Vc_Post_Custom_Layout_Module
 	 * @return string|false
 	 */
 	public function get_custom_layout_path( $layout_name ) {
-		$custom_layout_path = vc_template( '/pages/layouts/' . $layout_name . '.php' );
+		$custom_layout_path = vc_template( '/pages/layouts/' . sanitize_file_name( $layout_name ) . '.php' );
 		if ( ! is_file( $custom_layout_path ) ) {
 			return false;
 		}
@@ -219,7 +219,7 @@ class Vc_Post_Custom_Layout_Module
 	public function get_layout_href_by_layout_name( $layout_name ) {
 		if ( vc_is_page_editable() || vc_is_inline() ) {
 			$frontend_editor = new Vc_Frontend_Editor();
-			$href = $frontend_editor->getInlineUrl( get_the_ID() ) . '&vc_post_custom_layout=' . $layout_name;
+			$href = $frontend_editor->getInlineUrl() . '&vc_post_custom_layout=' . $layout_name;
 		} else {
 			$href = '#';
 		}

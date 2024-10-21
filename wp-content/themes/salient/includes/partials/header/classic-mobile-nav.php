@@ -65,7 +65,7 @@ if ( $header_format === 'menu-left-aligned' ||
 			}
 		?>
 
-		<div class="menu-items-wrap" data-has-secondary-text="<?php echo esc_attr($has_secondary_text); ?>">
+		<div class="menu-items-wrap row" data-has-secondary-text="<?php echo esc_attr($has_secondary_text); ?>">
 
 			<ul>
 				<?php

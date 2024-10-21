@@ -366,9 +366,41 @@ if ( !function_exists( 'nectar_vc_navbar_mod' ) ) {
  */
 if ( !function_exists( 'nectar_generate_salient_studio_button' ) ) {
 	function nectar_generate_salient_studio_button() {
-		return '<li><a href="javascript:;" class="vc_icon-btn vc_templates-button salient-studio-templates"  id="vc_templates-editor-button" title="'
-					 . esc_html__('Salient studio template library', 'salient-core' ) . '"><i class="vc-composer-icon vc-c-icon-add_template"></i> <span>'. esc_html__('Salient Templates','salient-core'). '</span></a></li>';
+
+		$hide_studio_button = get_option('salient_custom_branding_hide_studio', false);
+		if ( $hide_studio_button === 'on' ) {
+			return '';
+		}
+
+		$template_library_name = esc_html__('Salient Templates','salient-core');
+		$template_library_title = esc_html__('Salient Studio Template Library','salient-core');
+		$custom_branding_class = '';
+		if ( class_exists('NectarThemeManager') && 
+			property_exists('NectarThemeManager', 'custom_theme_name') &&
+			NectarThemeManager::$custom_theme_name ) {
+				$template_library_name = NectarThemeManager::$custom_theme_name . ' ' . esc_html__('Templates','salient-core');
+				$template_library_title = NectarThemeManager::$custom_theme_name . ' ' . esc_html__('template library','salient-core');
+				$custom_branding_class = ' custom_branding';
+		}
+		return '<li><a href="javascript:;" class="vc_icon-btn vc_templates-button salient-studio-templates'.$custom_branding_class.'"  id="vc_templates-editor-button" title="'
+					 . esc_html($template_library_title) . '"><i class="vc-composer-icon vc-c-icon-add_template"></i> <span>'. esc_html($template_library_name) . '</span></a></li>';
 	}
+}
+
+add_filter('vc_get_all_templates', 'nectar_override_wpbakery_category_name');
+function nectar_override_wpbakery_category_name($data) {
+	$index = 0;
+	if ( class_exists('NectarThemeManager') && 
+			property_exists('NectarThemeManager', 'custom_theme_name') &&
+			NectarThemeManager::$custom_theme_name ) {
+		foreach($data as $item) {
+			if ( $item['category'] === 'default_templates' ) {
+				$data[$index]['category_name'] = esc_html(NectarThemeManager::$custom_theme_name) . ' ' . esc_html__('Templates','salient-core');
+			}
+			$index++;
+		}
+	}
+	return $data;
 }
 
 /**
@@ -1043,10 +1075,91 @@ if(function_exists('vc_add_shortcode_param')) {
 
 	}
 
+	/**
+	 * Create nectar repeater field
+	 *
+	 * @since 16.2
+	 */
+	vc_add_shortcode_param( 'nectar_cf_repeater', 'nectar_cf_repeater_field' );
+
+	function nectar_cf_repeater_field( $settings, $value ) {
+		$markup = '<div class="nectar-repeater-field">';
+		
+		if ( !$value ) { 
+			$value = '';
+		} 
+		$markup .= '<div class="nectar-repeater-field__save_data">
+			<input name="' . $settings['param_name'] . '" class="wpb_vc_param_value wpb-textinput ' . $settings['param_name'] . ' ' . $settings['type'] . '" type="hidden" value="'.esc_attr($value).'"/>
+		</div>';
+
+		$markup .= '<div class="nectar-repeater-field__template">
+			<div class="nectar-repeater-field__item">
+				<form>
+					<a href="#" class="nectar-repeater-field__item__remove">
+						<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 22C6.47715 22 2 17.5228 2 12C2 6.47715 6.47715 2 12 2C17.5228 2 22 6.47715 22 12C22 17.5228 17.5228 22 12 22ZM12 20C16.4183 20 20 16.4183 20 12C20 7.58172 16.4183 4 12 4C7.58172 4 4 7.58172 4 12C4 16.4183 7.58172 20 12 20ZM12 10.5858L14.8284 7.75736L16.2426 9.17157L13.4142 12L16.2426 14.8284L14.8284 16.2426L12 13.4142L9.17157 16.2426L7.75736 14.8284L10.5858 12L7.75736 9.17157L9.17157 7.75736L12 10.5858Z" fill="currentColor"></path></svg>
+					</a>
+
+					<div>
+						<div class="wpb_element_label">'.__('Custom Field Key','salient-core').'</div>
+						<input name="meta_key" class="wpb-textinput text" type="text" />
+					</div>
+					<div>
+						<div class="wpb_element_label">'.__('Custom Format','salient-core').'</div>
+						<div>
+							<div class="salient-fancy-checkbox vc_shortcode-param">	
+								<input id="use_custom_format" value="" class="wpb_vc_param_value use_custom_format checkbox" type="checkbox" name="use_custom_format">	
+							</div>
+							<div class="dependent">
+								<input name="custom_format" placeholder="e.g. Price: %s" class="wpb-textinput text" type="text" />
+								<span class="vc_description vc_clearfix">'.__('The %s will be replaced with the value of your custom field.').'</span>
+							</div>
+						</div>	
+					</div>
+					<div>
+						<div class="wpb_element_label">'.__('Render Element','salient-core').'</div>
+						<select name="render_tag">
+							<option value="span">'.__('span','salient-core').'</option>
+							<option value="p">'.__('Paragraph','salient-core').'</option>
+							<option value="em">'.__('Italic','salient-core').'</option>
+							<option value="div">'.__('div','salient-core').'</option>
+							<option value="h2">'.__('Heading 2','salient-core').'</option>
+							<option value="h3">'.__('Heading 3','salient-core').'</option>
+							<option value="h4">'.__('Heading 4','salient-core').'</option>
+							<option value="h5">'.__('Heading 5','salient-core').'</option>
+							<option value="h6">'.__('Heading 6','salient-core').'</option>
+						</select>
+					</div>
+				</form>
+			</div>
+		</div>';
+
+		$markup .= '<div class="nectar-repeater-field__items"></div>';
+		$markup .= '<a href="#" class="nectar-repeater-field__add"><span>'.__('Add New Custom Field','salient-core').'</span><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M11 11V5H13V11H19V13H13V19H11V13H5V11H11Z" fill="currentColor"></path></svg></a>';
+		$markup .= '</div>';
+		
+		return $markup;
+	}
 
 }
 
 
+
+// VENDOR MAPS
+add_action( 'vc_after_mapping', 'nectar_custom_vender_maps', 99);
+function nectar_custom_vender_maps() {
+	// acf
+	include_once( ABSPATH . 'wp-admin/includes/plugin.php' ); // Require class-vc-wxr-parser-plugin.php to use is_plugin_active() below
+	if (  class_exists( 'acf' ) || 
+			is_plugin_active( 'advanced-custom-fields/acf.php' ) ||
+			is_plugin_active( 'advanced-custom-fields-pro/acf.php' ) ) {
+		if ( ! class_exists('WPBakeryShortCode_Vc_Acf') ) {
+			require_once( SALIENT_CORE_ROOT_DIR_PATH.'includes/vender/acf/class-vc-acf-shortcode.php' );
+		}
+	}
+}
+
+
+// REGULAR MAPS
 add_action('vc_before_init', 'nectar_custom_maps');
 
 /**
@@ -3129,18 +3242,18 @@ function nectar_custom_maps() {
 				array(
 					"type" => "checkbox",
 					"class" => "",
-					"heading" => esc_html__("Parallax Background Image Scroll", "salient-core"),
+					"heading" => esc_html__("Parallax Background Media On Scroll", "salient-core"),
 					"value" => array("Enable Parallax Background?" => "true" ),
 					"param_name" => "parallax_bg",
 					'edit_field_class' => 'vc_col-xs-12 salient-fancy-checkbox',
-					"description" => esc_html__("This will cause the background image on your row to scroll at a different speed than the content", "salient-core"),
+					"description" => esc_html__("This will cause the background media on your row to scroll at a different speed than the content", "salient-core"),
 					"group" => "Animation"
 				),
 				array(
 					"type" => "dropdown",
 					"class" => "",
-					"description" => esc_html__("The more dramatic the parallax speed, the larger the BG image will have to be resized to accommodate.", "salient-core"),
-					"heading" => esc_html__("Parallax Background Image Speed", "salient-core"),
+					"description" => esc_html__("The more dramatic the parallax speed, the larger the BG layer will have to be resized to accommodate. Note: the \"Fixed in place\" option will have no effect on the video layer.", "salient-core"),
+					"heading" => esc_html__("Parallax Background Layer Speed", "salient-core"),
 					"param_name" => "parallax_bg_speed",
 					'save_always' => true,
 					"value" => array(
@@ -8146,7 +8259,26 @@ function nectar_custom_maps() {
 		vc_remove_param("vc_text_separator", "css_animation");
 
 
-
+	// ACF custom render tag
+	// vc_add_param("vc_acf", array(
+	// 	"type" => "dropdown",
+	// 	"class" => "",
+	// 	'save_always' => true,
+	// 	"heading" => esc_html__("Render Tag", "salient-core"),
+	// 	"param_name" => "render_tag",
+	// 	"value" => array(
+	// 		"Default" => "default",
+	// 		"div" => 'div',
+	// 		"p" => 'p',
+	// 		"span" => 'span',
+	// 		"h6" => "h6",
+	// 		"h5" => "h5",
+	// 		"h4" => "h4",
+	// 		"h3" => "h3",
+	// 		"h2" => "h2",
+	// 		"h1" => "h1"
+	// 	)
+	// ));
 
 	// Horizontal progress bar shortcode
 	vc_lean_map('bar', null, SALIENT_CORE_ROOT_DIR_PATH . 'includes/nectar_maps/bar.php');

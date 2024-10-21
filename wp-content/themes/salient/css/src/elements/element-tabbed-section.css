@@ -178,7 +178,8 @@ body .row .tabbed >div:first-of-type{
 }
 
 
- .tabbed[data-style*="vertical"] .wpb_tabs_nav{
+ .tabbed[data-style*="vertical"] .wpb_tabs_nav,
+ #top .tabbed[data-style*="vertical"] .wpb_tabs_nav{
     width:20%;
      float:left
 }

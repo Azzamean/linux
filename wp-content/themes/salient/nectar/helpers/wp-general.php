@@ -188,3 +188,25 @@ function nectar_use_flexbox_grid() {
 		return false;
 	}
 }
+
+
+// Fix for Safari 18 negative horizontal margin on floats.
+add_action( 'admin_print_styles', 'nectar_safari_18_temp_fix' );
+
+if ( !function_exists('nectar_safari_18_temp_fix') ) {
+	function nectar_safari_18_temp_fix() {
+		global $current_screen;
+
+		if ( isset( $current_screen->base ) && 'post' === $current_screen->base ) {
+			$clear = is_rtl() ? 'right' : 'left';
+
+			?>
+			<style id="nectar-classic-editor-safari-18-temp-fix">
+			_::-webkit-full-page-media, _:future, :root #post-body #postbox-container-2 {
+				clear: <?php echo $clear; ?>;
+			}
+			</style>
+			<?php
+		}
+	}
+}

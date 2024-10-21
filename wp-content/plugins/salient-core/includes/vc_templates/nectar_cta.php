@@ -46,6 +46,8 @@ $underline_border_color = esc_attr($text_color);
 $text_color             = (!empty($text_color)) ? 'custom' : 'std';
 $nofollow_attr          = (!empty($nofollow) && 'true' === $nofollow) ? ' rel="nofollow"': '';
 
+$link_text_stored = $link_text;
+
 if( 'span' === $heading_tag ) {
 	$style .= ' class="nectar-button-type"';
 }
@@ -151,15 +153,22 @@ else if( $btn_style === 'curved-arrow-animation' ) {
   echo '</'.$anchor_tag .'></span>';
   echo '</'.esc_html($heading_tag).'></div>';
 }
-else if( $btn_style === 'basic' || $btn_style === 'text-reveal-wave' ) {
+else if( $btn_style === 'basic' || $btn_style === 'text-reveal-wave' || $btn_style === 'text-reveal' ) {
+
+  $btn_attrs = '';
+  $btn_classes = '';
 
   if( $btn_style === 'text-reveal-wave' ) {
     $link_text = preg_replace("/([^\\s>])(?!(?:[^<>]*)?>)/u","<span class=\"char\">$1</span>",$link_text);
+  } else if ( $btn_style === 'text-reveal' ) {
+    $btn_attrs = 'data-text="'.esc_attr($link_text).'"';
+    $btn_classes = ' nectar-text-reveal-button__text';
   }
 
 	echo '<div class="nectar-cta '.esc_attr($class) .esc_attr($dynamic_el_styles) .'" data-color="'. esc_attr($button_color) .'" data-using-bg="'.esc_attr($using_bg_color).'" data-style="'.esc_attr($btn_style).'" data-display="'. esc_attr($display) .'" data-alignment="'.esc_attr($alignment).'" data-text-color="'.esc_attr($text_color).'" '.$style_markup.'>';
   echo '<'.esc_html($heading_tag). $style.'>';
-  echo  '<span class="link_wrap" '.$style_padding_markup.'>'.$icon_output.'<'.$anchor_tag .' '.$target . $nofollow_attr .' class="link_text'.esc_attr($link_text_classes).'" role="button" href="'.esc_url($url).'"><span class="text">'.wp_kses_post($link_text) .'</span>'; 
+  $aria_label = ($btn_style === 'text-reveal-wave') ? 'aria-label="'.wp_kses_post($link_text_stored).'" ' : '';
+  echo  '<span class="link_wrap" '.$style_padding_markup.'>'.$icon_output.'<'.$anchor_tag .' '.$target . $nofollow_attr .' class="link_text'.esc_attr($link_text_classes).'" '.$aria_label.'role="button" href="'.esc_url($url).'"><span class="text'.$btn_classes.'"'.$btn_attrs.'>'.wp_kses_post($link_text) .'</span>'; 
   echo '</'.$anchor_tag .'></span></'.esc_html($heading_tag).'></div>';
 }
 // Next section link.

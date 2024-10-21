@@ -99,7 +99,11 @@ $text_repeat_number_int = intval($text_repeat_number);
 
 // Text Repeats.
 for( $i = 0; $i < $text_repeat_number_int; $i++ ) {
-	$inner_content .= $content;
+  if ( $i < 1 ) {
+    $inner_content .= $content;
+  } else {
+    $inner_content .= preg_replace('/<(h[1-6])(.*?)>/','<$1$2 aria-hidden="true">',$content);
+  }
 }
 
 // Background Layer.

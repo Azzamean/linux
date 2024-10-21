@@ -33,6 +33,7 @@
     1.18. Background Blur
     1.19. Header Size
     1.20. Header Border
+    1.21. OCM Icon variants
 2. Link Hover Effects
     2.1 Skip to content focus
     2.2. Header Navigation Hover Effects
@@ -131,10 +132,10 @@
 	$headerFormat 					= (!empty($nectar_options['header_format'])) ? $nectar_options['header_format'] : 'default';
 	$shrinkNum 							= (!empty($nectar_options['header-resize-on-scroll-shrink-num'])) ? intval($nectar_options['header-resize-on-scroll-shrink-num']) : 6;
 	$perm_trans 						= (!empty($nectar_options['header-permanent-transparent'])) ? $nectar_options['header-permanent-transparent'] : 'false';
-  $headerResize 					= (!empty($nectar_options['header-resize-on-scroll']) && $perm_trans != '1' && $headerFormat != 'centered-menu-bottom-bar') ? $nectar_options['header-resize-on-scroll'] : '0';
+  $headerResize 					= (!empty($nectar_options['header-resize-on-scroll']) && $headerFormat != 'centered-menu-bottom-bar') ? $nectar_options['header-resize-on-scroll'] : '0';
 	$hideHeaderUntilNeeded 	= (!empty($nectar_options['header-hide-until-needed']) && $headerFormat != 'centered-menu-bottom-bar') ? $nectar_options['header-hide-until-needed'] : '0';
 	$body_border 						= (!empty($nectar_options['body-border'])) ? $nectar_options['body-border'] : 'off';
-	$headerRemoveStickiness = (!empty($nectar_options['header-remove-fixed'])) ? $nectar_options['header-remove-fixed'] : '0';
+	$headerRemoveStickiness = NectarThemeManager::$header_remove_fixed;
 	$using_secondary 				= (!empty($nectar_options['header_layout'])) ? $nectar_options['header_layout'] : ' ';
 	$menu_item_spacing 			= (!empty($nectar_options['header-menu-item-spacing'])) ? esc_attr($nectar_options['header-menu-item-spacing']) : '10';
   $side_widget_class      = (!empty($nectar_options['header-slide-out-widget-area-style'] ) ) ? $nectar_options['header-slide-out-widget-area-style'] : 'slide-out-from-right';
@@ -193,6 +194,8 @@
 		$header_space = $logo_height + ($header_padding*2) + $extra_secondary_height;
 	}
 
+
+
 	$page_transition_bg 	= (!empty($nectar_options['transition-bg-color'])) ? $nectar_options['transition-bg-color'] : '#ffffff';
 	$page_transition_bg_2 = (!empty($nectar_options['transition-bg-color-2'])) ? $nectar_options['transition-bg-color-2'] : $page_transition_bg;
 
@@ -213,13 +216,30 @@
   if( 'material' === $theme_skin && 'yes' === $ajax_search && 'true' === $header_search ) {
     $ext_search_active = true;
   }
-
+  
 
   /*-------------------------------------------------------------------------*/
   /* 1.1. Header Navigation Sizing
   /*-------------------------------------------------------------------------*/
 
     $material_header_space = $logo_height + ($header_padding*2);
+
+    if ( 'material' === $theme_skin ) {
+      echo ':root {
+        --header-nav-height: '. $material_header_space .'px; 
+      }';
+    } else {
+      echo ':root {
+        --header-nav-height: '. $header_space .'px; 
+      }';
+    }
+
+    echo '@media only screen and (max-width: 999px) {
+      :root {
+        --header-nav-height: '.(intval($mobile_logo_height) + 24) .'px; 
+      }
+    }';
+    
 
 	  if( $headerFormat !== 'left-header' ) {
 
@@ -367,6 +387,7 @@
     }
 
 		 echo'
+     #header-outer[data-lhe="text_reveal"] #top nav >ul >li[class*="menu-item-btn"] >a,
 		 #header-outer[data-lhe="animated_underline"] #top nav > ul > li > a,
 		 #top nav > ul > li[class*="button_solid_color"] > a,
 		 body #header-outer[data-lhe="default"] #top nav .sf-menu > li[class*="button_solid_color"] > a:hover,
@@ -381,6 +402,7 @@
 		 }
 
 		 #header-outer[data-lhe="default"] #top nav > ul > li > a,
+     #header-outer[data-lhe="text_reveal"] #top nav > ul > li:not([class*="menu-item-btn"]) > a,
      #header-outer .nectar-header-text-content,
      body[data-header-search="false"][data-full-width-header="false"] #header-outer[data-lhe="animated_underline"][data-format="default"][data-cart="false"] .nectar-header-text-content {
 			 padding-left: '.$menu_item_spacing.'px;
@@ -416,22 +438,24 @@
      // Arrows.
 		 $dropdown_arrows = (!empty($nectar_options['header-dropdown-arrows']) && $headerFormat !== 'left-header' ) ? $nectar_options['header-dropdown-arrows'] : 'inherit';
 
-		 if( $dropdown_arrows === 'show' && intval($menu_item_spacing) > 7 || $theme_skin === 'original' && $dropdown_arrows === 'inherit') {
+     if ('text_reveal' !== $header_hover_effect ) {
+      if( $dropdown_arrows === 'show' && intval($menu_item_spacing) > 7 || $theme_skin === 'original' && $dropdown_arrows === 'inherit') {
 
-			 echo '#header-outer #top .sf-menu > .sf-with-ul > a {
-					 padding-right: '. intval(intval($menu_item_spacing) + 10) .'px!important;
-				 }
-	 			 #header-outer[data-lhe="animated_underline"] #top .sf-menu > .sf-with-ul:not([class*="button"]) > a {
-					 padding-right: 10px!important;
-				 }
-         #header-outer[data-lhe="animated_underline"] #top .sf-menu > .sf-with-ul[class*="button"] > a {
-					 padding-right: 26px!important;
-				 }
-				 #header-outer[data-lhe="default"][data-condense="true"][data-format="centered-menu-bottom-bar"]:not([data-menu-bottom-bar-align="left"]).fixed-menu #top nav .sf-menu > .sf-with-ul > a {
-					 padding-right: '. intval( floor($menu_item_spacing/1.3) + 10) .'px!important;
-				 }';
+        echo '#header-outer #top .sf-menu > .sf-with-ul > a {
+            padding-right: '. intval(intval($menu_item_spacing) + 10) .'px!important;
+          }
+          #header-outer[data-lhe="animated_underline"] #top .sf-menu > .sf-with-ul:not([class*="button"]) > a {
+            padding-right: 10px!important;
+          }
+          #header-outer[data-lhe="animated_underline"] #top .sf-menu > .sf-with-ul[class*="button"] > a {
+            padding-right: 26px!important;
+          }
+          #header-outer[data-lhe="default"][data-condense="true"][data-format="centered-menu-bottom-bar"]:not([data-menu-bottom-bar-align="left"]).fixed-menu #top nav .sf-menu > .sf-with-ul > a {
+            padding-right: '. intval( floor($menu_item_spacing/1.3) + 10) .'px!important;
+          }';
 
-		 }
+      }
+      }
 
      // Dropdown Positioning.
      if( isset( $nectar_options['header-dropdown-position'] ) &&
@@ -440,14 +464,16 @@
 
        echo '#header-outer #top .sf-menu > li > ul,
        body #header-outer #top .nectar-woo-cart .widget_shopping_cart,
-       body #header-outer #top .cart-notification {
+       body #header-outer #top .cart-notification,
+       #header-outer nav .nectar-global-section-megamenu {
          top: 50%;
          margin-top: '.( $nav_font_line_height + 12) .'px;
          transition: margin 0.2s ease;
        }
        #header-outer.small-nav #top .sf-menu > li > ul,
        body #header-outer.small-nav #top .nectar-woo-cart .widget_shopping_cart,
-       body #header-outer.small-nav #top .cart-notification {
+       body #header-outer.small-nav #top .cart-notification,
+       #header-outer.small-nav nav .nectar-global-section-megamenu {
          top: 50%;
          margin-top: '.( $nav_font_line_height + 12 - ($header_padding/3.5) ) .'px;
        }';
@@ -494,7 +520,8 @@
          #header-secondary-outer .sf-menu > li > ul > li,
          #header-outer .widget_shopping_cart .cart_list,
          #header-outer .widget_shopping_cart .total,
-         #header-outer .widget_shopping_cart .buttons {
+         #header-outer .widget_shopping_cart .buttons,
+         #header-outer nav .nectar-global-section-megamenu > .inner {
            -webkit-transform:translate3d(0,13px,0);
            transform:translate3d(0,13px,0);
          }';
@@ -508,10 +535,14 @@
            overflow: visible;
          }
 
-         body .sf-menu >li > ul {
+         body .sf-menu >li > ul,
+         #header-outer nav .nectar-global-section-megamenu {
            -webkit-transform:translate3d(0,15px,0);
            transform:translate3d(0,15px,0);
            opacity: 0;
+         }
+         #header-outer nav .nectar-global-section-megamenu {
+          transition: opacity 0.55s cubic-bezier(0.2,.8,.25,1), transform 0.55s cubic-bezier(0.2,.8,.25,1);
          }
          body .sf-menu >li.sfHover > ul{
            -webkit-transform:translate3d(0,0,0);
@@ -564,7 +595,8 @@
          #header-secondary-outer .sf-menu > li > ul > li,
          #header-outer .widget_shopping_cart .cart_list,
          #header-outer .widget_shopping_cart .total,
-         #header-outer .widget_shopping_cart .buttons {
+         #header-outer .widget_shopping_cart .buttons,
+         #header-outer nav .nectar-global-section-megamenu > .inner {
           transition: opacity 0.4s ease;
           -webkit-transition: opacity 0.4s ease;
          }';
@@ -583,7 +615,8 @@
          #header-outer .widget_shopping_cart,
          #header-outer .cart-notification,
          body[data-fancy-form-rcs="1"] .nectar-shop-header .woocommerce-ordering .select2-dropdown,
-         body[data-fancy-form-rcs="1"] .variations_form .select2-dropdown {
+         body[data-fancy-form-rcs="1"] .variations_form .select2-dropdown,
+         #header-outer nav .nectar-global-section-megamenu {
            box-shadow: rgba(0, 0, 0, 0.04) 0px 1px 0px, rgba(0, 0, 0, 0.05) 0px 2px 7px, rgba(0, 0, 0, 0.06) 0px 12px 22px;
          }';
        } else if( 'large-alt' === $nectar_options['header-dropdown-box-shadow']  ) {
@@ -593,14 +626,16 @@
          #header-outer .widget_shopping_cart,
          #header-outer .cart-notification,
          body[data-fancy-form-rcs="1"] .nectar-shop-header .woocommerce-ordering .select2-dropdown,
-         body[data-fancy-form-rcs="1"] .variations_form .select2-dropdown {
+         body[data-fancy-form-rcs="1"] .variations_form .select2-dropdown,
+         #header-outer nav .nectar-global-section-megamenu {
            box-shadow: 
                 rgba(0, 0, 0, 0.02) 0px 1px 0px, 
                 rgba(0, 0, 0, 0.06) 0px 38px 38px;
          }';
        }
        else if( 'none' === $nectar_options['header-dropdown-box-shadow'] ) {
-         echo '#header-outer #top .sf-menu > li ul {
+         echo '#header-outer #top .sf-menu > li ul,
+         body #header-outer nav .nectar-global-section-megamenu {
            box-shadow: none;
          }';
        }
@@ -616,7 +651,8 @@
        #header-outer .widget_shopping_cart .widget_shopping_cart_content,
        #header-outer .cart-notification,
        body #header-outer #top .nectar-woo-cart .widget_shopping_cart,
-       body[data-fancy-form-rcs="1"] .nectar-shop-header .woocommerce-ordering .select2-dropdown {
+       body[data-fancy-form-rcs="1"] .nectar-shop-header .woocommerce-ordering .select2-dropdown,
+       #header-outer nav .nectar-global-section-megamenu {
          border-radius: '.esc_attr($nectar_options['header-dropdown-border-radius']).'px;
        }';
      }
@@ -2529,7 +2565,7 @@
       }
     }
 
-    @media only screen and (max-device-width: 2600px) {
+    @media only screen and (max-width: 2600px) {
 
       .ascend.using-mobile-browser #search {
         height: 100%;
@@ -3546,7 +3582,14 @@
   }
 
   /* Header resize */
-  if( '1' === $headerResize && 'left-header' !== $headerFormat ) {
+  if ( '1' === $headerResize && '1' == $perm_trans ) {
+    echo '#header-outer[data-header-resize="1"] #logo,
+    #header-outer[data-header-resize="1"] .logo-spacing {
+      transition: margin 0.32s ease, color 0.32s ease;
+    }';
+  }
+  
+  if( '1' === $headerResize && '1' != $perm_trans && 'left-header' !== $headerFormat ) {
     
     echo '#header-outer[data-header-resize="1"] #logo,
     #header-outer[data-header-resize="1"] .logo-spacing {
@@ -3890,12 +3933,7 @@
         body #slide-out-widget-area.slide-out-from-right-hover .bottom-meta-wrap {
           transform: translateX(-50px);
         }
-        .admin-bar .slide-out-hover-icon-effect {
-          top: 62px!important;
-        }
-        .slide-out-hover-icon-effect {
-          top: 30px!important;
-        }';
+        ';
       }
 
     }
@@ -3971,24 +4009,25 @@
   /*-------------------------------------------------------------------------*/
   /*  1.18. Background Blur
   /*-------------------------------------------------------------------------*/
-  if( isset($nectar_options['header-blur-bg']) && $nectar_options['header-blur-bg'] === '1' ) {
+  if( isset($nectar_options['header-blur-bg']) && 
+      $nectar_options['header-blur-bg'] === '1' && 
+      $headerFormat !== 'left-header' ) {
 
-    $header_blur_func = (isset($nectar_options['header-blur-bg-func'])) ? $nectar_options['header-blur-bg-func'] : 'active_non_transparent';
+      $header_blur_func = (isset($nectar_options['header-blur-bg-func'])) ? $nectar_options['header-blur-bg-func'] : 'active_non_transparent';
 
-    if( $header_blur_func === 'active_non_transparent' ) {
-      echo '#header-outer:not(.transparent) {
-        -webkit-backdrop-filter: blur(12px); 
-        backdrop-filter: blur(12px); 
-     }';
-    } 
-    else {
-      echo '#header-outer {
-        -webkit-backdrop-filter: blur(12px); 
-        backdrop-filter: blur(12px); 
-     }';
-    }
+      if( $header_blur_func === 'active_non_transparent' ) {
+        echo '#header-outer:not(.transparent) {
+          -webkit-backdrop-filter: blur(12px); 
+          backdrop-filter: blur(12px); 
+      }';
+      } 
+      else {
+        echo '#header-outer {
+          -webkit-backdrop-filter: blur(12px); 
+          backdrop-filter: blur(12px); 
+      }';
+      }
 
-    
   }
 
   /*-------------------------------------------------------------------------*/
@@ -4289,6 +4328,26 @@
 
   }
 
+  /*-------------------------------------------------------------------------*/
+  /* 1.21.  OCM Icon variants
+  /*-------------------------------------------------------------------------*/
+  $ocm_icon_variant = (isset($nectar_options['header-slide-out-widget-area-icon-variant'])) ? $nectar_options['header-slide-out-widget-area-icon-variant'] : 'default';
+  if ( 'default' === $ocm_icon_variant && 'material' === $theme_skin ) {
+    echo '
+    .lines:before, body[data-slide-out-widget-area-style="slide-out-from-right-hover"] .slide-out-hover-icon-effect.slide-out-widget-area-toggle.small .lines:before {
+      width: 1rem;
+    }
+    body[data-slide-out-widget-area-style="slide-out-from-right-hover"] .slide-out-widget-area-toggle.mobile-icon .lines:before,
+    body #header-outer .slide-out-widget-area-toggle.mobile-icon .lines:before,
+    #header-outer  .left-aligned-ocm .lines:before {
+      width: 1rem!important;
+    }
+    @media only screen and (max-width: 999px) {
+      .slide-out-hover-icon-effect.slide-out-widget-area-toggle:not(.small) .lines:before {
+        width: 1rem;
+      }
+    }';
+  } 
 
   /*-------------------------------------------------------------------------*/
   /* 2. Link Hover Effects
@@ -4514,7 +4573,7 @@
      body #header-outer .mobile-header li:not([class*="button_"]) > a .menu-title-text:after,
      body.material #slide-out-widget-area[class*="slide-out-from-right"] .off-canvas-menu-container li a:after,
      #header-secondary-outer[data-lhe="animated_underline"] nav >.sf-menu >li >a .menu-title-text:after,
-     #slide-out-widget-area.fullscreen-split .inner .off-canvas-menu-container li a:after,
+     #slide-out-widget-area.fullscreen-split .inner .off-canvas-menu-container li > a:after,
      #slide-out-widget-area.fullscreen-inline-images .inner .off-canvas-menu-container li a span:after,
      body.material #slide-out-widget-area[class*="slide-out-from-right"] .off-canvas-menu-container .nectar-menu-item-with-icon .menu-title-text:after,
      body #slide-out-widget-area.fullscreen-split .off-canvas-menu-container .nectar-menu-item-with-icon .menu-title-text:after,
@@ -4669,8 +4728,8 @@
    body.material #slide-out-widget-area[class*="slide-out-from-right"] .off-canvas-menu-container .nectar-menu-item-with-icon .menu-title-text:after,
    body #slide-out-widget-area.fullscreen-split .off-canvas-menu-container .nectar-menu-item-with-icon .menu-title-text:after,
    #header-secondary-outer[data-lhe="animated_underline"] nav >.sf-menu >li >a .menu-title-text:after,
-   #slide-out-widget-area.fullscreen-split .inner .off-canvas-menu-container li a:after,
-   #slide-out-widget-area.fullscreen-inline-images .inner .off-canvas-menu-container li a span:after {
+   #slide-out-widget-area.fullscreen-split .inner .off-canvas-menu-container li > a:after,
+   #slide-out-widget-area.fullscreen-inline-images .inner .off-canvas-menu-container li > a span:after {
      border-top-width: '.esc_attr($nectar_options['animated-underline-thickness']) .'px;
    }
    .nectar-cta[data-style="underline"] .link_wrap .link_text:after {
@@ -5469,9 +5528,13 @@
        margin: '.esc_attr($mobile_padding_mod).'px 0;
       }
 
-      #header-space {
+     #header-space {
  			 height: '. (intval($mobile_logo_height) + 24 + ($mobile_padding_mod*2)) .'px;
  		 }
+
+     :root {
+      --header-nav-height: '. (intval($mobile_logo_height) + 24 + ($mobile_padding_mod*2)) .'px;
+     }
    
     #top #mobile-cart-link, #top .mobile-search, #header-outer #top .mobile-user-account {
       padding: 0 10px;
@@ -6590,9 +6653,161 @@
     /* 8. Page Transitions
     /*-------------------------------------------------------------------------*/
 
-    if( isset($nectar_options['ajax-page-loading']) &&
-       !empty( $nectar_options['ajax-page-loading'] ) &&
-       $nectar_options['ajax-page-loading'] === '1' ) {
+    $using_page_transitions = isset($nectar_options['ajax-page-loading']) &&
+    !empty( $nectar_options['ajax-page-loading'] ) &&
+    $nectar_options['ajax-page-loading'] === '1' ? true : false;
+
+    // MODERN view transitions API.
+    if( $using_page_transitions &&
+        isset($nectar_options['page-transition-type']) &&
+       'view-transitions' === $nectar_options['page-transition-type'] ) {
+
+        $transitions_api_effect = isset($nectar_options['transitions-api-effect']) ? $nectar_options['transitions-api-effect'] : 'fade';
+        $transitions_api_bg = isset($nectar_options['transition-bg-color']) ? esc_attr($nectar_options['transition-bg-color']) : '#ffffff';    
+
+        // need consistency in overflow on body for mobile view transitions, so overflow is not hidden in all.
+        
+        echo '
+        @media only screen and (min-width: 1000px) {
+
+          @view-transition {
+            navigation: auto;
+          }
+          
+          html body,
+          html body.compensate-for-scrollbar {
+            overflow: visible;
+            touch-action: pan-y;
+          }
+            
+          ';
+
+        if ( 'reveal-from-bottom' === $transitions_api_effect ) {
+        
+          echo '
+          
+          html {
+            background-color: '.$transitions_api_bg.';
+          }
+            ::view-transition-old(*),
+            ::view-transition-new(*) {
+                mix-blend-mode: normal;
+                backface-visibility: hidden;
+            }
+
+            @keyframes salient-view-transition-start {
+                0% {
+                  clip-path: inset(100% 0% 0% 0%);
+                }
+                50%,100% {
+                    opacity: 1;
+                    animation-timing-function: ease-out;
+                }
+                100% {
+                  transform: none;
+                  clip-path: inset(0% 0% 0% 0%);
+                }
+            }
+
+            @keyframes salient-view-transition-end {
+                0% {
+                  opacity: 1;
+                  transform: translateY(0%) scale(1);
+                }
+                100% {    
+                  opacity: 0;
+                  transform: translateY(-15%) scale(0.93);
+                }
+            }
+
+
+          ::view-transition-old(root) {
+              animation: salient-view-transition-end 1.3s cubic-bezier(0.55, 0, 0.1, 1.0);
+              animation-delay: 0s;
+              animation-fill-mode: both;
+          }
+
+          ::view-transition-new(root) {
+              animation: salient-view-transition-start 1.3s cubic-bezier(0.55, 0, 0.1, 1.0);
+              animation-delay: 0s;
+              animation-fill-mode: both;
+              z-index: 1000;
+              position: relative;
+          }';
+
+        } // end reveal from bottom
+
+
+        if ( 'gradient-wipe' === $transitions_api_effect ) {
+        
+          echo '
+              ::view-transition-old(*),
+              ::view-transition-new(*) {
+                  mix-blend-mode: normal;
+                  backface-visibility: hidden;
+              }
+          
+              @property --salient-view-transition-gradient-wipe-progress {
+                  syntax: "<number>";
+                  initial-value: 0;
+                  inherits: false;
+              }
+              
+              @keyframes salient-view-transition-start {
+                  0% {
+                    opacity: 1;
+                      transform: none;
+                      --salient-view-transition-gradient-wipe-progress: 0;
+                  }
+
+                  100% {
+                    opacity: 1;
+                    transform: none;
+                    --salient-view-transition-gradient-wipe-progress: 1;
+                  }
+              }
+
+              @keyframes salient-view-transition-end {
+                  0% {
+                    opacity: 1;
+                    transform: none;
+                  }
+
+                  100% {    
+                    opacity: 1;
+                    transform: none;
+                  
+                  }
+              }
+
+              ::view-transition-old(root) {
+                animation: salient-view-transition-end 1.2s cubic-bezier(0.45, 0, 0.35, 1.0);
+                animation-delay: 0s;
+                animation-fill-mode: both;
+              }
+
+              ::view-transition-new(root) {
+                animation: salient-view-transition-start 1.2s cubic-bezier(0.45, 0, 0.35, 1.0);
+                animation-fill-mode: both;
+                mask-image: linear-gradient(
+                  270deg, 
+                  #000000 calc( -70% + calc(170% * var(--salient-view-transition-gradient-wipe-progress))), 
+                  transparent calc(170% * var(--salient-view-transition-gradient-wipe-progress))
+                ); 
+                -webkit-mask-image: linear-gradient(
+                  270deg, 
+                  #000000 calc( -70% + calc(170% * var(--salient-view-transition-gradient-wipe-progress))), 
+                  transparent calc(170% * var(--salient-view-transition-gradient-wipe-progress))
+                );
+            }';
+
+        } // end gradient wipe
+
+        echo '}'; // closing media query.
+    }
+
+    // Legacy method.
+    else if( $using_page_transitions ) {
 
     echo '
     #ajax-loading-screen{
@@ -7342,6 +7557,10 @@
   /*-------------------------------------------------------------------------*/
 
   if( isset($nectar_options['body-border']) && !empty($nectar_options['body-border']) && '1' === $nectar_options['body-border'] ) {
+    
+    $body_border_func = NectarThemeManager::$body_border_func;
+    $body_border_breakpoint = (isset($nectar_options['body-border-mobile']) && '1' !== $nectar_options['body-border-mobile']) ? '1000px' : '1px';
+
     echo '
     .body-border-bottom{
       height:20px;
@@ -7361,13 +7580,25 @@
       z-index:10000;
       position:fixed;
       background-color:#fff;
-    }
+    }';
 
-    .admin-bar .body-border-top{
+    echo '.admin-bar .body-border-top{
       top:32px
+    }';
+    if ( isset($nectar_options['body-border-mobile']) && '1' === $nectar_options['body-border-mobile'] && 'vignette' === $body_border_func ) {
+      echo '
+      @media only screen and (max-width: 783px) and (min-width: 601px) {
+      .admin-bar .body-border-top{
+        top: var(--wp-admin--admin-bar--height);
+      }}
+        @media only screen and (max-width: 600px) {
+          .admin-bar .body-border-top{
+            top: 0;
+          }
+        }';
     }
 
-    .body-border-right{
+    echo '.body-border-right{
       height:100%;
       width:20px;
       top:0;
@@ -7388,16 +7619,46 @@
     }
     .pum-open [data-body-border="1"] #header-outer[data-transparent-header="true"][data-transparent-shadow-helper="true"].transparent:not(.dark-slide):before {
       opacity: 0;
+    }';
+    if ( $body_border_breakpoint !== '1px' ) { 
+      echo '@media only screen and (max-width: 999px) {
+        .body-border-right,
+        .body-border-left,
+        .body-border-top,
+        .body-border-bottom {
+          display: none;
+        }
+      }';
     }
-    @media only screen and (max-width: 999px) {
-      .body-border-right,
-      .body-border-left,
-      .body-border-top,
-      .body-border-bottom {
-        display: none;
+
+    if ( $body_border_func === 'vignette' ) {
+      $body_border_size  = (!empty($nectar_options['body-border-size'])) ? esc_attr($nectar_options['body-border-size']) : '20';
+      echo 'html {
+        overscroll-behavior-y: none; 
       }
+      .body-border-top, .admin-bar .body-border-top {
+        top: 0;
+        position: absolute;
+      }
+      .body-border-bottom { 
+        position: absolute;
+      }
+      @media only screen and (min-width: '.esc_attr($body_border_breakpoint).') {
+        body #header-space {
+          margin-top: var( --nectar-body-border-size );
+          margin-bottom: 0;
+        }
+      }
+      body #slide-out-widget-area.slide-out-from-right-hover {
+        margin-right: 0;
+        z-index: 10001;
+      }
+      .ocm-effect-wrap,
+      body[data-slide-out-widget-area-style="slide-out-from-right"].admin-bar:not(.material-ocm-open):not(.nectar_box_roll) .ocm-effect-wrap {
+        position: relative;
+      }';
+   
     }
-    ';
   }
 
 
@@ -7548,7 +7809,7 @@
 
     }
 
-    @media only screen and (min-device-width: 481px) and (max-device-width: 1025px) and (orientation:landscape) {
+    @media only screen and (min-width: 481px) and (max-width: 1025px) and (orientation:landscape) {
 
       .col.has-animation[data-animation="fade-in-from-left"],
       .wpb_column.has-animation[data-animation="fade-in-from-left"],
@@ -7606,7 +7867,7 @@
     }
 
 
-    @media only screen and (max-device-width: 2600px) {
+    @media only screen and (max-width: 2600px) {
 
       body.using-mobile-browser .col.has-animation[data-animation="fade-in-from-left"],
       body.using-mobile-browser .wpb_column.has-animation[data-animation="fade-in-from-left"],
@@ -7750,7 +8011,7 @@
   }
 
   if( true === $mobile_remove_parallax ) {
-    echo '@media only screen and (max-device-width: 2600px) {
+    echo '@media only screen and (max-width: 2600px) {
 
       body[data-remove-m-parallax="1"].using-mobile-browser .full-width-section.parallax_section,
       body[data-remove-m-parallax="1"].using-mobile-browser .full-width-content.parallax_section {
@@ -8993,7 +9254,7 @@
       width: 100%;
     }
 
-    #slide-out-widget-area.fullscreen-inline-images .inner {
+    #slide-out-widget-area.fullscreen-inline-images .inner-wrap > .inner {
         width:100%;
         position:relative;
         top: 0;
@@ -9333,19 +9594,19 @@
   
   if( $ocm_custom_font_size_desktop && !empty($ocm_custom_font_size_desktop) && class_exists('NectarElDynamicStyles') ) {
 
-    $ocm_font_size_selector = 'body #slide-out-widget-area .inner .off-canvas-menu-container li a';
+    $ocm_font_size_selector = 'body #slide-out-widget-area .inner-wrap > .inner .off-canvas-menu-container li > a';
 
     if( 'fullscreen-inline-images' === $side_widget_class ) {
-      $ocm_font_size_selector = ' body #slide-out-widget-area .inner .off-canvas-menu-container li a';
+      $ocm_font_size_selector = ' body #slide-out-widget-area .inner-wrap > .inner .off-canvas-menu-container li > a';
     } 
     else if( 'fullscreen' === $side_widget_class ) {
-      $ocm_font_size_selector = ' body #slide-out-widget-area.fullscreen .inner .off-canvas-menu-container li a';
+      $ocm_font_size_selector = ' body #slide-out-widget-area.fullscreen .inner-wrap > .inner .off-canvas-menu-container li > a';
     }
     else if( 'fullscreen-alt' === $side_widget_class ) {
-      $ocm_font_size_selector = ' body #slide-out-widget-area.fullscreen-alt .inner .off-canvas-menu-container li a';
+      $ocm_font_size_selector = ' body #slide-out-widget-area.fullscreen-alt .inner-wrap > .inner .off-canvas-menu-container li > a';
     }
     else if( 'slide-out-from-right-hover' === $side_widget_class ) {
-      $ocm_font_size_selector = ' body #slide-out-widget-area.slide-out-from-right-hover .inner .off-canvas-menu-container li a';
+      $ocm_font_size_selector = ' body #slide-out-widget-area.slide-out-from-right-hover .inner-wrap > .inner .off-canvas-menu-container li > a';
     } 
 
     echo '@media only screen and (min-width: 1000px) {
@@ -9358,23 +9619,23 @@
   
   if( $ocm_custom_font_size_mobile && !empty($ocm_custom_font_size_mobile) && class_exists('NectarElDynamicStyles') ) {
 
-    $ocm_font_size_selector = 'body #slide-out-widget-area .inner .off-canvas-menu-container li a';
+    $ocm_font_size_selector = 'body #slide-out-widget-area .inner-wrap > .inner .off-canvas-menu-container li > a';
 
     if( 'fullscreen-inline-images' === $side_widget_class ) {
-      $ocm_font_size_selector .= ', body #slide-out-widget-area.fullscreen-inline-images .inner .widget.widget_nav_menu li a, 
-      body #slide-out-widget-area.fullscreen-inline-images .inner .off-canvas-menu-container li a';
+      $ocm_font_size_selector .= ', body #slide-out-widget-area.fullscreen-inline-images .inner-wrap > .inner .widget.widget_nav_menu li > a, 
+      body #slide-out-widget-area.fullscreen-inline-images .inner-wrap > .inner .off-canvas-menu-container li > a';
     } 
     else if( 'fullscreen' === $side_widget_class ) {
-      $ocm_font_size_selector = ' body #slide-out-widget-area.fullscreen .inner .off-canvas-menu-container li a';
+      $ocm_font_size_selector = ' body #slide-out-widget-area.fullscreen .inner-wrap > .inner .off-canvas-menu-container li > a';
     }
     else if( 'fullscreen-alt' === $side_widget_class ) {
-      $ocm_font_size_selector = ' body #slide-out-widget-area.fullscreen-alt .inner .off-canvas-menu-container li a';
+      $ocm_font_size_selector = ' body #slide-out-widget-area.fullscreen-alt .inner-wrap > .inner .off-canvas-menu-container li > a';
     }
     else if( 'slide-out-from-right-hover' === $side_widget_class ) {
-      $ocm_font_size_selector = ' body #slide-out-widget-area.slide-out-from-right-hover .inner .off-canvas-menu-container li a';
+      $ocm_font_size_selector = ' body #slide-out-widget-area.slide-out-from-right-hover .inner-wrap > .inner .off-canvas-menu-container li > a';
     } 
     else if( 'simple' === $side_widget_class ) {
-      $ocm_font_size_selector = ' #header-outer #mobile-menu ul li a';
+      $ocm_font_size_selector = ' #header-outer #mobile-menu ul li > a';
     } 
 
     echo '

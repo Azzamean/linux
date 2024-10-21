@@ -21,6 +21,91 @@
     }
   };
 
+
+  /* CF Repeater */
+  function NectarCFRepeater(el) {
+    this.$el = el;
+    this.valueInput   = this.$el.find('.nectar-repeater-field__save_data input');
+    this.data         = [];
+    this.saveData     = this.valueInput.val();
+    this.itemTemplate = this.$el.find('.nectar-repeater-field__template').html();
+
+    this.buildItems()
+    this.events();
+  }
+
+  NectarCFRepeater.prototype.events = function() {
+    var that = this;
+
+    // Add.
+    this.$el.find('.nectar-repeater-field__add').on('click', function() {
+      that.add();
+      return false;
+    });
+
+    // Remove.
+    $('body').on('click', '.nectar-repeater-field__item__remove', function() {
+      $(this).parents('.nectar-repeater-field__item').remove();
+      that.update();
+      return false;
+    });
+
+    // Update.
+    this.$el.on('change', ':input', this.update.bind(this));
+  };
+
+  NectarCFRepeater.prototype.add = function() {
+    var $item = $(this.itemTemplate);
+    this.$el.find('.nectar-repeater-field__items').append($item);
+    nectarFancyCheckboxes();
+  };
+
+  NectarCFRepeater.prototype.update = function() {
+    var data = [];
+    this.$el.find('.nectar-repeater-field__items .nectar-repeater-field__item').each(function() {
+
+      var formData = $(this).find(':input').serializeArray();
+      var formObject = {};
+
+      $.each(formData, function(_, kv) {
+        formObject[kv.name] = kv.value;
+      });
+
+      data.push(formObject);
+    });
+    
+    this.valueInput.val(encodeURIComponent(JSON.stringify(data)));
+  };
+
+  
+  NectarCFRepeater.prototype.buildItems = function() {
+    var that = this;
+    if ( !this.saveData ) {
+      return;
+    }
+  
+    var data = JSON.parse(decodeURIComponent(this.saveData));
+    if( data.length > 0 ) {
+      $.each(data, function(i, item) {
+        var $item = $(that.itemTemplate);
+        $item.find(':input').each(function() {
+          var name = $(this).attr('name');
+          $(this).val(item[name]);
+          // set prop for checkbox
+          if( $(this).is(':checkbox') ) {
+            if( item.hasOwnProperty(name) ) {
+              $(this).prop('checked', true);
+              $(this).parents('.salient-fancy-checkbox').addClass('fancy-checkbox-activated');
+            }
+          }
+        });
+        that.$el.find('.nectar-repeater-field__items').append($item);
+      });
+    }
+  };
+
+
+
   /* Global Sections */
   function SalientGlobalSections(el) {
 
@@ -735,6 +820,11 @@
 
     $('.vc_edit_form_elements .vc_shortcode-param.salient-fancy-checkbox:not(.constrain-icon) input[type="checkbox"].wpb_vc_param_value.checkbox').each(function(){
 
+      // Return if already done.
+      if ( $(this).parents('.nectar-cb-enabled').length > 0 ) {
+        return;
+      }
+      
       if( $(this).prop('checked') ) {
         var $checkboxMarkup = $('<label class="cb-enable selected"><span>On</span></label><label class="cb-disable"><span>Off</span></label>');
       } else {
@@ -1169,6 +1259,7 @@
       $( this ).addClass( 'selected' );
 
       $(this).parent().addClass( 'activated');
+      $(this).parents('.salient-fancy-checkbox').addClass( 'fancy-checkbox-activated' );
 
       $( 'input[type="checkbox"]', parent ).prop("checked", true).trigger('change');
 
@@ -1181,6 +1272,7 @@
       $( '.cb-enable', parent ).removeClass( 'selected' );
       $( this ).addClass( 'selected' );
       $(this).parent().removeClass( 'activated');
+      $(this).parents('.salient-fancy-checkbox').removeClass( 'fancy-checkbox-activated' );
 
       $( 'input[type="checkbox"]', parent ).prop("checked", false).trigger('change');
 
@@ -1428,7 +1520,8 @@
   window.nectarPostGridFeaturedFirstItemCallback = function() {
 
     var $featuredTopItem = $(".wpb_vc_param_value[name=featured_top_item]", this.$content);
- 
+    
+    // Hides masory options if featured top item is checked.
     $featuredTopItem.on("change", function() {
 
       if( $featuredTopItem.prop('checked') == true ) {
@@ -1438,6 +1531,9 @@
       }
 
     }).trigger('change');
+
+    // Should not be available when using 1 col layout.
+    
 
   };
 
@@ -1484,6 +1580,15 @@
       '4_col_masonry_layout',
     ];
 
+    var stackHiddenSelectors = [
+      'enable_masonry',
+      'featured_top_item',
+      '2_col_masonry_layout',
+      '3_col_masonry_layout',
+      '4_col_masonry_layout',
+      'parallax_scrolling'
+    ];
+
     $displayType.on("change", function() {
 
       var that = this;
@@ -1498,17 +1603,26 @@
         $('select[name=grid_style] option.mouse_follow_image', that.$content).prop('disabled', false);
         $('select[name=grid_style] option.vertical_list', that.$content).prop('disabled', false);
         $('select[name=grid_style] option.content_next_to_image', that.$content).prop('disabled', false);
+        $('select[name=grid_style] option.content_under_image', that.$content).prop('disabled', false);
+
 
         $(".column-device-group-header", that.$content).removeClass('hidden-device-group-element');
+        $(".column-device-group-header", that.$content).removeClass('hidden-device-group-element-full');
+
       } 
       else if( $displayType.val() === 'carousel' ) {
- 
+        
+        stackHiddenSelectors.forEach(function(el){
+          $(".vc_shortcode-param[data-vc-shortcode-param-name="+el+"]", that.$content).removeClass('hidden-element');
+        });
+
         // carousel
         dependentSelectors.forEach(function(el){
           $(".vc_shortcode-param[data-vc-shortcode-param-name="+el+"]", that.$content).addClass('hidden-element');
         });
 
         // Hide device options.
+        $(".column-device-group-header", that.$content).removeClass('hidden-device-group-element-full');
         $(".column-device-group-header", that.$content).addClass('hidden-device-group-element');
         $('.column-device-group-header .device-selection [data-filter="desktop"]', that.$content).trigger('click');
 
@@ -1521,7 +1635,31 @@
         $('select[name=grid_style] option.mouse_follow_image', that.$content).prop('disabled', true);
         $('select[name=grid_style] option.vertical_list', that.$content).prop('disabled', true);
         $('select[name=grid_style] option.content_next_to_image', that.$content).prop('disabled', true);
+        $('select[name=grid_style] option.content_under_image', that.$content).prop('disabled', false);
 
+
+    } else if ( $displayType.val() === 'stack' ) {
+
+      setTimeout(() => {
+        stackHiddenSelectors.forEach(function(el){
+          $(".vc_shortcode-param[data-vc-shortcode-param-name="+el+"]", that.$content).addClass('hidden-element');
+        });
+        // Hide device options.
+        $(".column-device-group-header", that.$content).addClass('hidden-device-group-element-full');
+        $('.column-device-group-header .device-selection [data-filter="desktop"]', that.$content).trigger('click');
+
+         // Limit styles
+         if( gridStyleField.val() !== 'content_overlaid' ) {
+          $('select[name=grid_style]').val('content_overlaid');
+          $('select[name=grid_style]').trigger('change');
+        }
+        $('select[name=grid_style] option.mouse_follow_image', that.$content).prop('disabled', true);
+        $('select[name=grid_style] option.vertical_list', that.$content).prop('disabled', true);
+        $('select[name=grid_style] option.content_next_to_image', that.$content).prop('disabled', true);
+        $('select[name=grid_style] option.content_under_image', that.$content).prop('disabled', true);
+
+      }, 10);
+      
     }
 
   }).trigger('change');
@@ -1735,7 +1873,7 @@
           'vc_row' !== $shortcode ) {
           colorOverlayPreview('general');
       }
-
+      
       if( 'nectar_global_section' === $shortcode ) {
         new SalientGlobalSections($('#vc_ui-panel-edit-element .wpb_el_type_nectar_global_section_select .edit_form_line'));
       }
@@ -1762,6 +1900,10 @@
         createDeviceGroup('position-device-group');
         createDeviceGroup('position-display-device-group');
         createDeviceGroup('transform-device-group');
+      }
+
+      if( 'nectar_project_categories' === $shortcode ) {
+        createDeviceGroup('alignment-device-group');
       }
 
       if( 'nectar_cta' === $shortcode ) {
@@ -1832,6 +1974,9 @@
         createDeviceGroup('font-size-device-group');
         createDeviceGroup('padding-device-group');
         createDeviceGroup('column-device-group');
+
+        // repeater CF
+        new NectarCFRepeater($('#vc_ui-panel-edit-element .nectar-repeater-field'));
       }
 
 
@@ -1842,6 +1987,11 @@
       if( 'nectar_responsive_text' === $shortcode ) {
         createDeviceGroup('font-size-device-group');
       }
+
+      if( 'nectar_icon_list_item' === $shortcode ) {
+        createDeviceGroup('font-size-device-group');
+      }
+
 
       if ('nectar_animated_shape' === $shortcode) {
         createDeviceGroup('dimensions-device-group');
@@ -1873,10 +2023,12 @@
       'testimonial_slider' === $shortcode ||
       'nectar_video_player_self_hosted' === $shortcode ||
       'nectar_icon' === $shortcode ||
+      'nectar_project_categories' === $shortcode ||
       'nectar_lottie' === $shortcode ||
       'nectar_animated_shape' === $shortcode ||
       'nectar_price_typography' === $shortcode ||
       'nectar_responsive_text' === $shortcode ||
+      'nectar_icon_list_item' === $shortcode ||
       'nectar_badge' === $shortcode ||
       'nectar_highlighted_text' === $shortcode ||
       'fancy-ul' === $shortcode ||

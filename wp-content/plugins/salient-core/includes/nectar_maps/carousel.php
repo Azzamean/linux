@@ -919,6 +919,19 @@ return array(
 				"description" => ''
 			),
 			array(
+				"type" => "dropdown",
+				"class" => "",
+				"heading" => esc_html__("Ticker Movement Direction", 'salient-core'),
+				'save_always' => true,
+				"param_name" => "ticker_direction",
+				"value" => array(
+					esc_html__("Default",'salient-core') => 'default',
+					esc_html__("Reverse",'salient-core') => 'reverse',
+				),
+				"dependency" => array('element' => "autorotate_type", 'value' => 'ticker'),
+				"description" => ''
+			),
+			array(
 				"type" => "textfield",
 				"heading" => esc_html__("Autorotation Speed", 'salient-core'),
 				"param_name" => "autorotation_speed",

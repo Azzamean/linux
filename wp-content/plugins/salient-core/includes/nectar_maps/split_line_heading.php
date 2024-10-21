@@ -98,7 +98,7 @@ $split_line_heading_params = array_merge(
 			"heading" => esc_html__("Fit text to container", "salient-core"),
 			"param_name" => "fit_text_to_container",
 			"value" => array(esc_html__("Yes", "salient-core") => 'true'),
-			"description" => esc_html__("This will scales up (or down) text so it fits perfectly to the parent column.", "salient-core"),
+			"description" => esc_html__("This will scale your text so that it fits perfectly to the parent column.", "salient-core"),
 			"dependency" => array('callback' => 'nectarFitTextCallback'),
 		),
 		array(

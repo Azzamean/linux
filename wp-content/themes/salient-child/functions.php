@@ -693,7 +693,7 @@ function editor_granted_appearance_access()
     global $multisite_three_live;
     global $multisite_five_dev;
     global $multisite_five_live;
-    if ((is_multisite() && $current_multisite == $multisite_three_dev)
+    if ((is_multisite() && ($current_multisite == $multisite_three_dev || $current_multisite == $multisite_three_live))
     ) {
         $site_id = get_current_blog_id();
         // InterUSS
@@ -705,20 +705,17 @@ function editor_granted_appearance_access()
             editor_appearance_access();
         }
     }
-    if ((is_multisite() && $current_multisite == $multisite_five_live)
+    if ((is_multisite() && ($current_multisite == $multisite_five_dev || $current_multisite == $multisite_five_live))
     ) {
         $site_id = get_current_blog_id();
-        // Trust
+        // Voice Interoperability
+        if ($site_id == "4") {
+            editor_appearance_access();
+        }
+        // Trustmark Initiative
         if ($site_id == "10") {
             editor_appearance_access();
         }
-    }
-
-
-    if ((is_multisite() && $current_multisite == $multisite_five_dev) 
-        || (is_multisite() && $current_multisite == $multisite_five_live)
-    ) {
-        $site_id = get_current_blog_id();
     }
 }
 
@@ -889,7 +886,7 @@ $sites = get_sites();
 foreach( $sites as $site ) {
     switch_to_blog( $site->blog_id );
     
-    if( in_array( 'simple-banner/simple-banner.php', (array) get_option( 'active_plugins', array() ) ) ) {
+    if( in_array( 'search-filter-pro/search-filter-pro.php', (array) get_option( 'active_plugins', array() ) ) ) {
             echo "Plugin is active on {$site->blogname}";
     }
     

@@ -48,7 +48,12 @@ if( has_post_thumbnail() ) {
     );
     
     echo '<a href="' . esc_url( get_permalink() ) . '" aria-label="'.get_the_title().'"><span class="post-featured-img">';
-    echo '<img class="nectar-lazy skip-lazy wp-post-image" alt="'.esc_attr($alt_tag).'" height="'.esc_attr($height).'" width="'.esc_attr($width).'" data-nectar-img-src="'.esc_attr($img_src[0]).'" data-nectar-img-srcset="'.esc_attr($img_srcset).'" sizes="'.esc_attr($image_attrs['sizes']).'" />';
+    $skip_lazy_class = '';
+    $disable_third_party_lazy_loading = apply_filters('nectar_disable_third_party_lazy_loading', true);
+    if ( $disable_third_party_lazy_loading ) {
+      $skip_lazy_class = ' skip-lazy';
+    }
+    echo '<img class="nectar-lazy wp-post-image'.$skip_lazy_class.'" alt="'.esc_attr($alt_tag).'" height="'.esc_attr($height).'" width="'.esc_attr($width).'" data-nectar-img-src="'.esc_attr($img_src[0]).'" data-nectar-img-srcset="'.esc_attr($img_srcset).'" sizes="'.esc_attr($image_attrs['sizes']).'" />';
     echo '</span></a>';
     
   } else {

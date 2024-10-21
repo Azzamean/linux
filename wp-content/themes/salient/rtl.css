@@ -281,6 +281,10 @@ body.material #slide-out-widget-area[class*="slide-out-from-right"] .off-canvas-
   margin-right: -20px;
 }
 
+#header-outer .nectar-global-section-megamenu {
+  text-align: right;
+}
+
 #header-outer[data-format="default"] #logo.no-image,
 #header-outer[data-format="centered-menu"] #logo.no-image,
 #header-outer[data-format="menu-left-aligned"] #logo.no-image,

@@ -5,16 +5,16 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 /** @var bool $is_about_page */
 ?>
-<img class="vc-featured-img" src="<?php echo esc_url( vc_asset_url( 'vc/wpb-7-7-about.png' ) ); ?>"/>
+<img class="vc-featured-img" src="<?php echo esc_url( vc_asset_url( 'vc/wpb-7-8-about.png' ) ); ?>"/>
 
 <div class="vc-feature-text">
-	<h3><?php esc_html_e( 'Module Manager, AI in the Classic Editor & Element Caching', 'js_composer' ); ?></h3>
+	<h3><?php esc_html_e( 'Follow Your AI Credit Usage', 'js_composer' ); ?></h3>
 
-	<p><?php esc_html_e( 'Manage which modules (like Custom Code, Skin Builder, Shortcode Mapper, etc.) are loaded and available in the editor. Use WPBakery AI in the Classic Editor to generate, improve, and translate texts, and enjoy improved editor performance with element caching after every edit.', 'js_composer' ); ?></p>
+	<p><?php esc_html_e( 'Keep track of your AI credit usage directly within the editor, accessible on both the frontend and backend. Each user is allocated 20,000 monthly AI credits for generating text, translations, and code. Stay informed and manage your credits efficiently to make the most of your AI capabilities.', 'js_composer' ); ?></p>
 	<ul>
-		<li><?php esc_html_e( 'Control modules with Module Manager', 'js_composer' ); ?></li>
-		<li><?php esc_html_e( 'Utilize WPBakery AI in the Classic Editor', 'js_composer' ); ?></li>
-		<li><?php esc_html_e( 'Caching for Element Settings ', 'js_composer' ); ?></li>
+		<li><?php esc_html_e( 'Check your AI credit usage directly within the editor', 'js_composer' ); ?></li>
+		<li><?php esc_html_e( 'Monitor your AI credits on both frontend and backend', 'js_composer' ); ?></li>
+		<li><?php esc_html_e( 'Ensure you use your 20,000 monthly AI credits wisely', 'js_composer' ); ?></li>
 	</ul>
 	<?php
 	$tabs = vc_settings()->getTabs();

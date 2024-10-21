@@ -79,8 +79,8 @@ if ( $side_widget_area === '1' && $side_widget_class !== 'simple' || true === $l
 			$side_widget_class === 'fullscreen-alt' ||
 			$side_widget_class === 'fullscreen-split' ||
 			$side_widget_class === 'fullscreen-inline-images' ||
-			( $theme_skin === 'material' && $side_widget_class === 'slide-out-from-right' ) ||
-			( $theme_skin === 'material' && $side_widget_class === 'slide-out-from-right-hover' ) ) {
+			$side_widget_class === 'slide-out-from-right'  ||
+			$side_widget_class === 'slide-out-from-right-hover' ) {
 
 				echo '<div class="inner-wrap">';
 			}
@@ -120,7 +120,7 @@ if ( $side_widget_area === '1' && $side_widget_class !== 'simple' || true === $l
 							if ( ! empty( $nectar_secondary_link ) ) {
 								echo '<a href="' . esc_url( $nectar_secondary_link ) . '">';
 							}
-							echo wp_kses_post( $nectar_options['secondary-header-text'] );
+							echo do_shortcode( wp_kses_post( $nectar_options['secondary-header-text'] ) );
 							if ( ! empty( $nectar_secondary_link ) ) {
 								echo '</a>';
 							}
@@ -229,6 +229,26 @@ if ( $side_widget_area === '1' && $side_widget_class !== 'simple' || true === $l
 							?>
 
 						</ul>
+
+							<?php
+				
+							// Material secondary nav in menu.
+							$using_secondary = ( ! empty( $nectar_options['header_layout'] ) && $header_format != 'left-header' ) ? $nectar_options['header_layout'] : ' ';
+
+							if ( has_nav_menu( 'off_canvas_nav' ) && $separate_mobile_ocm == '1' && $using_secondary === 'header_with_secondary' && has_nav_menu( 'secondary_nav' ) && $header_mobile_func !== 'display_full' ) {
+								echo '<ul class="menu secondary-header-items mobile-only">';
+								wp_nav_menu(
+									array(
+										'walker'         => new Nectar_Arrow_Walker_Nav_Menu(),
+										'theme_location' => 'secondary_nav',
+										'container'      => '',
+										'items_wrap'     => '%3$s',
+									)
+								);
+								echo '</ul>';
+							}
+							?>
+					
 					</div>
 
 					<?php
@@ -271,13 +291,13 @@ if ( $side_widget_area === '1' && $side_widget_class !== 'simple' || true === $l
 					}
 
 					if ( $side_widget_class === 'fullscreen' ||
-					$side_widget_class === 'fullscreen-alt' ||
-					$side_widget_class === 'fullscreen-split' ||
-          $side_widget_class === 'fullscreen-inline-images' ||
-					( $theme_skin === 'material' && $side_widget_class === 'slide-out-from-right' ) ||
-					( $theme_skin === 'material' && $side_widget_class === 'slide-out-from-right-hover' ) ) {
-						echo '</div> <!--/inner-wrap-->';
-					}
+						$side_widget_class === 'fullscreen-alt' ||
+						$side_widget_class === 'fullscreen-split' ||
+						$side_widget_class === 'fullscreen-inline-images' ||
+						$side_widget_class === 'slide-out-from-right' ||
+						$side_widget_class === 'slide-out-from-right-hover' ) {
+							echo '</div> <!--/inner-wrap-->';
+						}
 					?>
 
 				</div>

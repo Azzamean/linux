@@ -16,7 +16,24 @@
     $theme_menu_icon = null;
     if( floatval(get_bloginfo('version')) >= "3.8" ) {
         $current_color = get_user_option( 'admin_color' );
-        if( $current_color == 'light' ) {
+
+        if ( NectarThemeManager::$custom_theme_logo &&
+            isset(NectarThemeManager::$custom_theme_logo['url']) &&
+            !empty(NectarThemeManager::$custom_theme_logo['url']) ) {
+              $theme_menu_icon = esc_attr(NectarThemeManager::$custom_theme_logo['url']);
+              // Add css here to filter the logo into white.
+              add_action('admin_head', function() {
+                $theme = wp_get_theme();
+                $theme_name = str_replace(' ', '', $theme->get( 'Name' ));
+                echo '<style>
+                   .toplevel_page_'.esc_attr($theme_name).' .wp-menu-image img,
+                   .redux-container #redux-header img {
+                    filter: brightness(0) invert(1);
+                  }
+                </style>';   
+              });
+        }
+        else if( $current_color == 'light' ) {
             $theme_menu_icon = NECTAR_FRAMEWORK_DIRECTORY . 'assets/img/icons/salient-grey.svg';
         } else {
             $theme_menu_icon = NECTAR_FRAMEWORK_DIRECTORY . 'assets/img/icons/salient.svg';
@@ -41,14 +58,14 @@
         // This is where your data is stored in the database and also becomes your global variable name.
         'display_name'         => $theme->get( 'Name' ),
         // Name that appears at the top of your panel
-        'display_version'      => $theme->get( 'Version' ),
+        'display_version'      => NectarThemeManager::$hide_theme_version ? '' : $theme->get( 'Version' ),
         // Version that appears at the top of your panel
         'menu_type'            => 'menu',
         //Specify if the admin menu should appear or not. Options: menu or submenu (Under appearance only)
         'allow_sub_menu'       => true,
         // Show the sections below the admin menu item or not
-        'menu_title'           => esc_html__( 'Salient', 'salient' ),
-        'page_title'           => esc_html__( 'Salient Options', 'salient' ),
+        'menu_title'           => NectarThemeManager::$theme_name,
+        'page_title'           => NectarThemeManager::$theme_name . ' ' . esc_html__( 'Options', 'salient' ),
         // You will need to generate a Google API key to use this feature.
         // Please visit: https://developers.google.com/fonts/docs/developer_api#Auth
         'google_api_key'       => '',
@@ -418,6 +435,26 @@
            'default' => '0'
          ),
          array(
+          'id' => 'body-border-functionality',
+          'type' => 'select',
+          'required' => array( 'body-border', '=', '1' ),
+          'title' => esc_html__('Body Border Functionality', 'salient'),
+          'subtitle' => esc_html__('"Scrolling Vignette" will disable the stickiness of your header navigation.', 'salient'),
+          'options' => [
+            'default' => 'Fixed Vignette',
+            'vignette' => 'Scrolling Vignette',
+          ],
+          'default' => 'default'
+        ),
+        array(
+          'id' => 'body-border-mobile',
+          'type' => 'switch',
+          'required' => array( 'body-border', '=', '1' ),
+          'title' => esc_html__('Body Border Persist on Mobile', 'salient'),
+          'desc' => '',
+          'default' => '0'
+        ),
+         array(
            'id' => 'body-border-color',
            'type' => 'color',
            'required' => array( 'body-border', '=', '1' ),
@@ -445,11 +482,31 @@
        'id'               => 'general-settings-functionality',
        'subsection'       => true,
        'fields'           => array(
+        array(
+          'id' => 'smooth-scroll',
+          'type' => 'switch',
+          'title' => esc_html__('Smooth Scrolling', 'salient'),
+          'subtitle' => esc_html__('Toggle smooth scrolling (powered by Lenis). This option affects all desktop browsers, except Safari.', 'salient'),
+          'desc' => '',
+          'default' => '0'
+        ),
+        array(
+          'id'        => 'smooth-scroll-strength',
+          'type'      => 'slider',
+          'required' => array( 'smooth-scroll', '=', '1' ),
+          'title'     => esc_html__('Smooth Scrolling Strength', 'salient'),
+          'desc'      => '',
+          "default"   => 50,
+          "min"       => 1,
+          "step"      => 1,
+          "max"       => 100,
+          'display_value' => 'text'
+        ),
          array(
            'id' => 'one-page-scrolling',
            'type' => 'switch',
            'title' => esc_html__('One Page Scroll Support (Animated Anchor Links)', 'salient'),
-           'subtitle' => esc_html__('Toggle whether or not to enable one page scroll support', 'salient'),
+           'subtitle' => esc_html__('Toggle whether or not to enable one page scroll support.', 'salient'),
            'desc' => '',
            'default' => '1'
          ),
@@ -2832,7 +2889,8 @@
            'options' => array(
              'default' => esc_html__('Color Change', 'salient'),
              'animated_underline' => esc_html__('Animated Underline', 'salient'),
-             'button_bg' => esc_html__('Button Background', 'salient')
+             'button_bg' => esc_html__('Button Background', 'salient'),
+             'text_reveal' => esc_html__('Text Reveal', 'salient')
            ),
            'default' => 'animated_underline'
          ),
@@ -3312,9 +3370,21 @@
            'default' => 'remove_images'
          ),
          array(
+          'id' => 'header-slide-out-widget-area-icon-variant',
+          'type' => 'select',
+          'title' => esc_html__('Off Canvas Icon Style', 'salient'),
+          'desc' => '',
+          'subtitle' => esc_html__('Controls the lines within the menu icon.', 'salient'),
+          'options' => array(
+            'default' => esc_html__('Default', 'salient'),
+            'even_lines' => esc_html__('Even Lines', 'salient'),
+          ),
+          'default' => 'default',
+        ),
+         array(
            'id' => 'header-slide-out-widget-area-icon-style',
            'type' => 'select',
-           'title' => esc_html__('Off Canvas Icon Style', 'salient'),
+           'title' => esc_html__('Off Canvas Icon Button', 'salient'),
            'subtitle' => esc_html__('Please select your off canvas header icon style.', 'salient'),
            'desc' => '',
            'options' => array(
@@ -4363,14 +4433,51 @@
        'icon'   => 'el el-refresh',
        'fields' => array(
 
-         array(
-           'id' => 'ajax-page-loading',
-           'type' => 'switch',
-           'title' => esc_html__('Animated Page Transitions', 'salient'),
-           'subtitle' => esc_html__('This will enable an animation between loading your pages.', 'salient'),
-           'desc' => '',
-           'default' => '0'
-         ),
+        array(
+          'id' => 'page-transition-type',
+          'type' => 'select',
+          'title' => esc_html__('Transition Method', 'salient'),
+          'subtitle' => esc_html__('The "Simulated with JS" method ensures compatibility across all browsers but may not deliver the smoothest experience.','salient').'<br/><br/>'.__('For seamless page transitions, we recommend using the "View Transitions API" as a progressive enhancement. This approach leverages cutting-edge web technology. Here you can see the', 'salient') . ' ' . '<a target="_blank" rel="noopener noreferrer" href="https://caniuse.com/view-transitions">'.esc_html('browsers which support it.', 'salient') . '</a>',
+          'options' => array(
+            "default" => esc_html__('Simulated with JS (Legacy)', 'salient'),
+            "view-transitions" => esc_html__('View Transitions API (Modern)', 'salient'),
+          ),
+          'default' => 'default'
+        ),
+
+
+
+        array(
+          'id' => 'ajax-page-loading',
+          'type' => 'switch',
+          'title' => esc_html__('Animated Page Transitions', 'salient'),
+          'subtitle' => esc_html__('This will enable an animation between loading your pages.', 'salient'),
+          'desc' => '',
+          'default' => '0',
+        ),
+
+        array(
+          'id' => 'transitions-api-effect',
+          'type' => 'select',
+          'title' => esc_html__('Transition Effect', 'salient'),
+          'options' => array(
+            "fade" => esc_html__('Fade', 'salient'),
+            "gradient-wipe" => esc_html__('Horizontal Gradient Wipe', 'salient'),
+            "reveal-from-bottom" => esc_html__('Vertical Reveal', 'salient'),
+          ),
+          'required' => array( 'page-transition-type', '=', 'view-transitions' ),
+          'default' => 'fade'
+        ),
+
+        // array(
+        //   'id' => 'transitions-api-effect-disable-on-mobile',
+        //   'type' => 'switch',
+        //   'title' => esc_html__('Disable Page Transitions On Mobile', 'salient'),
+        //   'subtitle' => esc_html__('This will limit transitions to only occur on desktop displays.', 'salient'),
+        //   'desc' => '',
+        //   'required' => array( 'page-transition-type', '=', 'view-transitions' ),
+        //   'default' => '0'
+        // ),
 
          array(
            'id' => 'disable-transition-fade-on-click',
@@ -4378,7 +4485,9 @@
            'title' => esc_html__('Disable Fade Out On Click', 'salient'),
            'subtitle' => esc_html__('This will disable the default functionality of your page fading out when clicking a link with the Standard transition method. Is useful if your page transitions are conflicting with third party plugins that take over certain anchors such as lighboxes.', 'salient'),
            'desc' => '',
-           'default' => '0'
+           'default' => '0',
+           'required' => array( 'page-transition-type', '=', 'default' ),
+
          ),
 
          array(
@@ -4387,7 +4496,7 @@
            'title' => esc_html__('Disable Page Transitions On Mobile', 'salient'),
            'subtitle' => esc_html__('This will remove page transitions when viewed on a mobile device (produces faster loading)', 'salient'),
            'desc' => '',
-           'required' => array( 'ajax-page-loading', '=', '1' ),
+           'required' => array( array( 'page-transition-type', '=', 'default' ), array( 'ajax-page-loading', '=', '1' ) ),
            'default' => '1'
          ),
 
@@ -4402,13 +4511,14 @@
              "horizontal_swipe_basic" => esc_html__('Horizontal basic swipe', 'salient'),
              "horizontal_swipe" => esc_html__('Horizontal multi layer swipe', 'salient')
            ),
-           'default' => 'standard'
+           'default' => 'standard',
+           'required' => array( 'page-transition-type', '=', 'default' ),
          ),
 
          array(
            'id' => 'loading-icon',
            'type' => 'select',
-           'required' => array( 'transition-effect', '=', 'standard' ),
+           'required' => array( array( 'page-transition-type', '=', 'default' ), array( 'transition-effect', '=', 'standard' ) ),
            'title' => esc_html__('Loading Icon Style', 'salient'),
            'subtitle' => esc_html__('Select your loading icon style here', 'salient'),
            'options' => array(
@@ -4982,7 +5092,8 @@
                'in_header' => esc_html__('In Project Header', 'salient'),
                'after_project' => esc_html__('At Bottom Of Project', 'salient'),
                'after_project_2' => esc_html__('At Bottom W/ Featured Image', 'salient'),
-               'after_project_next_only' => esc_html__('At Bottom W/ Featured Image Next Only', 'salient')
+               'after_project_next_only' => esc_html__('At Bottom W/ Featured Image Next Only', 'salient'),
+               'none' => esc_html__('None', 'salient')
              ),
              'default' => 'after_project'
            ),

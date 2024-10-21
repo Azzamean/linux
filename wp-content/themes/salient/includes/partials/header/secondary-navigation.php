@@ -24,7 +24,7 @@ $bg_header                 = ( ! empty( $post->ID ) && $post->ID != 0 ) ? $using
 $bg_header                 = ( $bg_header == 1 ) ? 'true' : 'false';
 $trans_header              = ( ! empty( $nectar_options['transparent-header'] ) && $nectar_options['transparent-header'] === '1' ) ? $nectar_options['transparent-header'] : 'false';
 $perm_trans                = ( ! empty( $nectar_options['header-permanent-transparent'] ) && $trans_header != 'false' && $bg_header === 'true' && $header_format != 'centered-menu-bottom-bar' ) ? $nectar_options['header-permanent-transparent'] : 'false';
-$header_remove_stickiness  = ( ! empty( $nectar_options['header-remove-fixed'] ) ) ? $nectar_options['header-remove-fixed'] : '0';
+$header_remove_stickiness  = NectarThemeManager::$header_remove_fixed;
 $header_mobile_func        = ( ! empty( $nectar_options['secondary-header-mobile-display'] ) && $perm_trans !== '1' ) ? $nectar_options['secondary-header-mobile-display'] : 'default';
 
 if ( $header_format === 'left-header' ) {

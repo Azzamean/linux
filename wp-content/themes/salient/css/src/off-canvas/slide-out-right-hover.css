@@ -24,7 +24,7 @@ body[data-slide-out-widget-area-style="slide-out-from-right-hover"] #header-oute
 		transition: transform .7s cubic-bezier(0.25,1,.2,1)
 }
 /* text fade in */
-#slide-out-widget-area.slide-out-from-right-hover .inner{
+#slide-out-widget-area.slide-out-from-right-hover .inner-wrap > .inner{
 	 opacity:0;
 		margin-bottom:30px;
 		transform:translateX(50px);
@@ -32,10 +32,10 @@ body[data-slide-out-widget-area-style="slide-out-from-right-hover"] #header-oute
 		-ms-transition:transform .45s cubic-bezier(.2,.75,.3,1) 0.22s,opacity .45s cubic-bezier(.2,.75,.3,1) 0.22s;
 		transition:transform .45s cubic-bezier(.2,.75,.3,1) 0.22s,opacity .45s cubic-bezier(.2,.75,.3,1) 0.22s
 }
-.material #slide-out-widget-area.slide-out-from-right-hover .inner {
+.material #slide-out-widget-area.slide-out-from-right-hover .inner-wrap > .inner {
 	margin-bottom: 0px;
 }
-#slide-out-widget-area.slide-out-from-right-hover.open .inner{
+#slide-out-widget-area.slide-out-from-right-hover.open .inner-wrap > .inner{
 	 opacity:1;
 		transform:translateX(0px)
 }
@@ -73,7 +73,7 @@ body[data-slide-out-widget-area-style="slide-out-from-right-hover"] #header-oute
 	margin: auto 0;
   position: relative;
 }
-#slide-out-widget-area.slide-out-from-right-hover .inner{
+#slide-out-widget-area.slide-out-from-right-hover .inner-wrap > .inner{
 	 position:relative;
 	 display: -webkit-box;
    display: -webkit-flex;
@@ -84,7 +84,7 @@ body[data-slide-out-widget-area-style="slide-out-from-right-hover"] #header-oute
 #slide-out-widget-area.slide-out-from-right-hover .bottom-text{
 	 margin-top:30px
 }
-#slide-out-widget-area.slide-out-from-right-hover .inner .off-canvas-menu-container{
+#slide-out-widget-area.slide-out-from-right-hover .inner-wrap > .inner .off-canvas-menu-container{
 	margin: auto 0;
   position: relative;
 	width:100%;
@@ -94,42 +94,42 @@ body[data-slide-out-widget-area-style="slide-out-from-right-hover"] #header-oute
 	 margin-top:30px
 }
 
-#slide-out-widget-area.slide-out-from-right-hover .inner .off-canvas-menu-container li a{
+#slide-out-widget-area.slide-out-from-right-hover .inner-wrap > .inner .off-canvas-menu-container li a{
 	 font-size:24px;
 	 line-height:30px
 }
-body #slide-out-widget-area.slide-out-from-right-hover .inner .off-canvas-menu-container li a{
+body #slide-out-widget-area.slide-out-from-right-hover .inner-wrap > .inner .off-canvas-menu-container li a{
 	 word-break:break-word
 }
-body #slide-out-widget-area.slide-out-from-right-hover .inner .widget.widget_nav_menu li a,
-body #slide-out-widget-area.slide-out-from-right-hover .inner .off-canvas-menu-container li a{
+body #slide-out-widget-area.slide-out-from-right-hover .inner-wrap > .inner .widget.widget_nav_menu li a,
+body #slide-out-widget-area.slide-out-from-right-hover .inner-wrap > .inner .off-canvas-menu-container li a{
 	 display:inline-block;
 		position:relative;
 		opacity:1;
 		padding-left:0;
 		padding-right:0
 }
-#slide-out-widget-area.slide-out-from-right-hover .inner .widget.widget_nav_menu li a,
-#slide-out-widget-area.slide-out-from-right-hover .inner .off-canvas-menu-container li a {
+#slide-out-widget-area.slide-out-from-right-hover .inner-wrap > .inner .widget.widget_nav_menu li a,
+#slide-out-widget-area.slide-out-from-right-hover .inner-wrap > .inner .off-canvas-menu-container li a {
 	color:rgba(255,255,255,0.7);
 }
-#slide-out-widget-area.slide-out-from-right-hover .inner .widget.widget_nav_menu li.no-pointer-events,
-#slide-out-widget-area.slide-out-from-right-hover .inner .off-canvas-menu-container li.no-pointer-events{
+#slide-out-widget-area.slide-out-from-right-hover .inner-wrap > .inner .widget.widget_nav_menu li.no-pointer-events,
+#slide-out-widget-area.slide-out-from-right-hover .inner-wrap > .inner .off-canvas-menu-container li.no-pointer-events{
 	 pointer-events:none
 }
-#slide-out-widget-area.slide-out-from-right-hover .inner .off-canvas-menu-container li,
-.material #slide-out-widget-area.slide-out-from-right-hover .inner .off-canvas-menu-container li li  {
+#slide-out-widget-area.slide-out-from-right-hover .inner-wrap > .inner .off-canvas-menu-container li,
+.material #slide-out-widget-area.slide-out-from-right-hover .inner-wrap > .inner .off-canvas-menu-container li li  {
 		margin: 5px 0;
 		line-height: 1.2;
 }
-#slide-out-widget-area.slide-out-from-right-hover .inner .off-canvas-menu-container li a {
+#slide-out-widget-area.slide-out-from-right-hover .inner-wrap > .inner .off-canvas-menu-container li a {
 		-webkit-transition: color .2s;
 		transition: color .2s;
 }
 #slide-out-widget-area.slide-out-from-right-hover .off-canvas-menu-container {
 		min-width: 190px;
 }
-#slide-out-widget-area.slide-out-from-right-hover .inner .off-canvas-menu-container li a:hover {
+#slide-out-widget-area.slide-out-from-right-hover .inner-wrap > .inner .off-canvas-menu-container li a:hover {
 		color: #fff;
 }
 .admin-bar #slide-out-widget-area.slide-out-from-right-hover{
@@ -148,22 +148,22 @@ body #slide-out-widget-area.slide-out-from-right-hover .inner .off-canvas-menu-c
 				display: none;
 	 }
 }
-#slide-out-widget-area.slide-out-from-right-hover[data-dropdown-func="separate-dropdown-parent-link"] .inner > div.off-canvas-menu-container {
+#slide-out-widget-area.slide-out-from-right-hover[data-dropdown-func="separate-dropdown-parent-link"] .inner-wrap > .inner > div.off-canvas-menu-container {
 		margin: auto 0;
 		position: relative;
 		-ms-transform: none!important;
 		-webkit-transform: none!important;
 		transform: none!important;
 }
-#slide-out-widget-area.slide-out-from-right-hover[data-dropdown-func="separate-dropdown-parent-link"] .inner{
+#slide-out-widget-area.slide-out-from-right-hover[data-dropdown-func="separate-dropdown-parent-link"] .inner-wrap > .inner{
 		display: -webkit-box;
 		display: -webkit-flex;
 		display: flex;
 		height: auto;
 		flex-wrap: wrap;
 }
-body #slide-out-widget-area.slide-out-from-right-hover .inner .off-canvas-menu-container li.subviewopen >a,
-body #slide-out-widget-area.slide-out-from-right-hover .inner .off-canvas-menu-container li.subview >a{
+body #slide-out-widget-area.slide-out-from-right-hover .inner-wrap > .inner .off-canvas-menu-container li.subviewopen >a,
+body #slide-out-widget-area.slide-out-from-right-hover .inner-wrap > .inner .off-canvas-menu-container li.subview >a{
 	 display:none
 }
 .admin-bar .slide-out-hover-icon-effect{

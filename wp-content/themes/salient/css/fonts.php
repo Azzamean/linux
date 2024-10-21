@@ -192,9 +192,21 @@ $header_search_font = (isset($nectar_options['header-search-type'])) ? $nectar_o
 		   echo '.single #single-below-header span { font-family: ' . esc_attr($font_family) .';  }';
 		 }
 
+		 if(!empty($the_line_height)) {
+			echo ':root {
+				--nectar-body-line-height: ' . esc_attr($the_line_height) . ';
+			}';
+		}
+
+		// Store font size.
+		if( !empty($nectar_options['body_font_size']) && $nectar_options['body_font_size'] != '-' ) {
+			echo ':root {
+				--nectar-body-font-size: ' . esc_attr($nectar_options['body_font_size']) . ';
+			}';
+		}
 		 echo '.nectar-fancy-ul ul li .icon-default-style[class^="icon-"] {';
 			 if(!empty($the_line_height)) {
-				 echo 'line-height:' . $the_line_height .';';
+				 echo 'line-height:' . esc_attr($the_line_height) .';';
 			 }
 		 echo '}';
 
@@ -321,7 +333,7 @@ $header_search_font = (isset($nectar_options['header-search-type'])) ? $nectar_o
     #top .span_9 > .slide-out-widget-area-toggle a.using-label .label,
 		#header-secondary-outer .nectar-center-text,
 		#slide-out-widget-area .secondary-header-text,
-    #header-outer #mobile-menu ul li a,
+    #header-outer #mobile-menu ul li > a,
 		#header-outer #mobile-menu .secondary-header-text,  
     .nectar-mobile-only.mobile-header a {';
 
@@ -376,7 +388,7 @@ $header_search_font = (isset($nectar_options['header-search-type'])) ? $nectar_o
 	if( is_array($nectar_options['navigation_dropdown_font_family']) && 
 		$nectar_options['navigation_dropdown_font_family']['attrs_in_use'] ) {
 
-		echo '#top .sf-menu li ul li a,
+		echo '#top .sf-menu li ul li.menu-item a,
 		#header-secondary-outer nav > ul > li > a,
 		#header-secondary-outer .sf-menu li ul li a,
 		#header-secondary-outer ul ul li a,
@@ -1234,6 +1246,7 @@ if( $woocommerce && 'h3' === $product_tab_heading_typography ) {
 		#header-outer .widget_shopping_cart .cart_list a,
 		.woocommerce .yith-wcan-reset-navigation.button,
 		.single-product .entry-summary p.stock.out-of-stock,
+		.nectar-post-grid.layout-stacked[data-text-layout="all_middle"] .nectar-post-grid-item__meta-wrap,
     	.nectar-post-grid .nectar-post-grid-item .content .meta-category a,
 		.nectar-post-grid-item .item-main > .meta-author .meta-author-name,
 		.nectar-post-grid-item .post-heading-wrap .meta-author-name,
@@ -1527,10 +1540,10 @@ if( $woocommerce && 'h3' === $product_tab_heading_typography ) {
 	if( is_array($nectar_options['off_canvas_nav_font_family']) && 
 		$nectar_options['off_canvas_nav_font_family']['attrs_in_use'] ) {
 
-			echo 'body #slide-out-widget-area .inner .off-canvas-menu-container li a,
-			body #slide-out-widget-area.fullscreen .inner .off-canvas-menu-container li a,
-			body #slide-out-widget-area.fullscreen-alt .inner .off-canvas-menu-container li a,
-			body #slide-out-widget-area.slide-out-from-right-hover .inner .off-canvas-menu-container li a,
+			echo 'body #slide-out-widget-area .inner-wrap > .inner .off-canvas-menu-container li > a,
+			body #slide-out-widget-area.fullscreen .inner-wrap > .inner .off-canvas-menu-container li > a,
+			body #slide-out-widget-area.fullscreen-alt .inner-wrap > .inner .off-canvas-menu-container li > a,
+			body #slide-out-widget-area.slide-out-from-right-hover .inner-wrap > .inner .off-canvas-menu-container li > a,
 			body #nectar-ocm-ht-line-check { ';
 
 				// Output font properties.
@@ -1582,9 +1595,10 @@ if( $woocommerce && 'h3' === $product_tab_heading_typography ) {
 		$nectar_options['off_canvas_nav_subtext_font_family']['attrs_in_use'] ) {
 
 			echo 'body #slide-out-widget-area .menuwrapper li small,
-      #header-outer .sf-menu li ul li a .item_desc,
+      #header-outer .sf-menu li ul li.menu-item a .item_desc,
       #slide-out-widget-area.fullscreen-split .off-canvas-menu-container li small,
 			#slide-out-widget-area .off-canvas-menu-container .nectar-ext-menu-item .item_desc,
+			#slide-out-widget-area[class*="slide-out-from-right"] .off-canvas-menu-container .menu li small,
       .material #slide-out-widget-area[class*="slide-out-from-right"] .off-canvas-menu-container .menu li small,
 			#header-outer #mobile-menu ul ul > li > a .item_desc,
 			.nectar-ext-menu-item .menu-item-desc,

@@ -55,12 +55,25 @@ if (!class_exists('Nectar_Visual_Hook_Locations')) {
         public function register_admin_toolbar_link( WP_Admin_Bar $admin_bar ) 
         {
 
-            $title = '<span class="ab-icon"></span>' . esc_html__('Display Salient Hooks', 'salient-core');
+            $display_hooks = esc_html__('Display Salient Hooks', 'salient-core');
+            $hide_hooks = esc_html__('Hide Salient Hooks', 'salient-core');
+            if ( class_exists('NectarThemeManager') && 
+			property_exists('NectarThemeManager', 'custom_theme_name') &&
+			NectarThemeManager::$custom_theme_name ) {
+				$template_library_name = NectarThemeManager::$custom_theme_name . ' ' . esc_html__('Templates','salient-core');
+				$template_library_title = NectarThemeManager::$custom_theme_name . ' ' . esc_html__('template library','salient-core');
+				
+                $display_hooks = esc_html__('Display','salient-core') . ' '. esc_html(NectarThemeManager::$custom_theme_name) . ' '. esc_html__('Hooks', 'salient-core');
+                $hide_hooks = esc_html__('Hide','salient-core') . ' '. esc_html(NectarThemeManager::$custom_theme_name) . ' '. esc_html__('Hooks', 'salient-core');
+
+		    }
+
+            $title = '<span class="ab-icon"></span>' . $display_hooks;
             $href = add_query_arg( array('salient-hook-locations' => 'true') );
             $id = 'salient-hook-locations';
 
             if( $this->show_hook_locations === true ) {
-                $title = '<span class="ab-icon"></span>' . esc_html__('Hide Salient Hooks', 'salient-core');
+                $title = '<span class="ab-icon"></span>' . $hide_hooks;
                 $href = remove_query_arg( 'salient-hook-locations' );
                 $id = 'salient-hook-locations-active';
             }

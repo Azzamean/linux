@@ -103,7 +103,15 @@ class Vc_Navbar_Frontend extends Vc_Navbar {
 				</a>
 				<ul class="vc_dropdown-list">
 					<li class="vc_dropdown-list-item">
-						<a href="<?php echo get_edit_post_link( $post ) . '&wpb-backend-editor'; ?>"><?php esc_html_e( 'Backend Editor', 'js_composer' ); ?></a>
+						<?php
+						if ( vc_user_access()->part( 'backend_editor' )->can()->get() ) {
+							?>
+							<a href="<?php echo get_edit_post_link( $post ) . '&wpb-backend-editor'; ?>">
+								<?php esc_html_e( 'Backend Editor', 'js_composer' ); ?>
+							</a>
+							<?php
+						}
+						?>
 					</li>
 					<li class="vc_dropdown-list-item">
 						<a href="<?php echo get_permalink( $post ); ?>"><?php esc_html_e( 'View Page', 'js_composer' ); ?></a>

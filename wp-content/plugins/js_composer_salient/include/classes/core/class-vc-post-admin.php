@@ -105,7 +105,9 @@ class Vc_Post_Admin {
 	 */
 	public function setJsStatus( $post_id ) {
 		$value = vc_post_param( 'wpb_vc_js_status' );
-		if ( null !== $value ) {
+		if ( null === $value ) {
+			delete_post_meta( $post_id, '_wpb_vc_js_status', get_post_meta( $post_id, '_wpb_vc_js_status', true ) );
+		} else {
 			if ( '' === get_post_meta( $post_id, '_wpb_vc_js_status' ) ) {
 				add_post_meta( $post_id, '_wpb_vc_js_status', $value, true );
 			} elseif ( get_post_meta( $post_id, '_wpb_vc_js_status', true ) !== $value ) {

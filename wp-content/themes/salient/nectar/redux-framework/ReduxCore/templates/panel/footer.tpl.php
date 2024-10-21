@@ -22,28 +22,39 @@
             <div id="redux-share">
                 <?php 
                 // nectar addition 
+                $hide_footer_social = get_option('salient_custom_branding_hide_theme_footer_links', false);
+            
                 $ext_links = array(
                   array(
+                    'text' => esc_html__('ThemeNectar','salient'),
+                    'link' => esc_url('https://themenectar.com/')
+                  ),
+                  array(
                     'text' => esc_html__('Facebook','salient'),
-                    'link' => esc_url('http://www.facebook.com/ThemeNectar-488077244574702/')
+                    'link' => esc_url('https://www.facebook.com/themenectar/')
                   ),
                   array(
                     'text' => esc_html__('Instagram','salient'),
                     'link' => esc_url('https://www.instagram.com/theme_nectar/')
                   ),
                   array(
-                    'text' => esc_html__('Support Forum','salient'),
+                    'text' => esc_html__('Support','salient'),
                     'link' => esc_url('https://themenectar.ticksy.com/')
                   ),
                   array(
                     'text' => esc_html__('Changelog','salient'),
-                    'link' => esc_url('http://themenectar.com/changelogs/salient.html')
+                    'link' => esc_url('https://themenectar.com/changelogs/salient.html')
                   ),
                   array(
-                    'text' => esc_html__('Documentation','salient'),
-                    'link' => esc_url('http://themenectar.com/docs/salient')
+                    'text' => esc_html__('Docs','salient'),
+                    'link' => esc_url('https://themenectar.com/docs/salient')
                   ),
                 );
+
+                if ( $hide_footer_social === 'on' ) {
+                  $ext_links = [];
+                }
+                
                 foreach($ext_links as $k => $data) {
                   echo '<a class="salient-options-link" href="'.esc_attr($data['link']).'" rel="noreferrer" target="_blank">'.esc_html($data['text']).'</a>';
                 }

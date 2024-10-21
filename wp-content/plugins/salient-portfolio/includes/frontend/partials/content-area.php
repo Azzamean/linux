@@ -106,7 +106,17 @@ if ( class_exists('Salient_Portfolio_Single_Layout') && Salient_Portfolio_Single
 			
 			if( !empty($portfolio_extra_content_preview) ) {
 				$portfolio_extra_content = $portfolio_extra_content_preview;
+				
+				// design options css.
+				if (class_exists('Vc_Base')) {
+					$vc = new Vc_Base();
+					if ( method_exists($vc,'parseShortcodesCss') ) {
+						$css = $vc->parseShortcodesCss( $portfolio_extra_content_preview, 'custom' );
+						$portfolio_extra_content .= '<style type="text/css" data-type="nectar-portfolio-core-wbb-css-preview">'.$css.'</style>';
+					}
+				}
 			}
+
 			
 		} // end preview
 

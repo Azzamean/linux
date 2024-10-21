@@ -35,6 +35,7 @@ extract(shortcode_atts(array(
 	'delay' => '',
 	'autorotation_speed' => '5000',
 	'ticker_speed' => 'slow',
+	'ticker_direction' => 'default',
 	'column_padding' => '' ,
 	'script' => 'carouFredSel',
 	'desktop_cols' => '4',
@@ -185,6 +186,7 @@ else if( $script === 'flickity' ) {
 
   if( 'ticker' === $autorotate_type ) {
 	$flickity_attrs .= 'data-ticker-speed="'.esc_attr($ticker_speed).'" ';
+	$flickity_attrs .= 'data-ticker-direction="'.esc_attr($ticker_direction).'" ';
   }
 
 	echo '<div class="nectar-flickity not-initialized nectar-carousel'.esc_attr($dynamic_class_names).'" '.$flickity_attrs.'data-centered-cells="'.esc_attr($flickity_centered_cells).'" data-pause-on-hover="'.esc_attr($flickity_autorotate_pause_on_hover).'" data-touch-icon-color="'.esc_attr($flickity_touch_total_icon_color).'" data-control-color="'.esc_attr($color).'" data-overflow="'.esc_attr($flickity_overflow).'" data-r-bottom-total="'.esc_attr($flickity_touch_total_hide_indicator).'" data-drag-scale="'.esc_attr($flickity_image_scale_on_drag).'" data-wrap="'.esc_attr($flickity_wrap_around).'" data-spacing="'.esc_attr($flickity_spacing).'" data-controls="'.esc_attr($flickity_controls).'" data-pagination-alignment="'.esc_attr($pagination_alignment_flickity).'" data-adaptive-height="'.esc_attr($flickity_adaptive_height).'" data-border-radius="'.esc_attr($border_radius).'" data-column-border="'.esc_attr($enable_column_border).'" data-column-padding="'.esc_attr($column_padding).'" data-format="'.esc_attr($flickity_formatting).'" data-autoplay="'.esc_attr($autorotate).'" data-autoplay-dur="'.esc_attr($autorotation_speed).'" data-control-style="material_pagination" data-desktop-columns="'.esc_attr($desktop_cols_flickity).'" data-small-desktop-columns="'.esc_attr($desktop_small_cols_flickity).'" data-tablet-columns="'.esc_attr($tablet_cols_flickity).'" data-phone-columns="'.esc_attr($phone_cols_flickity).'" data-column-color="'.esc_attr($column_color).'">';

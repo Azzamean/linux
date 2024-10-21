@@ -7,13 +7,13 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 
 return array(
-	"name" => esc_html__("Text With Inline Media", "salient-core"),
-	"base" => "nectar_text_inline_images",
-	"icon" => "icon-wpb-split-line-heading",
-	"allowed_container_element" => 'vc_row',
-    "weight" => '2',
-	"category" => esc_html__('Typography', 'salient-core'),
-	"description" => esc_html__('Animated multi line heading', 'salient-core'),
+  "name" => esc_html__("Text With Inline Media", "salient-core"),
+  "base" => "nectar_text_inline_images",
+  "icon" => "icon-wpb-split-line-heading",
+  "allowed_container_element" => 'vc_row',
+  "weight" => '2',
+  "category" => esc_html__('Typography', 'salient-core'),
+  "description" => esc_html__('Animated multi line heading', 'salient-core'),
 	"params" => array(
       array(
         "type" => "dropdown",
@@ -107,9 +107,11 @@ return array(
       "param_name" => "image_size",
       "value" => array(
         esc_html__("Small Uncropped",'salient-core') => "medium",
-        esc_html__("Large Uncropped",'salient-core') => "large",
         esc_html__("Small Square",'salient-core') => 'nectar_small_square',
-        esc_html__("Big Square",'salient-core') => 'medium_featured',
+        esc_html__("Small Horizontal Rect",'salient-core') => 'medium__h_rect',
+        esc_html__("Large Uncropped",'salient-core') => "large",
+        esc_html__("Large Square",'salient-core') => 'medium_featured',
+        esc_html__("Large Horizontal Rect",'salient-core') => 'large__h_rect',
       ),
       'dependency' => array(
         'element' => 'media_type',
@@ -155,6 +157,21 @@ return array(
 			"value" => Array(esc_html__("Yes, please", "salient-core") => 'yes'),
 			"dependency" => Array('element' => "image_effect", 'value' => array('circle_reveal','circle_fade_in')),
 		),
+    array(
+      "type" => "dropdown",
+      "heading" => esc_html__("Image Roundness", "salient-core"),
+      'save_always' => true,
+      "param_name" => "media_roundness",
+      "value" => array(
+        esc_html__("0px", "salient-core") => "0px",
+        esc_html__("3px", "salient-core") => "3px",
+        esc_html__("5px", "salient-core") => "5px",
+        esc_html__("10px", "salient-core") => "10px",
+        esc_html__("15px", "salient-core") => "15px",
+        esc_html__("20px", "salient-core") => "20px",
+        esc_html__("50px", "salient-core") => "50px"
+      ),
+    ),
 		
 		array(
 			"type" => "colorpicker",

@@ -20,7 +20,7 @@ $nav_cart_style = ( ! empty( $nectar_options['ajax-cart-style'] ) ) ? $nectar_op
 
 if ( $woocommerce && $nav_cart_style === 'slide_in' ) {
 
-	echo '<div class="nectar-slide-in-cart style_'.esc_attr($nav_cart_style).'">';
+	echo '<div class="nectar-slide-in-cart nectar-modal style_'.esc_attr($nav_cart_style).'">';
 
 	if ( version_compare( WOOCOMMERCE_VERSION, '2.0.0' ) >= 0 ) {
 		$instance_params = ( defined('ICL_SITEPRESS_VERSION') ) ? array('wpml_language' => 'all', 'title' => '') : array('title' => '');
@@ -43,7 +43,7 @@ else if ( $woocommerce && $nav_cart_style === 'slide_in_click' ) {
 		$close_markup = '<span class="icon-salient-m-close"></span>';
 	}
 
-	echo '<div class="nectar-slide-in-cart style_'.esc_attr($nav_cart_style).'">';
+	echo '<div class="nectar-slide-in-cart nectar-modal style_'.esc_attr($nav_cart_style).'">';
 
 	echo '<div class="inner"><div class="header"><span data-inherit-heading-family="h4">'. esc_html__('Cart', 'salient') .'</span><a href="#" class="close-cart"><span class="screen-reader-text">'.esc_html__('Close Cart','salient').'</span>'.$close_markup.'</a></div>';
 

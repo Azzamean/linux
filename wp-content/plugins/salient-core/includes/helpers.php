@@ -76,6 +76,16 @@
   }
 
 
+  if( !function_exists('nectar_lazy_loaded_video_markup') ) {
+    function nectar_lazy_loaded_video_markup($video_url, $video_type, $class) {
+      
+
+      return '<video class="nectar-lazy-video '.esc_attr($class).'" preload="auto" loop autoplay muted playsinline>
+        <source data-nectar-video-src="'.esc_url($video_url).'" type="'.esc_attr($video_type).'">
+      </video>';
+    }
+  }
+
 
 
   /**

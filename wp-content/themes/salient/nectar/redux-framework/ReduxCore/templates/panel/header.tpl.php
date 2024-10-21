@@ -60,9 +60,24 @@
             
             <?php } 
             /* nectar addition */
+
+            if ( NectarThemeManager::$custom_theme_logo &&
+            isset(NectarThemeManager::$custom_theme_logo['url']) &&
+            !empty(NectarThemeManager::$custom_theme_logo['url']) ) {
+              $theme_menu_icon = esc_attr(NectarThemeManager::$custom_theme_logo['url']);
+            } else {
+                $theme_menu_icon = NECTAR_FRAMEWORK_DIRECTORY . 'assets/img/icons/salient.svg';
+            }
             ?>
-            <img src="<?php echo NECTAR_FRAMEWORK_DIRECTORY . 'assets/img/icons/salient.svg'; ?>" height="20px"  alt="salient"/>
-            <h2><?php echo wp_kses_post( $this->parent->args['display_name'] ); ?></h2>
+            <img src="<?php echo esc_attr($theme_menu_icon); ?>" height="20px"  alt="salient"/>
+            <h2><?php 
+            $custom_theme_name = get_option( 'salient_custom_branding_theme_name', false );
+            if ( $custom_theme_name ) {
+                echo wp_kses_post( $custom_theme_name );
+            } else {
+                echo wp_kses_post( $this->parent->args['display_name'] ); 
+            }
+            ?></h2>
 
             <?php if ( ! empty( $this->parent->args['display_version'] ) ) { ?>
                 <span><?php echo wp_kses_post( $this->parent->args['display_version'] ); ?></span>

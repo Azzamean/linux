@@ -24,21 +24,33 @@ return array(
             'save_always' => true,
             "value" => array(
               esc_html__( "Image", "salient-core") => "image",
-              esc_html__( "Video", "salient-core") => "video",      
+              esc_html__( "Video", "salient-core") => "video", 
+              esc_html__( "Color", "salient-core") => "color",  
             ),
             "description" => esc_html__("Select what type of media to display for this section.", "salient-core")
           ),
 
-		array(
-			"type" => "fws_image",
-			"class" => "",
-			"heading" => "Image",
-			"value" => "",
-            "param_name" => "image",
-            "dependency" => Array('element' => "section_type", 'value' => array('image')),
-			"description" => esc_html__("Specify the image to display for this section.", "salient-core")
-		),
-        
+      array(
+        "type" => "fws_image",
+        "class" => "",
+        "heading" => "Image",
+        "value" => "",
+              "param_name" => "image",
+              "dependency" => Array('element' => "section_type", 'value' => array('image')),
+        "description" => esc_html__("Specify the image to display for this section.", "salient-core")
+      ),
+
+      array(
+        'type' => 'colorpicker',
+        'heading' => __( 'Section Color', 'salient-core' ),
+        'value' => '',
+        'save_always' => true,
+        'param_name' => 'section_color',
+        'dependency' => array( 'element' => 'section_type', 'value' => array( 'color' ) ),
+        'description' => esc_html__( 'Choose a background color for your section.', 'salient-core' ),
+      ),
+
+          
 
         array(
             "type" => "nectar_attach_video",
@@ -106,6 +118,65 @@ return array(
               esc_html__("Right Bottom", "salient-core" ) => "right-bottom"   
             ),
             "description" => esc_html__("Select your desired video alignment.", "salient-core")
+          ),
+
+          array(
+            "type" => "textfield",
+            'group' => esc_html__('Link', 'salient-core'),
+            "heading" => esc_html__("Link URL", "salient-core"),
+            "param_name" => "link_href",
+            "description" => esc_html__("The URL that will be used for the link", "salient-core")
+          ),
+          array(
+            "type" => "dropdown",
+            "class" => "",
+            "heading" => esc_html__("Link Functionality", "salient-core"),
+            "param_name" => "link_target",
+            'save_always' => true,
+            'group' => esc_html__('Link', 'salient-core'),
+            'value' => array(
+              esc_html__("Open in same window", "salient-core") => "_self",
+              esc_html__("Open in new window", "salient-core") => "_blank"
+            )
+          ),
+          array(
+            "type" => "checkbox",
+            "class" => "",
+            'edit_field_class' => 'vc_col-xs-12 salient-fancy-checkbox',
+            "heading" => esc_html__("Link Mouse Indicator", "salient-core"),
+            "param_name" => "link_indicator",
+            'group' => esc_html__('Link', 'salient-core'),
+            "value" => array(esc_html__("Yes", "salient-core") => 'true'),
+          ),
+          array(
+            "type" => "colorpicker",
+            "class" => "",
+            "heading" => "Link Indicator BG Color",
+            "param_name" => "link_indicator_color",
+            "value" => "",
+            "dependency" => array('element' => "link_indicator", 'not_empty' => true),
+            'group' => esc_html__('Link', 'salient-core'),
+            "description" => esc_html__("The color of the background of your link indicator button.", "salient-core")
+          ),
+          array(
+            "type" => "colorpicker",
+            "class" => "",
+            "heading" => "Link Indicator Text Color",
+            "param_name" => "link_indicator_text_color",
+            "value" => "",
+            'group' => esc_html__('Link', 'salient-core'),
+            "dependency" => array('element' => "link_indicator", 'not_empty' => true),
+            "description" => esc_html__("The color of your touch link button text.", "salient-core")
+          ),
+          array(
+            "type" => "textfield",
+            "class" => "",
+            "heading" => "Link Indicator Text",
+            "param_name" => "link_indicator_text",
+            "value" => '',
+            "dependency" => array('element' => "link_indicator", 'not_empty' => true),
+            'group' => esc_html__('Link', 'salient-core'),
+            "description" => esc_html__("The text that will be displayed on your link indicator button.", "salient-core")
           ),
 
         

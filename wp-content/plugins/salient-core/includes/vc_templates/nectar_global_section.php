@@ -81,6 +81,12 @@ if (!empty($id)) {
 			
 			}
 
+			// design option css
+			if ( method_exists($vc,'addShortcodesCss') ) {
+				$vc->addShortcodesCss($section_id);
+			}
+
+			// custom CSS
 			if ( class_exists('Vc_Custom_Css_Module') ) {
 				vc_modules_manager()->get_module( 'vc-custom-css' )->output_custom_css_to_page($section_id);
 			}

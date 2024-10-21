@@ -71,7 +71,7 @@ if( !class_exists('Nectar_Woo_Quickview') ) {
 	    $quick_view_sizing = 'cropped';
 	    
 			echo '<div class="nectar-quick-view-box-backdrop"></div>
-	    <div class="nectar-quick-view-box" data-image-sizing="'.$quick_view_sizing.'">
+	    <div class="nectar-quick-view-box nectar-modal" data-image-sizing="'.$quick_view_sizing.'">
 	    <div class="inner-wrap">
 	    
 	    <div class="close">

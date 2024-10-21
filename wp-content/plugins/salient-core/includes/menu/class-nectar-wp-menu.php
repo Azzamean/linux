@@ -50,10 +50,16 @@ if( !class_exists('NectarWPMenu') ) {
 
         // JS
         wp_register_script( 'nectar-admin-wp-menu', SALIENT_CORE_PLUGIN_PATH . '/includes/menu/js/nectar-menu-admin.js', array( 'jquery' ), $Salient_Core->plugin_version);
-
+		
+		$salient_menu_options_text = esc_html__( 'Salient Menu Item Options', 'salient-core' );
+		if ( class_exists('NectarThemeManager') && 
+			property_exists('NectarThemeManager', 'custom_theme_name') &&
+			NectarThemeManager::$custom_theme_name ) {
+			$salient_menu_options_text = esc_html(NectarThemeManager::$custom_theme_name) . ' ' . esc_html__( 'Menu Item Options', 'salient-core' );
+		}
 			  //// Translations.
 				$translation_arr = array(
-          'edit_button_text' => esc_html__( 'Salient Menu Item Options', 'salient-core' ),
+          'edit_button_text' => $salient_menu_options_text,
 					'saving' => esc_html__( 'Saving...', 'salient-core' ),
 					'error' => esc_html__( 'Error Saving', 'salient-core' ),
 					'success' => esc_html__( 'Saved Successfully', 'salient-core' ),
@@ -208,6 +214,8 @@ if( !class_exists('NectarWPMenu') ) {
 				'enable_mega_menu'                        => 'regular',
 				'mega_menu_width'                         => 'regular',
 				'mega_menu_alignment'                     => 'regular',
+				'mega_menu_global_section'                => 'regular',
+				'mega_menu_global_section_mobile'         => 'regular',
 				'disable_mega_menu_title'                 => 'regular',
 				'mega_menu_bg_img'                        => 'array',
 				'mega_menu_bg_img_alignment'              => 'regular',

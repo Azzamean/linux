@@ -203,6 +203,13 @@ function nectar_metabox_salient_headers_post($post_type) {
 		/**
 		* Header navigation transparency.
 		*/
+		$salient_options_panel_text = esc_html__('you have activated in the Salient options panel.', 'salient-core');
+		if ( class_exists('NectarThemeManager') && 
+			property_exists('NectarThemeManager', 'custom_theme_name') &&
+			NectarThemeManager::$custom_theme_name ) {
+			$salient_options_panel_text = esc_html__('you have activated in the') . ' ' . esc_html(NectarThemeManager::$custom_theme_name) . ' ' . esc_html__('options panel.', 'salient-core');
+		}
+
 		$meta_box = array(
 			'id' => 'nectar-metabox-header-nav-transparency',
 			'title' => esc_html__('Navigation Transparency', 'salient-core'),
@@ -213,7 +220,7 @@ function nectar_metabox_salient_headers_post($post_type) {
 			'fields' => array(
 				array( 
 					'name' =>  esc_html__('Disable Transparency From Navigation', 'salient-core'),
-					'desc' => esc_html__('You can use this option to force your navigation header to stay a solid color even if it qualifies to trigger the','salient-core') . '<a target="_blank" href="'. esc_url(admin_url('?page='.NectarThemeInfo::$theme_options_name.'&tab=18')) .'"> transparent effect</a> ' . esc_html__('you have activated in the Salient options panel.', 'salient-core'),
+					'desc' => esc_html__('You can use this option to force your navigation header to stay a solid color even if it qualifies to trigger the','salient-core') . '<a target="_blank" href="'. esc_url(admin_url('?page='.NectarThemeInfo::$theme_options_name.'&tab=18')) .'"> transparent effect</a> ' . $salient_options_panel_text,
 					'id' => '_disable_transparent_header',
 					'type' => 'checkbox',
 					'std' => ''

@@ -126,7 +126,7 @@ if ( !function_exists( 'nectar_page_header' ) ) {
 		$early_exit = ( isset($post->post_type) && $post->post_type === 'page' && $bg_type === 'image_bg' && empty($bg_color) && empty($bg) && empty($height) && empty($title)) ? true : false;
 
 
-		$headerRemoveStickiness     = (!empty($nectar_options['header-remove-fixed'])) ? $nectar_options['header-remove-fixed'] : '0';
+		$headerRemoveStickiness     = NectarThemeManager::$header_remove_fixed;
 		$header_format              = (!empty($nectar_options['header_format'])) ? $nectar_options['header_format'] : 'default';
 		$condense_header_on_scroll  = (!empty($nectar_options['condense-header-on-scroll']) && $header_format === 'centered-menu-bottom-bar' && $headerRemoveStickiness != '1' && $nectar_options['condense-header-on-scroll'] === '1') ? 'true' : 'false';
 

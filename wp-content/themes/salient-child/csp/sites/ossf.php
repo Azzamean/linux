@@ -4,6 +4,7 @@ $nonce = generate_custom_nonce();
 // OSSF HEADERS POLICY
 function security_headers( array $headers = array() ): array
 {
+    $headers['Access-Control-Allow-Origin']             = '*';
     $headers['Access-Control-Allow-Methods']             = 'GET,POST';
     $headers['Access-Control-Allow-Headers']             = 'Content-Type, Authorization';
     $headers['Content-Security-Policy']                  = hsts_plugin_get_csp_header();

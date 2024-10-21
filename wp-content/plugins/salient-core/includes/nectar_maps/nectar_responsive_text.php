@@ -15,7 +15,28 @@ $responsive_text_params = array(
         "description" => ''
     ),
 
+    array(
+		"type" => "dropdown",
+		"class" => "",
+		'save_always' => true,
+		"heading" => "Font Style",
+		"description" => esc_html__("Optionally have your text inherit styling from a specific tag.", "salient-core"),
+		"param_name" => "inherited_font_style",
+		"value" => array(
+            'Default' => 'default',
+			"H1" => "h1",
+			"H2" => "h2",
+			"H3" => "h3",
+			"H4" => "h4",
+			"H5" => "h5",
+			"H6" => "h6",
+			"Paragraph" => "p",
+			"Italic" => "i",
+		)
+	),
+
 );
+
 
 
 $font_size_group = SalientWPbakeryParamGroups::font_sizing_group();

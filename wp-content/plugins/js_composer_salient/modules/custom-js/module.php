@@ -40,6 +40,16 @@ class Vc_Custom_Js_Module
 		add_filter( 'vc_post_meta_list', [$this, 'add_custom_meta_to_update'] );
 
 		add_filter( 'wpb_set_post_custom_meta', [$this, 'set_post_custom_meta'], 10, 2 );
+
+		add_filter( 'vc_enqueue_backend_editor_js', array(
+			$this,
+			'enqueue_editor_js'
+		));
+
+		add_filter( 'vc_enqueue_frontend_editor_js', array(
+			$this,
+			'enqueue_editor_js'
+		));
 	}
 
 	/**
@@ -51,16 +61,16 @@ class Vc_Custom_Js_Module
 		add_filter( 'print_head_scripts', array(
 			$this,
 			'output_post_header_custom_js',
-		), 90 );
-		add_filter( 'wp_print_footer_scripts', array(
+		), 90, 1 );
+		add_action( 'wp_print_footer_scripts', array(
 			$this,
 			'output_post_footer_custom_js',
 		), 90 );
 		add_filter( 'print_head_scripts', array(
 			$this,
 			'output_global_header_custom_html',
-		), 100 );
-		add_filter( 'wp_print_footer_scripts', array(
+		), 100, 1 );
+		add_action( 'wp_print_footer_scripts', array(
 			$this,
 			'output_global_footer_custom_html',
 		), 100 );
@@ -69,22 +79,25 @@ class Vc_Custom_Js_Module
 	/**
 	 * Add post custom html to the header tag of the page.
 	 *
+	 * @param bool $is_print
+	 *
 	 * @since 7.0
 	 */
-	public function output_post_header_custom_js() {
+	public function output_post_header_custom_js( $is_print ) {
 		$id = wpb_get_post_id_for_custom_output();
 
 		if ( ! $id ) {
-			return;
+			return $is_print;
 		}
 
 		$post_header_html = get_post_meta( $id, '_wpb_post_custom_js_header', true );
 
 		if ( empty( $post_header_html ) ) {
-			return;
+			return $is_print;
 		}
 
 		$this->output_custom_js( $post_header_html, 'header' );
+		return $is_print;
 	}
 
 	/**
@@ -133,15 +146,19 @@ class Vc_Custom_Js_Module
 	/**
 	 * Add custom html to the header tag of the page.
 	 *
+	 * @param bool $is_print
+	 *
 	 * @since 7.7
 	 */
-	public function output_global_header_custom_html() {
+	public function output_global_header_custom_html( $is_print ) {
 		$global_header_html = get_option( Vc_Settings::$field_prefix . 'custom_js_header' );
 
 		echo '<script>';
 		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		echo wp_unslash( $global_header_html );
 		echo '</script>';
+
+		return $is_print;
 	}
 
 	/**
@@ -183,5 +200,19 @@ class Vc_Custom_Js_Module
 		$post_custom_meta['post_custom_js_footer'] = get_post_meta( $post->ID, '_wpb_post_custom_js_footer', true );
 
 		return $post_custom_meta;
+	}
+
+	/**
+	 * Load module JS in frontend and backend editor.
+	 *
+	 * @since 7.8
+	 * @param array $dependencies
+	 * @return array
+	 */
+	public function enqueue_editor_js( $dependencies ) {
+		$dependencies[] = 'ace-editor';
+		$dependencies[] = 'wpb-code-editor';
+
+		return $dependencies;
 	}
 }

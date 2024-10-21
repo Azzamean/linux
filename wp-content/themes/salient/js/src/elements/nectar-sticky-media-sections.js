@@ -11,6 +11,280 @@
 
   "use strict";
 
+  function NectarScrollPinnedSections(el) {
+    this.$el = el;
+    this.sections = [];
+    this.sectionEls = [...this.$el[0].querySelectorAll('.nectar-sticky-media-section__content-section')];
+    this.usingFrontEndEditor = (window.nectarDOMInfo && window.nectarDOMInfo.usingFrontEndEditor) ? true : false;
+    this.gap = '20px'; 
+    this.activeIndex = 0;
+    this.stackingEffect = false;
+    this.subtractNavHeight = this.$el[0].classList.contains('subtract-nav-height');
+    this.usingNavigation = false;
+    this.navigationButtons = [];
+    this.effect = 'default';
+    this.init();
+  }
+
+  NectarScrollPinnedSections.prototype.init = function () {
+    this.effectConfig();
+    this.navigation();
+    this.calculateGap();
+    this.createTimelines();
+    this.calculateOffsets();
+    this.events();
+    this.raf();
+    this.navHighlight();
+  };
+
+
+  NectarScrollPinnedSections.prototype.effectConfig = function () {
+    
+    for (var i = 0; i < this.$el[0].classList.length; i++) {
+      var match = this.$el[0].classList[i].match(/^effect-(.*)$/);
+      if (match) {
+        var effectName = match[1];
+        this.effect = effectName;
+      }
+    }
+
+    this.effects = {
+      'default': {},
+      'scale' : {
+        scale: [1.0, 0.92]
+      },
+      'scale_blur' : {
+        scale: [1.0, 0.92],
+        filter: ['blur(0px)', 'blur(4px)']
+      },
+    }
+
+    this.stackingEffect = this.$el[0].classList.contains('stacking-effect');
+
+  };
+
+  NectarScrollPinnedSections.prototype.navigation = function () {
+    if ( this.$el[0].querySelector('.nectar-sticky-media-section__navigation') ) {
+      this.usingNavigation = true;
+      this.navigationButtons = [...this.$el[0].querySelectorAll('.nectar-sticky-media-section__navigation button')];
+      var that = this;
+      this.$el[0].querySelectorAll('.nectar-sticky-media-section__navigation button').forEach(function(el, i){
+        el.addEventListener('click', function(){
+          that.scrollToSection(i);
+        });
+      });
+    }
+  };
+
+  NectarScrollPinnedSections.prototype.scrollToSection = function (index) {
+    var offset = this.sections[index].offset;
+    window.scrollTo({
+      top: offset,
+      behavior: 'smooth'
+    });
+  };
+
+  NectarScrollPinnedSections.prototype.events = function () { 
+    $(window).on('resize', () => {
+      this.calculateGap();
+      this.calculateOffsets();
+    });
+
+    $(window).on('load', () => {
+      this.calculateGap();
+      this.createTimelines();
+      this.calculateOffsets();
+    });
+
+    this.observe();
+  };
+
+
+  NectarScrollPinnedSections.prototype.createTimelines = function (section) {
+
+    const that = this;
+    this.sectionEls.forEach((section, i) => {
+      
+      const inner = section.querySelector('.nectar-sticky-media-section__content-section__wrap');
+
+      this.sections[i] = ({
+        element: section,
+        innerElement: inner,
+        elementHeight: section.offsetHeight,
+        timeline: anime.timeline({ 
+          autoplay: false,
+          update:  function(anim) {
+            // Staking effect.
+            if ( that.stackingEffect ) {
+              if(Math.round(anim.progress) === 100 ) {
+                  inner.style.transform = 'translateY(-'+ 10 +'px)';  
+                  if( that.sections[i-1] ) {
+                    that.sections[i-1].innerElement.style.transform = 'translateY(-'+ 20 +'px)';
+                  }
+              } else {
+                inner.style.transform = 'translateY(0px)';
+              };
+            }
+
+          } 
+        }),
+
+      });
+
+      this.sections[i].timeline.add({
+        duration: 1000, 
+        easing: 'linear',
+        targets: section,
+        ...this.effects[this.effect]
+      });
+
+    });
+  };
+
+  NectarScrollPinnedSections.prototype.navHighlight = function() {
+    // Navigation highlight active section.
+    if ( this.usingNavigation ) {
+                  
+        this.navigationButtons.forEach(function(el, i){
+          el.classList.remove('active');
+        });
+        this.navigationButtons[this.activeIndex].classList.add('active');
+      }
+  };
+
+
+  NectarScrollPinnedSections.prototype.calculateGap = function() {
+    const regex = /section-height-(\d+)vh/;
+    const classNames = this.$el[0].classList;
+
+    classNames.forEach(className => {
+      const match = className.match(regex);
+      if (match) {
+          const extractedNumber = match[1];
+          const percentGap = (100 - parseInt(extractedNumber))/2;
+
+          const headerNavHeight = getComputedStyle(document.documentElement).getPropertyValue('--header-nav-height');
+
+          if ( headerNavHeight && this.subtractNavHeight) {
+            this.gap = window.nectarDOMInfo.winH * (percentGap/100) + parseInt(headerNavHeight);
+          } else {
+            this.gap = window.nectarDOMInfo.winH * (percentGap/100);
+          }
+
+      }
+  });
+  };
+
+  NectarScrollPinnedSections.prototype.calculateOffsets = function () {
+
+
+    const scrollTop = window.nectarDOMInfo && window.nectarDOMInfo.scrollTop ? window.nectarDOMInfo.scrollTop : window.scrollY;
+    const sectionElOffset = this.$el[0].getBoundingClientRect().top + scrollTop;
+    this.sectionEls.forEach((element, i) => {
+
+      const elementTop = this.gap;
+      element.style.top = elementTop + 'px';
+
+      const gap = this.gap;
+      const offset = sectionElOffset - this.gap + (element.offsetHeight * i);
+
+      this.sections[i].offset = offset;
+      this.sections[i].elementHeight = element.offsetHeight;
+      
+    });
+
+ 
+  };
+
+  NectarScrollPinnedSections.prototype.raf = function () {
+    if ( !window.nectarDOMInfo.scrollTop ) {
+      window.requestAnimationFrame(this.raf.bind(this));
+      return;
+    }
+
+    this.sections.forEach((section, i) => {
+      
+      // scrub through pinning.
+      // if (section.offset < window.nectarDOMInfo.scrollTop &&
+      //   section.offset + section.elementHeight > window.nectarDOMInfo.scrollTop) {
+      if (section.offset < window.nectarDOMInfo.scrollTop) {
+        
+        // skip animating the last section.
+        if ( i !== this.sections.length - 1 ) {
+          const offset = window.nectarDOMInfo.scrollTop - section.offset;
+          const percent = offset / section.elementHeight;
+          section.timeline.seek(percent * section.timeline.duration);
+        }
+      }
+      
+      if (section.offset - (section.elementHeight/2) < window.nectarDOMInfo.scrollTop &&
+          section.offset + (section.elementHeight/2) > window.nectarDOMInfo.scrollTop) {
+            if( this.activeIndex !== i ) {
+              this.setActiveIndex(i);
+            }
+      }
+    });
+
+    window.requestAnimationFrame(this.raf.bind(this));
+  };
+
+  NectarScrollPinnedSections.prototype.setActiveIndex = function (i) {
+    this.activeIndex = i;
+    this.navHighlight();
+  };
+
+  NectarScrollPinnedSections.prototype.observe = function () {
+    
+    var that = this;
+     this.observer = new IntersectionObserver(function (entries) {
+
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) {
+
+         that.calculateOffsets();
+          
+      
+          var vid = entry.target.querySelector('.nectar-sticky-media-section__media video');
+
+          if( vid ) {
+            if( vid.currentTime == 0) {
+              that.playSectionVideo(vid);
+            }
+          }
+          that.observer.unobserve(entry.target);
+        }
+
+      });
+
+    },{
+      rootMargin: '-5% 0% -5% 0%',
+      threshold: 0
+    });
+
+    // Observe each section.
+    this.sectionEls.forEach( (el) => {
+      that.observer.observe(el);
+    });
+  };
+
+
+  NectarScrollPinnedSections.prototype.playSectionVideo = function(video) {
+    var that = this;
+    if( video.readyState >= 2 ) {
+      video.pause();
+      video.currentTime = 0;
+      video.play();
+    } else {
+      setTimeout(function(){
+        that.playSectionVideo(video);
+      }, 70);
+    }
+    
+  };
+
+
+
+
   function NectarStickyMedia(el) {
 
     this.$el = el;
@@ -289,9 +563,15 @@
 
     mediaSections = [];
 
-    $('.nectar-sticky-media-sections').each(function (i) {
+    $('.nectar-sticky-media-sections:not(.type--scroll-pinned-sections)').each(function (i) {
       mediaSections[i] = new NectarStickyMedia($(this));
     });
+
+    $('.nectar-sticky-media-sections.type--scroll-pinned-sections').each(function (i) {
+      mediaSections[i] = new NectarScrollPinnedSections($(this));
+    });
+
+
   }
 
   $(document).ready(function () {

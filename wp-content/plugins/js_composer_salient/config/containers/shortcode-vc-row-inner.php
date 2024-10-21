@@ -22,6 +22,8 @@ return array(
 			'type' => 'checkbox',
 			'heading' => esc_html__( 'Equal height', 'js_composer' ),
 			'param_name' => 'equal_height',
+			// nectar addition
+			'edit_field_class' => 'vc_col-xs-12 salient-fancy-checkbox',
 			'description' => esc_html__( 'If checked columns will be set to equal height.', 'js_composer' ),
 			'value' => array( esc_html__( 'Yes', 'js_composer' ) => 'yes' ),
 		),
@@ -70,6 +72,8 @@ return array(
 			'type' => 'checkbox',
 			'heading' => esc_html__( 'Disable row', 'js_composer' ),
 			'param_name' => 'disable_element',
+			// nectar addition
+			'edit_field_class' => 'vc_col-xs-12 salient-fancy-checkbox',
 			// Inner param name.
 			'description' => esc_html__( 'If checked the row won\'t be visible on the public side of your website. You can switch it back any time.', 'js_composer' ),
 			'value' => array( esc_html__( 'Yes', 'js_composer' ) => 'yes' ),

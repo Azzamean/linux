@@ -238,7 +238,7 @@
   }
 }
 .salient-version-box__img-wrap img {
-  animation: salient_zoom_out 9s ease forwards;
+  /* animation: salient_zoom_out 9s ease forwards; */
 }
 .salient-version-box--bg-cover .bg {
   position: absolute;

@@ -230,10 +230,10 @@ Description: Header Layout set to "Left Header" in theme options
 		 body[data-header-format="left-header"].admin-bar #header-outer .cart-notification{
         top:107px
     }
-     body[data-header-format="left-header"] #top .sf-menu li ul li a{
+     body[data-header-format="left-header"] #top .sf-menu li ul li.menu-item a{
         color:#999
     }
-     body[data-header-color="dark"][data-header-format="left-header"] #top .sf-menu li ul li a{
+     body[data-header-color="dark"][data-header-format="left-header"] #top .sf-menu li ul li.menu-item a{
         color:#A0A0A0
     }
      body[data-header-format="left-header"][data-header-search="true"] #header-outer nav #nectar-user-account {
@@ -484,7 +484,7 @@ Description: Header Layout set to "Left Header" in theme options
 		 body[data-header-format="left-header"][data-dropdown-style="minimal"] .sf-menu .current-menu-ancestor >li .current-menu-ancestor >ul{
         max-height:none
     }
-     body[data-header-format="left-header"] #top .sf-menu li ul li a{
+     body[data-header-format="left-header"] #top .sf-menu li ul li.menu-item a{
         -webkit-transition:color .25s cubic-bezier(0.12,0.75,0.4,1);
          transition:color .25s cubic-bezier(0.12,0.75,0.4,1)
     }
@@ -504,9 +504,9 @@ Description: Header Layout set to "Left Header" in theme options
      body[data-header-format="left-header"] #social-in-menu a{
         color:#888
     }
-     body[data-header-format="left-header"][data-dropdown-style="minimal"] #top .sf-menu li ul li a,
+     body[data-header-format="left-header"][data-dropdown-style="minimal"] #top .sf-menu li ul li.menu-item a,
 		 body[data-header-format="left-header"][data-dropdown-style="minimal"] #top nav >ul >.megamenu >.sub-menu,
-		 body[data-header-format="left-header"] #top .sf-menu li ul li a,
+		 body[data-header-format="left-header"] #top .sf-menu li ul li.menu-item a,
 		 body[data-header-format="left-header"] #top nav >ul >.megamenu >.sub-menu{
         background-color:transparent!important
     }

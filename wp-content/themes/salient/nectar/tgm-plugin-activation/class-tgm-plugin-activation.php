@@ -1120,7 +1120,8 @@ if ( ! class_exists( 'TGM_Plugin_Activation' ) ) {
 				! class_exists('Salient_Demo_Importer') ||
 				! class_exists('Salient_Core') ||
 				! class_exists('Salient_Widgets') ||
-				! class_exists('Salient_Social') ) {
+				! class_exists('Salient_Social') ||
+				! class_exists('Salient_Custom_Branding') ) {
 					if( $salient_on_theme_options_page_bool ) {
 						$nectar_plugins_not_active = true;
 					}

@@ -915,13 +915,14 @@ if ( ! function_exists( 'nectar_slider_display' ) ) {
 									$poster = nectar_options_img( $poster );
 								}
 
+								$poster_attr = ( $poster && apply_filters('nectar_slider_enable_video_posters', false) ) ? 'poster="'.esc_attr( $poster).'" ' : '';
 								$slider .= '
 								<div class="mobile-video-image" style="background-image: url(' . esc_url($poster) . ')"> <span class="ie-fix"></span>  </div>
 								<div class="slide-bg-wrap">
 								<div class="video-wrap">
 								
 								
-								<video class="slider-video" width="1800" height="700" preload="auto" loop autoplay muted playsinline>';
+								<video class="slider-video" width="1800" height="700" '.$poster_attr.'preload="auto" loop autoplay muted playsinline>';
 								
 								if( function_exists('nectar_video_src_from_wp_attachment') ) {
 									

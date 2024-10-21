@@ -49,9 +49,9 @@ function vc_page_settings_tab_color_submit_attributes( $submitButtonAttributes )
  * @deprecated 7.7
  */
 function vc_page_settings_desing_options_load() {
-	_deprecated_function( __FUNCTION__, '7.7', "vc_modules_manager()->get_module('vc-design-options')->page_settings_design_options_load()" );
+	_deprecated_function( __FUNCTION__, '7.7', "vc_modules_manager()->get_module('vc-design-options')->load_module_settings_assets()" );
 	if ( ! vc_modules_manager()->is_module_on( 'vc-design-options' ) ) {
 		vc_modules_manager()->turn_on( 'vc-design-options' );
 	}
-	vc_modules_manager()->get_module( 'vc-design-options' )->page_settings_design_options_load();
+	vc_modules_manager()->get_module( 'vc-design-options' )->load_module_settings_assets();
 }

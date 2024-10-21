@@ -14,5 +14,7 @@ if( ! function_exists('salient_portfolio_maps') ) {
 
     vc_lean_map('recent_projects', null, SALIENT_PORTFOLIO_ROOT_DIR_PATH . 'includes/wpbakery/maps/recent_projects.php');
     
+    vc_lean_map('nectar_project_categories', null, SALIENT_PORTFOLIO_ROOT_DIR_PATH . 'includes/wpbakery/maps/nectar_project_categories.php');
+
   }
 }

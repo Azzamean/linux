@@ -199,6 +199,19 @@ class Vc_Current_User_Access_Controller extends Vc_Role_Access_Controller {
 			$state = $allCaps[ $capKey ];
 		}
 
+		// if state of rule not saving in settings we should get default value of it
+		if ( is_null( $state ) && isset( $currentUser->roles ) ) {
+			foreach ( $currentUser->roles as $role ) {
+				$state = vc_role_access()->who( $role )->part( $this->getPart() )->getState();
+
+				if ( is_null( $state ) ) {
+					continue;
+				} else {
+					break;
+				}
+			}
+		}
+
 		return apply_filters( 'vc_user_access_with_' . $this->getPart() . '_get_state', $state, $this->getPart() );
 	}
 

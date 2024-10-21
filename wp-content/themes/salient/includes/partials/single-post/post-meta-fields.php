@@ -67,7 +67,7 @@ if ( have_posts() ) :
       echo '</span></span>';
     }
 
-    echo ( 'large' !== $author_style ) ? $date_markup . $est_time_markup : '';
+    echo ( 'large' !== $author_style || '1' === $remove_post_author  ) ? $date_markup . $est_time_markup : '';
 
     
 

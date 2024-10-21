@@ -114,10 +114,10 @@ function nectar_salient_welcome_content() {
 		<div class="salient-version-box">
 				<div class="content">
 				  <h1><?php echo esc_html__('Salient Version','salient') . ' ' . nectar_get_theme_version(); ?></h1>
-					<p class="subtitle"><?php echo esc_html__('To explore what\'s new in version 16 and view a full list of changes, check out the','salient'); ?> <a href="https://themenectar.com/changelogs/salient.html" target="_blank"><?php echo esc_html__('changelog','salient'); ?>.</a></p>
+					<p class="subtitle"><?php echo esc_html__('To explore what\'s new in version 17 and view a full list of changes, check out the','salient'); ?> <a href="https://themenectar.com/changelogs/salient.html" target="_blank"><?php echo esc_html__('changelog','salient'); ?>.</a></p>
 			  </div>
         <div class="cache-notice"><h3><?php echo esc_html__('A note for upgrading users','salient'); ?></h3><p><?php echo esc_html__('This is a major release. If you\'re using a performance plugin to cache or minify your assets, you must clear the cache, or else layout issues are likely to occur.','salient'); ?></p></div>
-        <div class="salient-version-box__img-wrap"><img src="<?php echo get_template_directory_uri(). '/nectar/welcome/img/version-16.jpg'; ?>" alt="Salient version 16" width="" height="" /></div>
+        <div class="salient-version-box__img-wrap"><img src="<?php echo get_template_directory_uri(). '/nectar/welcome/img/version-17.jpg'; ?>" alt="Salient version 17" width="" height="" /></div>
 		</div>
 		<?php 
 		if( ! class_exists('Salient_Portfolio') ||
@@ -127,7 +127,8 @@ function nectar_salient_welcome_content() {
 			! class_exists('Salient_Demo_Importer') ||
 			! class_exists('Salient_Core') ||
 			! class_exists('Salient_Widgets') ||
-			! class_exists('Salient_Social') ) { ?>
+			! class_exists('Salient_Social') ||
+			! class_exists('Salient_Custom_Branding') ) { ?>
 	    <div class="notice-box">
 	      <div class="inner">
 	        <h3><?php echo esc_html__('For Upgrading Users Coming From Version 10.5 Or Below','salient'); ?></h3>
@@ -160,6 +161,9 @@ function nectar_salient_welcome_content() {
 							}
 							if( ! class_exists('Salient_Shortcodes') ) {
 								echo '<li><span>'. esc_html__('Optional','salient') .'</span><a target="_blank" href="'. esc_url( admin_url( 'themes.php?page=tgmpa-install-plugins' ) ) . '">'. esc_html__('Salient Shortcodes', 'salient') . '</a></li>'; 
+							}
+							if( ! class_exists('Salient_Custom_Branding') ) {
+								echo '<li><span>'. esc_html__('Optional','salient') .'</span><a target="_blank" href="'. esc_url( admin_url( 'themes.php?page=tgmpa-install-plugins' ) ) . '">'. esc_html__('Salient Custom Branding', 'salient') . '</a></li>'; 
 							}
 							?>
 						</ul>
@@ -217,6 +221,6 @@ function nectar_salient_welcome_assets($hook) {
     return;
   }
   
-  wp_register_style( 'nectar_salient_welcome_css', get_template_directory_uri() . '/nectar/welcome/css/style.css', false, '15.0' );
+  wp_register_style( 'nectar_salient_welcome_css', get_template_directory_uri() . '/nectar/welcome/css/style.css', false, '17.0' );
   wp_enqueue_style( 'nectar_salient_welcome_css' );
 }

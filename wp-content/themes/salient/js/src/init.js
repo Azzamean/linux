@@ -44,6 +44,10 @@
 		$animatedAnchorLinks        = ($('body[data-animated-anchors="true"]').length > 0) ? true : false,
 		bypassAnimations            = (!$body.is('[data-m-animate="1"]') && navigator.userAgent.match(/(Android|iPod|iPhone|iPad|BlackBerry|IEMobile|Opera Mini)/) ) ? true : false,
 		headerOCMButtonPos          = (window.nectarOptions && window.nectarOptions.ocm_btn_position && window.nectarOptions.ocm_btn_position === 'left') ? 'left' : 'default',
+		usingSmoothScroll           = (window.nectarOptions && window.nectarOptions.smooth_scroll && window.nectarOptions.smooth_scroll === 'true') ? true : false,
+		bodyBorderVignette          = (window.nectarOptions && window.nectarOptions.body_border_func && window.nectarOptions.body_border_func == 'vignette') ? true : false,
+		bodyBorderMobile            = (window.nectarOptions && window.nectarOptions.body_border_mobile && window.nectarOptions.body_border_mobile === '1') ? true : false,
+		bodyBorderHeight            = $body.find('.body-border-top').height(),
 		$portfolio_containers       = [],
 		$svgIcons                   = [],
 		$nectarCustomSliderRotate   = [],
@@ -96,6 +100,13 @@
 			}
 
 		}
+		
+		var usingIOS = navigator.userAgent.match(/(iPod|iPhone|iPad)/) || navigator.userAgent.match(/Mac/) && navigator.maxTouchPoints && navigator.maxTouchPoints > 2;
+		var safariAgent = navigator.userAgent.indexOf("Safari") > -1 && navigator.userAgent.indexOf("Chrome") < 1;
+		if ( safariAgent || usingIOS ) {
+			usingSmoothScroll = false;
+		}
+
 
 		/**
 		* Nectar DOM info helper.
@@ -129,9 +140,12 @@
 
 				if (!nectarDOMInfo.usingMobileBrowser) {
 
-					$window.on('scroll', function() {
-						nectarDOMInfo.scrollTop = nectarDOMInfo.scrollPosMouse();
-					});
+		
+					if (!usingSmoothScroll) {
+						$window.on('scroll', function() {
+							nectarDOMInfo.scrollTop = nectarDOMInfo.scrollPosMouse();
+						});
+					}
 					document.addEventListener("mousemove", function(e) {
 						nectarDOMInfo.clientX = e.clientX;
 						nectarDOMInfo.clientY = e.clientY;
@@ -225,6 +239,10 @@
 			fullWidthContentColumns();
 			addOrRemoveSF();
 			responsiveVideoIframes();
+
+			if ( $bodyBorderTop ) {
+				bodyBorderHeight = $bodyBorderTop.height();
+			}
 
 			if (!nectarDOMInfo.usingMobileBrowser) {
 				parallaxRowsBGCals();
@@ -613,10 +631,15 @@
 				var $style = that.$el.attr('data-indicator-style');
 				var $text = that.$el.attr('data-indicator-text');
 
+				var elSelector = that.$el.find('.nectar-post-grid-item');
+				if (that.$el.is('a')) {
+					elSelector  = that.$el;
+				}
+				
 				// unbind first.
-				that.$el.find('.nectar-post-grid-item').off();
+				elSelector.off();
 
-				that.$el.find('.nectar-post-grid-item').on('mouseenter', function() {
+				elSelector.on('mouseenter', function() {
 					that.activeViewRAF = true;
 					that.$viewEl.addClass('visible');
 					that.$viewEl.find('span').text( $text );
@@ -639,11 +662,18 @@
 					clearTimeout(that.timeout);
 				});
 
-				that.$el.find('.nectar-post-grid-item').on('mouseleave', function() {
-					that.timeout = setTimeout(function(){
+				elSelector.on('mouseleave', function() {
+
+					if (that.$el.is('a')) {
 						that.$viewEl.removeClass('visible');
 						that.$viewEl.removeClass('blurred-bg');
-					},100);
+					} else {
+						that.timeout = setTimeout(function(){
+							that.$viewEl.removeClass('visible');
+							that.$viewEl.removeClass('blurred-bg');
+						},100);
+					}
+
 
 				});
 
@@ -900,6 +930,7 @@
 			this.tickerPaused = false;
 			if( this.ticker ) {
 				var tickerSpeed = ( this.$el.is('[data-ticker-speed]') ) ? this.$el.attr('data-ticker-speed') : 'slow';
+				var tickerDirection = ( this.$el.is('[data-ticker-direction]') ) ? this.$el.attr('data-ticker-direction') : 'default';
 				
 				if( 'slow' === tickerSpeed ) {
 					this.tickerSpeed = 0.4;
@@ -909,6 +940,10 @@
 				} 
 				else {
 					this.tickerSpeed = 2;
+				}
+
+				if ( tickerDirection === 'reverse' ) {
+					this.tickerSpeed = this.tickerSpeed * -1;
 				}
 				
 				this.$wrapAround = true;
@@ -1950,7 +1985,7 @@
 				if ($('body[data-megamenu-width="full-width"]').length > 0 && $('ul.sub-menu').length > 0) {
 					megamenuFullwidth();
 					$window.on('smartresize', megamenuFullwidth);
-					$('header#top nav > ul > li.megamenu > .sub-menu').css('box-sizing', 'content-box');
+					$('header#top nav > ul > li.megamenu > .sub-menu, header#top nav > ul > li.megamenu > .nectar-global-section-megamenu').css('box-sizing', 'content-box');
 				}
 
 				// Extra hover class for megamenu check.
@@ -2092,7 +2127,7 @@
 			$('nav:not(.left-side):not(.right-side) .sf-menu > .nectar-megamenu-menu-item.align-left:not(.width-100)').each(function() {
 				var $parentEl = $(this);
 				var $headerContainer = $('header#top > .container > .row');
-				var $submenu = $(this).find('> ul.sub-menu');
+				var $submenu = $(this).find('> ul.sub-menu, > .nectar-global-section-megamenu');
 
 				if( $parentEl ) {
 
@@ -2103,7 +2138,7 @@
 					}
 
 					// Set left positioning.
-					$(this).find('> ul.sub-menu').css({
+					$(this).find('> ul.sub-menu, > .nectar-global-section-megamenu').css({
 						'right':  $headerContainer.width() - ( ($parentEl.offset().left + $parentEl.width()) - $headerContainer.offset().left ) - $(this).find('> ul.sub-menu').width() + $parentEl.width(),
 						'left': 'auto'
 					});
@@ -2117,7 +2152,7 @@
 			$('nav:not(.left-side):not(.right-side) .sf-menu > .nectar-megamenu-menu-item.align-right:not(.width-100)').each(function() {
 				var $parentEl = $(this);
 				var $headerContainer = $('header#top > .container > .row');
-				var $submenu = $(this).find('> ul.sub-menu');
+				var $submenu = $(this).find('> ul.sub-menu, > .nectar-global-section-megamenu');
 
 				if( $parentEl ) {
 
@@ -2127,7 +2162,7 @@
 						return true;
 					}
 
-					$(this).find('> ul.sub-menu').css({
+					$(this).find('> ul.sub-menu, > .nectar-global-section-megamenu').css({
 						'right':  $headerContainer.width() - ( ($parentEl.offset().left + $parentEl.width()) - $headerContainer.offset().left ),
 						'left': 'auto'
 					});
@@ -2140,7 +2175,7 @@
 			$('nav:not(.left-side):not(.right-side) .sf-menu > .nectar-megamenu-menu-item.align-middle:not(.width-100)').each(function() {
 				var $parentEl = $(this);
 				var $headerContainer = $('header#top > .container > .row');
-				var $submenu = $(this).find('> ul.sub-menu');
+				var $submenu = $(this).find('> ul.sub-menu, > .nectar-global-section-megamenu');
 
 				if( $parentEl && $submenu.length > 0 ) {
 
@@ -2189,7 +2224,7 @@
 
 			var $windowWidth = $window.width();
 			var $headerContainerWidth = $('header#top > .container').width();
-			$('header#top nav:not(.left-side):not(.right-side) > ul > li.megamenu:not(.width-50):not(.width-75) > .sub-menu').css({
+			$('header#top nav:not(.left-side):not(.right-side) > ul > li.megamenu:not(.width-50):not(.width-75) > .sub-menu, header#top nav:not(.left-side):not(.right-side) > ul > li.megamenu:not(.width-50):not(.width-75) > .nectar-global-section-megamenu').css({
 				'padding-left': ($windowWidth - $headerContainerWidth) / 2 + 'px',
 				'padding-right': ($windowWidth + 2 - $headerContainerWidth) / 2 + 'px',
 				'width': $headerContainerWidth,
@@ -3595,11 +3630,11 @@
 
 				var scrollY = window.scrollY || document.documentElement.scrollTop,
 				scrollTargetY = scrollTargetY || 0,
-				speed = speed || 2000,
+				speed = 1300,
 				easing = easing || 'easeOutSine',
 				currentTime = 0;
 
-				var time = Math.max(0.1, Math.min(Math.abs(scrollY - scrollTargetY) / speed, 0.8));
+				var time = Math.max(0.1, Math.min(Math.abs(scrollY - scrollTargetY) / speed, 1.3));
 
 				var easingEquations = {
 					easeInOutQuint: function (pos) {
@@ -5005,7 +5040,7 @@
 		* @since 10.5
 		*/
 		function tabbedChangeSection(clickedTab) {
-
+			
 			var $id = clickedTab.parents('li').index() + 1;
 			var $frontEndEditorTabDiv = ($('body.vc_editor').length > 0) ? '> .wpb_tab ' : '';
 
@@ -5344,7 +5379,7 @@
 		* @since 3.0
 		*/
 		function tabbedInit() {
-
+			
 			// Click event.
 			$body.on('click', '.tabbed > ul li:not(.cta-button) a', function(e){
 
@@ -5421,7 +5456,7 @@
 
 
 			$('.tabbed').each(function () {
-
+				
 				var $that;
 
 				// Handle icons
@@ -5524,7 +5559,7 @@
 			});
 
 			$body.on('click', '.nectar-sticky-tabs .wpb_tabs_nav a', function (e) {
-
+				
 				var clickedTab = $(this);
 				var $id = clickedTab.parents('li').index() + 1;
 				var $frontEndEditorTabDiv = ($('body.vc_editor').length > 0) ? '> .wpb_tab ' : '';
@@ -6788,7 +6823,7 @@
 							$teamName = '<h2>' + $(this).find('.team-meta h3').text() + '</h2><div class="title">' + wlEls($teamMemberTitle) + '</div>';
 						}
 
-						$body.append('<div class="nectar_team_member_overlay ' + $usingBoxedClass + '" data-style="' + $teamMemberStyle + '"><div class="inner-wrap"><div class="team_member_details"><div class="bio-inner"><span class="mobile-close"></span>'+ $teamName +'<div class="team-desc">' + wlEls($teamMemberMeta) + '</div></div></div><div class="team_member_picture"><div class="team_member_image_bg_cover"></div><div class="team_member_picture_wrap"><div class="team_member_image"></div></div></div></div></div>');
+						$body.append('<div class="nectar_team_member_overlay nectar-modal ' + $usingBoxedClass + '" data-style="' + $teamMemberStyle + '"><div class="inner-wrap"><div class="team_member_details"><div class="bio-inner"><span class="mobile-close"></span>'+ $teamName +'<div class="team-desc">' + wlEls($teamMemberMeta) + '</div></div></div><div class="team_member_picture"><div class="team_member_image_bg_cover"></div><div class="team_member_picture_wrap"><div class="team_member_image"></div></div></div></div></div>');
 
 						if ($teamMemberImg.length > 0) {
 
@@ -7390,7 +7425,7 @@
 					}
 
 					var $windowInnerWidth = nectarDOMInfo.winW,
-					$bodyBorderWidth      = ($('.body-border-right').length > 0 && $windowInnerWidth > 1000) ? parseInt($('.body-border-right').width()) * 2 : 0,
+					$bodyBorderWidth      = ($('.body-border-right').length > 0 && $windowInnerWidth > 1000 || $('.body-border-right').length > 0 && window.nectarOptions && window.nectarOptions.body_border_mobile && window.nectarOptions.body_border_mobile === '1') ? parseInt($('.body-border-right').width()) * 2 : 0,
 					$container_width      = ($('.container-wrap').length > 0) ? parseInt($('.container-wrap').outerWidth()) : $window.width(),
 					$extended_padding     = ($('body[data-ext-padding]').length > 0) ? parseInt($('body').attr('data-ext-padding'))*2 : 180;
 
@@ -7440,7 +7475,7 @@
 					$('.carousel-wrap[data-full-width="true"], .portfolio-items[data-col-num="elastic"]:not(.fullwidth-constrained), #boxed .full-width-content').each(function () {
 
 						var $leftHeaderSize = ($('#header-outer[data-format="left-header"]').length > 0 && $windowInnerWidth >= 1000) ? parseInt($('#header-outer[data-format="left-header"]').width()) : 0;
-						var $bodyBorderWidth = ($('.body-border-right').length > 0 && $windowInnerWidth > 1000) ? (parseInt($('.body-border-right').width()) * 2) - 2 : 0;
+						var $bodyBorderWidth = ($('.body-border-right').length > 0 && $windowInnerWidth > 1000 || $('.body-border-right').length > 0 && window.nectarOptions && window.nectarOptions.body_border_mobile && window.nectarOptions.body_border_mobile === '1') ? (parseInt($('.body-border-right').width()) * 2) - 2 : 0;
 
 						// Boxed.
 						if ($('#boxed').length == 1) {
@@ -7826,6 +7861,7 @@
 						if( nectarDOMInfo.winW < 690 ) {
 							intensity = intensity/1.35;
 						}
+						
 
 						if( that.topLevel === true && nectarDOMInfo.winW > 1000 || that.topLevel === true && this.persistOnMobile ) {
 							this.$elementInner[0].style.transform = this.type+'(' + -(that.lastY * intensity ) + 'px) translateZ(0)';
@@ -7864,7 +7900,8 @@
 					this.storedWinH     = nectarDOMInfo.winH;
 
 					if( el.parents('.nectar-sticky-tabs').length > 0 || 
-						el.parents('.nectar-sticky-column-css').length > 0 ) {
+						el.parents('.nectar-sticky-column-css').length > 0 ||
+						el.parents('.nectar-global-section-megamenu').length > 0 ) {
 						return;
 					}
 
@@ -8408,7 +8445,8 @@
 							// Parallax scrolling.
 							if( $(instance.elements[0]).is('[data-scroll-animation="true"]') && 
 									$('#nectar_fullscreen_rows').length == 0 && 
-									$(instance.elements[0]).parents('.n-sticky').length === 0 ) {
+									$(instance.elements[0]).parents('.n-sticky').length === 0 &&
+									$(instance.elements[0]).parents('.nectar-global-section-megamenu').length === 0 ) {
 								elParallaxArr.push( new NectarScrollPosAnimations($(instance.elements[0])) );
 							}
 
@@ -8446,7 +8484,14 @@
 								}
 								// All Others.
 								else {
-									parallaxItemsArr[parallaxItemCount] = new NectarParallaxScroll($(this), '.row-bg.using-image', parallaxSrollSpeed($(this).find('.row-bg').attr('data-parallax-speed')), 'regular');
+									
+									if ( $(this).find('.row-bg.using-image').length > 0 ) {
+										parallaxItemsArr[parallaxItemCount] = new NectarParallaxScroll($(this), '.row-bg.using-image', parallaxSrollSpeed($(this).find('.row-bg').attr('data-parallax-speed')), 'regular');
+									}
+
+									if ( $(this).find('> .nectar-video-wrap').length > 0 ) {
+										parallaxItemsArr[parallaxItemCount] = new NectarParallaxScroll($(this), '> .nectar-video-wrap .nectar-video-bg', parallaxSrollSpeed($(this).find('.row-bg').attr('data-parallax-speed')), 'regular');
+									}
 								}
 
 								parallaxItemCount++;
@@ -8529,7 +8574,7 @@
 						}
 
 						// Video backgrounds.
-						else if ($(this).find('.row-bg').length == 0 && $(this).find('.video-wrap').length > 0) {
+						if ($(this).find('.row-bg').length == 0 && $(this).find('.video-wrap').length > 0) {
               
 							$non_page_builder_slider = false;
 							// First nectar slider shortcode without page builder
@@ -8578,7 +8623,8 @@
 							vid.width(scale * vid_w_orig);
 							vid.height(scale * vid_h_orig);
 
-						} else {
+						}
+						 else {
 
 							// Top Level Special elements, Recent posts/ Simple Slider.
 							if ($(this).is('.nectar-recent-posts-single_featured') &&
@@ -8599,7 +8645,7 @@
 							// Regular.
 							else if (!$(this).hasClass('top-level') || nectarDOMInfo.usingFrontEndEditor || $(this).find('.parallax-layer').length > 0) {
                 
-								var classSelector = '.row-bg';
+								var classSelector = '.row-bg, > .nectar-video-wrap .nectar-video-inner';
 								var parallaxSpeed = $(this).find('.row-bg').attr('data-parallax-speed');
 
 								if( $(this).find('.parallax-layer').length > 0 && !$(this).hasClass('wpb_row')) {
@@ -8609,9 +8655,11 @@
               
 								var $ifFast = ($(this).find(classSelector + '[data-parallax-speed="fast"]').length > 0) ? 60 : 0;
                 
-								$(this).find(classSelector).css({
-									'height': Math.ceil(nectarDOMInfo.winH * parallaxSrollSpeed(parallaxSpeed) ) + $(this).outerHeight(true) + $ifFast
-								});
+								if ( $(this).parents('#page-header-bg').length == 0 ) {
+									$(this).find(classSelector).css({
+										'height': Math.ceil(nectarDOMInfo.winH * parallaxSrollSpeed(parallaxSpeed) ) + $(this).outerHeight(true) + $ifFast
+									});
+								}
 
 
 							}
@@ -9461,7 +9509,7 @@
 					$($fullscreenSelector + '.col.has-animation:not([data-animation*="reveal"]), ' + $fullscreenSelector + '.wpb_column.has-animation:not([data-animation*="reveal"]), ' + $fullscreenSelector + '.nectar-fancy-box.has-animation').each(function (i) {
 					
 						// delayJS
-						if (delayJS && $(this).parents('.top-level').length > 0 ) {
+						if (delayJS && $(this).parents('.top-level').length > 0 && $nectarFullPage.$usingFullScreenRows !== true  ) {
 							return true;
 						}
 
@@ -10118,7 +10166,7 @@
 				}
 
 				NectarSplitHeadingTimeline.prototype.mergeNeighbors = function() {
-					var $parentRow = this.$el.parents('.wpb_row');
+					var $parentRow = this.$el.closest('.wpb_row');
 					if ( $parentRow.length > 0 && $parentRow.find('.nectar-split-heading[data-text-effect="scroll-opacity-reveal"]').length > 0 ) { 
 						this.$el = $parentRow;
 						this.mergedGroup = true;
@@ -10181,6 +10229,13 @@
 							this.wordDelay = 250;
 						}
 					}
+
+					var customOffset = this.$el.find('.nectar-split-heading[data-text-effect="scroll-opacity-reveal"]').attr('data-animation-offset');
+					if ( customOffset && parseInt(customOffset) > 0 && parseInt(customOffset) < 100 ) {
+						customOffset = parseInt(customOffset);
+						this.topCushion = (nectarDOMInfo.winH * 0.05) + ((nectarDOMInfo.winH * 0.05) * (1 - (customOffset / 100)) * 6 );
+					}
+
 			
 				};
 
@@ -11119,11 +11174,22 @@
 					// Load More Markup.
 					if( this.settingsData.pagination === 'load-more' && this.el.find('.load-more-wrap').length == 0 ) {
 
-						if( this.el.find('.active.all-filter').length > 0 ) {
-							this.activeFilter = this.el.find('.active.all-filter').index() + 1;
+						if( this.el.find('.nectar-post-grid-filters .active').length > 0 ) {
+							this.activeFilter = this.el.find('.nectar-post-grid-filters .active').index() + 1;
 						}
 
-						this.activeCatTotal = parseInt(this.el.find('.nectar-post-grid-filters a:nth-child(' + this.activeFilter + ')').attr('data-total-count'));
+						var isUsingSortable = (this.sortable === 'yes') ? true : false;
+						// add up total counts for all selected taxonomies when all and sortable are not in use.
+						if ( !isUsingSortable && this.el.find('.active.all-filter').length === 0 ) {
+							var total = 0;
+							this.el.find('.nectar-post-grid-filters a').each(function() {
+								total += parseInt($(this).attr('data-total-count'));
+							});
+							this.activeCatTotal = total;
+						} else {
+							// total count must be from all items or start with the active category.
+							this.activeCatTotal = parseInt(this.el.find('.nectar-post-grid-filters a:nth-child(' + this.activeFilter + ')').attr('data-total-count'));
+						}
 
 						// Start hidden?
 						if( this.el.find('.nectar-post-grid-item').length >= this.activeCatTotal ) {
@@ -11169,6 +11235,10 @@
 					if( this.el.hasClass('target-blank-external-urls') ) {
 						this.el.find(".nectar-post-grid-item a[href*='http://']:not([href*='" + window.location.hostname + "'])").attr("target", "_blank");
 						this.el.find(".nectar-post-grid-item a[href*='https://']:not([href*='" + window.location.hostname + "'])").attr("target", "_blank");
+					}
+					if( this.el.hasClass('target-blank-all-urls') ) {
+						this.el.find(".nectar-post-grid-item a[href*='http://']").attr("target", "_blank");
+						this.el.find(".nectar-post-grid-item a[href*='https://']").attr("target", "_blank");
 					}
 				}
 
@@ -11284,7 +11354,11 @@
 								overlay_secondary_project_image: settingsData.overlay_secondary_project_image,
 								vertical_list_hover_effect: settingsData.vertical_list_hover_effect,
 								vertical_list_read_more: settingsData.vertical_list_read_more,
-								read_more_button: settingsData.read_more_button
+								read_more_button: settingsData.read_more_button,
+								custom_fields: settingsData.custom_fields,
+								custom_fields_location: settingsData.custom_fields_location,
+								display_type: settingsData.display_type,
+								text_content_layout: settingsData.text_content_layout
 							}
 						};
 						
@@ -11366,10 +11440,13 @@
 							if( $pagination === 'load-more' ) {
 
 								instance.activeCatTotal = parseInt(instance.el.find('.nectar-post-grid-filters a:nth-child(' + instance.activeFilter + ')').attr('data-total-count'));
-
-								if( $gridEl.find('.nectar-post-grid-item').length >= instance.activeCatTotal ) {
-									instance.el.find('.load-more-wrap').addClass('inactive');
-									instance.el.addClass('all-loaded');
+								
+								// Remove load more if all loaded, or if no data was returned (no more posts).
+								// The latter will currently happen when doing a custom query and the last page is loaded
+								// when not specifying any taxonomy data.
+								if( $gridEl.find('.nectar-post-grid-item').length >= instance.activeCatTotal || !data ) {
+										instance.el.find('.load-more-wrap').addClass('inactive');
+										instance.el.addClass('all-loaded');
 								} else {
 									instance.el.find('.load-more-wrap').removeClass('inactive');
 									instance.el.removeClass('all-loaded');
@@ -11438,7 +11515,7 @@
 
 					$($fullscreenSelector + '.nectar-post-grid-wrap').each(function () {
 
-						if ( delayJS && $(this).hasClass('delay-js-loaded') ) {
+						if ( delayJS && $(this).hasClass('delay-js-loaded') && $nectarFullPage.$usingFullScreenRows == false) {
 							return;
 						}
 						
@@ -12090,86 +12167,8 @@
 				*/
 				function resizeVideoToCover() {
 
-					var vid_w_orig  = 1280,
-					vid_h_orig      = 720,
-					min_w           = 1200;
 
 					$('.nectar-video-wrap').each(function () {
-
-						if ( delayJS && $(this).parents('.top-level').length > 0 ||
-								 delayJS && $(this).parents('.nectar_hook_404_content').length > 0 ) {
-								return true;
-						}
-
-						var $containerHeight, $containerWidth;
-
-						if ($(this).find('video').length == 0) {
-							return;
-						}
-
-						if ($(this).parents('#page-header-bg').length > 0) {
-
-							if ($('.container-wrap.auto-height').length > 0) {
-								return false;
-							}
-
-							$containerHeight  = $(this).parents('#page-header-bg').outerHeight();
-							$containerWidth   = $(this).parents('#page-header-bg').outerWidth();
-						} else {
-
-							if ($(this).hasClass('column-video')) {
-								if( $body.is('[data-flex-cols="true"]') ) {
-									var $parentColInner = $(this).parents('.vc_column-inner');
-									$containerHeight  = $parentColInner.outerHeight();
-									$containerWidth   = $parentColInner.outerWidth();
-								} else {
-									$containerHeight  = $(this).parents('.wpb_column').outerHeight();
-									$containerWidth   = $(this).parents('.wpb_column').outerWidth();
-								}
-							} else {
-								var $parentRow = $(this).parents('.wpb_row');
-								$containerHeight  = $parentRow.outerHeight();
-								$containerWidth   = ($(this).parents('.full-width-section').length > 0) ? nectarDOMInfo.winW : $parentRow.outerWidth();
-							}
-						}
-
-						// Set the video viewport to the window size
-						$(this).width($containerWidth);
-						if ($(this).parents('#page-header-bg').length > 0) {
-							$(this).height($containerHeight);
-						}
-
-						// Use largest scale factor of horizontal/vertical
-						var scale_h = $containerWidth / vid_w_orig,
-						scale_v     = ($containerHeight - $containerHeight) / vid_h_orig,
-						scale       = scale_h > scale_v ? scale_h : scale_v;
-
-						// Update minium width to never allow excess space
-						min_w = 1280 / 720 * ($containerHeight + 40);
-
-						// Don't allow scaled width < minimum video width
-						if (scale * vid_w_orig < min_w) {
-							scale = min_w / vid_w_orig;
-						}
-
-						// Now scale the video
-						$(this).find('video, .mejs-overlay, .mejs-poster').width(Math.ceil(scale * vid_w_orig + 0));
-						$(this).find('video, .mejs-overlay, .mejs-poster').height(Math.ceil(scale * vid_h_orig + 0));
-
-						// And center it by scrolling the video viewport
-						$(this).scrollLeft(($(this).find('video').width() - $containerWidth) / 2);
-						$(this).scrollTop(($(this).find('video').height() - ($containerHeight)) / 2);
-						$(this).find('.mejs-overlay, .mejs-poster').scrollTop(($(this).find('video').height() - ($containerHeight)) / 2);
-
-
-						// Align bottom
-						if ($(this).attr('data-bg-alignment') == 'center bottom' || $(this).attr('data-bg-alignment') == 'bottom') {
-							$(this).scrollTop(($(this).find('video').height() - ($containerHeight + 6)));
-						}
-						// Align top
-						else if ($(this).attr('data-bg-alignment') == 'center top' || $(this).attr('data-bg-alignment') == 'top') {
-							$(this).scrollTop(0);
-						}
 
 						// Add loaded class
 						$(this).addClass('position-loaded');
@@ -12191,16 +12190,6 @@
 					}
 
 					setTimeout(function () {
-
-						resizeVideoToCover();
-
-						// Resize
-						$window.on('resize',resizeVideoToCover);
-						window.addEventListener("orientationchange", function() {
-						this.setTimeout(function(){
-							resizeVideoToCover();
-						}, 100); 
-						});
 
 						$('.video-color-overlay').each(function () {
 							$(this).css('background-color', $(this).attr('data-color'));
@@ -12511,6 +12500,7 @@
 							$('.ocm-effect-wrap-inner').append($topToolBar);
 						}
 
+
 					}
 
 					OCM_materialIconMarkup();
@@ -12614,7 +12604,7 @@
 						$menuHeight = $('#slide-out-widget-area .off-canvas-menu-container:last-child').height();
 					}
 
-					$('#slide-out-widget-area .inner').css({
+					$('#slide-out-widget-area .inner').first().css({
 						'height': 'auto',
 						'min-height': $menuHeight
 					});
@@ -12647,7 +12637,8 @@
 				*/
 				function OCM_materialIconMarkup() {
 
-					if ($('body.material').length > 0 && $('body[data-slide-out-widget-area-style="slide-out-from-right-hover"]').length == 0 ) {
+					if ($('body.material').length > 0 && $('body[data-slide-out-widget-area-style="slide-out-from-right-hover"]').length == 0 ||
+							$('body.material').length > 0 && bodyBorderVignette === true) {
 
 						if ( $('#mobile-menu').length == 0) {
 							var $menuIconClone = $('header#top ul .slide-out-widget-area-toggle:first a > span > i').clone();
@@ -12795,8 +12786,8 @@
 					$('body > #boxed').length > 0 ||
 					$('.ocm-effect-wrap-inner > #boxed').length > 0) {
 
-						$('#slide-out-widget-area.fullscreen .off-canvas-social-links, #slide-out-widget-area.fullscreen-alt .off-canvas-social-links').appendTo('#slide-out-widget-area .inner');
-						$('#slide-out-widget-area.fullscreen .bottom-text, #slide-out-widget-area.fullscreen-alt .bottom-text').appendTo('#slide-out-widget-area .inner');
+						$('#slide-out-widget-area.fullscreen .off-canvas-social-links, #slide-out-widget-area.fullscreen-alt .off-canvas-social-links').appendTo('#slide-out-widget-area .inner-wrap > .inner');
+						$('#slide-out-widget-area.fullscreen .bottom-text, #slide-out-widget-area.fullscreen-alt .bottom-text').appendTo('#slide-out-widget-area .inner-wrap > .inner');
 
 					} else {
 						$('#slide-out-widget-area.fullscreen .off-canvas-social-links,#slide-out-widget-area.fullscreen-alt .off-canvas-social-links').appendTo('#slide-out-widget-area .inner-wrap');
@@ -12846,6 +12837,7 @@
           OCM_convertExtItems();
 
 					if( $('.slide-out-from-right-hover.ios-ocm-style').length > 0 ) {
+						$('#ajax-content-wrap').addClass('ios-ocm-style-open');
 						setTimeout(function () {
 							$('#slide-out-widget-area .slide_out_area_close').addClass('material-ocm-open');
 							$('#slide-out-widget-area .slide_out_area_close').removeClass('hide_until_rendered');
@@ -12873,9 +12865,16 @@
 
 						if ($('body.mobile').length > 0 || $withinCustomBreakpoint || headerOCMButtonPos === 'left') {
 
-							$hIconEl.css({
-								'top': $('header#top .span_9 > .slide-out-widget-area-toggle a').offset().top - nectarDOMInfo.scrollTop
-							});
+							if ( $('.left-aligned-ocm').length > 0 && $('.left-aligned-ocm').css('display') != 'none' ) {
+		
+								$hIconEl.css({
+									'top': $('header#top .left-aligned-ocm .slide-out-widget-area-toggle a').offset().top - nectarDOMInfo.scrollTop
+								});
+							} else {
+								$hIconEl.css({
+									'top': $('header#top .span_9 > .slide-out-widget-area-toggle a').offset().top - nectarDOMInfo.scrollTop
+								});
+							}
 
 							if( alignmentPosition === 'left' || headerOCMButtonPos === 'left') {
 								$hIconEl.css({
@@ -13089,6 +13088,7 @@
 					}
 
 					if( $('.slide-out-from-right-hover.ios-ocm-style').length > 0 ) {
+							$('#ajax-content-wrap').removeClass('ios-ocm-style-open');
 							$('#slide-out-widget-area .slide_out_area_close').removeClass('material-ocm-open');
 					}
 
@@ -13394,7 +13394,7 @@
 						} else if ($('body.material').length > 0) {
 
 							// Material theme skin slide out from right
-
+							
 							//move ajax loading outside
 							if ($loadingScreenEl.length > 0 && $('.ocm-effect-wrap #ajax-loading-screen').length > 0) {
 								$loadingScreenEl.insertBefore('.ocm-effect-wrap');
@@ -13625,6 +13625,7 @@
 						//material
 						$offCanvasEl.removeClass('open');
 
+
 						$('#slide-out-widget-area, #slide-out-widget-area-bg, #header-outer .slide-out-widget-area-toggle').removeClass('material-open');
 						$('.ocm-effect-wrap, .ocm-effect-wrap-shadow, body > .slide_out_area_close, #fp-nav').removeClass('material-ocm-open');
 
@@ -13674,6 +13675,7 @@
 
 
 							$('body[data-hhun="1"] #header-secondary-outer.hidden').removeClass('hidden');
+
 
 							nectarState.materialOffCanvasOpen = false;
 
@@ -14414,7 +14416,7 @@
 
 					$('#header-outer #mobile-menu ul li').each(function(){
 
-						if($(this).find('> ul').length > 0) {
+						if($(this).find('> ul').length > 0 || $(this).find('> .nectar-global-section-megamenu').length > 0) {
 							$(this).find('> a').append('<span class="sf-sub-indicator"><i class="fa fa-angle-down"></i></span>');
 						}
 
@@ -14429,13 +14431,13 @@
 
 						// Open.
 						if( $parentLI.hasClass('current-open-item') ) {
-							$parentLI.find('> ul').show();
+							$parentLI.find('> ul, > .nectar-global-section-megamenu').show();
 							setTimeout(function(){
 								$parentLI.addClass('visible');
 							},30);
 						} else {
 							// Close.
-							$parentLI.find('ul').hide();
+							$parentLI.find('ul, .nectar-global-section-megamenu').hide();
 							// Ensure open children also close.
 							$parentLI.find('li').removeClass('visible').removeClass('current-open-item');
 							$parentLI.removeClass('visible');
@@ -14593,7 +14595,8 @@
             return false;
           });
 
-					$body.on('click', '.slide-out-widget-area-toggle:not(.std-menu) a.open:not(.animating), .nectar-ocm-trigger-open a.open, #slide-out-widget-area .slide_out_area_close, > .slide_out_area_close, #slide-out-widget-area-bg.slide-out-from-right, .material-ocm-open #ajax-content-wrap', function (e) {
+					$body.on('click', '.slide-out-widget-area-toggle:not(.std-menu) a.open:not(.animating), .nectar-ocm-trigger-open a.open, #slide-out-widget-area .slide_out_area_close, > .slide_out_area_close, #slide-out-widget-area-bg.slide-out-from-right, .material-ocm-open #ajax-content-wrap, #ajax-content-wrap.ios-ocm-style-open', function (e) {
+
 
 						if (e.originalEvent == undefined &&
 							$('.slide_out_area_close.non-human-allowed').length == 0 &&
@@ -14768,7 +14771,8 @@
 				function OCM_init() {
 
 					// simplify ocm on mobile.
-					if ( window.nectarOptions && 
+					if ( bodyBorderVignette && $body.hasClass('material') && $offCanvasEl.hasClass('slide-out-from-right') || 
+							window.nectarOptions && 
 							window.nectarOptions.simplify_ocm_mobile === '1' && 
 							nectarDOMInfo.usingMobileBrowser &&
 							$offCanvasEl.hasClass('slide-out-from-right') && $('body.material').length > 0 ) {
@@ -14777,6 +14781,12 @@
 
 							$offCanvasEl.removeClass('slide-out-from-right');
 							$offCanvasEl.addClass('slide-out-from-right-hover').addClass('ios-ocm-style');
+							
+							if ( bodyBorderVignette ) {
+								$('body').on('click', '#ajax-content-wrap.ios-ocm-style-open', function () {
+									$('.slide-out-widget-area-toggle a').trigger('click');
+								});
+							}
 
 							$('#slide-out-widget-area .inner > .widget').wrapAll('<div class="bottom-meta-wrap"></div>');
 	
@@ -15093,7 +15103,7 @@
 						this.$menu 			= this.$el.children('ul.menu');
 						this.$menuitems = this.$menu.find('li:not(.back) > a');
 
-						this.$el.find('ul.sub-menu')
+						this.$el.find('.sub-menu')
 							.prepend('<li class="back"><a href="#"> ' + $offCanvasEl.attr('data-back-txt') + ' </a></li>');
 
 						this.$back = this.$menu.find('li.back');
@@ -15117,7 +15127,7 @@
 
 
 							var $item = $(this).parent('li'),
-							$submenu = $item.children('ul.sub-menu');
+							$submenu = $item.children('.sub-menu');
 
 							$('.fullscreen-alt .off-canvas-menu-container .clip-wrap, .fullscreen-alt .off-canvas-menu-container .clip-wrap span').css('transition-duration', '0s');
 
@@ -15170,7 +15180,7 @@
 						this.$back.on('click.menu', function () {
 
 							var $this = $(this),
-							$submenu 	= $this.parents('ul.sub-menu:first'),
+							$submenu 	= $this.parents('.sub-menu:first'),
 							$item 		= $submenu.parent(),
 							$flyin 		= $submenu.clone().insertAfter(self.$menu);
            
@@ -17891,6 +17901,9 @@
 							else {
 								// At top of document.
 								var $topDetachNum = ($headerSecondaryEl.length > 0) ? 32 : 0;
+								if ( usingSmoothScroll ) {
+									$topDetachNum += 10;
+								}
 								if ($bodyBorderTop.length > 0) {
 									$topDetachNum = ($headerSecondaryEl.length > 0) ? 32 + $bodyBorderTop.height() : $bodyBorderTop.height();
 								}
@@ -18011,7 +18024,7 @@
 					$scrollTriggerOffset = 30;
 
 					if( headerTransparent == true && !nectarDOMInfo.usingMobileBrowser ) {
-						$scrollTriggerOffset = 0;
+						$scrollTriggerOffset = usingSmoothScroll ? 30 : 0;
 					}
 
 					if ($offset > $scrollTriggerOffset && $windowWidth >= 1000 && $('body.material-ocm-open').length == 0) {
@@ -18127,7 +18140,7 @@
 					}
 
 					if( headerTransparent == true && !nectarDOMInfo.usingMobileBrowser ) {
-						$scrollTriggerOffset = 0;
+						$scrollTriggerOffset = usingSmoothScroll ? 30 : 0;
 					}
 
 					if ($offset <= $scrollTriggerOffset && $windowWidth >= 1000 || $('.small-nav').length > 0 && $('#ajax-content-wrap.no-scroll').length > 0) {
@@ -18399,18 +18412,20 @@
 
 
 					// Handle mobile transparent class.
-					if (headerHideUntilNeeded == '1' && $('#header-outer[data-remove-fixed="1"]').length == 0) {
-
-						if( $('#header-outer[data-mobile-fixed="1"]').length > 0 ) {
+					if (headerHideUntilNeeded == '1' && $('#header-outer[data-mobile-fixed="1"]').length > 0) {
 
 						if ($('.nectar-box-roll').length > 0) {
 							$headerOuterEl.addClass('at-top-before-box');
 						}
 
 						cancelAnimationFrame( hhunState.raf );
+						hhunState.timeoutQueued = false;
 						hhunHeaderEffect();
 
-						} else {
+					}
+					else if ($('#header-outer[data-mobile-fixed="1"]').length > 0) {
+						requestAnimationFrame(mobileHeaderRAF);
+
 						// Remove HHUN classes.
 						cancelAnimationFrame( hhunState.raf );
 
@@ -18420,11 +18435,6 @@
 						.removeClass('invisible')
 						.removeClass('at-top')
 						.css('transform', 'none');
-						}
-
-					}
-					else if ($('#header-outer[data-mobile-fixed="1"]').length > 0) {
-						requestAnimationFrame(mobileHeaderRAF);
 					} 
 					else if ($headerOuterEl.attr('data-transparent-header') == 'true') {
 						$headerOuterEl.addClass('transparent');
@@ -18473,7 +18483,28 @@
 						if ($('#header-outer[data-remove-fixed="1"]').length == 0) {
 							cancelAnimationFrame( hhunState.raf );
 							hhunHeaderEffect();
+						} else {
+								// Remove HHUN classes.
+								cancelAnimationFrame( hhunState.raf );
+								hhunState.timeoutQueued = true;
+
+								// maybe transparent.
+								if ($headerOuterEl.attr('data-transparent-header') == 'true' && 
+									$('body.material #header-outer[data-condense="true"]').length == 0 &&
+									$headerOuterEl.hasClass('detached') ) {
+										// only if coming from hhun active.
+									$headerOuterEl.addClass('transparent');
+								}
+
+								$headerOuterEl
+								.removeClass('scrolled-down')
+								.removeClass('detached')
+								.removeClass('invisible')
+								.removeClass('at-top')
+								.css('transform', 'none');
+
 						}
+						
 
 					} //end if hhun
 
@@ -18586,6 +18617,7 @@
 				function headerNavOffsetInit() {
 
 					var lastPosition     = -1;
+					var lastPosition2    = -1;
 					var $headerScrollTop = nectarDOMInfo.scrollTop;
 
 					// Verify scroll pos has changed before calculating.
@@ -18647,7 +18679,7 @@
 					}
 
 					// Bind event and begin if needed.
-					if ($('#header-outer[data-mobile-fixed="1"]').length > 0 && $wpAdminBar.length > 0) {
+					if ($('#header-outer[data-mobile-fixed="1"]').length > 0 && $wpAdminBar.length > 0 ) {
 
 						if ($('#nectar_fullscreen_rows').length == 0) {
 							requestAnimationFrame(headerOffsetAdjust);
@@ -18658,6 +18690,60 @@
 						$window.on('smartresize', headerOffsetAdjustCalc);
 
 					}
+
+
+					// Vigentte body border
+					if ( bodyBorderVignette ) {
+						if ($('#nectar_fullscreen_rows').length == 0) {
+							requestAnimationFrame(headerBorderAdjust);
+						} 
+
+						$window.on('smartresize', headerBorderAdjustCalc);
+
+					}
+
+					// Verify scroll pos has changed before calculating.
+					function headerBorderAdjust() {
+
+						if ( $body.hasClass('compose-mode') ) {
+							return;
+						}
+						if (bodyBorderMobile == false && nectarDOMInfo.winW < 1000) {
+							requestAnimationFrame(headerBorderAdjust);
+							$headerOuterEl.css('margin-top', '0');
+							return false;
+						}
+
+						$headerScrollTop = nectarDOMInfo.scrollTop;
+
+						if (lastPosition2 == $headerScrollTop) {
+							requestAnimationFrame(headerBorderAdjust);
+							return false;
+						} else {
+							lastPosition2 = $headerScrollTop;
+						}
+
+						headerBorderAdjustCalc();
+						requestAnimationFrame(headerBorderAdjust);
+
+					}
+
+					function headerBorderAdjustCalc() {
+
+						var $eleHeight = 0;
+						var $endOffset = 0;
+
+						//bodyBorderMobile  
+						$eleHeight += bodyBorderHeight;
+
+						if ($eleHeight - $headerScrollTop > $endOffset) {
+							$headerOuterEl[0].style.marginTop = $eleHeight - $headerScrollTop + 'px';
+						} else {
+							$headerOuterEl[0].style.marginTop = $endOffset + 'px';
+						}
+
+					}
+	
 
 				}
 
@@ -18882,8 +18968,14 @@
 
 						if ($bodyBorderTop.length > 0 &&
 							$window.width() > 1000 &&
-							$('body[data-hhun="1"]').length > 0) {
-							$offsetHeight += $bodyBorderTop.height();
+							$('body[data-hhun="1"]').length > 0 ||
+
+							$bodyBorderTop.length > 0 && 
+							$('body[data-hhun="1"]').length > 0 && 
+							bodyBorderMobile ) {
+								if ( !bodyBorderVignette ) {
+										$offsetHeight += $bodyBorderTop.height();
+								}
 						}
 
 						// Recalc for resizing (same as stuck/unstuck logic below)
@@ -18964,8 +19056,12 @@
 							$offsetHeight += $wpAdminBar.height();
 						}
 
-						if ($bodyBorderTop.length > 0 && $window.width() > 1000 && $('body[data-hhun="1"]').length > 0) {
-							$offsetHeight += $bodyBorderTop.height();
+						if ($bodyBorderTop.length > 0 && $window.width() > 1000 && $('body[data-hhun="1"]').length > 0 || 
+								$bodyBorderTop.length > 0 && bodyBorderMobile && $('body[data-hhun="1"]').length > 0 ) {
+							
+								if ( !bodyBorderVignette ) {
+									$offsetHeight += $bodyBorderTop.height();
+								}
 						}
 
 						this.waypoint = new Waypoint($.extend({}, this.options, {
@@ -19585,9 +19681,12 @@
 								$(this)[0].innerHTML += '<span><span class="inner'+animatedClass+'">' + textArr[i] + '</span></span> ';
 							}
 
+							$(this).attr('aria-label', $(this).text());
+
 						});
 
 						$el.addClass('markup-generated');
+	
 				}
 
 				function splitLineHeadingMarkup() {
@@ -19600,7 +19699,7 @@
 
 						/* Skip markup generation when effect is removed on mobile */
 						if( $(this).is('[data-m-rm-animation="true"]') && nectarDOMInfo.winW < 1000 ) {
-						return true;
+							return true;
 						}
 
 						var animatedStyle = ( $(this).hasClass('animated-in') ) ? ' style="transform: none;"' : '';
@@ -19616,6 +19715,8 @@
 							for (var i = 0; i < textArr.length; i++) {
 								$(this)[0].innerHTML += '<span>' + textArr[i] + '</span> ';
 							}
+
+							$(this).attr('aria-label', $(this).text());
 
 						});
 
@@ -19634,6 +19735,7 @@
 						});
 
 						$(this).addClass('markup-generated');
+						
 
 					});
 
@@ -20275,7 +20377,12 @@
           linkIndicatorArr = [];
           if( !nectarDOMInfo.usingMobileBrowser ) {
             $('[data-nectar-link-indicator]').each(function(i) {
-              linkIndicatorArr[i] = new NectarIconMouseFollow($(this),'link-indicator');
+							if ($(this).is('[data-indicator-text]')) {
+								linkIndicatorArr[i] = new NectarIconMouseFollow($(this),'view-indicator');
+							} else {
+								linkIndicatorArr[i] = new NectarIconMouseFollow($(this),'link-indicator');
+							}
+              
             });
           }
         }
@@ -22024,6 +22131,10 @@
 					}
 
 					$(stickySelectors).each(function () {
+
+						if ($(this).parents('#slide-out-widget-area').length > 0) {
+							return true;
+						}
 						
 						// Padding from top of screen
 						var $ssExtraTopSpace = stickyOffset;
@@ -22386,7 +22497,7 @@
 				*/
 				function select2Init() {
 
-					$('select:not(.state_select):not(.country_select):not(.comment-form-rating #rating):not(#tribe-bar-form select):not(.woocommerce-currency-switcher):not(.nectar-custom-product-attr select):not(.flatpickr-calendar select)').each(function () {
+					$('select:not(.state_select):not(.country_select):not(.comment-form-rating #rating):not(#tribe-bar-form select):not(.woocommerce-currency-switcher):not(.wc-blocks-components-select__container select):not(.nectar-custom-product-attr select):not(.flatpickr-calendar select)').each(function () {
 
 						// Prevent search from triggering on small devices.
 						var $minimumToSearch = ( nectarDOMInfo.winW > 690 ) ? 7 : 200;
@@ -22471,7 +22582,9 @@
 									$selector = $(this);
 								}
 
-								if ($(this).parents('#buddypress').length == 0 && $(this).parents('.widget_categories').length == 0) {
+								if ($(this).parents('#buddypress').length == 0 && 
+										$(this).parents('.widget_categories').length == 0 &&
+										$(this).parents('.wc-blocks-components-select__container').length == 0) {
 									//if label is found
 									
 									if ($selector.prev('label').length == 1) {
@@ -23272,8 +23385,6 @@
 					parallaxRowsBGCals();
 				}
 
-				// Video BG
-				resizeVideoToCover();
 			}
 
 			// Document ready event - starting everything up.

@@ -144,7 +144,7 @@ if( !function_exists('salient_portfolio_metabox') ) {
 						'std' => ''
 					),
 					array(
-						'name' =>  esc_html__('Hide Featured Image/Video on Single Project Page?', 'salient-portfolio'),
+						'name' =>  esc_html__('Hide Featured Media on Single Project Page?', 'salient-portfolio'),
 						'desc' => esc_html__('You can choose to hide your featured image/video from automatically displaying on the top of the main project page.', 'salient-portfolio'),
 						'id' => '_nectar_hide_featured',
 						'type' => 'checkbox',
@@ -266,7 +266,7 @@ if( !function_exists('salient_portfolio_metabox') ) {
 						'std' => ''
 					),
 					array(
-						'name' =>  esc_html__('Hide Featured Image/Video on Single Project Page?', 'salient-portfolio'),
+						'name' =>  esc_html__('Hide Featured Media on Single Project Page?', 'salient-portfolio'),
 						'desc' => esc_html__('You can choose to hide your featured image/video from automatically displaying on the top of the main project page.', 'salient-portfolio'),
 						'id' => '_nectar_hide_featured',
 						'type' => 'checkbox',
@@ -307,14 +307,21 @@ if( !function_exists('salient_portfolio_metabox') ) {
 						)
 					),
 					$gallery_slider,
-          array( 
+					array( 
+						'name' => esc_html__('Project Video (.mp4)', 'salient-portfolio'),
+						'desc' => esc_html__('Supply an .mp4 video file that will be used for Portfolio items in the Post Loop builder element.', 'salient-portfolio'),
+						'id' => '_nectar_portfolio_custom_video',
+						'type' => 'media',
+						'std' => ''
+					),
+          			array( 
 						'name' => esc_html__('Custom Thumbnail Image', 'salient-portfolio'),
 						'desc' => esc_html__('If you would like to have a separate thumbnail for your portfolio item, upload it here. If left blank, a cropped version of your featured image will be automatically used instead. The recommended dimensions are 600px by 403px.', 'salient-portfolio'),
 						'id' => '_nectar_portfolio_custom_thumbnail',
 						'type' => 'file',
 						'std' => ''
 					),
-          array( 
+					array( 
 						'name' => esc_html__('Secondary Overlaid Image', 'salient-portfolio'),
 						'desc' => esc_html__('Certain styles within the Post Loop Builder page builder element will allow for this to be overlaid on top of your featured image.', 'salient-portfolio'),
 						'id' => '_nectar_portfolio_secondary_thumbnail',
@@ -532,6 +539,14 @@ if( !function_exists('salient_portfolio_metabox') ) {
 		#-----------------------------------------------------------------#
 		# Header Navigation Transparency
 		#-----------------------------------------------------------------#
+		$salient_options_panel_text = esc_html__('you have activated in the Salient options panel.', 'salient-core');
+
+		if ( class_exists('NectarThemeManager') && 
+			property_exists('NectarThemeManager', 'custom_theme_name') &&
+			NectarThemeManager::$custom_theme_name ) {
+			$salient_options_panel_text = esc_html__('you have activated in the') . ' ' . esc_html(NectarThemeManager::$custom_theme_name) . ' ' . esc_html__('options panel.', 'salient-core');
+		}
+
 		$meta_box = array(
 			'id' => 'nectar-metabox-header-nav-transparency',
 			'title' => esc_html__('Navigation Transparency', 'salient-portfolio'),
@@ -542,7 +557,7 @@ if( !function_exists('salient_portfolio_metabox') ) {
 			'fields' => array(
 				array( 
 					'name' =>  esc_html__('Disable Transparency From Navigation', 'salient-portfolio'),
-					'desc' => esc_html__('You can use this option to force your navigation header to stay a solid color even if it qualifies to trigger the','salient-portfolio') . '<a target="_blank" href="'. esc_url(admin_url('?page=Salient#16_section_group_li_a')) .'"> transparent effect</a> ' . esc_html__('you have activated in the Salient options panel.', 'salient-portfolio'),
+					'desc' => esc_html__('You can use this option to force your navigation header to stay a solid color even if it qualifies to trigger the','salient-portfolio') . '<a target="_blank" href="'. esc_url(admin_url('?page=Salient#16_section_group_li_a')) .'"> transparent effect</a> ' . $salient_options_panel_text,
 					'id' => '_disable_transparent_header',
 					'type' => 'checkbox',
 					'std' => ''
@@ -570,7 +585,7 @@ if( !function_exists('salient_portfolio_metabox') ) {
 						
 						$force_transparency = array( 
 		          'name' =>  esc_html__('Force Transparency On Navigation', 'salient-core'),
-		          'desc' => esc_html__('You can use this option to force your navigation header to start transparent even if it does not qualify to trigger the','salient-core') . '<a target="_blank" href="'. esc_url(admin_url('?page=Salient#16_section_group_li_a')) .'"> transparent effect</a> ' . esc_html__('you have activated in the Salient options panel.', 'salient-core'),
+		          'desc' => esc_html__('You can use this option to force your navigation header to start transparent even if it does not qualify to trigger the','salient-core') . '<a target="_blank" href="'. esc_url(admin_url('?page=Salient#16_section_group_li_a')) .'"> transparent effect</a> ' . $salient_options_panel_text,
 		          'id' => '_force_transparent_header',
 		          'type' => 'checkbox',
 		          'std' => ''
@@ -588,8 +603,8 @@ if( !function_exists('salient_portfolio_metabox') ) {
 		#-----------------------------------------------------------------#
 		$meta_box = array( 
 			'id' => 'nectar-metabox-portfolio-video',
-			'title' => esc_html__('Video Settings', 'salient-portfolio'),
-			'description' => esc_html__('If you have a video, please fill out the fields below.', 'salient-portfolio'),
+			'title' => esc_html__('Lightbox/Single Project Video Settings', 'salient-portfolio'),
+			'description' => esc_html__('Videos added here will be shown when clicking on a project either via a lightbox or on the single template.', 'salient-portfolio'),
 			'post_type' => 'portfolio',
 			'context' => 'normal',
 			'priority' => 'high',
@@ -602,7 +617,7 @@ if( !function_exists('salient_portfolio_metabox') ) {
 					'std' => ''
 				),
 				array( 
-					'name' => esc_html__('OGV File URL', 'salient-portfolio'),
+					'name' => esc_html__('OGV File URL (Optional)', 'salient-portfolio'),
 					'desc' => esc_html__('Please upload the .ogv video file.', 'salient-portfolio'),
 					'id' => '_nectar_video_ogv',
 					'type' => 'media',

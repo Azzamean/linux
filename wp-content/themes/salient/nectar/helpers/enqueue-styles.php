@@ -148,6 +148,7 @@ function nectar_main_styles() {
 		 wp_register_style( 'skin-original', $nectar_get_template_directory_uri . '/css/'.$src_dir.'/skin-original.css', '', $nectar_theme_version );
 		 wp_register_style( 'skin-ascend', $nectar_get_template_directory_uri . '/css/'.$src_dir.'/ascend.css', '', $nectar_theme_version );
 		 wp_register_style( 'skin-material', $nectar_get_template_directory_uri . '/css/'.$src_dir.'/skin-material.css', '', $nectar_theme_version );
+		 wp_register_style( 'nectar-smooth-scroll', $nectar_get_template_directory_uri . '/css/'.$src_dir.'/plugins/lenis.css', '', $nectar_theme_version );
 
 		 global $post;
 
@@ -1093,9 +1094,6 @@ function nectar_page_sepcific_styles() {
     border-radius: 0!important;
   }
   
-  video, audio{
-    visibility:hidden
-  }
   .mejs-controls .mejs-time-rail .mejs-time-loaded{
     background-color:rgba(255,255,255,0.3)!important
   }
@@ -1372,6 +1370,11 @@ add_action( 'wp_head', 'nectar_preload_key_requests', 5 );
 			 wp_enqueue_style( 'magnific' );
 		 } elseif ( $lightbox_script === 'fancybox' ) {
 			 wp_enqueue_style( 'fancyBox' );
+		 }
+
+		 // Smooth scrolling
+		 if ( isset( $nectar_options['smooth-scroll'] ) && $nectar_options['smooth-scroll'] === '1' ) {
+			 wp_enqueue_style( 'nectar-smooth-scroll' );
 		 }
 
 		 // Off canvas menu.

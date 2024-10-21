@@ -84,13 +84,6 @@ html body .full-width-content.vc_row-fluid .span_12 {
 }
 
 
-/* FWC Gutters */
-@media only screen and ( max-width: 999px ) {
-  .container-wrap .full-width-content .vc_row-fluid[data-column-margin*="px"] > .span_12 > .wpb_column {
-    margin-bottom: 30px;
-  }
-}
-
 
 .vc_row-fluid[data-column-margin="default"].full-width-content > .span_12 > .one-fourths:not([class*="vc_col-xs-"]),
 .vc_row-fluid[data-column-margin="none"].full-width-content > .span_12 > .one-fourths:not([class*="vc_col-xs-"]),
@@ -1360,7 +1353,7 @@ body[data-col-gap] .vc_row-fluid .span_12.post-area {
 /* Phone and Tablet */
 @media only screen and (min-width : 1px) and (max-width : 999px) {
   .vc_row-fluid.full-width-content .col .wpb_row,
-  .vc_row-fluid.full-width-content .col,
+  .vc_row-fluid.full-width-content .col:not(.child_column),
   .vc_row-fluid.vc_row[data-column-margin="none"] .col,
   .vc_row-fluid .wpb_column[class*="vc_col-xs"]:not(.vc_col-xs-12) {
     margin-bottom: 0;

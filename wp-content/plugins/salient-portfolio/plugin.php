@@ -5,7 +5,7 @@
  * Description: Showcase your projects in a stunning manner with the Nectar Portfolio post type.
  * Author: ThemeNectar
  * Author URI: https://themenectar.com
- * Version: 1.7.6
+ * Version: 1.8
  * Text Domain: salient-portfolio
  */
 
@@ -17,7 +17,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 define( 'SALIENT_PORTFOLIO_ROOT_DIR_PATH', plugin_dir_path( __FILE__ ) );
 define( 'SALIENT_PORTFOLIO_PLUGIN_PATH', plugins_url( 'salient-portfolio' ) );
 if ( ! defined( 'SALIENT_PORTFOLIO_PLUGIN_VERSION' ) ) {
-	define( 'SALIENT_PORTFOLIO_PLUGIN_VERSION', '1.7.6' );
+	define( 'SALIENT_PORTFOLIO_PLUGIN_VERSION', '1.8' );
 }
 
 register_deactivation_hook( __FILE__, 'flush_rewrite_rules' );

@@ -1522,6 +1522,14 @@ if( !function_exists('nectar_lazyload_woocommerce_imgs') ) {
 }
 
 
+// template files notice.
+add_filter( 'woocommerce_show_admin_notice', function ( $show, $notice ) {
+	if ( 'template_files' === $notice ) {
+		return false;
+	}
+	return $show;
+}, 10, 2 );
+
 
 // Remove AJAX for products with a large amoutn of variations
 if ( !function_exists( 'nectar_wc_ajax_variation_thresh' ) ) {

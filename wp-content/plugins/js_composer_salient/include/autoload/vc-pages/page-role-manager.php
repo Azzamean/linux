@@ -94,10 +94,7 @@ add_filter( 'vc_role_access_with_backend_editor_get_state', 'wpb_editor_access',
 add_filter( 'vc_role_access_with_frontend_editor_get_state', 'wpb_editor_access', 10, 2 );
 
 function wpb_custom_html_elements_access( $state, $shortcode ) {
-	if ( in_array( $shortcode, array(
-		'vc_raw_html',
-		'vc_raw_js',
-	) ) ) {
+	if ( in_array( $shortcode, wpb_get_elements_with_custom_html() ) ) {
 		$state = vc_user_access()->part( 'unfiltered_html' )->checkStateAny( true, null )->get();
 	}
 
