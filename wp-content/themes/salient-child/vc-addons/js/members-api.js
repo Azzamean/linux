@@ -24,10 +24,9 @@ jQuery(document).ready(function ($) {
             window.open('http://' + membersWebsite, '_blank');
          }
          if (membersLogo != "undefined") {
-            if (membersMembership == "Platinum Membership") {
-               $("#slider").append(img);
-
-            }
+            //if (membersMembership == "Platinum Membership") {
+            $("#slider").append(img);
+            //}
          }
       })
 

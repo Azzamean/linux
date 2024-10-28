@@ -36,12 +36,12 @@ function hsts_plugin_get_csp_header(): string
         "*.hubspot.com *.hsadspixel.net *.hscollectedforms.net *.hsleadflows.net *.hs-banner.com *.facebook.net " .
         "js.zi-scripts.com ws.zoominfo.com tags.clickagy.com ws-assets.zoominfo.com schedule.zoominfo.com api.schedule.zoominfo.com  *.buzzsprout.com snap.licdn.com " .
         "*.google-analytics.com *.hs-analytics.net *.usemessages.com googleads.g.doubleclick.net js-agent.newrelic.com https://www.googletagmanager.com https://googletagmanager.com https://tagmanager.google.com; " .
-    "style-src 'unsafe-inline' 'self' fonts.googleapis.com https://googletagmanager.com https://tagmanager.google.com https://fonts.googleapis.com *.osano.com; " .
+    "style-src 'unsafe-inline' 'self' *.fontawesome.com fonts.googleapis.com https://googletagmanager.com https://tagmanager.google.com https://fonts.googleapis.com *.osano.com; " .
     "object-src 'self' *.osano.com; " . // todo: able to switch this to 'none'?
     "base-uri 'self'; " . // todo: able to switch this to 'none'?
     "connect-src 'self' js.zi-scripts.com *.hsforms.com *.hscollectedforms.net analytics.google.com *.google-analytics.com *.hubspot.com *.doubleclick.net *.hubapi.com " .
         "*.linkedin.com *.osano.com aorta.clickagy.com  hemsync.clickagy.com ws.zoominfo.com api.schedule.zoominfo.com *.googleadservices.com www.googletagmanager.com *.google.com js-agent.newrelic.com; " .
-    "font-src 'self' data: fonts.gstatic.com; " .
+    "font-src 'self' data: *.fontawesome.com fonts.gstatic.com; " .
     "frame-src 'self' *.osano.com *.hsforms.com *.youtube.com *.google.com *.openssf.org *.landscape2.io *.buzzsprout.com aorta.clickagy.com hemsync.clickagy.com *.doubleclick.net zoom-lfx.platform.linuxfoundation.org; " .
     "img-src 'self' data: *.buzzsprout.com *.hsforms.com *.hubspot.com *.hubspot.net *.linkedin.com *.ads.linkedin.com secure.gravatar.com *.w.org *.google.com *.google-analytics.com  *.facebook.com " . 
     "*.linuxfoundation.org https://googletagmanager.com https://www.googletagmanager.com https://ssl.gstatic.com https://www.gstatic.com https://fonts.gstatic.com;" .
