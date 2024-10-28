@@ -347,6 +347,7 @@ a.list-design.navigation-btn {
 
 /* MEMBERS API STYLES */
 .slider.container {
+	backgroudn: transparent;
 	width: 100%;
 	margin: 0 auto;
 	padding: 4rem 0;
