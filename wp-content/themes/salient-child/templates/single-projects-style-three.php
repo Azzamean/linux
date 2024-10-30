@@ -26,6 +26,7 @@ $accent_color = $nectar_options["accent-color"];
 get_header();
 ?>
 
+<?php if (! post_password_required() ) { ?>
 <div class="container-wrap projects-wrap">
     <div class="container main-content">
 
@@ -73,7 +74,7 @@ get_header();
                 <div class="row">
                     <section class="projects-description">
                     <?php if ($projects_description_title != null 
-    || $projects_description_title != ""
+                    || $projects_description_title != ""
 ) {
          echo "<h6 class='projects-description-title'>" .
              $projects_description_title .
@@ -134,7 +135,7 @@ get_header();
                 </div>
                 
                 <!--/full-width-section -->    
-<?php if (have_rows("projects_case_studies")) : ?>
+    <?php if (have_rows("projects_case_studies")) : ?>
     <div class="full-width-section case-studies-wrapper">
       <div class="row-bg-wrap">
         <div class="inner-wrap row-bg-layer">
@@ -153,41 +154,41 @@ get_header();
                   </div>
                 </div>
                 <div class="row_col_wrap_12_inner col span_12  left">
-    <?php if (have_rows("projects_case_studies")) :
-        $i = 0;
-        while (have_rows("projects_case_studies")):
-            the_row();
-            if (get_row_layout() == "projects_add_case_study") :
-                $projects_case_studies_image = get_sub_field(
-                    "projects_case_studies_image"
-                );
-                $projects_case_studies_title = get_sub_field(
-                    "projects_case_studies_title"
-                );
-                $projects_case_studies_download_url = get_sub_field(
-                    "projects_case_studies_download_url"
-                );
-                if ($i > 1) {
-                    break;
-                } // GRABS ONLY FIRST 2
-                echo '<div class="vc_col-sm-6 wpb_column column_container vc_column_container col child_column no-extra-padding inherit_tablet inherit_phone"><div class="vc_column-inner"><div class="wpb_wrapper"><div class="wpb_text_column wpb_content_element "><div class="wpb_wrapper">';
-                echo '<div class="projects-case-studies-box">';
-                echo '<div class="projects-case-studies-image">';
-                echo '<img src="' . $projects_case_studies_image . '"/>';
-                echo '</div>';
-                echo '<div class="projects-case-studies-information">';
-                echo '<h6>' . $projects_case_studies_title . '</h6>';
-                echo '<a class="projects-case-studies-button" href="' .
-                 $projects_case_studies_download_url .
-                 '">Download Now</a>';
-                echo '</div>';
-                echo '</div>';
+        <?php if (have_rows("projects_case_studies")) :
+            $i = 0;
+            while (have_rows("projects_case_studies")):
+                the_row();
+                if (get_row_layout() == "projects_add_case_study") :
+                    $projects_case_studies_image = get_sub_field(
+                        "projects_case_studies_image"
+                    );
+                    $projects_case_studies_title = get_sub_field(
+                        "projects_case_studies_title"
+                    );
+                    $projects_case_studies_download_url = get_sub_field(
+                        "projects_case_studies_download_url"
+                    );
+                    if ($i > 1) {
+                        break;
+                    } // GRABS ONLY FIRST 2
+                    echo '<div class="vc_col-sm-6 wpb_column column_container vc_column_container col child_column no-extra-padding inherit_tablet inherit_phone"><div class="vc_column-inner"><div class="wpb_wrapper"><div class="wpb_text_column wpb_content_element "><div class="wpb_wrapper">';
+                    echo '<div class="projects-case-studies-box">';
+                    echo '<div class="projects-case-studies-image">';
+                    echo '<img src="' . $projects_case_studies_image . '"/>';
+                    echo '</div>';
+                    echo '<div class="projects-case-studies-information">';
+                    echo '<h6>' . $projects_case_studies_title . '</h6>';
+                    echo '<a class="projects-case-studies-button" href="' .
+                     $projects_case_studies_download_url .
+                     '">Download Now</a>';
+                    echo '</div>';
+                    echo '</div>';
 
-                echo "</div></div></div></div></div>";
-                $i++;
-            endif;
-        endwhile;
-    endif; ?>
+                    echo "</div></div></div></div></div>";
+                    $i++;
+                endif;
+            endwhile;
+        endif; ?>
                     </section>
                 </div>
               </div>
@@ -209,5 +210,9 @@ get_header();
     <!--/container main-content-->
 </div>
 <!--/container-wrap-->
-
+    <?php
+}else{
+    echo get_the_password_form($post->ID);
+}
+?>
 <?php get_footer(); ?>

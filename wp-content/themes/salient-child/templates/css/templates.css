@@ -342,6 +342,11 @@ h1.working-groups-title-text.white {
 	margin-bottom: 35px;
 }
 
+.single-projects .post-password-form {
+	width: 50%;
+	margin: 0 auto;
+	padding: 30px 0;
+}
 
 /* WEBINARS */
 

@@ -26,6 +26,7 @@ $accent_color = $nectar_options["accent-color"];
 get_header();
 ?>
 
+<?php if (! post_password_required() ) { ?>
 <div class="container-wrap projects-wrap">
     <div class="container main-content">
 
@@ -170,5 +171,9 @@ get_header();
     <!--/container main-content-->
 </div>
 <!--/container-wrap-->
-
+    <?php
+}else{
+    echo get_the_password_form($post->ID);
+}
+?>
 <?php get_footer(); ?>

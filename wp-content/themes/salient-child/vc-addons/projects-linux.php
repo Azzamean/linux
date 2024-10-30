@@ -209,6 +209,7 @@ function projects_grid($atts, $content)
         "order" => $order,
         "orderby" => $orderby,
         "ignore_sticky_posts" => true,
+        'has_password'   => false,
     ];
 
     switch ($design) {
