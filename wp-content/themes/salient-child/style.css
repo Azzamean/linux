@@ -17,7 +17,6 @@ span.osano-cm-toggle__label.osano-cm-label {
 	color: #444 !important;
 }
 
-
 /* WP ADMIN HEADER */
 li#wp-admin-bar-my-sites ul#wp-admin-bar-my-sites-list {
 	height: 500px !important;
@@ -61,7 +60,6 @@ ul#wp-admin-bar-my-sites-list {
 	/* display: none !important; */
 }
 
-
 /* FORCE TWITTER BIRD INTO THE X ICON */
 body .fa.fa-twitter:before {
 	content: "\e918" !important;
@@ -74,4 +72,29 @@ header nav .fa.fa-twitter:after {
 
 .footer-social .fa.fa-twitter:after {
 	display: none !important;
+}
+
+/* WP BAKERY TESTIMONIALS MODULE */
+.testimonial_slider .image-icon.has-bg {
+	width: 100%;
+	height: 100%;
+}
+
+.image-icon.has-bg {
+	background-size: contain;
+	background-repeat: no-repeat;
+}
+
+.testimonial_slider .image-icon {
+	margin-bottom: 16px;
+	max-width: 200px;
+	border-radius: 0;
+}
+
+.portrait-testimonials .testimonial_slider .image-icon {
+	line-height: 200px;
+}
+
+.landscape-testimonials .testimonial_slider .image-icon {
+	line-height: 100px;
 }

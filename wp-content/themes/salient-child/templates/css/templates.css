@@ -242,9 +242,9 @@ h1.working-groups-title-text.white {
 	/* font-family: Bitter; */
 	font-weight: 700;
 	color: #000000;
-	background-color: #d0cfcf;
-	border: 1px solid #ffffff !important;
-	color: #ffffff !important;
+	/* background-color: #d0cfcf; */
+	/* border: 1px solid #ffffff !important; */
+	/* color: #ffffff !important; */
 }
 
 .tabbed ul li a:hover {}

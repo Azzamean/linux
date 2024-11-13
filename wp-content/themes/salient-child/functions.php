@@ -6,7 +6,8 @@
 
 // GET WP BAKERY CUSTOM MODULES; SOME MOVED TO LINUX FOUNDATION PLUGIN
 require_once "vc-addons/recent-posts-linux.php";
-require_once "vc-addons/members-api-linux.php";
+require_once "vc-addons/members-api-carousel-linux.php";
+require_once "vc-addons/members-api-grid-linux.php";
 //require_once "vc-addons/projects-linux.php";
 //require_once "vc-addons/webinars-linux.php";
 //require_once "vc-addons/members-linux.php";
@@ -543,6 +544,12 @@ function remove_large_image_sizes()
 }
 add_action("init", "remove_large_image_sizes");
 
+function add_wide_portfolio_thumb()
+{
+    add_image_size("portfolio-thumb", 1024, 300, true);
+}
+add_action("init", "remove_large_image_sizes");
+
 // REDIRECT CPT SINGLE TO URL, ARCHIVE PAGE IS PUBLICLY AVAILABLE THOUGH; SO FOR REMOVAL OF ARCHIVES: 'publicly_queryable'  => false on the CPTS
 function members_cpt_redirect()
 {
@@ -828,6 +835,33 @@ function update_font_awesome()
     wp_enqueue_style('font-awesome', 'https://use.fontawesome.com/releases/v6.0.0/css/all.css', '', '6.0.0');
     wp_enqueue_style('font-awesome-shim', 'https://use.fontawesome.com/releases/v6.0.0/css/v4-shims.css', array('font-awesome'), '6.0.0');
 }
+
+/* WP JOB MANAGER ORDER BY */
+if (function_exists("is_plugin_active") && is_plugin_active("wp-job-manager/wp-job-manager.php")) {
+    // https://codex.wordpress.org/Class_Reference/WP_Query#Order_.26_Orderby_Parameters
+    // FOR FRONT END SORT AND ORDER ONLY; REMEMBER TO GO INTO DASHBOARD TO REORDER TAB AND CLICK SAVE AFTER THIS TO REORDER IN THE DATABASE
+    function xyz_custom_orderby($query_args)
+    {
+        // Use meta_value_num for numeric sorting (if issues with meta_value)
+        $query_args["orderby"] = "date";
+        $query_args["order"] = "DESC"; //DESC shows latest jobs first
+        return $query_args;
+    }
+
+    //add_filter("job_manager_get_listings_args", "xyz_custom_orderby", 99);
+    // FOR FRONT END SORT AND ORDER ONLY; REMEMBER TO GO INTO DASHBOARD TO REORDER TAB AND CLICK SAVE AFTER THIS TO REORDER IN THE DATABASE
+    function xyz_custom_orderby_query_args($query_args)
+    {
+        $query_args["cache-bust"] = time();
+        $query_args["orderby"] = "date"; //DESC shows latest jobs first
+        $query_args["order"] = "DESC";
+        //$query_args[ 'meta_key' ] = '_job_salary'
+        return $query_args;
+    }
+
+    //add_filter("get_job_listings_query_args", "xyz_custom_orderby_query_args", 99);
+}
+/* END OF JOB MANAGER ORDER BY */
 
 /**********************************************/
 /*******

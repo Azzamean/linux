@@ -40,7 +40,6 @@ $nectar_header_options = nectar_get_header_variables();
 		<?php
 				
 		// CHECK IF NOTIFICATIONS BAR PLUGIN IS ACTIVE
-		include_once( ABSPATH . 'wp-admin/includes/plugin.php' );
 		if (is_plugin_active('notifications-bar/notifications-bar.php')) {
 			notification_bar_display();
 		}	
