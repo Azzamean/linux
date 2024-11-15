@@ -30,6 +30,8 @@ require_once "includes/gdpr-youtube.php";
 // GET CUSTOM FONTS
 require_once "fonts/fonts.php";
 
+// test
+
 // GET CHILD THEME LIBRARIES
 function salient_child_enqueue_styles()
 {
